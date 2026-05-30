@@ -2,7 +2,17 @@ extends Node
 
 const SCENARIO_ID := "river-pass"
 const FACTION_ID := "faction_mireclaw"
-const TREASURY := {"gold": 5200, "wood": 8, "ore": 8}
+const TREASURY := {
+	"gold": 12000,
+	"wood": 24,
+	"ore": 24,
+	"aetherglass": 12,
+	"embergrain": 12,
+	"peatwax": 12,
+	"verdant_grafts": 12,
+	"brass_scrip": 12,
+	"memory_salt": 12,
+}
 const LEAK_KEYS := [
 	"final_score",
 	"income_value",
@@ -75,7 +85,7 @@ func _run_case(case_id: String, expected_destination: String) -> Dictionary:
 		return {}
 	var selected_build: Dictionary = town_report.get("build", {}).get("selected_build", {})
 	if selected_build.is_empty():
-		_fail("%s missing selected build candidate" % case_id)
+		_fail("%s missing selected build candidate: %s" % [case_id, JSON.stringify(town_report.get("build", {}))])
 		return {}
 	if String(selected_build.get("public_reason", "")) == "":
 		_fail("%s selected build missing public reason" % case_id)
@@ -95,6 +105,13 @@ func _run_case(case_id: String, expected_destination: String) -> Dictionary:
 	if String(destination.get("public_reason", "")) == "":
 		_fail("%s destination missing public reason" % case_id)
 		return {}
+	if case_id == "raid":
+		if String(destination.get("raid_placement_id", "")) != "report_duskfen_local_raid":
+			_fail("%s expected nearby raid support, got %s" % [case_id, destination])
+			return {}
+		if int(destination.get("supply_distance", 9999)) > 3:
+			_fail("%s nearby raid support distance is too high: %s" % [case_id, destination])
+			return {}
 	var public_events := []
 	for event in town_report.get("events", []):
 		if event is Dictionary:
@@ -115,9 +132,24 @@ func _base_session():
 		"normal",
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
+	session.day = 24
 	OverworldRules.normalize_overworld_state(session)
 	OverworldRules.refresh_fog_of_war(session)
+	_reset_duskfen_build_timer(session)
 	return session
+
+func _reset_duskfen_build_timer(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("placement_id", "")) != "duskfen_bastion":
+			continue
+		town["last_build_day"] = 0
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
 
 func _set_enemy_treasury(session, treasury: Dictionary) -> void:
 	var states: Array = session.overworld.get("enemy_states", [])
@@ -154,7 +186,7 @@ func _add_active_raid(session) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(
 		{
-			"placement_id": "report_duskfen_raid",
+			"placement_id": "report_duskfen_local_raid",
 			"encounter_id": "encounter_mire_raid",
 			"x": 7,
 			"y": 1,
@@ -169,7 +201,31 @@ func _add_active_raid(session) -> void:
 			"target_label": "Riverwatch Free Company Yard",
 			"target_x": 0,
 			"target_y": 4,
-			"enemy_army": {"id": "report_duskfen_raid", "name": "Report Raid", "stacks": []},
+			"enemy_army": {
+				"id": "report_duskfen_local_raid",
+				"name": "Nearby Report Raid",
+				"stacks": [{"unit_id": "unit_bog_brute", "count": 1}],
+			},
+		}
+	)
+	encounters.append(
+		{
+			"placement_id": "report_duskfen_remote_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 0,
+			"y": 4,
+			"difficulty": "pressure",
+			"combat_seed": hash("%s:report_duskfen_remote_raid" % SCENARIO_ID),
+			"spawned_by_faction_id": FACTION_ID,
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 9,
+			"target_kind": "town",
+			"target_placement_id": "riverwatch_hold",
+			"target_label": "Riverwatch Hold",
+			"target_x": 0,
+			"target_y": 2,
+			"enemy_army": {"id": "report_duskfen_remote_raid", "name": "Remote Report Raid", "stacks": []},
 		}
 	)
 	session.overworld["encounters"] = encounters

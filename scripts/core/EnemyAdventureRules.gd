@@ -9621,6 +9621,17 @@ static func _path_distance(session: SessionStateStoreScript.SessionData, start: 
 			queue.append({"pos": next, "distance": distance + 1})
 	return 9999
 
+static func raid_reinforcement_route_distance(
+	session: SessionStateStoreScript.SessionData,
+	support_town: Dictionary,
+	raid: Dictionary
+) -> int:
+	if session == null or support_town.is_empty() or raid.is_empty():
+		return 9999
+	var start := Vector2i(int(support_town.get("x", 0)), int(support_town.get("y", 0)))
+	var goal := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	return _path_distance(session, start, [goal], String(raid.get("placement_id", "")))
+
 static func _tile_lookup(tiles: Array) -> Dictionary:
 	var lookup = {}
 	for tile in tiles:

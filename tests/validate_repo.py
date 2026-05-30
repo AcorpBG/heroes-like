@@ -219,6 +219,7 @@ AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-reg
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_multi_scenario_recruitment_delivery_report.gd"
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCENE_PATH = ROOT / "tests" / "ai_multi_scenario_recruitment_delivery_report.tscn"
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-multi-scenario-recruitment-delivery-report.md"
+AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-local-recruitment-support-report.md"
 AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_defense_retask_report.gd"
 AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_defense_retask_report.tscn"
 AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-retask-report.md"
@@ -15539,6 +15540,43 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI raid regroup/retreat doc is missing required text: {required_text}")
 
 
+def validate_ai_local_recruitment_support(errors: list[str]) -> None:
+    ensure(AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH.exists(), errors, "AI local recruitment support doc is missing")
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    town_governor_report_text = (ROOT / "tests" / "ai_town_governor_pressure_report.gd").read_text(encoding="utf-8")
+    for required_token in (
+        "raid_reinforcement_route_distance",
+        "_best_raid_reinforcement_target(session, config, faction_id, town)",
+        "supply_distance",
+        "supply_distance >= 9999",
+        "score -= float(supply_distance * 10)",
+    ):
+        ensure(
+            required_token in enemy_turn_text or required_token in enemy_adventure_text,
+            errors,
+            f"AI local recruitment support implementation is missing token: {required_token}",
+        )
+    for required_token in (
+        "report_duskfen_local_raid",
+        "report_duskfen_remote_raid",
+        "nearby raid support",
+        "supply_distance",
+    ):
+        ensure(required_token in town_governor_report_text, errors, f"AI town governor pressure report is missing local support token: {required_token}")
+    if AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH.exists():
+        doc_text = AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Local Recruitment Support Report",
+            "strategic-ai-local-recruitment-support-10184",
+            "route/locality",
+            "unreachable hosts are skipped",
+            "No save migration",
+            "No new strategic-AI production-ready claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI local recruitment support doc is missing required text: {required_text}")
+
+
 def validate_ai_town_defense_retask(errors: list[str]) -> None:
     for path in (
         AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
@@ -21630,6 +21668,7 @@ def main() -> int:
     validate_ai_town_retake_assault(errors)
     validate_ai_raid_assault_grouping(errors)
     validate_ai_raid_regroup_retreat(errors)
+    validate_ai_local_recruitment_support(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
