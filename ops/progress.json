@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-planned-launch-host-template-lock-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization and full long-run generated-map matrix remain explicit gaps.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-commander-risk-tolerance-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T22:33:11Z",
+  "updatedAt": "2026-05-30T22:49:26Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -30552,6 +30552,133 @@
         "This is a live behavior correction in the planned-task launch path, not a broad production-readiness claim.",
         "The rerun of strategic_ai_baseline_kpi_report.tscn hung beyond its --quit-after 120 window and was killed; an earlier same-turn baseline run still reported production_ready=false with Medium RMG generalization and full 100-seed matrix as remaining gaps."
       ]
+    },
+    {
+      "id": "strategic-ai-rmg-medium-generalization-probe-10184",
+      "title": "Strategic AI RMG Medium Generalization Probe",
+      "status": "blocked",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Strategic AI production-readiness KPI blocker",
+      "planRef": "PLAN.md Current product focus / strategic AI follow-up",
+      "purpose": "Move Medium land Native RMG strategic-AI turn health from a permanent measurement gap into executed baseline behavior so generated-map AI startup and turn execution must work beyond strict Small.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_baseline_kpi_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Baseline strategic-AI KPI executes the Medium land generated-map turn probe by default, observes enemy activity and target assignment on Medium, removes the Medium generalization blocker when green, preserves the long-run 100-seed matrix blocker, and repo validation passes.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "campaign production",
+        "water or underground Medium parity",
+        "full 100-seed eight-week matrix"
+      ],
+      "startedAt": "2026-05-30T22:35:12Z",
+      "updatedAt": "2026-05-30T22:46:54Z",
+      "blockedAt": "2026-05-30T22:46:54Z",
+      "blockedReason": "Medium land Native RMG package generation currently fails before strategic-AI turn execution with archived_legacy_native_rmg_disabled for translated_rmg_template_002_v1 / translated_rmg_profile_002_v1. The strategic-AI goal remains active; only this Medium generalization slice is blocked on RMG generator support.",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+          "result": "blocked",
+          "summary": "Medium land generation failed before AI turn coverage with archived_legacy_native_rmg_disabled."
+        }
+      ]
+    },
+    {
+      "id": "strategic-ai-commander-risk-tolerance-10184",
+      "title": "Strategic AI Commander Risk Tolerance",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner direction to prioritize real strategic AI behavior changes over reports/audits",
+      "planRef": "PLAN.md Current product focus / strategic AI follow-up",
+      "purpose": "Apply commander personality, command profile, battle traits, and recent outcomes to live strategic-AI risk gates so raid leaders no longer share one fixed readiness threshold.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Town assault, hero intercept, resource-front, and encounter-arrival risk gates use commander risk tolerance; focused coverage proves aggressive and cautious commanders make different live gate decisions at the same army strength; repo validation passes.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "broad RMG parity",
+        "campaign production",
+        "report-only audit work"
+      ],
+      "startedAt": "2026-05-30T22:46:54Z",
+      "updatedAt": "2026-05-30T22:49:26Z",
+      "completedAt": "2026-05-30T22:49:26Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup report passed and now proves the same town-assault army strength is ready for aggressive hero_vaska but risk-gated to regroup for defeated cautious hero_sable."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "pass",
+          "summary": "Hero hunt assignment, support grouping, risk gating, and battle outcome lifecycle remain passing."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+          "result": "pass",
+          "summary": "Town retake assault, proactive regroup, staging, and battle arbitration remain passing."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned recruitment preparation and ready planned-task launch remain passing."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository content and wiring validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "summary": "Completed. Live strategic-AI risk gates now apply bounded commander risk tolerance from archetype, command profile, battle traits, target kind, strategy override, and recent outcome across town assault, hero intercept, resource-front, and encounter-arrival decisions.",
+      "notes": [
+        "This is a live behavior change, not a report-only audit.",
+        "The Medium RMG generalization probe remains blocked separately on Medium Native RMG package generation before AI execution."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -40953,7 +41080,7 @@
     "summary": "Planned launch host-template lock and focused strategic-AI regressions passed; broad KPI rerun was killed after hanging beyond --quit-after."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-30T22:33:11Z",
+  "currentSliceUpdatedAt": "2026-05-30T22:49:26Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -43909,16 +44036,12 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T22:12:00Z",
-    "sliceId": "strategic-ai-commander-outcome-adaptation-10184",
+    "updatedAt": "2026-05-30T22:49:26Z",
+    "sliceId": "strategic-ai-commander-risk-tolerance-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; adaptive outcome-memory case covered)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_state_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_commander_role_adoption_boundary_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -43926,20 +44049,21 @@
     ],
     "evidence": {
       "implemented": [
-        "Commander outcome advancement now preserves target memory through progression updates.",
-        "Commander memory now records bounded target_success_counts and target_failure_counts by target kind.",
-        "Strategic task fit now includes a bounded adaptive bonus/penalty from live commander outcome memory.",
-        "Focused coverage proves repeated hero-pressure success changes hero_sable's later task choice from artifact pressure to hero pressure from the same candidate set."
+        "Town assault, hero intercept, resource-front, and encounter-arrival risk readiness now scale required strength by commander risk tolerance.",
+        "Risk tolerance now uses commander archetype, command path, attack/defense/power/knowledge profile, battle traits, target kind, recent outcome, and optional strategy override.",
+        "Public readiness reports expose base_required_strength and risk_tolerance_scale so future behavior failures can distinguish base threat math from commander doctrine.",
+        "Focused coverage proves the same town-assault army strength commits under aggressive hero_vaska and regroups under defeated cautious hero_sable."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "actor_id": "hero_sable",
-        "initial_target_key": "artifact:trailsinger_cache",
-        "adapted_target_key": "hero:hero_lyra",
-        "hero_success_count": 2
+        "aggressive_actor_id": "hero_vaska",
+        "cautious_actor_id": "hero_sable",
+        "target_kind": "town",
+        "aggressive_ready": true,
+        "cautious_ready": false
       },
-      "remaining_validation": "Full 100-seed eight-week generated-map matrix, Medium/generated-map generalization, deeper economy/army timing, broader adaptive doctrine checks, and live-client pacing remain open.",
-      "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, automatic tuning, campaign production, or production-ready claim."
+      "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full 100-seed eight-week generated-map matrix remains open, and live-client pacing/manual play remains needed.",
+      "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, campaign production, or production-ready claim."
     }
   }
 }

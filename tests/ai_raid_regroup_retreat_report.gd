@@ -28,17 +28,21 @@ func _run() -> void:
 	var failed_regroup_case := _empty_garrison_regroup_releases_to_rebuild()
 	if failed_regroup_case.is_empty():
 		return
+	var commander_risk_case := _commander_risk_tolerance_changes_live_town_gate()
+	if commander_risk_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_support_and_failed_regroups_rebuild",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_support_failed_regroups_rebuild_and_commander_risk_tolerance_shapes_live_gates",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
 		"unreachable_route_case": unreachable_route_case,
 		"garrison_routing_case": garrison_routing_case,
 		"failed_regroup_case": failed_regroup_case,
+		"commander_risk_case": commander_risk_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -512,6 +516,79 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
+func _commander_risk_tolerance_changes_live_town_gate() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var town := {
+		"placement_id": "risk_tolerance_player_hold",
+		"town_id": "town_duskfen",
+		"x": 4,
+		"y": 4,
+		"owner": "player",
+		"garrison": [],
+	}
+	var selected := {}
+	for count in range(1, 80):
+		var aggressive_raid := _town_risk_probe_raid(session, "risk_aggressive_vaska", "hero_vaska", count)
+		var cautious_raid := _town_risk_probe_raid(session, "risk_cautious_sable", "hero_sable", count, EnemyAdventureRules.COMMANDER_OUTCOME_DEFEATED)
+		var aggressive_report := EnemyAdventureRules._town_assault_advance_risk_report(session, aggressive_raid, town, config)
+		var cautious_report := EnemyAdventureRules._town_assault_advance_risk_report(session, cautious_raid, town, config)
+		var strength := int(aggressive_report.get("assault_strength", 0))
+		if (
+			bool(aggressive_report.get("ready", false))
+			and not bool(cautious_report.get("ready", true))
+			and strength < int(cautious_report.get("required_strength", 0))
+		):
+			selected = {
+				"count": count,
+				"aggressive_raid": aggressive_raid,
+				"cautious_raid": cautious_raid,
+				"aggressive_report": aggressive_report,
+				"cautious_report": cautious_report,
+			}
+			break
+	if selected.is_empty():
+		_fail("Could not find a split strength where aggressive commander commits and cautious commander regroups.")
+		return {}
+	var aggressive_report: Dictionary = selected.get("aggressive_report", {})
+	var cautious_report: Dictionary = selected.get("cautious_report", {})
+	if float(aggressive_report.get("risk_tolerance_scale", 1.0)) >= float(cautious_report.get("risk_tolerance_scale", 1.0)):
+		_fail("Commander risk scales did not separate aggressive/cautious reports: aggressive=%s cautious=%s" % [JSON.stringify(aggressive_report), JSON.stringify(cautious_report)])
+		return {}
+	if int(aggressive_report.get("base_required_strength", 0)) != int(cautious_report.get("base_required_strength", 0)):
+		_fail("Risk fixture changed base requirement instead of commander tolerance: aggressive=%s cautious=%s" % [JSON.stringify(aggressive_report), JSON.stringify(cautious_report)])
+		return {}
+	var cautious_redirect := EnemyAdventureRules.redirect_town_assault_for_risk(
+		session,
+		config,
+		selected.get("cautious_raid", {}),
+		MIRECLAW,
+		cautious_report
+	)
+	if String(cautious_redirect.get("target_kind", "")) != "regroup":
+		_fail("Cautious defeated commander did not regroup after risk gate: %s" % JSON.stringify(cautious_redirect))
+		return {}
+	var redirect_reason_codes := _string_array(cautious_redirect.get("target_reason_codes", []))
+	if "assault_risk_regroup" not in redirect_reason_codes:
+		_fail("Cautious commander regroup missed assault risk reason: %s" % JSON.stringify(cautious_redirect))
+		return {}
+	return {
+		"case_id": "commander_risk_tolerance_shapes_town_assault_gate",
+		"stack_count": int(selected.get("count", 0)),
+		"assault_strength": int(aggressive_report.get("assault_strength", 0)),
+		"base_required_strength": int(aggressive_report.get("base_required_strength", 0)),
+		"aggressive_scale": float(aggressive_report.get("risk_tolerance_scale", 1.0)),
+		"aggressive_required_strength": int(aggressive_report.get("required_strength", 0)),
+		"aggressive_ready": bool(aggressive_report.get("ready", false)),
+		"cautious_scale": float(cautious_report.get("risk_tolerance_scale", 1.0)),
+		"cautious_required_strength": int(cautious_report.get("required_strength", 0)),
+		"cautious_ready": bool(cautious_report.get("ready", true)),
+		"cautious_redirect_kind": String(cautious_redirect.get("target_kind", "")),
+		"cautious_redirect_id": String(cautious_redirect.get("target_placement_id", "")),
+		"cautious_redirect_reasons": redirect_reason_codes,
+	}
+
 func _understrength_raid(session, config: Dictionary) -> Dictionary:
 	var raid := {
 		"placement_id": "regroup_vaska_understrength",
@@ -545,6 +622,48 @@ func _understrength_raid(session, config: Dictionary) -> Dictionary:
 		{},
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _town_risk_probe_raid(session, placement_id: String, roster_hero_id: String, stack_count: int, last_outcome: String = "") -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": 8,
+		"y": 1,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 1,
+		"target_kind": "town",
+		"target_placement_id": "risk_tolerance_player_hold",
+		"target_label": "Risk Tolerance Hold",
+		"target_x": 4,
+		"target_y": 4,
+		"goal_x": 4,
+		"goal_y": 4,
+		"target_reason_codes": ["town_siege", "risk_tolerance_fixture"],
+		"target_public_reason": "town pressure",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "%s_host" % placement_id,
+			"name": "Risk Tolerance Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": max(1, stack_count)}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	if last_outcome != "":
+		var commander_state: Dictionary = raid.get("enemy_commander_state", {})
+		commander_state["last_outcome"] = last_outcome
+		raid["enemy_commander_state"] = commander_state
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
 func _guarded_resource_claim_raid(session) -> Dictionary:

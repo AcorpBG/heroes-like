@@ -2020,7 +2020,7 @@ static func _queue_town_defense_battle(
 	if not (encounter is Dictionary):
 		return {}
 	var defender_owner := String(town.get("owner", "neutral"))
-	var readiness_report := _town_assault_ready_report(session, encounter, town)
+	var readiness_report := _town_assault_ready_report(session, encounter, town, config)
 	if not bool(readiness_report.get("ready", false)):
 		var previous_target := _raid_target_snapshot(encounter)
 		encounter = EnemyAdventureRulesScript.redirect_town_assault_for_risk(
@@ -2076,7 +2076,8 @@ static func _queue_town_defense_battle(
 static func _town_assault_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary,
-	town: Dictionary
+	town: Dictionary,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var assault_strength := EnemyAdventureRulesScript.raid_strength(encounter)
 	var desired_strength := EnemyAdventureRulesScript.desired_raid_strength(encounter)
@@ -2085,7 +2086,9 @@ static func _town_assault_ready_report(
 	var desired_floor := int(round(float(desired_strength) * 0.68))
 	var garrison_floor := int(round(float(garrison_strength) * 0.85))
 	var readiness_floor: int = 60 + (readiness * 2)
-	var required_strength: int = max(85, desired_floor, garrison_floor, readiness_floor)
+	var base_required_strength: int = max(85, desired_floor, garrison_floor, readiness_floor)
+	var risk_tolerance_scale := EnemyAdventureRulesScript.commander_risk_tolerance_scale(encounter, config, "town")
+	var required_strength: int = EnemyAdventureRulesScript._scaled_required_strength(base_required_strength, risk_tolerance_scale)
 	var ready := assault_strength >= required_strength
 	return {
 		"ready": ready,
@@ -2093,6 +2096,8 @@ static func _town_assault_ready_report(
 		"desired_strength": desired_strength,
 		"garrison_strength": garrison_strength,
 		"town_readiness": readiness,
+		"base_required_strength": base_required_strength,
+		"risk_tolerance_scale": risk_tolerance_scale,
 		"required_strength": required_strength,
 		"reason": "ready_for_town_assault" if ready else "assault_risk_regroup",
 	}
@@ -2125,7 +2130,7 @@ static func _queue_hero_intercept_battle(
 	if hero_id == "":
 		return {}
 	var encounters = session.overworld.get("encounters", [])
-	var readiness_report := _hero_intercept_ready_report(session, encounter, hero)
+	var readiness_report := _hero_intercept_ready_report(session, encounter, hero, config)
 	if not bool(readiness_report.get("ready", false)):
 		var previous_target := _raid_target_snapshot(encounter)
 		encounter = EnemyAdventureRulesScript.redirect_hero_intercept_for_risk(
@@ -2181,20 +2186,25 @@ static func _queue_hero_intercept_battle(
 static func _hero_intercept_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary,
-	hero: Dictionary
+	hero: Dictionary,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var hunter_strength := EnemyAdventureRulesScript.raid_strength(encounter)
 	var desired_strength := EnemyAdventureRulesScript.desired_raid_strength(encounter)
 	var hero_strength := _army_strength(hero.get("army", {}).get("stacks", []))
 	var desired_floor := int(round(float(desired_strength) * 0.65))
 	var hero_floor := int(round(float(hero_strength) * 0.85))
-	var required_strength: int = max(75, desired_floor, hero_floor)
+	var base_required_strength: int = max(75, desired_floor, hero_floor)
+	var risk_tolerance_scale := EnemyAdventureRulesScript.commander_risk_tolerance_scale(encounter, config, "hero")
+	var required_strength: int = EnemyAdventureRulesScript._scaled_required_strength(base_required_strength, risk_tolerance_scale)
 	var ready := hunter_strength >= required_strength
 	return {
 		"ready": ready,
 		"hunter_strength": hunter_strength,
 		"desired_strength": desired_strength,
 		"hero_strength": hero_strength,
+		"base_required_strength": base_required_strength,
+		"risk_tolerance_scale": risk_tolerance_scale,
 		"required_strength": required_strength,
 		"reason": "ready_for_hero_intercept" if ready else "hero_hunt_risk_regroup",
 	}
@@ -2234,7 +2244,7 @@ static func _town_defense_candidate(session: SessionStateStoreScript.SessionData
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
 			continue
 		var strength = EnemyAdventureRulesScript.raid_strength(encounter)
-		var readiness_report := _town_assault_ready_report(session, encounter, town)
+		var readiness_report := _town_assault_ready_report(session, encounter, town, config)
 		var score := _town_assault_candidate_score(
 			session,
 			config,
@@ -2299,7 +2309,7 @@ static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionDa
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
 			continue
 		var strength = EnemyAdventureRulesScript.raid_strength(encounter)
-		var readiness_report := _hero_intercept_ready_report(session, encounter, hero)
+		var readiness_report := _hero_intercept_ready_report(session, encounter, hero, config)
 		var score := _hero_intercept_candidate_score(
 			session,
 			config,
