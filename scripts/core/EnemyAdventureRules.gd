@@ -109,6 +109,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_garrison_reinforced",
 	"ai_raid_reinforced",
 	"ai_commander_rebuilt",
+	"ai_commander_prepared",
 	"ai_commander_role_observed",
 	"ai_raid_moved",
 	"ai_raid_arrived",
