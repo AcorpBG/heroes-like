@@ -204,6 +204,9 @@ AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH = ROOT / "docs" / "strate
 AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_retask_cancellation_report.gd"
 AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_retask_cancellation_report.tscn"
 AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-task-retask-cancellation-report.md"
+AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_encounter_objective_report.gd"
+AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_encounter_objective_report.tscn"
+AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-encounter-objective-task-board-report.md"
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
@@ -14899,6 +14902,52 @@ def validate_ai_hero_task_retask_cancellation(errors: list[str]) -> None:
         ):
             ensure(required_text in doc_text, errors, f"AI hero task retask cancellation doc is missing required text: {required_text}")
 
+def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCENE_PATH,
+        AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task encounter objective file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    for required_token in (
+        'target_kind not in ["resource", "town", "encounter"]',
+        'match target_kind:',
+        '"encounter":',
+        "func _ai_hero_task_reconciled_encounter_task",
+        "OverworldRulesScript.is_encounter_resolved(session, encounter)",
+        '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI hero task encounter objective implementation is missing token: {required_token}")
+    ensure(
+        '["resource", "town", "encounter", "commander", "front"]' in enemy_turn_text,
+        errors,
+        "Enemy task-state normalizer does not accept target_kind encounter.",
+    )
+    if AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "objective_front_encounters_use_saved_task_continuity",
+            "objective_front_encounter_assigns_reuses_and_closes_task",
+            "causeway_levee_cutters",
+            "saved_hero_task",
+            "invalid_target_missing",
+            "hero_task_state_live_persist_no_save_migration",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task encounter objective report is missing token: {required_token}")
+    if AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Encounter Objective Task Board Report",
+            "implementation evidence",
+            "objective-front encounter targets",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "No save migration",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task encounter objective doc is missing required text: {required_text}")
+
 
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     doc_path = ROOT / "docs" / "headless-strategic-ai-live-turn-harness-report.md"
@@ -21458,6 +21507,7 @@ def main() -> int:
     validate_ai_hero_task_resumption(errors)
     validate_ai_hero_task_spawn_commander_selection(errors)
     validate_ai_hero_task_retask_cancellation(errors)
+    validate_ai_hero_task_encounter_objective(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
     validate_ai_town_retake_assault(errors)

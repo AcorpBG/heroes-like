@@ -6926,6 +6926,20 @@ static func _ai_hero_task_target_snapshot_for_plan(
 				"target_y": int(town.get("y", 0)),
 				"goal_tiles": _town_staging_tiles(session, town),
 			}
+		"encounter":
+			var encounter_result := _find_encounter_by_placement(session, target_id)
+			if int(encounter_result.get("index", -1)) < 0:
+				return {}
+			var encounter: Dictionary = encounter_result.get("encounter", {})
+			if OverworldRulesScript.is_encounter_resolved(session, encounter):
+				return {}
+			var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+			return {
+				"target_label": String(encounter_template.get("name", target_id)),
+				"target_x": int(encounter.get("x", 0)),
+				"target_y": int(encounter.get("y", 0)),
+				"goal_tiles": _encounter_staging_tiles(session, encounter),
+			}
 	return {}
 
 static func _saved_task_plan_beats(candidate: Dictionary, best: Dictionary) -> bool:
@@ -7012,7 +7026,7 @@ static func _ai_hero_task_record_live_assignment(
 		return
 	var target_kind := String(current_target.get("target_kind", ""))
 	var target_id := String(current_target.get("target_placement_id", ""))
-	if target_kind not in ["resource", "town"] or target_id == "":
+	if target_kind not in ["resource", "town", "encounter"] or target_id == "":
 		return
 	var task: Dictionary = task_record.duplicate(true) if not task_record.is_empty() else {}
 	if task.is_empty() or String(task.get("actor_id", "")) != actor_id or String(task.get("target_id", "")) != target_id:
@@ -7212,6 +7226,8 @@ static func _ai_hero_task_reconciled_live_task(
 			return _ai_hero_task_reconciled_resource_task(session, faction_id, task, target_id)
 		"town":
 			return _ai_hero_task_reconciled_town_task(session, faction_id, task, target_id)
+		"encounter":
+			return _ai_hero_task_reconciled_encounter_task(session, faction_id, task, target_id)
 	return task
 
 static func _ai_hero_task_reconcile_actor(
@@ -7302,6 +7318,24 @@ static func _ai_hero_task_reconciled_town_task(
 		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
 	if owner not in ["player", "enemy"]:
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
+	return task
+
+static func _ai_hero_task_reconciled_encounter_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	if target_id == "":
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var encounter_result := _find_encounter_by_placement(session, target_id)
+	if int(encounter_result.get("index", -1)) < 0:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var encounter: Dictionary = encounter_result.get("encounter", {})
+	if OverworldRulesScript.is_encounter_resolved(session, encounter):
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_resolved")
+	if String(encounter.get("contested_by_faction_id", "")) == faction_id:
+		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
 	return task
 
 static func _ai_hero_task_with_lifecycle(task: Dictionary, status: String, validation: String) -> Dictionary:
@@ -9140,6 +9174,7 @@ static func _contest_encounter_target(
 		session.overworld["encounters"] = encounters
 		if claimed_now:
 			state["pressure"] = max(0, int(state.get("pressure", 0))) + 1
+			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 			var contest_message := "%s locks down %s and turns it into a live front." % [
 				_raid_name(raid),
 				String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
@@ -9178,6 +9213,7 @@ static func _contest_encounter_target(
 	if resolved is Array and placement_id not in resolved:
 		resolved.append(placement_id)
 		session.overworld["resolved_encounters"] = resolved
+	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 	var encounter_template = ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", ""))))
 	var spoils = _reward_resources_for_empire(encounter_template.get("rewards", {}))
 	state["treasury"] = _merge_resources(state.get("treasury", {}), spoils)
