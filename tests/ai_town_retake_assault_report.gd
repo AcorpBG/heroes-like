@@ -13,6 +13,9 @@ func _run() -> void:
 	var case_report := _river_pass_retake_front_queues_town_battle()
 	if case_report.is_empty():
 		return
+	var arbitration_case_report := _town_assault_arbitration_prefers_ready_strategic_target()
+	if arbitration_case_report.is_empty():
+		return
 	var risk_case_report := _weak_river_pass_retake_front_stages_before_town_battle()
 	if risk_case_report.is_empty():
 		return
@@ -26,6 +29,7 @@ func _run() -> void:
 		"behavior_policy": "enemy_retake_front_town_targets_queue_battles_with_proactive_risk_regroup",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"arbitration_case": arbitration_case_report,
 		"risk_case": risk_case_report,
 		"proactive_risk_case": proactive_risk_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
@@ -33,6 +37,71 @@ func _run() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _town_assault_arbitration_prefers_ready_strategic_target() -> Dictionary:
+	var session = _base_session()
+	session.day = 3
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_captured_retake_front(session, "duskfen_bastion")
+	_add_player_captured_town(session, "lowland_watch", {"x": 9, "y": 2})
+	_remove_mireclaw_town_target_encounters(session)
+	var config := _enemy_config()
+
+	var weak_near := _retake_raid_seed(session, "near_weak_lowland_vaska", 1, 9, 1)
+	weak_near = _set_raid_target_town(weak_near, "lowland_watch", "Lowland Watch")
+	weak_near["target_x"] = 9
+	weak_near["target_y"] = 2
+	weak_near["goal_x"] = 9
+	weak_near["goal_y"] = 1
+	weak_near["goal_distance"] = 0
+	weak_near["arrived"] = true
+	weak_near["target_reason_codes"] = ["town_siege", "low_value_probe"]
+	weak_near["target_public_reason"] = "probing town"
+
+	var ready_strategic := _retake_raid_seed(session, "ready_strategic_duskfen_sable", 14, 7, 2)
+	ready_strategic["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		ready_strategic,
+		"hero_sable",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	ready_strategic = EnemyAdventureRules.ensure_raid_army(
+		_set_raid_target_town(ready_strategic, "duskfen_bastion", "Duskfen Bastion"),
+		session
+	)
+	ready_strategic["goal_distance"] = 1
+	ready_strategic["arrived"] = true
+	ready_strategic["target_reason_codes"] = ["town_siege", "retake_front", "objective_front"]
+	ready_strategic["target_public_reason"] = "retaking captured town"
+
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(weak_near)
+	encounters.append(ready_strategic)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyTurnRules._queue_town_defense_battle(session, config, MIRECLAW)
+	if not bool(result.get("battle_started", false)):
+		_fail("Town assault arbitration should have queued the ready strategic assault: %s" % JSON.stringify(result))
+		return {}
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if String(battle_context.get("town_placement_id", "")) != "duskfen_bastion":
+		_fail("Town assault arbitration chose wrong target: %s" % JSON.stringify(battle_context))
+		return {}
+	if String(session.battle.get("resolved_key", "")) != "ready_strategic_duskfen_sable":
+		_fail("Town assault arbitration chose wrong raid: %s" % JSON.stringify(session.battle))
+		return {}
+	return {
+		"case_id": "town_assault_arbitration_prefers_ready_strategic_target",
+		"selected_raid_id": String(session.battle.get("resolved_key", "")),
+		"selected_town_id": String(battle_context.get("town_placement_id", "")),
+		"near_probe_id": "near_weak_lowland_vaska",
+		"battle_started": true,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
 
 func _river_pass_retake_front_queues_town_battle() -> Dictionary:
 	var session = _base_session()
@@ -269,6 +338,17 @@ func _retake_raid_seed(session, placement_id: String, bog_brute_count: int, x: i
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
+func _set_raid_target_town(raid: Dictionary, town_id: String, label: String) -> Dictionary:
+	var updated := raid.duplicate(true)
+	updated["target_kind"] = "town"
+	updated["target_placement_id"] = town_id
+	updated["target_label"] = label
+	updated["target_x"] = int(updated.get("target_x", updated.get("x", 0)))
+	updated["target_y"] = int(updated.get("target_y", updated.get("y", 0)))
+	updated["goal_x"] = int(updated.get("goal_x", updated.get("x", 0)))
+	updated["goal_y"] = int(updated.get("goal_y", updated.get("y", 0)))
+	return updated
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -327,6 +407,28 @@ func _set_player_captured_retake_front(session, placement_id: String) -> void:
 		return
 	_fail("Could not find town %s for retake-front fixture." % placement_id)
 
+func _add_player_captured_town(session, placement_id: String, position: Dictionary) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	towns.append(
+		{
+			"placement_id": placement_id,
+			"town_id": "town_duskfen",
+			"name": "Lowland Watch",
+			"x": int(position.get("x", 0)),
+			"y": int(position.get("y", 0)),
+			"owner": "player",
+			"controlling_faction_id": "",
+			"garrison": [{"unit_id": "unit_ember_squire", "count": 1}],
+			"front": {
+				"state": "retake",
+				"faction_id": MIRECLAW,
+				"last_change_day": int(session.day),
+				"source": "test_fixture",
+			},
+		}
+	)
+	session.overworld["towns"] = towns
+
 func _add_enemy_regroup_town(session, placement_id: String, position: Dictionary) -> void:
 	var towns: Array = session.overworld.get("towns", [])
 	towns.append(
@@ -341,6 +443,16 @@ func _add_enemy_regroup_town(session, placement_id: String, position: Dictionary
 		}
 	)
 	session.overworld["towns"] = towns
+
+func _remove_mireclaw_town_target_encounters(session) -> void:
+	var kept := []
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW and String(encounter.get("target_kind", "")) == "town":
+			continue
+		kept.append(encounter)
+	session.overworld["encounters"] = kept
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

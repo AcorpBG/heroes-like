@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-battle-task-outcome-lifecycle-10184",
-  "currentSliceTitle": "Strategic AI Battle Task Outcome Lifecycle",
+  "currentSliceId": "strategic-ai-threat-arbitration-10184",
+  "currentSliceTitle": "Strategic AI Threat Arbitration",
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T17:05:00Z",
+  "updatedAt": "2026-05-30T17:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28931,6 +28931,65 @@
           "residualRisk": "This fixes battle-outcome task lifecycle for focused hero-hunt and town-retake battle surfaces. Full strategic AI release readiness still needs long-run generated-map behavior evidence, richer retreat doctrine, strategic economy timing, coordinated multi-front planning, and live-client pacing checks."
         }
       }
+    },
+    {
+      "id": "strategic-ai-threat-arbitration-10184",
+      "title": "Strategic AI Threat Arbitration",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "owner-directed strategic AI production readiness",
+      "planRef": "PLAN.md Current product focus / strategic AI follow-up",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "tests/ai_town_retake_assault_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Enemy town-assault battle queueing prefers ready and strategically valuable assaults over merely nearest arrived raids.",
+        "Enemy hero-intercept battle queueing prefers ready and high-value vulnerable hero catches over nearer weak-risk fronts.",
+        "Regression evidence uses competing live raids and verifies the battle actually starts for the selected strategic target."
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T17:35:00Z",
+        "sliceId": "strategic-ai-threat-arbitration-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Town-assault battle candidate selection now scores readiness, strength margin, strategic town priority, retake/front pressure, objective status, and distance instead of nearest-only ordering.",
+            "Hero-intercept battle candidate selection now scores readiness, strength margin, active/primary hero value, exposed-hero metadata, hero vulnerability, strategy weights, and distance instead of nearest-only ordering.",
+            "Competing live raid fixtures prove a weak nearby town probe no longer blocks a ready Duskfen retake battle, and a weak nearby hero decoy no longer blocks a ready high-value hero intercept."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-hunt-task-board-report.md",
+            "docs/strategic-ai-town-retake-assault-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_TOWN_DEFENSE_RETASK_REPORT"
+          ],
+          "residualRisk": "This improves tactical battle arbitration among already-arrived strategic AI fronts. Full strategic AI release readiness still needs long-run generated-map behavior, higher-level multi-front planning, richer retreat doctrine, economy timing, and live-client pacing checks."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -39296,8 +39355,8 @@
       "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-battle-task-outcome-lifecycle-10184",
-  "currentSliceUpdatedAt": "2026-05-30T17:05:00Z",
+  "active_slice": "strategic-ai-threat-arbitration-10184",
+  "currentSliceUpdatedAt": "2026-05-30T17:35:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -42250,7 +42309,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-battle-task-outcome-lifecycle-10184 [completed]",
+  "currentSlice": "strategic-ai-threat-arbitration-10184 [completed]",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-05-30T16:23:51Z",

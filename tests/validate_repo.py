@@ -15214,6 +15214,7 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
         "invalid_battle_defeat",
         "invalid_battle_withdrawal",
         "battle_stalemate",
+        "func _hero_intercept_candidate_score",
     ):
         ensure(required_token in enemy_turn_text, errors, f"AI hero task hero hunt normalizer/intercept implementation is missing token: {required_token}")
     ensure(
@@ -15240,6 +15241,8 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
             "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_stall_withdrawal_and_battle_outcome_lifecycle",
             "hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome",
             "weak_hero_hunt_regroups_before_intercept",
+            "hero_intercept_arbitration_prefers_ready_high_value_hunt",
+            "ready_high_value_hero_sable",
             "hero_hunt_support_groups_before_intercept",
             "stale_unsupported_hero_hunt_retires_to_rebuild",
             "invalid_battle_defeat",
@@ -16100,6 +16103,7 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         ensure(path.exists(), errors, f"Missing AI town retake assault file: {path.relative_to(ROOT)}")
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func ai_live_town_retake_target_selection_plan",
         "ai_live_town_retake_target_selection_plan(session, config, raid)",
@@ -16112,6 +16116,11 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         "retaking captured town",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"Enemy adventure rules are missing town retake assault token: {required_token}")
+    for required_token in (
+        "func _town_assault_candidate_score",
+        "func _enemy_config_for_faction",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"Enemy turn rules are missing town assault arbitration token: {required_token}")
     for required_token in (
         '"strategic_ai_live_town_retake_assault"',
         "func _strategic_ai_live_town_retake_assault",
@@ -16131,6 +16140,8 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
             "enemy_retake_front_town_targets_queue_battles_with_proactive_risk_regroup",
             "live_town_retake_assault_proactive_risk_no_save_migration",
             "river_pass_retake_front_queues_town_defense_battle",
+            "town_assault_arbitration_prefers_ready_strategic_target",
+            "ready_strategic_duskfen_sable",
             "weak_retake_front_stages_before_town_battle",
             "weak_retake_front_regroups_before_marching",
             "proactive_risk_case",

@@ -1851,10 +1851,12 @@ static func _hero_intercept_ready_report(
 
 static func _town_defense_candidate(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	var best = {}
-	var best_distance = 9999
-	var best_strength = -1
+	var best_score := -1000000000.0
+	var best_distance := 9999
+	var best_strength := -1
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	var encounters = session.overworld.get("encounters", [])
+	var config := _enemy_config_for_faction(session, faction_id)
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
 		if not (encounter is Dictionary):
@@ -1875,18 +1877,52 @@ static func _town_defense_candidate(session: SessionStateStoreScript.SessionData
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
 			continue
 		var strength = EnemyAdventureRulesScript.raid_strength(encounter)
-		if goal_distance < best_distance or (goal_distance == best_distance and strength > best_strength):
+		var readiness_report := _town_assault_ready_report(session, encounter, town)
+		var score := _town_assault_candidate_score(
+			session,
+			config,
+			faction_id,
+			encounter,
+			town,
+			readiness_report,
+			goal_distance,
+			strength
+		)
+		if (
+			score > best_score
+			or (
+				is_equal_approx(score, best_score)
+				and (
+					goal_distance < best_distance
+					or (goal_distance == best_distance and strength > best_strength)
+					or (
+						goal_distance == best_distance
+						and strength == best_strength
+						and String(encounter.get("placement_id", "")) < String(best.get("encounter", {}).get("placement_id", ""))
+					)
+				)
+			)
+		):
+			best_score = score
 			best_distance = goal_distance
 			best_strength = strength
-			best = {"encounter_index": index, "encounter": encounter, "town": town}
+			best = {
+				"encounter_index": index,
+				"encounter": encounter,
+				"town": town,
+				"readiness_report": readiness_report,
+				"selection_score": score,
+			}
 	return best
 
 static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	var best = {}
-	var best_distance = 9999
-	var best_strength = -1
+	var best_score := -1000000000.0
+	var best_distance := 9999
+	var best_strength := -1
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	var encounters = session.overworld.get("encounters", [])
+	var config := _enemy_config_for_faction(session, faction_id)
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
 		if not (encounter is Dictionary):
@@ -1906,11 +1942,121 @@ static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionDa
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
 			continue
 		var strength = EnemyAdventureRulesScript.raid_strength(encounter)
-		if goal_distance < best_distance or (goal_distance == best_distance and strength > best_strength):
+		var readiness_report := _hero_intercept_ready_report(session, encounter, hero)
+		var score := _hero_intercept_candidate_score(
+			session,
+			config,
+			faction_id,
+			encounter,
+			hero,
+			readiness_report,
+			goal_distance,
+			strength
+		)
+		if (
+			score > best_score
+			or (
+				is_equal_approx(score, best_score)
+				and (
+					goal_distance < best_distance
+					or (goal_distance == best_distance and strength > best_strength)
+					or (
+						goal_distance == best_distance
+						and strength == best_strength
+						and String(encounter.get("placement_id", "")) < String(best.get("encounter", {}).get("placement_id", ""))
+					)
+				)
+			)
+		):
+			best_score = score
 			best_distance = goal_distance
 			best_strength = strength
-			best = {"encounter_index": index, "encounter": encounter, "hero": hero}
+			best = {
+				"encounter_index": index,
+				"encounter": encounter,
+				"hero": hero,
+				"readiness_report": readiness_report,
+				"selection_score": score,
+			}
 	return best
+
+static func _town_assault_candidate_score(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	encounter: Dictionary,
+	town: Dictionary,
+	readiness_report: Dictionary,
+	goal_distance: int,
+	strength: int
+) -> float:
+	var target_id := String(town.get("placement_id", ""))
+	var objective_anchor := EnemyAdventureRulesScript.target_is_objective_anchor(session, "town", target_id)
+	var town_priority := EnemyAdventureRulesScript.priority_target_bonus(config, target_id)
+	town_priority += EnemyAdventureRulesScript._town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var readiness: int = int(readiness_report.get("town_readiness", OverworldRulesScript.town_battle_readiness(town, session)))
+	var required: int = maxi(1, int(readiness_report.get("required_strength", 1)))
+	var strength_margin: int = strength - required
+	var score := 0.0
+	if bool(readiness_report.get("ready", false)):
+		score += 100000.0
+	else:
+		score -= 15000.0
+	score += float(maxi(-80, strength_margin)) * 2.0
+	score += float(strength) * 0.25
+	score += float(town_priority) * 5.0
+	score += float(readiness) * 6.0
+	score += float(maxi(0, 12 - goal_distance)) * 20.0
+	if bool(objective_anchor):
+		score += 420.0
+	if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
+		score += float(int(front_state.get("priority_bonus", 0))) * 3.0
+		if String(front_state.get("mode", "")) == "retake":
+			score += 260.0
+	var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+	if "town_siege" in reason_codes:
+		score += 100.0
+	if "objective_front" in reason_codes:
+		score += 180.0
+	return score
+
+static func _hero_intercept_candidate_score(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	encounter: Dictionary,
+	hero: Dictionary,
+	readiness_report: Dictionary,
+	goal_distance: int,
+	strength: int
+) -> float:
+	var hero_id := String(hero.get("id", ""))
+	var hero_strength: int = int(readiness_report.get("hero_strength", _army_strength(hero.get("army", {}).get("stacks", []))))
+	var required: int = maxi(1, int(readiness_report.get("required_strength", 1)))
+	var strength_margin: int = strength - required
+	var score := 0.0
+	if bool(readiness_report.get("ready", false)):
+		score += 100000.0
+	else:
+		score -= 15000.0
+	score += float(maxi(-80, strength_margin)) * 2.2
+	score += float(strength) * 0.22
+	score += float(maxi(0, 12 - goal_distance)) * 20.0
+	score += float(maxi(0, 180 - hero_strength)) * 1.25
+	if String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+		score += 110.0
+	if bool(hero.get("is_primary", false)):
+		score += 150.0
+	var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+	if "exposed_hero" in reason_codes:
+		score += 180.0
+	if "hero_hunt" in reason_codes:
+		score += 80.0
+	if hero_id != "":
+		score += float(EnemyAdventureRulesScript.priority_target_bonus(config, hero_id))
+		score *= EnemyAdventureRulesScript.strategy_target_weight(config, faction_id, "hero", hero_id)
+	return score
 
 static func _best_build_candidate(
 	session: SessionStateStoreScript.SessionData,
@@ -2501,6 +2647,14 @@ static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.
 			"generated_package_town_config": true,
 		})
 	return fallback_configs
+
+static func _enemy_config_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	if faction_id == "":
+		return {}
+	for config_value in _enemy_faction_configs_for_session(session):
+		if config_value is Dictionary and String(config_value.get("faction_id", "")) == faction_id:
+			return config_value
+	return {}
 
 static func _valid_enemy_faction_configs(configs: Array) -> Array:
 	var result := []
