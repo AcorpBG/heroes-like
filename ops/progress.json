@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-task-actor-lifecycle-10184",
-  "currentSliceTitle": "Strategic AI Task Actor Lifecycle",
+  "currentSliceId": "strategic-ai-task-resumption-10184",
+  "currentSliceTitle": "Strategic AI Task Resumption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Saved strategic AI tasks now suspend or invalidate when their commander actor is missing, recovering, or unable to deploy, preventing stale actor reservations from steering future turns.",
+  "currentSliceNotes": "Started. This slice makes suspended task state recoverable instead of a permanent dead end after commander recovery or rebuild.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T12:49:00Z",
+  "updatedAt": "2026-05-30T13:32:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27360,6 +27360,59 @@
           "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
         }
       }
+    },
+    {
+      "id": "strategic-ai-task-resumption-10184",
+      "title": "Strategic AI Task Resumption",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after actor lifecycle reconciliation",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "focused strategic AI Godot report",
+        "docs strategic AI task resumption report",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Suspended saved strategic AI tasks reactivate when their commander is again present and deployable, then run through the same target lifecycle checks before reuse. Focused runtime tests prove deployable commanders resume valid saved objectives, still-unavailable commanders remain suspended, and stale resumed tasks still complete/invalidate correctly. Validation passes and no save-version migration is introduced.",
+      "startedAt": "2026-05-30T13:05:00Z",
+      "updatedAt": "2026-05-30T13:32:00Z",
+      "notes": "Completed. Suspended saved strategic AI tasks now resume only when their commander is again deployable, and resumed work still expires, completes, or invalidates through the normal lifecycle before reuse.",
+      "completedAt": "2026-05-30T13:32:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T13:32:00Z",
+        "sliceId": "strategic-ai-task-resumption-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
+            "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
+            "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
+            "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
+            "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-task-resumption-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -34334,6 +34387,51 @@
           }
         }
       }
+    },
+    {
+      "id": "strategic-ai-task-resumption-10184",
+      "title": "Strategic AI Task Resumption",
+      "completedAt": "2026-05-30T13:32:00Z",
+      "summary": "Completed. Suspended saved strategic AI hero tasks now reactivate only when the owning commander exists, is available, and can deploy; resumed tasks still run expiration and target lifecycle checks before saved-target reuse.",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_resumption_report.gd",
+        "docs/strategic-ai-hero-task-resumption-report.md",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T13:32:00Z",
+        "sliceId": "strategic-ai-task-resumption-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
+            "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
+            "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
+            "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
+            "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-task-resumption-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -37136,9 +37234,10 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T12:49:00Z",
-    "sliceId": "strategic-ai-task-actor-lifecycle-10184",
+    "updatedAt": "2026-05-30T13:32:00Z",
+    "sliceId": "strategic-ai-task-resumption-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
@@ -37149,23 +37248,23 @@
     ],
     "evidence": {
       "implemented": [
-        "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
-        "Missing commander actors invalidate with invalid_actor_missing.",
-        "Recovering commanders suspend their tasks with invalid_actor_recovering.",
-        "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
-        "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
+        "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
+        "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
+        "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
+        "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
+        "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
+        "docs/strategic-ai-hero-task-resumption-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
+      "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T12:49:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T13:32:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39630,34 +39729,13 @@
         "saveVersion": 9,
         "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "strategic-ai-task-actor-lifecycle-10184",
-    "title": "Strategic AI Task Actor Lifecycle",
-    "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after target lifecycle reconciliation",
-    "planRef": "PLAN.md Current strategic AI target",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "focused strategic AI Godot report",
-      "docs strategic AI task actor lifecycle report",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Saved strategic AI hero tasks are reconciled against commander roster state before reuse: missing actors invalidate, recovering/rebuilding actors suspend with explicit validation codes, active/available actors keep valid current tasks, focused runtime tests prove actor lifecycle transitions, validation passes, and no save-version migration is introduced.",
-    "startedAt": "2026-05-30T12:35:00Z",
-    "updatedAt": "2026-05-30T12:49:00Z",
-    "notes": "Completed. Saved strategic AI tasks now suspend or invalidate when their commander actor is missing, recovering, or unable to deploy, preventing stale actor reservations from steering future turns.",
-    "completedAt": "2026-05-30T12:49:00Z",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-30T12:49:00Z",
-      "sliceId": "strategic-ai-task-actor-lifecycle-10184",
+      "updatedAt": "2026-05-30T13:32:00Z",
+      "sliceId": "strategic-ai-task-resumption-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
@@ -39668,27 +39746,81 @@
       ],
       "evidence": {
         "implemented": [
-          "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
-          "Missing commander actors invalidate with invalid_actor_missing.",
-          "Recovering commanders suspend their tasks with invalid_actor_recovering.",
-          "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
-          "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
+          "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
+          "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
+          "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
+          "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
+          "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
+          "docs/strategic-ai-hero-task-resumption-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
+        "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "strategic-ai-task-resumption-10184",
+    "title": "Strategic AI Task Resumption",
+    "status": "completed",
+    "source": "continuation of owner strategic AI production-readiness goal after actor lifecycle reconciliation",
+    "planRef": "PLAN.md Current strategic AI target",
+    "sourceDocs": [
+      "PLAN.md",
+      "project.md"
+    ],
+    "implementationTargets": [
+      "scripts/core/EnemyAdventureRules.gd",
+      "focused strategic AI Godot report",
+      "docs strategic AI task resumption report",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "Suspended saved strategic AI tasks reactivate when their commander is again present and deployable, then run through the same target lifecycle checks before reuse. Focused runtime tests prove deployable commanders resume valid saved objectives, still-unavailable commanders remain suspended, and stale resumed tasks still complete/invalidate correctly. Validation passes and no save-version migration is introduced.",
+    "startedAt": "2026-05-30T13:05:00Z",
+    "updatedAt": "2026-05-30T13:32:00Z",
+    "notes": "Completed. Suspended saved strategic AI tasks now resume only when their commander is again deployable, and resumed work still expires, completes, or invalidates through the normal lifecycle before reuse.",
+    "completedAt": "2026-05-30T13:32:00Z",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-30T13:32:00Z",
+      "sliceId": "strategic-ai-task-resumption-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
+          "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
+          "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
+          "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
+          "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-hero-task-resumption-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T12:49:00Z",
-    "sliceId": "strategic-ai-task-actor-lifecycle-10184",
+    "updatedAt": "2026-05-30T13:32:00Z",
+    "sliceId": "strategic-ai-task-resumption-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
@@ -39699,19 +39831,19 @@
     ],
     "evidence": {
       "implemented": [
-        "Saved strategic AI tasks now reconcile commander actor state before target lifecycle checks or saved-task reuse.",
-        "Missing commander actors invalidate with invalid_actor_missing.",
-        "Recovering commanders suspend their tasks with invalid_actor_recovering.",
-        "Rebuilding commanders that cannot deploy suspend their tasks with invalid_actor_rebuilding.",
-        "Deployable commanders keep current saved tasks and continue to reuse valid target assignments."
+        "Task reconciliation now includes suspended saved strategic AI hero tasks instead of leaving them permanently outside the reuse path.",
+        "Suspended tasks reactivate to planned/valid only when their commander actor exists, is available, and can deploy.",
+        "Still-recovering and still-rebuilding commanders remain suspended with invalid_actor_recovering or invalid_actor_rebuilding, preserving actor lifecycle safety.",
+        "Reactivated tasks immediately run through expiration and target lifecycle checks before saved target selection can reuse them.",
+        "Focused Godot report proves one deployable suspended task resumes and is reused, one expired resumed task cancels, and one already-owned resumed task completes."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-task-actor-lifecycle-report.md"
+        "docs/strategic-ai-hero-task-resumption-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "residualRisk": "This slice hardens commander actor availability for saved tasks; broad long-run generated-map AI quality, deep target scoring, and full release readiness remain active goal work."
+      "residualRisk": "This slice closes suspended-task recovery; broad long-run generated-map strategic AI quality, multi-hero army grouping, defensive posture, and full release readiness remain active goal work."
     }
   }
 }
