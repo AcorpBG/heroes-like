@@ -29,6 +29,9 @@ func _run() -> void:
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
+	var unit_fit_case := _recruitment_unit_priority_follows_destination()
+	if unit_fit_case.is_empty():
+		return
 	var garrison_case := _critical_garrison_still_wins()
 	if garrison_case.is_empty():
 		return
@@ -42,9 +45,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_recruitment_prepares_saved_commander_tasks_and_ready_tasks_launch_below_generic_pressure",
+		"behavior_policy": "town_recruitment_prepares_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, planned_case, garrison_case, ready_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, planned_case, unit_fit_case, garrison_case, ready_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -147,6 +150,60 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 		"after_strength": after_strength,
 		"planned_batches": int(recruit_result.get("planned_batches", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
+	}
+
+func _recruitment_unit_priority_follows_destination() -> Dictionary:
+	var config := _enemy_config()
+	var garrison_destination := {
+		"type": "garrison",
+		"decision_rule": "critical_garrison_gap",
+		"reason_codes": ["garrison_safety"],
+	}
+	var magic_artifact_destination := {
+		"type": "planned",
+		"target_kind": "artifact",
+		"reason_codes": ["artifact_pressure", "magic_support"],
+		"commander_fit_bonus": 80,
+		"commander_fit_profile": "hexcaller/magic",
+	}
+	var cutthroat_garrison_score := EnemyTurnRules._recruit_priority_for_destination(
+		"unit_blackbranch_cutthroat",
+		config,
+		FACTION_ID,
+		garrison_destination
+	)
+	var slinger_garrison_score := EnemyTurnRules._recruit_priority_for_destination(
+		"unit_mire_slinger",
+		config,
+		FACTION_ID,
+		garrison_destination
+	)
+	var cutthroat_magic_score := EnemyTurnRules._recruit_priority_for_destination(
+		"unit_blackbranch_cutthroat",
+		config,
+		FACTION_ID,
+		magic_artifact_destination
+	)
+	var slinger_magic_score := EnemyTurnRules._recruit_priority_for_destination(
+		"unit_mire_slinger",
+		config,
+		FACTION_ID,
+		magic_artifact_destination
+	)
+	if cutthroat_garrison_score <= slinger_garrison_score:
+		_fail("Garrison destination should prefer sturdier melee over ranged support: cutthroat=%f slinger=%f" % [cutthroat_garrison_score, slinger_garrison_score])
+		return {}
+	if slinger_magic_score <= cutthroat_magic_score:
+		_fail("Magic artifact preparation should prefer ranged support over generic melee: slinger=%f cutthroat=%f" % [slinger_magic_score, cutthroat_magic_score])
+		return {}
+	return {
+		"case_id": "recruitment_unit_priority_changes_by_destination",
+		"garrison_preferred_unit": "unit_blackbranch_cutthroat",
+		"garrison_cutthroat_score": cutthroat_garrison_score,
+		"garrison_slinger_score": slinger_garrison_score,
+		"magic_artifact_preferred_unit": "unit_mire_slinger",
+		"magic_slinger_score": slinger_magic_score,
+		"magic_cutthroat_score": cutthroat_magic_score,
 	}
 
 func _critical_garrison_still_wins() -> Dictionary:

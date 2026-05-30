@@ -491,11 +491,12 @@ static func town_recruitment_pressure_report(
 ) -> Dictionary:
 	var candidates := []
 	var recruit_ids := []
+	var destination := _choose_recruit_destination_breakdown(session, config, town, faction_id)
 	for unit_id_value in town.get("available_recruits", {}).keys():
 		recruit_ids.append(String(unit_id_value))
 	recruit_ids.sort_custom(func(a: String, b: String) -> bool:
-		var a_priority = _recruit_priority(a, config, faction_id)
-		var b_priority = _recruit_priority(b, config, faction_id)
+		var a_priority = _recruit_priority_for_destination(a, config, faction_id, destination)
+		var b_priority = _recruit_priority_for_destination(b, config, faction_id, destination)
 		if is_equal_approx(a_priority, b_priority):
 			return a < b
 		return a_priority > b_priority
@@ -504,7 +505,6 @@ static func town_recruitment_pressure_report(
 		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
 		var cost := _enemy_recruit_cost(town, unit_id)
 		var recruit_count: int = min(available, _max_affordable_from_pool(treasury, cost))
-		var destination := _choose_recruit_destination_breakdown(session, config, town, faction_id)
 		candidates.append(
 			{
 				"unit_id": unit_id,
@@ -512,7 +512,7 @@ static func town_recruitment_pressure_report(
 				"available": available,
 				"recruit_count": recruit_count,
 				"cost": cost,
-				"priority": _recruit_priority(unit_id, config, faction_id),
+				"priority": _recruit_priority_for_destination(unit_id, config, faction_id, destination),
 				"affordable": recruit_count > 0,
 				"destination": destination,
 			}
@@ -1120,11 +1120,12 @@ static func _recruit_town_forces(
 	var planned_batches = 0
 	var events = []
 	var recruit_ids = []
+	var initial_destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
 	for unit_id_value in town.get("available_recruits", {}).keys():
 		recruit_ids.append(String(unit_id_value))
 	recruit_ids.sort_custom(func(a: String, b: String) -> bool:
-		var a_priority = _recruit_priority(a, config, faction_id)
-		var b_priority = _recruit_priority(b, config, faction_id)
+		var a_priority = _recruit_priority_for_destination(a, config, faction_id, initial_destination_breakdown)
+		var b_priority = _recruit_priority_for_destination(b, config, faction_id, initial_destination_breakdown)
 		if is_equal_approx(a_priority, b_priority):
 			return a < b
 		return a_priority > b_priority
@@ -1138,8 +1139,8 @@ static func _recruit_town_forces(
 		var recruit_count = min(available, _max_affordable_from_pool(treasury, cost))
 		if recruit_count <= 0:
 			continue
-		var destination = _choose_recruit_destination(session, config, town, faction_id)
 		var destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
+		var destination = _recruit_destination_from_breakdown(destination_breakdown)
 		var applied_count = recruit_count
 		if String(destination.get("type", "")) == "raid":
 			applied_count = _apply_reinforcement_to_raid(
@@ -1200,6 +1201,9 @@ static func _choose_recruit_destination(
 	faction_id: String
 ) -> Dictionary:
 	var breakdown := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+	return _recruit_destination_from_breakdown(breakdown)
+
+static func _recruit_destination_from_breakdown(breakdown: Dictionary) -> Dictionary:
 	match String(breakdown.get("type", "garrison")):
 		"raid":
 			return {"type": "raid", "index": int(breakdown.get("index", -1))}
@@ -1427,6 +1431,8 @@ static func _recruit_destination_report_payload(
 		payload["target_strength"] = int(best_planned.get("target_strength", 0))
 		payload["base_encounter_id"] = String(best_planned.get("base_encounter_id", ""))
 		payload["task_id"] = String(best_planned.get("task_id", ""))
+		payload["commander_fit_bonus"] = int(best_planned.get("commander_fit_bonus", 0))
+		payload["commander_fit_profile"] = String(best_planned.get("commander_fit_profile", ""))
 		payload["target_kind"] = String(best_planned.get("target_kind", ""))
 		payload["target_id"] = String(best_planned.get("target_id", ""))
 		payload["target_label"] = String(best_planned.get("target_label", best_planned.get("target_id", "")))
@@ -1502,6 +1508,7 @@ static func _best_planned_task_recruitment_target(
 		var objective_anchor := EnemyAdventureRulesScript.target_is_objective_anchor(session, target_kind, target_id)
 		var score := float(need) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.65
 		score += float(int(saved_plan.get("priority", task.get("priority", 0)))) * 0.35
+		score += float(max(0, int(task.get("commander_fit_bonus", 0)))) * 0.65
 		score += float(EnemyAdventureRulesScript.priority_target_bonus(config, target_id)) * 0.35
 		score *= EnemyAdventureRulesScript.strategy_target_weight(config, faction_id, target_kind, target_id, site_family, objective_anchor)
 		score -= float(max(0, int(saved_plan.get("goal_distance", 0))) * 5)
@@ -1518,6 +1525,8 @@ static func _best_planned_task_recruitment_target(
 				"goal_distance": int(saved_plan.get("goal_distance", 0)),
 				"base_encounter_id": base_encounter_id,
 				"target_strength": target_strength,
+				"commander_fit_bonus": int(task.get("commander_fit_bonus", 0)),
+				"commander_fit_profile": String(task.get("commander_fit_profile", "")),
 			}
 	return best
 
@@ -3411,6 +3420,76 @@ static func _recruit_priority(unit_id: String, config: Dictionary, faction_id: S
 			score += 18.0
 		if "bloodrush" in abilities:
 			score += 14.0
+	return score
+
+static func _recruit_priority_for_destination(
+	unit_id: String,
+	config: Dictionary,
+	faction_id: String,
+	destination: Dictionary = {}
+) -> float:
+	var unit = ContentService.get_unit(unit_id)
+	if unit.is_empty():
+		return 0.0
+	var score := _recruit_priority(unit_id, config, faction_id)
+	var tier: int = max(1, int(unit.get("tier", 1)))
+	var attack: int = max(0, int(unit.get("attack", 0)))
+	var defense: int = max(0, int(unit.get("defense", 0)))
+	var hp: int = max(1, int(unit.get("hp", 1)))
+	var initiative: int = max(0, int(unit.get("initiative", 0)))
+	var ranged := bool(unit.get("ranged", false))
+	var flying := bool(unit.get("flying", false))
+	var role := String(unit.get("role", ""))
+	var abilities: Array = unit.get("ability_ids", []) if unit.get("ability_ids", []) is Array else []
+	var destination_type := String(destination.get("type", "garrison"))
+	var target_kind := String(destination.get("target_kind", ""))
+	var reason_codes := _normalize_string_array(destination.get("reason_codes", []))
+	var decision_rule := String(destination.get("decision_rule", ""))
+
+	match destination_type:
+		"garrison":
+			score += float((defense * 12) + int(hp / 2))
+			if "garrison_safety" in reason_codes or decision_rule in ["critical_garrison_gap", "stabilizing_front"]:
+				score += float(defense * 10)
+				if "brace" in abilities or "linekeeper" in abilities or role in ["melee", "defender"]:
+					score += 28.0
+				if ranged:
+					score += 10.0
+		"raid":
+			score += float((attack * 10) + (initiative * 5))
+			if target_kind == "town":
+				score += float((tier * 9) + attack * 4)
+			elif target_kind == "hero":
+				score += float(initiative * 8)
+				if flying:
+					score += 20.0
+			elif target_kind in ["resource", "artifact", "encounter"]:
+				score += float(tier * 5)
+			if "bloodrush" in abilities or "volley" in abilities:
+				score += 18.0
+		"planned":
+			score += float(max(0, int(destination.get("commander_fit_bonus", 0))) * 0.35)
+			match target_kind:
+				"town":
+					score += float((attack * 12) + (tier * 10))
+				"hero":
+					score += float((attack * 9) + (initiative * 10))
+					if flying:
+						score += 20.0
+				"artifact", "encounter":
+					score += float((tier * 8) + attack * 5)
+					if ranged:
+						score += 20.0
+				"resource":
+					score += float((defense * 8) + (attack * 6))
+					if "recruit_denial" in reason_codes and tier <= 3:
+						score += 12.0
+			if "magic" in String(destination.get("commander_fit_profile", "")) and ranged:
+				score += 40.0
+		"rebuild":
+			score += float((tier * 8) + attack * 7 + defense * 5)
+			if ranged:
+				score += 8.0
 	return score
 
 static func _enemy_recruit_cost(town: Dictionary, unit_id: String) -> Dictionary:
