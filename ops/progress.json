@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-destination-aware-recruitment-10184",
-  "currentSliceTitle": "Strategic AI Destination Aware Recruitment",
+  "currentSliceId": "strategic-ai-opportunistic-hero-intercept-10184",
+  "currentSliceTitle": "Strategic AI Opportunistic Hero Intercept",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy town recruitment now chooses unit types for the selected destination instead of using one generic faction priority.",
+  "currentSliceNotes": "Completed. Active non-defensive raids now retarget nearby exposed player heroes when the intercept is reachable and risk-ready, while defense/support/objective/guarded-claim work remains protected.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T01:05:00Z",
+  "updatedAt": "2026-05-31T01:52:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,79 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-opportunistic-hero-intercept-10184",
+      "title": "Strategic AI Opportunistic Hero Intercept",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / opportunistic live raid adaptation",
+      "purpose": "Make active non-defensive enemy raids react to nearby exposed player heroes instead of marching past reachable, favorable interception opportunities.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "A live active raid with a valid non-hero target retargets to a nearby exposed player hero only when the hero is reachable, not sheltered in a player town, the current mission is not defensive/support/protected objective work, and the intercept passes existing hero-risk readiness. The retarget updates commander memory, live task state, and public target-assignment events without weakening existing hero-hunt, regroup, and live-turn behavior.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "changing battle math or faction balance",
+        "new report-only gates",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-31T01:34:00Z",
+      "updatedAt": "2026-05-31T01:52:00Z",
+      "completedAt": "2026-05-31T01:52:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "pass",
+          "summary": "Hero-hunt runtime report passes, including active non-defensive raid retargeting to a nearby exposed hero with ai_target_assigned event and live task-board assignment."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, guarded-claim, route-recovery, and support behavior still pass; guarded resource claims retarget to guards before any opportunistic hero intercept."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn task execution still completes reserved resource-front tasks and persists task-board state."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. advance_raids now runs a bounded opportunistic hero-intercept pass after target assignment and before movement/risk resolution. It skips existing hero/regroup targets, arrived raids, delivery intercepts, defense/support/objective/guarded-claim work, sheltered heroes, unreachable heroes, and unsafe intercepts."
+      ]
+    },
     {
       "id": "strategic-ai-destination-aware-recruitment-10184",
       "title": "Strategic AI Destination Aware Recruitment",

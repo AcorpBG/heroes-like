@@ -14,6 +14,9 @@ func _run() -> void:
 	var case_report := _hero_hunt_task_board_case()
 	if case_report.is_empty():
 		return
+	var opportunity_case_report := _active_raid_opportunistically_intercepts_nearby_exposed_hero_case()
+	if opportunity_case_report.is_empty():
+		return
 	var risk_case_report := _weak_hero_hunt_regroups_before_intercept_case()
 	if risk_case_report.is_empty():
 		return
@@ -35,6 +38,7 @@ func _run() -> void:
 		"behavior_policy_previous_stall": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_and_stall_withdrawal",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"opportunity_case": opportunity_case_report,
 		"risk_case": risk_case_report,
 		"arbitration_case": arbitration_case_report,
 		"support_case": support_case_report,
@@ -44,6 +48,75 @@ func _run() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _active_raid_opportunistically_intercepts_nearby_exposed_hero_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 3
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for opportunity intercept fixture.")
+		return {}
+	var hero_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var raid_tile := _nearby_open_non_town_tile_at_distance(session, hero_tile, 2, 4)
+	_move_player_hero(session, hero_id, hero_tile)
+	_clear_mireclaw_resource_claims(session)
+	var player_town := _first_player_town(session)
+	if player_town.is_empty():
+		_fail("Opportunity intercept fixture needs a valid player town target.")
+		return {}
+	_remove_mireclaw_active_raids(session)
+	var raid := _raid_seed(session, "hero_vaska", "opportunity_intercept_vaska", raid_tile)
+	raid["target_kind"] = "town"
+	raid["target_placement_id"] = String(player_town.get("placement_id", ""))
+	raid["target_label"] = String(player_town.get("name", player_town.get("placement_id", "")))
+	raid["target_x"] = int(player_town.get("x", 0))
+	raid["target_y"] = int(player_town.get("y", 0))
+	raid["goal_x"] = int(player_town.get("x", 0))
+	raid["goal_y"] = int(player_town.get("y", 0))
+	raid["goal_distance"] = 9999
+	raid["target_reason_codes"] = ["town_siege", "pressure_probe"]
+	raid["target_public_reason"] = "town pressure"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "valid non-hero target for opportunity intercept fixture"
+	raid = _set_raid_bog_brutes(raid, 40)
+	_append_encounter(session, raid)
+
+	var state := {}
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_raid := _encounter(session, "opportunity_intercept_vaska")
+	if after_raid.is_empty():
+		_fail("Opportunity intercept raid disappeared after advance.")
+		return {}
+	if String(after_raid.get("target_kind", "")) != "hero" or String(after_raid.get("target_placement_id", "")) != hero_id:
+		_fail("Active raid did not opportunistically retarget the nearby exposed hero: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	for required_code in ["hero_hunt", "exposed_hero", "opportunity_intercept"]:
+		if required_code not in reason_codes:
+			_fail("Opportunity intercept missing %s: %s" % [required_code, JSON.stringify(after_raid)])
+			return {}
+	if String(after_raid.get("previous_target_kind", "")) != "town":
+		_fail("Opportunity intercept did not preserve previous target metadata: %s" % JSON.stringify(after_raid))
+		return {}
+	var events: Array = advance_result.get("events", []) if advance_result.get("events", []) is Array else []
+	var event_types := _event_types(events)
+	if "ai_target_assigned" not in event_types:
+		_fail("Opportunity intercept did not emit ai_target_assigned: %s" % JSON.stringify(advance_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "active", "valid")
+	if _failed:
+		return {}
+	return {
+		"case_id": "active_raid_opportunistically_intercepts_nearby_exposed_hero",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"previous_target_kind": String(after_raid.get("previous_target_kind", "")),
+		"distance_after_advance": int(after_raid.get("goal_distance", 9999)),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
 
 func _hero_hunt_task_board_case() -> Dictionary:
 	var session = _base_session()
@@ -665,12 +738,37 @@ func _nearest_open_non_town_tile_excluding(session, preferred: Vector2i, exclude
 	_fail("Could not find open non-town tile near %s." % str(preferred))
 	return preferred
 
+func _nearby_open_non_town_tile_at_distance(session, center: Vector2i, min_distance: int, max_distance: int) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for radius in range(max(0, min_distance), max(min_distance, max_distance) + 1):
+		for dy in range(-radius, radius + 1):
+			var dx_options := [radius - abs(dy)]
+			if dx_options[0] != 0:
+				dx_options.append(-dx_options[0])
+			for dx in dx_options:
+				var tile := Vector2i(center.x + int(dx), center.y + dy)
+				if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+					continue
+				if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+					continue
+				if _player_town_at(session, tile):
+					continue
+				return tile
+	_fail("Could not find open non-town tile %d-%d steps from %s." % [min_distance, max_distance, str(center)])
+	return center
+
 func _player_town_at(session, tile: Vector2i) -> bool:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "neutral")) == "player":
 			if int(town.get("x", -1)) == tile.x and int(town.get("y", -1)) == tile.y:
 				return true
 	return false
+
+func _first_player_town(session) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "neutral")) == "player":
+			return town
+	return {}
 
 func _append_encounter(session, encounter: Dictionary) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])
@@ -692,6 +790,28 @@ func _remove_mireclaw_hero_hunt_encounters(session) -> void:
 			continue
 		kept.append(encounter)
 	session.overworld["encounters"] = kept
+
+func _remove_mireclaw_active_raids(session) -> void:
+	var kept := []
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW and String(encounter.get("placement_id", "")) not in resolved:
+			continue
+		kept.append(encounter)
+	session.overworld["encounters"] = kept
+
+func _clear_mireclaw_resource_claims(session) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if String(node.get("collected_by_faction_id", "")) == MIRECLAW:
+			node["collected_by_faction_id"] = ""
+			nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
 
 func _remove_enemy_regroup_towns(session) -> void:
 	var towns: Array = session.overworld.get("towns", [])
