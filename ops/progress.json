@@ -28048,6 +28048,70 @@
           "residualRisk": "This slice makes real map-object successes progress AI commanders; full release-ready strategic AI still needs long-run generated-map quality, stronger multi-week objective planning, multi-army grouping, retreat policy tuning, and live-client pacing review."
         }
       }
+    },
+    {
+      "id": "strategic-ai-commander-assault-consolidation-10184",
+      "title": "Strategic AI Commander Assault Consolidation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after adventure objective progression; improve real multi-army behavior by allowing nearby commander-led town assault hosts to consolidate instead of marching as disconnected separate attacks",
+      "planRef": "PLAN.md Current strategic AI target / residual multi-army grouping risk",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-raid-assault-grouping-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_assault_grouping_report.gd",
+        "docs/strategic-ai-raid-assault-grouping-report.md",
+        "docs/strategic-ai-commander-assault-consolidation-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Nearby same-faction raids assigned to the same player-held town assault must be able to consolidate even when the support raid has its own commander, provided the support commander is not the stronger lead host. The support army must transfer into the leader, the support raid must be resolved, the support commander must remain represented in the roster as an available but non-deployable rebuild target with empty current army continuity, matching live tasks must complete, public ai_raid_grouped output must remain non-debug, and focused runtime coverage must prove both commanderless and commander-led grouping without a save-version migration.",
+      "startedAt": "2026-05-30T17:35:00Z",
+      "updatedAt": "2026-05-30T17:46:00Z",
+      "notes": "Completed. Nearby commander-led support raids can now consolidate into a lead town assault, resolve the donor raid, complete matching donor tasks, and preserve the donor commander as a rebuildable roster entry.",
+      "completedAt": "2026-05-30T17:46:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T17:46:00Z",
+        "sliceId": "strategic-ai-commander-assault-consolidation-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Town assault grouping now accepts nearby commander-led support raids assigned to the same player-held town when the donor is not stronger than the lead commander host.",
+            "The donor support army transfers into the leader, grouped_commander_support_count tracks the commander-led consolidation, and leader commander army continuity refreshes to the combined strength.",
+            "The donor raid is resolved and the donor commander is released to the roster as available with active_placement_id cleared and current_strength 0, making that commander non-deployable until the existing rebuild path reinforces the host.",
+            "Matching active live town tasks for the donor commander complete when that host consolidates into the lead assault.",
+            "Focused runtime coverage proves both commanderless support grouping and Vaska/Sable commander-led grouping against Duskfen Bastion without debug leakage or save migration."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-raid-assault-grouping-report.md",
+            "docs/strategic-ai-commander-assault-consolidation-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_RAID_ASSAULT_GROUPING_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
+          ],
+          "residualRisk": "This slice improves live multi-army assault consolidation; full release-ready strategic AI still needs long-run generated-map quality, broader objective planning across weeks, retreat risk policy tuning, and live-client pacing review."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -40861,74 +40925,66 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-adventure-objective-progression-10184",
-    "title": "Strategic AI Adventure Objective Progression",
+    "id": "strategic-ai-commander-assault-consolidation-10184",
+    "title": "Strategic AI Commander Assault Consolidation",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "continuation of owner strategic AI production-readiness goal after town defender lifecycle; make successful adventure-map objectives advance live AI commander progression instead of only map/task state",
-    "planRef": "PLAN.md Current strategic AI target / Strategic AI Foundation commander progression",
+    "source": "continuation of owner strategic AI production-readiness goal after adventure objective progression; improve real multi-army behavior by allowing nearby commander-led town assault hosts to consolidate instead of marching as disconnected separate attacks",
+    "planRef": "PLAN.md Current strategic AI target / residual multi-army grouping risk",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-live-turn-execution-report.md",
-      "docs/strategic-ai-artifact-task-board-report.md"
+      "docs/strategic-ai-raid-assault-grouping-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_hero_task_live_turn_execution_report.gd",
-      "tests/ai_hero_task_artifact_objective_report.gd",
-      "docs/strategic-ai-adventure-objective-progression-report.md",
-      "docs/strategic-ai-live-turn-execution-report.md",
-      "docs/strategic-ai-artifact-task-board-report.md",
+      "tests/ai_raid_assault_grouping_report.gd",
+      "docs/strategic-ai-raid-assault-grouping-report.md",
+      "docs/strategic-ai-commander-assault-consolidation-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Successful AI adventure-map objectives must award bounded commander experience and a non-battle strategic_successes record for resource seizures, artifact pickups, objective encounter control, resource-front defense, and town-defense arrival. Focused runtime coverage must prove resource and artifact objective progression persists through enemy commander roster normalization without treating those successes as battle wins or requiring a save-version migration.",
-    "startedAt": "2026-05-30T17:05:00Z",
-    "updatedAt": "2026-05-30T17:18:00Z",
-    "notes": "Completed. AI commanders now gain bounded progression from successful resource, artifact, objective, resource-defense, and town-defense adventure-map objectives; focused runtime reports prove resource/artifact progression persists through roster normalization.",
-    "completedAt": "2026-05-30T17:18:00Z",
+    "completionCriteria": "Nearby same-faction raids assigned to the same player-held town assault must be able to consolidate even when the support raid has its own commander, provided the support commander is not the stronger lead host. The support army must transfer into the leader, the support raid must be resolved, the support commander must remain represented in the roster as an available but non-deployable rebuild target with empty current army continuity, matching live tasks must complete, public ai_raid_grouped output must remain non-debug, and focused runtime coverage must prove both commanderless and commander-led grouping without a save-version migration.",
+    "startedAt": "2026-05-30T17:35:00Z",
+    "updatedAt": "2026-05-30T17:46:00Z",
+    "notes": "Completed. Nearby commander-led support raids can now consolidate into a lead town assault, resolve the donor raid, complete matching donor tasks, and preserve the donor commander as a rebuildable roster entry.",
+    "completedAt": "2026-05-30T17:46:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T17:18:00Z",
-      "sliceId": "strategic-ai-adventure-objective-progression-10184",
+      "updatedAt": "2026-05-30T17:46:00Z",
+      "sliceId": "strategic-ai-commander-assault-consolidation-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "AI commander records now include strategic_successes as a non-battle objective-success counter that contributes slowly to renown/veterancy without incrementing battle_wins.",
-          "Resource-site seizure records resource_secured, awards bounded commander experience, persists the commander state to the roster, and completes the matching live task.",
-          "Artifact pickup records artifact_secured after claim/equip resolution, preserves equipped artifact bonuses, awards commander experience, persists the commander state to the roster, and completes the matching live task.",
-          "Objective encounter control/breaks, resource-front defense arrivals, and town-defense arrivals now also record bounded adventure objective progression.",
-          "Focused resource and artifact reports assert experience, strategic_successes, and last_outcome persistence through commander roster normalization."
+          "Town assault grouping now accepts nearby commander-led support raids assigned to the same player-held town when the donor is not stronger than the lead commander host.",
+          "The donor support army transfers into the leader, grouped_commander_support_count tracks the commander-led consolidation, and leader commander army continuity refreshes to the combined strength.",
+          "The donor raid is resolved and the donor commander is released to the roster as available with active_placement_id cleared and current_strength 0, making that commander non-deployable until the existing rebuild path reinforces the host.",
+          "Matching active live town tasks for the donor commander complete when that host consolidates into the lead assault.",
+          "Focused runtime coverage proves both commanderless support grouping and Vaska/Sable commander-led grouping against Duskfen Bastion without debug leakage or save migration."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-adventure-objective-progression-report.md",
-          "docs/strategic-ai-live-turn-execution-report.md",
-          "docs/strategic-ai-artifact-task-board-report.md"
+          "docs/strategic-ai-raid-assault-grouping-report.md",
+          "docs/strategic-ai-commander-assault-consolidation-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
-          "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
-          "AI_TOWN_DEFENSE_RETASK_REPORT",
-          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-          "AI_TOWN_RETAKE_ASSAULT_REPORT"
+          "AI_RAID_ASSAULT_GROUPING_REPORT",
+          "AI_RAID_REGROUP_RETREAT_REPORT",
+          "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
         ],
-        "residualRisk": "This slice makes real map-object successes progress AI commanders; full release-ready strategic AI still needs long-run generated-map quality, stronger multi-week objective planning, multi-army grouping, retreat policy tuning, and live-client pacing review."
+        "residualRisk": "This slice improves live multi-army assault consolidation; full release-ready strategic AI still needs long-run generated-map quality, broader objective planning across weeks, retreat risk policy tuning, and live-client pacing review."
       }
     }
   },

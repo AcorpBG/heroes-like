@@ -237,6 +237,7 @@ AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-reta
 AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.gd"
 AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.tscn"
 AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-assault-grouping-report.md"
+AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-commander-assault-consolidation-report.md"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
 NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
@@ -15986,6 +15987,7 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH,
         AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH,
         AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH,
+        AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI raid assault grouping file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
@@ -15994,6 +15996,9 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         "func _best_nearby_assault_support_raid_index",
         "func _merged_raid_army_payload",
         "commanderless_support_column",
+        "grouped_commander_support_count",
+        "func _release_grouped_support_commander_to_rebuild_roster",
+        "COMMANDER_STATUS_AVAILABLE",
         '"ai_raid_grouped"',
         '"army_consolidation"',
         "sync_commander_army_continuity",
@@ -16021,7 +16026,12 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "nearby_same_town_raids_group_before_assault",
             "river_pass_nearby_raids_group_for_town_assault",
             "grouping_support_column",
+            "river_pass_commander_raids_group_for_town_assault",
+            "grouping_commander_support_sable",
             "grouped_support_count",
+            "grouped_commander_support_count",
+            "support_commander_deployable",
+            "support_task_status",
             "ai_raid_grouped",
             "commanderless_support_column",
             "EnemyTurnRules.run_enemy_turn",
@@ -16041,6 +16051,18 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "No full strategic AI quality claim",
         ):
             ensure(required_text in doc_text, errors, f"AI raid assault grouping doc is missing required text: {required_text}")
+    if AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH.exists():
+        doc_text = AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Commander Assault Consolidation Report",
+            "strategic-ai-commander-assault-consolidation-10184",
+            "Commander-led support grouping",
+            "available but non-deployable",
+            "river_pass_commander_raids_group_for_town_assault",
+            "No save migration",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI commander assault consolidation doc is missing required text: {required_text}")
 
 
 def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
