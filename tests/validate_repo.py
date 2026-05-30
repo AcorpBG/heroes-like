@@ -228,6 +228,7 @@ AI_SCOUTING_SPELL_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-scou
 AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_defense_retask_report.gd"
 AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_defense_retask_report.tscn"
 AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-retask-report.md"
+AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-arrival-report.md"
 AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_retake_assault_report.gd"
 AI_TOWN_RETAKE_ASSAULT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_retake_assault_report.tscn"
 AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-retake-assault-report.md"
@@ -15764,6 +15765,65 @@ def validate_ai_town_defense_retask(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI town defense retask doc is missing required text: {required_text}")
 
 
+def validate_ai_town_defense_arrival(errors: list[str]) -> None:
+    for path in (
+        AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
+        AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI town defense arrival file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8") if OVERWORLD_RULES_PATH.exists() else ""
+    for required_token in (
+        "_defend_town_target",
+        '"ai_town_defended"',
+        '"ai_defender_commander_state"',
+        '"ai_defense_rating"',
+        '"garrison_reinforced"',
+        '"town_defense:%s"',
+        "sync_commander_state_to_roster",
+        "COMMANDER_STATUS_ACTIVE",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing town defense arrival token: {required_token}")
+    for required_token in (
+        "_town_assault_enemy_commander_state",
+        '"ai_defender_commander_state"',
+        "create_town_assault_payload",
+        '"source_type": "town_garrison"',
+        "town.erase(\"ai_defender_commander_state\")",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing town defense arrival token: {required_token}")
+    for required_token in (
+        '"ai_defender_commander_state"',
+        '"ai_defense_rating"',
+        '"ai_defense_reinforced_strength"',
+    ):
+        ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing town defense arrival persistence token: {required_token}")
+    if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "ai_town_defended",
+            "garrison_strength_before",
+            "garrison_strength_after",
+            "stationed_commander_id",
+            "town_assault_enemy_commander_id",
+            "unit_bog_brute",
+            "BattleRules.create_town_assault_payload",
+        ):
+            ensure(required_token in report_text, errors, f"AI town defense arrival report coverage is missing token: {required_token}")
+    if AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH.exists():
+        doc_text = AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Town Defense Arrival Report",
+            "strategic-ai-town-defense-arrival-10184",
+            "ai_town_defended",
+            "garrison_strength_after",
+            "No save migration",
+            "No broad strategic-AI production-ready claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI town defense arrival doc is missing required text: {required_text}")
+
+
 def validate_ai_town_retake_assault(errors: list[str]) -> None:
     for path in (
         AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH,
@@ -21804,6 +21864,7 @@ def main() -> int:
     validate_ai_hero_task_hero_hunt(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)
+    validate_ai_town_defense_arrival(errors)
     validate_ai_town_retake_assault(errors)
     validate_ai_raid_assault_grouping(errors)
     validate_ai_raid_regroup_retreat(errors)
