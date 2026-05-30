@@ -167,14 +167,63 @@ func _guarded_resource_claim_retargets_to_guard() -> Dictionary:
 	if not bool(public_log.get("ok", false)):
 		_fail("Guarded resource redirect public event boundary failed: %s" % JSON.stringify(public_log))
 		return {}
+
+	var guard_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_guard_raid := _encounter(session, "guarded_resource_claim_vaska")
+	if after_guard_raid.is_empty():
+		_fail("Guarded resource claim raid disappeared after guard clear.")
+		return {}
+	if _resource_controller(session, "river_free_company") != "player":
+		_fail("Guarded resource was seized during guard clearance instead of after retarget: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	if String(after_guard_raid.get("target_kind", "")) != "resource" or String(after_guard_raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Guarded resource claim did not resume the original resource after guard clear: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	var resumed_reason_codes := _string_array(after_guard_raid.get("target_reason_codes", []))
+	if "guard_cleared" not in resumed_reason_codes or "guarded_resource_claim" not in resumed_reason_codes:
+		_fail("Guarded resource resume missed guard-cleared reason codes: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	if String(after_guard_raid.get("guarded_claim_target_id", "")) != "":
+		_fail("Guarded resource resume did not clear transient guarded_claim metadata: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	var guard_event_types := _event_types(guard_result.get("events", []))
+	if "ai_target_assigned" not in guard_event_types:
+		_fail("Guarded resource resume did not emit ai_target_assigned: %s" % JSON.stringify(guard_result))
+		return {}
+	if "ai_site_seized" in guard_event_types:
+		_fail("Guarded resource guard-clear turn incorrectly emitted ai_site_seized: %s" % JSON.stringify(guard_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "resource", "river_free_company", "active", "valid")
+	if _failed:
+		return {}
+
+	var claim_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_claim_raid := _encounter(session, "guarded_resource_claim_vaska")
+	if _resource_controller(session, "river_free_company") != MIRECLAW:
+		_fail("Guarded resource was not seized after guard clearance and resume: %s" % JSON.stringify(after_claim_raid))
+		return {}
+	var claim_event_types := _event_types(claim_result.get("events", []))
+	if "ai_site_seized" not in claim_event_types:
+		_fail("Guarded resource final claim did not emit ai_site_seized: %s" % JSON.stringify(claim_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "resource", "river_free_company", "completed", "valid")
+	if _failed:
+		return {}
 	return {
-		"case_id": "guarded_resource_claim_retargets_to_guard",
-		"resource_controller_after": _resource_controller(session, "river_free_company"),
-		"target_kind": String(after_raid.get("target_kind", "")),
-		"target_id": String(after_raid.get("target_placement_id", "")),
+		"case_id": "guarded_resource_claim_resumes_and_secures_after_guard_clear",
+		"resource_controller_after_redirect": "player",
+		"resource_controller_after_guard_clear": "player",
+		"resource_controller_after_claim": _resource_controller(session, "river_free_company"),
+		"redirect_target_kind": String(after_raid.get("target_kind", "")),
+		"redirect_target_id": String(after_raid.get("target_placement_id", "")),
+		"resume_target_kind": String(after_guard_raid.get("target_kind", "")),
+		"resume_target_id": String(after_guard_raid.get("target_placement_id", "")),
 		"guarded_claim_target_id": String(after_raid.get("guarded_claim_target_id", "")),
 		"reason_codes": reason_codes,
-		"event_types": event_types,
+		"resumed_reason_codes": resumed_reason_codes,
+		"redirect_event_types": event_types,
+		"guard_clear_event_types": guard_event_types,
+		"claim_event_types": claim_event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}

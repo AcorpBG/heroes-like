@@ -170,6 +170,7 @@ func _guarded_artifact_claim_retargets_to_guard_case() -> Dictionary:
 	if bool(guarded_node.get("collected", false)):
 		_fail("Guarded artifact was collected before its guard was cleared: %s" % JSON.stringify(after_raid))
 		return {}
+	var collected_after_redirect := bool(guarded_node.get("collected", false))
 	if String(after_raid.get("target_kind", "")) != "encounter" or String(after_raid.get("target_placement_id", "")) != "warcrest_ruin_guard":
 		_fail("Guarded artifact claim did not retarget to the guard encounter: %s" % JSON.stringify(after_raid))
 		return {}
@@ -194,14 +195,78 @@ func _guarded_artifact_claim_retargets_to_guard_case() -> Dictionary:
 	if not bool(public_log.get("ok", false)):
 		_fail("Guarded artifact redirect public event boundary failed: %s" % JSON.stringify(public_log))
 		return {}
+
+	var guard_result := {}
+	var after_guard_raid := {}
+	var after_guard_node := {}
+	for _step in range(4):
+		guard_result = EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		after_guard_raid = _encounter(session, "guarded_artifact_claim_vaska")
+		if after_guard_raid.is_empty():
+			_fail("Guarded artifact claim raid disappeared while clearing guard.")
+			return {}
+		after_guard_node = _artifact_node(session, RELIC_TARGET_ID)
+		if bool(after_guard_node.get("collected", false)):
+			_fail("Guarded artifact was collected during guard clearance instead of after retarget: %s" % JSON.stringify(after_guard_raid))
+			return {}
+		if String(after_guard_raid.get("target_kind", "")) == "artifact" and String(after_guard_raid.get("target_placement_id", "")) == RELIC_TARGET_ID:
+			break
+	if String(after_guard_raid.get("target_kind", "")) != "artifact" or String(after_guard_raid.get("target_placement_id", "")) != RELIC_TARGET_ID:
+		_fail("Guarded artifact claim did not resume the original artifact after guard clear: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	var resumed_reason_codes := _string_array(after_guard_raid.get("target_reason_codes", []))
+	if "guard_cleared" not in resumed_reason_codes or "guarded_artifact_claim" not in resumed_reason_codes:
+		_fail("Guarded artifact resume missed guard-cleared reason codes: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	if String(after_guard_raid.get("guarded_claim_target_id", "")) != "":
+		_fail("Guarded artifact resume did not clear transient guarded_claim metadata: %s" % JSON.stringify(after_guard_raid))
+		return {}
+	var collected_after_guard_clear := bool(after_guard_node.get("collected", false))
+	var guard_event_types := _event_types(guard_result.get("events", []))
+	if "ai_target_assigned" not in guard_event_types:
+		_fail("Guarded artifact resume did not emit ai_target_assigned: %s" % JSON.stringify(guard_result))
+		return {}
+	if "ai_artifact_secured" in guard_event_types:
+		_fail("Guarded artifact guard-clear turn incorrectly emitted ai_artifact_secured: %s" % JSON.stringify(guard_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "artifact", RELIC_TARGET_ID, "active", "valid")
+	if _failed:
+		return {}
+
+	var claim_result := {}
+	var after_claim_raid := {}
+	var after_claim_node := {}
+	for _claim_step in range(4):
+		claim_result = EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		after_claim_raid = _encounter(session, "guarded_artifact_claim_vaska")
+		after_claim_node = _artifact_node(session, RELIC_TARGET_ID)
+		if bool(after_claim_node.get("collected", false)) and String(after_claim_node.get("collected_by_faction_id", "")) == MIRECLAW:
+			break
+	if not bool(after_claim_node.get("collected", false)) or String(after_claim_node.get("collected_by_faction_id", "")) != MIRECLAW:
+		_fail("Guarded artifact was not secured after guard clearance and resume: %s" % JSON.stringify(after_claim_raid))
+		return {}
+	var claim_event_types := _event_types(claim_result.get("events", []))
+	if "ai_artifact_secured" not in claim_event_types:
+		_fail("Guarded artifact final claim did not emit ai_artifact_secured: %s" % JSON.stringify(claim_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "artifact", RELIC_TARGET_ID, "completed", "valid")
+	if _failed:
+		return {}
 	return {
-		"case_id": "guarded_artifact_claim_retargets_to_guard",
-		"artifact_collected": bool(guarded_node.get("collected", false)),
-		"target_kind": String(after_raid.get("target_kind", "")),
-		"target_id": String(after_raid.get("target_placement_id", "")),
+		"case_id": "guarded_artifact_claim_resumes_and_secures_after_guard_clear",
+		"artifact_collected_after_redirect": collected_after_redirect,
+		"artifact_collected_after_guard_clear": collected_after_guard_clear,
+		"artifact_collected_after_claim": bool(after_claim_node.get("collected", false)),
+		"redirect_target_kind": String(after_raid.get("target_kind", "")),
+		"redirect_target_id": String(after_raid.get("target_placement_id", "")),
+		"resume_target_kind": String(after_guard_raid.get("target_kind", "")),
+		"resume_target_id": String(after_guard_raid.get("target_placement_id", "")),
 		"guarded_claim_target_id": String(after_raid.get("guarded_claim_target_id", "")),
 		"reason_codes": reason_codes,
-		"event_types": event_types,
+		"resumed_reason_codes": resumed_reason_codes,
+		"redirect_event_types": event_types,
+		"guard_clear_event_types": guard_event_types,
+		"claim_event_types": claim_event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"task_status_counts": _task_status_counts(_task_state(session)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
