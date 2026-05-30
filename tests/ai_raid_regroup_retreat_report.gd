@@ -30,6 +30,24 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 	var config := _enemy_config()
 	var state := _enemy_state(session)
 	_set_resource_controller(session, "river_free_company", "player")
+	_seed_task_board(session, [
+		_regroup_task("hero_sable", "duskfen_bastion", "active", "valid"),
+		_regroup_task("hero_tarn", "missing_regroup_town", "active", "valid"),
+		_regroup_task("hero_orrik", "riverwatch_hold", "active", "valid"),
+	])
+	var saved_plan_raid := _regroup_probe_raid(session, "hero_sable", "regroup_sable_saved_probe", {"x": 8, "y": 1})
+	var saved_plan := EnemyAdventureRules.ai_hero_task_saved_target_selection_plan(session, config, saved_plan_raid)
+	if String(saved_plan.get("target_kind", "")) != "regroup" or String(saved_plan.get("target_placement_id", "")) != "duskfen_bastion":
+		_fail("Saved regroup task was not reused: %s" % JSON.stringify(saved_plan))
+		return {}
+	var saved_reason_codes := _string_array(saved_plan.get("target_reason_codes", []))
+	if "saved_hero_task" not in saved_reason_codes:
+		_fail("Saved regroup plan is missing saved_hero_task reason: %s" % JSON.stringify(saved_plan))
+		return {}
+	_assert_task_status(session, "hero_tarn", "regroup", "missing_regroup_town", "invalid", "invalid_target_missing")
+	_assert_task_status(session, "hero_orrik", "regroup", "riverwatch_hold", "invalid", "invalid_controller_changed")
+	if _failed:
+		return {}
 	var raid := _understrength_raid(session, config)
 	var before_strength := EnemyAdventureRules.raid_strength(raid)
 	var desired_before := EnemyAdventureRules.desired_raid_strength(raid)
@@ -71,6 +89,14 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 	if resource_controller == MIRECLAW:
 		_fail("Understrength raid captured the original offensive resource instead of regrouping.")
 		return {}
+	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "completed", "valid")
+	if _failed:
+		return {}
+	EnemyTurnRules.normalize_enemy_states(session)
+	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "completed", "valid")
+	if _failed:
+		return {}
+	var task_state := _task_state(session)
 	return {
 		"case_id": "river_pass_understrength_raid_regroups_at_duskfen",
 		"before_strength": before_strength,
@@ -82,6 +108,10 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 		"message": String(result.get("message", "")),
 		"resource_controller_after": resource_controller,
 		"regroup_town_id": String(after_raid.get("last_regroup_town_id", "")),
+		"saved_plan_target_kind": String(saved_plan.get("target_kind", "")),
+		"saved_plan_target_id": String(saved_plan.get("target_placement_id", "")),
+		"saved_plan_reason_codes": saved_reason_codes,
+		"task_status_counts": _task_status_counts(task_state),
 	}
 
 func _understrength_raid(session, config: Dictionary) -> Dictionary:
@@ -119,6 +149,29 @@ func _understrength_raid(session, config: Dictionary) -> Dictionary:
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
+func _regroup_probe_raid(session, roster_hero_id: String, placement_id: String, origin: Dictionary) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": int(origin.get("x", 0)),
+		"y": int(origin.get("y", 0)),
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -145,6 +198,53 @@ func _enemy_state(session) -> Dictionary:
 			return state
 	_fail("Could not find enemy state for %s" % MIRECLAW)
 	return {}
+
+func _update_enemy_state(session, replacement: Dictionary) -> void:
+	var states: Array = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		var state = states[index]
+		if state is Dictionary and String(state.get("faction_id", "")) == String(replacement.get("faction_id", "")):
+			states[index] = replacement
+			session.overworld["enemy_states"] = states
+			return
+	_fail("Could not update enemy state for %s" % String(replacement.get("faction_id", "")))
+
+func _seed_task_board(session, tasks: Array) -> void:
+	var state := _enemy_state(session)
+	state["hero_task_state"] = {
+		"schema_version": 1,
+		"planner_epoch": 14,
+		"tasks": tasks,
+	}
+	_update_enemy_state(session, state)
+
+func _regroup_task(actor_id: String, target_id: String, status: String, validation: String) -> Dictionary:
+	return {
+		"task_id": "task:regroup:%s:%s" % [actor_id, target_id],
+		"owner_faction_id": MIRECLAW,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"source_kind": "saved_task_state",
+		"source_id": "regroup_task_fixture",
+		"task_class": "rebuild_host",
+		"task_status": status,
+		"target_kind": "regroup",
+		"target_id": target_id,
+		"front_id": "regroup:%s" % target_id,
+		"origin_kind": "encounter",
+		"origin_id": "regroup_task_fixture",
+		"priority_reason_codes": ["regroup_understrength", "army_consolidation", "regroup_task_fixture"],
+		"assigned_day": 2,
+		"expires_day": 9,
+		"continuity_policy": "persist_until_invalid",
+		"route_policy": "derive_route_on_turn",
+		"last_validation": validation,
+		"reservation": {
+			"reservation_status": "none",
+			"reservation_scope": "none",
+			"reservation_key": "",
+		},
+	}
 
 func _set_resource_controller(session, placement_id: String, faction_id: String) -> void:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
@@ -194,6 +294,41 @@ func _event_types(events: Variant) -> Array:
 				types.append(event_type)
 	types.sort()
 	return types
+
+func _task_state(session) -> Dictionary:
+	var state := _enemy_state(session)
+	return state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+
+func _assert_task_status(session, actor_id: String, target_kind: String, target_id: String, expected_status: String, expected_validation: String) -> void:
+	var task_state := _task_state(session)
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	for task in tasks:
+		if not (task is Dictionary):
+			continue
+		if String(task.get("actor_id", "")) == actor_id and String(task.get("target_kind", "")) == target_kind and String(task.get("target_id", "")) == target_id:
+			if String(task.get("task_status", "")) != expected_status or String(task.get("last_validation", "")) != expected_validation:
+				_fail("Task %s/%s/%s expected %s/%s, got %s" % [actor_id, target_kind, target_id, expected_status, expected_validation, JSON.stringify(task)])
+			return
+	_fail("Missing task %s/%s/%s in %s" % [actor_id, target_kind, target_id, JSON.stringify(task_state)])
+
+func _task_status_counts(task_state: Dictionary) -> Dictionary:
+	var counts := {}
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	for task in tasks:
+		if task is Dictionary:
+			var status := String(task.get("task_status", ""))
+			counts[status] = int(counts.get(status, 0)) + 1
+	return counts
+
+func _string_array(value: Variant) -> Array:
+	var output := []
+	if not (value is Array):
+		return output
+	for item in value:
+		var text := String(item)
+		if text != "" and text not in output:
+			output.append(text)
+	return output
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}

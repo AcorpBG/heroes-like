@@ -5297,6 +5297,8 @@ static func _resource_target_public_importance(player_controlled: bool, persiste
 
 static func _public_reason_from_codes(reason_codes: Array) -> String:
 	var codes := _normalize_string_array(reason_codes)
+	if "regroup_understrength" in codes:
+		return "regrouping understrength host"
 	if "town_defense" in codes:
 		return "defending threatened town"
 	if "site_defense" in codes:
@@ -6901,6 +6903,10 @@ static func _ai_hero_task_plan_from_saved_task(
 			priority += 50
 		"stabilize_front":
 			priority += 35
+		"rebuild_host":
+			priority += 70
+		"recover_commander":
+			priority += 30
 	return {
 		"target_kind": target_kind,
 		"target_placement_id": target_id,
@@ -6959,6 +6965,18 @@ static func _ai_hero_task_target_snapshot_for_plan(
 			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 			return {
 				"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_tiles": [tile],
+			}
+		"regroup":
+			var town_result := _find_town_by_placement(session, target_id)
+			if int(town_result.get("index", -1)) < 0:
+				return {}
+			var town: Dictionary = town_result.get("town", {})
+			var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+			return {
+				"target_label": "%s regroup" % _town_name(town),
 				"target_x": tile.x,
 				"target_y": tile.y,
 				"goal_tiles": [tile],
@@ -7074,7 +7092,7 @@ static func _ai_hero_task_record_live_assignment(
 		return
 	var target_kind := String(current_target.get("target_kind", ""))
 	var target_id := String(current_target.get("target_placement_id", ""))
-	if target_kind not in ["resource", "town", "artifact", "encounter", "hero"] or target_id == "":
+	if target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"] or target_id == "":
 		return
 	var task: Dictionary = task_record.duplicate(true) if not task_record.is_empty() else {}
 	if task.is_empty() or String(task.get("actor_id", "")) != actor_id or String(task.get("target_id", "")) != target_id:
@@ -7158,7 +7176,9 @@ static func _ai_hero_task_record_from_assignment(
 	if reason_codes.is_empty():
 		reason_codes = ["strategic_pressure"]
 	var task_class := "contest_site"
-	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
+	if target_kind == "regroup":
+		task_class = "rebuild_host"
+	elif "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
 		task_class = "defend_front"
 	elif "retake_front" in reason_codes:
 		task_class = "retake_site"
@@ -7280,6 +7300,8 @@ static func _ai_hero_task_reconciled_live_task(
 			return _ai_hero_task_reconciled_encounter_task(session, faction_id, task, target_id)
 		"hero":
 			return _ai_hero_task_reconciled_hero_task(session, faction_id, task, target_id)
+		"regroup":
+			return _ai_hero_task_reconciled_regroup_task(session, faction_id, task, target_id)
 	return task
 
 static func _ai_hero_task_reconcile_actor(
@@ -7419,6 +7441,22 @@ static func _ai_hero_task_reconciled_hero_task(
 	var hero := _player_hero_snapshot_for_task(session, target_id)
 	if hero.is_empty():
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	return task
+
+static func _ai_hero_task_reconciled_regroup_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	if target_id == "":
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var town_result := _find_town_by_placement(session, target_id)
+	if int(town_result.get("index", -1)) < 0:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var town: Dictionary = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
 	return task
 
 static func _ai_hero_task_with_lifecycle(task: Dictionary, status: String, validation: String) -> Dictionary:
@@ -9338,6 +9376,7 @@ static func _regroup_raid_at_town(
 
 	var ready_to_resume := not raid_regroup_needed(raid)
 	if ready_to_resume:
+		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		raid = _clear_regroup_target(raid)
 
 	var message := ""

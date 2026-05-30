@@ -14918,7 +14918,7 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter", "hero"]',
+        'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
         'match target_kind:',
         '"encounter":',
         "func _ai_hero_task_reconciled_encounter_task",
@@ -14927,7 +14927,7 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task encounter objective implementation is missing token: {required_token}")
     ensure(
-        '["resource", "town", "artifact", "encounter", "hero", "commander", "front"]' in enemy_turn_text,
+        '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]' in enemy_turn_text,
         errors,
         "Enemy task-state normalizer does not accept target_kind encounter.",
     )
@@ -14964,7 +14964,7 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter", "hero"]',
+        'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
         "func _ai_hero_task_reconciled_artifact_task",
         '"artifact":',
         "ArtifactRulesScript.describe_artifact",
@@ -14973,7 +14973,7 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task artifact objective implementation is missing token: {required_token}")
     ensure(
-        '["resource", "town", "artifact", "encounter", "hero", "commander", "front"]' in enemy_turn_text,
+        '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]' in enemy_turn_text,
         errors,
         "Enemy task-state normalizer does not accept target_kind artifact.",
     )
@@ -15011,7 +15011,7 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter", "hero"]',
+        'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
         "func _player_hero_snapshot_for_task",
         "func _ai_hero_task_reconciled_hero_task",
         '"hero":',
@@ -15020,7 +15020,7 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task hero hunt implementation is missing token: {required_token}")
     for required_token in (
-        '["resource", "town", "artifact", "encounter", "hero", "commander", "front"]',
+        '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]',
         'EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(session, faction_id, encounter, "completed", "valid")',
     ):
         ensure(required_token in enemy_turn_text, errors, f"AI hero task hero hunt normalizer/intercept implementation is missing token: {required_token}")
@@ -15481,11 +15481,16 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
     ):
         ensure(path.exists(), errors, f"Missing AI raid regroup/retreat file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
         "raid_regroup_needed",
         "_redirect_understrength_raid_to_regroup",
         "_nearest_regroup_town",
         "_regroup_raid_at_town",
+        "func _ai_hero_task_reconciled_regroup_task",
+        '"rebuild_host"',
+        '"regroup":',
+        '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
         "_transfer_town_garrison_to_raid",
         "_clear_regroup_target",
         '"ai_raid_regrouped"',
@@ -15497,12 +15502,21 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         '"target_public_importance": "high"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid regroup/retreat token: {required_token}")
+    ensure(
+        '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]' in enemy_turn_text,
+        errors,
+        "Enemy task-state normalizer does not accept target_kind regroup.",
+    )
     if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():
         report_text = AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_RAID_REGROUP_RETREAT_REPORT",
             "understrength_raids_retreat_to_owned_town_and_pull_garrison",
             "river_pass_understrength_raid_regroups_at_duskfen",
+            "saved_hero_task",
+            "invalid_target_missing",
+            "invalid_controller_changed",
+            "task_status_counts",
             "ai_raid_regrouped",
             "ai_target_assigned",
             "last_regroup_town_id",
@@ -15516,7 +15530,9 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Raid Regroup Retreat Report",
             "strategic-ai-raid-regroup-retreat-20260523-10184",
+            "strategic-ai-regroup-task-board-10184",
             "understrength raids retreat",
+            "target_kind: regroup",
             "Duskfen Bastion",
             "No full strategic AI quality claim",
         ):
