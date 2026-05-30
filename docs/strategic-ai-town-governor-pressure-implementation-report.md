@@ -3,6 +3,7 @@
 Status: completed implementation.
 Date: 2026-04-26.
 Slice: `strategic-ai-town-governor-pressure-report-implementation-10184`.
+Follow-up slice: `strategic-ai-town-rebuild-garrison-safety-10184`.
 
 ## Scope
 
@@ -30,6 +31,7 @@ The report proves:
 - A low-garrison case routes recruitment to garrison reinforcement with public reason `stabilizes garrison`.
 - An active-raid case routes recruitment to raid reinforcement with public reason `feeds raid hosts`.
 - A shattered-commander case routes recruitment to commander rebuild with public reason `rebuilds command`.
+- A critical-garrison plus shattered-commander case keeps recruitment on garrison safety with decision rule `critical_garrison_gap`, proving commander rebuild pressure does not override an unsafe town.
 - Public derived events do not expose score-table fields such as `final_score`, `income_value`, `growth_value`, `pressure_value`, `category_bonus`, or `raid_score`.
 
 Focused report command:

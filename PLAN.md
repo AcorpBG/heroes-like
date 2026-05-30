@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-regroup-garrison-aware-routing-10184`, completed to make regroup routing choose reachable towns with usable reinforcement before empty nearest towns.
+- Current implementation slice: `strategic-ai-town-rebuild-garrison-safety-10184`, completed to keep critically under-defended towns from spending recruit batches on commander rebuild before local safety is restored.
+- Latest completed slice: `strategic-ai-town-rebuild-garrison-safety-10184`.
 - Latest completed slice: `strategic-ai-regroup-garrison-aware-routing-10184`.
 - Latest completed slice: `strategic-ai-regroup-failure-rebuild-10184`.
 - Latest completed slice: `strategic-ai-unreachable-route-recovery-10184`.

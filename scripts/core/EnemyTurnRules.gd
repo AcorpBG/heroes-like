@@ -1204,6 +1204,22 @@ static func _choose_recruit_destination_breakdown(
 	raid_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.35
 	var rebuild_score = float(int(best_rebuild.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.85
 	rebuild_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.18
+	if current_defense < int(round(float(defense_target) * 0.72)):
+		return _recruit_destination_report_payload(
+			"garrison",
+			"critical_garrison_gap",
+			"stabilizes garrison",
+			["garrison_safety"],
+			"local defense is below the minimum wall target",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front
+		)
 	if (
 		not best_rebuild.is_empty()
 		and not EnemyAdventureRulesScript.has_available_raid_commander(
@@ -1218,22 +1234,6 @@ static func _choose_recruit_destination_breakdown(
 			"rebuilds command",
 			["commander_rebuild"],
 			"no available commander can launch until a host is rebuilt",
-			garrison_score,
-			raid_score,
-			rebuild_score,
-			defense_target,
-			current_defense,
-			best_raid,
-			best_rebuild,
-			local_front
-		)
-	if current_defense < int(round(float(defense_target) * 0.72)):
-		return _recruit_destination_report_payload(
-			"garrison",
-			"critical_garrison_gap",
-			"stabilizes garrison",
-			["garrison_safety"],
-			"local defense is below the minimum wall target",
 			garrison_score,
 			raid_score,
 			rebuild_score,

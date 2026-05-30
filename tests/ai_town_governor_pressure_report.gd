@@ -41,6 +41,10 @@ func _run() -> void:
 	if rebuild_case.is_empty():
 		return
 	cases.append(rebuild_case)
+	var rebuild_safety_case := _run_case("commander_rebuild_critical_garrison", "garrison")
+	if rebuild_safety_case.is_empty():
+		return
+	cases.append(rebuild_safety_case)
 
 	var all_events := []
 	for case_report in cases:
@@ -75,6 +79,8 @@ func _run_case(case_id: String, expected_destination: String) -> Dictionary:
 			_add_active_raid(session)
 		"commander_rebuild":
 			_strengthen_duskfen_garrison(session)
+			_set_shattered_commander_roster(session)
+		"commander_rebuild_critical_garrison":
 			_set_shattered_commander_roster(session)
 		_:
 			pass
@@ -111,6 +117,17 @@ func _run_case(case_id: String, expected_destination: String) -> Dictionary:
 			return {}
 		if int(destination.get("supply_distance", 9999)) > 3:
 			_fail("%s nearby raid support distance is too high: %s" % [case_id, destination])
+			return {}
+	if case_id == "commander_rebuild_critical_garrison":
+		if String(destination.get("decision_rule", "")) != "critical_garrison_gap":
+			_fail("%s should keep critical garrison safety ahead of rebuild, got %s" % [case_id, destination])
+			return {}
+		if float(destination.get("rebuild_score", 0.0)) <= 0.0:
+			_fail("%s should still expose commander rebuild need in the decision payload: %s" % [case_id, destination])
+			return {}
+	if case_id == "commander_rebuild":
+		if String(destination.get("decision_rule", "")) != "commander_rebuild_required":
+			_fail("%s expected safe-town rebuild priority, got %s" % [case_id, destination])
 			return {}
 	var public_events := []
 	for event in town_report.get("events", []):
