@@ -56,6 +56,33 @@
       "rewards": {}
     },
     {
+      "id": "encounter_resource_defense",
+      "name": "Defended Field Site",
+      "enemy_group_id": "army_mireclaw_raiding_party",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "fortified_line"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Site Captain",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "site_perimeter",
+          "type": "obstruction_line",
+          "label": "Site Perimeter",
+          "summary": "The stationed force controls the field site's approaches until the perimeter is broken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "commander", "momentum"]
+        }
+      ],
+      "rewards": {}
+    },
+    {
       "id": "encounter_hollow_mire",
       "name": "Hollow Mire",
       "enemy_group_id": "army_mireclaw_pack",

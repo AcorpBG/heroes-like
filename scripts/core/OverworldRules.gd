@@ -863,6 +863,16 @@ static func _collect_resource_node_result(
 			_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 			_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 			return {"ok": false, "message": "Clear %s before claiming this site." % encounter_display_name(guard_encounter)}
+	var defender_battle := _resource_defender_battle_payload(session, node, site)
+	if not defender_battle.is_empty():
+		session.battle = defender_battle
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+		return {
+			"ok": true,
+			"message": "Battle is joined for %s." % String(site.get("name", "the field site")),
+			"route": "battle",
+		}
 	if not _resource_node_claimable_by_player(node, site, session):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
@@ -1081,7 +1091,7 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 		return {
 			"ok": true,
 			"message": String(result.get("message", "")),
-			"route": "",
+			"route": String(result.get("route", "")),
 		}
 
 	var artifact_result := _find_active_artifact_node(session)
@@ -5174,6 +5184,118 @@ static func _resource_node_claimable_by_player(
 	if _resource_site_is_persistent(site):
 		return String(node.get("collected_by_faction_id", "")) != "player"
 	return not bool(node.get("collected", false))
+
+static func _resource_defender_battle_payload(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	if not _resource_node_has_live_ai_defender(session, node, site):
+		return {}
+	return _battle_rules().create_resource_defense_payload(session, String(node.get("placement_id", "")))
+
+static func _resource_node_has_live_ai_defender(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> bool:
+	if session == null or node.is_empty() or not _resource_site_is_persistent(site):
+		return false
+	var controller := String(node.get("collected_by_faction_id", ""))
+	if controller == "" or controller == "player":
+		return false
+	var defended_by := String(node.get("ai_defended_by_faction_id", ""))
+	var commander_state = node.get("ai_defender_commander_state", {})
+	if defended_by == "" and commander_state is Dictionary:
+		defended_by = String(commander_state.get("faction_id", ""))
+	if defended_by != "" and defended_by != controller:
+		return false
+	var defense_until := int(node.get("ai_defense_until_day", 0))
+	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
+	defense_until = max(defense_until, int(front.get("defense_until_day", 0)))
+	if defense_until < int(session.day):
+		return false
+	var defender_army = node.get("ai_defender_army", {})
+	if not (defender_army is Dictionary):
+		return false
+	return _army_strength_value(defender_army.get("stacks", [])) > 0
+
+static func capture_resource_after_defender_victory(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String
+) -> Dictionary:
+	if session == null or placement_id == "":
+		return {"ok": false, "message": ""}
+	var node_result := _find_resource_node_by_placement(session, placement_id)
+	if int(node_result.get("index", -1)) < 0:
+		return {"ok": false, "message": ""}
+	var node: Dictionary = node_result.get("node", {})
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if site.is_empty() or not _resource_site_is_persistent(site):
+		return {"ok": false, "message": ""}
+	var nodes = session.overworld.get("resource_nodes", [])
+	node = _clear_resource_ai_defender_metadata(node)
+	nodes[int(node_result.get("index", -1))] = node
+	session.overworld["resource_nodes"] = nodes
+	var refreshed := _find_resource_node_by_placement(session, placement_id)
+	return _collect_resource_node_result(session, refreshed)
+
+static func update_resource_defender_after_battle(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	faction_id: String,
+	commander_state: Dictionary,
+	survivor_stacks: Array,
+	resolved: bool
+) -> String:
+	if session == null or placement_id == "":
+		return ""
+	var node_result := _find_resource_node_by_placement(session, placement_id)
+	if int(node_result.get("index", -1)) < 0:
+		return ""
+	var nodes = session.overworld.get("resource_nodes", [])
+	var node: Dictionary = node_result.get("node", {})
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if resolved or String(node.get("collected_by_faction_id", "")) == "player" or survivor_stacks.is_empty():
+		node = _clear_resource_ai_defender_metadata(node)
+		nodes[int(node_result.get("index", -1))] = node
+		session.overworld["resource_nodes"] = nodes
+		return ""
+	var defender_army := {
+		"id": String(node.get("ai_defender_army", {}).get("id", "resource_defense_host")) if node.get("ai_defender_army", {}) is Dictionary else "resource_defense_host",
+		"name": String(node.get("ai_defender_army", {}).get("name", "Resource Defense Host")) if node.get("ai_defender_army", {}) is Dictionary else "Resource Defense Host",
+		"stacks": survivor_stacks.duplicate(true),
+	}
+	var defender_strength := _army_strength_value(survivor_stacks)
+	node["ai_defender_army"] = defender_army
+	node["ai_defense_rating"] = defender_strength
+	node["ai_defense_reinforced_strength"] = max(int(node.get("ai_defense_reinforced_strength", 0)), defender_strength)
+	if not commander_state.is_empty():
+		node["ai_defender_commander_state"] = commander_state.duplicate(true)
+		node["ai_defender_roster_hero_id"] = String(commander_state.get("roster_hero_id", ""))
+	if String(node.get("ai_defended_by_faction_id", "")) == "" and faction_id != "":
+		node["ai_defended_by_faction_id"] = faction_id
+	nodes[int(node_result.get("index", -1))] = node
+	session.overworld["resource_nodes"] = nodes
+	return "%s remains defended by %s." % [
+		String(site.get("name", "The field site")),
+		String(ContentService.get_faction(faction_id).get("name", faction_id)) if faction_id != "" else "the stationed force",
+	]
+
+static func _clear_resource_ai_defender_metadata(node: Dictionary) -> Dictionary:
+	var cleared := node.duplicate(true)
+	cleared.erase("ai_defender_commander_state")
+	cleared.erase("ai_defender_roster_hero_id")
+	cleared.erase("ai_defender_army")
+	cleared.erase("ai_defended_by_faction_id")
+	cleared.erase("ai_defended_day")
+	cleared.erase("ai_defense_until_day")
+	cleared.erase("ai_defense_rating")
+	cleared.erase("ai_defense_reinforced_strength")
+	var front: Dictionary = cleared.get("front", {}) if cleared.get("front", {}) is Dictionary else {}
+	if String(front.get("source", "")) == "strategic_ai_resource_defense" or String(front.get("state", "")) in ["defend", "stabilizing"]:
+		cleared.erase("front")
+	return cleared
 
 static func _resource_site_claim_rewards(site: Dictionary) -> Dictionary:
 	var rewards = site.get("claim_rewards", site.get("rewards", {}))
