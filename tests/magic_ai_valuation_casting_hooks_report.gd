@@ -22,7 +22,7 @@ func _run() -> void:
 		"battle": battle_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation and the existing battle casting decision hook only. Enemy adventure spell execution remains valuation-only until a safe strategic map casting executor exists.",
+			"This report proves bounded AI spell valuation, the existing battle casting decision hook, and live enemy movement-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -138,6 +138,9 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 		return {"ok": false, "error": "Adventure AI did not recommend a movement spell when it reaches the target: %s" % report}
 	if int(selected.get("movement_after", 0)) < 7:
 		return {"ok": false, "error": "Adventure AI selected spell does not reach the target fixture: %s" % selected}
+	var executor_case := _run_adventure_executor_case()
+	if not bool(executor_case.get("ok", false)):
+		return executor_case
 	return {
 		"ok": true,
 		"report_status": String(report.get("report_status", "")),
@@ -146,6 +149,87 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 		"selected_spell_id": String(selected.get("spell_id", "")),
 		"selected_recommendation": String(selected.get("recommendation", "")),
 		"runtime_hook_counts": report.get("runtime_hook_counts", {}),
+		"executor": executor_case,
+	}
+
+func _run_adventure_executor_case() -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		"river-pass",
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	var faction_id := "faction_mireclaw"
+	var config := _enemy_config(session, faction_id)
+	var commander := SpellRules.ensure_hero_spellbook(
+		{
+			"id": "enemy_commander:faction_mireclaw:hero_tarn",
+			"roster_hero_id": "hero_tarn",
+			"faction_id": faction_id,
+			"name": "Tarn Mireglass",
+			"command": {"power": 1, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_trailglyph"],
+				"mana": {"current": 12, "max": 12},
+			},
+		}
+	)
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "adventure_spell_executor_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 4,
+			"y": 0,
+			"difficulty": "pressure",
+			"combat_seed": 44004,
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+			"target_kind": "resource",
+			"target_placement_id": "midway_shrine",
+			"target_label": "Midway Shrine",
+			"target_x": 4,
+			"target_y": 2,
+			"enemy_army": {
+				"id": "adventure_spell_executor_raid",
+				"name": "Executor Spell Raid",
+				"stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 12}],
+			},
+			"enemy_commander_state": commander,
+		},
+		session
+	)
+	session.overworld["encounters"] = [raid]
+	var result := EnemyAdventureRules.advance_raids(session, config, faction_id, _enemy_state(session, faction_id))
+	var after_raid := _encounter(session, "adventure_spell_executor_raid")
+	if after_raid.is_empty():
+		return {"ok": false, "error": "Adventure spell executor raid disappeared."}
+	if int(after_raid.get("x", 0)) != 4 or int(after_raid.get("y", 0)) != 2:
+		return {"ok": false, "error": "Adventure spell executor did not move the raid to the resource target: %s" % after_raid}
+	if String(after_raid.get("last_adventure_spell_id", "")) != "spell_trailglyph":
+		return {"ok": false, "error": "Adventure spell executor did not record the cast spell: %s" % after_raid}
+	var mana: Dictionary = after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("mana", {})
+	if int(mana.get("current", 0)) >= 12:
+		return {"ok": false, "error": "Adventure spell executor did not spend commander mana: %s" % mana}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_adventure_spell_cast" not in event_types:
+		return {"ok": false, "error": "Adventure spell executor did not emit ai_adventure_spell_cast: %s" % result}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		return {"ok": false, "error": "Adventure spell public event boundary failed: %s" % public_log}
+	if not _assert_public_payload("adventure spell executor public events", public_log.get("public_events", [])):
+		return {"ok": false, "error": "Adventure spell executor public events leaked non-public fields."}
+	return {
+		"ok": true,
+		"spell_id": String(after_raid.get("last_adventure_spell_id", "")),
+		"movement_steps": int(after_raid.get("last_adventure_spell_movement_steps", 0)),
+		"final_x": int(after_raid.get("x", 0)),
+		"final_y": int(after_raid.get("y", 0)),
+		"mana_after": int(mana.get("current", 0)),
+		"event_types": event_types,
 	}
 
 func _stack(
@@ -179,6 +263,37 @@ func _stack_by_id(battle: Dictionary, battle_id: String) -> Dictionary:
 		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
 			return stack
 	return {}
+
+func _enemy_config(session, faction_id: String) -> Dictionary:
+	var scenario := ContentService.get_scenario(String(session.scenario_id))
+	for config in scenario.get("enemy_factions", []):
+		if config is Dictionary and String(config.get("faction_id", "")) == faction_id:
+			return config
+	return {"faction_id": faction_id, "label": faction_id}
+
+func _enemy_state(session, faction_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return state
+	return {"faction_id": faction_id}
+
+func _encounter(session, placement_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter
+	return {}
+
+func _event_types(events: Variant) -> Array:
+	var types := []
+	if not (events is Array):
+		return types
+	for event in events:
+		if event is Dictionary:
+			var event_type := String(event.get("event_type", ""))
+			if event_type != "" and event_type not in types:
+				types.append(event_type)
+	types.sort()
+	return types
 
 func _assert_public_payload(label: String, payload: Variant) -> bool:
 	var surface_text := JSON.stringify(payload).to_lower()

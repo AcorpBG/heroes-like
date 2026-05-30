@@ -220,6 +220,9 @@ AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCENE_PATH = ROOT / "tests" / "ai_multi_scenario_recruitment_delivery_report.tscn"
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-multi-scenario-recruitment-delivery-report.md"
 AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-local-recruitment-support-report.md"
+AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "magic_ai_valuation_casting_hooks_report.gd"
+AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCENE_PATH = ROOT / "tests" / "magic_ai_valuation_casting_hooks_report.tscn"
+AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-adventure-spell-execution-report.md"
 AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_defense_retask_report.gd"
 AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_defense_retask_report.tscn"
 AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-retask-report.md"
@@ -15577,6 +15580,46 @@ def validate_ai_local_recruitment_support(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"AI local recruitment support doc is missing required text: {required_text}")
 
 
+def validate_ai_adventure_spell_execution(errors: list[str]) -> None:
+    for path in (
+        AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH,
+        AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCENE_PATH,
+        AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI adventure spell execution file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    report_text = AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS",
+        "_maybe_cast_raid_adventure_movement_spell",
+        "SpellRulesScript.cast_overworld_spell",
+        "ai_adventure_spell_cast",
+        '"valuation_with_enemy_movement_spell_executor"',
+        "_hero_starting_spell_ids",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI adventure spell execution implementation is missing token: {required_token}")
+    for required_token in (
+        "_run_adventure_executor_case",
+        "adventure_spell_executor_raid",
+        "spell_trailglyph",
+        "ai_adventure_spell_cast",
+        "last_adventure_spell_id",
+        "mana_after",
+    ):
+        ensure(required_token in report_text, errors, f"AI adventure spell execution report is missing token: {required_token}")
+    if AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH.exists():
+        doc_text = AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Adventure Spell Execution Report",
+            "strategic-ai-adventure-spell-execution-10184",
+            "Enemy commander spellbooks preserve authored overworld spells",
+            "ai_adventure_spell_cast",
+            "No save migration",
+            "No broad strategic-AI production-ready claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI adventure spell execution doc is missing required text: {required_text}")
+
+
 def validate_ai_town_defense_retask(errors: list[str]) -> None:
     for path in (
         AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
@@ -21669,6 +21712,7 @@ def main() -> int:
     validate_ai_raid_assault_grouping(errors)
     validate_ai_raid_regroup_retreat(errors)
     validate_ai_local_recruitment_support(errors)
+    validate_ai_adventure_spell_execution(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
