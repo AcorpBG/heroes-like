@@ -1191,7 +1191,7 @@ static func _choose_recruit_destination_breakdown(
 	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
-	var best_raid = _best_raid_reinforcement_target(session, config, faction_id)
+	var best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
 	var faction_front_state := _faction_front_state(session, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
@@ -1342,6 +1342,7 @@ static func _recruit_destination_report_payload(
 		payload["raid_placement_id"] = String(raid.get("placement_id", ""))
 		payload["raid_label"] = EnemyAdventureRulesScript.raid_display_name(raid)
 		payload["raid_need"] = int(best_raid.get("need", 0))
+		payload["supply_distance"] = int(best_raid.get("supply_distance", 0))
 		payload["target_id"] = String(raid.get("target_placement_id", ""))
 		payload["target_label"] = String(raid.get("target_label", raid.get("target_placement_id", "")))
 	elif destination_type == "rebuild":
@@ -1354,10 +1355,12 @@ static func _recruit_destination_report_payload(
 static func _best_raid_reinforcement_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	support_town: Dictionary = {}
 ) -> Dictionary:
 	var best = {}
 	var best_score = -1.0
+	var best_distance = 9999
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for index in range(session.overworld.get("encounters", []).size()):
 		var encounter = session.overworld.get("encounters", [])[index]
@@ -1372,6 +1375,15 @@ static func _best_raid_reinforcement_target(
 		var need = desired - current
 		if need <= 0:
 			continue
+		var supply_distance := 0
+		if not support_town.is_empty():
+			supply_distance = EnemyAdventureRulesScript.raid_reinforcement_route_distance(
+				session,
+				support_town,
+				encounter
+			)
+			if supply_distance >= 9999:
+				continue
 		var site_family = EnemyAdventureRulesScript.target_site_family(
 			session,
 			String(encounter.get("target_kind", "")),
@@ -1398,10 +1410,22 @@ static func _best_raid_reinforcement_target(
 			var front_state: Dictionary = OverworldRulesScript.town_front_state(session, target_town)
 			if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
 				score += float(int(front_state.get("priority_bonus", 0))) * 0.4
+			if not support_town.is_empty() and String(target_town.get("placement_id", "")) == String(support_town.get("placement_id", "")):
+				score += 120.0
 		score += float(EnemyAdventureRulesScript.priority_target_bonus(config, String(encounter.get("target_placement_id", ""))))
-		if score > best_score:
+		if not support_town.is_empty():
+			score += float(max(0, 16 - supply_distance) * 18)
+			score -= float(supply_distance * 10)
+		if score > best_score or (is_equal_approx(score, best_score) and supply_distance < best_distance):
 			best_score = score
-			best = {"index": index, "encounter": encounter, "need": need}
+			best_distance = supply_distance
+			best = {
+				"index": index,
+				"encounter": encounter,
+				"need": need,
+				"supply_distance": supply_distance,
+				"score": score,
+			}
 	return best
 
 static func _best_commander_rebuild_target(

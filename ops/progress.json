@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-regroup-task-board-10184",
-  "currentSliceTitle": "Strategic AI Regroup Task Board",
+  "currentSliceId": "strategic-ai-local-recruitment-support-10184",
+  "currentSliceTitle": "Strategic AI Local Recruitment Support",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Understrength regroup orders now persist as strategic AI hero tasks, can be reused from saved-task selection, and complete when the host rebuilds enough to resume.",
+  "currentSliceNotes": "Completed. Enemy town recruitment support now scores active raid hosts by route/locality from the recruiting town and skips unreachable hosts for direct support.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T13:16:40Z",
+  "updatedAt": "2026-05-30T13:42:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-local-recruitment-support-10184",
+      "title": "Strategic AI Local Recruitment Support",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after regroup task-board continuity; make town recruitment support obey local logistics instead of global abstract raid need",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-town-governor-pressure-implementation-report.md",
+        "docs/strategic-ai-multi-scenario-recruitment-delivery-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_town_governor_pressure_report.gd",
+        "docs/strategic-ai-local-recruitment-support-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Enemy town recruitment chooses active raid reinforcement targets with route/locality scoring from the recruiting town; unreachable raid hosts are not selected for direct town support; selected raid destination reports include support distance for debug validation while public events remain compact; focused runtime coverage proves a town supports the nearby raid over a farther competing raid; existing multi-scenario recruitment delivery and task-board reports continue to pass; validation passes; no save-version migration is introduced.",
+      "startedAt": "2026-05-30T13:28:00Z",
+      "updatedAt": "2026-05-30T13:42:00Z",
+      "notes": "Completed. Town recruit destination scoring now passes the recruiting town into raid reinforcement selection, skips unreachable hosts, and prefers reachable nearby hosts before abstract global need.",
+      "completedAt": "2026-05-30T13:42:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T13:42:00Z",
+        "sliceId": "strategic-ai-local-recruitment-support-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "EnemyAdventureRules.raid_reinforcement_route_distance measures pathing distance from a recruiting town to an active raid host.",
+            "EnemyTurnRules._best_raid_reinforcement_target now receives the recruiting town, rejects unreachable direct support targets, and applies locality scoring before selecting a raid reinforcement destination.",
+            "Town recruitment destination debug payloads include supply_distance while public AI event boundaries remain compact.",
+            "Focused Duskfen fixture seeds nearby and farther competing raid hosts and proves the town supports report_duskfen_local_raid at supply_distance 2.",
+            "Existing multi-scenario recruitment delivery coverage still proves five faction/scenario cases deliver recruits into raid hosts."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-local-recruitment-support-report.md"
+          ],
+          "savePolicy": "no_save_migration",
+          "saveVersion": 9,
+          "focusedReport": "AI_TOWN_GOVERNOR_PRESSURE_REPORT",
+          "residualRisk": "This removes a global reinforcement-selection shortcut but does not add full convoy actors, long-run generated-map AI quality proof, full objective planning, or production-ready strategic AI."
+        }
+      }
+    },
     {
       "id": "economy-generated-package-breadth-rare-source-guard-pressure-scorecard-20260525-10184",
       "title": "Economy Generated Package Breadth Rare Source Guard Pressure Scorecard",

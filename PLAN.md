@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-regroup-task-board-10184`, completed to make understrength raid regroup orders first-class durable strategic AI tasks with saved-task reuse, lifecycle cleanup, regroup completion, and no save-version migration.
+- Current implementation slice: `strategic-ai-local-recruitment-support-10184`, completed to make enemy town recruitment support route/locality aware so towns reinforce nearby active raid hosts instead of globally feeding the highest abstract need.
+- Latest completed slice: `strategic-ai-local-recruitment-support-10184`.
 - Latest completed slice: `strategic-ai-regroup-task-board-10184`.
 - Latest completed slice: `strategic-ai-hero-hunt-task-board-10184`.
 - Latest completed slice: `strategic-ai-artifact-task-board-10184`.
