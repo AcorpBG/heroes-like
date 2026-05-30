@@ -178,6 +178,9 @@ BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-as
 BATTLE_SPELL_IMPACT_PRESENTATION_DOC_PATH = ROOT / "docs" / "battle-spell-impact-runtime-presentation-assets-report.md"
 HEADLESS_BALANCE_HARNESS_CLI_PATH = ROOT / "tools" / "run_headless_balance_harness.py"
 HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH = ROOT / "docs" / "headless-balance-harness-cli-report.md"
+STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCRIPT_PATH = ROOT / "tests" / "strategic_ai_long_run_seed_matrix_report.gd"
+STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCENE_PATH = ROOT / "tests" / "strategic_ai_long_run_seed_matrix_report.tscn"
+STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-long-run-seed-matrix-report.md"
 BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_intent_forecast_report.gd"
 BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH = ROOT / "tests" / "battle_intent_forecast_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
@@ -15311,6 +15314,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         objective_targeting_doc_path,
         HEADLESS_BALANCE_HARNESS_CLI_PATH,
         HEADLESS_BALANCE_HARNESS_CLI_DOC_PATH,
+        STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCRIPT_PATH,
+        STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCENE_PATH,
+        STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing headless strategic AI live turn harness file: {path.relative_to(ROOT)}")
     if HEADLESS_BALANCE_HARNESS_CLI_PATH.exists():
@@ -15355,6 +15361,14 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             ensure(required_text in cli_doc_text, errors, f"Headless balance harness CLI doc is missing required text: {required_text}")
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     for required_token in (
+        "STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID",
+        "func build_strategic_ai_long_run_seed_matrix_report",
+        "func _strategic_ai_long_run_seed_row",
+        "func _strategic_ai_auto_resolve_battle_interrupt",
+        "func _strategic_ai_long_run_blockers",
+        "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
+        "native_rmg_generated_maps_only",
+        "pressure_floor",
         '"strategic_ai_live_turn_execution"',
         '"strategic_ai_live_route_progression"',
         '"strategic_ai_live_town_governor_build_execution"',
@@ -15478,6 +15492,39 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "deterministic_battle_difficulty_sweep_samples",
     ):
         ensure(required_token in harness_text, errors, f"Headless simulation harness is missing strategic AI live-turn token: {required_token}")
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _enemy_faction_configs_with_runtime_defaults",
+        "func _enemy_faction_config_with_runtime_defaults",
+        "func _default_raid_encounter_ids_for_faction",
+        "func _default_spawn_points_for_faction",
+        "generated_package_town_config",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing generated-map AI runtime-default token: {required_token}")
+    long_run_report_text = STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT",
+        "build_strategic_ai_long_run_seed_matrix_report",
+        "native_rmg_generated_maps_only",
+        "authored_scenario_balance_surface",
+        "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
+        "target_assignment_count",
+        "startup_source",
+        "native_rmg_disk_package",
+    ):
+        ensure(required_token in long_run_report_text, errors, f"Strategic AI long-run seed matrix report is missing token: {required_token}")
+    if STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_DOC_PATH.exists():
+        long_run_doc_text = STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Long-Run Seed Matrix Report",
+            "`strategic-ai-long-run-seed-matrix-10184`",
+            "Native RMG generated-map strategic AI seed-matrix runner",
+            "startup_source = native_rmg_disk_package",
+            "target_assignment_count = 2",
+            "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
+            "No production-ready claim",
+        ):
+            ensure(required_text in long_run_doc_text, errors, f"Strategic AI long-run seed matrix doc is missing required text: {required_text}")
     report_text = (ROOT / "tests" / "headless_simulation_harness_report.gd").read_text(encoding="utf-8")
     for required_token in (
         "strategic_ai_live_turn_execution",

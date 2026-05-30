@@ -2619,13 +2619,13 @@ static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.
 	if configs is Array and not configs.is_empty():
 		var valid_configs := _valid_enemy_faction_configs(configs)
 		if not valid_configs.is_empty():
-			return valid_configs
+			return _enemy_faction_configs_with_runtime_defaults(session, valid_configs)
 	var runtime_record: Dictionary = session.overworld.get("native_random_map_runtime_scenario_record", {}) if session.overworld.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
 	configs = runtime_record.get("enemy_factions", [])
 	if configs is Array:
 		var valid_runtime_configs := _valid_enemy_faction_configs(configs)
 		if not valid_runtime_configs.is_empty():
-			return valid_runtime_configs
+			return _enemy_faction_configs_with_runtime_defaults(session, valid_runtime_configs)
 	var fallback_configs := []
 	var seen := {}
 	for town_value in session.overworld.get("towns", []):
@@ -2646,7 +2646,7 @@ static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.
 			"label": String(faction.get("name", faction_id)),
 			"generated_package_town_config": true,
 		})
-	return fallback_configs
+	return _enemy_faction_configs_with_runtime_defaults(session, fallback_configs)
 
 static func _enemy_config_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	if faction_id == "":
@@ -2664,8 +2664,82 @@ static func _valid_enemy_faction_configs(configs: Array) -> Array:
 		var config: Dictionary = config_value
 		if ContentService.get_faction(String(config.get("faction_id", ""))).is_empty():
 			continue
-		result.append(config)
+		result.append(config.duplicate(true))
 	return result
+
+static func _enemy_faction_configs_with_runtime_defaults(session: SessionStateStoreScript.SessionData, configs: Array) -> Array:
+	var result := []
+	for config_value in configs:
+		if not (config_value is Dictionary):
+			continue
+		result.append(_enemy_faction_config_with_runtime_defaults(session, config_value))
+	return result
+
+static func _enemy_faction_config_with_runtime_defaults(session: SessionStateStoreScript.SessionData, config: Dictionary) -> Dictionary:
+	var normalized := config.duplicate(true)
+	var faction_id := String(normalized.get("faction_id", ""))
+	if faction_id == "":
+		return normalized
+	var faction := ContentService.get_faction(faction_id)
+	if String(normalized.get("label", "")) == "":
+		normalized["label"] = String(faction.get("name", faction_id))
+	if int(normalized.get("pressure_per_day", 0)) <= 0:
+		normalized["pressure_per_day"] = 2
+	if int(normalized.get("pressure_per_enemy_town", 0)) <= 0:
+		normalized["pressure_per_enemy_town"] = 1
+	if int(normalized.get("raid_threshold", 0)) <= 0:
+		normalized["raid_threshold"] = 5
+	if int(normalized.get("max_active_raids", 0)) <= 0:
+		normalized["max_active_raids"] = 2
+	if int(normalized.get("raid_pillage_delay", 0)) <= 0:
+		normalized["raid_pillage_delay"] = 1
+	if not (normalized.get("raid_pillage", {}) is Dictionary) or normalized.get("raid_pillage", {}).is_empty():
+		normalized["raid_pillage"] = {"gold": 150}
+	if not (normalized.get("raid_encounter_ids", []) is Array) or normalized.get("raid_encounter_ids", []).is_empty():
+		normalized["raid_encounter_ids"] = _default_raid_encounter_ids_for_faction(faction_id)
+	if not (normalized.get("spawn_points", []) is Array) or normalized.get("spawn_points", []).is_empty():
+		normalized["spawn_points"] = _default_spawn_points_for_faction(session, faction_id)
+	if not (normalized.get("priority_target_placement_ids", []) is Array):
+		normalized["priority_target_placement_ids"] = []
+	if int(normalized.get("priority_target_bonus", 0)) <= 0:
+		normalized["priority_target_bonus"] = 80
+	if not bool(normalized.get("generated_package_town_config", false)) and _config_was_runtime_defaulted(config, normalized):
+		normalized["generated_package_town_config"] = bool(session != null and bool(session.flags.get("generated_random_map", false)))
+	return normalized
+
+static func _config_was_runtime_defaulted(source: Dictionary, normalized: Dictionary) -> bool:
+	for key in ["pressure_per_day", "pressure_per_enemy_town", "raid_threshold", "max_active_raids", "raid_pillage_delay", "raid_pillage", "raid_encounter_ids", "spawn_points"]:
+		if not source.has(key) and normalized.has(key):
+			return true
+	return false
+
+static func _default_raid_encounter_ids_for_faction(faction_id: String) -> Array:
+	match faction_id:
+		"faction_mireclaw":
+			return ["encounter_mire_raid", "encounter_blackbranch_reavers"]
+		"faction_sunvault":
+			return ["encounter_aurora_battery", "encounter_daybreak_matrix"]
+		"faction_thornwake":
+			return ["encounter_graftroot_wardens"]
+		"faction_brasshollow":
+			return ["encounter_orevein_exactors"]
+		"faction_veilmourn":
+			return ["encounter_bellwake_privateers"]
+		_:
+			return ["encounter_ford_reavers", "encounter_mire_raid"]
+
+static func _default_spawn_points_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
+	var points := []
+	if session == null:
+		return points
+	for entry in _owned_town_entries(session, faction_id):
+		if not (entry is Dictionary):
+			continue
+		var town: Dictionary = entry.get("town", {}) if entry.get("town", {}) is Dictionary else {}
+		if town.is_empty():
+			continue
+		points.append({"x": int(town.get("x", 0)), "y": int(town.get("y", 0))})
+	return points
 
 static func _owned_town_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	return _owned_town_entries(session, faction_id).size()
