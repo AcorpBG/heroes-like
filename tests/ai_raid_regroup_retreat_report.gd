@@ -16,13 +16,17 @@ func _run() -> void:
 	var guarded_claim_case := _guarded_resource_claim_retargets_to_guard()
 	if guarded_claim_case.is_empty():
 		return
+	var unreachable_route_case := _valid_but_unreachable_target_reroutes_to_regroup()
+	if unreachable_route_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_to_owned_town_and_guarded_claims_retarget_to_guard",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
+		"unreachable_route_case": unreachable_route_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -228,6 +232,67 @@ func _guarded_resource_claim_retargets_to_guard() -> Dictionary:
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
+func _valid_but_unreachable_target_reroutes_to_regroup() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_resource_position(session, "river_free_company", Vector2i(5, 5))
+	_block_cardinal_neighbors(session, Vector2i(5, 5))
+	_seed_task_board(session, [_resource_task("hero_vaska", "river_free_company", "active", "valid")])
+	var raid := _unreachable_route_raid(session)
+	if EnemyAdventureRules.raid_regroup_needed(raid):
+		_fail("Unreachable-route fixture raid should be strong enough to avoid understrength regroup: %s" % JSON.stringify(raid))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_raid := _encounter(session, "unreachable_route_vaska")
+	if after_raid.is_empty():
+		_fail("Unreachable-route raid disappeared after advance.")
+		return {}
+	var recovered_to_regroup := (
+		(String(after_raid.get("target_kind", "")) == "regroup" and String(after_raid.get("target_placement_id", "")) == "duskfen_bastion")
+		or (String(after_raid.get("target_kind", "")) == "" and String(after_raid.get("last_regroup_town_id", "")) == "duskfen_bastion")
+	)
+	if not recovered_to_regroup:
+		_fail("Unreachable-route raid did not recover through reachable regroup town: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("previous_target_kind", "")) != "resource" or String(after_raid.get("previous_target_placement_id", "")) != "river_free_company":
+		_fail("Unreachable-route retask did not preserve previous target metadata: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if reason_codes.is_empty():
+		reason_codes = _event_reason_codes(result.get("events", []), "ai_target_assigned")
+	if "route_unreachable" not in reason_codes or "regroup_route_recovery" not in reason_codes:
+		_fail("Unreachable-route retask missed route recovery reason codes: %s" % JSON.stringify(after_raid))
+		return {}
+	if _resource_controller(session, "river_free_company") == MIRECLAW:
+		_fail("Unreachable-route raid seized the isolated resource instead of recovering.")
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Unreachable-route recovery did not emit ai_target_assigned: %s" % JSON.stringify(result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "resource", "river_free_company", "invalid", "invalid_route_unreachable")
+	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "completed", "valid")
+	if _failed:
+		return {}
+	return {
+		"case_id": "valid_resource_target_unreachable_reroutes_to_regroup",
+		"after_target_kind": String(after_raid.get("target_kind", "")),
+		"after_target_id": String(after_raid.get("target_placement_id", "")),
+		"previous_target_id": String(after_raid.get("previous_target_placement_id", "")),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"resource_controller_after": _resource_controller(session, "river_free_company"),
+		"goal_distance_after": int(after_raid.get("goal_distance", 9999)),
+		"task_status_counts": _task_status_counts(_task_state(session)),
+	}
+
 func _understrength_raid(session, config: Dictionary) -> Dictionary:
 	var raid := {
 		"placement_id": "regroup_vaska_understrength",
@@ -288,6 +353,44 @@ func _guarded_resource_claim_raid(session) -> Dictionary:
 		"enemy_army": {
 			"id": "guarded_resource_claim_host",
 			"name": "Guarded Claim Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 12}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _unreachable_route_raid(session) -> Dictionary:
+	var raid := {
+		"placement_id": "unreachable_route_vaska",
+		"encounter_id": "encounter_mire_raid",
+		"x": 8,
+		"y": 1,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:unreachable_route_vaska" % String(session.scenario_id)),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 5,
+		"target_y": 5,
+		"goal_x": 5,
+		"goal_y": 5,
+		"target_reason_codes": ["persistent_income_denial", "recruit_denial"],
+		"target_public_reason": "site denial pressure",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "unreachable_route_host",
+			"name": "Route Recovery Host",
 			"stacks": [{"unit_id": "unit_bog_brute", "count": 12}],
 		},
 	}
@@ -460,6 +563,34 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		return
 	_fail("Could not find resource placement %s" % placement_id)
 
+func _set_resource_position(session, placement_id: String, tile: Vector2i) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if String(node.get("placement_id", "")) != placement_id:
+			continue
+		node["x"] = tile.x
+		node["y"] = tile.y
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		return
+	_fail("Could not move resource placement %s" % placement_id)
+
+func _block_cardinal_neighbors(session, center: Vector2i) -> void:
+	var map_rows: Array = session.overworld.get("map", [])
+	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var tile: Vector2i = center + delta
+		if tile.y < 0 or tile.y >= map_rows.size():
+			continue
+		var row: Array = map_rows[tile.y] if map_rows[tile.y] is Array else []
+		if tile.x < 0 or tile.x >= row.size():
+			continue
+		row[tile.x] = "water"
+		map_rows[tile.y] = row
+	session.overworld["map"] = map_rows
+
 func _resource_controller(session, placement_id: String) -> String:
 	for node in session.overworld.get("resource_nodes", []):
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
@@ -492,6 +623,17 @@ func _event_types(events: Variant) -> Array:
 				types.append(event_type)
 	types.sort()
 	return types
+
+func _event_reason_codes(events: Variant, event_type_filter: String) -> Array:
+	if not (events is Array):
+		return []
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		if String(event.get("event_type", "")) != event_type_filter:
+			continue
+		return _string_array(event.get("reason_codes", event.get("target_reason_codes", [])))
+	return []
 
 func _task_state(session) -> Dictionary:
 	var state := _enemy_state(session)
