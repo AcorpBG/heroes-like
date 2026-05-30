@@ -43,6 +43,7 @@ const COMMANDER_EXPERIENCE_TOWN_DEFENDED := 65
 const RAID_RISK_SUPPORT_STALL_DAYS := 3
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const RAID_BASE_MOVEMENT_STEPS := 1
+const RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE := 4
 const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
 const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
 const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
@@ -1070,6 +1071,7 @@ static func advance_raids(
 				if scouting_event_value is Dictionary and not scouting_event_value.is_empty():
 					event_records.append(scouting_event_value)
 		encounter = assign_target(session, config, encounter)
+		encounter = _redirect_raid_to_nearby_exposed_hero(session, config, encounter, faction_id)
 		encounter = _redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)
 		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
@@ -1950,6 +1952,224 @@ static func _redirect_fragile_raid_for_known_target_risk(
 				return raid
 			return redirect_hero_intercept_for_risk(session, config, raid, faction_id, hero_report)
 	return raid
+
+static func _redirect_raid_to_nearby_exposed_hero(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if bool(raid.get("arrived", false)):
+		return raid
+	var current_kind := String(raid.get("target_kind", ""))
+	if current_kind == "" or current_kind == "hero" or current_kind == "regroup":
+		return raid
+	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
+		return raid
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if _opportunistic_hero_intercept_protected_reason(reason_codes):
+		return raid
+	if _opportunistic_current_target_requires_guard_clearance(session, raid):
+		return raid
+	if int(raid.get("hero_intercept_delay_until_day", 0)) > int(session.day):
+		return raid
+
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	var best_score := -999999.0
+	var best_distance := 9999
+	var best_strength := -1
+	for hero in _player_hero_snapshots_for_intercept(session):
+		if not (hero is Dictionary):
+			continue
+		var hero_id := String(hero.get("id", ""))
+		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
+			continue
+		var goal_tile := _player_hero_goal_tile(hero)
+		var distance: int = _hero_target_goal_distance(session, origin, goal_tile)
+		if distance > RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE:
+			continue
+		var probe := raid.duplicate(true)
+		probe["target_kind"] = "hero"
+		probe["target_placement_id"] = hero_id
+		probe["target_label"] = String(hero.get("name", hero_id))
+		probe["target_x"] = goal_tile.x
+		probe["target_y"] = goal_tile.y
+		probe["goal_x"] = goal_tile.x
+		probe["goal_y"] = goal_tile.y
+		probe["goal_distance"] = distance
+		probe["target_reason_codes"] = ["hero_hunt", "exposed_hero", "opportunity_intercept"]
+		probe["target_public_reason"] = "exposed hero"
+		probe["target_public_importance"] = "high"
+		probe["target_debug_reason"] = "opportunistic hero intercept"
+		var readiness_report := _hero_intercept_advance_risk_report(probe, hero)
+		if not bool(readiness_report.get("ready", false)):
+			continue
+		var strength: int = raid_strength(probe)
+		var hero_strength: int = int(readiness_report.get("hero_strength", _army_strength(hero.get("army", {}).get("stacks", []))))
+		var required: int = max(1, int(readiness_report.get("required_strength", 1)))
+		var strength_margin: int = strength - required
+		var score: float = 260.0
+		score += float(max(0, RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE - distance)) * 42.0
+		score += float(max(-60, strength_margin)) * 1.8
+		score += float(max(0, 180 - hero_strength)) * 1.1
+		if hero_id == String(session.overworld.get("active_hero_id", "")):
+			score += 60.0
+		if bool(hero.get("is_primary", false)):
+			score += 70.0
+		score += float(priority_target_bonus(config, hero_id))
+		score *= strategy_target_weight(config, faction_id, "hero", hero_id)
+		if (
+			best.is_empty()
+			or score > best_score
+			or (
+				is_equal_approx(score, best_score)
+				and (
+					distance < best_distance
+					or (distance == best_distance and strength > best_strength)
+					or (
+						distance == best_distance
+						and strength == best_strength
+						and hero_id < String(best.get("hero_id", ""))
+					)
+				)
+			)
+		):
+			best = {
+				"hero": hero,
+				"hero_id": hero_id,
+				"distance": distance,
+				"score": score,
+				"strength": strength,
+			}
+			best_score = score
+			best_distance = distance
+			best_strength = strength
+	if best.is_empty():
+		return raid
+
+	var selected_hero: Dictionary = best.get("hero", {})
+	var selected_hero_id := String(best.get("hero_id", ""))
+	var selected_tile := _player_hero_goal_tile(selected_hero)
+	raid["previous_target_kind"] = current_kind
+	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_kind"] = "hero"
+	raid["target_placement_id"] = selected_hero_id
+	raid["target_label"] = String(selected_hero.get("name", selected_hero_id))
+	raid["target_x"] = selected_tile.x
+	raid["target_y"] = selected_tile.y
+	raid["goal_x"] = selected_tile.x
+	raid["goal_y"] = selected_tile.y
+	raid["goal_distance"] = int(best.get("distance", 9999))
+	raid["arrived"] = false
+	raid["opportunity_intercept_started_day"] = int(session.day)
+	raid["target_reason_codes"] = ["hero_hunt", "exposed_hero", "opportunity_intercept"]
+	raid["target_public_reason"] = "exposed hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "retargeted to nearby exposed hero"
+	raid = _refresh_target(session, raid)
+	var current_target := _current_target_snapshot(raid)
+	var commander_state = raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		raid["enemy_commander_state"] = record_target_assignment(
+			commander_state,
+			String(current_target.get("target_kind", "")),
+			String(current_target.get("target_placement_id", "")),
+			String(current_target.get("target_label", "")),
+			int(current_target.get("target_x", 0)),
+			int(current_target.get("target_y", 0))
+		)
+	_ai_hero_task_record_live_assignment(session, config, raid, current_target, {})
+	return raid
+
+static func _opportunistic_hero_intercept_protected_reason(reason_codes: Array) -> bool:
+	for code in [
+		"town_defense",
+		"site_defense",
+		"defend_front",
+		"front_stabilization",
+		"active_front_support",
+		"awaiting_support",
+		"regroup_understrength",
+		"army_consolidation",
+		"objective_front",
+		"guard_clearance",
+		"guarded_resource_claim",
+		"guarded_artifact_claim",
+		"route_unreachable",
+	]:
+		if code in reason_codes:
+			return true
+	return false
+
+static func _opportunistic_current_target_requires_guard_clearance(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary
+) -> bool:
+	if session == null or raid.is_empty():
+		return false
+	match String(raid.get("target_kind", "")):
+		"resource":
+			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
+			var node: Dictionary = resource_result.get("node", {})
+			if int(resource_result.get("index", -1)) < 0 or node.is_empty():
+				return false
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			return not _resource_guard_encounter_for_node(session, node, site).is_empty()
+		"artifact":
+			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
+			var artifact_node: Dictionary = artifact_result.get("node", {})
+			if int(artifact_result.get("index", -1)) < 0 or artifact_node.is_empty():
+				return false
+			return not _artifact_guard_encounter_for_node(session, artifact_node).is_empty()
+	return false
+
+static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScript.SessionData) -> Array:
+	var heroes := []
+	if session == null:
+		return heroes
+	var seen := {}
+	for hero_value in session.overworld.get("player_heroes", []):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value.duplicate(true)
+		var hero_id := String(hero.get("id", ""))
+		if hero_id == "":
+			continue
+		seen[hero_id] = true
+		heroes.append(hero)
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	if active_hero_id != "" and not seen.has(active_hero_id):
+		var active_hero_value = session.overworld.get("hero", {})
+		if active_hero_value is Dictionary and not active_hero_value.is_empty():
+			var active_hero: Dictionary = active_hero_value.duplicate(true)
+			active_hero["id"] = active_hero_id
+			var active_position = active_hero.get("position", {})
+			if not (active_position is Dictionary) or active_position.is_empty():
+				var position_source = session.overworld.get("hero_position", {"x": 0, "y": 0})
+				if position_source is Dictionary:
+					active_hero["position"] = position_source.duplicate(true)
+			active_hero["is_primary"] = true
+			heroes.append(active_hero)
+	return heroes
+
+static func _player_hero_sheltered_in_town(session: SessionStateStoreScript.SessionData, hero: Dictionary) -> bool:
+	if session == null or hero.is_empty():
+		return false
+	var hero_position: Dictionary = hero.get("position", {})
+	var hero_x := int(hero_position.get("x", -1))
+	var hero_y := int(hero_position.get("y", -1))
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		if String(town_value.get("owner", "neutral")) != "player":
+			continue
+		if int(town_value.get("x", -2)) == hero_x and int(town_value.get("y", -2)) == hero_y:
+			return true
+	return false
 
 static func resource_arrival_ready_report(
 	session: SessionStateStoreScript.SessionData,
