@@ -1075,6 +1075,9 @@ static func advance_raids(
 			var arrival_event: Dictionary = arrival_result.get("ai_event", {})
 			if not arrival_event.is_empty():
 				event_records.append(arrival_event)
+			if bool(encounter.get("raid_retired_to_rebuild", false)):
+				encounters[index] = encounter
+				continue
 		encounters[index] = encounter
 
 		var target_label = String(encounter.get("target_label", "the frontier")).strip_edges()
@@ -2490,7 +2493,12 @@ static func commander_can_deploy(source: Variant) -> bool:
 	var continuity := _normalized_commander_army_continuity(source)
 	if continuity.is_empty() or int(continuity.get("base_strength", 0)) <= 0:
 		return true
-	return int(continuity.get("current_strength", 0)) > 0
+	var current_strength: int = max(0, int(continuity.get("current_strength", 0)))
+	if current_strength <= 0:
+		return false
+	var base_strength: int = max(1, int(continuity.get("base_strength", 0)))
+	var deploy_floor: int = max(45, int(round(float(base_strength) * 0.55)))
+	return current_strength >= deploy_floor
 
 static func raid_commander_memory_summaries(encounters: Array, limit: int = 2) -> Array:
 	var summaries: Array = []
@@ -10829,6 +10837,9 @@ static func _regroup_raid_at_town(
 	if ready_to_resume:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		raid = _clear_regroup_target(raid)
+	elif transferred_count <= 0:
+		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
+		raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
 
 	var message := ""
 	if transferred_count > 0:
@@ -10837,6 +10848,11 @@ static func _regroup_raid_at_town(
 			_town_name(town),
 			transferred_count,
 			"" if transferred_count == 1 else "s",
+		]
+	elif bool(raid.get("raid_retired_to_rebuild", false)):
+		message = "%s reaches %s with no spare garrison and falls back into command rebuild." % [
+			_raid_name(raid),
+			_town_name(town),
 		]
 	else:
 		message = "%s regroups at %s but finds no spare garrison." % [_raid_name(raid), _town_name(town)]
@@ -10861,6 +10877,47 @@ static func _regroup_raid_at_town(
 		}
 	)
 	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+
+static func _retire_failed_regroup_to_rebuild(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String,
+	town: Dictionary
+) -> Dictionary:
+	var retired := raid.duplicate(true)
+	retired["regroup_blocked_day"] = int(session.day)
+	retired["regroup_blocked_reason"] = "no_spare_garrison"
+	retired["regroup_failed_count"] = max(0, int(retired.get("regroup_failed_count", 0))) + 1
+	retired["raid_retired_to_rebuild"] = true
+	retired["retired_to_rebuild_day"] = int(session.day)
+	retired["retired_to_rebuild_town_id"] = String(town.get("placement_id", ""))
+	var commander_state = retired.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var updated_commander := sync_commander_army_continuity(
+			commander_state,
+			retired.get("enemy_army", {}),
+			String(retired.get("encounter_id", retired.get("id", "")))
+		)
+		retired["enemy_commander_state"] = updated_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			updated_commander,
+			COMMANDER_STATUS_AVAILABLE,
+			"",
+			0,
+			String(updated_commander.get("last_outcome", ""))
+		)
+	var resolved = session.overworld.get("resolved_encounters", [])
+	if not (resolved is Array):
+		resolved = []
+	var placement_id := String(retired.get("placement_id", ""))
+	if placement_id != "" and placement_id not in resolved:
+		resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
+	retired = _clear_regroup_target(retired)
+	retired["arrived"] = false
+	return retired
 
 static func _transfer_town_garrison_to_raid(
 	session: SessionStateStoreScript.SessionData,

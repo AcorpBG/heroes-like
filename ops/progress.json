@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-unreachable-route-recovery-10184",
-  "currentSliceTitle": "Strategic AI Unreachable Route Recovery",
+  "currentSliceId": "strategic-ai-regroup-failure-rebuild-10184",
+  "currentSliceTitle": "Strategic AI Regroup Failure Rebuild",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active raids now invalidate unreachable current targets and recover through reachable regroup towns instead of freezing.",
+  "currentSliceNotes": "Completed. Empty-garrison regroup arrivals now release understrength active raids into commander rebuild instead of cycling on an unusable regroup target.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T22:29:00Z",
+  "updatedAt": "2026-05-30T23:02:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28459,6 +28459,39 @@
       "updatedAt": "2026-05-30T22:29:00Z",
       "notes": "Completed. Active raids now recover from valid-but-unreachable route targets through regroup instead of freezing.",
       "completedAt": "2026-05-30T22:29:00Z"
+    },
+    {
+      "id": "strategic-ai-regroup-failure-rebuild-10184",
+      "title": "Strategic AI Regroup Failure Rebuild",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "production strategic AI retreat timing review; an understrength active raid that reaches an empty regroup town must not keep cycling as a useless active host",
+      "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/validate_repo.py",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "If an understrength active raid arrives at a same-faction regroup town and receives no usable reinforcement, it must mark the regroup task suspended for commander rebuild, release the active encounter from the map turn loop, sync the commander army continuity into roster rebuild, avoid pillage/pressure from the retired host, and preserve existing successful regroup/unreachable-route behavior without a save-version bump.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No long-run generated-map KPI matrix in this slice",
+        "No save-version bump"
+      ],
+      "startedAt": "2026-05-30T22:45:00Z",
+      "updatedAt": "2026-05-30T23:02:00Z",
+      "notes": "Completed. Empty-garrison regroup arrivals now retire the active raid and push the commander into roster rebuild instead of keeping a useless active host.",
+      "completedAt": "2026-05-30T23:02:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -38672,8 +38705,8 @@
       "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-unreachable-route-recovery-10184",
-  "currentSliceUpdatedAt": "2026-05-30T22:29:00Z",
+  "active_slice": "strategic-ai-regroup-failure-rebuild-10184",
+  "currentSliceUpdatedAt": "2026-05-30T23:02:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41546,35 +41579,36 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-unreachable-route-recovery-10184",
-    "title": "Strategic AI Unreachable Route Recovery",
+    "id": "strategic-ai-regroup-failure-rebuild-10184",
+    "title": "Strategic AI Regroup Failure Rebuild",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "production strategic AI route resilience; target validity must include reachable execution, not only object existence",
-    "planRef": "PLAN.md Current strategic AI follow-up / long-run generated-map behavior and retreat timing review",
+    "source": "production strategic AI retreat timing review; an understrength active raid that reaches an empty regroup town must not keep cycling as a useless active host",
+    "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
-      "docs/strategic-ai-foundation.md"
+      "docs/strategic-ai-foundation.md",
+      "docs/strategic-ai-raid-regroup-retreat-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
       "tests/ai_raid_regroup_retreat_report.gd",
-      "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+      "docs/strategic-ai-raid-regroup-retreat-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Active raids whose current non-regroup target exists but has no reachable route must invalidate the active task as invalid_route_unreachable, retask to a reachable same-faction regroup town when available, emit a normal target-assignment event, preserve previous-target metadata, and avoid seizing the unreachable target without a save-version bump.",
-    "startedAt": "2026-05-30T22:12:00Z",
-    "updatedAt": "2026-05-30T22:29:00Z",
-    "notes": "Completed. Active raids now invalidate unreachable current targets and recover through reachable regroup towns instead of freezing.",
-    "completedAt": "2026-05-30T22:29:00Z",
+    "completionCriteria": "If an understrength active raid arrives at a same-faction regroup town and receives no usable reinforcement, it must mark the regroup task suspended for commander rebuild, release the active encounter from the map turn loop, sync the commander army continuity into roster rebuild, avoid pillage/pressure from the retired host, and preserve existing successful regroup/unreachable-route behavior without a save-version bump.",
+    "startedAt": "2026-05-30T22:45:00Z",
+    "updatedAt": "2026-05-30T23:02:00Z",
+    "notes": "Completed. Empty-garrison regroup arrivals now retire the active raid and push the commander into roster rebuild instead of keeping a useless active host.",
+    "completedAt": "2026-05-30T23:02:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T22:29:00Z",
-      "sliceId": "strategic-ai-unreachable-route-recovery-10184",
+      "updatedAt": "2026-05-30T23:02:00Z",
+      "sliceId": "strategic-ai-regroup-failure-rebuild-10184",
       "commands": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
@@ -41590,10 +41624,11 @@
       ],
       "evidence": {
         "implemented": [
-          "Active raids now check whether their current valid non-regroup target has a reachable route before movement.",
-          "Unreachable current targets invalidate the matching live hero task with invalid_route_unreachable before retasking.",
-          "When a reachable same-faction regroup town exists, the raid retasks with route_unreachable/regroup_route_recovery reasons, emits ai_target_assigned, and preserves previous-target metadata.",
-          "The focused fixture proves a valid resource target isolated by impassable terrain remains player-held while Vaska recovers through Duskfen Bastion instead of freezing on the impossible route."
+          "Commander roster deployability now uses the same understrength floor as raid regroup, so damaged persisted hosts below the floor stay in rebuild instead of redeploying immediately.",
+          "Empty-garrison regroup arrivals suspend the active regroup task with invalid_actor_rebuilding instead of leaving it active.",
+          "Failed regroup arrivals record regroup_blocked metadata, sync the damaged army continuity back to the commander roster, and mark the encounter resolved so it is no longer an active raid.",
+          "The failed-regroup turn skips active pressure and pillage counting, leaving the original player-controlled resource untouched.",
+          "Focused coverage proves successful regroup, guarded-claim retarget/resume, unreachable-route recovery, and empty-garrison rebuild release all remain on the same no-save-migration report surface."
         ],
         "sourceDocs": [
           "PLAN.md",
@@ -41604,7 +41639,7 @@
         "focusedReports": [
           "AI_RAID_REGROUP_RETREAT_REPORT"
         ],
-        "residualRisk": "This fixes one real route-execution failure mode. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
+        "residualRisk": "This fixes one failed-regroup cycling mode. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer retreat/economy timing, and manual live-client pacing checks."
       }
     }
   },
