@@ -14,13 +14,17 @@ func _run() -> void:
 	var case_report := _encounter_objective_task_board_case()
 	if case_report.is_empty():
 		return
+	var risk_case_report := _weak_encounter_objective_regroups_before_clear_case()
+	if risk_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "encounter_objective_tasks_are_durable",
-		"behavior_policy": "objective_front_encounters_use_saved_task_continuity",
+		"behavior_policy": "objective_front_encounters_use_saved_task_continuity_and_arrival_risk_gating",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"risk_case": risk_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -74,10 +78,19 @@ func _encounter_objective_task_board_case() -> Dictionary:
 	if _failed:
 		return {}
 
-	var state := _enemy_state(session)
-	var contest_result := EnemyAdventureRules._contest_encounter_target(session, assigned_raid, state, MIRECLAW)
-	if contest_result.is_empty():
-		_fail("Encounter contest returned no result.")
+	assigned_raid = _set_raid_bog_brutes(assigned_raid, 14)
+	var staging_tile := _first_encounter_staging_tile(session, encounter)
+	assigned_raid["x"] = staging_tile.x
+	assigned_raid["y"] = staging_tile.y
+	assigned_raid["goal_x"] = staging_tile.x
+	assigned_raid["goal_y"] = staging_tile.y
+	assigned_raid["goal_distance"] = 0
+	assigned_raid["arrived"] = false
+	_remove_mireclaw_encounters(session)
+	_append_encounter(session, assigned_raid)
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	if advance_result.is_empty():
+		_fail("Encounter advance returned no result.")
 		return {}
 	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "completed", "valid")
 	if _failed:
@@ -98,6 +111,80 @@ func _encounter_objective_task_board_case() -> Dictionary:
 		"reason_codes": reason_codes,
 		"resolved_encounter_id": OBJECTIVE_ENCOUNTER_ID,
 		"task_status_counts": _task_status_counts(final_task_state),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _weak_encounter_objective_regroups_before_clear_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var encounter := _encounter(session, OBJECTIVE_ENCOUNTER_ID)
+	if encounter.is_empty():
+		return {}
+	var raid := _raid_seed(session, "hero_vaska", "weak_encounter_objective_vaska", {"x": 8, "y": 4})
+	raid["target_kind"] = "encounter"
+	raid["target_placement_id"] = OBJECTIVE_ENCOUNTER_ID
+	raid["target_label"] = _encounter_label(encounter)
+	raid["target_x"] = int(encounter.get("x", 0))
+	raid["target_y"] = int(encounter.get("y", 0))
+	raid["target_reason_codes"] = ["site_contested", "objective_front", "encounter_objective_task_fixture"]
+	raid["target_public_reason"] = "objective front"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "weak encounter objective risk fixture"
+	var assigned_raid := EnemyAdventureRules.assign_target(session, config, raid)
+	assigned_raid = _set_raid_bog_brutes(assigned_raid, 7)
+	var staging_tile := _first_encounter_staging_tile(session, encounter)
+	assigned_raid["x"] = staging_tile.x
+	assigned_raid["y"] = staging_tile.y
+	assigned_raid["goal_x"] = staging_tile.x
+	assigned_raid["goal_y"] = staging_tile.y
+	assigned_raid["goal_distance"] = 0
+	assigned_raid["arrived"] = false
+	_remove_mireclaw_encounters(session)
+	_append_encounter(session, assigned_raid)
+
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	if OBJECTIVE_ENCOUNTER_ID in _string_array(session.overworld.get("resolved_encounters", [])):
+		_fail("Weak encounter objective raid incorrectly resolved %s." % OBJECTIVE_ENCOUNTER_ID)
+		return {}
+	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	if _failed:
+		return {}
+	var after_raid := _encounter(session, "weak_encounter_objective_vaska")
+	if after_raid.is_empty():
+		_fail("Weak encounter objective raid disappeared after risk gating.")
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "encounter_risk_regroup" not in reason_codes and "encounter_risk_staging" not in reason_codes:
+		_fail("Weak encounter objective did not record an encounter-risk reason: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_public_reason", "")) != "gathering strength for guarded site":
+		_fail("Weak encounter objective public reason was not guarded-site staging: %s" % JSON.stringify(after_raid))
+		return {}
+	if int(after_raid.get("encounter_arrival_delay_until_day", 0)) <= int(session.day):
+		_fail("Weak encounter objective did not set a future arrival delay: %s" % JSON.stringify(after_raid))
+		return {}
+	var events: Array = advance_result.get("events", []) if advance_result.get("events", []) is Array else []
+	var event_types := _event_types(events)
+	if "ai_target_assigned" not in event_types:
+		_fail("Weak encounter objective risk gating did not emit ai_target_assigned: %s" % JSON.stringify(advance_result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Weak encounter objective public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	return {
+		"case_id": "weak_encounter_objective_regroups_before_clear",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"resolved": false,
+		"encounter_arrival_delay_until_day": int(after_raid.get("encounter_arrival_delay_until_day", 0)),
+		"target_public_reason": String(after_raid.get("target_public_reason", "")),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -160,6 +247,50 @@ func _raid_seed(session, roster_hero_id: String, placement_id: String, origin: D
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _set_raid_bog_brutes(raid: Dictionary, count: int) -> Dictionary:
+	var updated := raid.duplicate(true)
+	var army := {
+		"id": "%s_host" % String(updated.get("placement_id", "encounter_objective")),
+		"name": "Encounter Objective Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": max(0, count)}],
+	}
+	updated["enemy_army"] = army
+	var commander_state = updated.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		updated["enemy_commander_state"] = EnemyAdventureRules.sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(updated.get("encounter_id", updated.get("id", "")))
+		)
+	return updated
+
+func _first_encounter_staging_tile(session, encounter: Dictionary) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	var encounter_x := int(encounter.get("x", 0))
+	var encounter_y := int(encounter.get("y", 0))
+	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var nx: int = encounter_x + delta.x
+		var ny: int = encounter_y + delta.y
+		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, nx, ny):
+			continue
+		return Vector2i(nx, ny)
+	return Vector2i(encounter_x, encounter_y)
+
+func _remove_mireclaw_encounters(session) -> void:
+	var kept := []
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW:
+			continue
+		kept.append(encounter)
+	session.overworld["encounters"] = kept
+
+func _append_encounter(session, encounter: Dictionary) -> void:
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(encounter)
+	session.overworld["encounters"] = encounters
 
 func _base_session():
 	var session = ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
@@ -238,6 +369,29 @@ func _string_array(value: Variant) -> Array:
 		if text != "" and text not in output:
 			output.append(text)
 	return output
+
+func _event_types(events: Array) -> Array:
+	var output := []
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		var event_type := String(event.get("event_type", ""))
+		if event_type != "" and event_type not in output:
+			output.append(event_type)
+	return output
+
+func _public_event_leaks(events: Variant) -> bool:
+	if not (events is Array):
+		return false
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		var text := JSON.stringify(event)
+		for token in ["target_debug_reason", "debug_reason", "score", "hero_task_state", "schema_version", "task_id"]:
+			if text.contains(token):
+				_fail("Public encounter objective event leaked internal token %s: %s" % [token, text])
+				return true
+	return false
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}

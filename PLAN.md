@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-hero-intercept-risk-gating-10184`, completed to stop underpowered AI hero-hunt hosts from suiciding into stronger player field armies before they meet a pursuit readiness threshold.
+- Current implementation slice: `strategic-ai-encounter-arrival-risk-gating-10184`, completed to stop underpowered AI raids from auto-clearing or contesting guarded encounter objectives just because they reached the tile.
+- Latest completed slice: `strategic-ai-encounter-arrival-risk-gating-10184`.
 - Latest completed slice: `strategic-ai-hero-intercept-risk-gating-10184`.
 - Latest completed slice: `strategic-ai-town-assault-risk-gating-10184`.
 - Latest completed slice: `strategic-ai-commander-assault-consolidation-10184`.
@@ -81,8 +82,7 @@ Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
 - Current strategic AI target: build from the baseline KPI audit into production behavior. Live commander/raid target choices now write normalized `enemy_states[].hero_task_state`, reuse saved active tasks for later target selection, reserve exclusive targets across active task boards, complete captured resource and artifact tasks, reconcile saved tasks against current target ownership/existence, suspend or invalidate saved tasks whose commander actor is missing, recovering, or unable to deploy, reactivate suspended saved tasks once their commander is deployable again, make new raid spawning prefer deployable commanders with reachable saved tasks before falling back to roster rotation, preserve explicit cancelled history when a commander is retasked to a different objective, persist objective-front encounter targets as first-class durable tasks, and keep all of that continuity without a save-version bump.
-- Current strategic AI follow-up: AI town-assault execution must compare the attacking host against target town readiness and host desired strength before queuing a town-defense battle. Weak hosts should regroup at owned towns when possible or stage briefly for support when no regroup town exists, with public retask events and no debug leakage.
-- Current strategic AI follow-up: AI hero-hunt execution must compare the hunter host against the target hero's field army before queuing `hero_intercept`; weak hunters should regroup or shadow instead of throwing away commander continuity.
+- Current strategic AI follow-up: broaden the same readiness discipline into long-run generated-map strategic AI evidence and any remaining objective surfaces where guarded value can be claimed without a real fight/readiness comparison. Do not treat encounter-arrival, hero-intercept, or town-assault risk gates as full release-ready strategic AI.
 - Current battle-presentation target: battle resolution should emit a readable event stream for movement, strikes, shots, spell casts, damage, healing, status changes, resisted/immune outcomes, deaths, retaliation, morale/cohesion, and momentum; the battle scene should consume that stream with normal/fast/instant playback controls while keeping combat math unchanged.
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed, the public benchmark report uses side-neutral `side_a`/`side_b` terminology, and spell-enabled benchmark availability follows the same Native RMG week surface as army snapshots.
 - Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.

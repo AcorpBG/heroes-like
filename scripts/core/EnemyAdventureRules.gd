@@ -869,7 +869,7 @@ static func advance_raids(
 		encounter["arrived"] = int(encounter.get("goal_distance", 9999)) == 0
 
 		if bool(encounter.get("arrived", false)):
-			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id)
+			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
 			encounter = arrival_result.get("encounter", encounter)
 			state = arrival_result.get("state", state)
 			var event_message = String(arrival_result.get("event_message", ""))
@@ -1573,6 +1573,85 @@ static func redirect_hero_intercept_for_risk(
 		return _refresh_target(session, raid)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in ["hero_hunt_risk_shadow", "awaiting_support", "hero_hunt"]:
+		if code not in reason_codes:
+			reason_codes.append(code)
+	raid["target_reason_codes"] = reason_codes
+	raid["goal_distance"] = max(1, int(raid.get("goal_distance", 1)))
+	return raid
+
+static func encounter_arrival_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"ready": true, "reason": "no_live_context"}
+	if String(raid.get("target_kind", "")) != "encounter":
+		return {"ready": true, "reason": "not_encounter_target"}
+	var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
+	var encounter_state: Dictionary = encounter_result.get("encounter", {})
+	if int(encounter_result.get("index", -1)) < 0 or encounter_state.is_empty():
+		return {"ready": true, "reason": "target_missing"}
+	if OverworldRulesScript.is_encounter_resolved(session, encounter_state):
+		return {"ready": true, "reason": "target_resolved"}
+	var guard_strength := _encounter_guard_strength(encounter_state)
+	if guard_strength <= 0:
+		return {"ready": true, "reason": "no_guard_strength"}
+	var host_strength := raid_strength(raid)
+	var desired_strength := desired_raid_strength(raid)
+	var required_strength: int = max(
+		60,
+		max(
+			int(ceili(float(guard_strength) * 0.90)),
+			int(ceili(float(desired_strength) * 0.75))
+		)
+	)
+	var ready := host_strength >= required_strength
+	return {
+		"ready": ready,
+		"host_strength": host_strength,
+		"guard_strength": guard_strength,
+		"desired_strength": desired_strength,
+		"required_strength": required_strength,
+		"target_placement_id": String(encounter_state.get("placement_id", "")),
+		"target_encounter_id": String(encounter_state.get("encounter_id", encounter_state.get("id", ""))),
+		"target_is_objective_anchor": _encounter_is_objective_anchor(session, encounter_state),
+		"reason": "ready" if ready else "encounter_guard_strength",
+	}
+
+static func redirect_encounter_objective_for_risk(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	risk_report: Dictionary = {}
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) != "encounter":
+		return raid
+	var strength := int(risk_report.get("host_strength", raid_strength(raid)))
+	var required := int(risk_report.get("required_strength", desired_raid_strength(raid)))
+	var debug_reason := "encounter arrival risk gate: strength %d below %d" % [strength, required]
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
+	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_public_reason"] = "gathering strength for guarded site"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = debug_reason
+	raid["encounter_arrival_risk_started_day"] = int(session.day)
+	raid["encounter_arrival_delay_until_day"] = int(session.day) + 1
+	raid["arrived"] = false
+	if not regroup_town.is_empty():
+		raid["target_kind"] = "regroup"
+		raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
+		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
+		raid["target_reason_codes"] = ["encounter_risk_regroup", "regroup_understrength", "army_consolidation", "objective_front"]
+		raid["encounter_regroup_started_day"] = int(session.day)
+		return _refresh_target(session, raid)
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	for code in ["encounter_risk_staging", "awaiting_support", "objective_front"]:
 		if code not in reason_codes:
 			reason_codes.append(code)
 	raid["target_reason_codes"] = reason_codes
@@ -9728,7 +9807,8 @@ static func _resolve_arrived_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	match String(raid.get("target_kind", "")):
 		"town":
@@ -9753,6 +9833,21 @@ static func _resolve_arrived_target(
 		"artifact":
 			return _secure_artifact_target(session, raid, state, faction_id)
 		"encounter":
+			var ready_report := encounter_arrival_ready_report(session, raid, faction_id)
+			if not bool(ready_report.get("ready", true)):
+				var previous_target := _current_target_snapshot(raid)
+				var redirected := redirect_encounter_objective_for_risk(session, config, raid, faction_id, ready_report)
+				var retask_event := ai_target_assignment_event(session, config, redirected, previous_target)
+				if retask_event.is_empty():
+					retask_event = ai_target_assignment_event(session, config, redirected, {})
+				return {
+					"encounter": redirected,
+					"state": state,
+					"event_message": "",
+					"ai_event": retask_event,
+					"risk_gated": true,
+					"risk_report": ready_report,
+				}
 			return _contest_encounter_target(session, raid, state, faction_id)
 		"regroup":
 			return _regroup_raid_at_town(session, raid, state, faction_id)
@@ -10968,6 +11063,14 @@ static func _base_enemy_army(encounter_id: String) -> Dictionary:
 	if encounter.is_empty():
 		return {}
 	return _normalize_army_payload(ContentService.get_army_group(String(encounter.get("enemy_group_id", ""))))
+
+static func _encounter_guard_strength(encounter_state: Dictionary) -> int:
+	if encounter_state.is_empty():
+		return 0
+	var army := _normalize_army_payload(encounter_state.get("enemy_army", {}))
+	if army.is_empty():
+		army = _base_enemy_army(String(encounter_state.get("encounter_id", encounter_state.get("id", ""))))
+	return _army_strength(army.get("stacks", []))
 
 static func _normalize_army_payload(army: Variant) -> Dictionary:
 	if not (army is Dictionary):
