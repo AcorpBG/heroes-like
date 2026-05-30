@@ -210,6 +210,7 @@ AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.gd"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.tscn"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-task-board-report.md"
+AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-equipment-report.md"
 AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.gd"
 AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.tscn"
 AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-hunt-task-board-report.md"
@@ -14973,6 +14974,9 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
         "func _ai_hero_task_reconciled_artifact_task",
         '"artifact":',
         "ArtifactRulesScript.describe_artifact",
+        "ArtifactRulesScript.claim_artifact",
+        "sync_commander_state_to_roster",
+        "ai_artifact_secured",
         "collected_by_faction_id",
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
     ):
@@ -14992,6 +14996,10 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
             "saved_hero_task",
             "invalid_target_missing",
             "invalid_target_resolved",
+            "artifact_warcrest_pennon",
+            "equipped_artifact_id",
+            "artifact_bonus_attack",
+            "artifact_event_type",
             "hero_task_state_live_persist_no_save_migration",
         ):
             ensure(required_token in report_text, errors, f"AI hero task artifact objective report is missing token: {required_token}")
@@ -15005,6 +15013,46 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"AI hero task artifact objective doc is missing required text: {required_text}")
+
+def validate_ai_artifact_equipment(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH,
+        AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI artifact equipment file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    report_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "ArtifactRulesScript.normalize_hero_artifacts",
+        "ArtifactRulesScript.claim_artifact",
+        "ArtifactRulesScript.artifact_equip_runtime_report",
+        "sync_commander_state_to_roster",
+        "ai_artifact_secured",
+        '"artifact_secured"',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"AI artifact equipment implementation is missing token: {required_token}")
+    for required_token in (
+        "artifact_warcrest_pennon",
+        "battle_attack",
+        "battle_initiative",
+        "_roster_commander_state",
+        "ai_public_event_log_boundary_report",
+        "ai_artifact_secured",
+    ):
+        ensure(required_token in report_text, errors, f"AI artifact equipment report is missing token: {required_token}")
+    if AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH.exists():
+        doc_text = AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Artifact Equipment Report",
+            "strategic-ai-artifact-equipment-10184",
+            "ArtifactRules.claim_artifact",
+            "artifact_warcrest_pennon",
+            "ai_artifact_secured",
+            "No save migration",
+            "No broad strategic-AI production-ready claim",
+        ):
+            ensure(required_text in doc_text, errors, f"AI artifact equipment doc is missing required text: {required_text}")
 
 def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     for path in (
@@ -21752,6 +21800,7 @@ def main() -> int:
     validate_ai_hero_task_retask_cancellation(errors)
     validate_ai_hero_task_encounter_objective(errors)
     validate_ai_hero_task_artifact_objective(errors)
+    validate_ai_artifact_equipment(errors)
     validate_ai_hero_task_hero_hunt(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
     validate_ai_town_defense_retask(errors)

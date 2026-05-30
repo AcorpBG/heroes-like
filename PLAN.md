@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-scouting-spell-execution-10184`, completed to let enemy commanders cast scouting overworld spells, write enemy knowledge memory, and bias target choice toward freshly scouted actionable map targets.
+- Current implementation slice: `strategic-ai-artifact-equipment-10184`, completed to make enemy commanders claim and equip secured artifacts through live artifact rules instead of leaving relics as faction-level captured ids only.
+- Latest completed slice: `strategic-ai-artifact-equipment-10184`.
 - Latest completed slice: `strategic-ai-scouting-spell-execution-10184`.
 - Latest completed slice: `strategic-ai-adventure-spell-execution-10184`.
 - Latest completed slice: `strategic-ai-local-recruitment-support-10184`.
