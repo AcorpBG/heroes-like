@@ -32,6 +32,9 @@ const COMMANDER_EXPERIENCE_STALEMATE := 30
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const RAID_BASE_MOVEMENT_STEPS := 1
 const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
+const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
+const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
+const RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS := 48
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 const COMMANDER_ROLE_RAIDER := "raider"
 const COMMANDER_ROLE_DEFENDER := "defender"
@@ -322,7 +325,7 @@ static func adventure_spell_valuation_report(
 		"effect_type_counts": effect_type_counts,
 		"runtime_hook_counts": hook_counts,
 		"candidates": candidates,
-		"runtime_policy": "valuation_with_enemy_movement_spell_executor",
+		"runtime_policy": "valuation_with_enemy_movement_and_scouting_spell_executors",
 	}
 
 static func artifact_reward_valuation_report(
@@ -792,6 +795,12 @@ static func advance_raids(
 		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id)
 		encounter = _redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id)
 		encounter = _redirect_raid_to_threatened_resource_defense(session, config, encounter, faction_id)
+		if not _raid_target_valid(session, encounter):
+			var scouting_result := _maybe_cast_raid_adventure_scouting_spell(session, config, encounter, faction_id)
+			encounter = scouting_result.get("encounter", encounter)
+			for scouting_event_value in scouting_result.get("events", []):
+				if scouting_event_value is Dictionary and not scouting_event_value.is_empty():
+					event_records.append(scouting_event_value)
 		encounter = assign_target(session, config, encounter)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
@@ -1063,7 +1072,7 @@ static func _maybe_cast_raid_adventure_movement_spell(
 		"route_pressure": true,
 	}
 	var report := adventure_spell_valuation_report(commander_state, movement, context)
-	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	var selected := _selected_adventure_spell_candidate(report, "restore_movement")
 	if selected.is_empty() or String(selected.get("recommendation", "")) != "cast":
 		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
 	var spell_id := String(selected.get("spell_id", ""))
@@ -1107,6 +1116,275 @@ static func _maybe_cast_raid_adventure_movement_spell(
 		}
 	)
 	return {"encounter": updated_raid, "movement_steps": steps, "events": [event]}
+
+static func _maybe_cast_raid_adventure_scouting_spell(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {"encounter": raid, "events": []}
+	var commander_state = raid.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {"encounter": raid, "events": []}
+	if int(raid.get("last_adventure_scout_spell_day", -9999)) == int(session.day):
+		return {"encounter": raid, "events": []}
+	var max_radius := _known_scouting_spell_max_radius(commander_state)
+	if max_radius <= 0:
+		return {"encounter": raid, "events": []}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var scoutable_targets := _scoutable_target_candidates(session, config, faction_id, origin, max_radius)
+	if scoutable_targets.is_empty():
+		return {"encounter": raid, "events": []}
+	var movement := {
+		"current": RAID_BASE_MOVEMENT_STEPS,
+		"max": RAID_BASE_MOVEMENT_STEPS,
+	}
+	var report := adventure_spell_valuation_report(
+		commander_state,
+		movement,
+		{
+			"target_kind": "scouting",
+			"target_label": "nearby targets",
+			"scouting_pressure": true,
+			"hidden_site_reveal": true,
+			"unscouted_target_count": scoutable_targets.size(),
+		}
+	)
+	var selected := _selected_adventure_spell_candidate(report, "reveal_radius")
+	if selected.is_empty():
+		return {"encounter": raid, "events": []}
+	var spell_id := String(selected.get("spell_id", ""))
+	var reveal_radius: int = max(0, int(selected.get("reveal_radius", 0)))
+	if reveal_radius <= 0:
+		return {"encounter": raid, "events": []}
+	var selected_radius_targets := _scoutable_target_candidates(session, config, faction_id, origin, reveal_radius)
+	if selected_radius_targets.is_empty():
+		return {"encounter": raid, "events": []}
+	var cast_result := SpellRulesScript.cast_overworld_spell(commander_state, movement, spell_id)
+	if not bool(cast_result.get("ok", false)):
+		return {"encounter": raid, "events": []}
+	reveal_radius = max(reveal_radius, int(cast_result.get("fog_reveal_radius", 0)))
+	var scouted_records := _record_enemy_scouting_reveal(
+		session,
+		config,
+		faction_id,
+		raid,
+		spell_id,
+		String(cast_result.get("spell_name", selected.get("spell_name", spell_id))),
+		reveal_radius
+	)
+	var updated_raid := raid.duplicate(true)
+	updated_raid["enemy_commander_state"] = cast_result.get("hero", commander_state)
+	updated_raid["last_adventure_scout_spell_id"] = spell_id
+	updated_raid["last_adventure_scout_spell_day"] = int(session.day)
+	updated_raid["last_adventure_scout_reveal_radius"] = reveal_radius
+	updated_raid["last_adventure_scouted_target_count"] = scouted_records.size()
+	var event := build_ai_event_record(
+		session,
+		config,
+		"ai_adventure_spell_cast",
+		updated_raid,
+		{
+			"target_kind": "spell",
+			"target_placement_id": spell_id,
+			"target_label": String(cast_result.get("spell_name", selected.get("spell_name", spell_id))),
+			"target_x": int(updated_raid.get("x", 0)),
+			"target_y": int(updated_raid.get("y", 0)),
+			"target_reason_codes": ["adventure_spell", "enemy_scouting"],
+			"target_public_reason": "route scouting",
+			"target_public_importance": "medium",
+			"target_debug_reason": "enemy commander cast a scouting spell to reveal actionable nearby targets",
+		},
+		{
+			"summary": "%s casts %s to scout nearby targets." % [
+				raid_commander_display_name(updated_raid),
+				String(cast_result.get("spell_name", spell_id)),
+			],
+			"state_policy": "derived",
+			"faction_id": faction_id,
+		}
+	)
+	return {"encounter": updated_raid, "events": [event]}
+
+static func _selected_adventure_spell_candidate(report: Dictionary, effect_type: String) -> Dictionary:
+	var selected := {}
+	for candidate_value in report.get("candidates", []):
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		if String(candidate.get("effect_type", "")) != effect_type:
+			continue
+		if String(candidate.get("recommendation", "")) != "cast":
+			continue
+		if selected.is_empty() or _adventure_band_rank(String(candidate.get("value_band", ""))) > _adventure_band_rank(String(selected.get("value_band", ""))):
+			selected = candidate
+	return selected
+
+static func _known_scouting_spell_max_radius(commander_state: Dictionary) -> int:
+	var hero := SpellRulesScript.ensure_hero_spellbook(commander_state.duplicate(true))
+	var max_radius := 0
+	for spell in SpellRulesScript.known_spells(hero, SpellRulesScript.CONTEXT_OVERWORLD):
+		if not (spell is Dictionary):
+			continue
+		var effect = spell.get("effect", {})
+		if not (effect is Dictionary) or String(effect.get("type", "")) != "reveal_radius":
+			continue
+		max_radius = max(max_radius, max(0, int(effect.get("amount", effect.get("radius", 0)))))
+	return max_radius
+
+static func _scoutable_target_candidates(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	origin: Vector2i,
+	radius: int
+) -> Array:
+	if session == null or faction_id == "" or radius <= 0:
+		return []
+	var output := []
+	for candidate_value in _target_candidates(session, config, origin):
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		var target_kind := String(candidate.get("target_kind", ""))
+		var target_id := String(candidate.get("target_placement_id", ""))
+		if target_kind == "" or target_id == "":
+			continue
+		if _enemy_target_scouted(session, faction_id, target_kind, target_id):
+			continue
+		var target := Vector2i(int(candidate.get("target_x", origin.x)), int(candidate.get("target_y", origin.y)))
+		if abs(origin.x - target.x) + abs(origin.y - target.y) > radius:
+			continue
+		output.append(candidate)
+	output.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("priority", 0)) == int(b.get("priority", 0)):
+			return String(a.get("target_label", "")) < String(b.get("target_label", ""))
+		return int(a.get("priority", 0)) > int(b.get("priority", 0))
+	)
+	return output
+
+static func _record_enemy_scouting_reveal(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	raid: Dictionary,
+	spell_id: String,
+	spell_name: String,
+	reveal_radius: int
+) -> Array:
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var targets := _scoutable_target_candidates(session, config, faction_id, origin, reveal_radius)
+	var records := []
+	for target_value in targets:
+		if not (target_value is Dictionary):
+			continue
+		var target: Dictionary = target_value
+		records.append(
+			{
+				"target_kind": String(target.get("target_kind", "")),
+				"target_id": String(target.get("target_placement_id", "")),
+				"target_label": String(target.get("target_label", target.get("target_placement_id", ""))),
+				"x": int(target.get("target_x", 0)),
+				"y": int(target.get("target_y", 0)),
+				"scouted_day": int(session.day),
+				"expires_day": int(session.day) + RAID_ADVENTURE_SCOUTING_MEMORY_DAYS,
+				"source_spell_id": spell_id,
+				"source_spell_name": spell_name,
+				"source_raid_id": String(raid.get("placement_id", "")),
+				"state_policy": "ai_known_world_memory",
+			}
+		)
+	return _merge_enemy_scouted_target_records(session, faction_id, records)
+
+static func _merge_enemy_scouted_target_records(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	records: Array
+) -> Array:
+	if session == null or faction_id == "" or records.is_empty():
+		return []
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	var state_index := -1
+	for index in range(states.size()):
+		if states[index] is Dictionary and String(states[index].get("faction_id", "")) == faction_id:
+			state_index = index
+			break
+	if state_index < 0:
+		states.append({"faction_id": faction_id})
+		state_index = states.size() - 1
+	var state: Dictionary = states[state_index] if states[state_index] is Dictionary else {"faction_id": faction_id}
+	var memory: Dictionary = state.get("known_world_memory", {}) if state.get("known_world_memory", {}) is Dictionary else {}
+	var existing: Array = memory.get("scouted_targets", []) if memory.get("scouted_targets", []) is Array else []
+	var by_key := {}
+	for existing_value in existing:
+		if not (existing_value is Dictionary):
+			continue
+		var existing_record: Dictionary = existing_value
+		if int(existing_record.get("expires_day", 0)) < int(session.day):
+			continue
+		by_key[_enemy_scouted_target_key(String(existing_record.get("target_kind", "")), String(existing_record.get("target_id", "")))] = existing_record
+	for record_value in records:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		var key := _enemy_scouted_target_key(String(record.get("target_kind", "")), String(record.get("target_id", "")))
+		if key == ":":
+			continue
+		by_key[key] = record
+	var merged := []
+	for key in by_key.keys():
+		merged.append(by_key[key])
+	merged.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("scouted_day", 0)) == int(b.get("scouted_day", 0)):
+			return String(a.get("target_label", "")) < String(b.get("target_label", ""))
+		return int(a.get("scouted_day", 0)) > int(b.get("scouted_day", 0))
+	)
+	while merged.size() > RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS:
+		merged.pop_back()
+	memory["schema_version"] = 1
+	memory["last_scouted_day"] = int(session.day)
+	memory["scouted_targets"] = merged
+	state["known_world_memory"] = memory
+	states[state_index] = state
+	session.overworld["enemy_states"] = states
+	return records
+
+static func _enemy_target_scouted(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_kind: String,
+	target_id: String
+) -> bool:
+	if session == null or faction_id == "" or target_kind == "" or target_id == "":
+		return false
+	var key := _enemy_scouted_target_key(target_kind, target_id)
+	for state_value in session.overworld.get("enemy_states", []):
+		if not (state_value is Dictionary) or String(state_value.get("faction_id", "")) != faction_id:
+			continue
+		var memory: Dictionary = state_value.get("known_world_memory", {}) if state_value.get("known_world_memory", {}) is Dictionary else {}
+		for record_value in memory.get("scouted_targets", []):
+			if not (record_value is Dictionary):
+				continue
+			var record: Dictionary = record_value
+			if _enemy_scouted_target_key(String(record.get("target_kind", "")), String(record.get("target_id", ""))) != key:
+				continue
+			return int(record.get("expires_day", 0)) >= int(session.day)
+	return false
+
+static func _enemy_scouted_target_priority_bonus(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_kind: String,
+	target_id: String
+) -> int:
+	if _enemy_target_scouted(session, faction_id, target_kind, target_id):
+		return RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS
+	return 0
+
+static func _enemy_scouted_target_key(target_kind: String, target_id: String) -> String:
+	return "%s:%s" % [target_kind, target_id]
 
 static func _merged_raid_army_payload(leader: Dictionary, donor: Dictionary) -> Dictionary:
 	var leader_army := _normalize_army_payload(leader.get("enemy_army", {}))
@@ -3590,6 +3868,9 @@ static func _append_town_candidate(
 	var reason_codes := ["town_siege"]
 	if objective_anchor:
 		reason_codes.append("objective_front")
+	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "town", placement_id)
+	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
+		reason_codes.append("enemy_scouting")
 	candidates.append(
 		{
 			"target_kind": "town",
@@ -3607,7 +3888,7 @@ static func _append_town_candidate(
 					faction_id,
 					"town",
 					placement_id,
-					priority + strategic_bonus,
+					priority + strategic_bonus + scouting_bonus,
 					"",
 					objective_anchor
 				) - _assignment_penalty(session, "town", placement_id)
@@ -3641,8 +3922,11 @@ static func _append_resource_candidate(
 	if goal_distance >= 9999:
 		return
 	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
-	var priority := int(breakdown.get("final_priority", 0))
-	var reason_codes: Array = breakdown.get("reason_codes", [])
+	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
+	var priority := int(breakdown.get("final_priority", 0)) + scouting_bonus
+	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
+	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
+		reason_codes.append("enemy_scouting")
 	candidates.append(
 		{
 			"target_kind": "resource",
@@ -3683,6 +3967,10 @@ static func _append_artifact_candidate(
 	if goal_distance >= 9999:
 		return
 	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id)
+	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "artifact", placement_id)
+	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
+	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
+		reason_codes.append("enemy_scouting")
 	candidates.append(
 		{
 			"target_kind": "artifact",
@@ -3700,12 +3988,12 @@ static func _append_artifact_candidate(
 					faction_id,
 					"artifact",
 					placement_id,
-					priority,
+					priority + scouting_bonus,
 					"",
 					false
 				) - _assignment_penalty(session, "artifact", placement_id)
 			),
-			"target_reason_codes": breakdown.get("reason_codes", []),
+			"target_reason_codes": reason_codes,
 			"target_public_reason": String(breakdown.get("public_reason", "")),
 			"target_public_importance": String(breakdown.get("public_importance", "medium")),
 		}
@@ -3752,6 +4040,9 @@ static func _append_encounter_candidate(
 		reason_codes = _default_reason_codes_for_target("encounter", placement_id, {"objective_anchor": objective_anchor})
 	if priority_bonus > 0 and "objective_front" not in reason_codes:
 		reason_codes.append("objective_front")
+	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "encounter", placement_id)
+	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
+		reason_codes.append("enemy_scouting")
 	var public_reason := String(object_breakdown.get("public_reason", ""))
 	if public_reason == "":
 		public_reason = _public_reason_from_codes(reason_codes)
@@ -3775,7 +4066,7 @@ static func _append_encounter_candidate(
 					faction_id,
 					"encounter",
 					placement_id,
-					priority + metadata_priority,
+					priority + metadata_priority + scouting_bonus,
 					"",
 					objective_anchor
 				) - _assignment_penalty(session, "encounter", placement_id)
@@ -4543,6 +4834,8 @@ static func commander_role_resource_target_view(
 			_resource_route_pressure_value(site),
 			_linked_player_town_bonus(session, node)
 		)
+	if _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id) > 0 and "enemy_scouting" not in reason_codes:
+		reason_codes.append("enemy_scouting")
 	var target_x := int(node.get("x", 0))
 	var target_y := int(node.get("y", 0))
 	return {
@@ -5419,6 +5712,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "site contested"
 	if "commander_memory" in codes:
 		return "known commander focus"
+	if "enemy_scouting" in codes:
+		return "scouted target"
 	return ""
 
 static func _public_event_log_text(text: String) -> String:
@@ -8658,6 +8953,13 @@ static func _adventure_spell_value(
 	var restored := int(consequence.get("movement_restored", 0))
 	var movement_max: int = max(1, int(movement_state.get("max", 1)))
 	var value := 1.0 + (float(restored) / float(movement_max)) * 6.0
+	if String(behavior.get("target_policy", "")) == "self_hero_reveal_radius":
+		var reveal_radius: int = max(0, int(consequence.get("reveal_radius", 0)))
+		value += min(8.0, float(reveal_radius) * 1.15)
+		if bool(strategic_context.get("scouting_pressure", false)):
+			value += 2.0 + min(5.0, float(max(0, int(strategic_context.get("unscouted_target_count", 0)))) * 0.75)
+		if bool(strategic_context.get("hidden_site_reveal", false)):
+			value += 1.5
 	var objective_steps := int(strategic_context.get("objective_steps_remaining", 0))
 	var movement_current := int(movement_state.get("current", 0))
 	var movement_after := int(consequence.get("movement_after", movement_current))
@@ -8701,6 +9003,7 @@ static func _public_adventure_spell_candidate(
 		"movement_before": int(consequence.get("movement_before", 0)),
 		"movement_after": int(consequence.get("movement_after", int(consequence.get("movement_before", 0)))),
 		"movement_restored": int(consequence.get("movement_restored", 0)),
+		"reveal_radius": int(consequence.get("reveal_radius", 0)),
 		"value_band": _adventure_spell_value_band(value),
 		"recommendation": recommendation,
 		"reason": _adventure_spell_reason(strategic_context, behavior, validation, consequence),
@@ -8739,6 +9042,8 @@ static func _adventure_spell_reason(
 	var movement_after := int(consequence.get("movement_after", movement_before))
 	if objective_steps > movement_before and objective_steps <= movement_after:
 		return "cast because restored movement reaches the current %s" % String(strategic_context.get("target_kind", "target"))
+	if String(behavior.get("target_policy", "")) == "self_hero_reveal_radius" and bool(strategic_context.get("scouting_pressure", false)):
+		return "cast because scouting reveals actionable nearby targets"
 	if int(consequence.get("movement_restored", 0)) > 0 and bool(strategic_context.get("route_pressure", false)):
 		return "cast to preserve route pressure with the authored movement spell hook"
 	if String(behavior.get("target_policy", "")) == "self_hero_movement_gap":

@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-adventure-spell-execution-10184`, completed to let enemy commanders cast bounded self-movement overworld spells during live raid movement when the spell changes objective reach.
+- Current implementation slice: `strategic-ai-scouting-spell-execution-10184`, completed to let enemy commanders cast scouting overworld spells, write enemy knowledge memory, and bias target choice toward freshly scouted actionable map targets.
+- Latest completed slice: `strategic-ai-scouting-spell-execution-10184`.
 - Latest completed slice: `strategic-ai-adventure-spell-execution-10184`.
 - Latest completed slice: `strategic-ai-local-recruitment-support-10184`.
 - Latest completed slice: `strategic-ai-regroup-task-board-10184`.

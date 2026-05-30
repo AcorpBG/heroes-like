@@ -22,7 +22,7 @@ func _run() -> void:
 		"battle": battle_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, the existing battle casting decision hook, and live enemy movement-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -141,6 +141,9 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 	var executor_case := _run_adventure_executor_case()
 	if not bool(executor_case.get("ok", false)):
 		return executor_case
+	var scouting_executor_case := _run_adventure_scouting_executor_case()
+	if not bool(scouting_executor_case.get("ok", false)):
+		return scouting_executor_case
 	return {
 		"ok": true,
 		"report_status": String(report.get("report_status", "")),
@@ -150,6 +153,7 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 		"selected_recommendation": String(selected.get("recommendation", "")),
 		"runtime_hook_counts": report.get("runtime_hook_counts", {}),
 		"executor": executor_case,
+		"scouting_executor": scouting_executor_case,
 	}
 
 func _run_adventure_executor_case() -> Dictionary:
@@ -232,6 +236,95 @@ func _run_adventure_executor_case() -> Dictionary:
 		"event_types": event_types,
 	}
 
+func _run_adventure_scouting_executor_case() -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		"river-pass",
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	var faction_id := "faction_mireclaw"
+	var config := _enemy_config(session, faction_id)
+	session.overworld["towns"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["resource_nodes"] = [
+		{"placement_id": "midway_shrine", "site_id": "site_riverwatch_free_company_yard", "x": 4, "y": 2, "collected_by_faction_id": "player"},
+		{"placement_id": "southern_ore", "site_id": "site_ore_crates", "x": 8, "y": 4},
+	]
+	var commander := SpellRules.ensure_hero_spellbook(
+		{
+			"id": "enemy_commander:faction_mireclaw:hero_tarn",
+			"roster_hero_id": "hero_tarn",
+			"faction_id": faction_id,
+			"name": "Tarn Mireglass",
+			"command": {"power": 1, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_survey_chain"],
+				"mana": {"current": 16, "max": 16},
+			},
+		}
+	)
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "adventure_spell_scouting_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 4,
+			"y": 0,
+			"difficulty": "pressure",
+			"combat_seed": 44005,
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+			"enemy_army": {
+				"id": "adventure_spell_scouting_raid",
+				"name": "Scouting Spell Raid",
+				"stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 12}],
+			},
+			"enemy_commander_state": commander,
+		},
+		session
+	)
+	session.overworld["encounters"] = [raid]
+	var result := EnemyAdventureRules.advance_raids(session, config, faction_id, _enemy_state(session, faction_id))
+	var after_raid := _encounter(session, "adventure_spell_scouting_raid")
+	if after_raid.is_empty():
+		return {"ok": false, "error": "Adventure scouting spell raid disappeared."}
+	if String(after_raid.get("last_adventure_scout_spell_id", "")) != "spell_survey_chain":
+		return {"ok": false, "error": "Adventure scouting executor did not record Survey Chain: %s" % after_raid}
+	if int(after_raid.get("last_adventure_scouted_target_count", 0)) <= 0:
+		return {"ok": false, "error": "Adventure scouting executor did not record any scouted targets: %s" % after_raid}
+	var mana: Dictionary = after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("mana", {})
+	if int(mana.get("current", 0)) >= 16:
+		return {"ok": false, "error": "Adventure scouting executor did not spend commander mana: %s" % mana}
+	var memory := _enemy_known_world_memory(session, faction_id)
+	var scouted_target_ids := _scouted_target_ids(memory)
+	if "resource:midway_shrine" not in scouted_target_ids:
+		return {"ok": false, "error": "Adventure scouting memory did not record midway_shrine: %s" % memory}
+	if String(after_raid.get("target_placement_id", "")) != "midway_shrine":
+		return {"ok": false, "error": "Adventure scouting did not bias target selection toward the revealed shrine: %s" % after_raid}
+	if "enemy_scouting" not in after_raid.get("target_reason_codes", []):
+		return {"ok": false, "error": "Adventure scouting target did not carry enemy_scouting reason code: %s" % after_raid}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_adventure_spell_cast" not in event_types:
+		return {"ok": false, "error": "Adventure scouting executor did not emit ai_adventure_spell_cast: %s" % result}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		return {"ok": false, "error": "Adventure scouting public event boundary failed: %s" % public_log}
+	if not _assert_public_payload("adventure scouting public events", public_log.get("public_events", [])):
+		return {"ok": false, "error": "Adventure scouting public events leaked non-public fields."}
+	return {
+		"ok": true,
+		"spell_id": String(after_raid.get("last_adventure_scout_spell_id", "")),
+		"scouted_target_count": int(after_raid.get("last_adventure_scouted_target_count", 0)),
+		"selected_target_id": String(after_raid.get("target_placement_id", "")),
+		"mana_after": int(mana.get("current", 0)),
+		"memory_target_ids": scouted_target_ids,
+		"event_types": event_types,
+	}
+
 func _stack(
 	battle_id: String,
 	side: String,
@@ -282,6 +375,23 @@ func _encounter(session, placement_id: String) -> Dictionary:
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return encounter
 	return {}
+
+func _enemy_known_world_memory(session, faction_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return state.get("known_world_memory", {}) if state.get("known_world_memory", {}) is Dictionary else {}
+	return {}
+
+func _scouted_target_ids(memory: Dictionary) -> Array:
+	var ids := []
+	for record in memory.get("scouted_targets", []):
+		if not (record is Dictionary):
+			continue
+		var key := "%s:%s" % [String(record.get("target_kind", "")), String(record.get("target_id", ""))]
+		if key != ":" and key not in ids:
+			ids.append(key)
+	ids.sort()
+	return ids
 
 func _event_types(events: Variant) -> Array:
 	var types := []
