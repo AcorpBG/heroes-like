@@ -1010,6 +1010,7 @@ static func advance_raids(
 				if scouting_event_value is Dictionary and not scouting_event_value.is_empty():
 					event_records.append(scouting_event_value)
 		encounter = assign_target(session, config, encounter)
+		encounter = _redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)
 		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
@@ -1813,6 +1814,95 @@ static func _redirect_unreachable_raid_target(
 		{}
 	)
 	return redirected
+
+static func _redirect_fragile_raid_for_known_target_risk(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) == "" or String(raid.get("target_kind", "")) == "regroup":
+		return raid
+	if bool(raid.get("arrived", false)):
+		return raid
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
+		return raid
+	if "active_front_support" in reason_codes or "awaiting_support" in reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
+		return raid
+	match String(raid.get("target_kind", "")):
+		"town":
+			if int(raid.get("assault_delay_until_day", 0)) > int(session.day):
+				return raid
+			var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+			var town: Dictionary = town_result.get("town", {})
+			if int(town_result.get("index", -1)) < 0 or town.is_empty() or String(town.get("owner", "neutral")) != "player":
+				return raid
+			var readiness_report := _town_assault_advance_risk_report(session, raid, town)
+			if bool(readiness_report.get("ready", true)):
+				return raid
+			return redirect_town_assault_for_risk(session, config, raid, faction_id, readiness_report)
+		"encounter":
+			if int(raid.get("encounter_arrival_delay_until_day", 0)) > int(session.day):
+				return raid
+			var encounter_report := encounter_arrival_ready_report(session, raid, faction_id)
+			if bool(encounter_report.get("ready", true)):
+				return raid
+			return redirect_encounter_objective_for_risk(session, config, raid, faction_id, encounter_report)
+		"hero":
+			if int(raid.get("hero_intercept_delay_until_day", 0)) > int(session.day):
+				return raid
+			var hero := _player_hero_snapshot_for_task(session, String(raid.get("target_placement_id", "")))
+			if hero.is_empty():
+				return raid
+			var hero_report := _hero_intercept_advance_risk_report(raid, hero)
+			if bool(hero_report.get("ready", true)):
+				return raid
+			return redirect_hero_intercept_for_risk(session, config, raid, faction_id, hero_report)
+	return raid
+
+static func _town_assault_advance_risk_report(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	town: Dictionary
+) -> Dictionary:
+	var assault_strength := raid_strength(raid)
+	var desired_strength := desired_raid_strength(raid)
+	var garrison_strength := _town_garrison_strength(town)
+	var readiness: int = OverworldRulesScript.town_battle_readiness(town, session)
+	var desired_floor := int(round(float(desired_strength) * 0.68))
+	var garrison_floor := int(round(float(garrison_strength) * 0.85))
+	var readiness_floor: int = 60 + (readiness * 2)
+	var required_strength: int = max(85, desired_floor, garrison_floor, readiness_floor)
+	var ready := assault_strength >= required_strength
+	return {
+		"ready": ready,
+		"assault_strength": assault_strength,
+		"desired_strength": desired_strength,
+		"garrison_strength": garrison_strength,
+		"town_readiness": readiness,
+		"required_strength": required_strength,
+		"reason": "ready_for_town_assault" if ready else "assault_risk_regroup",
+	}
+
+static func _hero_intercept_advance_risk_report(raid: Dictionary, hero: Dictionary) -> Dictionary:
+	var hunter_strength := raid_strength(raid)
+	var desired_strength := desired_raid_strength(raid)
+	var hero_strength := _army_strength(hero.get("army", {}).get("stacks", []))
+	var desired_floor := int(round(float(desired_strength) * 0.65))
+	var hero_floor := int(round(float(hero_strength) * 0.85))
+	var required_strength: int = max(75, desired_floor, hero_floor)
+	var ready := hunter_strength >= required_strength
+	return {
+		"ready": ready,
+		"hunter_strength": hunter_strength,
+		"desired_strength": desired_strength,
+		"hero_strength": hero_strength,
+		"required_strength": required_strength,
+		"reason": "ready_for_hero_intercept" if ready else "hero_hunt_risk_regroup",
+	}
 
 static func redirect_town_assault_for_risk(
 	session: SessionStateStoreScript.SessionData,

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-post-move-assault-grouping-10184",
-  "currentSliceTitle": "Strategic AI Post-Move Assault Grouping",
+  "currentSliceId": "strategic-ai-proactive-risk-regroup-10184",
+  "currentSliceTitle": "Strategic AI Proactive Risk Regroup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Assault leaders now rerun same-target grouping after movement, so support columns that become adjacent that turn can join before battle resolution.",
+  "currentSliceNotes": "Completed. Proactive known-risk regroup/staging now runs after target assignment for independent town, encounter, and hero attack objectives.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T16:05:21Z",
+  "updatedAt": "2026-05-30T16:17:58Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28657,6 +28657,42 @@
       "updatedAt": "2026-05-30T16:05:21Z",
       "notes": "Completed. Assault leaders now rerun same-target grouping after movement, so support columns that become adjacent that turn can join before battle resolution.",
       "completedAt": "2026-05-30T16:05:21Z"
+    },
+    {
+      "id": "strategic-ai-proactive-risk-regroup-10184",
+      "title": "Strategic AI Proactive Risk Regroup",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "production strategic AI retreat timing; weak-but-deployable hosts should not spend turns marching into known bad town, encounter, or hero fights only to bounce at battle entry",
+      "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md",
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_town_retake_assault_report.gd",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "After live target assignment, town/encounter/hero attack hosts that are strong enough to deploy but below known battle-entry readiness must retask to a reachable same-faction regroup town or stage with the existing risk reason codes before spending movement toward the risky target; existing understrength regroup, arrival risk gates, support grouping, task continuity, and public event behavior must remain intact without a save-version bump.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No new generated-map matrix gate",
+        "No combat balance tuning"
+      ],
+      "startedAt": "2026-05-30T16:09:26Z",
+      "updatedAt": "2026-05-30T16:17:58Z",
+      "notes": "Completed. Proactive known-risk regroup/staging runs after target assignment while preserving support grouping.",
+      "completedAt": "2026-05-30T16:17:58Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -35982,6 +36018,60 @@
           "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
         }
       }
+    },
+    {
+      "sliceId": "strategic-ai-proactive-risk-regroup-10184",
+      "completedAt": "2026-05-30T16:17:58Z",
+      "summary": "AI attack hosts now check known town/encounter/hero objective risk immediately after assignment and regroup or stage before marching into bad fights.",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T16:17:58Z",
+        "sliceId": "strategic-ai-proactive-risk-regroup-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Enemy raid advancement now runs proactive known-target risk checks immediately after target assignment for independent town, encounter, and hero attack objectives.",
+            "Weak-but-deployable hosts that become too weak for the selected objective retask to reachable same-faction regroup towns or stage with existing risk reason codes before spending movement toward the bad fight.",
+            "The proactive path preserves previous risky target metadata and reuses existing town, encounter, and hero risk redirect helpers without a save-version bump.",
+            "Active-front support and awaiting-support hosts remain eligible for grouping so support columns merge into leaders instead of retasking themselves away.",
+            "Focused Duskfen evidence proves a five-stack Mireclaw retake host is deployable before assignment, then proactively regroups at risk_regroup_redoubt after Duskfen retake risk is known."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-town-retake-assault-report.md",
+            "docs/strategic-ai-town-assault-risk-gating-report.md",
+            "docs/strategic-ai-raid-regroup-retreat-report.md",
+            "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+            "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_RAID_ASSAULT_GROUPING_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_HERO_TASK_HERO_HUNT_REPORT"
+          ],
+          "residualRisk": "This closes a retreat-timing gap for known risky objectives. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, stronger economy/army timing, and manual live-client pacing checks."
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -37205,6 +37295,37 @@
           "saveVersion": 9,
           "focusedReport": "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
           "residualRisk": "This slice closes artifact/relic target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
+        }
+      },
+      {
+        "sliceId": "strategic-ai-proactive-risk-regroup-10184",
+        "updatedAt": "2026-05-30T16:17:58Z",
+        "evidence": {
+          "implemented": [
+            "Enemy raid advancement now runs proactive known-target risk checks immediately after target assignment for independent town, encounter, and hero attack objectives.",
+            "Weak-but-deployable hosts that become too weak for the selected objective retask to reachable same-faction regroup towns or stage with existing risk reason codes before spending movement toward the bad fight.",
+            "The proactive path preserves previous risky target metadata and reuses existing town, encounter, and hero risk redirect helpers without a save-version bump.",
+            "Active-front support and awaiting-support hosts remain eligible for grouping so support columns merge into leaders instead of retasking themselves away.",
+            "Focused Duskfen evidence proves a five-stack Mireclaw retake host is deployable before assignment, then proactively regroups at risk_regroup_redoubt after Duskfen retake risk is known."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-town-retake-assault-report.md",
+            "docs/strategic-ai-town-assault-risk-gating-report.md",
+            "docs/strategic-ai-raid-regroup-retreat-report.md",
+            "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+            "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_RAID_ASSAULT_GROUPING_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_HERO_TASK_HERO_HUNT_REPORT"
+          ],
+          "residualRisk": "This closes a retreat-timing gap for known risky objectives. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, stronger economy/army timing, and manual live-client pacing checks."
         }
       }
     ],
@@ -38828,15 +38949,14 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T20:02:00Z",
-    "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
+    "updatedAt": "2026-05-30T16:17:58Z",
+    "sliceId": "strategic-ai-proactive-risk-regroup-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -38844,34 +38964,34 @@
     ],
     "evidence": {
       "implemented": [
-        "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
-        "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
-        "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
-        "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
-        "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
-        "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
+        "Enemy raid advancement now runs proactive known-target risk checks immediately after target assignment for independent town, encounter, and hero attack objectives.",
+        "Weak-but-deployable hosts that become too weak for the selected objective retask to reachable same-faction regroup towns or stage with existing risk reason codes before spending movement toward the bad fight.",
+        "The proactive path preserves previous risky target metadata and reuses existing town, encounter, and hero risk redirect helpers without a save-version bump.",
+        "Active-front support and awaiting-support hosts remain eligible for grouping so support columns merge into leaders instead of retasking themselves away.",
+        "Focused Duskfen evidence proves a five-stack Mireclaw retake host is deployable before assignment, then proactively regroups at risk_regroup_redoubt after Duskfen retake risk is known."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-guarded-object-claim-routing-report.md",
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md",
         "docs/strategic-ai-raid-regroup-retreat-report.md",
-        "docs/strategic-ai-artifact-task-board-report.md"
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
+        "AI_TOWN_RETAKE_ASSAULT_REPORT",
         "AI_RAID_REGROUP_RETREAT_REPORT",
-        "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+        "AI_RAID_ASSAULT_GROUPING_REPORT",
         "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
-        "AI_HERO_TASK_HERO_HUNT_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT"
+        "AI_HERO_TASK_HERO_HUNT_REPORT"
       ],
-      "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
+      "residualRisk": "This closes a retreat-timing gap for known risky objectives. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, stronger economy/army timing, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-post-move-assault-grouping-10184",
-  "currentSliceUpdatedAt": "2026-05-30T16:05:21Z",
+  "active_slice": "strategic-ai-proactive-risk-regroup-10184",
+  "currentSliceUpdatedAt": "2026-05-30T16:17:58Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41741,46 +41861,17 @@
         ],
         "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "strategic-ai-post-move-assault-grouping-10184",
-    "title": "Strategic AI Post-Move Assault Grouping",
-    "status": "completed",
-    "phase": "phase-5-playable-alpha-baseline",
-    "classification": "implementation_slice",
-    "source": "production strategic AI coordinated multi-hero planning; support columns that become adjacent after movement should join the assault before battle resolution instead of waiting a turn or leaving the leader unsupported",
-    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md",
-      "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-raid-assault-grouping-report.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_raid_assault_grouping_report.gd",
-      "docs/strategic-ai-raid-assault-grouping-report.md",
-      "tests/validate_repo.py",
-      "PLAN.md",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Assault leaders targeting a town or objective encounter must attempt same-target support grouping again after movement and before arrival resolution, so support columns that become adjacent that turn can be absorbed into the assault; existing pre-move grouping, commander support release, battle queueing, task completion, and public event behavior must remain intact without a save-version bump.",
-    "startedAt": "2026-05-30T16:01:50Z",
-    "updatedAt": "2026-05-30T16:05:21Z",
-    "notes": "Completed. Assault leaders now rerun same-target grouping after movement, so support columns that become adjacent that turn can join before battle resolution.",
-    "completedAt": "2026-05-30T16:05:21Z",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-30T16:05:21Z",
-      "sliceId": "strategic-ai-post-move-assault-grouping-10184",
+      "updatedAt": "2026-05-30T16:17:58Z",
+      "sliceId": "strategic-ai-proactive-risk-regroup-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "python3 -m py_compile tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
@@ -41788,40 +41879,118 @@
       ],
       "evidence": {
         "implemented": [
-          "Enemy raid advancement now runs assault grouping before movement and again after movement before arrival resolution.",
-          "Support columns targeting the same town or objective encounter can be absorbed when they become adjacent during the leader's movement turn.",
-          "Focused River Pass evidence proves a non-adjacent leader/support pair becomes adjacent after the leader moves onto the Duskfen staging tile, groups, and then queues the town-defense battle.",
-          "Existing adjacent grouping, commander-led support release/rebuild continuity, retake assault risk gating, live-turn task execution, regroup/retreat, defense retask, and retask-cancellation reports remain passing."
+          "Enemy raid advancement now runs proactive known-target risk checks immediately after target assignment for independent town, encounter, and hero attack objectives.",
+          "Weak-but-deployable hosts that become too weak for the selected objective retask to reachable same-faction regroup towns or stage with existing risk reason codes before spending movement toward the bad fight.",
+          "The proactive path preserves previous risky target metadata and reuses existing town, encounter, and hero risk redirect helpers without a save-version bump.",
+          "Active-front support and awaiting-support hosts remain eligible for grouping so support columns merge into leaders instead of retasking themselves away.",
+          "Focused Duskfen evidence proves a five-stack Mireclaw retake host is deployable before assignment, then proactively regroups at risk_regroup_redoubt after Duskfen retake risk is known."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-raid-assault-grouping-report.md"
+          "docs/strategic-ai-town-retake-assault-report.md",
+          "docs/strategic-ai-town-assault-risk-gating-report.md",
+          "docs/strategic-ai-raid-regroup-retreat-report.md",
+          "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+          "docs/strategic-ai-hero-intercept-risk-gating-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_RAID_ASSAULT_GROUPING_REPORT",
           "AI_TOWN_RETAKE_ASSAULT_REPORT",
-          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
           "AI_RAID_REGROUP_RETREAT_REPORT",
-          "AI_TOWN_DEFENSE_RETASK_REPORT",
-          "AI_HERO_TASK_RETASK_CANCELLATION_REPORT"
+          "AI_RAID_ASSAULT_GROUPING_REPORT",
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "AI_HERO_TASK_HERO_HUNT_REPORT"
         ],
-        "residualRisk": "This closes one same-turn coordination gap for assault grouping. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, richer economy timing, retreat timing review, and manual live-client pacing checks."
+        "residualRisk": "This closes a retreat-timing gap for known risky objectives. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, stronger economy/army timing, and manual live-client pacing checks."
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "strategic-ai-proactive-risk-regroup-10184",
+    "title": "Strategic AI Proactive Risk Regroup",
+    "status": "completed",
+    "phase": "phase-5-playable-alpha-baseline",
+    "classification": "implementation_slice",
+    "source": "production strategic AI retreat timing; weak-but-deployable hosts should not spend turns marching into known bad town, encounter, or hero fights only to bounce at battle entry",
+    "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
+    "sourceDocs": [
+      "PLAN.md",
+      "project.md",
+      "docs/strategic-ai-foundation.md",
+      "docs/strategic-ai-raid-regroup-retreat-report.md",
+      "docs/strategic-ai-town-assault-risk-gating-report.md",
+      "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+      "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+    ],
+    "implementationTargets": [
+      "PLAN.md",
+      "docs/strategic-ai-raid-regroup-retreat-report.md",
+      "docs/strategic-ai-town-assault-risk-gating-report.md",
+      "docs/strategic-ai-town-retake-assault-report.md",
+      "ops/progress.json",
+      "scripts/core/EnemyAdventureRules.gd",
+      "tests/ai_town_retake_assault_report.gd",
+      "tests/validate_repo.py"
+    ],
+    "completionCriteria": "After live target assignment, town/encounter/hero attack hosts that are strong enough to deploy but below known battle-entry readiness must retask to a reachable same-faction regroup town or stage with the existing risk reason codes before spending movement toward the risky target; existing understrength regroup, arrival risk gates, support grouping, task continuity, and public event behavior must remain intact without a save-version bump.",
+    "startedAt": "2026-05-30T16:09:26Z",
+    "updatedAt": "2026-05-30T16:17:58Z",
+    "notes": "Completed. Proactive known-risk regroup/staging runs after target assignment while preserving support grouping.",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-30T16:17:58Z",
+      "sliceId": "strategic-ai-proactive-risk-regroup-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Enemy raid advancement now runs proactive known-target risk checks immediately after target assignment for independent town, encounter, and hero attack objectives.",
+          "Weak-but-deployable hosts that become too weak for the selected objective retask to reachable same-faction regroup towns or stage with existing risk reason codes before spending movement toward the bad fight.",
+          "The proactive path preserves previous risky target metadata and reuses existing town, encounter, and hero risk redirect helpers without a save-version bump.",
+          "Active-front support and awaiting-support hosts remain eligible for grouping so support columns merge into leaders instead of retasking themselves away.",
+          "Focused Duskfen evidence proves a five-stack Mireclaw retake host is deployable before assignment, then proactively regroups at risk_regroup_redoubt after Duskfen retake risk is known."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-town-retake-assault-report.md",
+          "docs/strategic-ai-town-assault-risk-gating-report.md",
+          "docs/strategic-ai-raid-regroup-retreat-report.md",
+          "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+          "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "focusedReports": [
+          "AI_TOWN_RETAKE_ASSAULT_REPORT",
+          "AI_RAID_REGROUP_RETREAT_REPORT",
+          "AI_RAID_ASSAULT_GROUPING_REPORT",
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "AI_HERO_TASK_HERO_HUNT_REPORT"
+        ],
+        "residualRisk": "This closes a retreat-timing gap for known risky objectives. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, stronger economy/army timing, and manual live-client pacing checks."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T16:05:21Z",
-    "sliceId": "strategic-ai-post-move-assault-grouping-10184",
+    "updatedAt": "2026-05-30T16:17:58Z",
+    "sliceId": "strategic-ai-proactive-risk-regroup-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -41829,26 +41998,30 @@
     ],
     "evidence": {
       "implemented": [
-        "Enemy raid advancement now runs assault grouping before movement and again after movement before arrival resolution.",
-        "Support columns targeting the same town or objective encounter can be absorbed when they become adjacent during the leader's movement turn.",
-        "Focused River Pass evidence proves a non-adjacent leader/support pair becomes adjacent after the leader moves onto the Duskfen staging tile, groups, and then queues the town-defense battle.",
-        "Existing adjacent grouping, commander-led support release/rebuild continuity, retake assault risk gating, live-turn task execution, regroup/retreat, defense retask, and retask-cancellation reports remain passing."
+        "Enemy raid advancement now runs proactive known-target risk checks immediately after target assignment for independent town, encounter, and hero attack objectives.",
+        "Weak-but-deployable hosts that become too weak for the selected objective retask to reachable same-faction regroup towns or stage with existing risk reason codes before spending movement toward the bad fight.",
+        "The proactive path preserves previous risky target metadata and reuses existing town, encounter, and hero risk redirect helpers without a save-version bump.",
+        "Active-front support and awaiting-support hosts remain eligible for grouping so support columns merge into leaders instead of retasking themselves away.",
+        "Focused Duskfen evidence proves a five-stack Mireclaw retake host is deployable before assignment, then proactively regroups at risk_regroup_redoubt after Duskfen retake risk is known."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-raid-assault-grouping-report.md"
+        "docs/strategic-ai-town-retake-assault-report.md",
+        "docs/strategic-ai-town-assault-risk-gating-report.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_RAID_ASSAULT_GROUPING_REPORT",
         "AI_TOWN_RETAKE_ASSAULT_REPORT",
-        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
         "AI_RAID_REGROUP_RETREAT_REPORT",
-        "AI_TOWN_DEFENSE_RETASK_REPORT",
-        "AI_HERO_TASK_RETASK_CANCELLATION_REPORT"
+        "AI_RAID_ASSAULT_GROUPING_REPORT",
+        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+        "AI_HERO_TASK_HERO_HUNT_REPORT"
       ],
-      "residualRisk": "This closes one same-turn coordination gap for assault grouping. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, richer economy timing, retreat timing review, and manual live-client pacing checks."
+      "residualRisk": "This closes a retreat-timing gap for known risky objectives. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning quality, stronger economy/army timing, and manual live-client pacing checks."
     }
   }
 }

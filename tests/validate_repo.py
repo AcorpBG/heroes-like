@@ -16048,6 +16048,10 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
     for required_token in (
         "func ai_live_town_retake_target_selection_plan",
         "ai_live_town_retake_target_selection_plan(session, config, raid)",
+        "func _redirect_fragile_raid_for_known_target_risk",
+        "func _town_assault_advance_risk_report",
+        "func _hero_intercept_advance_risk_report",
+        "_redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)",
         '"retake_front"',
         "live retake front town target selection",
         "retaking captured town",
@@ -16069,10 +16073,13 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         report_text = AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_TOWN_RETAKE_ASSAULT_REPORT",
-            "enemy_retake_front_town_targets_queue_town_defense_battles",
-            "enemy_retake_front_town_targets_queue_town_defense_battles_with_assault_risk_gating",
+            "enemy_retake_front_town_targets_queue_battles_with_proactive_risk_regroup",
+            "live_town_retake_assault_proactive_risk_no_save_migration",
             "river_pass_retake_front_queues_town_defense_battle",
             "weak_retake_front_stages_before_town_battle",
+            "weak_retake_front_regroups_before_marching",
+            "proactive_risk_case",
+            "risk_regroup_redoubt",
             "assault_risk_regroup",
             "assault_risk_staging",
             "staging stronger assault",
@@ -16093,9 +16100,11 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
             "Strategic AI Town Retake Assault Report",
             "strategic-ai-live-town-retake-assault-harness-20260523-10184",
             "strategic-ai-town-assault-risk-gating-10184",
+            "strategic-ai-proactive-risk-regroup-10184",
             "player-captured Duskfen Bastion",
             "`town_defense`",
             "`weak_retake_front_stages_before_town_battle`",
+            "`weak_retake_front_regroups_before_marching`",
             "`assault_risk_regroup`",
             "No full strategic AI quality claim",
         ):
@@ -16110,6 +16119,8 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
             "`_town_assault_ready_report`",
             "`redirect_town_assault_for_risk`",
             "`weak_retake_front_stages_before_town_battle`",
+            "`weak_retake_front_regroups_before_marching`",
+            "strategic-ai-proactive-risk-regroup-10184",
             "No save migration",
             "No full strategic AI quality claim",
         ):
