@@ -683,11 +683,11 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _clear_delivery_intercept_target(raid)
 		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
 		if plan.is_empty():
-			plan = ai_active_front_support_target_selection_plan(session, config, raid)
-		if plan.is_empty():
 			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
+		if plan.is_empty():
+			plan = ai_active_front_support_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = choose_target(
 				session,
@@ -3367,8 +3367,10 @@ static func normalize_commander_roster(
 				"record": record,
 				"target_memory": target_memory,
 				"army_continuity": army_continuity,
+				"commander_role_state": _normalized_commander_role_state(existing, commander_seed),
 			}
 		)
+		var role_state := _normalized_commander_role_state(existing, commander_state)
 		var entry := {
 			"roster_hero_id": roster_hero_id,
 			"status": COMMANDER_STATUS_AVAILABLE,
@@ -3381,6 +3383,7 @@ static func normalize_commander_roster(
 			"strategic_successes": max(0, int(record.get("strategic_successes", 0))),
 			"renown": max(0, int(record.get("renown", 0))),
 			"target_memory": target_memory,
+			"commander_role_state": role_state,
 			"army_continuity": commander_army_continuity(commander_state),
 			"commander_state": commander_state,
 		}
@@ -3731,6 +3734,7 @@ static func apply_resolved_commander_aftermath(
 				entry
 			)
 			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+			entry["commander_role_state"] = commander_live_role_state(entry.get("commander_state", {}))
 			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 			var recovery_days := 0
 			var summary := ""
@@ -3817,7 +3821,7 @@ static func build_roster_commander_state(
 		"artifacts": ArtifactRulesScript.normalize_hero_artifacts(artifacts_source),
 	}
 	commander_state = _normalize_enemy_progression(commander_state)
-	return _apply_commander_army_metadata(
+	var with_metadata := _apply_commander_army_metadata(
 		_apply_commander_record_metadata(
 			_apply_commander_memory_metadata(
 				SpellRulesScript.refresh_daily_mana(
@@ -3835,6 +3839,7 @@ static func build_roster_commander_state(
 		),
 		army_continuity
 	)
+	return _apply_commander_role_metadata(with_metadata, record_source)
 
 static func advance_commander_record(commander_state: Dictionary, outcome_id: String) -> Dictionary:
 	if commander_state.is_empty():
@@ -3948,6 +3953,7 @@ static func record_commander_deployment(
 			entry
 		)
 		entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+		entry["commander_role_state"] = commander_live_role_state(entry.get("commander_state", {}))
 		entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 		roster[roster_index] = entry
 		break
@@ -4004,6 +4010,7 @@ static func sync_commander_state_to_roster(
 				entry
 			)
 			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+			entry["commander_role_state"] = commander_live_role_state(entry.get("commander_state", {}))
 			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 			roster[roster_index] = entry
 			state["commander_roster"] = roster
@@ -4095,6 +4102,7 @@ static func reinforce_commander_roster_army(
 				entry
 			)
 			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+			entry["commander_role_state"] = commander_live_role_state(entry.get("commander_state", {}))
 			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 			roster[roster_index] = entry
 			state["commander_roster"] = roster
@@ -4798,6 +4806,43 @@ static func _commander_adaptive_task_fit_bonus(memory: Dictionary, target_kind: 
 		bonus -= 8
 	return clampi(bonus, -28, 58)
 
+static func _commander_role_continuity_fit_bonus(
+	scenario_id: String,
+	role_state: Dictionary,
+	candidate: Dictionary
+) -> int:
+	if role_state.is_empty() or candidate.is_empty():
+		return 0
+	var target_kind := String(candidate.get("target_kind", ""))
+	var target_id := String(candidate.get("target_placement_id", ""))
+	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+	var candidate_front_id := commander_role_front_id(scenario_id, target_kind, target_id)
+	var role := String(role_state.get("role", ""))
+	var role_target_kind := String(role_state.get("target_kind", ""))
+	var role_target_id := String(role_state.get("target_id", ""))
+	var role_front_id := String(role_state.get("front_id", ""))
+	var bonus := 0
+	if target_kind == role_target_kind and target_id == role_target_id:
+		bonus += 55
+	elif role_front_id != "" and candidate_front_id == role_front_id:
+		bonus += 24
+	elif role_target_id != "":
+		bonus -= 8
+	match role:
+		COMMANDER_ROLE_RAIDER:
+			if target_kind in ["town", "resource", "hero"] and not _resource_defense_reason_active(reason_codes):
+				bonus += 12
+		COMMANDER_ROLE_RETAKER:
+			if target_kind in ["town", "resource"] and ("retake_front" in reason_codes or "persistent_income_denial" in reason_codes):
+				bonus += 16
+		COMMANDER_ROLE_DEFENDER:
+			if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
+				bonus += 22
+		COMMANDER_ROLE_STABILIZER:
+			if "front_stabilization" in reason_codes or "active_front_support" in reason_codes or target_kind == "resource":
+				bonus += 10
+	return clampi(bonus, -20, 80)
+
 static func _normalized_commander_record(entry_value: Variant, commander_state_value: Variant = {}) -> Dictionary:
 	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
 	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
@@ -4952,6 +4997,63 @@ static func _apply_commander_memory_metadata(commander_state: Dictionary, memory
 	commander["target_memory"] = memory
 	commander["memory_brief"] = commander_memory_brief(memory)
 	commander["memory_summary"] = commander_memory_summary(memory)
+	return commander
+
+static func commander_live_role_state(source: Variant) -> Dictionary:
+	return _normalized_commander_role_state(source)
+
+static func _normalized_commander_role_state(source: Variant, fallback_source: Variant = {}) -> Dictionary:
+	var source_dict: Dictionary = source if source is Dictionary else {}
+	var fallback_dict: Dictionary = fallback_source if fallback_source is Dictionary else {}
+	var role_value: Variant = source_dict.get("commander_role_state", {})
+	if not (role_value is Dictionary) and source_dict.get("commander_state", {}) is Dictionary:
+		role_value = source_dict.get("commander_state", {}).get("commander_role_state", {})
+	if not (role_value is Dictionary):
+		role_value = fallback_dict.get("commander_role_state", {})
+	if not (role_value is Dictionary) and fallback_dict.get("commander_state", {}) is Dictionary:
+		role_value = fallback_dict.get("commander_state", {}).get("commander_role_state", {})
+	if not (role_value is Dictionary):
+		return {}
+	var role_payload: Dictionary = role_value
+	var role := String(role_payload.get("role", ""))
+	if role not in [
+		COMMANDER_ROLE_RAIDER,
+		COMMANDER_ROLE_DEFENDER,
+		COMMANDER_ROLE_RETAKER,
+		COMMANDER_ROLE_STABILIZER,
+		COMMANDER_ROLE_RECOVERING,
+		COMMANDER_ROLE_RESERVE,
+	]:
+		role = ""
+	var target_kind := String(role_payload.get("target_kind", ""))
+	var target_id := String(role_payload.get("target_id", ""))
+	if role == "" and target_kind == "" and target_id == "":
+		return {}
+	return {
+		"role": role if role != "" else COMMANDER_ROLE_RESERVE,
+		"role_status": String(role_payload.get("role_status", "")),
+		"task_class": String(role_payload.get("task_class", "")),
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": String(role_payload.get("target_label", target_id)),
+		"front_id": String(role_payload.get("front_id", "")),
+		"origin_id": String(role_payload.get("origin_id", "")),
+		"assigned_day": max(0, int(role_payload.get("assigned_day", 0))),
+		"expires_day": max(0, int(role_payload.get("expires_day", 0))),
+		"last_validation": String(role_payload.get("last_validation", "valid")),
+		"reason_codes": _normalize_string_array(role_payload.get("reason_codes", [])),
+		"source_policy": String(role_payload.get("source_policy", "live")),
+	}
+
+static func _apply_commander_role_metadata(commander_state: Dictionary, role_source: Variant) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var commander := commander_state.duplicate(true)
+	var role_state := _normalized_commander_role_state(role_source, commander)
+	if role_state.is_empty():
+		commander.erase("commander_role_state")
+	else:
+		commander["commander_role_state"] = role_state
 	return commander
 
 static func _normalized_commander_army_continuity(
@@ -5445,6 +5547,8 @@ static func plan_enemy_hero_task_board(
 		if task.is_empty():
 			continue
 		next_tasks.append(task)
+		roster = _adopt_commander_role_on_roster(roster, faction_id, task, "strategic_planner")
+		working_state["commander_roster"] = roster
 		var event := _ai_hero_task_planner_event(session, config, task)
 		if not event.is_empty():
 			events.append(event)
@@ -5514,6 +5618,7 @@ static func _ai_hero_task_planner_task_for_actor(
 		if "strategic_task_planner" not in reason_codes:
 			reason_codes.append("strategic_task_planner")
 		var assigned_day := int(session.day)
+		var source_role := _ai_hero_task_role_for_task_class(task_class, target_kind)
 		var task_id := ai_hero_task_candidate_id(
 			String(session.scenario_id),
 			faction_id,
@@ -5530,7 +5635,9 @@ static func _ai_hero_task_planner_task_for_actor(
 			"actor_kind": "commander_roster",
 			"actor_id": actor_id,
 			"source_kind": "commander_role_adapter",
-			"source_id": _ai_hero_task_source_id(String(session.scenario_id), faction_id, actor_id, COMMANDER_ROLE_RAIDER, target_kind, target_id, assigned_day),
+			"source_id": _ai_hero_task_source_id(String(session.scenario_id), faction_id, actor_id, source_role, target_kind, target_id, assigned_day),
+			"source_role": source_role,
+			"source_policy": AI_HERO_TASK_STATE_POLICY,
 			"task_class": task_class,
 			"task_status": "planned",
 			"target_kind": target_kind,
@@ -5620,6 +5727,7 @@ static func _ai_commander_task_fit_bonus(
 		)
 	)
 	var memory := _normalized_commander_memory(entry, commander_state)
+	var live_role_state := commander_live_role_state(entry)
 	var battle_traits := _normalize_string_array(
 		_merge_unique_strings(
 			commander_state.get("battle_traits", []),
@@ -5630,6 +5738,11 @@ static func _ai_commander_task_fit_bonus(
 	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
 	var site_family := String(candidate.get("site_family", target_site_family(session, target_kind, String(candidate.get("target_placement_id", "")))))
 	var bonus := _commander_adaptive_task_fit_bonus(memory, target_kind)
+	bonus += _commander_role_continuity_fit_bonus(
+		String(session.scenario_id) if session != null else "",
+		live_role_state,
+		candidate
+	)
 
 	match target_kind:
 		"town":
@@ -7242,6 +7355,7 @@ static func commander_role_state_view(
 	var status := _normalize_commander_status(commander_entry.get("status", COMMANDER_STATUS_AVAILABLE))
 	var recovery_day: int = max(0, int(commander_entry.get("recovery_day", 0)))
 	var session_day := int(session.day) if session != null else 0
+	var live_role_state := commander_live_role_state(commander_entry)
 	var role := COMMANDER_ROLE_RESERVE
 	var role_status := "available"
 	var validation := "valid"
@@ -7256,6 +7370,9 @@ static func commander_role_state_view(
 		role = COMMANDER_ROLE_RECOVERING
 		role_status = "rebuilding"
 		validation = "blocked_rebuild"
+	elif not live_role_state.is_empty() and int(live_role_state.get("expires_day", 0)) >= session_day:
+		role = String(live_role_state.get("role", COMMANDER_ROLE_RESERVE))
+		role_status = String(live_role_state.get("role_status", "assigned"))
 	return {
 		"schema_status": "report_fixture_only",
 		"roster_hero_id": roster_hero_id,
@@ -7265,6 +7382,7 @@ static func commander_role_state_view(
 		"army_status": commander_army_status(commander_entry),
 		"army_summary": commander_army_summary(commander_entry),
 		"memory_summary": commander_memory_summary(commander_entry),
+		"commander_role_state": live_role_state,
 		"display_name": commander_display_name(commander_entry, false),
 		"role": role,
 		"role_status": role_status,
@@ -9964,6 +10082,92 @@ static func _ai_hero_task_record_live_assignment(
 	if runtime_task.is_empty():
 		return
 	_ai_hero_task_upsert_live_task(session, faction_id, runtime_task)
+	adopt_commander_role_from_task(session, faction_id, runtime_task, "live_target_assignment")
+
+static func adopt_commander_role_from_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	source_policy: String = "live_task"
+) -> void:
+	if session == null or faction_id == "" or task.is_empty():
+		return
+	var actor_id := String(task.get("actor_id", ""))
+	if actor_id == "":
+		return
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state_index in range(states.size()):
+		var state = states[state_index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var roster := _adopt_commander_role_on_roster(
+			normalize_commander_roster(session, faction_id, state.get("commander_roster", [])),
+			faction_id,
+			task,
+			source_policy
+		)
+		state["commander_roster"] = roster
+		states[state_index] = state
+		session.overworld["enemy_states"] = states
+		return
+
+static func _adopt_commander_role_on_roster(
+	roster: Array,
+	faction_id: String,
+	task: Dictionary,
+	source_policy: String = "live_task"
+) -> Array:
+	var actor_id := String(task.get("actor_id", ""))
+	if actor_id == "":
+		return roster
+	for roster_index in range(roster.size()):
+		var entry = roster[roster_index]
+		if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != actor_id:
+			continue
+		var updated: Dictionary = entry.duplicate(true)
+		var role_state := _commander_role_state_from_task(task, source_policy)
+		if role_state.is_empty():
+			return roster
+		updated["commander_role_state"] = role_state
+		var commander_state: Dictionary = updated.get("commander_state", {}) if updated.get("commander_state", {}) is Dictionary else {}
+		commander_state["commander_role_state"] = role_state
+		updated["commander_state"] = build_roster_commander_state(
+			actor_id,
+			faction_id,
+			commander_state,
+			updated
+		)
+		updated["commander_role_state"] = commander_live_role_state(updated.get("commander_state", {}))
+		roster[roster_index] = updated
+		return roster
+	return roster
+
+static func _commander_role_state_from_task(task: Dictionary, source_policy: String) -> Dictionary:
+	var task_class := String(task.get("task_class", ""))
+	var target_kind := String(task.get("target_kind", ""))
+	var target_id := String(task.get("target_id", ""))
+	if task_class == "" or target_kind == "" or target_id == "":
+		return {}
+	var role := String(task.get("source_role", ""))
+	if role == "":
+		role = _ai_hero_task_role_for_task_class(task_class, target_kind)
+	var assigned_day: int = max(0, int(task.get("assigned_day", 0)))
+	var expires_day: int = max(assigned_day + 3, int(task.get("expires_day", 0)))
+	return {
+		"role": role,
+		"role_status": _ai_hero_task_role_status_from_task_class(task_class),
+		"task_class": task_class,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": String(task.get("target_label", target_id)),
+		"front_id": String(task.get("front_id", "")),
+		"origin_id": String(task.get("origin_id", "")),
+		"assigned_day": assigned_day,
+		"expires_day": expires_day,
+		"last_validation": String(task.get("last_validation", "valid")),
+		"reason_codes": _normalize_string_array(task.get("priority_reason_codes", [])),
+		"source_policy": source_policy,
+	}
 
 static func _ai_hero_task_runtime_task_payload(
 	session: SessionStateStoreScript.SessionData,
@@ -9982,6 +10186,9 @@ static func _ai_hero_task_runtime_task_payload(
 	if assigned_day <= 0:
 		assigned_day = int(session.day)
 	var task_class := String(task.get("task_class", "contest_site"))
+	var source_role := String(task.get("source_role", ""))
+	if source_role == "":
+		source_role = _ai_hero_task_role_for_task_class(task_class, target_kind)
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", current_target.get("target_reason_codes", [])))
 	if reason_codes.is_empty():
 		reason_codes = ["strategic_pressure"]
@@ -10004,6 +10211,7 @@ static func _ai_hero_task_runtime_task_payload(
 		"actor_id": actor_id,
 		"source_kind": String(task.get("source_kind", "commander_role_adapter")),
 		"source_id": String(task.get("source_id", raid.get("placement_id", ""))),
+		"source_role": source_role,
 		"task_class": task_class,
 		"task_status": "active",
 		"target_kind": target_kind,
@@ -10049,6 +10257,7 @@ static func _ai_hero_task_record_from_assignment(
 		task_class = "retake_site"
 	elif target_kind == "town":
 		task_class = "raid_town"
+	var source_role := _ai_hero_task_role_for_task_class(task_class, target_kind)
 	var assigned_day := int(session.day)
 	var task_id := ai_hero_task_candidate_id(
 		String(session.scenario_id),
@@ -10067,6 +10276,7 @@ static func _ai_hero_task_record_from_assignment(
 		"actor_id": actor_id,
 		"source_kind": "saved_task_state",
 		"source_id": String(raid.get("placement_id", "")),
+		"source_role": source_role,
 		"task_class": task_class,
 		"task_status": "active",
 		"target_kind": target_kind,
@@ -10487,6 +10697,23 @@ static func _ai_hero_task_class_for_role(role: String, target_kind: String, role
 	if role == COMMANDER_ROLE_RECOVERING and role_status == "rebuilding":
 		return "rebuild_host"
 	return "reserve"
+
+static func _ai_hero_task_role_for_task_class(task_class: String, target_kind: String = "") -> String:
+	match task_class:
+		"raid_town", "contest_site":
+			return COMMANDER_ROLE_RAIDER
+		"retake_site":
+			return COMMANDER_ROLE_RETAKER
+		"defend_front":
+			return COMMANDER_ROLE_DEFENDER
+		"stabilize_front":
+			return COMMANDER_ROLE_STABILIZER
+		"recover_commander", "rebuild_host":
+			return COMMANDER_ROLE_RECOVERING
+		_:
+			if target_kind == "town":
+				return COMMANDER_ROLE_RAIDER
+	return COMMANDER_ROLE_RESERVE
 
 static func _ai_hero_task_role_status_from_task_class(task_class: String) -> String:
 	if task_class == "recover_commander":

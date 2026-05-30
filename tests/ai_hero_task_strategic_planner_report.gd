@@ -22,16 +22,20 @@ func _run() -> void:
 	var adaptive_case := _planner_uses_commander_outcome_memory()
 	if adaptive_case.is_empty():
 		return
+	var role_adoption_case := _planner_adopts_live_commander_role_state()
+	if role_adoption_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "coordinated_task_planner_live_behavior",
-		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_and_scores_targets_by_commander_identity_and_adaptive_outcome_memory",
+		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_scores_targets_by_commander_identity_adaptive_outcome_memory_and_live_role_continuity",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": planner_case,
 		"multi_origin_case": multi_origin_case,
 		"personality_case": personality_case,
 		"adaptive_case": adaptive_case,
+		"role_adoption_case": role_adoption_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -324,6 +328,64 @@ func _planner_uses_commander_outcome_memory() -> Dictionary:
 		"adapted_fit_profile": String(adapted_task.get("commander_fit_profile", "")),
 	}
 
+func _planner_adopts_live_commander_role_state() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state["pressure"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_resource_controller(session, "river_signal_post", "player")
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	var planned_state: Dictionary = plan_result.get("state", {})
+	var adopted_task := _first_planned_task_for_kind(planned_state, "resource")
+	if adopted_task.is_empty():
+		_fail("Role adoption fixture expected a planned resource task, got %s" % JSON.stringify(plan_result))
+		return {}
+	var actor_id := String(adopted_task.get("actor_id", ""))
+	var entry := _commander_entry_from_state(planned_state, actor_id)
+	var role_state := EnemyAdventureRules.commander_live_role_state(entry)
+	if role_state.is_empty():
+		_fail("Planner did not persist live commander role state for %s in %s" % [actor_id, JSON.stringify(entry)])
+		return {}
+	if String(role_state.get("target_kind", "")) != String(adopted_task.get("target_kind", "")) or String(role_state.get("target_id", "")) != String(adopted_task.get("target_id", "")):
+		_fail("Role state target does not match adopted task: role=%s task=%s" % [JSON.stringify(role_state), JSON.stringify(adopted_task)])
+		return {}
+	if String(role_state.get("role", "")) != String(adopted_task.get("source_role", "")):
+		_fail("Role state did not preserve task source_role: role=%s task=%s" % [JSON.stringify(role_state), JSON.stringify(adopted_task)])
+		return {}
+	_update_enemy_state(session, planned_state)
+	var same_candidate := {
+		"target_kind": "resource",
+		"target_placement_id": String(adopted_task.get("target_id", "")),
+		"priority": 100,
+		"target_reason_codes": adopted_task.get("priority_reason_codes", []),
+	}
+	var rival_id := "river_signal_post" if String(adopted_task.get("target_id", "")) != "river_signal_post" else "river_free_company"
+	var rival_candidate := {
+		"target_kind": "resource",
+		"target_placement_id": rival_id,
+		"priority": 100,
+		"target_reason_codes": ["persistent_income_denial", "route_pressure", "strategic_task_planner"],
+	}
+	var same_fit := EnemyAdventureRules._ai_commander_task_fit_bonus(session, MIRECLAW, actor_id, same_candidate)
+	var rival_fit := EnemyAdventureRules._ai_commander_task_fit_bonus(session, MIRECLAW, actor_id, rival_candidate)
+	if same_fit <= rival_fit:
+		_fail("Live role continuity should favor the adopted front: same=%d rival=%d role=%s" % [same_fit, rival_fit, JSON.stringify(role_state)])
+		return {}
+	return {
+		"case_id": "planner_persists_live_role_state_and_scores_continuity",
+		"actor_id": actor_id,
+		"role": String(role_state.get("role", "")),
+		"source_policy": String(role_state.get("source_policy", "")),
+		"target_key": "%s:%s" % [String(role_state.get("target_kind", "")), String(role_state.get("target_id", ""))],
+		"same_target_fit": same_fit,
+		"rival_fit": rival_fit,
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
@@ -438,6 +500,20 @@ func _planned_task_for_target(state: Dictionary, target_kind: String, target_id:
 		var task: Dictionary = task_value
 		if String(task.get("target_kind", "")) == target_kind and String(task.get("target_id", "")) == target_id:
 			return task
+	return {}
+
+func _first_planned_task_for_kind(state: Dictionary, target_kind: String) -> Dictionary:
+	for task_value in _planned_tasks(state):
+		if task_value is Dictionary and String(task_value.get("target_kind", "")) == target_kind:
+			return task_value
+	return {}
+
+func _commander_entry_from_state(state: Dictionary, roster_hero_id: String) -> Dictionary:
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	for entry in roster:
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry
+	_fail("Could not find commander %s in planned state" % roster_hero_id)
 	return {}
 
 func _assert_active_task(session, actor_id: String, target_kind: String, target_id: String) -> void:

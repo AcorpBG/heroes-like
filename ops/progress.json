@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-threat-recovery-reinforcement-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-live-commander-role-adoption-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:03:06Z",
+  "updatedAt": "2026-05-30T23:20:16Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -30834,6 +30834,98 @@
         "This is a live strategic-AI behavior change, not a report-only audit.",
         "Existing planned-task and regroup recruitment behavior remains covered."
       ]
+    },
+    {
+      "id": "strategic-ai-live-commander-role-adoption-10184",
+      "title": "Strategic AI Live Commander Role Adoption",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner direction to prioritize production-ready strategic AI behavior over reports/audits",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Commander role adoption becomes live strategic AI state: planned/runtime assignments persist compact role state on commanders and future planning scores continuity with that role/front.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "tests/ai_hero_task_live_target_selection_report.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Strategic planner and runtime target assignment persist live commander role state, planned tasks carry source roles matching task purpose, and role/front continuity affects future planner choice without save-version migration or public debug leakage.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "new report-only adoption gates",
+        "battle balance tuning",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T23:08:58Z",
+      "updatedAt": "2026-05-30T23:20:16Z",
+      "completedAt": "2026-05-30T23:20:16Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Planner persists commander_role_state from planned tasks, source roles match task purpose, and same-target continuity beats rival fit."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+          "result": "pass",
+          "summary": "Runtime target assignment records live commander role state for primary and companion assignments."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "result": "pass",
+          "summary": "Commander spawn selection remains compatible with the role-state roster payload."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live turn execution still seizes resource tasks after threat-aware fixture cleanup."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment preparation remains green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Raid regroup and retreat behavior remains green with commander role-state metadata present."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed after live commander role adoption."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "summary": "Completed. Strategic planner and runtime assignments now adopt compact live commander role state, future planner scoring rewards role/front continuity, planned task source roles match task purpose instead of hard-coded raider roles, and saved/live tasks outrank generic active-front support after urgent town retakes.",
+      "notes": [
+        "This is a live strategic-AI behavior change, not a report-only audit.",
+        "Full strategic AI production readiness remains open for broader generated-map long-run behavior, economy timing, coordinated multi-front doctrine, and live-client pacing."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -41222,20 +41314,23 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T23:03:06Z",
-    "sliceId": "strategic-ai-threat-recovery-reinforcement-10184",
+    "updatedAt": "2026-05-30T23:20:16Z",
+    "sliceId": "strategic-ai-live-commander-role-adoption-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (pass)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (pass)",
       "python3 tests/validate_repo.py (pass)",
       "jq empty ops/progress.json (pass)",
       "git diff --check (pass)"
     ],
-    "summary": "Threat-recovery recruitment reinforcement and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
+    "summary": "Live commander-role adoption and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-30T23:03:06Z",
+  "currentSliceUpdatedAt": "2026-05-30T23:20:16Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44191,34 +44286,37 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T23:03:06Z",
-    "sliceId": "strategic-ai-threat-recovery-reinforcement-10184",
+    "updatedAt": "2026-05-30T23:20:16Z",
+    "sliceId": "strategic-ai-live-commander-role-adoption-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Active raid reinforcement target strength now includes recorded player_threat_hero_strength for threat-avoidance regrouping commanders.",
-        "Town recruitment destination payloads expose threat_recovery, threat_hero_id, threat_hero_strength, and target_strength for raid destinations.",
-        "The live hero-hunt report now proves a safe enemy town prioritizes the retreating commander as a raid reinforcement destination with threat_recovery=true.",
-        "Existing planned-task preparation and regroup behavior remains passing."
+        "Strategic planner assignments now persist compact commander_role_state on commander roster entries.",
+        "Runtime target assignment now adopts live commander role state for the assigned target and source policy.",
+        "Planned task source roles now follow task purpose instead of being hard-coded as raider.",
+        "Future commander task fit scoring now rewards live role/front continuity.",
+        "Saved and live task targets now outrank generic active-front support after urgent town retake logic."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "actor_id": "hero_vaska",
-        "recruitment_type": "raid",
-        "reinforcement_decision_rule": "active_raid_need",
-        "threat_hero_id": "hero_lyra",
-        "threat_strength": 540,
-        "reinforcement_target_strength": 497
+        "planner_actor_id": "hero_mireclaw_kessa_chainboom",
+        "runtime_primary_actor_id": "hero_vaska",
+        "runtime_companion_actor_id": "hero_sable",
+        "source_policy": "live_target_assignment",
+        "continuity_scoring": "same target fit beats rival fit"
       },
-      "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full 100-seed eight-week generated-map matrix remains open, and live-client pacing/manual play remains needed.",
-      "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, campaign production, or production-ready claim."
+      "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full long-run generated-map strategic-AI matrix remains open, and live-client pacing/manual play remains needed.",
+      "policy": "Live strategic AI behavior slice; no report-only gate creation, campaign production, or production-ready claim."
     }
   }
 }

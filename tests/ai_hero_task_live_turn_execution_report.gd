@@ -32,13 +32,14 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	var state := _enemy_state(session)
 	state["pressure"] = 0
 	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 12, "y": 12})
 	_set_resource_controller(session, "river_free_company", "player")
 	_set_resource_controller(session, "river_signal_post", "player")
 	var free_company_before := _resource_controller(session, "river_free_company")
 	var signal_post_before := _resource_controller(session, "river_signal_post")
 	var encounters: Array = session.overworld.get("encounters", [])
-	encounters.append(_raid_seed(session, config, "hero_vaska", "live_turn_vaska_free_company", {"x": 0, "y": 4}))
-	encounters.append(_raid_seed(session, config, "hero_sable", "live_turn_sable_signal_post", {"x": 2, "y": 3}))
+	encounters.append(_strong_raid_seed(session, config, "hero_vaska", "live_turn_vaska_free_company", {"x": 0, "y": 4}))
+	encounters.append(_strong_raid_seed(session, config, "hero_sable", "live_turn_sable_signal_post", {"x": 2, "y": 3}))
 	session.overworld["encounters"] = encounters
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
 	var vaska_progress_before := _commander_progress_snapshot(session, "hero_vaska")
@@ -138,6 +139,25 @@ func _raid_seed(session, config: Dictionary, roster_hero_id: String, placement_i
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
+func _strong_raid_seed(session, config: Dictionary, roster_hero_id: String, placement_id: String, origin: Dictionary) -> Dictionary:
+	var raid := _raid_seed(session, config, roster_hero_id, placement_id, origin)
+	var army := {
+		"id": String(raid.get("encounter_id", "encounter_mire_raid")),
+		"name": "Live Turn Proof Host",
+		"stacks": [
+			{"unit_id": "unit_bog_brute", "count": 12},
+			{"unit_id": "unit_mire_slinger", "count": 12},
+		],
+	}
+	raid["enemy_army"] = army
+	if raid.get("enemy_commander_state", {}) is Dictionary:
+		raid["enemy_commander_state"] = EnemyAdventureRules.sync_commander_army_continuity(
+			raid.get("enemy_commander_state", {}),
+			army,
+			String(raid.get("encounter_id", "encounter_mire_raid"))
+		)
+	return raid
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -190,6 +210,19 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		session.overworld["resource_nodes"] = nodes
 		return
 	_fail("Could not find resource placement %s" % placement_id)
+
+func _set_player_position(session, position: Dictionary) -> void:
+	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
+	for heroes_key in ["heroes", "player_heroes"]:
+		var heroes: Array = session.overworld.get(heroes_key, []) if session.overworld.get(heroes_key, []) is Array else []
+		for index in range(heroes.size()):
+			var hero = heroes[index]
+			if hero is Dictionary and String(hero.get("owner", "player")) == "player":
+				hero["x"] = int(position.get("x", 0))
+				hero["y"] = int(position.get("y", 0))
+				hero["position"] = session.overworld["hero_position"].duplicate(true)
+				heroes[index] = hero
+				session.overworld[heroes_key] = heroes
 
 func _resource_controller(session, placement_id: String) -> String:
 	for node in session.overworld.get("resource_nodes", []):
