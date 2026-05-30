@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-regroup-garrison-aware-routing-10184",
-  "currentSliceTitle": "Strategic AI Regroup Garrison-Aware Routing",
+  "currentSliceId": "strategic-ai-town-rebuild-garrison-safety-10184",
+  "currentSliceTitle": "Strategic AI Town Rebuild Garrison Safety",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Regroup routing now chooses reachable towns with usable reinforcement before empty nearest towns.",
+  "currentSliceNotes": "Completed. Critically under-defended towns stabilize garrison before spending recruitment on commander rebuild, while safe towns still rebuild shattered commanders.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:31:00Z",
+  "updatedAt": "2026-05-30T23:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28525,6 +28525,39 @@
       "updatedAt": "2026-05-30T23:31:00Z",
       "notes": "Completed. Regroup routing now prefers reachable useful garrisons over nearer empty towns while keeping empty-town rebuild fallback.",
       "completedAt": "2026-05-30T23:31:00Z"
+    },
+    {
+      "id": "strategic-ai-town-rebuild-garrison-safety-10184",
+      "title": "Strategic AI Town Rebuild Garrison Safety",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "production strategic AI economy timing; towns must not spend critical local safety recruits on commander rebuild before stabilizing their own garrison",
+      "planRef": "PLAN.md Current strategic AI follow-up / stronger army economy timing",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-town-governor-pressure-implementation-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_town_governor_pressure_report.gd",
+        "tests/validate_repo.py",
+        "docs/strategic-ai-town-governor-pressure-implementation-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Enemy town recruitment must prioritize critical garrison safety before commander rebuild when local defense is below the minimum wall target, while still routing recruitment to commander rebuild once the town is safely garrisoned and no deployable commanders remain; focused evidence must prove both cases without a save-version bump.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No new save schema",
+        "No combat or unit balance tuning"
+      ],
+      "startedAt": "2026-05-30T23:48:00Z",
+      "updatedAt": "2026-05-30T23:59:00Z",
+      "notes": "Completed. Critical garrison safety now wins over commander rebuild pressure until local defense is no longer below the minimum wall target.",
+      "completedAt": "2026-05-30T23:59:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -38738,8 +38771,8 @@
       "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-regroup-garrison-aware-routing-10184",
-  "currentSliceUpdatedAt": "2026-05-30T23:31:00Z",
+  "active_slice": "strategic-ai-town-rebuild-garrison-safety-10184",
+  "currentSliceUpdatedAt": "2026-05-30T23:59:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41612,44 +41645,42 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-regroup-garrison-aware-routing-10184",
-    "title": "Strategic AI Regroup Garrison-Aware Routing",
+    "id": "strategic-ai-town-rebuild-garrison-safety-10184",
+    "title": "Strategic AI Town Rebuild Garrison Safety",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "production strategic AI retreat timing review; retreat routing should seek real reinforcement before falling back to empty staging towns",
-    "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
+    "source": "production strategic AI economy timing; towns must not spend critical local safety recruits on commander rebuild before stabilizing their own garrison",
+    "planRef": "PLAN.md Current strategic AI follow-up / stronger army economy timing",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-raid-regroup-retreat-report.md"
+      "docs/strategic-ai-town-governor-pressure-implementation-report.md"
     ],
     "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_raid_regroup_retreat_report.gd",
-      "docs/strategic-ai-raid-regroup-retreat-report.md",
+      "scripts/core/EnemyTurnRules.gd",
+      "tests/ai_town_governor_pressure_report.gd",
+      "docs/strategic-ai-town-governor-pressure-implementation-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "When an active host needs regroup, strategic AI must prefer reachable same-faction towns with usable garrison reinforcement over nearer empty towns, record the selected garrison-aware regroup target in live raid/task state, keep empty-town rebuild fallback only when no useful reinforcement town exists, and preserve existing guarded-claim, unreachable-route, successful-regroup, and failed-regroup behavior without a save-version bump.",
-    "startedAt": "2026-05-30T23:18:00Z",
-    "updatedAt": "2026-05-30T23:31:00Z",
-    "notes": "Completed. Regroup routing now prefers reachable useful garrisons over nearer empty towns while keeping empty-town rebuild fallback.",
-    "completedAt": "2026-05-30T23:31:00Z",
+    "completionCriteria": "Enemy town recruitment must prioritize critical garrison safety before commander rebuild when local defense is below the minimum wall target, while still routing recruitment to commander rebuild once the town is safely garrisoned and no deployable commanders remain; focused evidence must prove both cases without a save-version bump.",
+    "startedAt": "2026-05-30T23:48:00Z",
+    "updatedAt": "2026-05-30T23:59:00Z",
+    "notes": "Completed. Critical garrison safety now wins over commander rebuild pressure until local defense is no longer below the minimum wall target.",
+    "completedAt": "2026-05-30T23:59:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T23:31:00Z",
-      "sliceId": "strategic-ai-regroup-garrison-aware-routing-10184",
+      "updatedAt": "2026-05-30T23:59:00Z",
+      "sliceId": "strategic-ai-town-rebuild-garrison-safety-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_faction_personality_evidence_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "python3 -m py_compile tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
@@ -41657,21 +41688,22 @@
       ],
       "evidence": {
         "implemented": [
-          "Regroup town selection now evaluates reachable same-faction town garrison strength instead of only path distance.",
-          "A reachable town with usable garrison reinforcement beats a nearer empty town; towns that can cover the strength gap beat partial reinforcements, while partial reinforcements choose the largest useful contribution.",
-          "The old nearest-town fallback remains when no reachable town has usable garrison, preserving the empty-garrison rebuild release behavior.",
-          "Focused coverage proves a damaged Vaska host ignores empty Duskfen Bastion, regroups at a reachable reserve redoubt, pulls its garrison, completes the regroup task, and avoids rebuild retirement."
+          "Recruit destination selection now evaluates critical local garrison gaps before the no-deployable-commander rebuild shortcut.",
+          "A shattered-commander town with unsafe local defense routes recruits to garrison with decision rule critical_garrison_gap while still exposing positive rebuild pressure.",
+          "A safely garrisoned shattered-commander town still routes recruits to commander rebuild with decision rule commander_rebuild_required.",
+          "The broader faction-personality report now evaluates governor decisions from a mature day-24 fixture with full rare-resource treasury and reset enemy build timers so development pacing does not mask personality evidence."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-raid-regroup-retreat-report.md"
+          "docs/strategic-ai-town-governor-pressure-implementation-report.md"
         ],
-        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "savePolicy": "no_save_version_bump",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_RAID_REGROUP_RETREAT_REPORT"
+          "AI_TOWN_GOVERNOR_PRESSURE_REPORT",
+          "AI_FACTION_PERSONALITY_EVIDENCE_REPORT"
         ],
-        "residualRisk": "This improves retreat routing quality. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer economy timing, and manual live-client pacing checks."
+        "residualRisk": "This improves town recruitment safety ordering. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer economy timing, and manual live-client pacing checks."
       }
     }
   },

@@ -64,7 +64,17 @@ const RESOURCE_AFFINITY_CASES := [
 	},
 ]
 
-const TREASURY := {"gold": 7200, "wood": 12, "ore": 12}
+const TREASURY := {
+	"gold": 12000,
+	"wood": 24,
+	"ore": 24,
+	"aetherglass": 12,
+	"embergrain": 12,
+	"peatwax": 12,
+	"verdant_grafts": 12,
+	"brass_scrip": 12,
+	"memory_salt": 12,
+}
 
 var _failed := false
 
@@ -268,9 +278,23 @@ func _base_session(scenario_id: String):
 		"normal",
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
+	session.day = 24
 	OverworldRules.normalize_overworld_state(session)
 	OverworldRules.refresh_fog_of_war(session)
+	_reset_enemy_town_build_timers(session)
 	return session
+
+func _reset_enemy_town_build_timers(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "")) != "enemy":
+			continue
+		town["last_build_day"] = 0
+		towns[index] = town
+	session.overworld["towns"] = towns
 
 func _strategy_snapshot(strategy: Dictionary) -> Dictionary:
 	return {
