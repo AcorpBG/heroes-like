@@ -11836,7 +11836,31 @@ static func _contest_encounter_target(
 			"ai_event": resume_result.get("ai_event", {}),
 			"guarded_claim_resumed": true,
 		}
-	return {"encounter": resolved_raid, "state": state, "event_message": message}
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "site_contested" not in reason_codes:
+		reason_codes.push_front("site_contested")
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_site_contested",
+		resolved_raid,
+		{
+			"target_kind": "encounter",
+			"target_placement_id": placement_id,
+			"target_label": String(encounter_template.get("name", "the frontier camp")),
+			"target_x": int(encounter_state.get("x", 0)),
+			"target_y": int(encounter_state.get("y", 0)),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": _public_reason_from_codes(reason_codes),
+			"target_public_importance": String(raid.get("target_public_importance", "medium")),
+			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {"encounter": resolved_raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _resume_guarded_claim_after_guard_clear(
 	session: SessionStateStoreScript.SessionData,

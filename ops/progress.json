@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-planned-task-ready-launch-10184",
-  "currentSliceTitle": "Strategic AI Planned Task Ready Launch",
+  "currentSliceId": "strategic-ai-site-contest-event-surfacing-10184",
+  "currentSliceTitle": "Strategic AI Site Contest Event Surfacing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Prepared saved commander tasks can launch on readiness below generic raid pressure, while unplanned low-pressure raids remain blocked by pressure thresholds.",
+  "currentSliceNotes": "Completed. Resolved encounter/site arrivals now emit compact public ai_site_contested events instead of silently mutating encounter and task state.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:35:00Z",
+  "updatedAt": "2026-05-30T23:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,87 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-site-contest-event-surfacing-10184",
+      "title": "Strategic AI Site Contest Event Surfacing",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / site contest event surfacing",
+      "purpose": "Make resolved encounter and objective-site arrivals emit compact public ai_site_contested events instead of silently mutating encounter and task state.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-event-surfacing-plan.md",
+        "docs/strategic-ai-public-event-log-boundary-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_event_surfacing_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_event_surfacing_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Ready encounter arrivals produce compact public ai_site_contested events; risk-gated understrength arrivals still use the retask/risk path; event surfacing smoke passes without leaking score/debug fields.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "changing encounter arrival risk gating",
+        "running the full 100-seed eight-week matrix",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T23:55:00Z",
+      "updatedAt": "2026-05-30T23:55:00Z",
+      "completedAt": "2026-05-30T23:55:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_event_surfacing_report.tscn",
+          "result": "pass",
+          "summary": "AI event surfacing passes with compact public ai_site_contested output for ready objective-site and non-objective encounter contests, no scoring/debug leakage, and preserved event-log public boundaries."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, retreat, guarded-claim retargeting, route recovery, and support behavior still pass after event-surfacing changes."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turns still execute commander task boards and persist task progression."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment prep still launches ready saved tasks while preserving pressure gates for unplanned low-pressure raids."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. Resolved encounter/site arrivals now return compact public ai_site_contested event records instead of only mutating encounter/task state. The focused event-surfacing fixture uses a ready host and checks both objective-site and non-objective encounter contests, so it exercises contest behavior rather than the understrength risk-retask path."
+      ]
+    },
     {
       "id": "strategic-ai-planned-task-ready-launch-10184",
       "title": "Strategic AI Planned Task Ready Launch",
