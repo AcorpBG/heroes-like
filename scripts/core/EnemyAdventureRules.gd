@@ -677,9 +677,9 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _refresh_target(session, raid)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
-		var plan = ai_active_front_support_target_selection_plan(session, config, raid)
+		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
 		if plan.is_empty():
-			plan = ai_live_town_retake_target_selection_plan(session, config, raid)
+			plan = ai_active_front_support_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 		if plan.is_empty():
@@ -802,7 +802,13 @@ static func _active_front_support_candidate(
 			if int(town_result.get("index", -1)) < 0:
 				return {}
 			var town: Dictionary = town_result.get("town", {})
-			if String(town.get("owner", "neutral")) != "player":
+			var town_owner := String(town.get("owner", "neutral"))
+			var neutral_expansion := town_owner == "neutral" and (
+				"town_expansion" in front_reason_codes
+				or "neutral_town_claim" in front_reason_codes
+				or "neutral_town_siege" in front_reason_codes
+			)
+			if town_owner != "player" and not neutral_expansion:
 				return {}
 			target_label = _town_name(town)
 			target_x = int(town.get("x", 0))
@@ -854,6 +860,9 @@ static func _active_front_support_candidate(
 	var reason_codes := ["active_front_support", "army_consolidation"]
 	for code in [
 		"town_siege",
+		"town_expansion",
+		"neutral_town_claim",
+		"neutral_town_siege",
 		"objective_front",
 		"guard_clearance",
 		"site_contested",
@@ -866,7 +875,7 @@ static func _active_front_support_candidate(
 	]:
 		if code in front_reason_codes and code not in reason_codes:
 			reason_codes.append(code)
-	if target_kind == "town" and "town_siege" not in reason_codes:
+	if target_kind == "town" and "town_siege" not in reason_codes and "town_expansion" not in reason_codes:
 		reason_codes.append("town_siege")
 	if target_kind == "encounter" and "objective_front" not in reason_codes and objective_anchor:
 		reason_codes.append("objective_front")
@@ -987,7 +996,7 @@ static func ai_live_town_retake_target_selection_plan(
 			continue
 		if String(front_state.get("mode", "")) != "retake":
 			continue
-		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id, _ai_hero_task_actor_id_from_raid(raid)):
+		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id, _ai_hero_task_actor_id_from_raid(raid), true):
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
 		var goal_distance := _path_distance(session, origin_pos, staging_tiles, current_placement_id)
@@ -2118,15 +2127,22 @@ static func redirect_town_assault_for_risk(
 	raid["assault_risk_started_day"] = started_day
 	raid["assault_delay_until_day"] = int(session.day) + 1
 	raid["arrived"] = false
+	var preserved_town_codes := []
+	for code in ["town_expansion", "neutral_town_claim", "neutral_town_siege"]:
+		if code in _normalize_string_array(raid.get("target_reason_codes", [])) and code not in preserved_town_codes:
+			preserved_town_codes.append(code)
 	if not regroup_town.is_empty():
 		raid["target_kind"] = "regroup"
 		raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
 		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
 		raid["target_reason_codes"] = ["assault_risk_regroup", "regroup_understrength", "army_consolidation", "town_siege"]
+		for code in preserved_town_codes:
+			if code not in raid["target_reason_codes"]:
+				raid["target_reason_codes"].append(code)
 		raid["assault_regroup_started_day"] = int(session.day)
 		return _refresh_target(session, raid)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
-	for code in ["assault_risk_staging", "awaiting_support", "town_siege"]:
+	for code in ["assault_risk_staging", "awaiting_support", "town_siege"] + preserved_town_codes:
 		if code not in reason_codes:
 			reason_codes.append(code)
 	raid["target_reason_codes"] = reason_codes
@@ -5470,9 +5486,9 @@ static func _target_candidates(session: SessionStateStoreScript.SessionData, con
 			continue
 		if String(town.get("owner", "neutral")) != "neutral":
 			continue
-		if _town_garrison_strength(town) > 0:
-			continue
 		var base_priority = 145
+		if _town_garrison_strength(town) > 0:
+			base_priority += 25
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 45
 		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id)
@@ -5538,7 +5554,7 @@ static func _append_town_candidate(
 		return
 	var town = town_result.get("town", {})
 	var owner := String(town.get("owner", "neutral"))
-	var neutral_expansion := owner == "neutral" and _town_garrison_strength(town) <= 0
+	var neutral_expansion := owner == "neutral"
 	if owner != "player" and not neutral_expansion:
 		return
 
@@ -5551,6 +5567,8 @@ static func _append_town_candidate(
 	var objective_anchor = _town_is_objective_anchor(session, placement_id)
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
 	var reason_codes := ["town_expansion", "neutral_town_claim"] if neutral_expansion else ["town_siege"]
+	if neutral_expansion and _town_garrison_strength(town) > 0:
+		reason_codes.append("neutral_town_siege")
 	if objective_anchor and "objective_front" not in reason_codes:
 		reason_codes.append("objective_front")
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "town", placement_id)
@@ -5586,7 +5604,11 @@ static func _append_town_candidate(
 				else "town front pressure"
 			),
 			"target_debug_reason": (
-				"reachable empty neutral town expansion"
+				(
+					"reachable defended neutral town expansion"
+					if _town_garrison_strength(town) > 0
+					else "reachable empty neutral town expansion"
+				)
 				if neutral_expansion
 				else "town siege and objective pressure" if objective_anchor
 				else "town siege pressure"
@@ -8908,7 +8930,8 @@ static func _ai_hero_task_live_target_reserved(
 	target_kind: String,
 	target_id: String,
 	current_placement_id: String = "",
-	current_actor_id: String = ""
+	current_actor_id: String = "",
+	ignore_task_reservations: bool = false
 ) -> bool:
 	if session == null or target_kind == "" or target_id == "":
 		return false
@@ -8926,6 +8949,8 @@ static func _ai_hero_task_live_target_reserved(
 			if "active_front_support" in reason_codes or String(encounter.get("supporting_front_placement_id", "")) != "":
 				continue
 			return true
+	if ignore_task_reservations:
+		return false
 	for task in _ai_hero_task_live_tasks_for_faction(session, faction_id):
 		if not (task is Dictionary):
 			continue
@@ -12403,7 +12428,6 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 					and _town_faction_id(town) == String(raid.get("spawned_by_faction_id", ""))
 				) or (
 					String(town.get("owner", "neutral")) == "neutral"
-					and _town_garrison_strength(town) <= 0
 					and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes)
 				)
 		"regroup":

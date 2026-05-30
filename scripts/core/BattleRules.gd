@@ -414,13 +414,21 @@ static func _normalized_battle_context(session: SessionStateStoreScript.SessionD
 		var placement = raw_context
 		if String(placement.get("spawned_by_faction_id", "")) != "" and String(placement.get("target_kind", "")) == "town":
 			var target_town = _find_town_by_placement(session, String(placement.get("target_placement_id", ""))).get("town", {})
-			if not target_town.is_empty() and String(target_town.get("owner", "neutral")) == "player":
+			var target_owner := String(target_town.get("owner", "neutral"))
+			var target_reason_codes := _normalize_string_array(placement.get("target_reason_codes", []))
+			var neutral_expansion := target_owner == "neutral" and (
+				"town_expansion" in target_reason_codes
+				or "neutral_town_claim" in target_reason_codes
+				or "neutral_town_siege" in target_reason_codes
+			)
+			if not target_town.is_empty() and (target_owner == "player" or neutral_expansion):
 				context = {
 					"type": "town_defense",
 					"town_placement_id": String(target_town.get("placement_id", placement.get("target_placement_id", ""))),
 					"defending_hero_id": "",
 					"raid_encounter_key": OverworldRulesScript.encounter_key(placement),
 					"trigger_faction_id": String(placement.get("spawned_by_faction_id", "")),
+					"defender_owner": target_owner,
 				}
 				context_type = "town_defense"
 		elif String(placement.get("encounter_id", "")) == "encounter_town_assault" or String(placement.get("placement_id", "")).begins_with("town_assault:"):
@@ -507,6 +515,7 @@ static func _normalized_battle_context(session: SessionStateStoreScript.SessionD
 		"defending_hero_id": String(context.get("defending_hero_id", "")),
 		"raid_encounter_key": String(context.get("raid_encounter_key", "")),
 		"trigger_faction_id": _battle_context_trigger_faction_id(session, context, raw_context, town),
+		"defender_owner": String(context.get("defender_owner", town.get("owner", "player" if context_type == "town_defense" else "enemy"))),
 		"town_role": OverworldRulesScript.town_strategic_role(town),
 		"battlefront_summary": String(battlefront.get("summary", "")),
 		"battlefront_tags": battlefront.get("tags", []),
@@ -548,7 +557,8 @@ static func _battle_context_already_resolved(
 			return assaulted_town.is_empty() or String(assaulted_town.get("owner", "neutral")) != "enemy"
 		"town_defense":
 			var defended_town: Dictionary = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
-			return defended_town.is_empty() or String(defended_town.get("owner", "neutral")) != "player"
+			var defender_owner := String(context.get("defender_owner", "player"))
+			return defended_town.is_empty() or String(defended_town.get("owner", "neutral")) != defender_owner
 		_:
 			var resolved_key := String(session.battle.get("resolved_key", ""))
 			var resolved = session.overworld.get("resolved_encounters", [])
@@ -591,7 +601,7 @@ static func _sync_battle_context_anchors(
 			var towns = session.overworld.get("towns", [])
 			var town = town_result.get("town", {})
 			if _is_town_defense_context(context):
-				town["owner"] = "player"
+				town["owner"] = String(context.get("defender_owner", "player"))
 			else:
 				town["owner"] = "enemy"
 			towns[town_index] = town
@@ -9042,6 +9052,7 @@ static func _apply_delivery_route_aftermath(session: SessionStateStoreScript.Ses
 static func _finalize_town_defense_loss(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var context = session.battle.get("context", {})
 	var messages = []
+	var defender_owner := String((context if context is Dictionary else {}).get("defender_owner", "player"))
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
 	var base_summary := "%s falls after the walls are breached." % town_name if town_name != "" else "The town falls after the walls are breached."
 	var commander_source = session.battle.get("player_commander_source", {})
@@ -9071,7 +9082,7 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 	var delivery_summary := _apply_delivery_route_aftermath(session, "town_lost")
 	_append_nonempty_message(messages, delivery_summary)
 
-	var defending_hero = HeroCommandRulesScript.hero_by_id(session, defending_hero_id)
+	var defending_hero = HeroCommandRulesScript.hero_by_id(session, defending_hero_id) if defender_owner == "player" else {}
 	if not defending_hero.is_empty():
 		if bool(defending_hero.get("is_primary", false)):
 			var defeat_result = _finalize_primary_defeat(session, "The primary commander is defeated.", "town_lost")
@@ -9085,7 +9096,12 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 		var removal = _remove_hero_by_id_after_defeat(session, defending_hero_id)
 		_append_nonempty_message(messages, String(removal.get("message", "")))
 
-	collapse_aftermath = _apply_collapse_aftermath(session, "town_lost")
+	collapse_aftermath = _apply_collapse_aftermath(session, "town_lost") if defender_owner == "player" else {
+		"summary": "%s is absorbed into the enemy frontier." % (town_name if town_name != "" else "The neutral town"),
+		"resource_summary": "",
+		"pressure_summary": "",
+		"recovery_summary": "",
+	}
 	_append_nonempty_message(messages, String(collapse_aftermath.get("summary", "")))
 	session.flags["last_battle_outcome"] = "town_lost"
 	_record_battle_aftermath(

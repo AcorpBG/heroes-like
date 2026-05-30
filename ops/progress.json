@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-neutral-town-expansion-10184",
-  "currentSliceTitle": "Strategic AI Neutral Town Expansion",
+  "currentSliceId": "strategic-ai-defended-neutral-town-assault-10184",
+  "currentSliceTitle": "Strategic AI Defended Neutral Town Assault",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Generated-map/skirmish AI empires now target and capture reachable empty neutral towns as expansion objectives; broader strategic AI production readiness remains open.",
+  "currentSliceNotes": "Completed. Strategic AI neutral-town expansion now includes defended neutral towns through live battle routing, assault risk gating, neutral-safe capture aftermath, and active retake priority over planned reservations.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T20:55:00Z",
+  "updatedAt": "2026-05-30T21:40:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-defended-neutral-town-assault-10184",
+      "title": "Strategic AI Defended Neutral Town Assault",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / defended neutral town expansion",
+      "purpose": "Make AI commanders treat defended neutral towns as guarded expansion objectives, route ready assaults through the live town battle system, and capture them without applying player-loss side effects to neutral defenders.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-neutral-town-expansion-report.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/ai_neutral_town_expansion_report.gd",
+        "docs/strategic-ai-neutral-town-expansion-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Defended neutral towns appear as expansion candidates, weak assaults are risk-gated, ready assaults queue a live town-defense battle with neutral defender ownership preserved, enemy victory captures the town into enemy control and completes the commander task, and neutral defender loss does not apply player-collapse/resource-loss side effects.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "authoring campaign content",
+        "rewriting the battle system",
+        "running the full 100-seed eight-week generated-map matrix in this slice"
+      ],
+      "startedAt": "2026-05-30T21:10:00Z",
+      "updatedAt": "2026-05-30T21:40:00Z",
+      "completedAt": "2026-05-30T21:40:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed; defended neutral towns planned, weak assaults risk-gated, ready assaults queued live battle, enemy victory captured town, player resources unchanged)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed; active retake army preserved town target over planned reservations/support diversion)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false with generated-map coverage/generalization blockers)"
+      ],
+      "notes": [
+        "Selected because empty neutral towns were implemented, but defended neutral towns remained outside AI expansion and battle arbitration.",
+        "Completed by allowing defended neutral town target selection, preserving neutral expansion reason codes through assault-risk regroup/staging, queueing neutral-owned town-defense battles with defender_owner metadata, and skipping player-collapse/resource-loss aftermath for neutral defenders.",
+        "Also completed active retake priority: a live field army can override planned task reservations for urgent retake-front town recovery while active duplicate assaults remain blocked."
+      ]
+    },
     {
       "id": "strategic-ai-neutral-town-expansion-10184",
       "title": "Strategic AI Neutral Town Expansion",
@@ -39820,14 +39876,14 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-30T20:55:00Z",
+    "updatedAt": "2026-05-30T21:40:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed; planned neutral-town expansion target and captured empty neutral town into enemy control)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false with generated-map coverage/generalization blockers)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed; defended neutral towns planned, weak assaults risk-gated, ready assaults queued live battle, enemy victory captured town, player resources unchanged)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed; active retake army preserved town target over planned reservations/support diversion)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false with generated-map coverage/generalization blockers)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
@@ -39835,12 +39891,12 @@
     "status": "passed"
   },
   "active_slice": {
-    "sliceId": "strategic-ai-neutral-town-expansion-10184",
+    "sliceId": "strategic-ai-defended-neutral-town-assault-10184",
     "status": "completed",
-    "updatedAt": "2026-05-30T20:55:00Z",
-    "summary": "Completed. Generated-map/skirmish AI commanders now plan and capture reachable empty neutral towns as expansion objectives; broader strategic AI production readiness remains open."
+    "updatedAt": "2026-05-30T21:40:00Z",
+    "summary": "Completed. AI commanders now plan, risk-gate, battle, and capture defended neutral towns through live systems; active retake armies can override planned reservations for urgent town recovery; broader strategic AI production readiness remains open."
   },
-  "currentSliceUpdatedAt": "2026-05-30T20:55:00Z",
+  "currentSliceUpdatedAt": "2026-05-30T21:40:00Z",
   "validationHistory": [
     {
       "status": "pass",
