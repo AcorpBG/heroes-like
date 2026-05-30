@@ -2166,6 +2166,131 @@ static func select_raid_commander_roster_hero_id(
 		return candidate_id
 	return ""
 
+static func select_raid_commander_roster_hero_id_for_spawn(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	spawn_point: Dictionary,
+	preferred_index: int = 0,
+	occupied_commander_ids: Dictionary = {},
+	commander_roster: Variant = []
+) -> String:
+	var candidates := _raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		preferred_index,
+		occupied_commander_ids,
+		commander_roster
+	)
+	if candidates.is_empty():
+		return ""
+	var best_saved := {}
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		var saved_plan := _ai_hero_task_spawn_saved_plan_for_actor(
+			session,
+			faction_id,
+			String(candidate.get("roster_hero_id", "")),
+			spawn_point
+		)
+		if saved_plan.is_empty():
+			continue
+		candidate["saved_task_priority"] = int(saved_plan.get("priority", 0))
+		candidate["saved_task_goal_distance"] = int(saved_plan.get("goal_distance", 9999))
+		candidate["saved_task_target_label"] = String(saved_plan.get("target_label", ""))
+		if best_saved.is_empty() or _spawn_saved_task_commander_candidate_beats(candidate, best_saved):
+			best_saved = candidate
+	if not best_saved.is_empty():
+		return String(best_saved.get("roster_hero_id", ""))
+	return String(candidates[0].get("roster_hero_id", ""))
+
+static func _raid_commander_spawn_candidates(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	preferred_index: int,
+	occupied_commander_ids: Dictionary,
+	commander_roster: Variant
+) -> Array:
+	var candidates := []
+	if faction_id == "":
+		return candidates
+	var hero_ids: Array = _faction_commander_ids(faction_id)
+	if hero_ids.is_empty():
+		return candidates
+	var occupied: Dictionary = occupied_commander_ids
+	if occupied.is_empty():
+		occupied = occupied_raid_commander_ids(session, faction_id)
+	var normalized_roster = normalize_commander_roster(
+		session,
+		faction_id,
+		commander_roster if commander_roster is Array else commander_roster_for_faction(session, faction_id)
+	)
+	var unavailable: Dictionary = {}
+	for entry_value in normalized_roster:
+		if not (entry_value is Dictionary):
+			continue
+		var roster_hero_id := String(entry_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		if (
+			_normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE
+			or not commander_can_deploy(entry_value)
+		):
+			unavailable[roster_hero_id] = true
+	var start_index: int = posmod(preferred_index, hero_ids.size())
+	for offset in range(hero_ids.size()):
+		var candidate_id = String(hero_ids[(start_index + offset) % hero_ids.size()])
+		if candidate_id == "" or occupied.has(candidate_id) or unavailable.has(candidate_id):
+			continue
+		candidates.append({"roster_hero_id": candidate_id, "rotation_order": offset})
+	return candidates
+
+static func _ai_hero_task_spawn_saved_plan_for_actor(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	spawn_point: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or actor_id == "" or spawn_point.is_empty():
+		return {}
+	var probe_placement_id := "__spawn_saved_task_probe:%s" % actor_id
+	var probe_raid := {
+		"placement_id": probe_placement_id,
+		"spawned_by_faction_id": faction_id,
+		"x": int(spawn_point.get("x", 0)),
+		"y": int(spawn_point.get("y", 0)),
+		"enemy_commander_state": {"roster_hero_id": actor_id, "faction_id": faction_id},
+	}
+	var config := {"faction_id": faction_id}
+	var origin_pos := Vector2i(int(spawn_point.get("x", 0)), int(spawn_point.get("y", 0)))
+	var best := {}
+	for task_value in _ai_hero_task_live_tasks_for_faction(session, faction_id):
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("actor_id", "")) != actor_id:
+			continue
+		if String(task.get("task_status", "")) not in ["planned", "reserved", "active"]:
+			continue
+		if int(task.get("expires_day", 0)) > 0 and int(task.get("expires_day", 0)) < int(session.day):
+			continue
+		var plan := _ai_hero_task_plan_from_saved_task(session, config, probe_raid, task, origin_pos, probe_placement_id)
+		if plan.is_empty():
+			continue
+		if best.is_empty() or _saved_task_plan_beats(plan, best):
+			best = plan
+	return best
+
+static func _spawn_saved_task_commander_candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
+	if int(candidate.get("saved_task_priority", 0)) == int(best.get("saved_task_priority", 0)):
+		if int(candidate.get("saved_task_goal_distance", 9999)) == int(best.get("saved_task_goal_distance", 9999)):
+			if int(candidate.get("rotation_order", 9999)) == int(best.get("rotation_order", 9999)):
+				return String(candidate.get("roster_hero_id", "")) < String(best.get("roster_hero_id", ""))
+			return int(candidate.get("rotation_order", 9999)) < int(best.get("rotation_order", 9999))
+		return int(candidate.get("saved_task_goal_distance", 9999)) < int(best.get("saved_task_goal_distance", 9999))
+	return int(candidate.get("saved_task_priority", 0)) > int(best.get("saved_task_priority", 0))
+
 static func build_raid_commander_state(
 	encounter: Dictionary,
 	roster_hero_id: String = "",
