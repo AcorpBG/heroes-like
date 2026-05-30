@@ -6926,6 +6926,20 @@ static func _ai_hero_task_target_snapshot_for_plan(
 				"target_y": int(town.get("y", 0)),
 				"goal_tiles": _town_staging_tiles(session, town),
 			}
+		"artifact":
+			var artifact_result := _find_artifact_by_placement(session, target_id)
+			if int(artifact_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = artifact_result.get("node", {})
+			if bool(node.get("collected", false)):
+				return {}
+			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+			return {
+				"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_tiles": [tile],
+			}
 		"encounter":
 			var encounter_result := _find_encounter_by_placement(session, target_id)
 			if int(encounter_result.get("index", -1)) < 0:
@@ -7026,7 +7040,7 @@ static func _ai_hero_task_record_live_assignment(
 		return
 	var target_kind := String(current_target.get("target_kind", ""))
 	var target_id := String(current_target.get("target_placement_id", ""))
-	if target_kind not in ["resource", "town", "encounter"] or target_id == "":
+	if target_kind not in ["resource", "town", "artifact", "encounter"] or target_id == "":
 		return
 	var task: Dictionary = task_record.duplicate(true) if not task_record.is_empty() else {}
 	if task.is_empty() or String(task.get("actor_id", "")) != actor_id or String(task.get("target_id", "")) != target_id:
@@ -7226,6 +7240,8 @@ static func _ai_hero_task_reconciled_live_task(
 			return _ai_hero_task_reconciled_resource_task(session, faction_id, task, target_id)
 		"town":
 			return _ai_hero_task_reconciled_town_task(session, faction_id, task, target_id)
+		"artifact":
+			return _ai_hero_task_reconciled_artifact_task(session, faction_id, task, target_id)
 		"encounter":
 			return _ai_hero_task_reconciled_encounter_task(session, faction_id, task, target_id)
 	return task
@@ -7318,6 +7334,24 @@ static func _ai_hero_task_reconciled_town_task(
 		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
 	if owner not in ["player", "enemy"]:
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
+	return task
+
+static func _ai_hero_task_reconciled_artifact_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	if target_id == "":
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var artifact_result := _find_artifact_by_placement(session, target_id)
+	if int(artifact_result.get("index", -1)) < 0:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var node: Dictionary = artifact_result.get("node", {})
+	if bool(node.get("collected", false)):
+		if String(node.get("collected_by_faction_id", "")) == faction_id:
+			return _ai_hero_task_with_lifecycle(task, "completed", "valid")
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_resolved")
 	return task
 
 static func _ai_hero_task_reconciled_encounter_task(
@@ -9146,6 +9180,7 @@ static func _secure_artifact_target(
 		captured_artifacts.append(claimed_artifact_id)
 	state["captured_artifact_ids"] = captured_artifacts
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + _artifact_pressure_value(claimed_artifact_id)
+	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 	return {
 		"encounter": raid,
 		"state": state,
