@@ -44,6 +44,8 @@ const RAID_RISK_SUPPORT_STALL_DAYS := 3
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const RAID_BASE_MOVEMENT_STEPS := 1
 const RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE := 4
+const RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS := 3
+const RAID_NEARBY_PLAYER_THREAT_STRENGTH_RATIO := 1.15
 const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
 const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
 const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
@@ -1072,6 +1074,7 @@ static func advance_raids(
 					event_records.append(scouting_event_value)
 		encounter = assign_target(session, config, encounter)
 		encounter = _redirect_raid_to_nearby_exposed_hero(session, config, encounter, faction_id)
+		encounter = _redirect_raid_away_from_nearby_player_threat(session, config, encounter, faction_id)
 		encounter = _redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)
 		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
@@ -2137,6 +2140,111 @@ static func _opportunistic_current_target_requires_guard_clearance(
 				return false
 			return not _artifact_guard_encounter_for_node(session, artifact_node).is_empty()
 	return false
+
+static func _redirect_raid_away_from_nearby_player_threat(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	var current_kind := String(raid.get("target_kind", ""))
+	if current_kind == "" or current_kind == "hero" or current_kind == "regroup":
+		return raid
+	if int(raid.get("player_threat_avoidance_delay_until_day", 0)) > int(session.day):
+		return raid
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if _opportunistic_hero_intercept_protected_reason(reason_codes):
+		return raid
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var host_strength: int = max(1, raid_strength(raid))
+	var best_threat: Dictionary = {}
+	var best_distance := 9999
+	var best_strength := -1
+	for hero in _player_hero_snapshots_for_intercept(session):
+		if not (hero is Dictionary):
+			continue
+		var hero_id := String(hero.get("id", ""))
+		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
+			continue
+		var goal_tile := _player_hero_goal_tile(hero)
+		var distance: int = _hero_target_goal_distance(session, origin, goal_tile)
+		if distance > RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS:
+			continue
+		var hero_strength: int = _army_strength(hero.get("army", {}).get("stacks", []))
+		if hero_strength < int(ceili(float(host_strength) * RAID_NEARBY_PLAYER_THREAT_STRENGTH_RATIO)):
+			continue
+		var probe := raid.duplicate(true)
+		probe["target_kind"] = "hero"
+		probe["target_placement_id"] = hero_id
+		probe["target_label"] = String(hero.get("name", hero_id))
+		probe["target_x"] = goal_tile.x
+		probe["target_y"] = goal_tile.y
+		probe["goal_x"] = goal_tile.x
+		probe["goal_y"] = goal_tile.y
+		probe["goal_distance"] = distance
+		var readiness_report := _hero_intercept_advance_risk_report(probe, hero, config)
+		if bool(readiness_report.get("ready", false)):
+			continue
+		if (
+			best_threat.is_empty()
+			or distance < best_distance
+			or (
+				distance == best_distance
+				and (
+					hero_strength > best_strength
+					or (
+						hero_strength == best_strength
+						and hero_id < String(best_threat.get("hero_id", ""))
+					)
+				)
+			)
+		):
+			best_threat = {
+				"hero": hero,
+				"hero_id": hero_id,
+				"hero_strength": hero_strength,
+				"distance": distance,
+				"readiness_report": readiness_report,
+			}
+			best_distance = distance
+			best_strength = hero_strength
+	if best_threat.is_empty():
+		return raid
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	if regroup_town.is_empty():
+		return raid
+	raid["previous_target_kind"] = current_kind
+	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["previous_target_reason_codes"] = reason_codes
+	raid["previous_target_public_reason"] = String(raid.get("target_public_reason", ""))
+	raid["previous_target_public_importance"] = String(raid.get("target_public_importance", ""))
+	raid["previous_target_debug_reason"] = String(raid.get("target_debug_reason", ""))
+	raid["target_kind"] = "regroup"
+	raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
+	raid["target_label"] = "%s regroup" % _town_name(regroup_town)
+	raid["target_x"] = int(regroup_town.get("x", raid.get("x", 0)))
+	raid["target_y"] = int(regroup_town.get("y", raid.get("y", 0)))
+	raid["goal_x"] = int(regroup_town.get("x", raid.get("x", 0)))
+	raid["goal_y"] = int(regroup_town.get("y", raid.get("y", 0)))
+	raid["arrived"] = false
+	raid["player_threat_avoidance_started_day"] = int(session.day)
+	raid["player_threat_avoidance_delay_until_day"] = int(session.day) + 1
+	raid["player_threat_hero_id"] = String(best_threat.get("hero_id", ""))
+	raid["player_threat_hero_strength"] = int(best_threat.get("hero_strength", 0))
+	raid["player_threat_distance"] = int(best_threat.get("distance", 9999))
+	raid["target_reason_codes"] = ["player_threat_avoidance", "threat_avoidance_regroup", "army_consolidation", "hero_threat"]
+	raid["target_public_reason"] = "avoiding stronger hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "nearby player hero strength %d exceeds host strength %d" % [
+		int(best_threat.get("hero_strength", 0)),
+		host_strength,
+	]
+	raid = _refresh_target(session, raid)
+	_ai_hero_task_record_live_assignment(session, config, raid, _current_target_snapshot(raid), {})
+	return raid
 
 static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScript.SessionData) -> Array:
 	var heroes := []
