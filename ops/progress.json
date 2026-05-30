@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-threat-arbitration-10184",
-  "currentSliceTitle": "Strategic AI Threat Arbitration",
+  "currentSliceId": "strategic-ai-long-run-seed-matrix-10184",
+  "currentSliceTitle": "Strategic AI Long-Run Seed Matrix",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
+  "currentSliceNotes": "Completed. Added Native RMG generated-map strategic AI long-run seed-matrix runner and runtime defaults that allow skeletal generated enemy configs to launch live raid target assignments.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T17:35:00Z",
+  "updatedAt": "2026-05-30T18:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28990,6 +28990,85 @@
           "residualRisk": "This improves tactical battle arbitration among already-arrived strategic AI fronts. Full strategic AI release readiness still needs long-run generated-map behavior, higher-level multi-front planning, richer retreat doctrine, economy timing, and live-client pacing checks."
         }
       }
+    },
+    {
+      "id": "strategic-ai-long-run-seed-matrix-10184",
+      "title": "Strategic AI Long-Run Seed Matrix",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md Selectable Near-Term Work",
+      "planRef": "PLAN.md Current strategic AI target / Selectable Near-Term Work",
+      "purpose": "Broaden strategic AI evidence from focused fixtures into executable Native RMG generated-map seed-matrix turns and fix generated-map enemy configs that cannot launch live raids.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-baseline-kpi-report.md",
+        "docs/strategic-ai-long-run-seed-matrix-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Native RMG generated-map long-run seed-matrix runner exists, focused smoke starts a native disk-package generated map and observes strategic AI target assignment/raid activity, skeletal generated enemy configs receive runtime raid defaults, and validation records the full 100-seed eight-week matrix as remaining validation rather than a production-ready claim.",
+      "nonGoals": [
+        "campaign production unless explicitly selected",
+        "claiming strategic AI production readiness",
+        "claiming broad RMG parity beyond strict Small smoke evidence",
+        "automatic tuning or authored scenario balance substitution"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T18:18:00Z",
+        "sliceId": "strategic-ai-long-run-seed-matrix-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; focused Native RMG smoke emitted target_assignment_count=2 and active_raid_count=2; remaining-validation blocker for full 100-seed eight-week matrix preserved)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; blocker summary now recognizes focused long-run smoke but preserves full-matrix gap)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added HeadlessSimulationHarnessRules.build_strategic_ai_long_run_seed_matrix_report for Native RMG generated-map strategic AI turn matrices.",
+            "Added focused Godot report scene tests/strategic_ai_long_run_seed_matrix_report.tscn.",
+            "Long-run rows track setup, turns completed, enemy activity events, target assignments, battle interrupts, task-board counts, town ownership, active raids, and row signatures.",
+            "Battle interrupts are auto-resolved with the existing scored battle autoplay path so queued strategic fights do not stop the turn matrix.",
+            "Skeletal generated enemy configs now receive runtime defaults for pressure cadence, raid threshold, max raids, raid encounter pools, pillage policy, labels, and spawn points derived from owned enemy towns."
+          ],
+          "focused_native_rmg_smoke": {
+            "startup_source": "native_rmg_disk_package",
+            "size_class_id": "homm3_small",
+            "turns_completed": 1,
+            "enemy_activity_event_count": 4,
+            "target_assignment_count": 2,
+            "active_raid_count": 2,
+            "task_count": 2,
+            "behavior_bug_count": 0
+          },
+          "remaining_validation": "Full 100-seed eight-week matrix is implemented as a target surface but not run in the focused smoke; blocker strategic_ai_long_run_full_100_seed_8_week_matrix_not_run remains explicit.",
+          "policy": "Native RMG generated maps only; no authored scenario balance substitution, automatic tuning, or production-ready claim."
+        }
+      },
+      "summary": "Completed. Added Native RMG generated-map strategic AI long-run seed-matrix runner and runtime defaults that allow skeletal generated enemy configs to launch live raid target assignments.",
+      "updatedAt": "2026-05-30T18:18:00Z",
+      "startedAt": "2026-05-30T17:45:00Z",
+      "completedAt": "2026-05-30T18:18:00Z",
+      "notes": "Focused smoke proves a generated Small native disk-package session creates target assignments and active raids once skeletal generated enemy configs receive runtime strategic AI defaults. Full 100-seed eight-week matrix remains required validation before any production-readiness claim."
     }
   ],
   "completedImplementationEvidence": [
@@ -37700,6 +37779,42 @@
           ],
           "residualRisk": "This closes stale town-defender pinning and defended-front invisibility. Full release-ready strategic AI still needs broader generated-map long-run behavior, coordinated multi-front planning, richer attacker/defender rotation doctrine, economy timing, and manual live-client pacing checks."
         }
+      },
+      {
+        "sliceId": "strategic-ai-long-run-seed-matrix-10184",
+        "updatedAt": "2026-05-30T18:18:00Z",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; focused Native RMG smoke emitted target_assignment_count=2 and active_raid_count=2; remaining-validation blocker for full 100-seed eight-week matrix preserved)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; blocker summary now recognizes focused long-run smoke but preserves full-matrix gap)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Added HeadlessSimulationHarnessRules.build_strategic_ai_long_run_seed_matrix_report for Native RMG generated-map strategic AI turn matrices.",
+            "Added focused Godot report scene tests/strategic_ai_long_run_seed_matrix_report.tscn.",
+            "Long-run rows track setup, turns completed, enemy activity events, target assignments, battle interrupts, task-board counts, town ownership, active raids, and row signatures.",
+            "Battle interrupts are auto-resolved with the existing scored battle autoplay path so queued strategic fights do not stop the turn matrix.",
+            "Skeletal generated enemy configs now receive runtime defaults for pressure cadence, raid threshold, max raids, raid encounter pools, pillage policy, labels, and spawn points derived from owned enemy towns."
+          ],
+          "focused_native_rmg_smoke": {
+            "startup_source": "native_rmg_disk_package",
+            "size_class_id": "homm3_small",
+            "turns_completed": 1,
+            "enemy_activity_event_count": 4,
+            "target_assignment_count": 2,
+            "active_raid_count": 2,
+            "task_count": 2,
+            "behavior_bug_count": 0
+          },
+          "remaining_validation": "Full 100-seed eight-week matrix is implemented as a target surface but not run in the focused smoke; blocker strategic_ai_long_run_full_100_seed_8_week_matrix_not_run remains explicit.",
+          "policy": "Native RMG generated maps only; no authored scenario balance substitution, automatic tuning, or production-ready claim."
+        }
       }
     ],
     "native-rmg-generalized-policy-regate-10184": [
@@ -42309,43 +42424,42 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-threat-arbitration-10184 [completed]",
+  "currentSlice": "strategic-ai-long-run-seed-matrix-10184 [completed]",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T16:23:51Z",
-    "sliceId": "strategic-ai-town-defender-rotation-10184",
+    "updatedAt": "2026-05-30T18:18:00Z",
+    "sliceId": "strategic-ai-long-run-seed-matrix-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; focused Native RMG smoke emitted target_assignment_count=2 and active_raid_count=2; remaining-validation blocker for full 100-seed eight-week matrix preserved)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; blocker summary now recognizes focused long-run smoke but preserves full-matrix gap)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "python3 tests/validate_repo.py (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
+      "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Defended town fronts now preserve defense_until_day and last_defended_day through front-state normalization.",
-        "OverworldRules.town_front_state now treats front state defend as an active stabilization/defender-watch front while the defense window is live, exposing garrison/build/pressure bonuses to strategic AI instead of hiding the front behind commander metadata.",
-        "Stationed town defenders now remain active only while the town still has a live defend/stabilizing front for the same faction; clearing that front releases defender metadata and returns the commander to available roster status before stale timers expire.",
-        "Focused Duskfen evidence proves a defended town remains strategically active after ai_town_defended, then releases Vaska when the front is cleared. Existing town-defense retask, defense overcommit, town retake assault, raid assault grouping, and live-turn execution paths remain passing."
+        "Added HeadlessSimulationHarnessRules.build_strategic_ai_long_run_seed_matrix_report for Native RMG generated-map strategic AI turn matrices.",
+        "Added focused Godot report scene tests/strategic_ai_long_run_seed_matrix_report.tscn.",
+        "Long-run rows track setup, turns completed, enemy activity events, target assignments, battle interrupts, task-board counts, town ownership, active raids, and row signatures.",
+        "Battle interrupts are auto-resolved with the existing scored battle autoplay path so queued strategic fights do not stop the turn matrix.",
+        "Skeletal generated enemy configs now receive runtime defaults for pressure cadence, raid threshold, max raids, raid encounter pools, pillage policy, labels, and spawn points derived from owned enemy towns."
       ],
-      "sourceDocs": [
-        "PLAN.md",
-        "docs/strategic-ai-town-defense-retask-report.md",
-        "docs/strategic-ai-town-defense-arrival-report.md",
-        "docs/strategic-ai-town-defender-lifecycle-report.md"
-      ],
-      "savePolicy": "hero_task_state_live_persist_no_save_migration",
-      "saveVersion": 9,
-      "focusedReports": [
-        "AI_TOWN_DEFENSE_RETASK_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT",
-        "AI_RAID_ASSAULT_GROUPING_REPORT",
-        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT"
-      ],
-      "residualRisk": "This closes stale town-defender pinning and defended-front invisibility. Full release-ready strategic AI still needs broader generated-map long-run behavior, coordinated multi-front planning, richer attacker/defender rotation doctrine, economy timing, and manual live-client pacing checks."
+      "focused_native_rmg_smoke": {
+        "startup_source": "native_rmg_disk_package",
+        "size_class_id": "homm3_small",
+        "turns_completed": 1,
+        "enemy_activity_event_count": 4,
+        "target_assignment_count": 2,
+        "active_raid_count": 2,
+        "task_count": 2,
+        "behavior_bug_count": 0
+      },
+      "remaining_validation": "Full 100-seed eight-week matrix is implemented as a target surface but not run in the focused smoke; blocker strategic_ai_long_run_full_100_seed_8_week_matrix_not_run remains explicit.",
+      "policy": "Native RMG generated maps only; no authored scenario balance substitution, automatic tuning, or production-ready claim."
     }
   }
 }

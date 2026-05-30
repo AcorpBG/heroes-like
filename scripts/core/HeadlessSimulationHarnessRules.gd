@@ -11,6 +11,8 @@ const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
 const STRATEGIC_AI_BASELINE_KPI_SCHEMA_ID := "strategic_ai_baseline_kpi_report_v1"
 const STRATEGIC_AI_BASELINE_KPI_REPORT_ID := "STRATEGIC_AI_BASELINE_KPI_REPORT"
+const STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID := "strategic_ai_long_run_seed_matrix_v1"
+const STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_ID := "STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT"
 const HEX_DIGITS := "0123456789abcdef"
 const LIVE_RESOURCE_IDS := [
 	"gold",
@@ -86,6 +88,11 @@ const STRATEGIC_AI_BASELINE_CAPABILITIES := {
 	],
 }
 const STRATEGIC_AI_BASELINE_RMG_TURN_COUNT := 3
+const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
+const STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET := 56
+const STRATEGIC_AI_LONG_RUN_DEFAULT_SEED_COUNT := 8
+const STRATEGIC_AI_LONG_RUN_DEFAULT_TURN_COUNT := 28
+const STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT := 96
 const STRATEGIC_AI_BASELINE_RMG_CASES := [
 	{
 		"case_id": "native_rmg_small_seed_11_ai_turn_probe",
@@ -119,6 +126,32 @@ const STRATEGIC_AI_BASELINE_RMG_CASES := [
 		"underground": false,
 		"size_class_id": "homm3_medium",
 		"expected_scope": "production_gap_probe",
+	},
+]
+const STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES := [
+	{
+		"template_id": "translated_rmg_template_049_v1",
+		"profile_id": "translated_rmg_profile_049_v1",
+		"player_count": 3,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_small",
+	},
+	{
+		"template_id": "border_gate_compact_v1",
+		"profile_id": "border_gate_compact_profile_v1",
+		"player_count": 3,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_small",
+	},
+	{
+		"template_id": "frontier_spokes_v1",
+		"profile_id": "frontier_spokes_profile_v1",
+		"player_count": 3,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_small",
 	},
 ]
 
@@ -268,6 +301,57 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 		"recommended_next_slices": recommended_next_slices,
 	})
 	return report
+
+static func build_strategic_ai_long_run_seed_matrix_report(input_config: Dictionary = {}) -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var seed_count: int = max(1, int(input_config.get("seed_count", STRATEGIC_AI_LONG_RUN_DEFAULT_SEED_COUNT)))
+	var turn_count: int = max(1, int(input_config.get("turn_count", STRATEGIC_AI_LONG_RUN_DEFAULT_TURN_COUNT)))
+	var battle_step_limit: int = max(1, int(input_config.get("battle_step_limit", STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT)))
+	var pressure_floor: int = max(0, int(input_config.get("pressure_floor", 0)))
+	var seed_prefix := String(input_config.get("seed_prefix", "strategic-ai-long-run-native-small"))
+	var template_cases: Array = input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) if input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) is Array else STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES
+	var rows := []
+	for seed_index in range(seed_count):
+		var template_case: Dictionary = template_cases[seed_index % max(1, template_cases.size())] if template_cases[seed_index % max(1, template_cases.size())] is Dictionary else {}
+		var seed := "%s-%03d" % [seed_prefix, seed_index + 1]
+		rows.append(_strategic_ai_long_run_seed_row(template_case, seed, turn_count, battle_step_limit, pressure_floor))
+	ContentService.clear_generated_scenario_drafts()
+	var summary := _strategic_ai_long_run_summary(rows, seed_count, turn_count)
+	var blocker_rows := _strategic_ai_long_run_blockers(summary, seed_count, turn_count)
+	var ok := blocker_rows.is_empty()
+	return {
+		"ok": ok,
+		"report_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_ID,
+		"schema_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID,
+		"status": "pass" if ok else "needs_attention",
+		"production_ready": false,
+		"seed_count": seed_count,
+		"turn_count": turn_count,
+		"full_matrix_target": {
+			"seed_count": STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET,
+			"turn_count": STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET,
+			"week_count": STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET / 7,
+		},
+		"execution_scope": "full_target" if seed_count >= STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET and turn_count >= STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET else "focused_native_rmg_smoke_matrix",
+		"summary": summary,
+		"blocker_rows": blocker_rows,
+		"rows": rows,
+		"signature": _signature_for({
+			"schema_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID,
+			"seed_count": seed_count,
+			"turn_count": turn_count,
+			"summary": summary,
+			"row_signatures": _strategic_ai_long_run_row_signatures(rows),
+		}),
+		"policy": {
+			"native_rmg_generated_maps_only": true,
+			"authored_scenario_balance_surface": false,
+			"manual_play_replacement": false,
+			"automatic_tuning": false,
+			"runtime_balance_changes": false,
+			"production_ready_claim": false,
+		},
+	}
 
 static func strategic_ai_multi_scenario_recruitment_delivery_case(input_config: Dictionary = {}) -> Dictionary:
 	return _strategic_ai_multi_scenario_recruitment_delivery(input_config)
@@ -737,7 +821,7 @@ static func _strategic_ai_baseline_blocker_rows(subsystem_summary: Dictionary, c
 	rows.append({
 		"blocker_id": "no_long_run_seed_matrix",
 		"severity": "production_gap",
-		"summary": "No 8-week 100-seed strategic AI simulation matrix exists yet.",
+		"summary": "Focused Native RMG long-run smoke exists, but the full 8-week 100-seed strategic AI simulation matrix has not been run yet.",
 	})
 	return rows
 
@@ -758,6 +842,324 @@ static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 		slices.append("strategic-ai-rmg-medium-generalization-probe-10184")
 	slices.append("strategic-ai-long-run-seed-matrix-10184")
 	return slices
+
+static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: String, turn_count: int, battle_step_limit: int, pressure_floor: int = 0) -> Dictionary:
+	var player_config := ScenarioSelectRulesScript.build_random_map_player_config(
+		seed,
+		String(template_case.get("template_id", "")),
+		String(template_case.get("profile_id", "")),
+		int(template_case.get("player_count", 3)),
+		String(template_case.get("water_mode", "land")),
+		bool(template_case.get("underground", false)),
+		String(template_case.get("size_class_id", "homm3_small"))
+	)
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		player_config,
+		"normal",
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	var row := {
+		"seed": seed,
+		"template_id": String(player_config.get("profile", {}).get("template_id", "")),
+		"profile_id": String(player_config.get("profile", {}).get("id", "")),
+		"player_count": int(player_config.get("player_constraints", {}).get("player_count", 0)),
+		"size_class_id": String(player_config.get("size", {}).get("size_class_id", "")),
+		"startup_source": String(setup.get("startup_source", "")),
+		"setup_ok": bool(setup.get("ok", false)),
+		"validation_status": String(validation.get("status", validation.get("validation_status", ""))),
+		"turn_count_target": turn_count,
+		"turn_results": [],
+		"battle_results": [],
+		"event_counts": {},
+		"failures": [],
+	}
+	var failures: Array = row["failures"]
+	if not bool(setup.get("ok", false)):
+		failures.append("native_rmg_setup_failed")
+		row["ok"] = false
+		row["classification"] = "setup_failure"
+		row["setup_error_code"] = String(setup.get("error_code", ""))
+		row["signature"] = _signature_for(row)
+		return row
+	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session == null or session.scenario_id == "":
+		failures.append("native_rmg_session_start_failed")
+		row["ok"] = false
+		row["classification"] = "session_failure"
+		row["signature"] = _signature_for(row)
+		return row
+	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	if pressure_floor > 0:
+		_strategic_ai_apply_pressure_floor(session, pressure_floor)
+	row["scenario_id"] = String(session.scenario_id)
+	row["initial_counts"] = _overworld_counts(session.overworld)
+	row["initial_enemy_state_count"] = session.overworld.get("enemy_states", []).size() if session.overworld.get("enemy_states", []) is Array else 0
+	row["initial_town_owners"] = _strategic_ai_town_owner_counts(session)
+	row["initial_task_summary"] = _strategic_ai_task_summary(session)
+	row["pressure_floor"] = pressure_floor
+	var all_turns_ok := true
+	var turns_completed := 0
+	var battle_interrupt_count := 0
+	var auto_resolved_battle_count := 0
+	var stalled_turn_count := 0
+	var enemy_activity_event_count := 0
+	for turn_index in range(turn_count):
+		if session.scenario_status != "in_progress":
+			break
+		var result: Dictionary = OverworldRules.end_turn(session)
+		var events: Array = result.get("enemy_activity_events", []) if result.get("enemy_activity_events", []) is Array else []
+		enemy_activity_event_count += events.size()
+		_strategic_ai_count_event_types(row["event_counts"], events)
+		var turn_ok := bool(result.get("ok", false))
+		all_turns_ok = all_turns_ok and turn_ok
+		turns_completed += 1
+		if events.is_empty():
+			stalled_turn_count += 1
+		row["turn_results"].append({
+			"turn_index": turn_index + 1,
+			"day": int(session.day),
+			"ok": turn_ok,
+			"enemy_activity_event_count": events.size(),
+			"enemy_activity_summary": String(result.get("enemy_activity_summary", "")),
+			"game_state": String(session.game_state),
+			"scenario_status": String(session.scenario_status),
+		})
+		if not turn_ok:
+			failures.append("turn_%d_failed" % (turn_index + 1))
+			break
+		if String(session.game_state) == "battle" and not session.battle.is_empty():
+			battle_interrupt_count += 1
+			var battle_result := _strategic_ai_auto_resolve_battle_interrupt(session, battle_step_limit)
+			row["battle_results"].append(battle_result)
+			if bool(battle_result.get("ok", false)):
+				auto_resolved_battle_count += 1
+			else:
+				failures.append("battle_interrupt_%d_failed" % battle_interrupt_count)
+				all_turns_ok = false
+				break
+	EnemyTurnRules.normalize_enemy_states(session)
+	row["turns_completed"] = turns_completed
+	row["enemy_activity_event_count"] = enemy_activity_event_count
+	row["battle_interrupt_count"] = battle_interrupt_count
+	row["auto_resolved_battle_count"] = auto_resolved_battle_count
+	row["stalled_turn_count"] = stalled_turn_count
+	row["final_day"] = int(session.day)
+	row["final_game_state"] = String(session.game_state)
+	row["final_scenario_status"] = String(session.scenario_status)
+	row["final_counts"] = _overworld_counts(session.overworld)
+	row["final_enemy_state_count"] = session.overworld.get("enemy_states", []).size() if session.overworld.get("enemy_states", []) is Array else 0
+	row["final_town_owners"] = _strategic_ai_town_owner_counts(session)
+	row["final_task_summary"] = _strategic_ai_task_summary(session)
+	row["active_raid_count"] = _strategic_ai_active_raid_count(session)
+	row["ok"] = all_turns_ok and failures.is_empty() and int(row.get("initial_enemy_state_count", 0)) > 0 and turns_completed > 0
+	row["classification"] = "native_rmg_long_run_ai_health" if bool(row.get("ok", false)) else "behavior_bug"
+	row["signature"] = _signature_for({
+		"seed": seed,
+		"turns_completed": turns_completed,
+		"event_counts": row.get("event_counts", {}),
+		"battle_interrupt_count": battle_interrupt_count,
+		"final_counts": row.get("final_counts", {}),
+		"final_town_owners": row.get("final_town_owners", {}),
+		"final_task_summary": row.get("final_task_summary", {}),
+		"failures": failures,
+	})
+	return row
+
+static func _strategic_ai_auto_resolve_battle_interrupt(session: SessionStateStoreScript.SessionData, step_limit: int) -> Dictionary:
+	var steps := 0
+	var player_orders := 0
+	var invalid_orders := 0
+	var final_state := "continue"
+	var context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	while steps < step_limit and not session.battle.is_empty():
+		steps += 1
+		var ready_result: Dictionary = BattleRules.resolve_if_battle_ready(session)
+		final_state = String(ready_result.get("state", "continue"))
+		if _strategic_ai_battle_terminal_state(final_state):
+			break
+		if session.battle.is_empty():
+			break
+		var active_stack: Dictionary = BattleRules.get_active_stack(session.battle)
+		if String(active_stack.get("side", "")) != "player":
+			continue
+		var decision := BattleAutoplayBalanceHarnessRulesScript.player_autoplay_decision_report(session, true)
+		var action := String(decision.get("action", "defend"))
+		var result: Dictionary = BattleRules.perform_player_action(session, action)
+		if String(result.get("state", "")) == "invalid" and action != "defend":
+			invalid_orders += 1
+			action = "defend"
+			result = BattleRules.perform_player_action(session, action)
+		player_orders += 1
+		final_state = String(result.get("state", final_state))
+		if _strategic_ai_battle_terminal_state(final_state):
+			break
+	if not _strategic_ai_battle_terminal_state(final_state) and steps >= step_limit:
+		final_state = "stalled_step_limit"
+	return {
+		"ok": _strategic_ai_battle_terminal_state(final_state) and final_state != "stalled_step_limit",
+		"state": final_state,
+		"steps": steps,
+		"player_orders": player_orders,
+		"invalid_orders": invalid_orders,
+		"context_type": String(context.get("type", "")),
+		"town_placement_id": String(context.get("town_placement_id", "")),
+		"scenario_status": String(session.scenario_status),
+		"game_state": String(session.game_state),
+	}
+
+static func _strategic_ai_battle_terminal_state(state: String) -> bool:
+	return state in ["victory", "defeat", "hero_defeat", "town_lost", "retreat", "surrender", "stalemate"]
+
+static func _strategic_ai_count_event_types(output: Dictionary, events: Array) -> void:
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		var event_type := String(event.get("event_type", ""))
+		if event_type == "":
+			continue
+		output[event_type] = int(output.get(event_type, 0)) + 1
+
+static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: int, requested_turn_count: int) -> Dictionary:
+	var setup_ok_count := 0
+	var row_ok_count := 0
+	var behavior_bug_count := 0
+	var total_turns_completed := 0
+	var total_enemy_events := 0
+	var battle_interrupt_count := 0
+	var auto_resolved_battle_count := 0
+	var total_stalled_turns := 0
+	var event_counts := {}
+	var terminal_status_counts := {}
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		if bool(row.get("setup_ok", false)):
+			setup_ok_count += 1
+		if bool(row.get("ok", false)):
+			row_ok_count += 1
+		if String(row.get("classification", "")) == "behavior_bug":
+			behavior_bug_count += 1
+		total_turns_completed += int(row.get("turns_completed", 0))
+		total_enemy_events += int(row.get("enemy_activity_event_count", 0))
+		battle_interrupt_count += int(row.get("battle_interrupt_count", 0))
+		auto_resolved_battle_count += int(row.get("auto_resolved_battle_count", 0))
+		total_stalled_turns += int(row.get("stalled_turn_count", 0))
+		var row_event_counts: Dictionary = row.get("event_counts", {}) if row.get("event_counts", {}) is Dictionary else {}
+		for key in row_event_counts.keys():
+			event_counts[String(key)] = int(event_counts.get(String(key), 0)) + int(row_event_counts.get(key, 0))
+		var status := String(row.get("final_scenario_status", ""))
+		if status != "":
+			terminal_status_counts[status] = int(terminal_status_counts.get(status, 0)) + 1
+	var requested_turn_total: int = max(1, requested_seed_count * requested_turn_count)
+	return {
+		"row_count": rows.size(),
+		"requested_seed_count": requested_seed_count,
+		"requested_turn_count": requested_turn_count,
+		"setup_ok_count": setup_ok_count,
+		"row_ok_count": row_ok_count,
+		"behavior_bug_count": behavior_bug_count,
+		"turns_completed": total_turns_completed,
+		"turn_completion_pct": int(round(float(total_turns_completed) * 100.0 / float(requested_turn_total))),
+		"enemy_activity_event_count": total_enemy_events,
+		"battle_interrupt_count": battle_interrupt_count,
+		"auto_resolved_battle_count": auto_resolved_battle_count,
+		"stalled_turn_count": total_stalled_turns,
+		"stalled_turn_pct": int(round(float(total_stalled_turns) * 100.0 / float(max(1, total_turns_completed)))),
+		"event_counts": event_counts,
+		"terminal_status_counts": terminal_status_counts,
+		"target_assignment_count": int(event_counts.get("ai_target_assigned", 0)),
+		"site_seized_count": int(event_counts.get("ai_site_seized", 0)),
+		"town_battle_queued_count": int(event_counts.get("ai_town_assault_battle_queued", 0)) + int(event_counts.get("ai_town_defense_battle_queued", 0)),
+	}
+
+static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_count: int, requested_turn_count: int) -> Array:
+	var rows := []
+	if int(summary.get("setup_ok_count", 0)) < requested_seed_count:
+		rows.append({"blocker_id": "native_rmg_seed_setup_failure", "severity": "bug", "summary": "At least one native generated-map seed failed setup."})
+	if int(summary.get("behavior_bug_count", 0)) > 0:
+		rows.append({"blocker_id": "strategic_ai_long_run_behavior_bug", "severity": "bug", "summary": "At least one generated-map strategic AI long-run row failed during turns or battle resolution."})
+	if int(summary.get("turns_completed", 0)) <= 0:
+		rows.append({"blocker_id": "strategic_ai_long_run_no_turns", "severity": "bug", "summary": "The long-run matrix completed no generated-map turns."})
+	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
+		rows.append({"blocker_id": "strategic_ai_long_run_no_enemy_activity", "severity": "production_gap", "summary": "Generated-map AI turns completed without observable enemy activity."})
+	if int(summary.get("target_assignment_count", 0)) <= 0:
+		rows.append({"blocker_id": "strategic_ai_long_run_no_target_assignment", "severity": "production_gap", "summary": "Generated-map AI did not assign strategic targets during the matrix."})
+	if int(summary.get("stalled_turn_pct", 0)) > 75:
+		rows.append({"blocker_id": "strategic_ai_long_run_excess_idle_turns", "severity": "production_gap", "summary": "Most generated-map AI turns produced no observable activity."})
+	if requested_seed_count < STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET or requested_turn_count < STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET:
+		rows.append({
+			"blocker_id": "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
+			"severity": "remaining_validation",
+			"summary": "The implemented runner supports the production target, but this focused validation did not execute the full 100-seed eight-week matrix.",
+		})
+	return rows
+
+static func _strategic_ai_long_run_row_signatures(rows: Array) -> Array:
+	var signatures := []
+	for row in rows:
+		if row is Dictionary:
+			signatures.append(String(row.get("signature", "")))
+	signatures.sort()
+	return signatures
+
+static func _strategic_ai_town_owner_counts(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var counts := {"player": 0, "enemy": 0, "neutral": 0, "other": 0}
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for town in towns:
+		if not (town is Dictionary):
+			continue
+		var owner := String(town.get("owner", "neutral"))
+		if counts.has(owner):
+			counts[owner] = int(counts.get(owner, 0)) + 1
+		else:
+			counts["other"] = int(counts.get("other", 0)) + 1
+	return counts
+
+static func _strategic_ai_task_summary(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var summary := {"task_count": 0, "open_count": 0, "completed_count": 0, "cancelled_count": 0, "suspended_count": 0, "invalidated_count": 0}
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state in states:
+		if not (state is Dictionary):
+			continue
+		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+		for task in tasks:
+			if not (task is Dictionary):
+				continue
+			summary["task_count"] = int(summary.get("task_count", 0)) + 1
+			var status := String(task.get("status", ""))
+			if status == "open":
+				summary["open_count"] = int(summary.get("open_count", 0)) + 1
+			elif status == "completed":
+				summary["completed_count"] = int(summary.get("completed_count", 0)) + 1
+			elif status == "cancelled":
+				summary["cancelled_count"] = int(summary.get("cancelled_count", 0)) + 1
+			elif status == "suspended":
+				summary["suspended_count"] = int(summary.get("suspended_count", 0)) + 1
+			elif status == "invalidated":
+				summary["invalidated_count"] = int(summary.get("invalidated_count", 0)) + 1
+	return summary
+
+static func _strategic_ai_active_raid_count(session: SessionStateStoreScript.SessionData) -> int:
+	var count := 0
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state in states:
+		if state is Dictionary:
+			count += EnemyTurnRules.active_raid_count(session, String(state.get("faction_id", "")))
+	return count
+
+static func _strategic_ai_apply_pressure_floor(session: SessionStateStoreScript.SessionData, pressure_floor: int) -> void:
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary):
+			continue
+		state["pressure"] = max(int(state.get("pressure", 0)), pressure_floor)
+		states[index] = state
+	session.overworld["enemy_states"] = states
 
 static func harness_signature_for_cases(cases: Array, status_counts: Dictionary, missing_subsystems: Array) -> String:
 	return _signature_for({
