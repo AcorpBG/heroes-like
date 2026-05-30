@@ -41,6 +41,7 @@ func _river_pass_primary_target_case() -> Dictionary:
 	var assigned := EnemyAdventureRules.assign_target(session, config, raid)
 	_assert_target(assigned, "river_free_company", "assigned raid")
 	_assert_saved_task_state(session, "hero_vaska", "river_free_company")
+	_assert_commander_role_state(session, "hero_vaska", "river_free_company", "live_target_assignment")
 	var event := EnemyAdventureRules.ai_target_assignment_event(session, config, assigned, {})
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report([event], 1)
 	if not bool(public_log.get("ok", false)):
@@ -76,6 +77,7 @@ func _river_pass_companion_reservation_case() -> Dictionary:
 	_assert_target(assigned, "river_signal_post", "companion assigned raid")
 	_assert_saved_task_state(session, "hero_vaska", "river_free_company")
 	_assert_saved_task_state(session, "hero_sable", "river_signal_post")
+	_assert_commander_role_state(session, "hero_sable", "river_signal_post", "live_target_assignment")
 	return {
 		"case_id": "river_pass_sable_respects_free_company_reservation",
 		"reserved_target_id": String(vaska.get("target_placement_id", "")),
@@ -162,6 +164,20 @@ func _assert_saved_task_state(session, actor_id: String, target_id: String) -> v
 		_fail("Live target selection did not persist task %s -> %s: %s" % [actor_id, target_id, JSON.stringify(task_state)])
 		return
 	_fail("Live target selection could not find Mireclaw enemy task state.")
+
+func _assert_commander_role_state(session, actor_id: String, target_id: String, source_policy: String) -> void:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW):
+		if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != actor_id:
+			continue
+		var role_state := EnemyAdventureRules.commander_live_role_state(entry)
+		if String(role_state.get("target_id", "")) != target_id or String(role_state.get("source_policy", "")) != source_policy:
+			_fail("Commander role state mismatch for %s -> %s: %s" % [actor_id, target_id, JSON.stringify(role_state)])
+			return
+		if String(role_state.get("role", "")) == "":
+			_fail("Commander role state omitted role for %s: %s" % [actor_id, JSON.stringify(role_state)])
+			return
+		return
+	_fail("Could not find commander %s for role-state check." % actor_id)
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}
