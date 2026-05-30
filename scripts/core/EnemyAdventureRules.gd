@@ -651,11 +651,14 @@ const AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS := [
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
 	var had_memory := not commander_target_memory(raid.get("enemy_commander_state", {})).is_empty()
+	var task_record_for_assignment := {}
 	if _raid_target_valid(session, raid):
 		raid = _refresh_target(session, raid)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
 		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
+		if plan.is_empty():
+			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
 		if plan.is_empty():
@@ -666,7 +669,13 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 				raid.get("enemy_commander_state", {})
 			)
 		if not plan.is_empty():
+			if plan.get("hero_task_record", {}) is Dictionary:
+				task_record_for_assignment = plan.get("hero_task_record", {}).duplicate(true)
+			plan.erase("hero_task_record")
+			plan.erase("hero_task_id")
 			raid.merge(plan, true)
+	raid.erase("hero_task_record")
+	raid.erase("hero_task_id")
 	var current_target := _current_target_snapshot(raid)
 	if _target_signature(current_target) != "" and (
 		_target_signature(previous_target) != _target_signature(current_target)
@@ -682,6 +691,7 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 				int(current_target.get("target_x", 0)),
 				int(current_target.get("target_y", 0))
 			)
+		_ai_hero_task_record_live_assignment(session, config, raid, current_target, task_record_for_assignment)
 	return raid
 
 static func ai_live_town_retake_target_selection_plan(
@@ -713,7 +723,7 @@ static func ai_live_town_retake_target_selection_plan(
 			continue
 		if String(front_state.get("mode", "")) != "retake":
 			continue
-		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id):
+		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id, _ai_hero_task_actor_id_from_raid(raid)):
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
 		var goal_distance := _path_distance(session, origin_pos, staging_tiles, current_placement_id)
@@ -2968,7 +2978,7 @@ static func ai_hero_task_live_target_selection_plan(
 		if String(candidate.get("target_kind", "")) != "resource":
 			continue
 		var target_id := String(candidate.get("target_placement_id", ""))
-		if target_id == "" or _ai_hero_task_live_target_reserved(session, faction_id, "resource", target_id, String(raid.get("placement_id", ""))):
+		if target_id == "" or _ai_hero_task_live_target_reserved(session, faction_id, "resource", target_id, String(raid.get("placement_id", "")), roster_hero_id):
 			continue
 		var target_view := commander_role_resource_target_view(session, config, faction_id, target_id, origin)
 		if target_view.is_empty():
@@ -6639,7 +6649,8 @@ static func _ai_hero_task_live_target_reserved(
 	faction_id: String,
 	target_kind: String,
 	target_id: String,
-	current_placement_id: String = ""
+	current_placement_id: String = "",
+	current_actor_id: String = ""
 ) -> bool:
 	if session == null or target_kind == "" or target_id == "":
 		return false
@@ -6654,7 +6665,150 @@ static func _ai_hero_task_live_target_reserved(
 			continue
 		if String(encounter.get("target_placement_id", "")) == target_id:
 			return true
+	for task in _ai_hero_task_live_tasks_for_faction(session, faction_id):
+		if not (task is Dictionary):
+			continue
+		var task_status := String(task.get("task_status", ""))
+		if task_status not in ["planned", "reserved", "active"]:
+			continue
+		if current_actor_id != "" and String(task.get("actor_id", "")) == current_actor_id:
+			continue
+		if String(task.get("actor_active_placement_id", "")) == current_placement_id:
+			continue
+		if String(task.get("target_kind", "")) != target_kind:
+			continue
+		if String(task.get("target_id", "")) == target_id:
+			return true
 	return false
+
+static func ai_hero_task_saved_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var actor_id := _ai_hero_task_actor_id_from_raid(raid)
+	if faction_id == "" or actor_id == "":
+		return {}
+	var current_placement_id := String(raid.get("placement_id", ""))
+	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	for task_value in _ai_hero_task_live_tasks_for_faction(session, faction_id):
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("actor_id", "")) != actor_id:
+			continue
+		if String(task.get("task_status", "")) not in ["planned", "reserved", "active"]:
+			continue
+		if int(task.get("expires_day", 0)) > 0 and int(task.get("expires_day", 0)) < int(session.day):
+			continue
+		var plan := _ai_hero_task_plan_from_saved_task(session, config, raid, task, origin_pos, current_placement_id)
+		if plan.is_empty():
+			continue
+		if best.is_empty() or _saved_task_plan_beats(plan, best):
+			best = plan
+	return best
+
+static func _ai_hero_task_plan_from_saved_task(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	task: Dictionary,
+	origin_pos: Vector2i,
+	current_placement_id: String
+) -> Dictionary:
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var target_kind := String(task.get("target_kind", ""))
+	var target_id := String(task.get("target_id", ""))
+	if target_kind == "" or target_id == "":
+		return {}
+	if _ai_hero_task_live_target_reserved(session, faction_id, target_kind, target_id, current_placement_id, String(task.get("actor_id", ""))):
+		return {}
+	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id)
+	if target.is_empty():
+		return {}
+	var goal_tiles: Array = target.get("goal_tiles", []) if target.get("goal_tiles", []) is Array else []
+	if goal_tiles.is_empty():
+		return {}
+	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id)
+	if goal_distance >= 9999:
+		return {}
+	var goal_tile: Vector2i = _best_goal_tile(session, origin_pos, goal_tiles)
+	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
+	if "saved_hero_task" not in reason_codes:
+		reason_codes.append("saved_hero_task")
+	var task_class := String(task.get("task_class", ""))
+	var priority: int = 35 + max(0, int(task.get("assigned_day", 0)))
+	match task_class:
+		"retake_site":
+			priority += 85
+		"raid_town":
+			priority += 80
+		"contest_site":
+			priority += 55
+		"defend_front":
+			priority += 50
+		"stabilize_front":
+			priority += 35
+	return {
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+		"target_label": String(target.get("target_label", target_id)),
+		"target_x": int(target.get("target_x", 0)),
+		"target_y": int(target.get("target_y", 0)),
+		"goal_x": goal_tile.x,
+		"goal_y": goal_tile.y,
+		"goal_distance": goal_distance,
+		"priority": priority,
+		"target_reason_codes": reason_codes,
+		"target_public_reason": _public_reason_from_codes(reason_codes),
+		"target_public_importance": "high" if task_class in ["retake_site", "raid_town", "contest_site"] else "medium",
+		"target_debug_reason": "saved strategic hero task %s" % task_class,
+		"hero_task_id": String(task.get("task_id", "")),
+		"hero_task_record": task,
+	}
+
+static func _ai_hero_task_target_snapshot_for_plan(
+	session: SessionStateStoreScript.SessionData,
+	target_kind: String,
+	target_id: String
+) -> Dictionary:
+	match target_kind:
+		"resource":
+			var node_result := _find_resource_by_placement(session, target_id)
+			if int(node_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = node_result.get("node", {})
+			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			return {
+				"target_label": String(site.get("name", target_id)),
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_tiles": [tile],
+			}
+		"town":
+			var town_result := _find_town_by_placement(session, target_id)
+			if int(town_result.get("index", -1)) < 0:
+				return {}
+			var town: Dictionary = town_result.get("town", {})
+			return {
+				"target_label": _town_name(town),
+				"target_x": int(town.get("x", 0)),
+				"target_y": int(town.get("y", 0)),
+				"goal_tiles": _town_staging_tiles(session, town),
+			}
+	return {}
+
+static func _saved_task_plan_beats(candidate: Dictionary, best: Dictionary) -> bool:
+	if int(candidate.get("priority", 0)) == int(best.get("priority", 0)):
+		if int(candidate.get("goal_distance", 9999)) == int(best.get("goal_distance", 9999)):
+			return String(candidate.get("target_label", "")) < String(best.get("target_label", ""))
+		return int(candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+	return int(candidate.get("priority", 0)) > int(best.get("priority", 0))
 
 static func _ai_hero_task_live_target_task_valid(task: Dictionary) -> bool:
 	if task.is_empty():
@@ -6714,7 +6868,277 @@ static func _ai_hero_task_live_plan_from_task(
 		"target_public_reason": public_reason,
 		"target_public_importance": "high" if task_class in ["retake_site", "contest_site"] else "medium",
 		"target_debug_reason": "live commander target selection adopted %s" % task_class,
+		"hero_task_id": String(task.get("task_id", "")),
+		"hero_task_record": task,
 	}
+
+static func _ai_hero_task_record_live_assignment(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	current_target: Dictionary,
+	task_record: Dictionary = {}
+) -> void:
+	if session == null or current_target.is_empty():
+		return
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var actor_id := _ai_hero_task_actor_id_from_raid(raid)
+	if faction_id == "" or actor_id == "":
+		return
+	var target_kind := String(current_target.get("target_kind", ""))
+	var target_id := String(current_target.get("target_placement_id", ""))
+	if target_kind not in ["resource", "town"] or target_id == "":
+		return
+	var task: Dictionary = task_record.duplicate(true) if not task_record.is_empty() else {}
+	if task.is_empty() or String(task.get("actor_id", "")) != actor_id or String(task.get("target_id", "")) != target_id:
+		task = _ai_hero_task_record_from_assignment(session, config, raid, current_target, actor_id)
+	var runtime_task := _ai_hero_task_runtime_task_payload(session, config, raid, current_target, task, actor_id)
+	if runtime_task.is_empty():
+		return
+	_ai_hero_task_upsert_live_task(session, faction_id, runtime_task)
+
+static func _ai_hero_task_runtime_task_payload(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	current_target: Dictionary,
+	task: Dictionary,
+	actor_id: String
+) -> Dictionary:
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var target_kind := String(current_target.get("target_kind", task.get("target_kind", "")))
+	var target_id := String(current_target.get("target_placement_id", task.get("target_id", "")))
+	if faction_id == "" or actor_id == "" or target_kind == "" or target_id == "":
+		return {}
+	var assigned_day := int(task.get("assigned_day", 0))
+	if assigned_day <= 0:
+		assigned_day = int(session.day)
+	var task_class := String(task.get("task_class", "contest_site"))
+	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", current_target.get("target_reason_codes", [])))
+	if reason_codes.is_empty():
+		reason_codes = ["strategic_pressure"]
+	var task_id := String(task.get("task_id", ""))
+	if task_id == "":
+		task_id = ai_hero_task_candidate_id(
+			String(session.scenario_id),
+			faction_id,
+			actor_id,
+			task_class,
+			target_kind,
+			target_id,
+			assigned_day,
+			max(1, int(raid.get("days_active", 0)) + 1)
+		)
+	var payload := {
+		"task_id": task_id,
+		"owner_faction_id": faction_id,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"source_kind": String(task.get("source_kind", "commander_role_adapter")),
+		"source_id": String(task.get("source_id", raid.get("placement_id", ""))),
+		"task_class": task_class,
+		"task_status": "active",
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"front_id": String(task.get("front_id", commander_role_front_id(String(session.scenario_id), target_kind, target_id))),
+		"origin_kind": String(task.get("origin_kind", "encounter")),
+		"origin_id": String(task.get("origin_id", raid.get("placement_id", ""))),
+		"priority_reason_codes": reason_codes,
+		"assigned_day": assigned_day,
+		"expires_day": max(assigned_day + 7, int(task.get("expires_day", 0))),
+		"continuity_policy": String(task.get("continuity_policy", "persist_until_invalid")),
+		"route_policy": String(task.get("route_policy", "derive_route_on_turn")),
+		"last_validation": "valid",
+		"reservation": _ai_hero_task_default_reservation(task_class, target_kind, target_id),
+	}
+	if task.get("reservation", {}) is Dictionary:
+		var reservation: Dictionary = task.get("reservation", {})
+		if not reservation.is_empty():
+			payload["reservation"] = reservation.duplicate(true)
+	return payload
+
+static func _ai_hero_task_record_from_assignment(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	current_target: Dictionary,
+	actor_id: String
+) -> Dictionary:
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	var target_kind := String(current_target.get("target_kind", ""))
+	var target_id := String(current_target.get("target_placement_id", ""))
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", current_target.get("target_reason_codes", [])))
+	if reason_codes.is_empty():
+		reason_codes = ["strategic_pressure"]
+	var task_class := "contest_site"
+	if target_kind == "town":
+		task_class = "raid_town"
+	elif "retake_front" in reason_codes:
+		task_class = "retake_site"
+	elif "site_defense" in reason_codes or "defend_front" in reason_codes:
+		task_class = "defend_front"
+	var assigned_day := int(session.day)
+	var task_id := ai_hero_task_candidate_id(
+		String(session.scenario_id),
+		faction_id,
+		actor_id,
+		task_class,
+		target_kind,
+		target_id,
+		assigned_day,
+		max(1, int(raid.get("days_active", 0)) + 1)
+	)
+	return {
+		"task_id": task_id,
+		"owner_faction_id": faction_id,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"source_kind": "saved_task_state",
+		"source_id": String(raid.get("placement_id", "")),
+		"task_class": task_class,
+		"task_status": "active",
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"front_id": commander_role_front_id(String(session.scenario_id), target_kind, target_id),
+		"origin_kind": "encounter",
+		"origin_id": String(raid.get("placement_id", "")),
+		"priority_reason_codes": reason_codes,
+		"assigned_day": assigned_day,
+		"expires_day": assigned_day + 7,
+		"continuity_policy": "persist_until_invalid",
+		"route_policy": "derive_route_on_turn",
+		"last_validation": "valid",
+		"reservation": _ai_hero_task_default_reservation(task_class, target_kind, target_id),
+	}
+
+static func _ai_hero_task_actor_id_from_raid(raid: Dictionary) -> String:
+	var commander_state = raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary:
+		var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
+		if roster_hero_id != "":
+			return roster_hero_id
+	return String(raid.get("commander_hero_id", raid.get("placement_id", "")))
+
+static func _ai_hero_task_live_tasks_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
+	var state := _ai_hero_task_enemy_state_for_faction(session, faction_id)
+	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	return tasks
+
+static func _ai_hero_task_upsert_live_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary
+) -> void:
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state_index in range(states.size()):
+		var state = states[state_index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+		var next_tasks := []
+		for existing_value in tasks:
+			if not (existing_value is Dictionary):
+				continue
+			var existing: Dictionary = existing_value
+			if String(existing.get("actor_id", "")) == String(task.get("actor_id", "")):
+				continue
+			if String(existing.get("task_status", "")) in ["completed", "failed", "cancelled", "invalid"]:
+				next_tasks.append(existing)
+				continue
+			var reservation: Dictionary = existing.get("reservation", {}) if existing.get("reservation", {}) is Dictionary else {}
+			var task_reservation: Dictionary = task.get("reservation", {}) if task.get("reservation", {}) is Dictionary else {}
+			if String(reservation.get("reservation_scope", "")) == "exclusive_target" \
+					and String(reservation.get("reservation_key", "")) != "" \
+					and String(reservation.get("reservation_key", "")) == String(task_reservation.get("reservation_key", "")):
+				existing["task_status"] = "invalid"
+				existing["last_validation"] = "invalid_target_reserved"
+				existing["invalidated_by_task_id"] = String(task.get("task_id", ""))
+			next_tasks.append(existing)
+		next_tasks.append(task)
+		state["hero_task_state"] = {
+			"schema_version": 1,
+			"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + 1,
+			"tasks": _ai_hero_task_prune_live_tasks(next_tasks, int(session.day)),
+		}
+		states[state_index] = state
+		session.overworld["enemy_states"] = states
+		return
+
+static func _ai_hero_task_finish_live_assignment(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	task_status: String,
+	validation: String
+) -> void:
+	if session == null or faction_id == "" or raid.is_empty():
+		return
+	var actor_id := _ai_hero_task_actor_id_from_raid(raid)
+	var target_kind := String(raid.get("target_kind", ""))
+	var target_id := String(raid.get("target_placement_id", ""))
+	if actor_id == "" or target_kind == "" or target_id == "":
+		return
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state_index in range(states.size()):
+		var state = states[state_index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+		var changed := false
+		var next_tasks := []
+		for task_value in tasks:
+			if not (task_value is Dictionary):
+				continue
+			var task: Dictionary = task_value
+			if String(task.get("actor_id", "")) == actor_id \
+					and String(task.get("target_kind", "")) == target_kind \
+					and String(task.get("target_id", "")) == target_id \
+					and String(task.get("task_status", "")) in ["planned", "reserved", "active"]:
+				task = task.duplicate(true)
+				task["task_status"] = task_status
+				task["last_validation"] = validation
+				changed = true
+			next_tasks.append(task)
+		if not changed:
+			return
+		state["hero_task_state"] = {
+			"schema_version": 1,
+			"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + 1,
+			"tasks": _ai_hero_task_prune_live_tasks(next_tasks, int(session.day)),
+		}
+		states[state_index] = state
+		session.overworld["enemy_states"] = states
+		return
+
+static func _ai_hero_task_prune_live_tasks(tasks: Array, day: int) -> Array:
+	var kept := []
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		var expires_day := int(task.get("expires_day", 0))
+		if expires_day > 0 and expires_day + 3 < day:
+			continue
+		kept.append(task)
+	kept.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("assigned_day", 0)) == int(b.get("assigned_day", 0)):
+			return String(a.get("task_id", "")) < String(b.get("task_id", ""))
+		return int(a.get("assigned_day", 0)) > int(b.get("assigned_day", 0))
+	)
+	while kept.size() > 12:
+		kept.pop_back()
+	return kept
+
+static func _ai_hero_task_enemy_state_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	if session == null:
+		return {}
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return state
+	return {}
 
 static func _ai_hero_task_class_for_role(role: String, target_kind: String, role_status: String = "") -> String:
 	if role == COMMANDER_ROLE_RAIDER and target_kind == "town":
@@ -8199,6 +8623,8 @@ static func _secure_resource_target(
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 	if not _resource_node_contestable_by_faction(node, site, faction_id):
+		if String(node.get("collected_by_faction_id", "")) == faction_id:
+			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var nodes = session.overworld.get("resource_nodes", [])
 	var previous_node: Dictionary = node.duplicate(true)
@@ -8296,6 +8722,7 @@ static func _secure_resource_target(
 			"state_policy": "durable_state_reference",
 		}
 	)
+	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _defend_resource_target(

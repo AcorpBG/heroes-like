@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-quality-pass-10184",
-  "currentSliceTitle": "Strategic AI Quality Pass",
+  "currentSliceId": "strategic-ai-persistent-hero-task-board-10184",
+  "currentSliceTitle": "Strategic AI Persistent Hero Task Board",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented strategic AI baseline KPI audit: fast existing-evidence capability summary, Native RMG turn-health coverage rows, production blocker rows, and focused Godot report. Validation: strategic_ai_baseline_kpi_report.tscn, validate_repo.py, jq empty, git diff --check passed; full headless harness was attempted but exceeded practical wait and was stopped.",
+  "currentSliceNotes": "Completed focused production slice. Strategic AI now has a real persistent hero task board for live target assignments, saved-task reuse, reservation continuity, and resource-task completion. Full shared headless harness was attempted but not claimed because it remained silent and was killed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T11:32:23Z",
+  "updatedAt": "2026-05-30T11:58:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27195,6 +27195,67 @@
       "startedAt": "2026-05-29T08:44:55Z",
       "updatedAt": "2026-05-29T09:07:43Z",
       "completedAt": "2026-05-29T09:07:43Z"
+    },
+    {
+      "id": "strategic-ai-persistent-hero-task-board-10184",
+      "title": "Strategic AI Persistent Hero Task Board",
+      "status": "completed",
+      "source": "owner direction to move strategic AI work beyond superficial reporting into production-ready behavior state",
+      "planRef": "PLAN.md Selectable Near-Term Work",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/ai_hero_task_live_target_selection_report.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd",
+        "strategic AI focused reports and validation tokens",
+        "docs/strategic-ai-live-target-selection-report.md",
+        "docs/strategic-ai-live-turn-execution-report.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Live enemy commander/raid target assignments persist to normalized hero_task_state, saved tasks are reused for target continuity, exclusive reservations use the persisted board, completed resource captures close their tasks, focused Godot reports pass, static validation passes, and no save-version migration is introduced.",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T11:58:00Z",
+        "sliceId": "strategic-ai-persistent-hero-task-board-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
+        "evidence": {
+          "implemented": [
+            "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
+            "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
+            "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
+            "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
+            "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-live-target-selection-report.md",
+            "docs/strategic-ai-live-turn-execution-report.md",
+            "docs/headless-strategic-ai-live-turn-harness-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
+        }
+      },
+      "notes": "Completed focused production slice. Strategic AI now has a real persistent hero task board for live target assignments, saved-task reuse, reservation continuity, and resource-task completion. Full shared headless harness was attempted but not claimed because it remained silent and was killed.",
+      "startedAt": "2026-05-30T11:58:00Z",
+      "updatedAt": "2026-05-30T11:58:00Z",
+      "completedAt": "2026-05-30T11:58:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -36971,45 +37032,41 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T10:07:18Z",
-    "sliceId": "battle-layout-smoke-followup-10184",
+    "updatedAt": "2026-05-30T11:58:00Z",
+    "sliceId": "strategic-ai-persistent-hero-task-board-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn (passed; 21 cases including presentation_event_stream and real_faction_presentation_smoke)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
+    "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
     "evidence": {
       "implemented": [
-        "BattleRules emits a bounded battle_presentation_events queue with structured move/strike/shoot/cast/damage/heal/buff/debuff/resist/immune/cleanse/death/retaliation/morale/momentum records.",
-        "BattleShell consumes the presentation stream in the dispatch surface and exposes event stream, speed, and readable text through validation_snapshot().",
-        "BattleBoardView scales cue/animation playback by the selected normal, fast, or instant battle presentation speed without changing battle resolution math.",
-        "Focused Godot smoke validates real-unit Thornwake versus Veilmourn and Brasshollow versus Embercourt shell presentation cases."
+        "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
+        "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
+        "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
+        "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
+        "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/battle-presentation-runtime-event-stream-report.md",
-        "docs/battle-event-playback-sequencing-report.md",
-        "docs/animation-event-cue-catalog-contract-report.md"
+        "docs/strategic-ai-live-target-selection-report.md",
+        "docs/strategic-ai-live-turn-execution-report.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
       ],
-      "godotReport": {
-        "scene": "res://tests/battle_event_animation_state_report.tscn",
-        "ok": true,
-        "case_count": 21,
-        "new_cases": [
-          "presentation_event_stream",
-          "real_faction_presentation_smoke"
-        ],
-        "real_matchups": [
-          "Thornwake vs Veilmourn",
-          "Brasshollow vs Embercourt"
-        ]
-      },
-      "mathPolicy": "Presentation events and speed controls were added without retuning combat math, units, spells, or AI decisions."
+      "savePolicy": "hero_task_state_live_persist_no_save_migration",
+      "saveVersion": 9,
+      "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T10:07:18Z",
+  "currentSliceUpdatedAt": "2026-05-30T11:58:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -39380,125 +39437,136 @@
           "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
         }
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-30T11:58:00Z",
+      "sliceId": "strategic-ai-persistent-hero-task-board-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
+          "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
+          "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
+          "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
+          "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-live-target-selection-report.md",
+          "docs/strategic-ai-live-turn-execution-report.md",
+          "docs/headless-strategic-ai-live-turn-harness-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
+      }
     }
   ],
   "currentSlice": {
-    "id": "combat-mireclaw-packhunter-trait-trim-10184",
-    "title": "Combat Mireclaw Packhunter Trait Trim",
+    "id": "strategic-ai-persistent-hero-task-board-10184",
+    "title": "Strategic AI Persistent Hero Task Board",
     "status": "completed",
-    "source": "owner direction to balance Mireclaw dominance after all-live hero matrix showed top Mireclaw heroes overconverting W3/W4 matchups",
-    "planRef": "PLAN.md Battle Balance Benchmark Target",
+    "source": "owner direction to move strategic AI work beyond superficial reporting into production-ready behavior state",
+    "planRef": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "PLAN.md",
       "project.md"
     ],
     "implementationTargets": [
-      "content/heroes.json",
-      "content/spells.json if second-stage trim is needed",
+      "scripts/core/EnemyAdventureRules.gd",
+      "scripts/core/HeadlessSimulationHarnessRules.gd",
+      "tests/ai_hero_task_live_target_selection_report.gd",
+      "tests/ai_hero_task_live_turn_execution_report.gd",
+      "strategic AI focused reports and validation tokens",
+      "docs/strategic-ai-live-target-selection-report.md",
+      "docs/strategic-ai-live-turn-execution-report.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Overperforming Mireclaw hero trait packages are trimmed, validation passes, and all-live benchmark evidence shows whether W3/W4 Mireclaw matchups fall below the 65% escalation threshold; apply the exact spell trim only if required.",
+    "completionCriteria": "Live enemy commander/raid target assignments persist to normalized hero_task_state, saved tasks are reused for target continuity, exclusive reservations use the persisted board, completed resource captures close their tasks, focused Godot reports pass, static validation passes, and no save-version migration is introduced.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-29T09:07:43Z",
-      "sliceId": "combat-mireclaw-packhunter-trait-trim-10184",
+      "updatedAt": "2026-05-30T11:58:00Z",
+      "sliceId": "strategic-ai-persistent-hero-task-board-10184",
       "commands": [
-        "jq empty content/heroes.json ops/progress.json (passed)",
-        "python3 tests/hero_roster_readiness_report.py (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_trait_trim.json (passed; ok=true)",
-        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json (passed; ok=true, 12000 samples)"
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
       ],
+      "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
       "evidence": {
         "implemented": [
-          "Removed Packhunter from the five overperforming Mireclaw W3/W4 heroes identified by all-live replay evidence.",
-          "Nix Votivejaw now uses linekeeper + bogwise.",
-          "Vaska Reedmaw now uses vanguard + linekeeper.",
-          "Kessa Chainboom now uses vanguard + bogwise.",
-          "Zhorra Fenwake now uses bogwise + linekeeper.",
-          "Orrik Tollreaver now uses linekeeper + bogwise.",
-          "Did not apply the planned Mire spell trim because no Mireclaw W3/W4 matchup remained above 65% after the trait pass."
+          "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
+          "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
+          "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
+          "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
+          "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
         ],
-        "benchmark_impact": {
-          "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json",
-          "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
-          "ok": true,
-          "balance_status": "needs_tuning",
-          "outliers_before": 43,
-          "outliers_after": 38,
-          "mireclaw_w3_w4_deltas": [
-            "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 55.0%",
-            "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 61.0%",
-            "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 60.0%",
-            "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 53.5%",
-            "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 53.5%",
-            "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Brasshollow 53.5%",
-            "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 51.5%",
-            "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 56.0%",
-            "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Thornwake 54.5%",
-            "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 66.0%"
-          ],
-          "acceptance": {
-            "mireclaw_w3_w4_pairs_above_65_after": 0,
-            "mireclaw_w3_average_before": 65.6,
-            "mireclaw_w3_average_after": 56.6,
-            "remaining_new_debt": "W4 Veilmourn now dominates Mireclaw 66.0%; this is recorded as next specific matchup debt rather than applying unrelated Mire spell trims."
-          }
-        }
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-live-target-selection-report.md",
+          "docs/strategic-ai-live-turn-execution-report.md",
+          "docs/headless-strategic-ai-live-turn-harness-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
       }
     },
-    "notes": "Completed. Packhunter was removed from the five overperforming Mireclaw heroes; all-live outliers dropped 43 to 38 and no Mireclaw W3/W4 matchup remains above 65%, so the planned spell trim was not applied. W4 Veilmourn over Mireclaw at 66% remains specific follow-up debt.",
-    "startedAt": "2026-05-29T08:44:55Z",
-    "updatedAt": "2026-05-29T09:07:43Z",
-    "completedAt": "2026-05-29T09:07:43Z"
+    "notes": "Completed focused production slice. Strategic AI now has a real persistent hero task board for live target assignments, saved-task reuse, reservation continuity, and resource-task completion. Full shared headless harness was attempted but not claimed because it remained silent and was killed.",
+    "startedAt": "2026-05-30T11:58:00Z",
+    "updatedAt": "2026-05-30T11:58:00Z",
+    "completedAt": "2026-05-30T11:58:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-29T09:07:43Z",
-    "sliceId": "combat-mireclaw-packhunter-trait-trim-10184",
+    "updatedAt": "2026-05-30T11:58:00Z",
+    "sliceId": "strategic-ai-persistent-hero-task-board-10184",
     "commands": [
-      "jq empty content/heroes.json ops/progress.json (passed)",
-      "python3 tests/hero_roster_readiness_report.py (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --hero-policy all-live --json > tmp/battle_balance_quick_all_live_mireclaw_trait_trim.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --hero-policy all-live --json > tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json (passed; ok=true, 12000 samples)"
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)"
     ],
+    "notes": "Attempted full tests/headless_simulation_harness_report.tscn with --quit-after 240; the process produced no output after several minutes and was killed, so it is not claimed as passed for this slice.",
     "evidence": {
       "implemented": [
-        "Removed Packhunter from the five overperforming Mireclaw W3/W4 heroes identified by all-live replay evidence.",
-        "Nix Votivejaw now uses linekeeper + bogwise.",
-        "Vaska Reedmaw now uses vanguard + linekeeper.",
-        "Kessa Chainboom now uses vanguard + bogwise.",
-        "Zhorra Fenwake now uses bogwise + linekeeper.",
-        "Orrik Tollreaver now uses linekeeper + bogwise.",
-        "Did not apply the planned Mire spell trim because no Mireclaw W3/W4 matchup remained above 65% after the trait pass."
+        "EnemyAdventureRules.assign_target now records resource/town target assignments into normalized enemy_states[].hero_task_state while stripping transient hero_task_record/task id fields from active encounters.",
+        "Saved active hero tasks are consulted before deriving fresh live commander plans, allowing commander target continuity across turn normalization without a save-version bump.",
+        "Exclusive target reservations now include persisted active tasks and skip the same stable commander actor id instead of depending on transient placement-only state.",
+        "Captured resource tasks are marked completed during arrival resolution so seized objectives do not remain active stale work.",
+        "Focused strategic AI reports now expect live task-board persistence and still reject public-event leaks of task ids, reservation keys, debug reasons, and score internals."
       ],
-      "benchmark_impact": {
-        "artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_trait_trim.json",
-        "baseline_artifact": "tmp/battle_balance_100_seed_all_live_mireclaw_half_shield.json",
-        "ok": true,
-        "balance_status": "needs_tuning",
-        "outliers_before": 43,
-        "outliers_after": 38,
-        "mireclaw_w3_w4_deltas": [
-          "W3 Brasshollow vs Mireclaw: Mireclaw 64.5% -> Mireclaw 55.0%",
-          "W3 Embercourt vs Mireclaw: Mireclaw 70.0% -> Mireclaw 61.0%",
-          "W3 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 60.0%",
-          "W3 Mireclaw vs Thornwake: Mireclaw 65.0% -> Mireclaw 53.5%",
-          "W3 Mireclaw vs Veilmourn: Mireclaw 61.5% -> Mireclaw 53.5%",
-          "W4 Brasshollow vs Mireclaw: Mireclaw 58.0% -> Brasshollow 53.5%",
-          "W4 Embercourt vs Mireclaw: Mireclaw 60.5% -> Mireclaw 51.5%",
-          "W4 Mireclaw vs Sunvault: Mireclaw 67.0% -> Mireclaw 56.0%",
-          "W4 Mireclaw vs Thornwake: Mireclaw 60.0% -> Thornwake 54.5%",
-          "W4 Mireclaw vs Veilmourn: Veilmourn 53.0% -> Veilmourn 66.0%"
-        ],
-        "acceptance": {
-          "mireclaw_w3_w4_pairs_above_65_after": 0,
-          "mireclaw_w3_average_before": 65.6,
-          "mireclaw_w3_average_after": 56.6,
-          "remaining_new_debt": "W4 Veilmourn now dominates Mireclaw 66.0%; this is recorded as next specific matchup debt rather than applying unrelated Mire spell trims."
-        }
-      }
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/strategic-ai-live-target-selection-report.md",
+        "docs/strategic-ai-live-turn-execution-report.md",
+        "docs/headless-strategic-ai-live-turn-harness-report.md"
+      ],
+      "savePolicy": "hero_task_state_live_persist_no_save_migration",
+      "saveVersion": 9,
+      "residualRisk": "The full shared headless harness remains too slow/silent for this run and was not counted as a passing gate; focused live strategic AI reports and static validation passed."
     }
   }
 }

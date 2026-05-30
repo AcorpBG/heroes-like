@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-quality-pass-10184`, selected as the strategic AI baseline KPI harness/audit before behavior tuning.
+- Current implementation slice: `strategic-ai-persistent-hero-task-board-10184`, selected to turn live commander/raid target choices into durable strategic AI task state.
+- Latest completed slice: `strategic-ai-persistent-hero-task-board-10184`.
 - Latest completed slice: `battle-layout-smoke-followup-10184`, expanded by owner direction into the battle presentation runtime slice.
 - Latest completed slice: `combat-mireclaw-packhunter-trait-trim-10184`.
 - Previous completed slice: `combat-mireclaw-half-anti-ranged-shielding-10184`.
@@ -60,7 +61,7 @@ Latest economy/town evidence:
 Current product focus:
 - Keep building toward a playable alpha baseline.
 - Prefer player-readable, live-loop improvements over adding new report gates.
-- Current strategic AI target: first establish a baseline KPI audit from existing live evidence plus Native RMG generated-map turn probes, then implement the highest-value production gap instead of tuning from anecdotes.
+- Current strategic AI target: build from the baseline KPI audit into production behavior. Live commander/raid target choices now write normalized `enemy_states[].hero_task_state`, reuse saved active tasks for later target selection, reserve exclusive targets across active task boards, and complete captured resource tasks without a save-version bump.
 - Current battle-presentation target: battle resolution should emit a readable event stream for movement, strikes, shots, spell casts, damage, healing, status changes, resisted/immune outcomes, deaths, retaliation, morale/cohesion, and momentum; the battle scene should consume that stream with normal/fast/instant playback controls while keeping combat math unchanged.
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed, the public benchmark report uses side-neutral `side_a`/`side_b` terminology, and spell-enabled benchmark availability follows the same Native RMG week surface as army snapshots.
 - Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.
@@ -72,7 +73,6 @@ Current product focus:
 Before starting any item, add or select a concrete slice in `ops/progress.json`, mark it `in_progress`, and keep validation evidence there.
 
 Recommended next slices:
-- `strategic-ai-persistent-hero-task-board-10184`: promote commander/raid role evidence into durable full AI hero task state after the baseline KPI audit identifies current production blockers.
 - `strategic-ai-long-run-seed-matrix-10184`: expand strategic AI validation from focused fixtures into multi-week generated-map seed matrices once task ownership is durable enough to measure.
 - `combat-faction-pair-stat-tuning-10184`: tune unit stats, growth, and ability power from the full benchmark outlier rows to reduce deterministic faction-pair win-rate spread.
 - `battle-spell-valuation-counterplay-followup-10184`: tune spell AI valuation and counterplay from the spell-enabled benchmark evidence, especially heavy control preference, before treating the new outlier set as pure unit-stat imbalance.

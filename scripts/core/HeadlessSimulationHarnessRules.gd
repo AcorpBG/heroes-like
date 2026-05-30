@@ -988,8 +988,8 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 		failures.append("Live turn produced fewer than two target assignment events.")
 	if site_seizures < 2:
 		failures.append("Live turn produced fewer than two site seizure events.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live turn execution wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live turn execution did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(turn_result.get("events", []), 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -1021,7 +1021,7 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 			"companion_raid": _raid_execution_signal(companion_raid),
 			"event_types": _event_types(turn_result.get("events", [])),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1127,8 +1127,8 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 		failures.append("Live route raid did not reduce goal distance: initial=%d final=%d." % [initial_goal_distance, final_goal_distance])
 	if not seized_target or target_controller != faction_id:
 		failures.append("Live route raid did not seize %s within %d turns." % [target_id, max_turns])
-	if _has_saved_hero_task_state(session):
-		failures.append("Live route progression wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live route progression did not persist hero_task_state.")
 	var assignment_events := _event_count(all_events, "ai_target_assigned")
 	var seizure_events := _event_count(all_events, "ai_site_seized")
 	if assignment_events < 1:
@@ -1167,7 +1167,7 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 			"route_records": route_records,
 			"event_types": _event_types(all_events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1274,8 +1274,8 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 		failures.append("Live town-governor execution did not emit a recruitment destination event.")
 	if garrison_count_after <= garrison_count_before and recruit_pool_after == recruit_pool_before:
 		failures.append("Live town-governor execution did not produce visible recruitment mutation.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live town-governor execution wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live town-governor execution did not preserve hero_task_state from the enemy turn.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 10)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -1317,7 +1317,7 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 			"selected_recruitment": _town_recruitment_signal(selected_recruitment),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1412,8 +1412,6 @@ static func _strategic_ai_live_regroup_retreat(input_config: Dictionary) -> Dict
 		failures.append("Live regroup raid did not clear regroup target after rebuilding.")
 	if resource_controller == faction_id:
 		failures.append("Live regroup captured the original offensive resource instead of retreating.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live regroup wrote forbidden hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -1447,7 +1445,7 @@ static func _strategic_ai_live_regroup_retreat(input_config: Dictionary) -> Dict
 			"raid": _raid_execution_signal(after_raid),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1542,8 +1540,6 @@ static func _strategic_ai_live_recruitment_delivery(input_config: Dictionary) ->
 		failures.append("Live recruitment delivery did not emit ai_town_recruited.")
 	if raid_reinforcement_events < 1:
 		failures.append("Live recruitment delivery did not emit ai_raid_reinforced.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live recruitment delivery wrote forbidden hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 10)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -1577,7 +1573,7 @@ static func _strategic_ai_live_recruitment_delivery(input_config: Dictionary) ->
 			"raid": _raid_execution_signal(after_raid),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1665,8 +1661,8 @@ static func _strategic_ai_live_town_defense_retask(input_config: Dictionary) -> 
 		failures.append("Live town-defense retask did not preserve previous target %s." % previous_target_id)
 	if resource_controller == faction_id:
 		failures.append("Live town-defense retask captured the previous offensive resource.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live town-defense retask wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live town-defense retask did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -1695,7 +1691,7 @@ static func _strategic_ai_live_town_defense_retask(input_config: Dictionary) -> 
 			"target_reason_codes": reason_codes,
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1810,7 +1806,7 @@ static func _strategic_ai_multi_scenario_town_defense_retask(input_config: Dicti
 				and "front_stabilization" in reason_codes
 				and assignment_events > 0
 				and resource_controller != faction_id
-				and not _has_saved_hero_task_state(session)
+				and _has_saved_hero_task_state(session)
 			)
 			if not retasked:
 				failures.append("%s/%s did not retask active raid to defend %s." % [scenario_id, faction_id, town_id])
@@ -1865,7 +1861,7 @@ static func _strategic_ai_multi_scenario_town_defense_retask(input_config: Dicti
 			"event_types": event_types,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -1982,7 +1978,6 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 				and case_raid_reinforcement_events > 0
 				and String(after_raid.get("target_kind", "")) != ""
 				and String(after_raid.get("target_placement_id", "")) != ""
-				and not _has_saved_hero_task_state(session)
 			)
 			if not delivered:
 				failures.append("%s/%s did not deliver recruits from %s into raid %s." % [scenario_id, faction_id, town_id, raid_id])
@@ -2042,7 +2037,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 			"event_types": event_types,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2141,8 +2136,8 @@ static func _strategic_ai_live_resource_site_defense(input_config: Dictionary) -
 		failures.append("Live resource-defense retask captured the abandoned offensive resource.")
 	if String(after_defense_node.get("ai_defended_by_faction_id", "")) != faction_id:
 		failures.append("Live resource-defense target did not record durable defense state.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live resource-defense retask wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live resource-defense retask did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 10)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -2175,7 +2170,7 @@ static func _strategic_ai_live_resource_site_defense(input_config: Dictionary) -
 			"defense_node": _resource_defense_signal(after_defense_node),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2257,8 +2252,8 @@ static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> 
 		failures.append("Live town-retake assault queued wrong battle context.")
 	if assignment_events < 1:
 		failures.append("Live town-retake assault did not surface an ai_target_assigned event.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live town-retake assault wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live town-retake assault did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -2287,7 +2282,7 @@ static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> 
 			"raid": _raid_execution_signal(after_raid),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2389,8 +2384,8 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 		failures.append("Live raid grouping did not continue into a battle.")
 	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("town_placement_id", "")) != town_id:
 		failures.append("Live raid grouping queued wrong battle context.")
-	if _has_saved_hero_task_state(session):
-		failures.append("Live raid grouping wrote forbidden hero_task_state.")
+	if not _has_saved_hero_task_state(session):
+		failures.append("Live raid grouping did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -2425,7 +2420,7 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 			"resolved_encounters": resolved,
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2497,8 +2492,8 @@ static func _strategic_ai_multi_scenario_pressure_coverage(input_config: Diction
 			event_type_map[String(event_type)] = true
 		if not bool(turn_result.get("ok", false)):
 			failures.append("%s enemy turn returned not-ok during pressure coverage." % scenario_id)
-		if _has_saved_hero_task_state(session):
-			failures.append("%s pressure coverage wrote forbidden hero_task_state." % scenario_id)
+		if not _has_saved_hero_task_state(session):
+			failures.append("%s pressure coverage did not persist hero_task_state." % scenario_id)
 		var scenario_launched_count := 0
 		for config in enemy_configs:
 			if not (config is Dictionary):
@@ -2570,7 +2565,7 @@ static func _strategic_ai_multi_scenario_pressure_coverage(input_config: Diction
 			"faction_cases": faction_rows,
 			"event_types": event_types,
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"deferred": deferred,
 			"failures": failures,
@@ -2679,8 +2674,8 @@ static func _strategic_ai_multi_scenario_objective_targeting(input_config: Dicti
 				failures.append("%s/%s objective targeting emitted no ai_target_assigned event." % [scenario_id, faction_id])
 			if reason_codes.is_empty():
 				failures.append("%s/%s objective targeting emitted no compact reason codes." % [scenario_id, faction_id])
-			if _has_saved_hero_task_state(session):
-				failures.append("%s/%s objective targeting wrote forbidden hero_task_state." % [scenario_id, faction_id])
+			if not _has_saved_hero_task_state(session):
+				failures.append("%s/%s objective targeting did not persist hero_task_state." % [scenario_id, faction_id])
 			faction_rows.append({
 				"scenario_id": scenario_id,
 				"faction_id": faction_id,
@@ -2733,7 +2728,7 @@ static func _strategic_ai_multi_scenario_objective_targeting(input_config: Dicti
 			"event_types": event_types,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "no_hero_task_state_write_no_save_migration",
+			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"deferred": deferred,
 			"failures": failures,
