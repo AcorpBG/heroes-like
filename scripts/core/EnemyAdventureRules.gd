@@ -685,9 +685,9 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		if plan.is_empty():
 			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 		if plan.is_empty():
-			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
-		if plan.is_empty():
 			plan = ai_active_front_support_target_selection_plan(session, config, raid)
+		if plan.is_empty():
+			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = choose_target(
 				session,
@@ -1218,7 +1218,7 @@ static func group_nearby_raids_for_town_assault(
 	if session == null or leader.is_empty() or leader_index < 0 or leader_index >= encounters.size():
 		return {"encounter": leader, "grouped": false, "events": []}
 	var target_kind := String(leader.get("target_kind", ""))
-	if target_kind not in ["town", "encounter", "hero"]:
+	if target_kind not in ["town", "encounter", "hero", "resource"]:
 		return {"encounter": leader, "grouped": false, "events": []}
 	if raid_regroup_needed(leader):
 		return {"encounter": leader, "grouped": false, "events": []}
@@ -1359,6 +1359,17 @@ static func _raid_grouping_target_view(
 				"target_x": hero_tile.x,
 				"target_y": hero_tile.y,
 			}
+		"resource":
+			var node_result := _find_resource_by_placement(session, target_id)
+			if int(node_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = node_result.get("node", {})
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			return {
+				"target_label": String(site.get("name", target_id)),
+				"target_x": int(node.get("x", 0)),
+				"target_y": int(node.get("y", 0)),
+			}
 	return {}
 
 static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes: Array) -> Array:
@@ -1369,6 +1380,8 @@ static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes
 		output.append("objective_front")
 	elif target_kind == "hero":
 		output.append("hero_hunt")
+	elif target_kind == "resource":
+		output.append("site_contested")
 	for code in [
 		"guard_clearance",
 		"site_contested",

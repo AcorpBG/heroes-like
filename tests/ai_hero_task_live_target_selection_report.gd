@@ -66,6 +66,12 @@ func _river_pass_companion_reservation_case() -> Dictionary:
 	_set_resource_controller(session, "river_signal_post", "player")
 	var vaska := _raid_seed(session, config, "hero_vaska", "live_target_vaska_active", {"x": 1, "y": 4})
 	vaska = EnemyAdventureRules.assign_target(session, config, vaska)
+	vaska["enemy_army"] = {
+		"id": "live_target_vaska_ready_host",
+		"name": "Ready Resource Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": 9}],
+	}
+	vaska = EnemyAdventureRules.ensure_raid_army(vaska, session)
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(vaska)
 	session.overworld["encounters"] = encounters
