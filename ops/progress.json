@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-rmg-small-turn-health-10184",
-  "currentSliceTitle": "Strategic AI RMG Small Turn Health",
+  "currentSliceId": "strategic-ai-planned-task-ready-launch-10184",
+  "currentSliceTitle": "Strategic AI Planned Task Ready Launch",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Supported strict-Small Native RMG AI turns now execute in the default strategic AI baseline and generated raid target assignments surface as player-facing threat events. Medium/generalization and full long-run seed-matrix work remain production gaps.",
+  "currentSliceNotes": "Completed. Prepared saved commander tasks can launch on readiness below generic raid pressure, while unplanned low-pressure raids remain blocked by pressure thresholds.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T22:45:00Z",
+  "updatedAt": "2026-05-30T23:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,90 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-planned-task-ready-launch-10184",
+      "title": "Strategic AI Planned Task Ready Launch",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI implementation slice / planned-task ready launch",
+      "purpose": "Let prepared saved commander tasks launch from readiness even below generic raid pressure, while preserving pressure thresholds for ordinary opportunistic raid spawning.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "A planned commander task whose saved target is reachable and whose commander continuity has been prepared to the task strength can launch despite generic pressure being below the normal raid threshold; the same low-pressure turn must not launch an opportunistic unplanned raid when no launch-ready saved task exists.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "weakening pressure thresholds for unplanned raids",
+        "running the full 100-seed eight-week matrix",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T23:05:00Z",
+      "updatedAt": "2026-05-30T23:35:00Z",
+      "completedAt": "2026-05-30T23:35:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment prep passes with same-turn planning before recruitment, saved commander preparation, critical garrison priority, prepared saved-task launch at pressure 0 with raid_threshold 99, and a control case proving unplanned low-pressure raids stay blocked."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner still seeds distinct commander tasks and selects planned-task spawn targets."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turns still execute commander resource tasks and persist task-board completion/progression."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, retreat, guarded-claim retargeting, route recovery, and support behavior still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "result": "pass",
+          "summary": "Strategic AI baseline remains green for supported Small generated-map probes; Medium/generalization and full long-run seed matrix remain production blockers."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. Planned saved commander tasks now have a readiness launch path: when the saved target is reachable and the assigned commander has been prepared to the task strength for the active encounter base, raid spawning can proceed even below generic pressure. The normal pressure threshold still blocks opportunistic unplanned raids. Ready saved-task candidates are prioritized over unready saved tasks at the same spawn point, and commander-prepared events are now allowed through the public AI event log."
+      ]
+    },
     {
       "id": "strategic-ai-rmg-small-turn-health-10184",
       "title": "Strategic AI RMG Small Turn Health",

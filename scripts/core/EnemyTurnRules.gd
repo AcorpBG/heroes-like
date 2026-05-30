@@ -1746,9 +1746,6 @@ static func _can_launch_raid(
 ) -> bool:
 	if _owned_town_count(session, faction_id) <= 0:
 		return false
-	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
-	if int(state.get("pressure", 0)) < raid_threshold:
-		return false
 	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(session, config, faction_id):
 		return false
 	if not EnemyAdventureRulesScript.has_available_raid_commander(
@@ -1760,7 +1757,134 @@ static func _can_launch_raid(
 	var encounter_pool = config.get("raid_encounter_ids", [])
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
 		return false
+	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
+	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
+	if int(state.get("pressure", 0)) < raid_threshold and launch_ready_plan.is_empty():
+		return false
 	return not _best_open_spawn_point(session, config, state, faction_id).is_empty()
+
+static func _planned_task_launch_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return {}
+	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var best := {}
+	for index in range(points.size()):
+		var point = points[index]
+		if not (point is Dictionary):
+			continue
+		var candidate := _ready_saved_task_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			index
+		)
+		if candidate.is_empty():
+			continue
+		var report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
+		if report.is_empty():
+			continue
+		if best.is_empty() or int(report.get("spawn_plan_score", 0)) > int(best.get("spawn_plan_score", 0)):
+			best = report
+	return best
+
+static func _spawn_point_candidate_ready_launch_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	candidate: Dictionary
+) -> Dictionary:
+	var actor_id := String(candidate.get("roster_hero_id", ""))
+	var target_kind := String(candidate.get("spawn_plan_target_kind", ""))
+	var target_id := String(candidate.get("spawn_plan_target_id", ""))
+	if actor_id == "" or target_kind == "" or target_id == "":
+		return {}
+	var task := _planned_task_for_ready_launch(session, faction_id, actor_id, target_kind, target_id)
+	if task.is_empty():
+		return {}
+	var base_encounter_id := _primary_raid_encounter_id(config)
+	var base_strength := _enemy_encounter_base_strength(base_encounter_id)
+	if base_strength <= 0:
+		return {}
+	var target_strength := base_strength + _planned_task_prep_strength(
+		base_strength,
+		target_kind,
+		String(task.get("task_class", ""))
+	)
+	var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state)
+	if commander.is_empty():
+		return {}
+	if String(commander.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)) != EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE:
+		return {}
+	if not EnemyAdventureRulesScript.commander_can_deploy(commander):
+		return {}
+	var continuity := EnemyAdventureRulesScript.commander_army_continuity(commander)
+	if String(continuity.get("encounter_id", "")) != base_encounter_id:
+		return {}
+	if continuity.is_empty() or int(continuity.get("current_strength", 0)) < target_strength:
+		return {}
+	return {
+		"actor_id": actor_id,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"task_id": String(task.get("task_id", "")),
+		"current_strength": int(continuity.get("current_strength", 0)),
+		"target_strength": target_strength,
+		"spawn_x": int(candidate.get("x", 0)),
+		"spawn_y": int(candidate.get("y", 0)),
+		"spawn_plan_score": int(candidate.get("spawn_plan_score", 0)),
+	}
+
+static func _planned_task_for_ready_launch(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	target_kind: String,
+	target_id: String
+) -> Dictionary:
+	for task_value in EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id):
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("actor_id", "")) != actor_id:
+			continue
+		if String(task.get("task_status", "")) not in ["planned", "reserved"]:
+			continue
+		if String(task.get("target_kind", "")) != target_kind or String(task.get("target_id", "")) != target_id:
+			continue
+		if int(task.get("expires_day", 0)) > 0 and int(task.get("expires_day", 0)) < int(session.day):
+			continue
+		if String(task.get("last_validation", "valid")) != "valid":
+			continue
+		return task
+	return {}
+
+static func _commander_roster_entry_for_launch(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	state: Dictionary
+) -> Dictionary:
+	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+		session,
+		faction_id,
+		state.get("commander_roster", EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id))
+	)
+	for entry_value in roster:
+		if entry_value is Dictionary and String(entry_value.get("roster_hero_id", "")) == actor_id:
+			return entry_value
+	return {}
 
 static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary) -> Dictionary:
 	var faction_id := String(config.get("faction_id", ""))
@@ -2748,6 +2872,17 @@ static func _spawn_point_candidate(
 ) -> Dictionary:
 	if faction_id == "" or point.is_empty():
 		return {}
+	var ready_saved_candidate := _ready_saved_task_spawn_candidate_for_point(
+		session,
+		config,
+		state,
+		faction_id,
+		point,
+		occupied_commander_ids,
+		spawn_order
+	)
+	if not ready_saved_candidate.is_empty():
+		return ready_saved_candidate
 	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
 		session,
 		faction_id,
@@ -2775,6 +2910,88 @@ static func _spawn_point_candidate(
 		)
 	if plan.is_empty():
 		return {}
+	var priority := int(plan.get("priority", plan.get("final_priority", 0)))
+	var goal_distance := int(plan.get("goal_distance", 9999))
+	if goal_distance >= 9999 and plan.has("target_x") and plan.has("target_y"):
+		goal_distance = abs(int(point.get("x", 0)) - int(plan.get("target_x", 0))) \
+			+ abs(int(point.get("y", 0)) - int(plan.get("target_y", 0)))
+	var score: int = (priority * 100) - (mini(goal_distance, 9999) * 5) - spawn_order
+	if plan_source == "saved_task":
+		score += 100000
+	var candidate := point.duplicate(true)
+	candidate["roster_hero_id"] = roster_hero_id
+	candidate["spawn_plan_source"] = plan_source
+	candidate["spawn_plan_target_kind"] = String(plan.get("target_kind", ""))
+	candidate["spawn_plan_target_id"] = String(plan.get("target_placement_id", ""))
+	candidate["spawn_plan_priority"] = priority
+	candidate["spawn_plan_goal_distance"] = goal_distance
+	candidate["spawn_plan_score"] = score
+	candidate["spawn_order"] = spawn_order
+	if plan_source == "saved_task":
+		var ready_report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
+		if not ready_report.is_empty():
+			candidate["spawn_plan_ready_launch"] = true
+			candidate["spawn_plan_current_strength"] = int(ready_report.get("current_strength", 0))
+			candidate["spawn_plan_target_strength"] = int(ready_report.get("target_strength", 0))
+			candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 200000
+	return candidate
+
+static func _ready_saved_task_spawn_candidate_for_point(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	spawn_order: int
+) -> Dictionary:
+	var best := {}
+	var candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
+	for commander_value in candidates:
+		if not (commander_value is Dictionary):
+			continue
+		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		var plan := EnemyAdventureRulesScript._ai_hero_task_spawn_saved_plan_for_actor(
+			session,
+			faction_id,
+			roster_hero_id,
+			point
+		)
+		if plan.is_empty():
+			continue
+		var candidate := _spawn_point_candidate_from_plan(
+			point,
+			plan,
+			roster_hero_id,
+			"saved_task",
+			spawn_order
+		)
+		var ready_report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
+		if ready_report.is_empty():
+			continue
+		candidate["spawn_plan_ready_launch"] = true
+		candidate["spawn_plan_current_strength"] = int(ready_report.get("current_strength", 0))
+		candidate["spawn_plan_target_strength"] = int(ready_report.get("target_strength", 0))
+		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 200000
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _spawn_point_candidate_from_plan(
+	point: Dictionary,
+	plan: Dictionary,
+	roster_hero_id: String,
+	plan_source: String,
+	spawn_order: int
+) -> Dictionary:
 	var priority := int(plan.get("priority", plan.get("final_priority", 0)))
 	var goal_distance := int(plan.get("goal_distance", 9999))
 	if goal_distance >= 9999 and plan.has("target_x") and plan.has("target_y"):
