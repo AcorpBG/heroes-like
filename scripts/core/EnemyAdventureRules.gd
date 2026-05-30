@@ -4685,8 +4685,8 @@ static func plan_enemy_hero_task_board(
 	var working_state := state.duplicate(true) if not state.is_empty() else _ai_hero_task_enemy_state_for_faction(session, faction_id).duplicate(true)
 	if working_state.is_empty():
 		return {"state": state, "planned_count": 0, "task_count": 0}
-	var origin := _ai_hero_task_planner_origin(session, config, faction_id)
-	if origin.is_empty():
+	var origins := _ai_hero_task_planner_origins(session, config, faction_id)
+	if origins.is_empty():
 		return {"state": working_state, "planned_count": 0, "task_count": 0}
 
 	_ai_hero_task_reconcile_live_tasks_for_faction(session, faction_id)
@@ -4709,11 +4709,7 @@ static func plan_enemy_hero_task_board(
 		if task_value is Dictionary:
 			next_tasks.append(task_value)
 
-	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-	var candidates := _target_candidates(session, config, origin_pos)
-	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return _candidate_beats(a, b)
-	)
+	var candidates := _ai_hero_task_planner_candidates_from_origins(session, config, origins)
 	var target_claims := _ai_hero_task_planner_target_claims(next_tasks)
 	var planned_count := 0
 	var events := []
@@ -4735,7 +4731,7 @@ static func plan_enemy_hero_task_board(
 			config,
 			faction_id,
 			actor_id,
-			origin,
+			origins[0],
 			candidates,
 			target_claims,
 			next_tasks.size() + planned_count + 1
@@ -4786,6 +4782,7 @@ static func _ai_hero_task_planner_task_for_actor(
 		if not (candidate_value is Dictionary):
 			continue
 		var candidate: Dictionary = candidate_value
+		var candidate_origin: Dictionary = candidate.get("planner_origin", origin) if candidate.get("planner_origin", {}) is Dictionary else origin
 		var target_kind := String(candidate.get("target_kind", ""))
 		var target_id := String(candidate.get("target_placement_id", ""))
 		if target_kind not in ["resource", "town", "artifact", "encounter", "hero"] or target_id == "":
@@ -4827,8 +4824,10 @@ static func _ai_hero_task_planner_task_for_actor(
 			"target_kind": target_kind,
 			"target_id": target_id,
 			"front_id": commander_role_front_id(String(session.scenario_id), target_kind, target_id),
-			"origin_kind": "town",
-			"origin_id": String(origin.get("placement_id", commander_role_origin_id(String(session.scenario_id), faction_id))),
+			"origin_kind": String(candidate_origin.get("kind", "town")),
+			"origin_id": String(candidate_origin.get("placement_id", commander_role_origin_id(String(session.scenario_id), faction_id))),
+			"origin_x": int(candidate_origin.get("x", 0)),
+			"origin_y": int(candidate_origin.get("y", 0)),
 			"priority_reason_codes": reason_codes,
 			"assigned_day": assigned_day,
 			"expires_day": assigned_day + 10,
@@ -4849,6 +4848,92 @@ static func _ai_hero_task_planner_class_for_candidate(candidate: Dictionary) -> 
 	if "retake_front" in reason_codes:
 		return "retake_site"
 	return "contest_site"
+
+static func _ai_hero_task_planner_candidates_from_origins(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origins: Array
+) -> Array:
+	var best_by_target := {}
+	for origin_value in origins:
+		if not (origin_value is Dictionary):
+			continue
+		var origin: Dictionary = origin_value
+		var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+		for candidate_value in _target_candidates(session, config, origin_pos):
+			if not (candidate_value is Dictionary):
+				continue
+			var candidate: Dictionary = candidate_value
+			var target_kind := String(candidate.get("target_kind", ""))
+			var target_id := String(candidate.get("target_placement_id", ""))
+			if target_kind == "" or target_id == "":
+				continue
+			var key := "%s:%s" % [target_kind, target_id]
+			var candidate_with_origin := candidate.duplicate(true)
+			candidate_with_origin["planner_origin"] = origin.duplicate(true)
+			if (
+				not best_by_target.has(key)
+				or _candidate_beats(candidate_with_origin, best_by_target.get(key, {}))
+			):
+				best_by_target[key] = candidate_with_origin
+	var output := []
+	for candidate_value in best_by_target.values():
+		if candidate_value is Dictionary:
+			output.append(candidate_value)
+	output.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return _candidate_beats(a, b)
+	)
+	return output
+
+static func _ai_hero_task_planner_origins(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	var origins := []
+	var seen_tiles := {}
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+			continue
+		var x := int(town.get("x", 0))
+		var y := int(town.get("y", 0))
+		seen_tiles["%d:%d" % [x, y]] = true
+		origins.append({
+			"kind": "town",
+			"placement_id": String(town.get("placement_id", "")),
+			"x": x,
+			"y": y,
+			"priority": _town_strategic_priority_bonus(session, town, faction_id, _town_is_objective_anchor(session, String(town.get("placement_id", "")))),
+		})
+	var spawn_points: Variant = config.get("spawn_points", [])
+	if spawn_points is Array:
+		for index in range(spawn_points.size()):
+			var spawn_value = spawn_points[index]
+			if not (spawn_value is Dictionary):
+				continue
+			var spawn_point: Dictionary = spawn_value
+			var x := int(spawn_point.get("x", 0))
+			var y := int(spawn_point.get("y", 0))
+			var tile_key := "%d:%d" % [x, y]
+			if seen_tiles.has(tile_key):
+				continue
+			seen_tiles[tile_key] = true
+			origins.append({
+				"kind": "spawn",
+				"placement_id": "spawn:%d:%d:%d" % [x, y, index],
+				"x": x,
+				"y": y,
+				"priority": 0,
+			})
+	origins.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("priority", 0)) == int(b.get("priority", 0)):
+			return String(a.get("placement_id", "")) < String(b.get("placement_id", ""))
+		return int(a.get("priority", 0)) > int(b.get("priority", 0))
+	)
+	return origins
 
 static func _ai_hero_task_planner_origin(
 	session: SessionStateStoreScript.SessionData,

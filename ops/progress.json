@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-same-turn-task-prep-10184",
-  "currentSliceTitle": "Strategic AI Same-Turn Task Prep",
+  "currentSliceId": "strategic-ai-multi-origin-task-planner-10184",
+  "currentSliceTitle": "Strategic AI Multi-Origin Task Planner",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Coordinated task-board planning now runs early enough in the live enemy turn for same-turn recruitment to prepare newly planned objectives.",
+  "currentSliceNotes": "Completed. Coordinated task-board planning now evaluates all owned towns and configured spawn origins instead of a single faction origin.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T19:20:00Z",
+  "updatedAt": "2026-05-30T20:04:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,66 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-multi-origin-task-planner-10184",
+      "title": "Strategic AI Multi-Origin Task Planner",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / generated-map multi-town planning quality",
+      "purpose": "Make the durable commander task planner consider every owned enemy town and configured spawn origin so multi-town/generated-map empires can plan from the right local front instead of a single global origin.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-coordinated-task-planner-report.md",
+        "docs/strategic-ai-planned-task-recruitment-prep-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "docs/strategic-ai-coordinated-task-planner-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "The planner must build candidate tasks from multiple valid origins, persist the selected origin on planned tasks, prove a second owned town can seed a nearby local objective that the primary origin cannot cheaply cover, and keep same-turn recruitment/spawn regressions green.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding a broad report-only gate",
+        "running the full 100-seed eight-week generated-map matrix in this slice",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T19:45:00Z",
+      "updatedAt": "2026-05-30T20:04:00Z",
+      "completedAt": "2026-05-30T20:04:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; multi-origin case planned resource:north_wood from local north_mire_watch origin)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; focused row passed and full matrix remains open)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. The coordinated task planner now evaluates targets from every owned enemy town and configured spawn origin, keeps the best reachable origin per target, and persists origin_kind/origin_id/origin coordinates on planned tasks.",
+      "notes": [
+        "Selected after finding the coordinated task planner still used a single faction origin, which undercuts multi-town and generated-map strategic play.",
+        "No production-ready strategic AI claim. Full 100-seed eight-week generated-map matrix, Medium/generalized RMG behavior, deeper army/economy timing, retreat/personality tuning, and live-client pacing remain open."
+      ]
+    },
     {
       "id": "strategic-ai-same-turn-task-prep-10184",
       "title": "Strategic AI Same-Turn Task Prep",
@@ -42618,14 +42678,14 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-same-turn-task-prep-10184 [completed]",
+  "currentSlice": "strategic-ai-multi-origin-task-planner-10184 [completed]",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T19:20:00Z",
-    "sliceId": "strategic-ai-same-turn-task-prep-10184",
+    "updatedAt": "2026-05-30T20:04:00Z",
+    "sliceId": "strategic-ai-multi-origin-task-planner-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed; full live turn plans before same-turn recruitment)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; multi-origin local-front case covered)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false)",
@@ -42638,18 +42698,17 @@
     ],
     "evidence": {
       "implemented": [
-        "Moved coordinated task-board planning earlier in the live enemy empire cycle, after town builds and before recruitment.",
-        "Kept the later pre-spawn planner as an idempotent post-raid-advance reconciliation point.",
-        "Extended planned-task recruitment coverage to exercise the full run_enemy_turn path, not only helper calls.",
-        "Full live-turn evidence now proves ai_commander_task_planned is emitted before same-turn ai_commander_prepared when the turn starts with no task board."
+        "Task-board planning now evaluates target candidates from every owned enemy town and configured spawn origin.",
+        "Candidates keep the strongest reachable local origin per target before target reservation and commander assignment.",
+        "Planned task records now persist origin_kind, origin_id, origin_x, and origin_y.",
+        "Focused coverage proves a second owned Mireclaw town near north_wood produces a local-origin resource task instead of using the far Duskfen origin."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "start_task_board": "absent",
-        "prepared_commander": "hero_sable",
-        "event_order": "ai_commander_task_planned before ai_commander_prepared",
-        "event_type": "ai_commander_prepared",
-        "critical_garrison_rule": "critical_garrison_gap"
+        "added_town": "north_mire_watch",
+        "target_key": "resource:north_wood",
+        "selected_origin_id": "north_mire_watch",
+        "selected_origin": {"x": 0, "y": 0}
       },
       "remaining_validation": "Full 100-seed eight-week generated-map matrix, Medium/generated-map generalization, deeper economy/army timing, retreat/personality tuning, and live-client pacing remain open.",
       "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, automatic tuning, campaign production, or production-ready claim."
