@@ -10,6 +10,8 @@ The focused fixture uses Duskfen Bastion in River Pass as the threatened stabili
 
 Follow-up slice: `strategic-ai-multi-scenario-town-defense-retask-20260524-10184`.
 
+Later follow-up: `strategic-ai-town-defense-arrival-10184` makes arrival at that defended town produce live garrison/commander consequences instead of stopping at retarget metadata.
+
 The shared headless simulation harness now broadens that proof through `strategic_ai_multi_scenario_town_defense_retask` and `live_enemy_town_defense_retask_across_scenario_breadth`. It runs the normal enemy end-turn cycle across `river-pass`, `prismhearth-watch`, `glassroad-sundering`, `glassfen-breakers`, and `ninefold-confluence`, covering 9 enemy faction cases.
 
 Implemented behavior:

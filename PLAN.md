@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-artifact-equipment-10184`, completed to make enemy commanders claim and equip secured artifacts through live artifact rules instead of leaving relics as faction-level captured ids only.
+- Current implementation slice: `strategic-ai-town-defense-arrival-10184`, completed to make enemy commanders who are redirected to defend owned threatened towns actually harden the town on arrival instead of only carrying a target label.
+- Latest completed slice: `strategic-ai-town-defense-arrival-10184`.
 - Latest completed slice: `strategic-ai-artifact-equipment-10184`.
 - Latest completed slice: `strategic-ai-scouting-spell-execution-10184`.
 - Latest completed slice: `strategic-ai-adventure-spell-execution-10184`.

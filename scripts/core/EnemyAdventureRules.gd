@@ -90,6 +90,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_site_seized",
 	"ai_site_contested",
 	"ai_site_defended",
+	"ai_town_defended",
 	"ai_town_built",
 	"ai_town_recruited",
 	"ai_garrison_reinforced",
@@ -9460,6 +9461,18 @@ static func _resolve_arrived_target(
 	faction_id: String
 ) -> Dictionary:
 	match String(raid.get("target_kind", "")):
+		"town":
+			var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+			var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+			var town: Dictionary = town_result.get("town", {})
+			if (
+				not town.is_empty()
+				and String(town.get("owner", "neutral")) == "enemy"
+				and _town_faction_id(town) == faction_id
+				and "town_defense" in reason_codes
+			):
+				return _defend_town_target(session, raid, state, faction_id)
+			return {"encounter": raid, "state": state, "event_message": ""}
 		"resource":
 			var node_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			var node: Dictionary = node_result.get("node", {})
@@ -9644,6 +9657,122 @@ static func _defend_resource_target(
 		}
 	)
 	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+
+static func _defend_town_target(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+	var town: Dictionary = town_result.get("town", {})
+	var town_index := int(town_result.get("index", -1))
+	if town_index < 0 or town.is_empty():
+		return {"encounter": raid, "state": state, "event_message": ""}
+	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		return {"encounter": raid, "state": state, "event_message": ""}
+
+	var army := _normalize_army_payload(raid.get("enemy_army", {}))
+	var garrison: Array = town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
+	var transferred_count := 0
+	var transferred_strength := 0
+	for stack_value in army.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		var count: int = max(0, int(stack_value.get("count", 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		garrison = _add_army_stack(garrison, unit_id, count)
+		transferred_count += count
+		transferred_strength += _unit_strength_value(unit_id) * count
+
+	var front: Dictionary = town.get("front", {}) if town.get("front", {}) is Dictionary else {}
+	front["state"] = "defend"
+	front["faction_id"] = faction_id
+	front["last_defended_day"] = int(session.day)
+	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
+	front["stabilize_until_day"] = max(int(front.get("stabilize_until_day", 0)), int(session.day) + 3)
+	front["source"] = "strategic_ai_town_defense_arrival"
+	town["front"] = front
+	town["garrison"] = garrison
+	town["ai_defended_by_faction_id"] = faction_id
+	town["ai_defended_day"] = int(session.day)
+	town["ai_defense_until_day"] = max(int(town.get("ai_defense_until_day", 0)), int(session.day) + 3)
+	town["ai_defense_rating"] = max(int(town.get("ai_defense_rating", 0)), _army_strength(garrison))
+	town["ai_defense_reinforced_strength"] = max(0, int(town.get("ai_defense_reinforced_strength", 0))) + transferred_strength
+
+	var updated_raid := raid.duplicate(true)
+	var commander_state = updated_raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var stationed_commander := sync_commander_army_continuity(
+			commander_state,
+			{"stacks": garrison},
+			"town_defense:%s" % String(town.get("placement_id", ""))
+		)
+		town["ai_defender_commander_state"] = stationed_commander
+		town["ai_defender_roster_hero_id"] = String(stationed_commander.get("roster_hero_id", ""))
+		updated_raid["enemy_commander_state"] = stationed_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			stationed_commander,
+			COMMANDER_STATUS_ACTIVE,
+			"town_defense:%s" % String(town.get("placement_id", ""))
+		)
+
+	var towns = session.overworld.get("towns", [])
+	towns[town_index] = town
+	session.overworld["towns"] = towns
+
+	updated_raid["enemy_army"] = {
+		"id": String(army.get("id", updated_raid.get("encounter_id", "town_defense_host"))),
+		"name": String(army.get("name", "Town Defense Host")),
+		"stacks": [],
+	}
+	updated_raid["arrived"] = true
+	updated_raid["town_defended_day"] = int(session.day)
+	updated_raid["town_defended_strength"] = transferred_strength
+	var resolved = session.overworld.get("resolved_encounters", [])
+	if not (resolved is Array):
+		resolved = []
+	var placement_id := String(updated_raid.get("placement_id", ""))
+	if placement_id != "" and placement_id not in resolved:
+		resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
+
+	state["pressure"] = max(0, int(state.get("pressure", 0))) + max(1, int(ceili(float(max(1, transferred_strength)) / 220.0)))
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
+	var defended_codes := ["town_defense", "front_stabilization", "garrison_reinforced"]
+	var town_label := _town_name(town)
+	var message := "%s reaches %s and folds %d unit%s into the defense." % [
+		_raid_name(updated_raid),
+		town_label,
+		transferred_count,
+		"" if transferred_count == 1 else "s",
+	]
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_town_defended",
+		updated_raid,
+		{
+			"target_kind": "town",
+			"target_placement_id": String(town.get("placement_id", "")),
+			"target_label": town_label,
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": defended_codes,
+			"target_public_reason": _public_reason_from_codes(defended_codes),
+			"target_public_importance": "high",
+			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _secure_artifact_target(
 	session: SessionStateStoreScript.SessionData,

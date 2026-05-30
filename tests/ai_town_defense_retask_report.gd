@@ -39,18 +39,30 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 	if EnemyAdventureRules.raid_regroup_needed(raid):
 		_fail("Fixture raid should be strong enough to avoid regroup before defense retask: %s" % JSON.stringify(raid))
 		return {}
+	var town_before := _town(session, "duskfen_bastion")
+	var garrison_strength_before := _garrison_strength(town_before)
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 
-	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var result := {}
+	var all_events := []
+	for _turn_index in range(4):
+		result = EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		state = result.get("state", state)
+		all_events.append_array(result.get("events", []))
+		if "ai_town_defended" in _event_types(all_events):
+			break
 	var after_raid := _encounter(session, "defense_retask_vaska")
 	if after_raid.is_empty():
 		_fail("Defense retask raid disappeared after advance.")
 		return {}
-	var event_types := _event_types(result.get("events", []))
+	var event_types := _event_types(all_events)
 	if "ai_target_assigned" not in event_types:
 		_fail("Defense retask did not emit ai_target_assigned: %s" % JSON.stringify(result))
+		return {}
+	if "ai_town_defended" not in event_types:
+		_fail("Defense retask did not resolve town-defense arrival: %s" % JSON.stringify(result))
 		return {}
 	if String(after_raid.get("target_kind", "")) != "town":
 		_fail("Defense retask did not target a town: %s" % JSON.stringify(after_raid))
@@ -68,7 +80,26 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 	if _resource_controller(session, "river_free_company") == MIRECLAW:
 		_fail("Defense retask still captured the previous resource target.")
 		return {}
-	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	var town_after := _town(session, "duskfen_bastion")
+	var garrison_strength_after := _garrison_strength(town_after)
+	if garrison_strength_after <= garrison_strength_before:
+		_fail("Town-defense arrival did not increase Duskfen garrison strength: before=%d after=%d town=%s" % [garrison_strength_before, garrison_strength_after, JSON.stringify(town_after)])
+		return {}
+	if String(town_after.get("ai_defended_by_faction_id", "")) != MIRECLAW:
+		_fail("Town-defense arrival did not mark Duskfen as AI defended: %s" % JSON.stringify(town_after))
+		return {}
+	var defender_commander: Dictionary = town_after.get("ai_defender_commander_state", {}) if town_after.get("ai_defender_commander_state", {}) is Dictionary else {}
+	if String(defender_commander.get("roster_hero_id", "")) != "hero_vaska":
+		_fail("Town-defense arrival did not station Vaska as Duskfen defender: %s" % JSON.stringify(defender_commander))
+		return {}
+	var assault_payload := BattleRules.create_town_assault_payload(session, "duskfen_bastion")
+	if String(assault_payload.get("enemy_hero", {}).get("roster_hero_id", "")) != "hero_vaska":
+		_fail("Town assault payload did not use stationed AI defender commander: %s" % JSON.stringify(assault_payload.get("enemy_hero", {})))
+		return {}
+	if not _battle_has_enemy_unit(assault_payload, "unit_bog_brute"):
+		_fail("Town assault payload did not include the arrived defender stack in the garrison battle.")
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(all_events, 8)
 	if not bool(public_log.get("ok", false)):
 		_fail("Defense retask public event boundary failed: %s" % JSON.stringify(public_log))
 		return {}
@@ -82,6 +113,11 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		"before_target_id": "river_free_company",
 		"after_target_kind": String(after_raid.get("target_kind", "")),
 		"after_target_id": String(after_raid.get("target_placement_id", "")),
+		"town_defended_event": "ai_town_defended" in event_types,
+		"garrison_strength_before": garrison_strength_before,
+		"garrison_strength_after": garrison_strength_after,
+		"stationed_commander_id": String(defender_commander.get("roster_hero_id", "")),
+		"town_assault_enemy_commander_id": String(assault_payload.get("enemy_hero", {}).get("roster_hero_id", "")),
 		"target_public_reason": String(after_raid.get("target_public_reason", "")),
 		"target_reason_codes": reason_codes,
 		"event_types": event_types,
@@ -214,6 +250,34 @@ func _resource_controller(session, placement_id: String) -> String:
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
 			return String(node.get("collected_by_faction_id", ""))
 	return ""
+
+func _town(session, placement_id: String) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			return town
+	return {}
+
+func _garrison_strength(town: Dictionary) -> int:
+	var total := 0
+	for stack in town.get("garrison", []):
+		if not (stack is Dictionary):
+			continue
+		var unit: Dictionary = ContentService.get_unit(String(stack.get("unit_id", "")))
+		var count: int = max(0, int(stack.get("count", 0)))
+		total += count * max(
+			6,
+			int(unit.get("hp", 1))
+			+ int(unit.get("min_damage", 1))
+			+ int(unit.get("max_damage", 1))
+			+ (3 if bool(unit.get("ranged", false)) else 0)
+		)
+	return total
+
+func _battle_has_enemy_unit(payload: Dictionary, unit_id: String) -> bool:
+	for stack in payload.get("stacks", []):
+		if stack is Dictionary and String(stack.get("side", "")) == "enemy" and String(stack.get("unit_id", "")) == unit_id:
+			return true
+	return false
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

@@ -84,6 +84,7 @@ static func create_town_assault_payload(
 	if town.is_empty() or String(town.get("owner", "neutral")) != "enemy":
 		return {}
 	var town_template: Dictionary = ContentService.get_town(String(town.get("town_id", "")))
+	var enemy_commander := _town_assault_enemy_commander_state(town)
 	var placement := {
 		"placement_id": "town_assault:%s" % town_placement_id,
 		"encounter_id": "encounter_town_assault",
@@ -98,7 +99,7 @@ static func create_town_assault_payload(
 			"name": "%s Garrison" % _town_name(town),
 			"stacks": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],
 		},
-		"enemy_hero_override": _town_captain_state(town),
+		"enemy_hero_override": enemy_commander if not enemy_commander.is_empty() else _town_captain_state(town),
 		"battle_context": {
 			"type": "town_assault",
 			"town_placement_id": town_placement_id,
@@ -106,6 +107,12 @@ static func create_town_assault_payload(
 		},
 	}
 	return create_battle_payload(session, placement)
+
+static func _town_assault_enemy_commander_state(town: Dictionary) -> Dictionary:
+	var commander_state = town.get("ai_defender_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		return commander_state.duplicate(true)
+	return {}
 
 static func create_battle_payload(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -6485,14 +6492,16 @@ static func _apply_enemy_commander_battle_memory(
 			String(rivalry_context.get("id", "")),
 			String(rivalry_context.get("label", ""))
 		)
-	var survivor_stacks := _battle_survivor_stacks(
-		session,
-		"enemy",
-		{
-			"source_type": "encounter_army",
-			"encounter_key": String(session.battle.get("resolved_key", "")),
+	var survivor_filter := {
+		"source_type": "encounter_army",
+		"encounter_key": String(session.battle.get("resolved_key", "")),
+	}
+	if _is_town_assault_context(session.battle.get("context", {})):
+		survivor_filter = {
+			"source_type": "town_garrison",
+			"town_placement_id": String(session.battle.get("context", {}).get("town_placement_id", "")),
 		}
-	)
+	var survivor_stacks := _battle_survivor_stacks(session, "enemy", survivor_filter)
 	var encounter_id := String(encounter.get("encounter_id", encounter.get("id", "")))
 	if encounter_id == "":
 		encounter_id = String(session.battle.get("encounter_id", ""))
@@ -8856,6 +8865,17 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 				"town_placement_id": String(context.get("town_placement_id", "")),
 			}
 		)
+		var enemy_commander_state = session.battle.get("enemy_hero", {})
+		if enemy_commander_state is Dictionary and not enemy_commander_state.is_empty():
+			if String(town.get("owner", "neutral")) == "enemy":
+				town["ai_defender_commander_state"] = enemy_commander_state.duplicate(true)
+				town["ai_defender_roster_hero_id"] = String(enemy_commander_state.get("roster_hero_id", ""))
+			else:
+				town.erase("ai_defender_commander_state")
+				town.erase("ai_defender_roster_hero_id")
+				town.erase("ai_defended_by_faction_id")
+				town.erase("ai_defense_until_day")
+				town.erase("ai_defense_rating")
 		towns[int(town_result.get("index", -1))] = town
 		session.overworld["towns"] = towns
 		return

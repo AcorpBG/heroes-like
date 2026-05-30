@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-artifact-equipment-10184",
-  "currentSliceTitle": "Strategic AI Artifact Equipment",
+  "currentSliceId": "strategic-ai-town-defense-arrival-10184",
+  "currentSliceTitle": "Strategic AI Town Defense Arrival",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy commanders claim and auto-equip secured artifacts through live ArtifactRules, persist equipment on active commander and roster state, and emit ai_artifact_secured public events without a save-version migration.",
+  "currentSliceNotes": "Completed. Enemy raids redirected to defend owned threatened towns now merge the host into live garrison/front defense state on arrival, station the commander as the town assault defender, emit ai_town_defended, and preserve that town defender through normalization and battle payload creation without a save-version migration.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T15:24:00Z",
+  "updatedAt": "2026-05-30T16:09:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,36 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-town-defense-arrival-10184",
+      "title": "Strategic AI Town Defense Arrival",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after artifact equipment; close live town-defense arrival behavior so defending commanders harden towns instead of stopping at retarget labels",
+      "planRef": "PLAN.md Current strategic AI target / Strategic AI Foundation town defense behavior",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-town-defense-retask-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/ai_town_defense_retask_report.gd",
+        "docs/strategic-ai-town-defense-arrival-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "When an active enemy commander is redirected to an owned threatened town and reaches the town defense target, arrival must merge the host into live town garrison/defense state, store the defending commander as the town's assault commander, keep the commander roster unavailable while stationed on the town-defense assignment, emit public ai_town_defended activity without score/debug leakage, complete the saved hero task, and focused runtime coverage must prove Duskfen Bastion gains real garrison strength/defense state and uses the stationed commander for town-assault battle payloads without a save-version migration.",
+      "startedAt": "2026-05-30T15:44:00Z",
+      "updatedAt": "2026-05-30T16:09:00Z",
+      "completedAt": "2026-05-30T16:09:00Z",
+      "notes": "Completed. Focused runtime coverage proves Duskfen's garrison strength increases from an arrived defender, ai_town_defended is emitted, Vaska is stored as the town defender, and town-assault battle payloads use that stationed commander instead of the generic captain."
+    },
     {
       "id": "strategic-ai-artifact-equipment-10184",
       "title": "Strategic AI Artifact Equipment",
