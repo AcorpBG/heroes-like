@@ -824,6 +824,10 @@ static func _run_empire_cycle(
 	_append_event_records(events, build_result.get("events", []))
 	session.overworld["towns"] = towns
 
+	var pre_recruit_task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
+	state = pre_recruit_task_plan_result.get("state", state)
+	_append_event_records(events, pre_recruit_task_plan_result.get("events", []))
+
 	var reinforcement_result := _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
 	var reinforcement_message = String(reinforcement_result.get("message", ""))
 	if reinforcement_message != "":
