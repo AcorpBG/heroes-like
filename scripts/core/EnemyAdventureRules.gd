@@ -2212,8 +2212,13 @@ static func _nearest_regroup_town(
 	faction_id: String
 ) -> Dictionary:
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	var best := {}
-	var best_distance := 9999
+	var fallback := {}
+	var fallback_distance := 9999
+	var best_reinforcement := {}
+	var best_reinforcement_distance := 9999
+	var best_reinforcement_strength := 0
+	var best_reinforcement_covers_need := false
+	var strength_needed: int = max(0, desired_raid_strength(raid) - raid_strength(raid))
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -2226,10 +2231,44 @@ static func _nearest_regroup_town(
 		var distance := _path_distance(session, current, [tile], String(raid.get("placement_id", "")))
 		if distance >= 9999:
 			continue
-		if distance < best_distance or (distance == best_distance and String(town.get("placement_id", "")) < String(best.get("placement_id", ""))):
-			best_distance = distance
-			best = town
-	return best
+		if distance < fallback_distance or (distance == fallback_distance and String(town.get("placement_id", "")) < String(fallback.get("placement_id", ""))):
+			fallback_distance = distance
+			fallback = town
+		var reinforcement_strength := _town_garrison_strength(town)
+		if reinforcement_strength <= 0:
+			continue
+		var covers_need := strength_needed <= 0 or reinforcement_strength >= strength_needed
+		var beats_current := best_reinforcement.is_empty()
+		if not beats_current and covers_need != best_reinforcement_covers_need:
+			beats_current = covers_need
+		elif not beats_current and covers_need:
+			beats_current = distance < best_reinforcement_distance or (
+				distance == best_reinforcement_distance
+				and String(town.get("placement_id", "")) < String(best_reinforcement.get("placement_id", ""))
+			)
+		elif not beats_current:
+			beats_current = reinforcement_strength > best_reinforcement_strength or (
+				reinforcement_strength == best_reinforcement_strength
+				and (
+					distance < best_reinforcement_distance
+					or (
+						distance == best_reinforcement_distance
+						and String(town.get("placement_id", "")) < String(best_reinforcement.get("placement_id", ""))
+					)
+				)
+			)
+		if beats_current:
+			best_reinforcement = town
+			best_reinforcement_distance = distance
+			best_reinforcement_strength = reinforcement_strength
+			best_reinforcement_covers_need = covers_need
+	if not best_reinforcement.is_empty():
+		return best_reinforcement
+	return fallback
+
+static func _town_garrison_strength(town: Dictionary) -> int:
+	var garrison = town.get("garrison", [])
+	return _army_strength(garrison if garrison is Array else [])
 
 static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:

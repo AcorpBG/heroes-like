@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-regroup-failure-rebuild-10184",
-  "currentSliceTitle": "Strategic AI Regroup Failure Rebuild",
+  "currentSliceId": "strategic-ai-regroup-garrison-aware-routing-10184",
+  "currentSliceTitle": "Strategic AI Regroup Garrison-Aware Routing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Empty-garrison regroup arrivals now release understrength active raids into commander rebuild instead of cycling on an unusable regroup target.",
+  "currentSliceNotes": "Completed. Regroup routing now chooses reachable towns with usable reinforcement before empty nearest towns.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:02:00Z",
+  "updatedAt": "2026-05-30T23:31:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28492,6 +28492,39 @@
       "updatedAt": "2026-05-30T23:02:00Z",
       "notes": "Completed. Empty-garrison regroup arrivals now retire the active raid and push the commander into roster rebuild instead of keeping a useless active host.",
       "completedAt": "2026-05-30T23:02:00Z"
+    },
+    {
+      "id": "strategic-ai-regroup-garrison-aware-routing-10184",
+      "title": "Strategic AI Regroup Garrison-Aware Routing",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "production strategic AI retreat timing review; retreat routing should seek real reinforcement before falling back to empty staging towns",
+      "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/validate_repo.py",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "When an active host needs regroup, strategic AI must prefer reachable same-faction towns with usable garrison reinforcement over nearer empty towns, record the selected garrison-aware regroup target in live raid/task state, keep empty-town rebuild fallback only when no useful reinforcement town exists, and preserve existing guarded-claim, unreachable-route, successful-regroup, and failed-regroup behavior without a save-version bump.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No new generated-map matrix harness in this slice",
+        "No save-version bump"
+      ],
+      "startedAt": "2026-05-30T23:18:00Z",
+      "updatedAt": "2026-05-30T23:31:00Z",
+      "notes": "Completed. Regroup routing now prefers reachable useful garrisons over nearer empty towns while keeping empty-town rebuild fallback.",
+      "completedAt": "2026-05-30T23:31:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -38705,8 +38738,8 @@
       "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-regroup-failure-rebuild-10184",
-  "currentSliceUpdatedAt": "2026-05-30T23:02:00Z",
+  "active_slice": "strategic-ai-regroup-garrison-aware-routing-10184",
+  "currentSliceUpdatedAt": "2026-05-30T23:31:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41579,12 +41612,12 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-regroup-failure-rebuild-10184",
-    "title": "Strategic AI Regroup Failure Rebuild",
+    "id": "strategic-ai-regroup-garrison-aware-routing-10184",
+    "title": "Strategic AI Regroup Garrison-Aware Routing",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "production strategic AI retreat timing review; an understrength active raid that reaches an empty regroup town must not keep cycling as a useless active host",
+    "source": "production strategic AI retreat timing review; retreat routing should seek real reinforcement before falling back to empty staging towns",
     "planRef": "PLAN.md Current strategic AI follow-up / retreat timing review",
     "sourceDocs": [
       "PLAN.md",
@@ -41600,15 +41633,15 @@
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "If an understrength active raid arrives at a same-faction regroup town and receives no usable reinforcement, it must mark the regroup task suspended for commander rebuild, release the active encounter from the map turn loop, sync the commander army continuity into roster rebuild, avoid pillage/pressure from the retired host, and preserve existing successful regroup/unreachable-route behavior without a save-version bump.",
-    "startedAt": "2026-05-30T22:45:00Z",
-    "updatedAt": "2026-05-30T23:02:00Z",
-    "notes": "Completed. Empty-garrison regroup arrivals now retire the active raid and push the commander into roster rebuild instead of keeping a useless active host.",
-    "completedAt": "2026-05-30T23:02:00Z",
+    "completionCriteria": "When an active host needs regroup, strategic AI must prefer reachable same-faction towns with usable garrison reinforcement over nearer empty towns, record the selected garrison-aware regroup target in live raid/task state, keep empty-town rebuild fallback only when no useful reinforcement town exists, and preserve existing guarded-claim, unreachable-route, successful-regroup, and failed-regroup behavior without a save-version bump.",
+    "startedAt": "2026-05-30T23:18:00Z",
+    "updatedAt": "2026-05-30T23:31:00Z",
+    "notes": "Completed. Regroup routing now prefers reachable useful garrisons over nearer empty towns while keeping empty-town rebuild fallback.",
+    "completedAt": "2026-05-30T23:31:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T23:02:00Z",
-      "sliceId": "strategic-ai-regroup-failure-rebuild-10184",
+      "updatedAt": "2026-05-30T23:31:00Z",
+      "sliceId": "strategic-ai-regroup-garrison-aware-routing-10184",
       "commands": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
@@ -41624,11 +41657,10 @@
       ],
       "evidence": {
         "implemented": [
-          "Commander roster deployability now uses the same understrength floor as raid regroup, so damaged persisted hosts below the floor stay in rebuild instead of redeploying immediately.",
-          "Empty-garrison regroup arrivals suspend the active regroup task with invalid_actor_rebuilding instead of leaving it active.",
-          "Failed regroup arrivals record regroup_blocked metadata, sync the damaged army continuity back to the commander roster, and mark the encounter resolved so it is no longer an active raid.",
-          "The failed-regroup turn skips active pressure and pillage counting, leaving the original player-controlled resource untouched.",
-          "Focused coverage proves successful regroup, guarded-claim retarget/resume, unreachable-route recovery, and empty-garrison rebuild release all remain on the same no-save-migration report surface."
+          "Regroup town selection now evaluates reachable same-faction town garrison strength instead of only path distance.",
+          "A reachable town with usable garrison reinforcement beats a nearer empty town; towns that can cover the strength gap beat partial reinforcements, while partial reinforcements choose the largest useful contribution.",
+          "The old nearest-town fallback remains when no reachable town has usable garrison, preserving the empty-garrison rebuild release behavior.",
+          "Focused coverage proves a damaged Vaska host ignores empty Duskfen Bastion, regroups at a reachable reserve redoubt, pulls its garrison, completes the regroup task, and avoids rebuild retirement."
         ],
         "sourceDocs": [
           "PLAN.md",
@@ -41639,7 +41671,7 @@
         "focusedReports": [
           "AI_RAID_REGROUP_RETREAT_REPORT"
         ],
-        "residualRisk": "This fixes one failed-regroup cycling mode. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer retreat/economy timing, and manual live-client pacing checks."
+        "residualRisk": "This improves retreat routing quality. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer economy timing, and manual live-client pacing checks."
       }
     }
   },
