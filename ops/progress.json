@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-town-defense-arrival-10184",
-  "currentSliceTitle": "Strategic AI Town Defense Arrival",
+  "currentSliceId": "strategic-ai-town-defender-lifecycle-10184",
+  "currentSliceTitle": "Strategic AI Town Defender Lifecycle",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Enemy raids redirected to defend owned threatened towns now merge the host into live garrison/front defense state on arrival, station the commander as the town assault defender, emit ai_town_defended, and preserve that town defender through normalization and battle payload creation without a save-version migration.",
+  "currentSliceNotes": "Completed. Town-defense defender commanders are now active roster assignments while the town defense is valid, skipped by raid commander selection while stationed, and released with defender metadata cleared when the defense window expires or the town no longer qualifies.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T16:09:00Z",
+  "updatedAt": "2026-05-30T16:43:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,34 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-town-defender-lifecycle-10184",
+      "title": "Strategic AI Town Defender Lifecycle",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after town-defense arrival; make stationed town defenders durable enough to affect later commander deployment and cleanly releasable when defense expires",
+      "planRef": "PLAN.md Current strategic AI target / Strategic AI Foundation commander lifecycle",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-town-defense-arrival-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_town_defense_retask_report.gd",
+        "docs/strategic-ai-town-defender-lifecycle-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Enemy commander roster normalization must treat valid town defender commander state as an active assignment with active_placement_id town_defense:<town_id>, exclude that commander from new raid deployment while the town remains enemy-owned for that faction and defense_until_day is current, and clear the town defender metadata plus return the commander to available when the defense window expires or town ownership/faction no longer qualifies. Focused runtime coverage must prove Vaska remains active immediately after defending Duskfen, cannot be selected for another raid while stationed, releases after the defense window expires, and no save-version migration is required.",
+      "startedAt": "2026-05-30T16:30:00Z",
+      "updatedAt": "2026-05-30T16:43:00Z",
+      "completedAt": "2026-05-30T16:43:00Z",
+      "notes": "Completed. Focused runtime coverage proves Vaska remains active on town_defense:duskfen_bastion after defending Duskfen, the next raid commander selector skips him and selects Sable while he is stationed, and Vaska returns to available after the defense window expires with defender metadata cleared."
+    },
     {
       "id": "strategic-ai-town-defense-arrival-10184",
       "title": "Strategic AI Town Defense Arrival",

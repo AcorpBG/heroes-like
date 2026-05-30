@@ -1709,6 +1709,7 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 static func normalize_all_commander_rosters(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
+	_normalize_town_defender_commander_states(session)
 	var states = session.overworld.get("enemy_states", [])
 	if not (states is Array):
 		return
@@ -2884,7 +2885,90 @@ static func _active_commander_map(
 			"placement_id": String(encounter.get("placement_id", "")),
 			"commander_state": commander_state.duplicate(true),
 		}
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		var defender_entry := _active_town_defender_entry(session, town, faction_id)
+		if defender_entry.is_empty():
+			continue
+		var defender_state: Dictionary = defender_entry.get("commander_state", {})
+		var defender_roster_hero_id := String(defender_state.get("roster_hero_id", ""))
+		if defender_roster_hero_id == "":
+			continue
+		active[defender_roster_hero_id] = defender_entry
 	return active
+
+static func _normalize_town_defender_commander_states(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var towns = session.overworld.get("towns", [])
+	if not (towns is Array):
+		return
+	var changed := false
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if not _town_has_ai_defender(town):
+			continue
+		if _active_town_defender_entry(session, town).is_empty():
+			town = town.duplicate(true)
+			_clear_town_defender_metadata(town)
+			towns[index] = town
+			changed = true
+	if changed:
+		session.overworld["towns"] = towns
+
+static func _town_has_ai_defender(town: Dictionary) -> bool:
+	return (
+		town.has("ai_defender_commander_state")
+		or String(town.get("ai_defender_roster_hero_id", "")) != ""
+		or String(town.get("ai_defended_by_faction_id", "")) != ""
+	)
+
+static func _active_town_defender_entry(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	faction_filter: String = ""
+) -> Dictionary:
+	if session == null or town.is_empty():
+		return {}
+	var commander_state = town.get("ai_defender_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {}
+	var roster_hero_id := String(commander_state.get("roster_hero_id", town.get("ai_defender_roster_hero_id", "")))
+	if roster_hero_id == "":
+		return {}
+	var faction_id := String(town.get("ai_defended_by_faction_id", commander_state.get("faction_id", "")))
+	if faction_id == "":
+		faction_id = _town_faction_id(town)
+	if faction_filter != "" and faction_id != faction_filter:
+		return {}
+	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		return {}
+	var front: Dictionary = town.get("front", {}) if town.get("front", {}) is Dictionary else {}
+	var defense_until: int = max(
+		int(town.get("ai_defense_until_day", 0)),
+		int(front.get("defense_until_day", 0))
+	)
+	if defense_until < int(session.day):
+		return {}
+	var entry_state: Dictionary = commander_state.duplicate(true)
+	entry_state["roster_hero_id"] = roster_hero_id
+	entry_state["faction_id"] = faction_id
+	return {
+		"placement_id": "town_defense:%s" % String(town.get("placement_id", "")),
+		"commander_state": entry_state,
+	}
+
+static func _clear_town_defender_metadata(town: Dictionary) -> void:
+	town.erase("ai_defender_commander_state")
+	town.erase("ai_defender_roster_hero_id")
+	town.erase("ai_defended_by_faction_id")
+	town.erase("ai_defended_day")
+	town.erase("ai_defense_until_day")
+	town.erase("ai_defense_rating")
+	town.erase("ai_defense_reinforced_strength")
 
 static func _normalize_commander_status(value: Variant) -> String:
 	var status := String(value)
