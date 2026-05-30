@@ -7,6 +7,7 @@ Related follow-up slice: `strategic-ai-unreachable-route-recovery-10184`
 Related follow-up slice: `strategic-ai-regroup-failure-rebuild-10184`
 Related follow-up slice: `strategic-ai-regroup-garrison-aware-routing-10184`
 Related follow-up slice: `strategic-ai-proactive-risk-regroup-10184`
+Related follow-up slice: `strategic-ai-resource-front-support-10184`
 
 Status: implementation evidence.
 
@@ -36,12 +37,15 @@ No full strategic AI quality claim.
 - If an understrength active raid arrives at its regroup town and finds no usable spare garrison, it suspends the matching regroup task with `invalid_actor_rebuilding`, records the failed regroup, retires the active encounter into `resolved_encounters`, syncs the damaged host into commander roster continuity, and stops producing map pressure or pillage from that failed regroup turn.
 - Regroup town selection now prefers reachable same-faction towns with usable garrison reinforcement over nearer empty towns. If multiple towns can cover the strength gap, the AI chooses the nearest covering town; if none can cover it, it chooses the town with the largest useful reinforcement before falling back to the nearest empty staging town.
 - Known offensive town, encounter, and hero targets now run risk checks immediately after target assignment, before the host spends movement. If the selected objective is too strong, the same regroup/staging policy is applied proactively instead of waiting until battle entry. Active-front support and hosts already waiting for support remain eligible for the existing grouping pass.
+- Contested resource-front targets now use the same support surface. A fragile host aimed at a player-held persistent resource checks the resource-front strength requirement before seizure, regroups or stages with `resource_risk_*` reason codes, preserves the original resource as previous-target metadata, and can receive active-front support back onto that resource objective.
 
 ## Focused Fixture
 
 `tests/ai_raid_regroup_retreat_report.tscn` uses River Pass with a damaged Mireclaw Vaska raid initially aimed at the player-controlled Free Company Camp. The raid starts understrength, chooses Duskfen Bastion instead of the original resource objective, folds the town's `unit_bog_brute` garrison into the host, records `last_regroup_town_id`, completes the durable regroup task, and leaves the original resource under player control. The same fixture also proves saved regroup-task reuse, missing-town invalidation, wrong-controller invalidation, and normalization preservation.
 
 The same report includes `guarded_resource_claim_retargets_to_guard`: a strong Vaska host reaches `river_free_company` while `river_free_company_guard` has an explicit `guards_resource_node` link. The Free Company stays player-held, the raid retargets to the guard encounter, public-safe `ai_target_assigned` is emitted, and no `ai_site_seized` event is produced.
+
+The same report includes `resource_front_risk_requests_active_support`: a Vaska host above the generic regroup floor but below the contested resource-front requirement targets the player-held Free Company Yard. The resource risk gate redirects it to Duskfen Bastion with `resource_risk_regroup` and `site_contested`, while a second available commander resolves the regrouped front back to the original resource and receives an `active_front_support` assignment with a positive support gap.
 
 The same report includes `valid_resource_target_unreachable_reroutes_to_regroup`: a strong Vaska host keeps a valid Free Company target, but the target tile is isolated by impassable terrain. The raid does not freeze or seize the site. It marks the resource task `invalid_route_unreachable`, emits `ai_target_assigned`, preserves previous-target metadata, and recovers through Duskfen Bastion regroup.
 

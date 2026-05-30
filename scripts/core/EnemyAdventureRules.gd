@@ -760,6 +760,9 @@ static func _active_front_needs_support(front: Dictionary) -> bool:
 		"hero_hunt_risk_regroup",
 		"hero_hunt",
 		"guard_clearance",
+		"site_contested",
+		"resource_risk_staging",
+		"resource_risk_regroup",
 		"objective_front",
 	]:
 		if code in reason_codes:
@@ -781,10 +784,10 @@ static func _active_front_support_candidate(
 	var target_kind := String(front.get("target_kind", ""))
 	var target_id := String(front.get("target_placement_id", ""))
 	var front_reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
-	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter", "hero"]:
+	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter", "hero", "resource"]:
 		target_kind = String(front.get("previous_target_kind", ""))
 		target_id = String(front.get("previous_target_placement_id", ""))
-	if target_kind not in ["town", "encounter", "hero"] or target_id == "":
+	if target_kind not in ["town", "encounter", "hero", "resource"] or target_id == "":
 		return {}
 	var target_label := ""
 	var target_x := 0
@@ -827,6 +830,19 @@ static func _active_front_support_candidate(
 			target_y = hero_tile.y
 			goal_tiles = _hero_target_goal_tiles(session, origin_pos, hero_tile, current_placement_id)
 			objective_anchor = true
+		"resource":
+			var node_result := _find_resource_by_placement(session, target_id)
+			if int(node_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = node_result.get("node", {})
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			if not _resource_node_contestable_by_faction(node, site, faction_id):
+				return {}
+			target_label = String(site.get("name", target_id))
+			target_x = int(node.get("x", 0))
+			target_y = int(node.get("y", 0))
+			goal_tiles = [Vector2i(target_x, target_y)]
+			objective_anchor = _objective_proximity_bonus(session, target_x, target_y) > 0
 	if goal_tiles.is_empty():
 		return {}
 	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id)
@@ -842,6 +858,8 @@ static func _active_front_support_candidate(
 		"hero_hunt",
 		"hero_hunt_risk_shadow",
 		"hero_hunt_risk_regroup",
+		"resource_risk_staging",
+		"resource_risk_regroup",
 		"exposed_hero",
 	]:
 		if code in front_reason_codes and code not in reason_codes:
@@ -852,6 +870,8 @@ static func _active_front_support_candidate(
 		reason_codes.append("objective_front")
 	if target_kind == "hero" and "hero_hunt" not in reason_codes:
 		reason_codes.append("hero_hunt")
+	if target_kind == "resource" and "site_contested" not in reason_codes:
+		reason_codes.append("site_contested")
 	var strength_gap: int = max(0, desired_raid_strength(front) - raid_strength(front))
 	var committed_support_strength := _active_front_committed_support_strength(
 		session,
@@ -1336,6 +1356,8 @@ static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes
 		"exposed_hero",
 		"hero_hunt_risk_shadow",
 		"hero_hunt_risk_regroup",
+		"resource_risk_staging",
+		"resource_risk_regroup",
 	]:
 		if code in leader_reason_codes and code not in output:
 			output.append(code)
@@ -1898,6 +1920,13 @@ static func _redirect_fragile_raid_for_known_target_risk(
 			if bool(encounter_report.get("ready", true)):
 				return raid
 			return redirect_encounter_objective_for_risk(session, config, raid, faction_id, encounter_report)
+		"resource":
+			if int(raid.get("resource_arrival_delay_until_day", 0)) > int(session.day):
+				return raid
+			var resource_report := resource_arrival_ready_report(session, raid, faction_id)
+			if bool(resource_report.get("ready", true)):
+				return raid
+			return redirect_resource_objective_for_risk(session, config, raid, faction_id, resource_report)
 		"hero":
 			if int(raid.get("hero_intercept_delay_until_day", 0)) > int(session.day):
 				return raid
@@ -1908,6 +1937,103 @@ static func _redirect_fragile_raid_for_known_target_risk(
 			if bool(hero_report.get("ready", true)):
 				return raid
 			return redirect_hero_intercept_for_risk(session, config, raid, faction_id, hero_report)
+	return raid
+
+static func resource_arrival_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"ready": true, "reason": "no_live_context"}
+	if String(raid.get("target_kind", "")) != "resource":
+		return {"ready": true, "reason": "not_resource_target"}
+	var node_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
+	var node: Dictionary = node_result.get("node", {})
+	if int(node_result.get("index", -1)) < 0 or node.is_empty():
+		return {"ready": true, "reason": "target_missing"}
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if not _resource_node_contestable_by_faction(node, site, faction_id):
+		return {"ready": true, "reason": "not_contestable"}
+	var host_strength := raid_strength(raid)
+	var desired_strength := desired_raid_strength(raid)
+	var guard := _resource_guard_encounter_for_node(session, node, site)
+	var guard_strength := _encounter_guard_strength(guard) if not guard.is_empty() else 0
+	var required_strength: int = max(60, int(ceili(float(desired_strength) * 0.70)))
+	if String(node.get("collected_by_faction_id", "")) == "player" and _resource_site_is_persistent(site):
+		required_strength = max(required_strength, 70)
+	if guard_strength > 0:
+		required_strength = max(
+			required_strength,
+			int(ceili(float(guard_strength) * 0.90)),
+			int(ceili(float(desired_strength) * 0.75))
+		)
+	var ready := host_strength >= required_strength
+	return {
+		"ready": ready,
+		"host_strength": host_strength,
+		"guard_strength": guard_strength,
+		"desired_strength": desired_strength,
+		"required_strength": required_strength,
+		"target_placement_id": String(node.get("placement_id", "")),
+		"target_site_id": String(node.get("site_id", "")),
+		"target_is_player_controlled": String(node.get("collected_by_faction_id", "")) == "player",
+		"target_has_guard": not guard.is_empty(),
+		"reason": "ready" if ready else "resource_front_strength",
+	}
+
+static func redirect_resource_objective_for_risk(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	risk_report: Dictionary = {}
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if String(raid.get("target_kind", "")) != "resource":
+		return raid
+	var strength := int(risk_report.get("host_strength", raid_strength(raid)))
+	var required := int(risk_report.get("required_strength", desired_raid_strength(raid)))
+	var debug_reason := "resource front risk gate: strength %d below %d" % [strength, required]
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	var started_day := _risk_started_day(raid, "resource_arrival_risk_started_day", int(session.day))
+	if (
+		regroup_town.is_empty()
+		and _risk_support_wait_exceeded(session, started_day)
+		and _risk_committed_support_strength(session, faction_id, raid) <= 0
+	):
+		return _retire_risk_stalled_raid_to_rebuild(
+			session,
+			raid,
+			faction_id,
+			"resource_risk_stalled",
+			"site_contested",
+			strength,
+			required
+		)
+	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
+	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["target_public_reason"] = "gathering strength for resource claim"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = debug_reason
+	raid["resource_arrival_risk_started_day"] = started_day
+	raid["resource_arrival_delay_until_day"] = int(session.day) + 1
+	raid["arrived"] = false
+	if not regroup_town.is_empty():
+		raid["target_kind"] = "regroup"
+		raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
+		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
+		raid["target_reason_codes"] = ["resource_risk_regroup", "regroup_understrength", "army_consolidation", "site_contested"]
+		raid["resource_regroup_started_day"] = int(session.day)
+		return _refresh_target(session, raid)
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	for code in ["resource_risk_staging", "awaiting_support", "site_contested"]:
+		if code not in reason_codes:
+			reason_codes.append(code)
+	raid["target_reason_codes"] = reason_codes
+	raid["goal_distance"] = max(1, int(raid.get("goal_distance", 1)))
 	return raid
 
 static func _town_assault_advance_risk_report(
@@ -7253,6 +7379,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "front stabilization"
 	if "retake_front" in codes:
 		return "retaking captured town"
+	if "resource_risk_staging" in codes or "resource_risk_regroup" in codes:
+		return "gathering strength for resource claim"
 	if "town_siege" in codes:
 		return "town siege remains the main front"
 	if "persistent_income_denial" in codes and "recruit_denial" in codes:
@@ -11047,6 +11175,21 @@ static func _resolve_arrived_target(
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			if _resource_node_defensible_by_faction(node, site, faction_id, _normalize_string_array(raid.get("target_reason_codes", []))):
 				return _defend_resource_target(session, raid, state, faction_id)
+			var ready_report := resource_arrival_ready_report(session, raid, faction_id)
+			if not bool(ready_report.get("ready", true)):
+				var previous_target := _current_target_snapshot(raid)
+				var redirected := redirect_resource_objective_for_risk(session, config, raid, faction_id, ready_report)
+				var retask_event := ai_target_assignment_event(session, config, redirected, previous_target)
+				if retask_event.is_empty():
+					retask_event = ai_target_assignment_event(session, config, redirected, {})
+				return {
+					"encounter": redirected,
+					"state": state,
+					"event_message": "",
+					"ai_event": retask_event,
+					"risk_gated": true,
+					"risk_report": ready_report,
+				}
 			var resource_guard := _resource_guard_encounter_for_node(session, node, site)
 			if not resource_guard.is_empty():
 				return _redirect_claim_to_guard_encounter(session, config, raid, state, faction_id, resource_guard, "resource")
