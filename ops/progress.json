@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-nearby-threat-avoidance-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-threat-recovery-reinforcement-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T22:56:33Z",
+  "updatedAt": "2026-05-30T23:03:06Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -30759,6 +30759,81 @@
         "This is a live strategic-AI behavior change, not a report-only audit.",
         "Defensive/front-support/protected objectives are exempt so threat avoidance does not pull committed defenders away from production defense jobs."
       ]
+    },
+    {
+      "id": "strategic-ai-threat-recovery-reinforcement-10184",
+      "title": "Strategic AI Threat Recovery Reinforcement",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner direction to prioritize production-ready strategic AI behavior over reports/audits",
+      "planRef": "PLAN.md Current product focus / strategic AI follow-up",
+      "purpose": "Enemy town recruitment reinforces commanders retreating from superior nearby player heroes using recorded threat strength, not only generic raid desired strength.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Town recruitment treats a threat-avoidance regrouping commander as an active raid need based on the recorded player hero strength, routes recruitment to that commander when local defense is safe, and keeps existing planned-task recruitment behavior passing.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "battle balance tuning",
+        "campaign production",
+        "report-only audit work"
+      ],
+      "startedAt": "2026-05-30T22:59:51Z",
+      "updatedAt": "2026-05-30T23:03:06Z",
+      "completedAt": "2026-05-30T23:03:06Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "pass",
+          "summary": "Threat avoidance case now proves the retreating commander becomes the town recruitment destination with threat_recovery=true and target_strength based on the recorded player hero strength."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment preparation and launch behavior remains passing."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, guarded claim, resource-front support, failed-regroup, and commander risk tolerance behavior remains passing."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository content and wiring validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "summary": "Completed. Town recruitment now treats threat-avoidance regrouping commanders as active raid reinforcement needs based on recorded player hero strength, so retreat from a superior hero feeds recovery instead of disappearing into generic desired-strength math.",
+      "notes": [
+        "This is a live strategic-AI behavior change, not a report-only audit.",
+        "Existing planned-task and regroup recruitment behavior remains covered."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -41147,20 +41222,20 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T22:33:11Z",
-    "sliceId": "strategic-ai-planned-launch-host-template-lock-10184",
+    "updatedAt": "2026-05-30T23:03:06Z",
+    "sliceId": "strategic-ai-threat-recovery-reinforcement-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (pass)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (pass)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (pass)",
       "python3 tests/validate_repo.py (pass)",
       "jq empty ops/progress.json (pass)",
       "git diff --check (pass)"
     ],
-    "summary": "Planned launch host-template lock and focused strategic-AI regressions passed; broad KPI rerun was killed after hanging beyond --quit-after."
+    "summary": "Threat-recovery recruitment reinforcement and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-30T22:56:33Z",
+  "currentSliceUpdatedAt": "2026-05-30T23:03:06Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44116,31 +44191,31 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T22:56:33Z",
-    "sliceId": "strategic-ai-nearby-threat-avoidance-10184",
+    "updatedAt": "2026-05-30T23:03:06Z",
+    "sliceId": "strategic-ai-threat-recovery-reinforcement-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Active non-defensive AI raids now evaluate superior nearby exposed player heroes after opportunistic intercept.",
-        "If the nearby player hero is too strong to hunt, the raid preserves its previous objective metadata and redirects to regroup instead of continuing into a bad fight.",
-        "Threat avoidance records player_threat_* context and a live regroup target assignment for task-board continuity.",
-        "Defensive/front-support/protected objectives remain exempt so committed defenders are not pulled off production defense jobs."
+        "Active raid reinforcement target strength now includes recorded player_threat_hero_strength for threat-avoidance regrouping commanders.",
+        "Town recruitment destination payloads expose threat_recovery, threat_hero_id, threat_hero_strength, and target_strength for raid destinations.",
+        "The live hero-hunt report now proves a safe enemy town prioritizes the retreating commander as a raid reinforcement destination with threat_recovery=true.",
+        "Existing planned-task preparation and regroup behavior remains passing."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
         "actor_id": "hero_vaska",
-        "previous_target_kind": "town",
-        "new_target_kind": "regroup",
+        "recruitment_type": "raid",
+        "reinforcement_decision_rule": "active_raid_need",
         "threat_hero_id": "hero_lyra",
-        "threat_distance": 2
+        "threat_strength": 540,
+        "reinforcement_target_strength": 497
       },
       "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full 100-seed eight-week generated-map matrix remains open, and live-client pacing/manual play remains needed.",
       "policy": "Live strategic AI behavior slice; no authored scenario balance substitution, campaign production, or production-ready claim."
