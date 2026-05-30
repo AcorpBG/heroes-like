@@ -20,15 +20,20 @@ func _run() -> void:
 	var support_case_report := _hero_hunt_support_groups_before_intercept_case()
 	if support_case_report.is_empty():
 		return
+	var stall_case_report := _stale_unsupported_hero_hunt_retires_to_rebuild_case()
+	if stall_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "hero_hunt_tasks_are_durable_with_support_grouping",
-		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_and_support_grouping",
+		"schema_status": "hero_hunt_tasks_are_durable_with_support_grouping_and_stall_withdrawal",
+		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_and_stall_withdrawal",
+		"behavior_policy_previous": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_and_support_grouping",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"risk_case": risk_case_report,
 		"support_case": support_case_report,
+		"stall_case": stall_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -298,6 +303,99 @@ func _hero_hunt_support_groups_before_intercept_case() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _stale_unsupported_hero_hunt_retires_to_rebuild_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 6
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for stale hero-hunt fixture.")
+		return {}
+	var target_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	_move_player_hero(session, hero_id, target_tile)
+	_remove_mireclaw_hero_hunt_encounters(session)
+	_remove_enemy_regroup_towns(session)
+	_seed_task_board(session, [_task("hero_vaska", hero_id, "active", "valid")])
+
+	var raid := _raid_seed(session, "hero_vaska", "stale_hero_hunt_vaska", target_tile)
+	raid["target_kind"] = "hero"
+	raid["target_placement_id"] = hero_id
+	raid["target_label"] = _hero_name(session, hero_id)
+	raid["target_x"] = target_tile.x
+	raid["target_y"] = target_tile.y
+	raid["goal_x"] = target_tile.x
+	raid["goal_y"] = target_tile.y
+	raid["goal_distance"] = 0
+	raid["arrived"] = true
+	raid["hero_intercept_risk_started_day"] = 2
+	raid["hero_intercept_delay_until_day"] = int(session.day)
+	raid["target_reason_codes"] = ["hero_hunt", "hero_hunt_risk_shadow", "awaiting_support", "hero_hunt_task_fixture"]
+	raid["target_public_reason"] = "stalking stronger hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "stale unsupported hero hunt fixture"
+	raid = _set_raid_bog_brutes(raid, 2)
+	var before_strength := EnemyAdventureRules.raid_strength(raid)
+	_append_encounter(session, raid)
+
+	var intercept_result := EnemyTurnRules._queue_hero_intercept_battle(session, config, MIRECLAW)
+	if bool(intercept_result.get("battle_started", false)) or not session.battle.is_empty():
+		_fail("Stale unsupported hero hunt incorrectly queued battle: %s" % JSON.stringify(intercept_result))
+		return {}
+	if not bool(intercept_result.get("risk_gated", false)):
+		_fail("Stale unsupported hero hunt did not pass through risk gate: %s" % JSON.stringify(intercept_result))
+		return {}
+	var after_raid := _encounter(session, "stale_hero_hunt_vaska")
+	if after_raid.is_empty():
+		_fail("Stale unsupported hero hunt raid disappeared from history.")
+		return {}
+	if not bool(after_raid.get("raid_retired_to_rebuild", false)) or not bool(after_raid.get("risk_stalled_to_rebuild", false)):
+		_fail("Stale unsupported hero hunt did not retire into rebuild: %s" % JSON.stringify(after_raid))
+		return {}
+	if not _resolved_contains(session, "stale_hero_hunt_vaska"):
+		_fail("Stale unsupported hero hunt was not removed from active encounters.")
+		return {}
+	if String(after_raid.get("target_kind", "")) != "commander":
+		_fail("Stale unsupported hero hunt should retarget to commander rebuild: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	for required_code in ["risk_support_timeout", "hero_hunt_risk_stalled", "hero_hunt"]:
+		if required_code not in reason_codes:
+			_fail("Stale unsupported hero hunt missing %s: %s" % [required_code, JSON.stringify(after_raid)])
+			return {}
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "suspended", "invalid_actor_rebuilding")
+	if _failed:
+		return {}
+	var roster_entry := _commander_entry(session, "hero_vaska")
+	if roster_entry.is_empty():
+		_fail("Missing hero_vaska roster entry after stale hero-hunt retirement.")
+		return {}
+	if EnemyAdventureRules.commander_can_deploy(roster_entry):
+		_fail("Stale unsupported hero hunt commander is deployable before rebuild: %s" % JSON.stringify(roster_entry))
+		return {}
+	var continuity := EnemyAdventureRules.commander_army_continuity(roster_entry)
+	if int(continuity.get("current_strength", 0)) != before_strength or int(continuity.get("rebuild_need", 0)) <= 0:
+		_fail("Stale unsupported hero hunt did not preserve rebuild continuity: before=%d continuity=%s" % [before_strength, JSON.stringify(continuity)])
+		return {}
+	var events: Array = intercept_result.get("events", []) if intercept_result.get("events", []) is Array else []
+	var event_types := _event_types(events)
+	if "ai_target_assigned" not in event_types:
+		_fail("Stale unsupported hero hunt retirement did not emit ai_target_assigned: %s" % JSON.stringify(intercept_result))
+		return {}
+	return {
+		"case_id": "stale_unsupported_hero_hunt_retires_to_rebuild",
+		"before_strength": before_strength,
+		"battle_started": false,
+		"risk_gated": true,
+		"retired_to_rebuild": bool(after_raid.get("raid_retired_to_rebuild", false)),
+		"resolved": _resolved_contains(session, "stale_hero_hunt_vaska"),
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"reason_codes": reason_codes,
+		"commander_deployable_after": EnemyAdventureRules.commander_can_deploy(roster_entry),
+		"commander_rebuild_need": int(continuity.get("rebuild_need", 0)),
+		"event_types": event_types,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _seed_task_board(session, tasks: Array) -> void:
 	var state := _enemy_state(session)
 	state["hero_task_state"] = {
@@ -494,6 +592,28 @@ func _remove_mireclaw_hero_hunt_encounters(session) -> void:
 			continue
 		kept.append(encounter)
 	session.overworld["encounters"] = kept
+
+func _remove_enemy_regroup_towns(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "neutral")) == "enemy":
+			town["owner"] = "neutral"
+			town["controlling_faction_id"] = ""
+			towns[index] = town
+	session.overworld["towns"] = towns
+
+func _resolved_contains(session, placement_id: String) -> bool:
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	return placement_id in resolved
+
+func _commander_entry(session, roster_hero_id: String) -> Dictionary:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry
+	return {}
 
 func _task_status_counts(task_state: Dictionary) -> Dictionary:
 	var counts := {}

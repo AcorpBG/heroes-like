@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue strategic AI quality work from the recommended next slices.
+- Latest completed slice: `strategic-ai-risk-stall-withdrawal-10184`.
 - Latest completed slice: `strategic-ai-hero-hunt-support-grouping-10184`.
 - Latest completed slice: `strategic-ai-town-defender-rotation-10184`.
 - Latest completed slice: `strategic-ai-proactive-risk-regroup-10184`.

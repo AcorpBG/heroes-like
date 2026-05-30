@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-hero-hunt-support-grouping-10184",
-  "currentSliceTitle": "Strategic AI Hero Hunt Support Grouping",
+  "currentSliceId": "strategic-ai-risk-stall-withdrawal-10184",
+  "currentSliceTitle": "Strategic AI Risk Stall Withdrawal",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Exposed-hero hunt fronts can attract active-front support, preserve hero-hunt metadata, group adjacent support commanders into the lead hunter, and avoid same-turn defense retarget theft while committed to support consolidation.",
+  "currentSliceNotes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T16:32:16Z",
+  "updatedAt": "2026-05-30T16:38:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28802,6 +28802,74 @@
           "residualRisk": "This closes exposed-hero support grouping on focused fixtures. Full release-ready strategic AI still needs broader generated-map long-run behavior, richer retreat judgment, economy timing, coordinated multi-front planning, and manual live-client pacing checks."
         }
       }
+    },
+    {
+      "id": "strategic-ai-risk-stall-withdrawal-10184",
+      "title": "Strategic AI Risk Stall Withdrawal",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "active goal to implement production-ready strategic AI behavior, not only focused harness reports; risk-gated commanders need a terminal preservation decision when support/regroup is unavailable",
+      "planRef": "PLAN.md Current strategic AI follow-up / retreat judgment and coordinated planning gap",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "A commander stalled on a risky town, hero, or guarded-encounter front without a reachable regroup town or committed support must preserve its army continuity, resolve the active raid, suspend the matching task as rebuilding, and stop applying map pressure instead of looping as awaiting-support forever; existing risk gates and support grouping must remain intact without a save-version bump.",
+      "nonGoals": [
+        "No full strategic AI release-readiness claim",
+        "No campaign AI work",
+        "No broad report-only gate"
+      ],
+      "startedAt": "2026-05-30T16:35:02Z",
+      "updatedAt": "2026-05-30T16:38:00Z",
+      "notes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
+      "completedAt": "2026-05-30T16:38:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T16:38:00Z",
+        "sliceId": "strategic-ai-risk-stall-withdrawal-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Town, hero, and guarded-encounter risk redirects now preserve their original risk-start day instead of resetting the wait timer each turn.",
+            "Risk-gated fronts with no regroup town and no committed support retire into commander rebuild after the support timeout, preserving army continuity and resolving the active raid.",
+            "Hero-hunt runtime evidence proves a stale unsupported hunter does not queue battle, emits a retarget event, suspends the live hero task as rebuilding, and stops being an active pressure encounter."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-hunt-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT",
+            "AI_RAID_REGROUP_RETREAT_REPORT"
+          ],
+          "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -39134,14 +39202,13 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T16:32:16Z",
-    "sliceId": "strategic-ai-hero-hunt-support-grouping-10184",
+    "updatedAt": "2026-05-30T16:38:00Z",
+    "sliceId": "strategic-ai-risk-stall-withdrawal-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -39149,30 +39216,27 @@
     ],
     "evidence": {
       "implemented": [
-        "Exposed-hero hunt fronts now satisfy active-front support selection when they need help, including hero-hunt risk/waiting reason codes.",
-        "Support commanders can select a live hero-hunt front, preserve hero_hunt/exposed_hero metadata, and merge through the existing ai_raid_grouped path before intercept resolution.",
-        "Hero support pathing can stage adjacent to an occupied hero tile/front instead of failing path resolution when the lead hunter already occupies the target tile.",
-        "Town/resource defensive retargeting now leaves active-front support or awaiting-support hosts committed long enough for same-turn consolidation to occur."
+        "Town, hero, and guarded-encounter risk redirects now preserve their original risk-start day instead of resetting the wait timer each turn.",
+        "Risk-gated fronts with no regroup town and no committed support retire into commander rebuild after the support timeout, preserving army continuity and resolving the active raid.",
+        "Hero-hunt runtime evidence proves a stale unsupported hunter does not queue battle, emits a retarget event, suspends the live hero task as rebuilding, and stops being an active pressure encounter."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-hero-hunt-task-board-report.md",
-        "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+        "docs/strategic-ai-hero-hunt-task-board-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
         "AI_HERO_TASK_HERO_HUNT_REPORT",
         "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_RAID_ASSAULT_GROUPING_REPORT",
         "AI_TOWN_RETAKE_ASSAULT_REPORT",
-        "AI_TOWN_DEFENSE_RETASK_REPORT"
+        "AI_RAID_REGROUP_RETREAT_REPORT"
       ],
-      "residualRisk": "This closes exposed-hero support grouping on focused fixtures. Full release-ready strategic AI still needs broader generated-map long-run behavior, richer retreat judgment, economy timing, coordinated multi-front planning, and manual live-client pacing checks."
+      "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-hero-hunt-support-grouping-10184",
-  "currentSliceUpdatedAt": "2026-05-30T16:32:16Z",
+  "active_slice": "strategic-ai-risk-stall-withdrawal-10184",
+  "currentSliceUpdatedAt": "2026-05-30T16:38:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -42126,13 +42190,13 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-hero-hunt-support-grouping-10184",
-    "title": "Strategic AI Hero Hunt Support Grouping",
+    "id": "strategic-ai-risk-stall-withdrawal-10184",
+    "title": "Strategic AI Risk Stall Withdrawal",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "owner direction to improve strategic AI quality beyond report gates; exposed-hero hunt fronts should request and absorb nearby support before committing to risky intercepts",
-    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning gap",
+    "source": "active goal to implement production-ready strategic AI behavior, not only focused harness reports; risk-gated commanders need a terminal preservation decision when support/regroup is unavailable",
+    "planRef": "PLAN.md Current strategic AI follow-up / retreat judgment and coordinated planning gap",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
@@ -42147,26 +42211,25 @@
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "A live exposed-hero hunt front below desired strength can be selected by another deployable commander as active-front support, that support keeps hero-hunt reason metadata, adjacent support groups into the lead hunter through the normal raid grouping path, donor commander task state completes/releases cleanly, and existing hero-intercept risk gating remains intact without a save-version bump.",
+    "completionCriteria": "A commander stalled on a risky town, hero, or guarded-encounter front without a reachable regroup town or committed support must preserve its army continuity, resolve the active raid, suspend the matching task as rebuilding, and stop applying map pressure instead of looping as awaiting-support forever; existing risk gates and support grouping must remain intact without a save-version bump.",
     "nonGoals": [
       "No full strategic AI release-readiness claim",
       "No campaign AI work",
-      "No new broad dashboard/report gate"
+      "No broad report-only gate"
     ],
-    "startedAt": "2026-05-30T16:27:18Z",
-    "updatedAt": "2026-05-30T16:32:16Z",
-    "notes": "Completed. Exposed-hero hunt fronts can attract active-front support, preserve hero-hunt metadata, group adjacent support commanders into the lead hunter, and avoid same-turn defense retarget theft while committed to support consolidation.",
-    "completedAt": "2026-05-30T16:32:16Z",
+    "startedAt": "2026-05-30T16:35:02Z",
+    "updatedAt": "2026-05-30T16:38:00Z",
+    "notes": "Completed. Risk-gated commanders preserve army continuity and withdraw into rebuild after waiting without regroup access or committed support instead of looping forever on impossible fronts.",
+    "completedAt": "2026-05-30T16:38:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T16:32:16Z",
-      "sliceId": "strategic-ai-hero-hunt-support-grouping-10184",
+      "updatedAt": "2026-05-30T16:38:00Z",
+      "sliceId": "strategic-ai-risk-stall-withdrawal-10184",
       "commands": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "python3 -m py_compile tests/validate_repo.py (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
@@ -42174,26 +42237,23 @@
       ],
       "evidence": {
         "implemented": [
-          "Exposed-hero hunt fronts now satisfy active-front support selection when they need help, including hero-hunt risk/waiting reason codes.",
-          "Support commanders can select a live hero-hunt front, preserve hero_hunt/exposed_hero metadata, and merge through the existing ai_raid_grouped path before intercept resolution.",
-          "Hero support pathing can stage adjacent to an occupied hero tile/front instead of failing path resolution when the lead hunter already occupies the target tile.",
-          "Town/resource defensive retargeting now leaves active-front support or awaiting-support hosts committed long enough for same-turn consolidation to occur."
+          "Town, hero, and guarded-encounter risk redirects now preserve their original risk-start day instead of resetting the wait timer each turn.",
+          "Risk-gated fronts with no regroup town and no committed support retire into commander rebuild after the support timeout, preserving army continuity and resolving the active raid.",
+          "Hero-hunt runtime evidence proves a stale unsupported hunter does not queue battle, emits a retarget event, suspends the live hero task as rebuilding, and stops being an active pressure encounter."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-hero-hunt-task-board-report.md",
-          "docs/strategic-ai-hero-intercept-risk-gating-report.md"
+          "docs/strategic-ai-hero-hunt-task-board-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
           "AI_HERO_TASK_HERO_HUNT_REPORT",
           "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-          "AI_RAID_ASSAULT_GROUPING_REPORT",
           "AI_TOWN_RETAKE_ASSAULT_REPORT",
-          "AI_TOWN_DEFENSE_RETASK_REPORT"
+          "AI_RAID_REGROUP_RETREAT_REPORT"
         ],
-        "residualRisk": "This closes exposed-hero support grouping on focused fixtures. Full release-ready strategic AI still needs broader generated-map long-run behavior, richer retreat judgment, economy timing, coordinated multi-front planning, and manual live-client pacing checks."
+        "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
       }
     }
   },
