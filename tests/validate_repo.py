@@ -14942,6 +14942,8 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
         "func _raid_grouping_target_view",
         "_encounter_guard_strength",
         "func _ai_hero_task_reconciled_encounter_task",
+        'elif "active_front_support" in reason_codes:',
+        'String(reservation.get("reservation_scope", "")) == "exclusive_target"',
         "OverworldRulesScript.is_encounter_resolved(session, encounter)",
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
     ):
@@ -14963,6 +14965,9 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
             "supporting_front_placement_id",
             "support_committed_strength",
             "overcommit_plan_empty_after_support",
+            "support_task_class",
+            "support_reservation_scope",
+            "leader_saved_plan_preserved",
             "ai_raid_grouped",
             "encounter_risk_regroup",
             "encounter_risk_staging",

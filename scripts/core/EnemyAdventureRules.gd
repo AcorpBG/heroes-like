@@ -7848,6 +7848,9 @@ static func _ai_hero_task_live_target_reserved(
 		if String(encounter.get("target_kind", "")) != target_kind:
 			continue
 		if String(encounter.get("target_placement_id", "")) == target_id:
+			var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+			if "active_front_support" in reason_codes or String(encounter.get("supporting_front_placement_id", "")) != "":
+				continue
 			return true
 	for task in _ai_hero_task_live_tasks_for_faction(session, faction_id):
 		if not (task is Dictionary):
@@ -7862,7 +7865,9 @@ static func _ai_hero_task_live_target_reserved(
 		if String(task.get("target_kind", "")) != target_kind:
 			continue
 		if String(task.get("target_id", "")) == target_id:
-			return true
+			var reservation: Dictionary = task.get("reservation", {}) if task.get("reservation", {}) is Dictionary else {}
+			if String(reservation.get("reservation_scope", "")) == "exclusive_target":
+				return true
 	return false
 
 static func ai_hero_task_saved_target_selection_plan(
@@ -8212,6 +8217,8 @@ static func _ai_hero_task_record_from_assignment(
 	var task_class := "contest_site"
 	if target_kind == "regroup":
 		task_class = "rebuild_host"
+	elif "active_front_support" in reason_codes:
+		task_class = "stabilize_front"
 	elif "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
 		task_class = "defend_front"
 	elif "retake_front" in reason_codes:
@@ -8417,9 +8424,16 @@ static func _ai_hero_task_reconciled_town_task(
 	var owner := String(town.get("owner", "neutral"))
 	var town_faction := _town_faction_id(town)
 	var task_class := String(task.get("task_class", ""))
+	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
 	var same_faction_town := owner == "enemy" and town_faction == faction_id
-	if task_class in ["defend_front", "stabilize_front"]:
+	if task_class == "defend_front" or (task_class == "stabilize_front" and "active_front_support" not in reason_codes):
 		if same_faction_town:
+			return task
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
+	if task_class == "stabilize_front" and "active_front_support" in reason_codes:
+		if same_faction_town:
+			return _ai_hero_task_with_lifecycle(task, "completed", "valid")
+		if owner in ["player", "enemy"]:
 			return task
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
 	if same_faction_town:

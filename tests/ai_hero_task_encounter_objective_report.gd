@@ -218,6 +218,7 @@ func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
 	leader = _set_raid_bog_brutes(leader, 7)
 	_remove_mireclaw_encounters(session)
 	_append_encounter(session, leader)
+	_seed_task_board(session, [_task("hero_vaska", OBJECTIVE_ENCOUNTER_ID, "active", "valid")])
 
 	var support := _raid_seed(session, "hero_sable", "encounter_support_sable", {"x": support_tile.x, "y": support_tile.y})
 	support = _set_raid_bog_brutes(support, 3)
@@ -232,7 +233,28 @@ func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
 	if String(assigned_support.get("supporting_front_placement_id", "")) != "encounter_support_leader_vaska":
 		_fail("Active-front support assignment did not remember the supported leader: %s" % JSON.stringify(assigned_support))
 		return {}
+	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	_assert_task_status(session, "hero_sable", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	if _failed:
+		return {}
+	var support_task := _task_for(session, "hero_sable", "encounter", OBJECTIVE_ENCOUNTER_ID)
+	if String(support_task.get("task_class", "")) != "stabilize_front":
+		_fail("Active-front support task did not use stabilize_front: %s" % JSON.stringify(support_task))
+		return {}
+	var support_reservation: Dictionary = support_task.get("reservation", {}) if support_task.get("reservation", {}) is Dictionary else {}
+	if String(support_reservation.get("reservation_scope", "")) != "shared_front":
+		_fail("Active-front support task did not use shared-front reservation: %s" % JSON.stringify(support_task))
+		return {}
+	EnemyTurnRules.normalize_enemy_states(session)
+	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	_assert_task_status(session, "hero_sable", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	if _failed:
+		return {}
 	_append_encounter(session, assigned_support)
+	var leader_saved_plan := EnemyAdventureRules.ai_hero_task_saved_target_selection_plan(session, config, leader)
+	if String(leader_saved_plan.get("target_kind", "")) != "encounter" or String(leader_saved_plan.get("target_placement_id", "")) != OBJECTIVE_ENCOUNTER_ID:
+		_fail("Shared active-front support reservation blocked the leader objective task: %s" % JSON.stringify(leader_saved_plan))
+		return {}
 	var overcommit_probe := _raid_seed(session, "hero_orrik", "encounter_support_orrik_probe", {"x": support_tile.x + 1, "y": support_tile.y})
 	overcommit_probe = _set_raid_bog_brutes(overcommit_probe, 3)
 	var overcommit_plan := EnemyAdventureRules.ai_active_front_support_target_selection_plan(session, config, overcommit_probe)
@@ -267,12 +289,19 @@ func _active_front_supports_and_groups_for_encounter_case() -> Dictionary:
 		return {}
 	if _public_event_leaks(public_log.get("public_events", [])):
 		return {}
+	_assert_task_status(session, "hero_vaska", "encounter", OBJECTIVE_ENCOUNTER_ID, "active", "valid")
+	_assert_task_status(session, "hero_sable", "encounter", OBJECTIVE_ENCOUNTER_ID, "completed", "valid")
+	if _failed:
+		return {}
 	return {
 		"case_id": "active_front_support_groups_for_encounter_objective",
 		"leader_id": "encounter_support_leader_vaska",
 		"support_id": "encounter_support_sable",
 		"target_id": OBJECTIVE_ENCOUNTER_ID,
 		"support_assignment_reason_codes": support_reason_codes,
+		"support_task_class": String(support_task.get("task_class", "")),
+		"support_reservation_scope": String(support_reservation.get("reservation_scope", "")),
+		"leader_saved_plan_preserved": String(leader_saved_plan.get("target_placement_id", "")) == OBJECTIVE_ENCOUNTER_ID,
 		"supporting_front_placement_id": String(assigned_support.get("supporting_front_placement_id", "")),
 		"support_strength_gap": int(assigned_support.get("support_strength_gap", 0)),
 		"support_committed_strength": int(assigned_support.get("support_committed_strength", 0)),
@@ -438,16 +467,22 @@ func _task_state(session) -> Dictionary:
 	return state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
 
 func _assert_task_status(session, actor_id: String, target_kind: String, target_id: String, expected_status: String, expected_validation: String) -> void:
+	var task := _task_for(session, actor_id, target_kind, target_id)
+	if task.is_empty():
+		_fail("Missing task %s/%s/%s in %s" % [actor_id, target_kind, target_id, JSON.stringify(_task_state(session))])
+		return
+	if String(task.get("task_status", "")) != expected_status or String(task.get("last_validation", "")) != expected_validation:
+		_fail("Task %s/%s/%s expected %s/%s, got %s" % [actor_id, target_kind, target_id, expected_status, expected_validation, JSON.stringify(task)])
+
+func _task_for(session, actor_id: String, target_kind: String, target_id: String) -> Dictionary:
 	var task_state := _task_state(session)
 	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
 	for task in tasks:
 		if not (task is Dictionary):
 			continue
 		if String(task.get("actor_id", "")) == actor_id and String(task.get("target_kind", "")) == target_kind and String(task.get("target_id", "")) == target_id:
-			if String(task.get("task_status", "")) != expected_status or String(task.get("last_validation", "")) != expected_validation:
-				_fail("Task %s/%s/%s expected %s/%s, got %s" % [actor_id, target_kind, target_id, expected_status, expected_validation, JSON.stringify(task)])
-			return
-	_fail("Missing task %s/%s/%s in %s" % [actor_id, target_kind, target_id, JSON.stringify(task_state)])
+			return task
+	return {}
 
 func _task_status_counts(task_state: Dictionary) -> Dictionary:
 	var counts := {}

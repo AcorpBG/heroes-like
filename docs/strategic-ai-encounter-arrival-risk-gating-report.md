@@ -11,6 +11,7 @@ Status: implementation evidence for `strategic-ai-encounter-arrival-risk-gating-
 - Saved encounter task continuity remains active while the host regroups or stages; the task is completed only after a ready host actually clears or contests the encounter.
 - `ai_active_front_support_target_selection_plan` lets a new deployable commander recognize an active same-faction front that is waiting for support and deliberately target that front instead of selecting an unrelated raid objective.
 - Active-front support planning now accounts for already-committed support strength and refuses support-chain targets, preventing multiple commanders from dogpiling the same front after the open strength gap is already covered.
+- Active-front support task persistence now uses `stabilize_front` with a shared-front reservation, so reinforcing commanders do not steal the leader's exclusive objective reservation or block saved objective-task reuse.
 - `group_nearby_raids_for_town_assault` now also consolidates adjacent same-faction commander support on shared encounter fronts, so objective/guarded encounter pressure can become one stronger host instead of isolated small raids.
 
 ## Focused Evidence
@@ -21,6 +22,7 @@ Status: implementation evidence for `strategic-ai-encounter-arrival-risk-gating-
 - `weak_encounter_objective_regroups_before_clear`: a Vaska host that is above the generic raid regroup floor but below the Reed Totemists guard requirement does not resolve the objective, keeps the encounter task active, records `encounter_risk_regroup`, emits `ai_target_assigned`, and sets a future `encounter_arrival_delay_until_day`.
 - `active_front_support_groups_for_encounter_objective`: Sable receives an `active_front_support` assignment to reinforce Vaska's `causeway_levee_cutters` front, then the normal raid advancement path emits `ai_raid_grouped` and merges Sable's host into Vaska's encounter-objective army.
 - The same case verifies `overcommit_plan_empty_after_support`: once Sable's committed host covers the front's open support gap, a third commander no longer receives another active-front support assignment for that same front or for Sable's support column.
+- The same case verifies `support_task_class: stabilize_front`, `support_reservation_scope: shared_front`, and `leader_saved_plan_preserved: true`, proving support assignments remain durable without invalidating the leader's objective task.
 
 No save migration is introduced; `SAVE_VERSION` remains unchanged.
 

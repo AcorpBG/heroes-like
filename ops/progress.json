@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-support-overcommit-control-10184",
-  "currentSliceTitle": "Strategic AI Support Overcommit Control",
+  "currentSliceId": "strategic-ai-shared-support-task-reservations-10184",
+  "currentSliceTitle": "Strategic AI Shared Support Task Reservations",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active-front support assignment now accounts for existing support commitments and avoids support-chain dogpiling.",
+  "currentSliceNotes": "Completed. Active-front support task persistence now uses shared stabilize-front reservations and preserves leader objective-task reuse.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T21:17:00Z",
+  "updatedAt": "2026-05-30T21:48:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28395,6 +28395,39 @@
           "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
         }
       }
+    },
+    {
+      "id": "strategic-ai-shared-support-task-reservations-10184",
+      "title": "Strategic AI Shared Support Task Reservations",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of active-front commander coordination; support assignments must persist as shared support work without stealing the leader objective reservation",
+      "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_encounter_objective_report.gd",
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Active-front support assignments must record durable shared support tasks, avoid exclusive target reservation conflicts with leader objective tasks, preserve saved leader objective-task reuse, and complete the support task when the support host groups without a save-version bump.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No new report gate beyond the existing focused encounter objective report",
+        "No save-version bump"
+      ],
+      "startedAt": "2026-05-30T21:40:00Z",
+      "updatedAt": "2026-05-30T21:48:00Z",
+      "notes": "Completed. Active-front support task persistence now uses shared stabilize-front reservations and preserves leader objective-task reuse.",
+      "completedAt": "2026-05-30T21:48:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -38608,8 +38641,8 @@
       "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-guarded-object-claim-routing-10184",
-  "currentSliceUpdatedAt": "2026-05-30T20:02:00Z",
+  "active_slice": "strategic-ai-shared-support-task-reservations-10184",
+  "currentSliceUpdatedAt": "2026-05-30T21:48:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41482,12 +41515,12 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-support-overcommit-control-10184",
-    "title": "Strategic AI Support Overcommit Control",
+    "id": "strategic-ai-shared-support-task-reservations-10184",
+    "title": "Strategic AI Shared Support Task Reservations",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "continuation of active-front commander coordination; prevent support assignment from overcommitting several commanders to an already-covered front",
+    "source": "continuation of active-front commander coordination; support assignments must persist as shared support work without stealing the leader objective reservation",
     "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
     "sourceDocs": [
       "PLAN.md",
@@ -41503,14 +41536,15 @@
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Active-front support planning must count already-assigned support strength against the supported front gap, refuse support-chain targets, and keep existing active-front support grouping behavior passing without a save-version bump.",
-    "startedAt": "2026-05-30T21:09:00Z",
-    "updatedAt": "2026-05-30T21:17:00Z",
-    "notes": "Completed. Active-front support assignment now accounts for existing support commitments and avoids support-chain dogpiling.",
+    "completionCriteria": "Active-front support assignments must record durable shared support tasks, avoid exclusive target reservation conflicts with leader objective tasks, preserve saved leader objective-task reuse, and complete the support task when the support host groups without a save-version bump.",
+    "startedAt": "2026-05-30T21:40:00Z",
+    "updatedAt": "2026-05-30T21:48:00Z",
+    "notes": "Completed. Active-front support now records shared stabilize-front tasks, preserves leader objective reservations, and completes support work when grouped.",
+    "completedAt": "2026-05-30T21:48:00Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T21:17:00Z",
-      "sliceId": "strategic-ai-support-overcommit-control-10184",
+      "updatedAt": "2026-05-30T21:48:00Z",
+      "sliceId": "strategic-ai-shared-support-task-reservations-10184",
       "commands": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
@@ -41526,10 +41560,10 @@
       ],
       "evidence": {
         "implemented": [
-          "Active-front support planning now subtracts already-committed support strength from the front strength gap before assigning another commander.",
-          "Support columns marked active_front_support are no longer treated as primary fronts that can request their own support chain.",
-          "Focused encounter evidence proves one Sable support assignment covers the open gap and a third Orik probe receives no additional active-front support plan.",
-          "Existing active-front grouping, town assault, live turn, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
+          "Active-front support assignments now record as stabilize_front tasks when active_front_support is present in reason codes.",
+          "Stabilize-front support tasks use shared_front reservations, so they do not invalidate or steal the leader commander objective task reservation.",
+          "Saved target reservation checks now only treat exclusive reservations as blocking and ignore active support columns for leader objective-task reuse.",
+          "Focused encounter evidence proves support_task_class=stabilize_front, support_reservation_scope=shared_front, leader_saved_plan_preserved=true, and support completion after grouping."
         ],
         "sourceDocs": [
           "PLAN.md",
@@ -41540,10 +41574,9 @@
         "focusedReports": [
           "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT"
         ],
-        "residualRisk": "This controls active-front dogpiling. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
+        "residualRisk": "This fixes support-task persistence and reservation ownership. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
       }
-    },
-    "completedAt": "2026-05-30T21:17:00Z"
+    }
   },
   "validation": {
     "status": "pass",
