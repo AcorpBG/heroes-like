@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-encounter-arrival-risk-gating-10184",
-  "currentSliceTitle": "Strategic AI Encounter Arrival Risk Gating",
+  "currentSliceId": "strategic-ai-guarded-object-claim-routing-10184",
+  "currentSliceTitle": "Strategic AI Guarded Object Claim Routing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Weak AI encounter-objective hosts now regroup or stage instead of blindly clearing guarded encounter objectives below readiness threshold.",
+  "currentSliceNotes": "Completed. AI resource/artifact claim execution now routes to unresolved guards before securing guarded value.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T19:30:00Z",
+  "updatedAt": "2026-05-30T20:02:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28322,6 +28322,79 @@
           "residualRisk": "This slice prevents weak AI raids from getting free guarded encounter-objective progress on arrival. Full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, smarter recruitment/consolidation timing, retreat timing balance, and manual live-client pacing review."
         }
       }
+    },
+    {
+      "id": "strategic-ai-guarded-object-claim-routing-10184",
+      "title": "Strategic AI Guarded Object Claim Routing",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "continuation of owner strategic AI production-readiness goal after encounter arrival risk gating; prevent AI resource/artifact claim paths from bypassing explicit guard links and generated object guards",
+      "planRef": "PLAN.md Current strategic AI follow-up / remaining objective claim surfaces with guarded value",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-adventure-objective-progression-report.md",
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "docs/strategic-ai-guarded-object-claim-routing-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "AI resource/artifact arrival must not secure a target while an unresolved explicit guard or generated object guard still protects it. The raid must retarget to the guard encounter with public-safe assignment evidence, leave the original resource/artifact task active, and only allow the claim after the guard is gone. Existing unguarded resource/artifact capture flows must remain passing without a save-version bump.",
+      "startedAt": "2026-05-30T19:42:00Z",
+      "updatedAt": "2026-05-30T20:02:00Z",
+      "notes": "Completed. AI resource/artifact claim execution now routes to unresolved guards before securing guarded value.",
+      "completedAt": "2026-05-30T20:02:00Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T20:02:00Z",
+        "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
+            "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
+            "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
+            "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
+            "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
+            "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-guarded-object-claim-routing-report.md",
+            "docs/strategic-ai-raid-regroup-retreat-report.md",
+            "docs/strategic-ai-artifact-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT"
+          ],
+          "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -35592,6 +35665,61 @@
           "residualRisk": "This slice prevents weak AI raids from getting free guarded encounter-objective progress on arrival. Full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, smarter recruitment/consolidation timing, retreat timing balance, and manual live-client pacing review."
         }
       }
+    },
+    {
+      "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
+      "completedAt": "2026-05-30T20:02:00Z",
+      "summary": "AI resource/artifact claim execution now honors unresolved guard links and generated object guards before securing guarded value.",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/strategic-ai-guarded-object-claim-routing-report.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-artifact-task-board-report.md"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T20:02:00Z",
+        "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
+            "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
+            "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
+            "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
+            "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
+            "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-guarded-object-claim-routing-report.md",
+            "docs/strategic-ai-raid-regroup-retreat-report.md",
+            "docs/strategic-ai-artifact-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReports": [
+            "AI_RAID_REGROUP_RETREAT_REPORT",
+            "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+            "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+            "AI_HERO_TASK_HERO_HUNT_REPORT",
+            "AI_TOWN_RETAKE_ASSAULT_REPORT"
+          ],
+          "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
+        }
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -38438,46 +38566,50 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T19:30:00Z",
-    "sliceId": "strategic-ai-encounter-arrival-risk-gating-10184",
+    "updatedAt": "2026-05-30T20:02:00Z",
+    "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
+      "python3 -m py_compile tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Encounter objective arrival now runs encounter_arrival_ready_report before _contest_encounter_target can clear or contest a guarded site.",
-        "The readiness threshold compares AI host strength against placement/base encounter guard strength and desired raid strength.",
-        "Under-threshold encounter-objective hosts no longer resolve the site; they redirect to a same-faction regroup town when reachable or stage briefly when no regroup town exists.",
-        "Risk-gated encounter hosts emit public-safe ai_target_assigned events with guarded-site language and no score/task leakage.",
-        "Focused coverage proves a strong Vaska host still resolves Causeway Stand levee cutters while a weaker host above the generic regroup floor records encounter_risk_regroup and keeps the encounter task active.",
-        "Existing hero-intercept risk, town-assault risk, regroup retreat, and artifact objective task reports remain passing."
+        "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
+        "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
+        "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
+        "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
+        "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
+        "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-encounter-objective-task-board-report.md",
-        "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
+        "docs/strategic-ai-guarded-object-claim-routing-report.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-artifact-task-board-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_HERO_TASK_HERO_HUNT_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT",
         "AI_RAID_REGROUP_RETREAT_REPORT",
-        "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT"
+        "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+        "AI_HERO_TASK_HERO_HUNT_REPORT",
+        "AI_TOWN_RETAKE_ASSAULT_REPORT"
       ],
-      "residualRisk": "This slice prevents weak AI raids from getting free guarded encounter-objective progress on arrival. Full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, smarter recruitment/consolidation timing, retreat timing balance, and manual live-client pacing review."
+      "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-encounter-arrival-risk-gating-10184",
-  "currentSliceUpdatedAt": "2026-05-30T19:30:00Z",
+  "active_slice": "strategic-ai-guarded-object-claim-routing-10184",
+  "currentSliceUpdatedAt": "2026-05-30T20:02:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41303,116 +41435,167 @@
         ],
         "residualRisk": "This slice prevents weak AI raids from getting free guarded encounter-objective progress on arrival. Full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, smarter recruitment/consolidation timing, retreat timing balance, and manual live-client pacing review."
       }
-    }
-  ],
-  "currentSlice": {
-    "id": "strategic-ai-encounter-arrival-risk-gating-10184",
-    "title": "Strategic AI Encounter Arrival Risk Gating",
-    "status": "completed",
-    "phase": "phase-5-playable-alpha-baseline",
-    "classification": "implementation_slice",
-    "source": "continuation of owner strategic AI production-readiness goal after hero-intercept risk gating; prevent weak AI raids from auto-clearing encounter objectives just by reaching the tile",
-    "planRef": "PLAN.md Current strategic AI follow-up / encounter objective arrival risk policy",
-    "sourceDocs": [
-      "PLAN.md",
-      "project.md",
-      "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-encounter-objective-task-board-report.md",
-      "docs/strategic-ai-raid-regroup-retreat-report.md"
-    ],
-    "implementationTargets": [
-      "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_hero_task_encounter_objective_report.gd",
-      "docs/strategic-ai-encounter-objective-task-board-report.md",
-      "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
-      "tests/validate_repo.py",
-      "PLAN.md",
-      "ops/progress.json"
-    ],
-    "completionCriteria": "Encounter objective arrival must require the AI raid host to meet a readiness threshold derived from the target encounter guard strength and raid desired strength. Under-threshold hosts at the objective must not resolve or contest the encounter; they must retask to a reachable same-faction regroup town or stage briefly for support, emit public-safe ai_target_assigned evidence, keep encounter task continuity active instead of completing it, and preserve existing strong encounter-objective closure without a save-version bump.",
-    "startedAt": "2026-05-30T19:12:00Z",
-    "updatedAt": "2026-05-30T19:30:00Z",
-    "notes": "Completed. Weak AI encounter-objective hosts now regroup or stage instead of blindly clearing guarded encounter objectives below readiness threshold.",
-    "completedAt": "2026-05-30T19:30:00Z",
-    "validation": {
+    },
+    {
       "status": "pass",
-      "updatedAt": "2026-05-30T19:30:00Z",
-      "sliceId": "strategic-ai-encounter-arrival-risk-gating-10184",
+      "updatedAt": "2026-05-30T20:02:00Z",
+      "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Encounter objective arrival now runs encounter_arrival_ready_report before _contest_encounter_target can clear or contest a guarded site.",
-          "The readiness threshold compares AI host strength against placement/base encounter guard strength and desired raid strength.",
-          "Under-threshold encounter-objective hosts no longer resolve the site; they redirect to a same-faction regroup town when reachable or stage briefly when no regroup town exists.",
-          "Risk-gated encounter hosts emit public-safe ai_target_assigned events with guarded-site language and no score/task leakage.",
-          "Focused coverage proves a strong Vaska host still resolves Causeway Stand levee cutters while a weaker host above the generic regroup floor records encounter_risk_regroup and keeps the encounter task active.",
-          "Existing hero-intercept risk, town-assault risk, regroup retreat, and artifact objective task reports remain passing."
+          "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
+          "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
+          "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
+          "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
+          "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
+          "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-encounter-objective-task-board-report.md",
-          "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
+          "docs/strategic-ai-guarded-object-claim-routing-report.md",
+          "docs/strategic-ai-raid-regroup-retreat-report.md",
+          "docs/strategic-ai-artifact-task-board-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-          "AI_HERO_TASK_HERO_HUNT_REPORT",
-          "AI_TOWN_RETAKE_ASSAULT_REPORT",
           "AI_RAID_REGROUP_RETREAT_REPORT",
-          "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT"
+          "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+          "AI_HERO_TASK_HERO_HUNT_REPORT",
+          "AI_TOWN_RETAKE_ASSAULT_REPORT"
         ],
-        "residualRisk": "This slice prevents weak AI raids from getting free guarded encounter-objective progress on arrival. Full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, smarter recruitment/consolidation timing, retreat timing balance, and manual live-client pacing review."
+        "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
+      }
+    }
+  ],
+  "currentSlice": {
+    "id": "strategic-ai-guarded-object-claim-routing-10184",
+    "title": "Strategic AI Guarded Object Claim Routing",
+    "status": "completed",
+    "phase": "phase-5-playable-alpha-baseline",
+    "classification": "implementation_slice",
+    "source": "continuation of owner strategic AI production-readiness goal after encounter arrival risk gating; prevent AI resource/artifact claim paths from bypassing explicit guard links and generated object guards",
+    "planRef": "PLAN.md Current strategic AI follow-up / remaining objective claim surfaces with guarded value",
+    "sourceDocs": [
+      "PLAN.md",
+      "project.md",
+      "docs/strategic-ai-foundation.md",
+      "docs/strategic-ai-adventure-objective-progression-report.md",
+      "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
+    ],
+    "implementationTargets": [
+      "scripts/core/EnemyAdventureRules.gd",
+      "tests/ai_raid_regroup_retreat_report.gd",
+      "docs/strategic-ai-guarded-object-claim-routing-report.md",
+      "tests/validate_repo.py",
+      "PLAN.md",
+      "ops/progress.json"
+    ],
+    "completionCriteria": "AI resource/artifact arrival must not secure a target while an unresolved explicit guard or generated object guard still protects it. The raid must retarget to the guard encounter with public-safe assignment evidence, leave the original resource/artifact task active, and only allow the claim after the guard is gone. Existing unguarded resource/artifact capture flows must remain passing without a save-version bump.",
+    "startedAt": "2026-05-30T19:42:00Z",
+    "updatedAt": "2026-05-30T20:02:00Z",
+    "notes": "Completed. AI resource/artifact claim execution now routes to unresolved guards before securing guarded value.",
+    "completedAt": "2026-05-30T20:02:00Z",
+    "validation": {
+      "status": "pass",
+      "updatedAt": "2026-05-30T20:02:00Z",
+      "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
+          "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
+          "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
+          "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
+          "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
+          "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-guarded-object-claim-routing-report.md",
+          "docs/strategic-ai-raid-regroup-retreat-report.md",
+          "docs/strategic-ai-artifact-task-board-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "focusedReports": [
+          "AI_RAID_REGROUP_RETREAT_REPORT",
+          "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+          "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+          "AI_HERO_TASK_HERO_HUNT_REPORT",
+          "AI_TOWN_RETAKE_ASSAULT_REPORT"
+        ],
+        "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
       }
     }
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T19:30:00Z",
-    "sliceId": "strategic-ai-encounter-arrival-risk-gating-10184",
+    "updatedAt": "2026-05-30T20:02:00Z",
+    "sliceId": "strategic-ai-guarded-object-claim-routing-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
+      "python3 -m py_compile tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Encounter objective arrival now runs encounter_arrival_ready_report before _contest_encounter_target can clear or contest a guarded site.",
-        "The readiness threshold compares AI host strength against placement/base encounter guard strength and desired raid strength.",
-        "Under-threshold encounter-objective hosts no longer resolve the site; they redirect to a same-faction regroup town when reachable or stage briefly when no regroup town exists.",
-        "Risk-gated encounter hosts emit public-safe ai_target_assigned events with guarded-site language and no score/task leakage.",
-        "Focused coverage proves a strong Vaska host still resolves Causeway Stand levee cutters while a weaker host above the generic regroup floor records encounter_risk_regroup and keeps the encounter task active.",
-        "Existing hero-intercept risk, town-assault risk, regroup retreat, and artifact objective task reports remain passing."
+        "Resource and artifact arrival resolution now checks unresolved explicit guard links and generated object-guard metadata before securing the target.",
+        "Guarded resource claims retarget to the guard encounter with guard_clearance and guarded_resource_claim instead of flipping the resource controller.",
+        "Guarded artifact claims retarget to the guard encounter with guard_clearance and guarded_artifact_claim instead of collecting/equipping the relic.",
+        "The redirect keeps guarded_claim_target_id/label metadata on the raid and emits public-safe ai_target_assigned evidence.",
+        "Focused coverage proves Riverwatch Free Company stays player-held behind river_free_company_guard and Warcrest Ruin stays uncollected behind warcrest_ruin_guard.",
+        "Existing unguarded live resource capture, artifact secure/equip, encounter arrival risk, hero intercept risk, and town assault risk reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-encounter-objective-task-board-report.md",
-        "docs/strategic-ai-encounter-arrival-risk-gating-report.md"
+        "docs/strategic-ai-guarded-object-claim-routing-report.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md",
+        "docs/strategic-ai-artifact-task-board-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_HERO_TASK_HERO_HUNT_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT",
         "AI_RAID_REGROUP_RETREAT_REPORT",
-        "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT"
+        "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
+        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
+        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
+        "AI_HERO_TASK_HERO_HUNT_REPORT",
+        "AI_TOWN_RETAKE_ASSAULT_REPORT"
       ],
-      "residualRisk": "This slice prevents weak AI raids from getting free guarded encounter-objective progress on arrival. Full release-ready strategic AI still needs long-run generated-map behavior, stronger multi-week objective planning, smarter recruitment/consolidation timing, retreat timing balance, and manual live-client pacing review."
+      "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   }
 }

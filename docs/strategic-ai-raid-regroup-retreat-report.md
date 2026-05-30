@@ -2,6 +2,7 @@
 
 Slice: `strategic-ai-raid-regroup-retreat-20260523-10184`
 Follow-up slice: `strategic-ai-regroup-task-board-10184`
+Related follow-up slice: `strategic-ai-guarded-object-claim-routing-10184`
 
 Status: implementation evidence.
 
@@ -25,10 +26,13 @@ No full strategic AI quality claim.
 - Missing regroup towns invalidate with `invalid_target_missing`; towns no longer owned by the matching AI faction invalidate with `invalid_controller_changed`.
 - A successful regroup that rebuilds the host enough to resume completes the matching active task before the raid target is cleared.
 - `EnemyTurnRules.normalize_enemy_states(...)` preserves `target_kind: regroup` task records without a save-version migration.
+- Guarded resource claim execution now refuses to seize the target while an unresolved explicit guard protects it. The raid retargets to the guard encounter with `guard_clearance` and `guarded_resource_claim`, while the original resource task remains active.
 
 ## Focused Fixture
 
 `tests/ai_raid_regroup_retreat_report.tscn` uses River Pass with a damaged Mireclaw Vaska raid initially aimed at the player-controlled Free Company Camp. The raid starts understrength, chooses Duskfen Bastion instead of the original resource objective, folds the town's `unit_bog_brute` garrison into the host, records `last_regroup_town_id`, completes the durable regroup task, and leaves the original resource under player control. The same fixture also proves saved regroup-task reuse, missing-town invalidation, wrong-controller invalidation, and normalization preservation.
+
+The same report includes `guarded_resource_claim_retargets_to_guard`: a strong Vaska host reaches `river_free_company` while `river_free_company_guard` has an explicit `guards_resource_node` link. The Free Company stays player-held, the raid retargets to the guard encounter, public-safe `ai_target_assigned` is emitted, and no `ai_site_seized` event is produced.
 
 ## Validation
 

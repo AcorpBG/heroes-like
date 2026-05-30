@@ -211,6 +211,7 @@ AI_ENCOUNTER_ARRIVAL_RISK_GATING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.gd"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.tscn"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-task-board-report.md"
+AI_GUARDED_OBJECT_CLAIM_ROUTING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-guarded-object-claim-routing-report.md"
 AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-equipment-report.md"
 AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-adventure-objective-progression-report.md"
 AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.gd"
@@ -15008,6 +15009,8 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
         "sync_commander_state_to_roster",
         "ai_artifact_secured",
         "collected_by_faction_id",
+        "_artifact_guard_encounter_for_node",
+        "_redirect_claim_to_guard_encounter",
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task artifact objective implementation is missing token: {required_token}")
@@ -15020,8 +15023,11 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
         report_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
-            "artifact_targets_use_saved_task_continuity",
+            "artifact_targets_use_saved_task_continuity_and_guarded_claim_routing",
             "artifact_relic_assigns_reuses_and_closes_task",
+            "guarded_artifact_claim_retargets_to_guard",
+            "guard_clearance",
+            "guarded_artifact_claim",
             "warcrest_ruin",
             "saved_hero_task",
             "invalid_target_missing",
@@ -15038,11 +15044,28 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Artifact Task Board Report",
             "implementation evidence",
+            "strategic-ai-guarded-object-claim-routing-10184",
             "artifact and relic targets",
+            "`guarded_artifact_claim_retargets_to_guard`",
             "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"AI hero task artifact objective doc is missing required text: {required_text}")
+    ensure(AI_GUARDED_OBJECT_CLAIM_ROUTING_REPORT_DOC_PATH.exists(), errors, "Missing strategic AI guarded object claim routing report doc")
+    if AI_GUARDED_OBJECT_CLAIM_ROUTING_REPORT_DOC_PATH.exists():
+        guard_doc_text = AI_GUARDED_OBJECT_CLAIM_ROUTING_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Guarded Object Claim Routing Report",
+            "strategic-ai-guarded-object-claim-routing-10184",
+            "`_resource_guard_encounter_for_node`",
+            "`_artifact_guard_encounter_for_node`",
+            "`_redirect_claim_to_guard_encounter`",
+            "`guarded_resource_claim_retargets_to_guard`",
+            "`guarded_artifact_claim_retargets_to_guard`",
+            "No save migration",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in guard_doc_text, errors, f"AI guarded object claim routing doc is missing required text: {required_text}")
 
 def validate_ai_artifact_equipment(errors: list[str]) -> None:
     for path in (
@@ -15652,6 +15675,8 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
         "_transfer_town_garrison_to_raid",
         "_clear_regroup_target",
+        "_resource_guard_encounter_for_node",
+        "_redirect_claim_to_guard_encounter",
         '"ai_raid_regrouped"',
         '"regroup"',
         '"regroup_understrength"',
@@ -15670,8 +15695,11 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         report_text = AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_RAID_REGROUP_RETREAT_REPORT",
-            "understrength_raids_retreat_to_owned_town_and_pull_garrison",
+            "understrength_raids_retreat_to_owned_town_and_guarded_claims_retarget_to_guard",
             "river_pass_understrength_raid_regroups_at_duskfen",
+            "guarded_resource_claim_retargets_to_guard",
+            "guarded_resource_claim",
+            "guard_clearance",
             "saved_hero_task",
             "invalid_target_missing",
             "invalid_controller_changed",

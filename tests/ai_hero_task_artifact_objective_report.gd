@@ -15,13 +15,17 @@ func _run() -> void:
 	var case_report := _artifact_task_board_case()
 	if case_report.is_empty():
 		return
+	var guarded_case_report := _guarded_artifact_claim_retargets_to_guard_case()
+	if guarded_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "artifact_relic_tasks_are_durable",
-		"behavior_policy": "artifact_targets_use_saved_task_continuity",
+		"behavior_policy": "artifact_targets_use_saved_task_continuity_and_guarded_claim_routing",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"guarded_claim_case": guarded_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -143,6 +147,66 @@ func _artifact_task_board_case() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _guarded_artifact_claim_retargets_to_guard_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_seed_task_board(session, [_task("hero_vaska", RELIC_TARGET_ID, "active", "valid")])
+	var relic := _artifact_node(session, RELIC_TARGET_ID)
+	if relic.is_empty():
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(_artifact_guard_encounter(relic))
+	encounters.append(_guarded_artifact_claim_raid(session, relic))
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_raid := _encounter(session, "guarded_artifact_claim_vaska")
+	if after_raid.is_empty():
+		_fail("Guarded artifact claim raid disappeared after advance.")
+		return {}
+	var guarded_node := _artifact_node(session, RELIC_TARGET_ID)
+	if bool(guarded_node.get("collected", false)):
+		_fail("Guarded artifact was collected before its guard was cleared: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_kind", "")) != "encounter" or String(after_raid.get("target_placement_id", "")) != "warcrest_ruin_guard":
+		_fail("Guarded artifact claim did not retarget to the guard encounter: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "guard_clearance" not in reason_codes or "guarded_artifact_claim" not in reason_codes:
+		_fail("Guarded artifact redirect missed guard-clearance reason codes: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("guarded_claim_target_id", "")) != RELIC_TARGET_ID:
+		_fail("Guarded artifact redirect did not retain original claim target: %s" % JSON.stringify(after_raid))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Guarded artifact redirect did not emit ai_target_assigned: %s" % JSON.stringify(result))
+		return {}
+	if "ai_artifact_secured" in event_types:
+		_fail("Guarded artifact redirect incorrectly emitted ai_artifact_secured: %s" % JSON.stringify(result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "artifact", RELIC_TARGET_ID, "active", "valid")
+	if _failed:
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Guarded artifact redirect public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	return {
+		"case_id": "guarded_artifact_claim_retargets_to_guard",
+		"artifact_collected": bool(guarded_node.get("collected", false)),
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"guarded_claim_target_id": String(after_raid.get("guarded_claim_target_id", "")),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"task_status_counts": _task_status_counts(_task_state(session)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _seed_task_board(session, tasks: Array) -> void:
 	var state := _enemy_state(session)
 	state["hero_task_state"] = {
@@ -202,6 +266,62 @@ func _raid_seed(session, roster_hero_id: String, placement_id: String, origin: D
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _guarded_artifact_claim_raid(session, relic: Dictionary) -> Dictionary:
+	var raid := {
+		"placement_id": "guarded_artifact_claim_vaska",
+		"encounter_id": "encounter_mire_raid",
+		"x": int(relic.get("x", 0)),
+		"y": int(relic.get("y", 0)),
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:guarded_artifact_claim_vaska" % String(session.scenario_id)),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 0,
+		"target_kind": "artifact",
+		"target_placement_id": RELIC_TARGET_ID,
+		"target_label": ArtifactRules.describe_artifact(String(relic.get("artifact_id", ""))),
+		"target_x": int(relic.get("x", 0)),
+		"target_y": int(relic.get("y", 0)),
+		"goal_x": int(relic.get("x", 0)),
+		"goal_y": int(relic.get("y", 0)),
+		"target_reason_codes": ["command_pressure", "faction_fit", "artifact_task_fixture"],
+		"target_public_reason": "command relic",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "guarded_artifact_claim_host",
+			"name": "Guarded Artifact Claim Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 12}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _artifact_guard_encounter(relic: Dictionary) -> Dictionary:
+	return {
+		"placement_id": "warcrest_ruin_guard",
+		"encounter_id": "encounter_roadward_lodge_watch",
+		"x": int(relic.get("x", 0)) + 2,
+		"y": int(relic.get("y", 0)),
+		"difficulty": "medium",
+		"combat_seed": 44102,
+		"guard_link": {
+			"guard_role": "guards_reward",
+			"target_kind": "artifact",
+			"target_id": RELIC_TARGET_ID,
+			"target_placement_id": RELIC_TARGET_ID,
+			"blocks_approach": true,
+			"clear_required_for_target": true,
+		},
+	}
 
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
@@ -276,6 +396,12 @@ func _artifact_node(session, placement_id: String) -> Dictionary:
 	_fail("Could not find artifact placement %s" % placement_id)
 	return {}
 
+func _encounter(session, placement_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter
+	return {}
+
 func _set_artifact_collected(session, placement_id: String, faction_id: String) -> void:
 	var nodes: Array = session.overworld.get("artifact_nodes", [])
 	for index in range(nodes.size()):
@@ -314,6 +440,18 @@ func _task_status_counts(task_state: Dictionary) -> Dictionary:
 			var status := String(task.get("task_status", ""))
 			counts[status] = int(counts.get(status, 0)) + 1
 	return counts
+
+func _event_types(events: Variant) -> Array:
+	var types := []
+	if not (events is Array):
+		return types
+	for event in events:
+		if event is Dictionary:
+			var event_type := String(event.get("event_type", ""))
+			if event_type != "" and event_type not in types:
+				types.append(event_type)
+	types.sort()
+	return types
 
 func _string_array(value: Variant) -> Array:
 	var output := []
