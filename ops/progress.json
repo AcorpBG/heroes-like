@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-town-rebuild-garrison-safety-10184",
-  "currentSliceTitle": "Strategic AI Town Rebuild Garrison Safety",
+  "currentSliceId": "strategic-ai-target-aware-spawn-point-selection-10184",
+  "currentSliceTitle": "Strategic AI Target-Aware Spawn Point Selection",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Critically under-defended towns stabilize garrison before spending recruitment on commander rebuild, while safe towns still rebuild shattered commanders.",
+  "currentSliceNotes": "Completed. Raid deployment now chooses the open spawn point that best serves saved commander tasks and live strategic targets instead of using the first open spawn slot.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:59:00Z",
+  "updatedAt": "2026-05-30T15:44:13Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -28558,6 +28558,39 @@
       "updatedAt": "2026-05-30T23:59:00Z",
       "notes": "Completed. Critical garrison safety now wins over commander rebuild pressure until local defense is no longer below the minimum wall target.",
       "completedAt": "2026-05-30T23:59:00Z"
+    },
+    {
+      "id": "strategic-ai-target-aware-spawn-point-selection-10184",
+      "title": "Strategic AI Target-Aware Spawn Point Selection",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "production strategic AI multi-front planning; factions with multiple owned spawn points must deploy from the point that best serves the selected task or target instead of wasting turns from config order",
+      "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-spawn-commander-selection-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd",
+        "docs/strategic-ai-spawn-commander-selection-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "When multiple spawn points are open, raid spawning must evaluate saved commander tasks and live target priority/distance from each spawn point, deploy from the best reachable point, keep saved-task commander selection intact, and retain first-open behavior only as a fallback when no target-aware candidate exists.",
+      "nonGoals": [
+        "No broad strategic AI release-readiness claim",
+        "No new generated-map matrix gate",
+        "No save-version bump"
+      ],
+      "startedAt": "2026-05-30T15:40:52Z",
+      "updatedAt": "2026-05-30T15:44:13Z",
+      "notes": "Completed. Raid deployment now scores open spawn points by saved-task reachability first, then fresh strategic target priority and distance.",
+      "completedAt": "2026-05-30T15:44:13Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -38771,8 +38804,8 @@
       "residualRisk": "This slice prevents AI claim execution from bypassing unresolved resource/artifact guards. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
     }
   },
-  "active_slice": "strategic-ai-town-rebuild-garrison-safety-10184",
-  "currentSliceUpdatedAt": "2026-05-30T23:59:00Z",
+  "active_slice": "strategic-ai-target-aware-spawn-point-selection-10184",
+  "currentSliceUpdatedAt": "2026-05-30T15:44:13Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -41645,40 +41678,40 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-town-rebuild-garrison-safety-10184",
-    "title": "Strategic AI Town Rebuild Garrison Safety",
+    "id": "strategic-ai-target-aware-spawn-point-selection-10184",
+    "title": "Strategic AI Target-Aware Spawn Point Selection",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "production strategic AI economy timing; towns must not spend critical local safety recruits on commander rebuild before stabilizing their own garrison",
-    "planRef": "PLAN.md Current strategic AI follow-up / stronger army economy timing",
+    "source": "production strategic AI multi-front planning; factions with multiple owned spawn points must deploy from the point that best serves the selected task or target instead of wasting turns from config order",
+    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-town-governor-pressure-implementation-report.md"
+      "docs/strategic-ai-spawn-commander-selection-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyTurnRules.gd",
-      "tests/ai_town_governor_pressure_report.gd",
-      "docs/strategic-ai-town-governor-pressure-implementation-report.md",
+      "tests/ai_hero_task_spawn_commander_selection_report.gd",
+      "docs/strategic-ai-spawn-commander-selection-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "Enemy town recruitment must prioritize critical garrison safety before commander rebuild when local defense is below the minimum wall target, while still routing recruitment to commander rebuild once the town is safely garrisoned and no deployable commanders remain; focused evidence must prove both cases without a save-version bump.",
-    "startedAt": "2026-05-30T23:48:00Z",
-    "updatedAt": "2026-05-30T23:59:00Z",
-    "notes": "Completed. Critical garrison safety now wins over commander rebuild pressure until local defense is no longer below the minimum wall target.",
-    "completedAt": "2026-05-30T23:59:00Z",
+    "completionCriteria": "When multiple spawn points are open, raid spawning must evaluate saved commander tasks and live target priority/distance from each spawn point, deploy from the best reachable point, keep saved-task commander selection intact, and retain first-open behavior only as a fallback when no target-aware candidate exists.",
+    "startedAt": "2026-05-30T15:40:52Z",
+    "updatedAt": "2026-05-30T15:44:13Z",
+    "notes": "Completed. Raid deployment now scores open spawn points by saved-task reachability first, then fresh strategic target priority and distance.",
+    "completedAt": "2026-05-30T15:44:13Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T23:59:00Z",
-      "sliceId": "strategic-ai-town-rebuild-garrison-safety-10184",
+      "updatedAt": "2026-05-30T15:44:13Z",
+      "sliceId": "strategic-ai-target-aware-spawn-point-selection-10184",
       "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_faction_personality_evidence_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
@@ -41688,22 +41721,21 @@
       ],
       "evidence": {
         "implemented": [
-          "Recruit destination selection now evaluates critical local garrison gaps before the no-deployable-commander rebuild shortcut.",
-          "A shattered-commander town with unsafe local defense routes recruits to garrison with decision rule critical_garrison_gap while still exposing positive rebuild pressure.",
-          "A safely garrisoned shattered-commander town still routes recruits to commander rebuild with decision rule commander_rebuild_required.",
-          "The broader faction-personality report now evaluates governor decisions from a mature day-24 fixture with full rare-resource treasury and reset enemy build timers so development pacing does not mask personality evidence."
+          "Enemy raid spawning now gathers all open spawn points instead of immediately taking the first open entry in scenario config order.",
+          "Each open spawn point is scored by deployable commander selection, reachable saved commander task priority and distance, and fresh strategic target priority and distance when no saved task is available.",
+          "The selected spawn point carries the chosen saved-task commander into the actual raid deployment, preserving saved-task target reuse and task-board persistence.",
+          "Focused evidence proves River Pass first-open spawn 7,1 is bypassed for 7,3 when the saved Free Company task is better served from the second open point."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-town-governor-pressure-implementation-report.md"
+          "docs/strategic-ai-spawn-commander-selection-report.md"
         ],
         "savePolicy": "no_save_version_bump",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_TOWN_GOVERNOR_PRESSURE_REPORT",
-          "AI_FACTION_PERSONALITY_EVIDENCE_REPORT"
+          "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT"
         ],
-        "residualRisk": "This improves town recruitment safety ordering. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer economy timing, and manual live-client pacing checks."
+        "residualRisk": "This fixes one real multi-front deployment waste pattern. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, richer economy timing, and manual live-client pacing checks."
       }
     }
   },

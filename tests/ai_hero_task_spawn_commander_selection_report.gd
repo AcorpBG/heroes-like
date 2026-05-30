@@ -16,13 +16,16 @@ func _run() -> void:
 	var fallback_case := _fallback_and_unavailable_actor_case()
 	if fallback_case.is_empty():
 		return
+	var spawn_point_case := _target_aware_spawn_point_case()
+	if spawn_point_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "spawn_prefers_deployable_saved_task_commander",
-		"behavior_policy": "saved_tasks_influence_live_commander_deployment",
+		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_spawn_point_selection",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -130,6 +133,60 @@ func _fallback_and_unavailable_actor_case() -> Dictionary:
 		"recovering_actor_id": "hero_sable",
 		"spawn_pick": spawn_pick,
 		"fallback_pick": fallback_pick,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _target_aware_spawn_point_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["raid_counter"] = 0
+	state["commander_counter"] = 1
+	_update_enemy_state(session, state)
+	_set_resource_controller(session, "river_free_company", "player")
+	_seed_task_board(session, [_task("hero_tarn", "river_free_company", 10, "planned", "valid")])
+	state = _enemy_state(session)
+
+	var first_open := EnemyTurnRules._first_open_spawn_point(session, config)
+	if int(first_open.get("x", 0)) != 7 or int(first_open.get("y", 0)) != 1:
+		_fail("Fixture expected first open spawn point 7,1 before target-aware selection, got %s" % JSON.stringify(first_open))
+		return {}
+	var best_open := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
+		_fail("Target-aware spawn selection should prefer closer southern spawn point, got %s" % JSON.stringify(best_open))
+		return {}
+	if String(best_open.get("spawn_plan_source", "")) != "saved_task":
+		_fail("Target-aware spawn selection should be driven by saved task, got %s" % JSON.stringify(best_open))
+		return {}
+	if String(best_open.get("roster_hero_id", "")) != "hero_tarn":
+		_fail("Target-aware spawn selection should preserve saved-task commander hero_tarn, got %s" % JSON.stringify(best_open))
+		return {}
+
+	var spawn_result := EnemyTurnRules._spawn_raid(session, config, state)
+	if not bool(spawn_result.get("ok", false)):
+		_fail("Target-aware spawn result failed: %s" % JSON.stringify(spawn_result))
+		return {}
+	var raid := _latest_raid(session)
+	if int(raid.get("x", 0)) != 7 or int(raid.get("y", 0)) != 3:
+		_fail("Spawned raid did not use target-aware spawn point 7,3: %s" % JSON.stringify(raid))
+		return {}
+	if String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")) != "hero_tarn":
+		_fail("Spawned raid did not keep saved-task commander hero_tarn: %s" % JSON.stringify(raid))
+		return {}
+	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Spawned raid did not reuse river_free_company saved task: %s" % JSON.stringify(raid))
+		return {}
+	_assert_task_status(session, "hero_tarn", "active", "river_free_company")
+	if _failed:
+		return {}
+	return {
+		"case_id": "spawn_point_prefers_saved_task_reachable_origin_over_first_open",
+		"first_open": first_open,
+		"selected_spawn_point": {"x": int(best_open.get("x", 0)), "y": int(best_open.get("y", 0))},
+		"spawn_plan_source": String(best_open.get("spawn_plan_source", "")),
+		"spawn_plan_goal_distance": int(best_open.get("spawn_plan_goal_distance", 0)),
+		"spawned_commander_id": String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")),
+		"target_id": String(raid.get("target_placement_id", "")),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
