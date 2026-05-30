@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-guarded-claim-resumption-10184`, completed to make AI raids resume and complete the original guarded resource/artifact claim after the guard encounter is cleared.
+- Current implementation slice: `strategic-ai-active-front-support-10184`, completed to make deployable commanders reinforce active high-value fronts and consolidate adjacent encounter-objective support hosts.
+- Latest completed slice: `strategic-ai-active-front-support-10184`.
 - Latest completed slice: `strategic-ai-guarded-claim-resumption-10184`.
 - Latest completed slice: `strategic-ai-guarded-object-claim-routing-10184`.
 - Latest completed slice: `strategic-ai-encounter-arrival-risk-gating-10184`.

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-guarded-claim-resumption-10184",
-  "currentSliceTitle": "Strategic AI Guarded Claim Resumption",
+  "currentSliceId": "strategic-ai-active-front-support-10184",
+  "currentSliceTitle": "Strategic AI Active Front Support",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. AI raids now resume the original guarded resource/artifact claim after clearing the guard and complete the task only after securing the prize.",
+  "currentSliceNotes": "Completed. Deployable commanders now recognize active fronts needing support and encounter-objective support hosts can consolidate through the normal raid advancement path.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T20:28:00Z",
+  "updatedAt": "2026-05-30T20:56:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -41482,44 +41482,44 @@
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-guarded-claim-resumption-10184",
-    "title": "Strategic AI Guarded Claim Resumption",
+    "id": "strategic-ai-active-front-support-10184",
+    "title": "Strategic AI Active Front Support",
     "status": "completed",
     "phase": "phase-5-playable-alpha-baseline",
     "classification": "implementation_slice",
-    "source": "continuation of owner strategic AI production-readiness goal after guarded object claim routing; finish the live follow-through from guard clearance back to the guarded prize",
-    "planRef": "PLAN.md Current strategic AI follow-up / guarded resource-artifact claim resumption",
+    "source": "continuation of owner strategic AI production-readiness goal after guarded claim follow-through; add live commander coordination instead of isolated target picking",
+    "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
     "sourceDocs": [
       "PLAN.md",
       "project.md",
       "docs/strategic-ai-foundation.md",
-      "docs/strategic-ai-adventure-objective-progression-report.md",
       "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
-      "docs/strategic-ai-guarded-object-claim-routing-report.md"
+      "docs/strategic-ai-commander-assault-consolidation-report.md"
     ],
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
-      "tests/ai_raid_regroup_retreat_report.gd",
-      "docs/strategic-ai-guarded-object-claim-routing-report.md",
+      "tests/ai_hero_task_encounter_objective_report.gd",
+      "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
       "tests/validate_repo.py",
       "PLAN.md",
       "ops/progress.json"
     ],
-    "completionCriteria": "After an AI raid clears a guard for a guarded resource/artifact claim, it must immediately retarget to the original claim, keep the original task active during guard clearance, and complete the task only when the resource/artifact is actually secured. Redirect, guard-clear resume, and final claim must emit public-safe evidence and preserve save version 9.",
-    "startedAt": "2026-05-30T20:12:00Z",
-    "updatedAt": "2026-05-30T20:28:00Z",
-    "notes": "Completed. AI raids now resume the original guarded resource/artifact claim after clearing the guard and complete the task only after securing the prize.",
+    "completionCriteria": "New deployable commanders must prefer reinforcing active same-faction fronts that explicitly need support, support assignments must carry public-safe reason metadata, and adjacent support hosts must consolidate into encounter-objective fronts without regressing existing town-assault grouping or save version 9.",
+    "startedAt": "2026-05-30T20:44:00Z",
+    "updatedAt": "2026-05-30T20:56:00Z",
+    "notes": "Completed. Deployable commanders now recognize active fronts needing support and encounter-objective support hosts can consolidate through the normal raid advancement path.",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T20:28:00Z",
-      "sliceId": "strategic-ai-guarded-claim-resumption-10184",
+      "updatedAt": "2026-05-30T20:56:00Z",
+      "sliceId": "strategic-ai-active-front-support-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "python3 -m py_compile tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
@@ -41527,45 +41527,40 @@
       ],
       "evidence": {
         "implemented": [
-          "Guard-clearing encounter resolution now detects raids carrying guarded_claim_kind/guarded_claim_target_id and restores the original guarded resource or artifact target after the guard is resolved.",
-          "The resume path rechecks that no unresolved resource/artifact guard still protects the original target before retargeting the raid.",
-          "Transient guarded_claim_* metadata is cleared after resume, the raid emits public-safe ai_target_assigned evidence, and the original resource/artifact task stays active until the actual claim succeeds.",
-          "Focused resource coverage proves Riverwatch Free Company remains player-held during redirect and guard clearance, then is seized by Mireclaw after the resumed claim.",
-          "Focused artifact coverage proves Warcrest Ruin remains uncollected during redirect and guard clearance, then is secured/equipped by Mireclaw after the resumed claim.",
-          "Encounter arrival risk, live turn execution, hero hunt, and town assault reports remain passing."
+          "Target assignment now checks active same-faction fronts that need support before falling back to normal retake/saved/live/score target selection.",
+          "New support assignments carry active_front_support and army_consolidation reason codes plus supported-front metadata.",
+          "Adjacent support grouping now works for shared encounter fronts in addition to town assaults.",
+          "Focused encounter evidence proves Sable reinforces Vaska at causeway_levee_cutters and merges into the encounter-objective host through normal advance_raids.",
+          "Existing town-assault grouping, town-assault risk, live turn execution, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-guarded-object-claim-routing-report.md",
-          "docs/strategic-ai-raid-regroup-retreat-report.md",
-          "docs/strategic-ai-artifact-task-board-report.md"
+          "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+          "docs/strategic-ai-commander-assault-consolidation-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
         "focusedReports": [
-          "AI_RAID_REGROUP_RETREAT_REPORT",
-          "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
           "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-          "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
-          "AI_HERO_TASK_HERO_HUNT_REPORT",
-          "AI_TOWN_RETAKE_ASSAULT_REPORT"
+          "AI_RAID_ASSAULT_GROUPING_REPORT"
         ],
-        "residualRisk": "This closes guarded-claim follow-through after guard clearance. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
+        "residualRisk": "This adds live active-front support and encounter-front consolidation. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
       }
     },
-    "completedAt": "2026-05-30T20:28:00Z"
+    "completedAt": "2026-05-30T20:56:00Z"
   },
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T20:28:00Z",
-    "sliceId": "strategic-ai-guarded-claim-resumption-10184",
+    "updatedAt": "2026-05-30T20:56:00Z",
+    "sliceId": "strategic-ai-active-front-support-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -41573,30 +41568,24 @@
     ],
     "evidence": {
       "implemented": [
-        "Guard-clearing encounter resolution now detects raids carrying guarded_claim_kind/guarded_claim_target_id and restores the original guarded resource or artifact target after the guard is resolved.",
-        "The resume path rechecks that no unresolved resource/artifact guard still protects the original target before retargeting the raid.",
-        "Transient guarded_claim_* metadata is cleared after resume, the raid emits public-safe ai_target_assigned evidence, and the original resource/artifact task stays active until the actual claim succeeds.",
-        "Focused resource coverage proves Riverwatch Free Company remains player-held during redirect and guard clearance, then is seized by Mireclaw after the resumed claim.",
-        "Focused artifact coverage proves Warcrest Ruin remains uncollected during redirect and guard clearance, then is secured/equipped by Mireclaw after the resumed claim.",
-        "Encounter arrival risk, live turn execution, hero hunt, and town assault reports remain passing."
+        "Target assignment now checks active same-faction fronts that need support before falling back to normal retake/saved/live/score target selection.",
+        "New support assignments carry active_front_support and army_consolidation reason codes plus supported-front metadata.",
+        "Adjacent support grouping now works for shared encounter fronts in addition to town assaults.",
+        "Focused encounter evidence proves Sable reinforces Vaska at causeway_levee_cutters and merges into the encounter-objective host through normal advance_raids.",
+        "Existing town-assault grouping, town-assault risk, live turn execution, guarded claim, artifact, and hero-hunt strategic AI reports remain passing."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-guarded-object-claim-routing-report.md",
-        "docs/strategic-ai-raid-regroup-retreat-report.md",
-        "docs/strategic-ai-artifact-task-board-report.md"
+        "docs/strategic-ai-encounter-arrival-risk-gating-report.md",
+        "docs/strategic-ai-commander-assault-consolidation-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
       "focusedReports": [
-        "AI_RAID_REGROUP_RETREAT_REPORT",
-        "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
         "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT",
-        "AI_HERO_TASK_HERO_HUNT_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT"
+        "AI_RAID_ASSAULT_GROUPING_REPORT"
       ],
-      "residualRisk": "This closes guarded-claim follow-through after guard clearance. Full release-ready strategic AI still needs long-run generated-map behavior, coordinated multi-hero planning, stronger army economy timing, retreat timing review, and manual live-client pacing checks."
+      "residualRisk": "This adds live active-front support and encounter-front consolidation. Full release-ready strategic AI still needs generated-map long-run behavior, broader multi-front planning, retreat timing review, and manual live-client pacing checks."
     }
   }
 }

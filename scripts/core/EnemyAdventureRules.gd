@@ -674,7 +674,9 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _refresh_target(session, raid)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
-		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
+		var plan = ai_active_front_support_target_selection_plan(session, config, raid)
+		if plan.is_empty():
+			plan = ai_live_town_retake_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 		if plan.is_empty():
@@ -711,6 +713,156 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 			)
 		_ai_hero_task_record_live_assignment(session, config, raid, current_target, task_record_for_assignment)
 	return raid
+
+static func ai_active_front_support_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	if faction_id == "":
+		return {}
+	var current_placement_id := String(raid.get("placement_id", ""))
+	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var best := {}
+	for front_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(front_value, faction_id, resolved_encounters):
+			continue
+		var front: Dictionary = front_value
+		if String(front.get("placement_id", "")) == current_placement_id:
+			continue
+		if not _active_front_needs_support(front):
+			continue
+		var candidate := _active_front_support_candidate(session, config, faction_id, front, origin_pos, current_placement_id)
+		if candidate.is_empty():
+			continue
+		if best.is_empty() or _active_front_support_candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _active_front_needs_support(front: Dictionary) -> bool:
+	if front.is_empty():
+		return false
+	var reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
+	for code in [
+		"awaiting_support",
+		"assault_risk_staging",
+		"assault_risk_regroup",
+		"encounter_risk_staging",
+		"encounter_risk_regroup",
+		"guard_clearance",
+		"objective_front",
+	]:
+		if code in reason_codes:
+			return true
+	if raid_regroup_needed(front):
+		return true
+	var desired := desired_raid_strength(front)
+	var strength := raid_strength(front)
+	return desired > 0 and strength < int(ceili(float(desired) * 0.90))
+
+static func _active_front_support_candidate(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	front: Dictionary,
+	origin_pos: Vector2i,
+	current_placement_id: String
+) -> Dictionary:
+	var target_kind := String(front.get("target_kind", ""))
+	var target_id := String(front.get("target_placement_id", ""))
+	var front_reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
+	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter"]:
+		target_kind = String(front.get("previous_target_kind", ""))
+		target_id = String(front.get("previous_target_placement_id", ""))
+	if target_kind not in ["town", "encounter"] or target_id == "":
+		return {}
+	var target_label := ""
+	var target_x := 0
+	var target_y := 0
+	var goal_tiles := []
+	var objective_anchor := false
+	match target_kind:
+		"town":
+			var town_result := _find_town_by_placement(session, target_id)
+			if int(town_result.get("index", -1)) < 0:
+				return {}
+			var town: Dictionary = town_result.get("town", {})
+			if String(town.get("owner", "neutral")) != "player":
+				return {}
+			target_label = _town_name(town)
+			target_x = int(town.get("x", 0))
+			target_y = int(town.get("y", 0))
+			goal_tiles = _town_staging_tiles(session, town)
+			objective_anchor = _town_is_objective_anchor(session, target_id)
+		"encounter":
+			var encounter_result := _find_encounter_by_placement(session, target_id)
+			if int(encounter_result.get("index", -1)) < 0:
+				return {}
+			var encounter: Dictionary = encounter_result.get("encounter", {})
+			if OverworldRulesScript.is_encounter_resolved(session, encounter):
+				return {}
+			var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+			target_label = String(encounter_template.get("name", target_id))
+			target_x = int(encounter.get("x", 0))
+			target_y = int(encounter.get("y", 0))
+			goal_tiles = _encounter_staging_tiles(session, encounter)
+			objective_anchor = _encounter_is_objective_anchor(session, encounter)
+	if goal_tiles.is_empty():
+		return {}
+	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id)
+	if goal_distance >= 9999:
+		return {}
+	var goal_tile := _best_goal_tile(session, origin_pos, goal_tiles)
+	var reason_codes := ["active_front_support", "army_consolidation"]
+	for code in ["town_siege", "objective_front", "guard_clearance", "site_contested"]:
+		if code in front_reason_codes and code not in reason_codes:
+			reason_codes.append(code)
+	if target_kind == "town" and "town_siege" not in reason_codes:
+		reason_codes.append("town_siege")
+	if target_kind == "encounter" and "objective_front" not in reason_codes and objective_anchor:
+		reason_codes.append("objective_front")
+	var strength_gap: int = max(0, desired_raid_strength(front) - raid_strength(front))
+	var priority: int = int(max(
+		0,
+		_weighted_priority(
+			config,
+			faction_id,
+			target_kind,
+			target_id,
+			180 + int(ceili(float(strength_gap) / 4.0)) + priority_target_bonus(config, target_id),
+			"",
+			objective_anchor
+		) - _assignment_penalty(session, target_kind, target_id)
+	))
+	return {
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+		"target_label": target_label,
+		"target_x": target_x,
+		"target_y": target_y,
+		"goal_x": goal_tile.x,
+		"goal_y": goal_tile.y,
+		"goal_distance": goal_distance,
+		"priority": priority,
+		"target_reason_codes": reason_codes,
+		"target_public_reason": "reinforcing active front",
+		"target_public_importance": "high",
+		"target_debug_reason": "active front support for %s" % String(front.get("placement_id", "")),
+		"supporting_front_placement_id": String(front.get("placement_id", "")),
+		"supporting_front_target_kind": target_kind,
+		"supporting_front_target_id": target_id,
+	}
+
+static func _active_front_support_candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
+	if int(candidate.get("priority", 0)) == int(best.get("priority", 0)):
+		if int(candidate.get("goal_distance", 9999)) == int(best.get("goal_distance", 9999)):
+			return String(candidate.get("target_label", "")) < String(best.get("target_label", ""))
+		return int(candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+	return int(candidate.get("priority", 0)) > int(best.get("priority", 0))
 
 static func ai_live_town_retake_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
@@ -932,7 +1084,8 @@ static func group_nearby_raids_for_town_assault(
 ) -> Dictionary:
 	if session == null or leader.is_empty() or leader_index < 0 or leader_index >= encounters.size():
 		return {"encounter": leader, "grouped": false, "events": []}
-	if String(leader.get("target_kind", "")) != "town":
+	var target_kind := String(leader.get("target_kind", ""))
+	if target_kind not in ["town", "encounter"]:
 		return {"encounter": leader, "grouped": false, "events": []}
 	if raid_regroup_needed(leader):
 		return {"encounter": leader, "grouped": false, "events": []}
@@ -940,11 +1093,8 @@ static func group_nearby_raids_for_town_assault(
 	var leader_id := String(leader.get("placement_id", ""))
 	if town_id == "" or leader_id == "":
 		return {"encounter": leader, "grouped": false, "events": []}
-	var town_result := _find_town_by_placement(session, town_id)
-	if int(town_result.get("index", -1)) < 0:
-		return {"encounter": leader, "grouped": false, "events": []}
-	var town: Dictionary = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "player":
+	var target_view := _raid_grouping_target_view(session, target_kind, town_id)
+	if target_view.is_empty():
 		return {"encounter": leader, "grouped": false, "events": []}
 	var donor_index := _best_nearby_assault_support_raid_index(
 		session,
@@ -970,13 +1120,13 @@ static func group_nearby_raids_for_town_assault(
 	leader["last_grouped_support_placement_id"] = donor_id
 	leader["last_grouped_support_day"] = int(session.day)
 	var reason_codes := _normalize_string_array(leader.get("target_reason_codes", []))
-	for code in ["army_consolidation", "town_siege"]:
+	for code in _raid_grouping_reason_codes(target_kind, reason_codes):
 		if code not in reason_codes:
 			reason_codes.append(code)
 	leader["target_reason_codes"] = reason_codes
 	leader["target_public_reason"] = "army consolidation"
 	leader["target_public_importance"] = "high"
-	leader["target_debug_reason"] = "nearby support host consolidated for town assault"
+	leader["target_debug_reason"] = "nearby support host consolidated for %s" % target_kind
 	var commander_state = leader.get("enemy_commander_state", {})
 	if commander_state is Dictionary and not commander_state.is_empty():
 		leader["enemy_commander_state"] = sync_commander_army_continuity(
@@ -1006,20 +1156,20 @@ static func group_nearby_raids_for_town_assault(
 		"ai_raid_grouped",
 		leader,
 		{
-			"target_kind": "town",
+			"target_kind": target_kind,
 			"target_placement_id": town_id,
-			"target_label": _town_name(town),
-			"target_x": int(town.get("x", 0)),
-			"target_y": int(town.get("y", 0)),
-			"target_reason_codes": ["army_consolidation", "town_siege"],
+			"target_label": String(target_view.get("target_label", "the front")),
+			"target_x": int(target_view.get("target_x", 0)),
+			"target_y": int(target_view.get("target_y", 0)),
+			"target_reason_codes": _raid_grouping_reason_codes(target_kind, reason_codes),
 			"target_public_reason": "army consolidation",
 			"target_public_importance": "high",
 		},
 		{
-			"summary": "%s folds %s into the assault on %s." % [
+			"summary": "%s folds %s into the push on %s." % [
 				_raid_name(leader),
 				_raid_name(donor),
-				_town_name(town),
+				String(target_view.get("target_label", "the front")),
 			],
 			"state_policy": "durable_state_reference",
 			"public_importance": "high",
@@ -1034,6 +1184,50 @@ static func group_nearby_raids_for_town_assault(
 		"leader_strength_after": raid_strength(leader),
 		"donor_strength": donor_strength,
 	}
+
+static func _raid_grouping_target_view(
+	session: SessionStateStoreScript.SessionData,
+	target_kind: String,
+	target_id: String
+) -> Dictionary:
+	match target_kind:
+		"town":
+			var town_result := _find_town_by_placement(session, target_id)
+			if int(town_result.get("index", -1)) < 0:
+				return {}
+			var town: Dictionary = town_result.get("town", {})
+			if String(town.get("owner", "neutral")) != "player":
+				return {}
+			return {
+				"target_label": _town_name(town),
+				"target_x": int(town.get("x", 0)),
+				"target_y": int(town.get("y", 0)),
+			}
+		"encounter":
+			var encounter_result := _find_encounter_by_placement(session, target_id)
+			if int(encounter_result.get("index", -1)) < 0:
+				return {}
+			var encounter: Dictionary = encounter_result.get("encounter", {})
+			if OverworldRulesScript.is_encounter_resolved(session, encounter):
+				return {}
+			var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+			return {
+				"target_label": String(encounter_template.get("name", target_id)),
+				"target_x": int(encounter.get("x", 0)),
+				"target_y": int(encounter.get("y", 0)),
+			}
+	return {}
+
+static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes: Array) -> Array:
+	var output := ["army_consolidation"]
+	if target_kind == "town":
+		output.append("town_siege")
+	elif target_kind == "encounter":
+		output.append("objective_front")
+	for code in ["guard_clearance", "site_contested", "active_front_support"]:
+		if code in leader_reason_codes and code not in output:
+			output.append(code)
+	return output
 
 static func _best_nearby_assault_support_raid_index(
 	session: SessionStateStoreScript.SessionData,
@@ -1058,7 +1252,7 @@ static func _best_nearby_assault_support_raid_index(
 		var donor: Dictionary = donor_value
 		if bool(donor.get("arrived", false)):
 			continue
-		if String(donor.get("target_kind", "")) != "town":
+		if String(donor.get("target_kind", "")) != String(leader.get("target_kind", "")):
 			continue
 		if String(donor.get("target_placement_id", "")) != town_id:
 			continue
