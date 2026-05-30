@@ -22,6 +22,7 @@ const COMMANDER_OUTCOME_STALEMATE := "stalemate"
 const COMMANDER_OUTCOME_RESOURCE_SECURED := "resource_secured"
 const COMMANDER_OUTCOME_ARTIFACT_SECURED := "artifact_secured"
 const COMMANDER_OUTCOME_OBJECTIVE_SECURED := "objective_secured"
+const COMMANDER_OUTCOME_TOWN_CAPTURED := "town_captured"
 const COMMANDER_OUTCOME_SITE_DEFENDED := "site_defended"
 const COMMANDER_OUTCOME_TOWN_DEFENDED := "town_defended"
 const COMMANDER_RECOVERY_DAYS_DEFEATED := 3
@@ -101,6 +102,7 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_site_seized",
 	"ai_site_contested",
 	"ai_site_defended",
+	"ai_town_captured",
 	"ai_town_defended",
 	"ai_town_built",
 	"ai_town_recruited",
@@ -3396,6 +3398,9 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 		COMMANDER_OUTCOME_OBJECTIVE_SECURED:
 			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_OBJECTIVE_SECURED)
+		COMMANDER_OUTCOME_TOWN_CAPTURED:
+			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_OBJECTIVE_SECURED)
 		COMMANDER_OUTCOME_SITE_DEFENDED:
 			record["strategic_successes"] = int(record.get("strategic_successes", 0)) + 1
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_SITE_DEFENDED)
@@ -5460,6 +5465,17 @@ static func _target_candidates(session: SessionStateStoreScript.SessionData, con
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 20
 		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id)
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "neutral")) != "neutral":
+			continue
+		if _town_garrison_strength(town) > 0:
+			continue
+		var base_priority = 145
+		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
+			base_priority += 45
+		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id)
 
 	for node in session.overworld.get("resource_nodes", []):
 		_append_resource_candidate(
@@ -5521,7 +5537,9 @@ static func _append_town_candidate(
 	if int(town_result.get("index", -1)) < 0:
 		return
 	var town = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "player":
+	var owner := String(town.get("owner", "neutral"))
+	var neutral_expansion := owner == "neutral" and _town_garrison_strength(town) <= 0
+	if owner != "player" and not neutral_expansion:
 		return
 
 	seen[seen_key] = true
@@ -5532,8 +5550,8 @@ static func _append_town_candidate(
 		return
 	var objective_anchor = _town_is_objective_anchor(session, placement_id)
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
-	var reason_codes := ["town_siege"]
-	if objective_anchor:
+	var reason_codes := ["town_expansion", "neutral_town_claim"] if neutral_expansion else ["town_siege"]
+	if objective_anchor and "objective_front" not in reason_codes:
 		reason_codes.append("objective_front")
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "town", placement_id)
 	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
@@ -5561,9 +5579,19 @@ static func _append_town_candidate(
 				) - _assignment_penalty(session, "town", placement_id)
 			),
 			"target_reason_codes": reason_codes,
-			"target_public_reason": "town siege remains the main front" if placement_id == String(config.get("siege_target_placement_id", "")) else "town front pressure",
-			"target_debug_reason": "town siege and objective pressure" if objective_anchor else "town siege pressure",
-			"target_public_importance": "critical" if objective_anchor or placement_id == String(config.get("siege_target_placement_id", "")) else "high",
+			"target_public_reason": (
+				"neutral town expansion"
+				if neutral_expansion
+				else "town siege remains the main front" if placement_id == String(config.get("siege_target_placement_id", ""))
+				else "town front pressure"
+			),
+			"target_debug_reason": (
+				"reachable empty neutral town expansion"
+				if neutral_expansion
+				else "town siege and objective pressure" if objective_anchor
+				else "town siege pressure"
+			),
+			"target_public_importance": "high" if neutral_expansion else "critical" if objective_anchor or placement_id == String(config.get("siege_target_placement_id", "")) else "high",
 		}
 	)
 
@@ -7379,6 +7407,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "front stabilization"
 	if "retake_front" in codes:
 		return "retaking captured town"
+	if "town_expansion" in codes or "neutral_town_claim" in codes:
+		return "neutral town expansion"
 	if "resource_risk_staging" in codes or "resource_risk_regroup" in codes:
 		return "gathering strength for resource claim"
 	if "town_siege" in codes:
@@ -10624,6 +10654,8 @@ static func _ai_event_summary(
 			return "%s contests %s%s." % [actor_clause, target_label, reason_suffix]
 		"ai_site_defended":
 			return "%s defends %s%s." % [actor_clause, target_label, reason_suffix]
+		"ai_town_captured":
+			return "%s claims %s%s." % [actor_clause, target_label, reason_suffix]
 		"ai_pressure_summary":
 			return "%s pressure centers on %s%s." % [faction_label, target_label, reason_suffix]
 		"ai_raid_grouped":
@@ -11163,6 +11195,13 @@ static func _resolve_arrived_target(
 			var town: Dictionary = town_result.get("town", {})
 			if (
 				not town.is_empty()
+				and String(town.get("owner", "neutral")) == "neutral"
+				and _town_garrison_strength(town) <= 0
+				and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes)
+			):
+				return _secure_neutral_town_target(session, raid, state, faction_id)
+			if (
+				not town.is_empty()
 				and String(town.get("owner", "neutral")) == "enemy"
 				and _town_faction_id(town) == faction_id
 				and "town_defense" in reason_codes
@@ -11402,6 +11441,66 @@ static func _defend_resource_target(
 			"state_policy": "durable_state_reference",
 		}
 	)
+	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
+
+static func _secure_neutral_town_target(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+	var town: Dictionary = town_result.get("town", {})
+	if int(town_result.get("index", -1)) < 0 or town.is_empty():
+		return {"encounter": raid, "state": state, "event_message": ""}
+	if String(town.get("owner", "neutral")) != "neutral" or _town_garrison_strength(town) > 0:
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var transition: Dictionary = OverworldRulesScript.transition_town_control(
+		session,
+		String(town.get("placement_id", "")),
+		"enemy",
+		faction_id,
+		"strategic_ai_neutral_town_expansion"
+	)
+	if not bool(transition.get("ok", false)):
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var captured_town: Dictionary = transition.get("town", town) if transition.get("town", town) is Dictionary else town
+	state["pressure"] = max(0, int(state.get("pressure", 0))) + 2
+	var updated_raid := _record_adventure_objective_success(
+		session,
+		faction_id,
+		raid,
+		COMMANDER_OUTCOME_TOWN_CAPTURED
+	)
+	var reason_codes := ["town_expansion", "neutral_town_claim"]
+	var town_label := _town_name(captured_town)
+	var message := "%s claims %s for %s." % [
+		_raid_name(updated_raid),
+		town_label,
+		String(ContentService.get_faction(faction_id).get("name", faction_id)),
+	]
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_town_captured",
+		updated_raid,
+		{
+			"target_kind": "town",
+			"target_placement_id": String(captured_town.get("placement_id", "")),
+			"target_label": town_label,
+			"target_x": int(captured_town.get("x", 0)),
+			"target_y": int(captured_town.get("y", 0)),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": _public_reason_from_codes(reason_codes),
+			"target_public_importance": "high",
+			"target_debug_reason": "empty neutral town captured into enemy economy",
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _defend_town_target(
@@ -12302,6 +12401,10 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 					"town_defense" in reason_codes
 					and String(town.get("owner", "neutral")) == "enemy"
 					and _town_faction_id(town) == String(raid.get("spawned_by_faction_id", ""))
+				) or (
+					String(town.get("owner", "neutral")) == "neutral"
+					and _town_garrison_strength(town) <= 0
+					and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes)
 				)
 		"regroup":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))

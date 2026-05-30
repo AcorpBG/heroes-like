@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-resource-front-support-10184",
-  "currentSliceTitle": "Strategic AI Resource Front Support",
+  "currentSliceId": "strategic-ai-neutral-town-expansion-10184",
+  "currentSliceTitle": "Strategic AI Neutral Town Expansion",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Contested resource fronts now use proactive strength checks and active-front support, with fragile hosts regrouping or staging around the original resource objective instead of solo-claiming high-value fronts.",
+  "currentSliceNotes": "Completed. Generated-map/skirmish AI empires now target and capture reachable empty neutral towns as expansion objectives; broader strategic AI production readiness remains open.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T20:28:00Z",
+  "updatedAt": "2026-05-30T20:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-neutral-town-expansion-10184",
+      "title": "Strategic AI Neutral Town Expansion",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / generated-map neutral town expansion",
+      "purpose": "Make AI commanders identify and capture reachable empty neutral towns as expansion objectives so generated-map empires can grow map control beyond player-town attacks and resource/object claims.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-coordinated-task-planner-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_neutral_town_expansion_report.gd",
+        "tests/ai_neutral_town_expansion_report.tscn",
+        "docs/strategic-ai-neutral-town-expansion-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Reachable empty neutral towns appear as expansion candidates, planned commander tasks can reserve them, an arriving AI raid transitions the town to enemy control with controlling_faction_id/front state, emits a compact public event, and existing strategic AI regressions remain green.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "implementing neutral-town siege battles for defended neutral towns",
+        "running the full 100-seed eight-week generated-map matrix in this slice",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T20:35:00Z",
+      "updatedAt": "2026-05-30T20:55:00Z",
+      "completedAt": "2026-05-30T20:55:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed; planned neutral-town expansion target and captured empty neutral town into enemy control)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false with generated-map coverage/generalization blockers)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "notes": [
+        "Selected after finding target selection and town-assault code only handled player towns, leaving neutral generated-map towns out of AI expansion.",
+        "This slice focuses on empty neutral towns. Defended neutral-town battle resolution remains a later combat/strategic-AI integration slice.",
+        "Completed with focused live coverage proving planned-task reservation, ownership transition, controlling_faction_id update, front-state stabilization, public capture event emission, commander outcome recording, and task completion."
+      ]
+    },
     {
       "id": "strategic-ai-resource-front-support-10184",
       "title": "Strategic AI Resource Front Support",
@@ -39761,17 +39820,14 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-30T17:39:10Z",
+    "updatedAt": "2026-05-30T20:55:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; planned 10 distinct commander tasks and spawned raid activated a planned target)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed; planned neutral-town expansion target and captured empty neutral town into enemy control)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; persistent task-board blocker removed, production_ready remains false)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; generated-map row reported durable task-board activity and preserves full-matrix remaining validation)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false with generated-map coverage/generalization blockers)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "python3 -m py_compile tests/validate_repo.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
@@ -39779,12 +39835,12 @@
     "status": "passed"
   },
   "active_slice": {
-    "sliceId": "strategic-ai-coordinated-task-planner-10184",
+    "sliceId": "strategic-ai-neutral-town-expansion-10184",
     "status": "completed",
-    "updatedAt": "2026-05-30T17:39:10Z",
-    "summary": "Completed. Enemy turns seed durable coordinated commander tasks before raid deployment; broader strategic AI production readiness remains open."
+    "updatedAt": "2026-05-30T20:55:00Z",
+    "summary": "Completed. Generated-map/skirmish AI commanders now plan and capture reachable empty neutral towns as expansion objectives; broader strategic AI production readiness remains open."
   },
-  "currentSliceUpdatedAt": "2026-05-30T17:39:10Z",
+  "currentSliceUpdatedAt": "2026-05-30T20:55:00Z",
   "validationHistory": [
     {
       "status": "pass",
