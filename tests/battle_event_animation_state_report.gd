@@ -33,6 +33,8 @@ func _run() -> void:
 	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
 	await _validate_board_playback_lifecycle()
+	await _validate_presentation_event_stream_contract()
+	await _validate_real_faction_matchup_presentation_smoke()
 	await _validate_shell_presentation_event_surface()
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
@@ -296,6 +298,7 @@ func _validate_death_state() -> void:
 
 func _validate_spell_cast_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	session.battle["turn_order"] = ["player_0", "player_0"]
 	session.battle["player_commander_state"] = _spellcaster_state()
 	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
 	var result := BattleRulesScript.cast_player_spell(session, "spell_cinder_burst")
@@ -707,9 +710,126 @@ func _validate_shell_presentation_event_surface() -> void:
 		"shell_payload": shell_payload,
 		"event_visible_text": String(snapshot.get("event_visible_text", "")),
 		"event_tooltip_text": String(snapshot.get("event_tooltip_text", "")),
+		"presentation_events": snapshot.get("battle_presentation_events", []),
+		"presentation_stream_text": String(snapshot.get("battle_presentation_stream_text", "")),
+		"presentation_speed": String(snapshot.get("battle_presentation_speed", "")),
 	}
 	frame.queue_free()
 	await get_tree().process_frame
+
+func _validate_presentation_event_stream_contract() -> void:
+	var strike_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
+	_set_stack_field(strike_session.battle, "player_0", "total_health", 999)
+	_set_stack_field(strike_session.battle, "enemy_0", "total_health", 999)
+	_set_stack_field(strike_session.battle, "enemy_0", "retaliations_left", 1)
+	var strike_result := BattleRulesScript.perform_player_action(strike_session, "strike")
+	_expect_ok("presentation stream strike", strike_result)
+	var strike_types := _presentation_event_types(strike_session.battle)
+	for expected_type in ["strike", "damage", "retaliation"]:
+		if expected_type not in strike_types:
+			_error("Presentation strike stream is missing %s in %s." % [expected_type, BattleRulesScript.battle_presentation_event_stream(strike_session.battle)])
+	var strike_stream_text := BattleRulesScript.describe_battle_presentation_stream(strike_session, 6)
+	for token in ["strikes", "damage", "retaliates"]:
+		if not strike_stream_text.to_lower().contains(token):
+			_error("Presentation strike stream text lost %s in %s." % [token, strike_stream_text])
+
+	var spell_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	spell_session.battle["turn_order"] = ["player_0", "player_0"]
+	spell_session.battle["player_commander_state"] = _spellcaster_state()
+	_set_stack_field(spell_session.battle, "enemy_0", "total_health", 999)
+	_set_stack_field(spell_session.battle, "enemy_0", "spell_resistance_pct", 40)
+	var spell_result := BattleRulesScript.cast_player_spell(spell_session, "spell_cinder_burst")
+	_expect_ok("presentation stream spell", spell_result)
+	var spell_types := _presentation_event_types(spell_session.battle)
+	for expected_type in ["cast", "spell_damage", "resist"]:
+		if expected_type not in spell_types:
+			_error("Presentation spell stream is missing %s in %s." % [expected_type, BattleRulesScript.battle_presentation_event_stream(spell_session.battle)])
+	var latest_spell_event := BattleRulesScript.latest_battle_presentation_event_payload(spell_session)
+	if int(latest_spell_event.get("serial", 0)) <= 0:
+		_error("Latest presentation payload did not expose a positive serial: %s." % latest_spell_event)
+
+	var speed_session := _basic_session("unit_river_guard", "unit_bog_brute", 0, 3, 7, 3)
+	var speed_result := BattleRulesScript.set_battle_presentation_speed(speed_session, BattleRulesScript.PRESENTATION_SPEED_FAST)
+	_expect_ok("presentation speed set", speed_result)
+	var destinations: Array = BattleRulesScript.legal_destinations_for_active_stack(speed_session.battle)
+	if destinations.is_empty():
+		_error("Presentation speed case has no legal move destination.")
+	else:
+		var destination: Dictionary = destinations[0]
+		var move_result := BattleRulesScript.move_active_stack_to_hex(speed_session, int(destination.get("q", 0)), int(destination.get("r", 0)))
+		_expect_ok("presentation speed move", move_result)
+		var board_summary := _board_summary_for_session(speed_session)
+		var playback: Dictionary = board_summary.get("animation_playback", {}) if board_summary.get("animation_playback", {}) is Dictionary else {}
+		_expect_equal("presentation speed board mode", String(playback.get("presentation_speed", "")), BattleRulesScript.PRESENTATION_SPEED_FAST)
+		if int(playback.get("effective_playback_duration_msec", 9999)) >= int(playback.get("playback_duration_msec", 0)):
+			_error("Fast presentation speed did not reduce playback duration: %s." % playback)
+	_report["cases"]["presentation_event_stream"] = {
+		"strike_types": strike_types,
+		"spell_types": spell_types,
+		"strike_stream_text": strike_stream_text,
+		"spell_events": BattleRulesScript.battle_presentation_event_stream(spell_session.battle),
+	}
+
+func _validate_real_faction_matchup_presentation_smoke() -> void:
+	var cases := [
+		{
+			"id": "thornwake_veilmourn",
+			"player_unit": "unit_thornwake_barkmantle_rams",
+			"enemy_unit": "unit_veilmourn_undertow_harpooners",
+		},
+		{
+			"id": "brasshollow_embercourt",
+			"player_unit": "unit_brasshollow_boiler_rivetcasters",
+			"enemy_unit": "unit_embercourt_ash_oath_bailiffs",
+		},
+	]
+	var results := {}
+	for case in cases:
+		var case_id := String(case.get("id", ""))
+		var session := _basic_session(String(case.get("player_unit", "")), String(case.get("enemy_unit", "")), 4, 3, 5, 3)
+		session.battle["turn_order"] = ["player_0", "player_0"]
+		_set_stack_field(session.battle, "player_0", "total_health", 999)
+		_set_stack_field(session.battle, "enemy_0", "total_health", 999)
+		_set_stack_field(session.battle, "enemy_0", "retaliations_left", 0)
+		var speed_result := BattleRulesScript.set_battle_presentation_speed(session, BattleRulesScript.PRESENTATION_SPEED_FAST)
+		_expect_ok("%s speed set" % case_id, speed_result)
+		var result := BattleRulesScript.perform_player_action(session, "strike")
+		_expect_ok("%s strike" % case_id, result)
+		var event_types := _presentation_event_types(session.battle)
+		for expected_type in ["strike", "damage"]:
+			if expected_type not in event_types:
+				_error("%s real-faction stream missing %s in %s." % [case_id, expected_type, BattleRulesScript.battle_presentation_event_stream(session.battle)])
+		var stream_text := BattleRulesScript.describe_battle_presentation_stream(session, 4)
+		if not stream_text.to_lower().contains("damage"):
+			_error("%s real-faction shell stream does not read as damage: %s." % [case_id, stream_text])
+		SessionState.set_active_session(session)
+		var frame := Control.new()
+		frame.name = "%sBattlePresentationSmokeFrame" % case_id
+		frame.size = Vector2(1024.0, 640.0)
+		add_child(frame)
+		var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+		frame.add_child(shell)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if shell.has_method("validation_set_battle_resolution_routing_enabled"):
+			shell.call("validation_set_battle_resolution_routing_enabled", false)
+		if shell.has_method("_refresh"):
+			shell.call("_refresh")
+		await get_tree().process_frame
+		var snapshot: Dictionary = shell.call("validation_snapshot") if shell.has_method("validation_snapshot") else {}
+		var shell_stream := String(snapshot.get("battle_presentation_stream_text", ""))
+		if shell_stream == "" or not shell_stream.to_lower().contains("damage"):
+			_error("%s shell did not consume the real-faction presentation stream: %s." % [case_id, snapshot])
+		_expect_equal("%s shell speed" % case_id, String(snapshot.get("battle_presentation_speed", "")), BattleRulesScript.PRESENTATION_SPEED_FAST)
+		results[case_id] = {
+			"event_types": event_types,
+			"stream_text": stream_text,
+			"shell_stream": shell_stream,
+			"speed": String(snapshot.get("battle_presentation_speed", "")),
+		}
+		frame.queue_free()
+		await get_tree().process_frame
+	_report["cases"]["real_faction_presentation_smoke"] = results
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:
 	return _session_for_stacks(
@@ -840,6 +960,16 @@ func _observed_animation_states(summary: Dictionary) -> Dictionary:
 		if entry is Dictionary:
 			observed_states[String(entry.get("battle_id", ""))] = String(entry.get("animation_state", ""))
 	return observed_states
+
+func _presentation_event_types(battle: Dictionary) -> Array:
+	var types := []
+	for event in BattleRulesScript.battle_presentation_event_stream(battle):
+		if not (event is Dictionary):
+			continue
+		var event_type := String(event.get("event_type", ""))
+		if event_type != "" and event_type not in types:
+			types.append(event_type)
+	return types
 
 func _cue_record_for(cue_playback: Dictionary, battle_id: String) -> Dictionary:
 	var records: Dictionary = cue_playback.get("active_records", {}) if cue_playback.get("active_records", {}) is Dictionary else {}

@@ -599,6 +599,25 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Latest ready save: none."
 
+[node name="SpeedBar" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SpeedNormal" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Normal"
+
+[node name="SpeedFast" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fast"
+
+[node name="SpeedInstant" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Instant"
+
 [node name="SaveSlot" type="OptionButton" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -621,6 +640,9 @@ text = "Menu"
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Defend" to="." method="_on_defend_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Retreat" to="." method="_on_retreat_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Surrender" to="." method="_on_surrender_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedNormal" to="." method="_on_speed_normal_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedFast" to="." method="_on_speed_fast_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedInstant" to="." method="_on_speed_instant_pressed"]
 [connection signal="item_selected" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Menu" to="." method="_on_menu_pressed"]

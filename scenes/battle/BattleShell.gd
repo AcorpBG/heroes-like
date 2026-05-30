@@ -55,6 +55,9 @@ const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_p
 @onready var _defend_button: Button = %Defend
 @onready var _retreat_button: Button = %Retreat
 @onready var _surrender_button: Button = %Surrender
+@onready var _speed_normal_button: Button = %SpeedNormal
+@onready var _speed_fast_button: Button = %SpeedFast
+@onready var _speed_instant_button: Button = %SpeedInstant
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _system_body_label: Label = %SystemBody
@@ -71,6 +74,7 @@ var _validation_battle_resolution_routing_enabled := true
 var _last_action_recap_payload := {}
 var _last_action_recap_text := ""
 var _battle_exit_handoff_in_progress := false
+var _battle_presentation_stream_text := ""
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -350,6 +354,21 @@ func _on_retreat_pressed() -> void:
 func _on_surrender_pressed() -> void:
 	_perform_action("surrender")
 
+func _on_speed_normal_pressed() -> void:
+	_set_battle_presentation_speed(BattleRules.PRESENTATION_SPEED_NORMAL)
+
+func _on_speed_fast_pressed() -> void:
+	_set_battle_presentation_speed(BattleRules.PRESENTATION_SPEED_FAST)
+
+func _on_speed_instant_pressed() -> void:
+	_set_battle_presentation_speed(BattleRules.PRESENTATION_SPEED_INSTANT)
+
+func _set_battle_presentation_speed(speed: String) -> void:
+	var result := BattleRules.set_battle_presentation_speed(_session, speed)
+	if bool(result.get("ok", false)):
+		_last_message = String(result.get("message", ""))
+	_refresh()
+
 func _on_spell_action_pressed(action_id: String) -> void:
 	if not action_id.begins_with("cast_spell:"):
 		return
@@ -461,7 +480,8 @@ func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: Stri
 	_last_message = String(result.get("message", _last_message))
 	_event_label.text = _last_message
 	_disable_battle_exit_handoff_inputs()
-	var timer := get_tree().create_timer(0.72)
+	var handoff_seconds: float = max(0.01, float(BattleRules.battle_presentation_playback_msec(snapshot)) / 1000.0)
+	var timer := get_tree().create_timer(handoff_seconds)
 	timer.timeout.connect(_complete_battle_exit_animation_handoff.bind(route_target))
 	return true
 
@@ -495,6 +515,7 @@ func _refresh() -> void:
 	section_started = ProfileLogScript.begin_usec()
 	_rebuild_spell_actions()
 	_refresh_action_buttons()
+	_refresh_speed_buttons()
 	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker()
@@ -510,28 +531,34 @@ func _refresh() -> void:
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
+	_battle_presentation_stream_text = BattleRules.describe_battle_presentation_stream(_session, 4)
 	var presentation_event := BattleRules.latest_animation_event_presentation_payload(_session)
 	var presentation_text := String(presentation_event.get("visible_text", "")).strip_edges()
 	var presentation_dispatch_text := dispatch_text
+	if _battle_presentation_stream_text != "":
+		presentation_dispatch_text = "%s\n%s" % [_battle_presentation_stream_text, presentation_dispatch_text]
 	if presentation_text != "":
-		presentation_dispatch_text = "%s\n%s" % [presentation_text, dispatch_text]
+		presentation_dispatch_text = "%s\n%s" % [presentation_text, presentation_dispatch_text]
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var action_context_surface := _battle_action_context_surface(presentation_dispatch_text, action_confirmation)
 	if action_context_surface.is_empty():
-		_set_single_line_label(_event_label, presentation_dispatch_text)
+		_set_compact_label(_event_label, presentation_dispatch_text, 3)
 		if presentation_text != "":
 			_event_label.tooltip_text = _join_tooltip_sections([
 				String(presentation_event.get("tooltip_text", "")),
+				_battle_presentation_stream_text,
 				dispatch_text,
 			])
 	else:
-		_set_single_line_label(
+		_set_compact_label(
 			_event_label,
-			"%s\n%s" % [String(action_context_surface.get("visible_text", "")), presentation_dispatch_text]
+			"%s\n%s" % [String(action_context_surface.get("visible_text", "")), presentation_dispatch_text],
+			3
 		)
 		_event_label.tooltip_text = _join_tooltip_sections([
 			String(action_context_surface.get("tooltip_text", _event_label.tooltip_text)),
 			String(presentation_event.get("tooltip_text", "")),
+			_battle_presentation_stream_text,
 		])
 	_set_single_line_label(_battle_context_label, BattleRules.describe_entry_context(_session))
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
@@ -718,6 +745,25 @@ func _refresh_action_buttons() -> void:
 	_strike_button.tooltip_text = "%s Target: %s." % [_strike_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _strike_button.tooltip_text
 	_shoot_button.tooltip_text = "%s Target: %s." % [_shoot_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _shoot_button.tooltip_text
 	_append_last_action_tooltips()
+
+func _refresh_speed_buttons() -> void:
+	var speed := BattleRules.battle_presentation_speed(_session)
+	var buttons := {
+		BattleRules.PRESENTATION_SPEED_NORMAL: _speed_normal_button,
+		BattleRules.PRESENTATION_SPEED_FAST: _speed_fast_button,
+		BattleRules.PRESENTATION_SPEED_INSTANT: _speed_instant_button,
+	}
+	for speed_id in buttons.keys():
+		var button: Button = buttons[speed_id]
+		if button == null:
+			continue
+		var selected := String(speed_id) == speed
+		button.disabled = selected
+		button.tooltip_text = (
+			"Current battle playback speed: %s." % speed.capitalize()
+			if selected
+			else "Switch battle playback speed to %s." % String(speed_id).capitalize()
+		)
 
 func _battle_profile_metadata(first_render: bool) -> Dictionary:
 	var battle := _session.battle if _session != null and _session.battle is Dictionary else {}
@@ -1636,6 +1682,7 @@ func validation_snapshot() -> Dictionary:
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
 	var presentation_event := BattleRules.latest_animation_event_presentation_payload(_session)
+	var presentation_stream_text := BattleRules.describe_battle_presentation_stream(_session, 4)
 	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
 	return {
 		"scene_path": scene_file_path,
@@ -1735,6 +1782,9 @@ func validation_snapshot() -> Dictionary:
 		"battle_presentation_event_tooltip_text": String(presentation_event.get("tooltip_text", "")),
 		"battle_presentation_event_source": String(presentation_event.get("source", "")),
 		"battle_presentation_event_id": String(presentation_event.get("event_id", "")),
+		"battle_presentation_events": BattleRules.battle_presentation_event_stream(_session.battle),
+		"battle_presentation_stream_text": presentation_stream_text,
+		"battle_presentation_speed": BattleRules.battle_presentation_speed(_session),
 		"battle_tab_readiness": _battle_tab_readiness_payload(),
 		"battle_tab_titles": _battle_tab_titles(),
 		"battle_tab_readiness_tooltip_text": _battle_tabs.tooltip_text,
@@ -2558,6 +2608,8 @@ func _apply_visual_theme() -> void:
 		_style_action_button(button, false, 88)
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button]:
 		_style_action_button(button, true)
+	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button]:
+		_style_action_button(button, false, 78)
 	for button in [_save_button, _menu_button]:
 		_style_action_button(button, true, 104)
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 104.0, 32.0, 12)

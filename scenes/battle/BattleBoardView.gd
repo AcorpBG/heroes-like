@@ -99,6 +99,7 @@ var _stack_animation_audio_playback_records: Dictionary = {}
 var _active_audio_players: Array = []
 var _battle_sfx_manifest: Dictionary = {}
 var _battle_sfx_manifest_loaded := false
+var _presentation_speed := BattleRulesScript.PRESENTATION_SPEED_NORMAL
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -255,6 +256,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 		_hover_destination_cell = Vector2i(-1, -1)
 	if not battle.is_empty():
 		_battle = battle
+		_presentation_speed = String(_battle.get(BattleRulesScript.PRESENTATION_SPEED_KEY, BattleRulesScript.PRESENTATION_SPEED_NORMAL))
 		_sync_animation_playback_records()
 		_active_stack = BattleRulesScript.get_active_stack(_battle)
 		_target_stack = BattleRulesScript.get_selected_target(_battle)
@@ -505,6 +507,8 @@ func validation_animation_playback_summary() -> Dictionary:
 		records[String(battle_id)] = record.duplicate(true)
 	return {
 		"playback_duration_msec": STACK_ANIMATION_EVENT_PLAYBACK_MSEC,
+		"presentation_speed": _presentation_speed,
+		"effective_playback_duration_msec": _presentation_duration_msec(STACK_ANIMATION_EVENT_PLAYBACK_MSEC),
 		"reaction_delay_msec": STACK_ANIMATION_REACTION_DELAY_MSEC,
 		"active_playback_count": records.size(),
 		"delayed_record_count": delayed_record_count,
@@ -1237,8 +1241,9 @@ func _sync_animation_playback_records() -> void:
 			continue
 		_latest_animation_serial_by_stack[battle_id] = serial
 		var cue_record := _animation_cue_playback_record_for_event(event)
-		var sequence_delay_msec := _sequence_delay_msec_for_event(event, cue_record)
-		var duration_msec: int = int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		var sequence_delay_msec := _presentation_sequence_delay_msec(_sequence_delay_msec_for_event(event, cue_record))
+		var base_duration_msec: int = int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		var duration_msec: int = _presentation_duration_msec(base_duration_msec)
 		var started_at_msec := now + sequence_delay_msec
 		var expires_at_msec: int = started_at_msec + max(1, duration_msec)
 		var playback_record: Dictionary = event.duplicate(true)
@@ -1246,12 +1251,14 @@ func _sync_animation_playback_records() -> void:
 		playback_record["started_at_msec"] = started_at_msec
 		playback_record["expires_at_msec"] = expires_at_msec
 		playback_record["sequence_delay_msec"] = sequence_delay_msec
+		playback_record["max_duration_ms"] = duration_msec
 		_stack_animation_playback_records[battle_id] = playback_record
 		if not cue_record.is_empty():
 			cue_record["observed_at_msec"] = now
 			cue_record["started_at_msec"] = started_at_msec
 			cue_record["expires_at_msec"] = expires_at_msec
 			cue_record["sequence_delay_msec"] = sequence_delay_msec
+			cue_record["max_duration_ms"] = duration_msec
 			_stack_animation_cue_playback_records[battle_id] = cue_record
 			_register_audio_cue_playback(cue_record)
 		else:
@@ -1269,6 +1276,22 @@ func _sequence_delay_msec_for_event(event: Dictionary, cue_record: Dictionary) -
 	if event_id == "battle_retaliation":
 		return STACK_ANIMATION_REACTION_DELAY_MSEC
 	return 0
+
+func _presentation_duration_msec(base_duration_msec: int) -> int:
+	match _presentation_speed:
+		BattleRulesScript.PRESENTATION_SPEED_FAST:
+			return max(1, int(round(float(max(1, base_duration_msec)) * 0.42)))
+		BattleRulesScript.PRESENTATION_SPEED_INSTANT:
+			return 1
+	return max(1, base_duration_msec)
+
+func _presentation_sequence_delay_msec(base_delay_msec: int) -> int:
+	match _presentation_speed:
+		BattleRulesScript.PRESENTATION_SPEED_FAST:
+			return max(0, int(round(float(max(0, base_delay_msec)) * 0.42)))
+		BattleRulesScript.PRESENTATION_SPEED_INSTANT:
+			return 0
+	return max(0, base_delay_msec)
 
 func _expire_animation_playback_records() -> void:
 	var now := int(Time.get_ticks_msec())

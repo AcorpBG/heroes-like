@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "combat-faction-pair-stat-tuning-10184",
-  "currentSliceTitle": "Combat Faction Pair Stat Tuning",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Targeted Thornwake vs Veilmourn W2 tuning: final artifact tmp/battle_balance_100_all_live_thorn_veil_w2_60_unit_late_comp.json has ok=true, W2 Thornwake over Veilmourn 59.0% (down from 71.5%), severity 179 vs prior 187.5, and only one 65+ severe row remains (W1 Thornwake over Veilmourn 67.0). Implemented via unit-only content tuning: Thornwake Barkmantle Rams HP 25->22, Thornwake Graft Matriarchs HP 41->44 and max damage 13->14, Thornwake Worldroot Bastion HP 96->102 and max damage 23->25, Veilmourn Undertow Harpooners max damage 6->7, Veilmourn Obituary Scribes attack 9->10 and max damage 8->9, Veilmourn Mirror-Keel Reavers HP 52->49 and max damage 14->13, Veilmourn Fogbound Leviathan HP 105->100 and max damage 26->24. Spell route was rejected because validation requires Graft Mend base_restore=18.",
+  "currentSliceId": "battle-layout-smoke-followup-10184",
+  "currentSliceTitle": "Battle Layout Smoke Followup",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed battle presentation runtime event stream and speed-control slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-29T18:29:07Z",
+  "updatedAt": "2026-05-30T10:07:18Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -24391,7 +24391,7 @@
     {
       "id": "battle-layout-smoke-followup-10184",
       "title": "Battle Layout Smoke Followup",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
@@ -24417,14 +24417,49 @@
         "broad release/parity claims"
       ],
       "validation": {
-        "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z",
+        "status": "pass",
+        "updatedAt": "2026-05-30T10:07:18Z",
         "sliceId": "battle-layout-smoke-followup-10184",
-        "commands": [],
-        "evidence": {}
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn (passed; 21 cases including presentation_event_stream and real_faction_presentation_smoke)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "BattleRules emits a bounded battle_presentation_events queue with structured move/strike/shoot/cast/damage/heal/buff/debuff/resist/immune/cleanse/death/retaliation/morale/momentum records.",
+            "BattleShell consumes the presentation stream in the dispatch surface and exposes event stream, speed, and readable text through validation_snapshot().",
+            "BattleBoardView scales cue/animation playback by the selected normal, fast, or instant battle presentation speed without changing battle resolution math.",
+            "Focused Godot smoke validates real-unit Thornwake versus Veilmourn and Brasshollow versus Embercourt shell presentation cases."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/battle-presentation-runtime-event-stream-report.md",
+            "docs/battle-event-playback-sequencing-report.md",
+            "docs/animation-event-cue-catalog-contract-report.md"
+          ],
+          "godotReport": {
+            "scene": "res://tests/battle_event_animation_state_report.tscn",
+            "ok": true,
+            "case_count": 21,
+            "new_cases": [
+              "presentation_event_stream",
+              "real_faction_presentation_smoke"
+            ],
+            "real_matchups": [
+              "Thornwake vs Veilmourn",
+              "Brasshollow vs Embercourt"
+            ]
+          },
+          "mathPolicy": "Presentation events and speed controls were added without retuning combat math, units, spells, or AI decisions."
+        }
       },
       "summary": "Pending. Continue battle layout smoke only if the prior manual stop left actionable evidence or a reproducible UI/runtime issue.",
-      "updatedAt": "2026-05-26T09:44:34Z"
+      "updatedAt": "2026-05-30T10:07:18Z",
+      "startedAt": "2026-05-30T09:54:57Z",
+      "notes": "Completed. Battle presentation now has a structured runtime event stream, shell consumption, normal/fast/instant speed controls, and focused Godot smoke over generated cue playback plus real Thornwake/Veilmourn and Brasshollow/Embercourt unit matchups.",
+      "completedAt": "2026-05-30T10:07:18Z"
     },
     {
       "id": "battle-fast-faction-benchmark-10184",
@@ -25149,7 +25184,7 @@
     {
       "id": "combat-faction-pair-stat-tuning-10184",
       "title": "Combat Faction Pair Stat Tuning",
-      "status": "in_progress",
+      "status": "paused",
       "phase": "phase-5-playable-alpha-baseline",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
@@ -25383,7 +25418,7 @@
           }
         }
       },
-      "notes": "Targeted Thornwake vs Veilmourn W2 tuning: final artifact tmp/battle_balance_100_all_live_thorn_veil_w2_60_unit_late_comp.json has ok=true, W2 Thornwake over Veilmourn 59.0% (down from 71.5%), severity 179 vs prior 187.5, and only one 65+ severe row remains (W1 Thornwake over Veilmourn 67.0). Implemented via unit-only content tuning: Thornwake Barkmantle Rams HP 25->22, Thornwake Graft Matriarchs HP 41->44 and max damage 13->14, Thornwake Worldroot Bastion HP 96->102 and max damage 23->25, Veilmourn Undertow Harpooners max damage 6->7, Veilmourn Obituary Scribes attack 9->10 and max damage 8->9, Veilmourn Mirror-Keel Reavers HP 52->49 and max damage 14->13, Veilmourn Fogbound Leviathan HP 105->100 and max damage 26->24. Spell route was rejected because validation requires Graft Mend base_restore=18.",
+      "notes": "Targeted Thornwake vs Veilmourn W2 tuning: final artifact tmp/battle_balance_100_all_live_thorn_veil_w2_60_unit_late_comp.json has ok=true, W2 Thornwake over Veilmourn 59.0% (down from 71.5%), severity 179 vs prior 187.5, and only one 65+ severe row remains (W1 Thornwake over Veilmourn 67.0). Implemented via unit-only content tuning: Thornwake Barkmantle Rams HP 25->22, Thornwake Graft Matriarchs HP 41->44 and max damage 13->14, Thornwake Worldroot Bastion HP 96->102 and max damage 23->25, Veilmourn Undertow Harpooners max damage 6->7, Veilmourn Obituary Scribes attack 9->10 and max damage 8->9, Veilmourn Mirror-Keel Reavers HP 52->49 and max damage 14->13, Veilmourn Fogbound Leviathan HP 105->100 and max damage 26->24. Spell route was rejected because validation requires Graft Mend base_restore=18. Paused after owner accepted the current decent balance state and selected battle presentation runtime as the next slice.",
       "classification": "implementation_slice",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
       "sourceDocs": [
@@ -25403,7 +25438,7 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "updatedAt": "2026-05-29T18:29:07Z",
+      "updatedAt": "2026-05-30T10:07:18Z",
       "startedAt": "2026-05-26T19:02:51Z"
     },
     {
@@ -36907,66 +36942,45 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-28T14:55:00Z",
-    "sliceId": "combat-mireclaw-late-anti-ranged-counter-10184",
+    "updatedAt": "2026-05-30T10:07:18Z",
+    "sliceId": "battle-layout-smoke-followup-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn (passed; 21 cases including presentation_event_stream and real_faction_presentation_smoke)",
       "python3 tests/validate_repo.py (passed)",
-      "jq empty content/units.json ops/progress.json (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_mireclaw_anti_ranged.json (passed; ok=true)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_week4.json (probe passed; superseded by full-matrix evidence)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --gate --json > tmp/battle_balance_100_seed_mireclaw_anti_ranged_full.json (passed; ok=true, 120 rows)",
+      "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Added Gorefen Screen shielding to Mireclaw T6 Gorefen Rippers using the existing live shielding mechanic: ranged damage multiplier 0.78, engaged/harried multipliers 1.05.",
-        "Added Drowned Sovereign Screen shielding to Mireclaw T7 Drowned Antler Sovereign using the existing live shielding mechanic: ranged damage multiplier 0.68, engaged/harried multipliers 1.06.",
-        "Kept Veilmourn units and spells unchanged because the owner called out Veilmourn underperformance elsewhere and requested a Mireclaw counter instead."
+        "BattleRules emits a bounded battle_presentation_events queue with structured move/strike/shoot/cast/damage/heal/buff/debuff/resist/immune/cleanse/death/retaliation/morale/momentum records.",
+        "BattleShell consumes the presentation stream in the dispatch surface and exposes event stream, speed, and readable text through validation_snapshot().",
+        "BattleBoardView scales cue/animation playback by the selected normal, fast, or instant battle presentation speed without changing battle resolution math.",
+        "Focused Godot smoke validates real-unit Thornwake versus Veilmourn and Brasshollow versus Embercourt shell presentation cases."
       ],
-      "unit_after": {
-        "unit_mireclaw_gorefen_rippers": {
-          "tier": 6,
-          "hp": 55,
-          "shielding": {
-            "ranged_damage_multiplier": 0.78,
-            "engaged_damage_multiplier": 1.05,
-            "harried_damage_multiplier": 1.05
-          }
-        },
-        "unit_mireclaw_drowned_antler_sovereign": {
-          "tier": 7,
-          "hp": 112,
-          "shielding": {
-            "ranged_damage_multiplier": 0.68,
-            "engaged_damage_multiplier": 1.06,
-            "harried_damage_multiplier": 1.06
-          }
-        }
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-presentation-runtime-event-stream-report.md",
+        "docs/battle-event-playback-sequencing-report.md",
+        "docs/animation-event-cue-catalog-contract-report.md"
+      ],
+      "godotReport": {
+        "scene": "res://tests/battle_event_animation_state_report.tscn",
+        "ok": true,
+        "case_count": 21,
+        "new_cases": [
+          "presentation_event_stream",
+          "real_faction_presentation_smoke"
+        ],
+        "real_matchups": [
+          "Thornwake vs Veilmourn",
+          "Brasshollow vs Embercourt"
+        ]
       },
-      "benchmark_impact": {
-        "full_matrix_before_outliers": 40,
-        "full_matrix_after_outliers": 39,
-        "after_balance_status": "needs_tuning",
-        "mireclaw_veilmourn_week4_before": "Veilmourn 90.5%",
-        "mireclaw_veilmourn_week4_after": "Veilmourn 66.0%",
-        "affected_week4_pairs_after": [
-          "Brasshollow vs Mireclaw: Mireclaw 62.0% (still outlier, worsened from 57.0%)",
-          "Embercourt vs Mireclaw: Mireclaw 53.0%",
-          "Mireclaw vs Sunvault: Mireclaw 50.5%",
-          "Mireclaw vs Thornwake: Mireclaw 53.5%",
-          "Mireclaw vs Veilmourn: Veilmourn 66.0%"
-        ],
-        "affected_week3_pairs_after": [
-          "Mireclaw vs Sunvault improved from Sunvault 63.0% to Sunvault 52.0%",
-          "Mireclaw vs Thornwake moved from Mireclaw 56.0% to Mireclaw 64.5%",
-          "Mireclaw vs Veilmourn moved from Mireclaw 64.0% to Mireclaw 73.5%"
-        ],
-        "interpretation": "The hard counter is reduced from extreme to ordinary outlier territory without nerfing Veilmourn. The shield is not final-perfect balance because it adds some Week 3 Mireclaw pressure and leaves Brasshollow vs Mireclaw as a Week 4 outlier."
-      }
+      "mathPolicy": "Presentation events and speed controls were added without retuning combat math, units, spells, or AI decisions."
     }
   },
   "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-29T09:07:43Z",
+  "currentSliceUpdatedAt": "2026-05-30T10:07:18Z",
   "validationHistory": [
     {
       "status": "pass",
