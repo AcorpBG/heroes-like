@@ -81,6 +81,23 @@ func _run() -> void:
 	if _failed:
 		return
 
+	var route_contest_result := _run_arrival_case(
+		"route_contest",
+		"hollow_mire_route_contest_raid",
+		6,
+		4,
+		"encounter",
+		"report_route_camp",
+		"Route Camp",
+		"route pressure",
+		["route_pressure"],
+		"medium"
+	)
+	var route_contest_event := _event_by_type_and_target(route_contest_result.get("events", []), "ai_site_contested", "report_route_camp")
+	_assert_event(route_contest_event, "ai_site_contested", "report_route_camp", ["site_contested", "route_pressure"])
+	if _failed:
+		return
+
 	var payload := {
 		"ok": true,
 		"scenario_id": SCENARIO_ID,
@@ -89,6 +106,7 @@ func _run() -> void:
 		"pressure_event": pressure_event,
 		"seizure_event": seizure_event,
 		"contest_event": contest_event,
+		"route_contest_event": route_contest_event,
 		"threat_excerpt": threat_text,
 		"dispatch_excerpt": dispatch_text,
 	}
@@ -144,6 +162,8 @@ func _run_arrival_case(
 	var session = _base_session()
 	if target_kind == "resource":
 		_set_resource_controller(session, target_id, "player")
+	elif target_kind == "encounter" and target_id == "report_route_camp":
+		_add_target_encounter(session, target_id, x, y)
 	_add_report_raid(session, raid_id, x, y, target_kind, target_id, target_label, public_reason, reason_codes, importance)
 	var result := EnemyAdventureRules.advance_raids(session, _enemy_config(), FACTION_ID, _enemy_state())
 	if result.get("events", []) is Array and not result.get("events", []).is_empty():
@@ -171,6 +191,14 @@ func _add_report_raid(
 			"x": x,
 			"y": y,
 			"difficulty": "pressure",
+			"enemy_army": {
+				"id": "ai_event_surfacing_ready_host",
+				"name": "Ready Event Surfacing Host",
+				"stacks": [
+					{"unit_id": "unit_bog_brute", "count": 20},
+					{"unit_id": "unit_mire_slinger", "count": 12},
+				],
+			},
 			"combat_seed": hash("%s:%s" % [SCENARIO_ID, raid_id]),
 			"spawned_by_faction_id": FACTION_ID,
 			"days_active": 0,
@@ -187,6 +215,20 @@ func _add_report_raid(
 			"target_reason_codes": reason_codes,
 			"target_public_importance": importance,
 			"target_debug_reason": public_reason,
+		}
+	)
+	session.overworld["encounters"] = encounters
+
+func _add_target_encounter(session, placement_id: String, x: int, y: int) -> void:
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(
+		{
+			"placement_id": placement_id,
+			"encounter_id": "encounter_mire_raid",
+			"x": x,
+			"y": y,
+			"difficulty": "pressure",
+			"combat_seed": hash("%s:%s" % [SCENARIO_ID, placement_id]),
 		}
 	)
 	session.overworld["encounters"] = encounters
