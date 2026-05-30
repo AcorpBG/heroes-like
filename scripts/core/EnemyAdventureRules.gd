@@ -1151,6 +1151,9 @@ static func advance_raids(
 			var event_message = String(arrival_result.get("event_message", ""))
 			if event_message != "":
 				event_messages.append(event_message)
+			for arrival_event_value in arrival_result.get("ai_events", []):
+				if arrival_event_value is Dictionary and not arrival_event_value.is_empty():
+					event_records.append(arrival_event_value)
 			var arrival_event: Dictionary = arrival_result.get("ai_event", {})
 			if not arrival_event.is_empty():
 				event_records.append(arrival_event)
@@ -1832,6 +1835,10 @@ static func _redirect_understrength_raid_to_regroup(
 	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
 	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["previous_target_reason_codes"] = _normalize_string_array(raid.get("target_reason_codes", []))
+	raid["previous_target_public_reason"] = String(raid.get("target_public_reason", ""))
+	raid["previous_target_public_importance"] = String(raid.get("target_public_importance", ""))
+	raid["previous_target_debug_reason"] = String(raid.get("target_debug_reason", ""))
 	raid["target_kind"] = "regroup"
 	raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
 	raid["target_label"] = "%s regroup" % _town_name(regroup_town)
@@ -1879,6 +1886,10 @@ static func _redirect_unreachable_raid_target(
 	redirected["previous_target_kind"] = String(raid.get("target_kind", ""))
 	redirected["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	redirected["previous_target_label"] = String(raid.get("target_label", ""))
+	redirected["previous_target_reason_codes"] = _normalize_string_array(raid.get("target_reason_codes", []))
+	redirected["previous_target_public_reason"] = String(raid.get("target_public_reason", ""))
+	redirected["previous_target_public_importance"] = String(raid.get("target_public_importance", ""))
+	redirected["previous_target_debug_reason"] = String(raid.get("target_debug_reason", ""))
 	redirected["target_kind"] = "regroup"
 	redirected["target_placement_id"] = String(regroup_town.get("placement_id", ""))
 	redirected["target_label"] = "%s regroup" % _town_name(regroup_town)
@@ -2247,6 +2258,10 @@ static func redirect_resource_objective_for_risk(
 	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
 	raid["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
+	raid["previous_target_reason_codes"] = _normalize_string_array(raid.get("target_reason_codes", []))
+	raid["previous_target_public_reason"] = String(raid.get("target_public_reason", ""))
+	raid["previous_target_public_importance"] = String(raid.get("target_public_importance", ""))
+	raid["previous_target_debug_reason"] = String(raid.get("target_debug_reason", ""))
 	raid["target_public_reason"] = "gathering strength for resource claim"
 	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = debug_reason
@@ -11768,7 +11783,7 @@ static func _resolve_arrived_target(
 				}
 			return _contest_encounter_target(session, raid, state, faction_id, config)
 		"regroup":
-			return _regroup_raid_at_town(session, raid, state, faction_id)
+			return _regroup_raid_at_town(session, raid, state, faction_id, config)
 		_:
 			return {"encounter": raid, "state": state, "event_message": ""}
 
@@ -12511,7 +12526,8 @@ static func _regroup_raid_at_town(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 	var town = town_result.get("town", {})
@@ -12532,10 +12548,13 @@ static func _regroup_raid_at_town(
 	raid["last_regroup_town_id"] = String(town.get("placement_id", ""))
 	raid["last_regroup_strength_delta"] = transferred_strength
 
+	var resumed_target_event := {}
 	var ready_to_resume := not raid_regroup_needed(raid)
 	if ready_to_resume:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
-		raid = _clear_regroup_target(raid)
+		var resume_result := _resume_previous_target_after_regroup(session, config, raid)
+		raid = resume_result.get("raid", raid)
+		resumed_target_event = resume_result.get("ai_event", {})
 	elif transferred_count <= 0:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
 		raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
@@ -12575,7 +12594,85 @@ static func _regroup_raid_at_town(
 			"state_policy": "durable_state_reference",
 		}
 	)
-	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
+	var events := [event]
+	if not resumed_target_event.is_empty():
+		events.append(resumed_target_event)
+	return {"encounter": raid, "state": state, "event_message": message, "ai_events": events}
+
+static func _resume_previous_target_after_regroup(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	var resumed := raid.duplicate(true)
+	var previous_kind := String(resumed.get("previous_target_kind", ""))
+	var previous_id := String(resumed.get("previous_target_placement_id", ""))
+	if previous_kind not in ["resource", "town", "artifact", "encounter", "hero"] or previous_id == "":
+		return {"raid": _clear_regroup_target(resumed), "ai_event": {}}
+	var previous_target := _current_target_snapshot(resumed)
+	resumed["target_kind"] = previous_kind
+	resumed["target_placement_id"] = previous_id
+	resumed["target_label"] = String(resumed.get("previous_target_label", ""))
+	resumed["target_reason_codes"] = _previous_target_reason_codes_for_resume(resumed, previous_kind)
+	resumed["target_public_reason"] = _previous_target_public_reason_for_resume(resumed, previous_kind)
+	resumed["target_public_importance"] = String(resumed.get("previous_target_public_importance", "high"))
+	resumed["target_debug_reason"] = _previous_target_debug_reason_for_resume(resumed, previous_kind)
+	resumed["arrived"] = false
+	resumed["regroup_resumed_target_day"] = int(session.day)
+	resumed = _refresh_target(session, resumed)
+	if not _raid_target_valid(session, resumed):
+		return {"raid": _clear_regroup_target(resumed), "ai_event": {}}
+	var origin := Vector2i(int(resumed.get("x", 0)), int(resumed.get("y", 0)))
+	var goal_tiles := _goal_tiles_from_raid(session, resumed)
+	var goal_distance := int(resumed.get("goal_distance", 9999))
+	if goal_distance >= 9999 and not (origin in goal_tiles):
+		return {"raid": _clear_regroup_target(resumed), "ai_event": {}}
+	_ai_hero_task_record_live_assignment(session, config, resumed, _current_target_snapshot(resumed), {})
+	var retask_event := ai_target_assignment_event(session, config, resumed, previous_target)
+	if retask_event.is_empty():
+		retask_event = ai_target_assignment_event(session, config, resumed, {})
+	return {"raid": resumed, "ai_event": retask_event}
+
+static func _previous_target_reason_codes_for_resume(raid: Dictionary, target_kind: String) -> Array:
+	var reason_codes := _normalize_string_array(raid.get("previous_target_reason_codes", []))
+	if reason_codes.is_empty():
+		match target_kind:
+			"resource":
+				reason_codes = ["site_contested", "persistent_income_denial"]
+			"town":
+				reason_codes = ["town_siege", "objective_front"]
+			"artifact":
+				reason_codes = ["artifact_pressure"]
+			"encounter":
+				reason_codes = ["site_contested", "objective_front"]
+			"hero":
+				reason_codes = ["hero_hunt"]
+	if "regroup_complete" not in reason_codes:
+		reason_codes.push_front("regroup_complete")
+	return reason_codes
+
+static func _previous_target_public_reason_for_resume(raid: Dictionary, target_kind: String) -> String:
+	var public_reason := String(raid.get("previous_target_public_reason", ""))
+	if public_reason != "":
+		return public_reason
+	match target_kind:
+		"resource":
+			return "resuming site pressure"
+		"town":
+			return "resuming town pressure"
+		"artifact":
+			return "resuming artifact claim"
+		"encounter":
+			return "resuming objective pressure"
+		"hero":
+			return "resuming hero hunt"
+	return "resuming previous objective"
+
+static func _previous_target_debug_reason_for_resume(raid: Dictionary, target_kind: String) -> String:
+	var debug_reason := String(raid.get("previous_target_debug_reason", ""))
+	if debug_reason != "":
+		return debug_reason
+	return "regroup complete; resuming previous %s objective" % target_kind
 
 static func _retire_failed_regroup_to_rebuild(
 	session: SessionStateStoreScript.SessionData,
