@@ -13,13 +13,21 @@ func _run() -> void:
 	var case_report := _river_pass_raid_retasks_to_stabilizing_town()
 	if case_report.is_empty():
 		return
+	var overcommit_case := _covered_town_defense_does_not_retask_second_commander()
+	if overcommit_case.is_empty():
+		return
+	var resource_overcommit_case := _covered_resource_defense_does_not_retask_second_commander()
+	if resource_overcommit_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_town_defense_retask_no_save_migration",
-		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts",
+		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_covered_fronts",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"overcommit_case": overcommit_case,
+		"resource_overcommit_case": resource_overcommit_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -158,6 +166,121 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _covered_town_defense_does_not_retask_second_commander() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_stabilizing_front(session, "duskfen_bastion")
+	_set_player_position(session, {"x": 6, "y": 2})
+	_set_resource_controller(session, "river_free_company", "player")
+
+	var committed := _defense_retask_raid(session)
+	committed["placement_id"] = "defense_committed_vaska"
+	committed["target_kind"] = "town"
+	committed["target_placement_id"] = "duskfen_bastion"
+	committed["target_label"] = "Duskfen Bastion"
+	committed["target_reason_codes"] = ["town_defense", "front_stabilization"]
+	committed["target_public_reason"] = "defending threatened town"
+	committed["goal_distance"] = 2
+	committed["arrived"] = false
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(committed)
+	session.overworld["encounters"] = encounters
+
+	var probe := _defense_retask_raid(session)
+	probe["placement_id"] = "defense_probe_sable"
+	probe["target_reason_codes"] = ["pressure_probe_fixture"]
+	probe["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		probe,
+		"hero_sable",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	probe = EnemyAdventureRules.ensure_raid_army(probe, session)
+	var redirected := EnemyAdventureRules._redirect_raid_to_threatened_town_defense(session, config, probe, MIRECLAW)
+	if String(redirected.get("target_kind", "")) != "resource" or String(redirected.get("target_placement_id", "")) != "river_free_company":
+		_fail("Covered town defense front should not retask second commander away from pressure: %s" % JSON.stringify(redirected))
+		return {}
+	if String(redirected.get("previous_target_placement_id", "")) != "":
+		_fail("Covered town defense front should leave probe target metadata untouched: %s" % JSON.stringify(redirected))
+		return {}
+	var committed_strength := EnemyAdventureRules.raid_strength(committed)
+	return {
+		"case_id": "covered_town_defense_does_not_retask_second_commander",
+		"covered_town_id": "duskfen_bastion",
+		"committed_defender_id": String(committed.get("placement_id", "")),
+		"committed_defender_strength": committed_strength,
+		"probe_target_kind": String(redirected.get("target_kind", "")),
+		"probe_target_id": String(redirected.get("target_placement_id", "")),
+		"probe_preserved_offense": String(redirected.get("target_placement_id", "")) == "river_free_company",
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _covered_resource_defense_does_not_retask_second_commander() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 0, "y": 4})
+	_set_resource_controller(session, "river_free_company", MIRECLAW)
+	_set_resource_controller(session, "river_signal_post", "player")
+	_set_resource_defense_front(session, "river_free_company")
+
+	var committed := _defense_retask_raid(session)
+	committed["placement_id"] = "resource_defense_committed_vaska"
+	committed["target_kind"] = "resource"
+	committed["target_placement_id"] = "river_free_company"
+	committed["target_label"] = "Free Company Camp"
+	committed["target_reason_codes"] = ["site_defense", "defend_front", "front_stabilization"]
+	committed["target_public_reason"] = "defending held site"
+	committed["goal_distance"] = 2
+	committed["arrived"] = false
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(committed)
+	session.overworld["encounters"] = encounters
+
+	var probe := _defense_retask_raid(session)
+	probe["placement_id"] = "resource_defense_probe_sable"
+	probe["target_placement_id"] = "river_signal_post"
+	probe["target_label"] = "Signal Post"
+	probe["target_x"] = 2
+	probe["target_y"] = 3
+	probe["goal_x"] = 2
+	probe["goal_y"] = 3
+	probe["target_reason_codes"] = ["pressure_probe_fixture"]
+	probe["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		probe,
+		"hero_sable",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	probe = EnemyAdventureRules.ensure_raid_army(probe, session)
+	var redirected := EnemyAdventureRules._redirect_raid_to_threatened_resource_defense(session, config, probe, MIRECLAW)
+	if String(redirected.get("target_kind", "")) != "resource" or String(redirected.get("target_placement_id", "")) != "river_signal_post":
+		_fail("Covered resource defense front should not retask second commander away from pressure: %s" % JSON.stringify(redirected))
+		return {}
+	if String(redirected.get("previous_target_placement_id", "")) != "":
+		_fail("Covered resource defense front should leave probe target metadata untouched: %s" % JSON.stringify(redirected))
+		return {}
+	var committed_strength := EnemyAdventureRules.raid_strength(committed)
+	return {
+		"case_id": "covered_resource_defense_does_not_retask_second_commander",
+		"covered_resource_id": "river_free_company",
+		"committed_defender_id": String(committed.get("placement_id", "")),
+		"committed_defender_strength": committed_strength,
+		"probe_target_kind": String(redirected.get("target_kind", "")),
+		"probe_target_id": String(redirected.get("target_placement_id", "")),
+		"probe_preserved_offense": String(redirected.get("target_placement_id", "")) == "river_signal_post",
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _defense_retask_raid(session) -> Dictionary:
 	var raid := {
 		"placement_id": "defense_retask_vaska",
@@ -276,6 +399,28 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		session.overworld["resource_nodes"] = nodes
 		return
 	_fail("Could not find resource placement %s" % placement_id)
+
+func _set_resource_defense_front(session, placement_id: String) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if String(node.get("placement_id", "")) != placement_id:
+			continue
+		node["front"] = {
+			"state": "defend",
+			"faction_id": MIRECLAW,
+			"threatened_by_player": true,
+			"priority_bonus": 120,
+			"last_change_day": max(0, int(session.day) - 1),
+			"defense_until_day": int(session.day) + 4,
+			"source": "test_fixture",
+		}
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		return
+	_fail("Could not find resource placement %s for defense front fixture." % placement_id)
 
 func _resource_controller(session, placement_id: String) -> String:
 	for node in session.overworld.get("resource_nodes", []):

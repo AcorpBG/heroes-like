@@ -155,8 +155,9 @@ func _assert_task_board(session) -> Dictionary:
 	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
 	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
 	var cancelled_old := false
-	var active_new := false
+	var replacement_recorded := false
 	var replacement_task_id := ""
+	var replacement_status := ""
 	var old_invalidated_by := ""
 	for task_value in tasks:
 		if not (task_value is Dictionary):
@@ -165,18 +166,20 @@ func _assert_task_board(session) -> Dictionary:
 		if String(task.get("actor_id", "")) != "hero_vaska":
 			continue
 		if String(task.get("target_kind", "")) == "town" and String(task.get("target_id", "")) == "duskfen_bastion":
-			if String(task.get("task_status", "")) == "active" and String(task.get("last_validation", "")) == "valid":
+			var task_status := String(task.get("task_status", ""))
+			if task_status in ["active", "completed"] and String(task.get("last_validation", "")) == "valid":
 				if String(task.get("task_class", "")) != "defend_front":
 					_fail("Retask replacement should be defend_front, got %s" % JSON.stringify(task))
 					return {}
-				active_new = true
+				replacement_recorded = true
 				replacement_task_id = String(task.get("task_id", ""))
+				replacement_status = task_status
 		if String(task.get("target_kind", "")) == "resource" and String(task.get("target_id", "")) == "river_free_company":
 			if String(task.get("task_status", "")) == "cancelled" and String(task.get("last_validation", "")) == "cancelled_by_retask":
 				cancelled_old = true
 				old_invalidated_by = String(task.get("invalidated_by_task_id", ""))
-	if not active_new:
-		_fail("Retask cancellation board is missing active Duskfen defense task: %s" % JSON.stringify(task_state))
+	if not replacement_recorded:
+		_fail("Retask cancellation board is missing valid Duskfen defense replacement task: %s" % JSON.stringify(task_state))
 		return {}
 	if not cancelled_old:
 		_fail("Retask cancellation board is missing cancelled previous resource task: %s" % JSON.stringify(task_state))
@@ -189,7 +192,8 @@ func _assert_task_board(session) -> Dictionary:
 		"planner_epoch": int(task_state.get("planner_epoch", 0)),
 		"task_count": tasks.size(),
 		"cancelled_old": cancelled_old,
-		"active_new": active_new,
+		"replacement_recorded": replacement_recorded,
+		"replacement_status": replacement_status,
 		"replacement_task_id": replacement_task_id,
 	}
 

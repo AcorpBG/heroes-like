@@ -2071,10 +2071,22 @@ static func _best_threatened_defense_town(
 		var distance := _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")))
 		if distance >= 9999:
 			continue
+		var defense_need := _town_defense_commitment_need(town, front_state)
+		var current_defense := _town_garrison_strength(town)
+		var committed_defense := _committed_town_defense_strength(
+			session,
+			faction_id,
+			String(town.get("placement_id", "")),
+			String(raid.get("placement_id", ""))
+		)
+		var open_defense_gap: int = max(0, defense_need - current_defense - committed_defense)
+		if open_defense_gap <= 0:
+			continue
 		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
 		var hero_distance: int = abs(hero_position.x - town_tile.x) + abs(hero_position.y - town_tile.y)
 		var score := int(front_state.get("priority_bonus", 0))
 		score += int(front_state.get("garrison_bonus", 0))
+		score += int(ceili(float(open_defense_gap) / 4.0))
 		score += max(0, 12 - hero_distance) * 18
 		score += max(0, 14 - distance) * 8
 		if String(config.get("siege_target_placement_id", "")) == String(town.get("placement_id", "")):
@@ -2152,9 +2164,20 @@ static func _best_threatened_resource_defense(
 		var distance := _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")))
 		if distance >= 9999:
 			continue
+		var defense_need := _resource_defense_commitment_need(site, front_state)
+		var committed_defense := _committed_resource_defense_strength(
+			session,
+			faction_id,
+			String(node.get("placement_id", "")),
+			String(raid.get("placement_id", ""))
+		)
+		var open_defense_gap: int = max(0, defense_need - committed_defense)
+		if open_defense_gap <= 0:
+			continue
 		var hero_distance: int = abs(hero_position.x - target_tile.x) + abs(hero_position.y - target_tile.y)
 		var score := int(front_state.get("priority_bonus", 0))
 		score += int(min(80.0, float(_resource_site_strategic_value(site)) / 40.0))
+		score += int(ceili(float(open_defense_gap) / 4.0))
 		score += max(0, 12 - hero_distance) * 14
 		score += max(0, 14 - distance) * 7
 		if String(config.get("priority_resource_placement_id", "")) == String(node.get("placement_id", "")):
@@ -2194,6 +2217,72 @@ static func _resource_defense_front_state(
 		"threat_radius": threat_radius,
 		"explicit": explicit,
 	}
+
+static func _town_defense_commitment_need(town: Dictionary, front_state: Dictionary) -> int:
+	return max(
+		95,
+		int(front_state.get("garrison_bonus", 0)) + 55,
+		int(round(float(int(front_state.get("priority_bonus", 0))) * 0.75)),
+		int(town.get("ai_defense_rating", 0))
+	)
+
+static func _resource_defense_commitment_need(site: Dictionary, front_state: Dictionary) -> int:
+	return max(
+		70,
+		int(front_state.get("priority_bonus", 0)),
+		int(round(float(_resource_site_strategic_value(site)) / 30.0))
+	)
+
+static func _committed_town_defense_strength(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	town_id: String,
+	current_placement_id: String
+) -> int:
+	if session == null or faction_id == "" or town_id == "":
+		return 0
+	var total := 0
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) == current_placement_id:
+			continue
+		if String(encounter.get("target_kind", "")) != "town":
+			continue
+		if String(encounter.get("target_placement_id", "")) != town_id:
+			continue
+		var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+		if "town_defense" not in reason_codes and "front_stabilization" not in reason_codes:
+			continue
+		total += raid_strength(encounter)
+	return total
+
+static func _committed_resource_defense_strength(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	resource_id: String,
+	current_placement_id: String
+) -> int:
+	if session == null or faction_id == "" or resource_id == "":
+		return 0
+	var total := 0
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) == current_placement_id:
+			continue
+		if String(encounter.get("target_kind", "")) != "resource":
+			continue
+		if String(encounter.get("target_placement_id", "")) != resource_id:
+			continue
+		if not _resource_defense_reason_active(_normalize_string_array(encounter.get("target_reason_codes", []))):
+			continue
+		total += raid_strength(encounter)
+	return total
 
 static func _primary_player_position(session: SessionStateStoreScript.SessionData) -> Vector2i:
 	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
