@@ -3,6 +3,7 @@ extends Node
 const REPORT_ID := "AI_TOWN_DEFENSE_RETASK_REPORT"
 const RIVER_PASS := "river-pass"
 const MIRECLAW := "faction_mireclaw"
+const BattleRules = preload("res://scripts/core/BattleRules.gd")
 
 var _failed := false
 
@@ -22,6 +23,9 @@ func _run() -> void:
 	var resource_stationing_case := _resource_defender_stations_and_releases()
 	if resource_stationing_case.is_empty():
 		return
+	var resource_battle_case := _resource_defender_forces_reclaim_battle()
+	if resource_battle_case.is_empty():
+		return
 	var release_case := _stationed_town_defender_releases_when_front_clears()
 	if release_case.is_empty():
 		return
@@ -35,6 +39,7 @@ func _run() -> void:
 		"overcommit_case": overcommit_case,
 		"resource_overcommit_case": resource_overcommit_case,
 		"resource_stationing_case": resource_stationing_case,
+		"resource_battle_case": resource_battle_case,
 		"release_case": release_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
@@ -327,6 +332,92 @@ func _resource_defender_stations_and_releases() -> Dictionary:
 		"released_commander_status": String(released_entry.get("status", "")),
 		"defender_metadata_cleared_after_expiry": not released_node.has("ai_defender_commander_state"),
 		"resolved_field_raid": "defense_retask_vaska" in resolved,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _resource_defender_forces_reclaim_battle() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 0, "y": 4})
+	_set_resource_controller(session, "river_free_company", MIRECLAW)
+	_set_resource_controller(session, "river_signal_post", "player")
+	_set_resource_defense_front(session, "river_free_company")
+	var raid := _defense_retask_raid(session)
+	raid["target_placement_id"] = "river_signal_post"
+	raid["target_label"] = "Signal Post"
+	raid["target_x"] = 2
+	raid["target_y"] = 3
+	raid["goal_x"] = 2
+	raid["goal_y"] = 3
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	for _turn_index in range(8):
+		var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		state = advance_result.get("state", state)
+		if String(_resource_node(session, "river_free_company").get("ai_defender_roster_hero_id", "")) == "hero_vaska":
+			break
+	var defended_node := _resource_node(session, "river_free_company")
+	if String(defended_node.get("ai_defender_roster_hero_id", "")) != "hero_vaska":
+		_fail("Resource defender battle fixture did not station Vaska: %s" % JSON.stringify(defended_node))
+		return {}
+	_set_player_position(
+		session,
+		{"x": int(defended_node.get("x", 0)), "y": int(defended_node.get("y", 0))}
+	)
+	var reclaim_result := OverworldRules._collect_resource_node_result(
+		session,
+		OverworldRules._find_resource_node_by_placement(session, "river_free_company")
+	)
+	if not bool(reclaim_result.get("ok", false)) or String(reclaim_result.get("route", "")) != "battle":
+		_fail("Reclaiming a defended resource did not hand off to battle: result=%s node=%s" % [JSON.stringify(reclaim_result), JSON.stringify(defended_node)])
+		return {}
+	if session.battle.is_empty() or String(session.battle.get("context", {}).get("type", "")) != "resource_assault":
+		_fail("Resource defender battle payload missing resource_assault context: %s" % JSON.stringify(session.battle))
+		return {}
+	if _resource_controller(session, "river_free_company") != MIRECLAW:
+		_fail("Resource controller changed before battle victory.")
+		return {}
+	var enemy_strength_before := _battle_side_strength(session.battle, "enemy")
+	if enemy_strength_before <= 0:
+		_fail("Resource defender battle payload had no enemy force: %s" % JSON.stringify(session.battle))
+		return {}
+	var stacks: Array = session.battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if stack is Dictionary and String(stack.get("side", "")) == "enemy":
+			stack["total_health"] = 0
+			stacks[index] = stack
+	session.battle["stacks"] = stacks
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "victory":
+		_fail("Resource defender battle did not resolve as player victory: %s" % JSON.stringify(outcome))
+		return {}
+	var captured_node := _resource_node(session, "river_free_company")
+	if String(captured_node.get("collected_by_faction_id", "")) != "player":
+		_fail("Resource defender victory did not capture the site: %s" % JSON.stringify(captured_node))
+		return {}
+	if captured_node.has("ai_defender_commander_state") or String(captured_node.get("ai_defender_roster_hero_id", "")) != "":
+		_fail("Resource defender metadata survived player victory: %s" % JSON.stringify(captured_node))
+		return {}
+	var roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_RECOVERING:
+		_fail("Defeated resource defender commander did not enter recovery: %s" % JSON.stringify(roster_entry))
+		return {}
+	return {
+		"case_id": "resource_defender_forces_reclaim_battle",
+		"target_id": "river_free_company",
+		"battle_context": "resource_assault",
+		"enemy_strength_before": enemy_strength_before,
+		"battle_outcome": String(outcome.get("state", "")),
+		"controller_after": String(captured_node.get("collected_by_faction_id", "")),
+		"defender_metadata_cleared": not captured_node.has("ai_defender_commander_state"),
+		"defender_commander_status": String(roster_entry.get("status", "")),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -643,6 +734,18 @@ func _battle_has_enemy_unit(payload: Dictionary, unit_id: String) -> bool:
 		if stack is Dictionary and String(stack.get("side", "")) == "enemy" and String(stack.get("unit_id", "")) == unit_id:
 			return true
 	return false
+
+func _battle_side_strength(battle: Dictionary, side: String) -> int:
+	var total := 0
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
+			continue
+		var unit_id := String(stack.get("unit_id", ""))
+		var unit := ContentService.get_unit(unit_id)
+		var unit_hp: int = max(1, int(unit.get("hp", stack.get("unit_hp", 1))))
+		var alive_count := int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
+		total += max(0, alive_count) * EnemyAdventureRules._unit_strength_value(unit_id)
+	return total
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

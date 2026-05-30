@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-resource-defender-stationing-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-resource-defense-battle-handoff-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:40:13Z",
+  "updatedAt": "2026-05-30T23:54:42Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,79 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-resource-defense-battle-handoff-10184",
+      "title": "Strategic AI Resource Defense Battle Handoff",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI target / resource defender stationing follow-up",
+      "purpose": "Make stationed AI resource defenders enforce live recapture battles and resolve resource control, defender metadata, commander roster state, and survivor continuity through battle aftermath instead of allowing direct player reclaim.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/BattleRules.gd",
+        "content/encounters.json",
+        "tests/ai_town_defense_retask_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Attempting to reclaim a persistent enemy-held resource with live ai_defender_army/ai_defender_commander_state creates a resource-assault battle payload; player victory captures the resource and clears stationed defender metadata while routing the defeated AI commander through roster recovery; non-victory preserves defender survivor continuity.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "new save version or migration",
+        "broad battle balance changes",
+        "new report-only gates",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T23:47:25Z",
+      "updatedAt": "2026-05-30T23:54:42Z",
+      "completedAt": "2026-05-30T23:54:42Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+          "result": "pass",
+          "summary": "Resource defender handoff case proves defended resource reclaim creates a resource_assault battle, keeps the site enemy-held until victory, then captures the site, clears defender metadata, and moves Vaska to commander recovery."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, guarded claim, resource-front support, consolidation, route recovery, and commander-risk behavior remain passing."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turns still execute and complete reserved commander resource tasks."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed with the new resource-defense encounter template."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ]
+    },
     {
       "id": "strategic-ai-commander-outcome-adaptation-10184",
       "title": "Strategic AI Commander Outcome Adaptation",
@@ -44438,33 +44511,34 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T23:40:13Z",
-    "sliceId": "strategic-ai-resource-defender-stationing-10184",
+    "updatedAt": "2026-05-30T23:54:42Z",
+    "sliceId": "strategic-ai-resource-defense-battle-handoff-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Resource-site defense arrivals now persist ai_defender_commander_state, ai_defender_roster_hero_id, ai_defender_army, ai_defense_rating, and ai_defense_reinforced_strength on the resource node.",
-        "Resource defenders now occupy resource_defense:<resource_id> in active commander ownership and are excluded from duplicate raid selection while stationed.",
-        "The original field raid is resolved out of active pressure when the commander stations on the resource.",
-        "Overworld resource-node normalization now preserves front and AI defender metadata.",
-        "Expired resource-defense windows release defender metadata and return the commander to available roster status."
+        "Player resource reclaim now detects live stationed AI resource defenders before direct capture.",
+        "Defended resource reclaim creates a resource_assault battle payload using the stationed ai_defender_army and ai_defender_commander_state.",
+        "Resource defender battles preserve enemy survivor continuity on non-resolved outcomes and clear defender metadata only after player victory/resolution.",
+        "Player victory captures the resource through the normal resource-control path and routes the defeated AI commander into roster recovery.",
+        "A dedicated encounter_resource_defense template provides battlefield tags/objective context for defended field-site fights."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
         "commander_id": "hero_vaska",
         "target_id": "river_free_company",
-        "active_placement_id": "resource_defense:river_free_company",
-        "defense_rating": 168,
-        "field_raid_resolved": true,
-        "released_after_expiry": true
+        "battle_context": "resource_assault",
+        "enemy_strength_before": 168,
+        "battle_outcome": "victory",
+        "controller_after": "player",
+        "defender_status_after": "recovering",
+        "defender_metadata_cleared": true
       },
       "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full long-run generated-map strategic-AI matrix remains open, and live-client pacing/manual play remains needed.",
       "policy": "Live strategic AI behavior slice; no report-only gate creation, campaign production, or production-ready claim."
