@@ -862,6 +862,10 @@ static func _run_empire_cycle(
 	if raid_message != "":
 		messages.append(raid_message)
 
+	var task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
+	state = task_plan_result.get("state", state)
+	_append_event_records(events, task_plan_result.get("events", []))
+
 	var defense_result = _queue_town_defense_battle(session, config, faction_id)
 	_append_event_records(events, defense_result.get("events", []))
 	var defense_message = String(defense_result.get("message", ""))

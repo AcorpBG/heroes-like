@@ -11,7 +11,7 @@ Implemented behavior:
 - The report reuses the existing headless strategic AI subsystems for town economy, recruitment delivery, hero tasking, routes, defense, regrouping, assault grouping, pressure, and objective targeting.
 - The report emits capability rows for `town_economy`, `hero_tasking_and_routes`, `defense_regroup_and_assault`, and `objective_pressure`.
 - The report records Native RMG generated-map turn-health coverage rows for two supported Small land cases plus one Medium generalization case; the default fast audit marks them as required coverage gaps, with full execution available through the report input config.
-- The report records production blockers instead of hiding them: no durable full hero task board, no completed full 100-seed eight-week long-run matrix, and any generated-map generalization gaps.
+- The report records production blockers instead of hiding them: no completed full 100-seed eight-week long-run matrix, and any generated-map generalization gaps.
 - The report recommends the next implementation slices from observed blocker rows.
 
 Focused evidence:
@@ -35,5 +35,5 @@ git diff --check
 
 Remaining gaps:
 - This is an audit and KPI layer, not a strategic AI quality completion claim.
-- AI still needs a persistent full hero task board, broader generated-map seed coverage, longer multi-week simulations, and production difficulty/personality tuning.
+- AI still needs broader generated-map seed coverage, longer multi-week simulations, richer economy/army timing, retreat/personality tuning, and live-client pacing review.
 - Campaign-specific AI scripting remains deferred.

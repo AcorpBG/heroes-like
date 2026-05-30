@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-long-run-seed-matrix-10184",
-  "currentSliceTitle": "Strategic AI Long-Run Seed Matrix",
+  "currentSliceId": "strategic-ai-coordinated-task-planner-10184",
+  "currentSliceTitle": "Strategic AI Coordinated Task Planner",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Added Native RMG generated-map strategic AI long-run seed-matrix runner and runtime defaults that allow skeletal generated enemy configs to launch live raid target assignments.",
+  "currentSliceNotes": "Completed. Enemy turns seed durable coordinated commander tasks before raid deployment; broader strategic AI production readiness remains open.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T18:18:00Z",
+  "updatedAt": "2026-05-30T17:39:10Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -29069,6 +29069,66 @@
       "startedAt": "2026-05-30T17:45:00Z",
       "completedAt": "2026-05-30T18:18:00Z",
       "notes": "Focused smoke proves a generated Small native disk-package session creates target assignments and active raids once skeletal generated enemy configs receive runtime strategic AI defaults. Full 100-seed eight-week matrix remains required validation before any production-readiness claim."
+    },
+    {
+      "id": "strategic-ai-coordinated-task-planner-10184",
+      "title": "Strategic AI Coordinated Task Planner",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / coordinated multi-hero planning",
+      "purpose": "Make enemy factions plan durable multi-commander objectives before raid deployment so commanders reserve distinct high-value reachable targets and spawn/target selection follows the task board.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-baseline-kpi-report.md",
+        "docs/strategic-ai-long-run-seed-matrix-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "tests/ai_hero_task_strategic_planner_report.tscn",
+        "docs/strategic-ai-coordinated-task-planner-report.md"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Enemy turns seed durable planned tasks for multiple available commanders before raid spawn, planned tasks reserve distinct high-value targets, spawn selection prefers a planned-task commander and reachable spawn point, assigned raids activate the saved task, and focused regressions remain green.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding a new broad report gate without live behavior",
+        "running the full 100-seed eight-week matrix in this slice",
+        "campaign production"
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; planned 10 distinct commander tasks and spawned raid activated a planned target)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; persistent task-board blocker removed, production_ready remains false)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; generated-map row reported durable task-board activity and preserves full-matrix remaining validation)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Enemy turns now seed a coordinated durable task board for deployable commanders before new raid deployment; planned tasks reserve distinct high-value reachable objectives and drive spawn/target activation.",
+      "updatedAt": "2026-05-30T17:39:10Z",
+      "startedAt": "2026-05-30T17:21:09Z",
+      "notes": [
+        "No production-ready strategic AI claim. Full 100-seed eight-week generated-map matrix, Medium/generalized RMG behavior, deeper army/economy timing, retreat/personality tuning, and live-client pacing remain open.",
+        "Long-run smoke now tracks durable task-board open/active counts because compact public enemy events may only expose pressure summaries while task-board state still advances."
+      ],
+      "completedAt": "2026-05-30T17:39:10Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -36497,6 +36557,26 @@
           "residualRisk": "This closes stale town-defender pinning and defended-front invisibility. Full release-ready strategic AI still needs broader generated-map long-run behavior, coordinated multi-front planning, richer attacker/defender rotation doctrine, economy timing, and manual live-client pacing checks."
         }
       }
+    },
+    {
+      "sliceId": "strategic-ai-coordinated-task-planner-10184",
+      "completedAt": "2026-05-30T17:39:10Z",
+      "summary": "Completed. Enemy turns seed durable coordinated commander tasks before raid deployment; broader strategic AI production readiness remains open.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; planned 10 distinct commander tasks and spawned raid activated a planned target)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; persistent task-board blocker removed, production_ready remains false)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; generated-map row reported durable task-board activity and preserves full-matrix remaining validation)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
+        "python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "residualRisk": "Full strategic AI production readiness still needs broad generated-map long-run validation, Medium/generalized RMG behavior, deeper army/economy timing, retreat/personality tuning, and live-client pacing review."
     }
   ],
   "docsReadyEvidence": [
@@ -39436,42 +39516,30 @@
     }
   ],
   "lastValidation": {
-    "status": "pass",
-    "updatedAt": "2026-05-30T16:38:00Z",
-    "sliceId": "strategic-ai-risk-stall-withdrawal-10184",
+    "updatedAt": "2026-05-30T17:39:10Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed; planned 10 distinct commander tasks and spawned raid activated a planned target)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; persistent task-board blocker removed, production_ready remains false)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; generated-map row reported durable task-board activity and preserves full-matrix remaining validation)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_assault_grouping_report.tscn (passed)",
       "python3 -m py_compile tests/validate_repo.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "evidence": {
-      "implemented": [
-        "Town, hero, and guarded-encounter risk redirects now preserve their original risk-start day instead of resetting the wait timer each turn.",
-        "Risk-gated fronts with no regroup town and no committed support retire into commander rebuild after the support timeout, preserving army continuity and resolving the active raid.",
-        "Hero-hunt runtime evidence proves a stale unsupported hunter does not queue battle, emits a retarget event, suspends the live hero task as rebuilding, and stops being an active pressure encounter."
-      ],
-      "sourceDocs": [
-        "PLAN.md",
-        "docs/strategic-ai-hero-hunt-task-board-report.md"
-      ],
-      "savePolicy": "hero_task_state_live_persist_no_save_migration",
-      "saveVersion": 9,
-      "focusedReports": [
-        "AI_HERO_TASK_HERO_HUNT_REPORT",
-        "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-        "AI_TOWN_RETAKE_ASSAULT_REPORT",
-        "AI_RAID_REGROUP_RETREAT_REPORT"
-      ],
-      "residualRisk": "This closes one stale-risk preservation path. Full release-ready strategic AI still needs long-run generated-map evidence, broader retreat doctrine after real battle losses, strategic economy timing, multi-front planning, and manual live-client pacing checks."
-    }
+    "status": "passed"
   },
-  "active_slice": "strategic-ai-threat-arbitration-10184",
-  "currentSliceUpdatedAt": "2026-05-30T17:35:00Z",
+  "active_slice": {
+    "sliceId": "strategic-ai-coordinated-task-planner-10184",
+    "status": "completed",
+    "updatedAt": "2026-05-30T17:39:10Z",
+    "summary": "Completed. Enemy turns seed durable coordinated commander tasks before raid deployment; broader strategic AI production readiness remains open."
+  },
+  "currentSliceUpdatedAt": "2026-05-30T17:39:10Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -42424,7 +42492,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-long-run-seed-matrix-10184 [completed]",
+  "currentSlice": "strategic-ai-coordinated-task-planner-10184 [completed]",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-05-30T18:18:00Z",

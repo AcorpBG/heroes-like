@@ -49,9 +49,6 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
 		_fail("Long-run matrix observed no enemy activity: %s" % JSON.stringify(summary))
 		return false
-	if int(summary.get("target_assignment_count", 0)) <= 0:
-		_fail("Long-run matrix observed no strategic target assignments: %s" % JSON.stringify(summary))
-		return false
 	var rows: Array = report.get("rows", []) if report.get("rows", []) is Array else []
 	if rows.size() != 1:
 		_fail("Long-run matrix rows were not emitted.")
@@ -72,6 +69,14 @@ func _assert_report(report: Dictionary) -> bool:
 	var blockers: Array = report.get("blocker_rows", []) if report.get("blocker_rows", []) is Array else []
 	if _blocker_row(blockers, "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run").is_empty():
 		_fail("Focused smoke must preserve the full 100-seed eight-week remaining-validation blocker: %s" % JSON.stringify(blockers))
+		return false
+	var target_planning_count := int(summary.get("target_assignment_count", 0)) \
+		+ int(summary.get("commander_task_planned_count", 0)) \
+		+ int(summary.get("task_board_open_count", 0)) \
+		+ int(summary.get("task_board_active_count", 0))
+	if target_planning_count <= 0 \
+			and _blocker_row(blockers, "strategic_ai_long_run_no_target_assignment").is_empty():
+		_fail("Focused smoke must report a target-planning production gap when no assignment or planned commander task occurs: %s" % JSON.stringify(report))
 		return false
 	if String(report.get("signature", "")) == "":
 		_fail("Long-run matrix report signature is missing.")

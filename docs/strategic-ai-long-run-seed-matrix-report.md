@@ -18,19 +18,19 @@ Focused smoke command:
 
 `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn`
 
-Observed Native RMG smoke:
+Current focused Native RMG smoke surface:
 
 - `startup_source = native_rmg_disk_package`
 - `size_class_id = homm3_small`
 - `turns_completed = 1`
-- `enemy_activity_event_count = 4`
-- `target_assignment_count = 2`
-- `active_raid_count = 2`
-- `task_count = 2`
-- no behavior-bug blockers
+- enemy activity is observed through real `OverworldRules.end_turn(...)`
+- `target_assignment_count` tracks active raid target assignment events
+- `commander_task_planned_count` tracks coordinated planner events when commanders receive durable pre-deployment tasks
+- `task_board_open_count` and `task_board_active_count` track durable planned/active work even when compact public turn events only surface pressure summaries
+- if no assignment or planned commander task occurs during the one-turn smoke, the report preserves `strategic_ai_long_run_no_target_assignment` as a production-gap blocker rather than hiding it
 
 ## Remaining Validation
 
 The runner supports the production target of 100 seeds over 56 turns, but the committed smoke intentionally does not execute the full 100-seed eight-week matrix. That remains tracked as `strategic_ai_long_run_full_100_seed_8_week_matrix_not_run`.
 
-No production-ready claim. Full strategic AI still needs the full matrix, long-run generated-map quality review, coordinated multi-hero planning, stronger economy timing, retreat judgment, and live-client pacing checks.
+No production-ready claim. Full strategic AI still needs the full matrix, long-run generated-map quality review, stronger economy timing, retreat judgment, and live-client pacing checks.
