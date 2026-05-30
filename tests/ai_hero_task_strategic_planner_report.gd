@@ -13,6 +13,9 @@ func _run() -> void:
 	var planner_case := _planner_seeds_distinct_tasks_before_spawn()
 	if planner_case.is_empty():
 		return
+	var multi_origin_case := _planner_uses_local_origin_for_remote_front()
+	if multi_origin_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -20,6 +23,7 @@ func _run() -> void:
 		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_before_raid_spawn",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": planner_case,
+		"multi_origin_case": multi_origin_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -78,6 +82,40 @@ func _planner_seeds_distinct_tasks_before_spawn() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _planner_uses_local_origin_for_remote_front() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state["pressure"] = 0
+	state.erase("hero_task_state")
+	_add_enemy_town(session, "north_mire_watch", "town_duskfen", 0, 0)
+	_update_enemy_state(session, state)
+	_set_resource_controller(session, "north_wood", "player")
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_resource_controller(session, "river_signal_post", "player")
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 2:
+		_fail("Multi-origin planner should seed tasks, got %s" % JSON.stringify(plan_result))
+		return {}
+	var planned_state: Dictionary = plan_result.get("state", {})
+	var north_task := _planned_task_for_target(planned_state, "resource", "north_wood")
+	if north_task.is_empty():
+		_fail("Multi-origin planner did not plan north_wood from local front: %s" % JSON.stringify(_task_keys(_planned_tasks(planned_state))))
+		return {}
+	if String(north_task.get("origin_id", "")) != "north_mire_watch":
+		_fail("north_wood should use the local north_mire_watch origin, got %s" % JSON.stringify(north_task))
+		return {}
+	return {
+		"case_id": "multi_origin_planner_uses_local_town_for_north_resource",
+		"planned_count": int(plan_result.get("planned_count", 0)),
+		"target_key": "resource:north_wood",
+		"origin_id": String(north_task.get("origin_id", "")),
+		"origin_x": int(north_task.get("origin_x", -1)),
+		"origin_y": int(north_task.get("origin_y", -1)),
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
@@ -100,6 +138,17 @@ func _enemy_state(session) -> Dictionary:
 			return state
 	_fail("Could not find enemy state for %s" % MIRECLAW)
 	return {}
+
+func _add_enemy_town(session, placement_id: String, town_id: String, x: int, y: int) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	towns.append({
+		"placement_id": placement_id,
+		"town_id": town_id,
+		"x": x,
+		"y": y,
+		"owner": "enemy",
+	})
+	session.overworld["towns"] = towns
 
 func _update_enemy_state(session, replacement: Dictionary) -> void:
 	var states: Array = session.overworld.get("enemy_states", [])
@@ -166,6 +215,15 @@ func _task_keys(tasks: Array) -> Array:
 			keys.append("%s:%s" % [String(task_value.get("target_kind", "")), String(task_value.get("target_id", ""))])
 	keys.sort()
 	return keys
+
+func _planned_task_for_target(state: Dictionary, target_kind: String, target_id: String) -> Dictionary:
+	for task_value in _planned_tasks(state):
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("target_kind", "")) == target_kind and String(task.get("target_id", "")) == target_id:
+			return task
+	return {}
 
 func _assert_active_task(session, actor_id: String, target_kind: String, target_id: String) -> void:
 	var state := _enemy_state(session)
