@@ -14,13 +14,17 @@ func _run() -> void:
 	var case_report := _hero_hunt_task_board_case()
 	if case_report.is_empty():
 		return
+	var risk_case_report := _weak_hero_hunt_regroups_before_intercept_case()
+	if risk_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "hero_hunt_tasks_are_durable",
-		"behavior_policy": "hero_targets_use_saved_task_continuity",
+		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"risk_case": risk_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -91,6 +95,7 @@ func _hero_hunt_task_board_case() -> Dictionary:
 	assigned_raid["goal_y"] = second_tile.y
 	assigned_raid["goal_distance"] = 0
 	assigned_raid["arrived"] = true
+	assigned_raid = _set_raid_bog_brutes(assigned_raid, 12)
 	_remove_mireclaw_hero_hunt_encounters(session)
 	_append_encounter(session, assigned_raid)
 	var intercept_result := EnemyTurnRules._queue_hero_intercept_battle(session, config, MIRECLAW)
@@ -119,6 +124,81 @@ func _hero_hunt_task_board_case() -> Dictionary:
 		"moved_target": {"x": second_tile.x, "y": second_tile.y},
 		"battle_context_type": String(battle_context.get("type", "")),
 		"task_status_counts": _task_status_counts(final_task_state),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _weak_hero_hunt_regroups_before_intercept_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for weak intercept fixture.")
+		return {}
+	var target_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	_move_player_hero(session, hero_id, target_tile)
+	var raid := _raid_seed(session, "hero_vaska", "weak_hero_hunt_vaska", target_tile)
+	raid["target_kind"] = "hero"
+	raid["target_placement_id"] = hero_id
+	raid["target_label"] = _hero_name(session, hero_id)
+	raid["target_x"] = target_tile.x
+	raid["target_y"] = target_tile.y
+	raid["goal_x"] = target_tile.x
+	raid["goal_y"] = target_tile.y
+	raid["goal_distance"] = 0
+	raid["arrived"] = true
+	raid["target_reason_codes"] = ["hero_hunt", "exposed_hero", "hero_hunt_task_fixture"]
+	raid["target_public_reason"] = "exposed hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "weak hero hunt risk fixture"
+	raid = _set_raid_bog_brutes(raid, 4)
+	_remove_mireclaw_hero_hunt_encounters(session)
+	_append_encounter(session, raid)
+
+	var intercept_result := EnemyTurnRules._queue_hero_intercept_battle(session, config, MIRECLAW)
+	if bool(intercept_result.get("battle_started", false)) or not session.battle.is_empty():
+		_fail("Weak hero hunt incorrectly queued battle: %s" % JSON.stringify(intercept_result))
+		return {}
+	if not bool(intercept_result.get("risk_gated", false)):
+		_fail("Weak hero hunt did not report risk gating: %s" % JSON.stringify(intercept_result))
+		return {}
+	var after_raid := _encounter(session, "weak_hero_hunt_vaska")
+	if after_raid.is_empty():
+		_fail("Weak hero hunt raid disappeared after risk gating.")
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "hero_hunt_risk_regroup" not in reason_codes and "hero_hunt_risk_shadow" not in reason_codes:
+		_fail("Weak hero hunt did not record a hero-risk reason: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_public_reason", "")) != "stalking stronger hero":
+		_fail("Weak hero hunt public reason was not stalking stronger hero: %s" % JSON.stringify(after_raid))
+		return {}
+	if int(after_raid.get("hero_intercept_delay_until_day", 0)) <= int(session.day):
+		_fail("Weak hero hunt did not set a future intercept delay: %s" % JSON.stringify(after_raid))
+		return {}
+	var events: Array = intercept_result.get("events", []) if intercept_result.get("events", []) is Array else []
+	var event_types := _event_types(events)
+	if "ai_target_assigned" not in event_types:
+		_fail("Weak hero hunt risk gating did not emit ai_target_assigned: %s" % JSON.stringify(intercept_result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Weak hero hunt public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	if _failed:
+		return {}
+	return {
+		"case_id": "weak_hero_hunt_regroups_before_intercept",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"battle_started": false,
+		"hero_intercept_delay_until_day": int(after_raid.get("hero_intercept_delay_until_day", 0)),
+		"target_public_reason": String(after_raid.get("target_public_reason", "")),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -181,6 +261,23 @@ func _raid_seed(session, roster_hero_id: String, placement_id: String, origin: V
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _set_raid_bog_brutes(raid: Dictionary, count: int) -> Dictionary:
+	var updated := raid.duplicate(true)
+	var army := {
+		"id": "%s_host" % String(updated.get("placement_id", "hero_hunt")),
+		"name": "Hero Hunt Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": max(0, count)}],
+	}
+	updated["enemy_army"] = army
+	var commander_state = updated.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		updated["enemy_commander_state"] = EnemyAdventureRules.sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(updated.get("encounter_id", updated.get("id", "")))
+		)
+	return updated
 
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
@@ -286,6 +383,12 @@ func _append_encounter(session, encounter: Dictionary) -> void:
 	encounters.append(encounter.duplicate(true))
 	session.overworld["encounters"] = encounters
 
+func _encounter(session, placement_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter
+	return {}
+
 func _remove_mireclaw_hero_hunt_encounters(session) -> void:
 	var kept := []
 	for encounter in session.overworld.get("encounters", []):
@@ -304,6 +407,27 @@ func _task_status_counts(task_state: Dictionary) -> Dictionary:
 			var status := String(task.get("task_status", ""))
 			counts[status] = int(counts.get(status, 0)) + 1
 	return counts
+
+func _event_types(events: Variant) -> Array:
+	var types := []
+	if not (events is Array):
+		return types
+	for event in events:
+		if event is Dictionary:
+			var event_type := String(event.get("event_type", ""))
+			if event_type != "" and event_type not in types:
+				types.append(event_type)
+	types.sort()
+	return types
+
+func _public_event_leaks(public_events: Variant) -> bool:
+	var forbidden_tokens := ["target_debug_reason", "hero_task_state", "task_id", "reservation_key", "garrison_score", "raid_score"]
+	var encoded := JSON.stringify(public_events)
+	for token in forbidden_tokens:
+		if encoded.find(token) >= 0:
+			_fail("Hero hunt public events leaked internal token %s" % token)
+			return true
+	return false
 
 func _string_array(value: Variant) -> Array:
 	var output := []

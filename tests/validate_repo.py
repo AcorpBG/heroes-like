@@ -215,6 +215,7 @@ AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-
 AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.gd"
 AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.tscn"
 AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-hunt-task-board-report.md"
+AI_HERO_INTERCEPT_RISK_GATING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-intercept-risk-gating-report.md"
 AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
 AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
 AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
@@ -15131,6 +15132,9 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     for required_token in (
         '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]',
         'EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(session, faction_id, encounter, "completed", "valid")',
+        "func _hero_intercept_ready_report",
+        "redirect_hero_intercept_for_risk",
+        "hero_intercept_delay_until_day",
     ):
         ensure(required_token in enemy_turn_text, errors, f"AI hero task hero hunt normalizer/intercept implementation is missing token: {required_token}")
     if AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.exists():
@@ -15138,7 +15142,12 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
         for required_token in (
             "AI_HERO_TASK_HERO_HUNT_REPORT",
             "hero_targets_use_saved_task_continuity",
+            "hero_targets_use_saved_task_continuity_with_intercept_risk_gating",
             "hero_hunt_assigns_reuses_follows_and_closes_task",
+            "weak_hero_hunt_regroups_before_intercept",
+            "hero_hunt_risk_regroup",
+            "hero_hunt_risk_shadow",
+            "stalking stronger hero",
             "saved_hero_task",
             "invalid_target_missing",
             "hero_intercept",
@@ -15150,11 +15159,27 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
         for required_text in (
             "Strategic AI Hero Hunt Task Board Report",
             "Implementation evidence",
+            "strategic-ai-hero-intercept-risk-gating-10184",
             "player-hero hunt targets",
+            "`weak_hero_hunt_regroups_before_intercept`",
+            "`hero_hunt_risk_regroup`",
             "AI_HERO_TASK_HERO_HUNT_REPORT",
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"AI hero task hero hunt doc is missing required text: {required_text}")
+    ensure(AI_HERO_INTERCEPT_RISK_GATING_REPORT_DOC_PATH.exists(), errors, "Missing strategic AI hero intercept risk gating report doc")
+    if AI_HERO_INTERCEPT_RISK_GATING_REPORT_DOC_PATH.exists():
+        risk_doc_text = AI_HERO_INTERCEPT_RISK_GATING_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Strategic AI Hero Intercept Risk Gating Report",
+            "strategic-ai-hero-intercept-risk-gating-10184",
+            "`_hero_intercept_ready_report`",
+            "`redirect_hero_intercept_for_risk`",
+            "`weak_hero_hunt_regroups_before_intercept`",
+            "No save migration",
+            "No full strategic AI quality claim",
+        ):
+            ensure(required_text in risk_doc_text, errors, f"AI hero intercept risk gating doc is missing required text: {required_text}")
 
 
 def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
