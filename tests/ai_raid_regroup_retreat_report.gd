@@ -103,17 +103,23 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 	if String(after_raid.get("last_regroup_town_id", "")) != "duskfen_bastion":
 		_fail("Regroup did not record duskfen_bastion as regroup town: %s" % JSON.stringify(after_raid))
 		return {}
-	if String(after_raid.get("target_kind", "")) != "":
-		_fail("Regrouped raid should clear its target after reaching a usable host strength: %s" % JSON.stringify(after_raid))
+	if String(after_raid.get("target_kind", "")) != "resource" or String(after_raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Regrouped raid should resume its previous resource target after reaching a usable host strength: %s" % JSON.stringify(after_raid))
+		return {}
+	var resumed_reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "regroup_complete" not in resumed_reason_codes or "persistent_income_denial" not in resumed_reason_codes:
+		_fail("Regrouped raid resume missed preserved objective reason codes: %s" % JSON.stringify(after_raid))
 		return {}
 	if resource_controller == MIRECLAW:
 		_fail("Understrength raid captured the original offensive resource instead of regrouping.")
 		return {}
 	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "completed", "valid")
+	_assert_task_status(session, "hero_vaska", "resource", "river_free_company", "active", "valid")
 	if _failed:
 		return {}
 	EnemyTurnRules.normalize_enemy_states(session)
 	_assert_task_status(session, "hero_vaska", "regroup", "duskfen_bastion", "completed", "valid")
+	_assert_task_status(session, "hero_vaska", "resource", "river_free_company", "active", "valid")
 	if _failed:
 		return {}
 	var task_state := _task_state(session)
@@ -128,6 +134,10 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 		"message": String(result.get("message", "")),
 		"resource_controller_after": resource_controller,
 		"regroup_town_id": String(after_raid.get("last_regroup_town_id", "")),
+		"resumed_target_kind": String(after_raid.get("target_kind", "")),
+		"resumed_target_id": String(after_raid.get("target_placement_id", "")),
+		"resumed_reason_codes": resumed_reason_codes,
+		"goal_distance_after_resume": int(after_raid.get("goal_distance", 9999)),
 		"saved_plan_target_kind": String(saved_plan.get("target_kind", "")),
 		"saved_plan_target_id": String(saved_plan.get("target_placement_id", "")),
 		"saved_plan_reason_codes": saved_reason_codes,

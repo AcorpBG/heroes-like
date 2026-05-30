@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-commander-outcome-adaptation-10184",
-  "currentSliceTitle": "Strategic AI Commander Outcome Adaptation",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. AI commander target-selection fit now adapts from live outcome memory: repeated success at a target kind increases future task fit, while defeats reduce it.",
+  "currentSliceId": "",
+  "currentSliceTitle": "",
+  "currentSliceStatus": "none",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-post-regroup-target-resumption-10184. Strategic AI production readiness remains open.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T22:12:00Z",
+  "updatedAt": "2026-05-30T22:22:14Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -30396,6 +30396,87 @@
         "Long-run smoke now tracks durable task-board open/active counts because compact public enemy events may only expose pressure summaries while task-board state still advances."
       ],
       "completedAt": "2026-05-30T17:39:10Z"
+    },
+    {
+      "id": "strategic-ai-post-regroup-target-resumption-10184",
+      "title": "Strategic AI Post-Regroup Target Resumption",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current product focus / strategic AI follow-up",
+      "purpose": "Make successful AI commander regroup resume the prior valid objective immediately, preserving strategic intent after reinforcement instead of clearing the target and waiting for generic reassignment.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Successful regroup restores a reachable previous objective, refreshes route distance, emits target-assignment evidence, records the resumed live task, preserves failed-regroup rebuild behavior, and focused strategic-AI regressions pass.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "adding broad report gates without live behavior",
+        "changing combat balance",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-30T22:20:44Z",
+      "updatedAt": "2026-05-30T22:22:14Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Successful understrength regroup now resumes river_free_company immediately, refreshes goal_distance_after_resume=10, emits ai_raid_regrouped and ai_target_assigned, and records an active resource task while failed-regroup rebuild behavior remains covered."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live task execution still completes resource-front tasks and commander outcome progression."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Same-turn planning, recruitment preparation, and prepared-task launch remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner, multi-origin planning, personality fit, and adaptive outcome-memory cases remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "completedAt": "2026-05-30T22:22:14Z",
+      "summary": "Completed. Successful AI regroup now resumes a reachable prior objective immediately, preserves public/reason metadata where available, emits both regroup and target-assignment events, and records the resumed live task.",
+      "notes": [
+        "If the prior objective no longer exists, is no longer valid, or has no reachable route, regroup falls back to the existing cleared-target behavior instead of looping into an impossible objective.",
+        "No save-version bump and no full strategic AI production-readiness claim."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -40783,27 +40864,22 @@
     }
   ],
   "lastValidation": {
-    "updatedAt": "2026-05-30T21:40:00Z",
+    "status": "pass",
+    "updatedAt": "2026-05-30T22:22:14Z",
+    "sliceId": "strategic-ai-post-regroup-target-resumption-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed; defended neutral towns planned, weak assaults risk-gated, ready assaults queued live battle, enemy victory captured town, player resources unchanged)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed; active retake army preserved town target over planned reservations/support diversion)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed; production_ready remains false with generated-map coverage/generalization blockers)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (pass)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (pass)",
+      "python3 tests/validate_repo.py (pass)",
+      "jq empty ops/progress.json (pass)",
+      "git diff --check (pass)"
     ],
-    "status": "passed"
+    "summary": "Post-regroup target resumption implementation and focused strategic-AI regressions passed."
   },
-  "active_slice": {
-    "sliceId": "strategic-ai-commander-outcome-adaptation-10184",
-    "status": "completed",
-    "updatedAt": "2026-05-30T22:12:00Z",
-    "summary": "Completed. AI commander target-selection fit now adapts from live outcome memory: repeated success at a target kind increases future task fit, while defeats reduce it; broader strategic AI production readiness remains open."
-  },
-  "currentSliceUpdatedAt": "2026-05-30T22:12:00Z",
+  "active_slice": "",
+  "currentSliceUpdatedAt": "2026-05-30T22:22:14Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -43756,7 +43832,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-commander-outcome-adaptation-10184 [completed]",
+  "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-05-30T22:12:00Z",
