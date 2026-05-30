@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-artifact-task-board-10184",
-  "currentSliceTitle": "Strategic AI Artifact Task Board",
+  "currentSliceId": "strategic-ai-hero-hunt-task-board-10184",
+  "currentSliceTitle": "Strategic AI Hero Hunt Task Board",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Artifact/relic targets now persist as strategic AI hero tasks and reconcile through saved-task continuity.",
+  "currentSliceNotes": "Completed. Exposed player-hero hunt targets now persist as strategic AI hero tasks, can be reused from moved hero positions, and close when a hero-intercept battle is queued.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T12:55:34Z",
+  "updatedAt": "2026-05-30T13:07:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -27647,6 +27647,69 @@
         }
       },
       "completedAt": "2026-05-30T12:55:34Z"
+    },
+    {
+      "id": "strategic-ai-hero-hunt-task-board-10184",
+      "title": "Strategic AI Hero Hunt Task Board",
+      "status": "completed",
+      "source": "continuation of owner strategic AI production-readiness goal after artifact task-board continuity; close transient exposed-player-hero hunt behavior in durable commander tasks",
+      "planRef": "PLAN.md Current strategic AI target",
+      "sourceDocs": [
+        "PLAN.md",
+        "project.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "focused strategic AI hero hunt Godot report",
+        "docs strategic AI hero hunt task-board report",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "completionCriteria": "Exposed player-hero target assignments persist to normalized enemy_states[].hero_task_state, saved target and spawn commander selection can reuse reachable hero-hunt tasks from current hero positions, missing hero targets invalidate through lifecycle reconciliation, queued hero-intercept battles close matching active hero-hunt tasks, normalized task state accepts target_kind hero, focused runtime tests prove assignment/reuse/movement/invalidation/intercept closure behavior, validation passes, and no save-version migration is introduced.",
+      "startedAt": "2026-05-30T12:59:22Z",
+      "updatedAt": "2026-05-30T13:07:30Z",
+      "notes": "Completed. Exposed player-hero hunt targets now persist as strategic AI hero tasks, can be reused from moved hero positions, and close when a hero-intercept battle is queued.",
+      "completedAt": "2026-05-30T13:07:30Z",
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-30T13:07:30Z",
+        "sliceId": "strategic-ai-hero-hunt-task-board-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Task-state normalization now accepts target_kind hero.",
+            "Live exposed-player-hero target assignments now persist into normalized enemy_states[].hero_task_state.",
+            "Saved strategic AI task selection rebuilds hero-hunt plans from the current player hero position instead of stale assignment coordinates.",
+            "Hero-hunt tasks reconcile missing player hero targets as invalid_target_missing.",
+            "Queued hero-intercept battles complete the matching active hero-hunt task.",
+            "Focused runtime coverage proves River Pass hero_lyra assignment, saved-task reuse after movement from 8,4 to 8,3, missing-target invalidation, normalization preservation, and task closure when Mireclaw queues a hero_intercept battle."
+          ],
+          "sourceDocs": [
+            "PLAN.md",
+            "docs/strategic-ai-hero-hunt-task-board-report.md"
+          ],
+          "savePolicy": "hero_task_state_live_persist_no_save_migration",
+          "saveVersion": 9,
+          "focusedReport": "AI_HERO_TASK_HERO_HUNT_REPORT",
+          "residualRisk": "This slice closes hero-hunt target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
+        }
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -37713,9 +37776,10 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T12:55:34Z",
-    "sliceId": "strategic-ai-artifact-task-board-10184",
+    "updatedAt": "2026-05-30T13:07:30Z",
+    "sliceId": "strategic-ai-hero-hunt-task-board-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
@@ -37723,31 +37787,33 @@
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Task-state normalization now accepts target_kind artifact.",
-        "Live artifact/relic target assignments now persist into normalized enemy_states[].hero_task_state.",
-        "Saved strategic AI task selection can rebuild artifact plans from live artifact placements.",
-        "Artifact tasks reconcile against live placement state: missing targets invalidate, externally collected relics invalidate, and own collected relics complete.",
-        "Enemy artifact pickup resolution completes matching active artifact tasks when the AI secures the relic.",
-        "Focused runtime coverage proves River Pass warcrest_ruin relic assignment, saved-task reuse, normalization preservation, missing-target invalidation, externally collected invalidation, and completed task closure after pickup."
+        "Task-state normalization now accepts target_kind hero.",
+        "Live exposed-player-hero target assignments now persist into normalized enemy_states[].hero_task_state.",
+        "Saved strategic AI task selection rebuilds hero-hunt plans from the current player hero position instead of stale assignment coordinates.",
+        "Hero-hunt tasks reconcile missing player hero targets as invalid_target_missing.",
+        "Queued hero-intercept battles complete the matching active hero-hunt task.",
+        "Focused runtime coverage proves River Pass hero_lyra assignment, saved-task reuse after movement from 8,4 to 8,3, missing-target invalidation, normalization preservation, and task closure when Mireclaw queues a hero_intercept battle."
       ],
       "sourceDocs": [
         "PLAN.md",
-        "docs/strategic-ai-artifact-task-board-report.md"
+        "docs/strategic-ai-hero-hunt-task-board-report.md"
       ],
       "savePolicy": "hero_task_state_live_persist_no_save_migration",
       "saveVersion": 9,
-      "focusedReport": "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
-      "residualRisk": "This slice closes artifact/relic target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
+      "focusedReport": "AI_HERO_TASK_HERO_HUNT_REPORT",
+      "residualRisk": "This slice closes hero-hunt target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
     }
   },
-  "active_slice": "combat-mireclaw-packhunter-trait-trim-10184",
-  "currentSliceUpdatedAt": "2026-05-30T12:55:34Z",
+  "active_slice": "strategic-ai-hero-hunt-task-board-10184",
+  "currentSliceUpdatedAt": "2026-05-30T13:07:30Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -40380,13 +40446,51 @@
         "focusedReport": "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
         "residualRisk": "This slice closes artifact/relic target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-30T13:07:30Z",
+      "sliceId": "strategic-ai-hero-hunt-task-board-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Task-state normalization now accepts target_kind hero.",
+          "Live exposed-player-hero target assignments now persist into normalized enemy_states[].hero_task_state.",
+          "Saved strategic AI task selection rebuilds hero-hunt plans from the current player hero position instead of stale assignment coordinates.",
+          "Hero-hunt tasks reconcile missing player hero targets as invalid_target_missing.",
+          "Queued hero-intercept battles complete the matching active hero-hunt task.",
+          "Focused runtime coverage proves River Pass hero_lyra assignment, saved-task reuse after movement from 8,4 to 8,3, missing-target invalidation, normalization preservation, and task closure when Mireclaw queues a hero_intercept battle."
+        ],
+        "sourceDocs": [
+          "PLAN.md",
+          "docs/strategic-ai-hero-hunt-task-board-report.md"
+        ],
+        "savePolicy": "hero_task_state_live_persist_no_save_migration",
+        "saveVersion": 9,
+        "focusedReport": "AI_HERO_TASK_HERO_HUNT_REPORT",
+        "residualRisk": "This slice closes hero-hunt target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
+      }
     }
   ],
   "currentSlice": {
-    "id": "strategic-ai-artifact-task-board-10184",
-    "title": "Strategic AI Artifact Task Board",
+    "id": "strategic-ai-hero-hunt-task-board-10184",
+    "title": "Strategic AI Hero Hunt Task Board",
     "status": "completed",
-    "source": "continuation of owner strategic AI production-readiness goal after encounter objective task-board continuity; close transient relic target behavior in durable commander tasks",
+    "source": "continuation of owner strategic AI production-readiness goal after artifact task-board continuity; close transient exposed-player-hero hunt behavior in durable commander tasks",
     "planRef": "PLAN.md Current strategic AI target",
     "sourceDocs": [
       "PLAN.md",
@@ -40396,20 +40500,22 @@
     "implementationTargets": [
       "scripts/core/EnemyAdventureRules.gd",
       "scripts/core/EnemyTurnRules.gd",
-      "focused strategic AI artifact task Godot report",
-      "docs strategic AI artifact task-board report",
+      "focused strategic AI hero hunt Godot report",
+      "docs strategic AI hero hunt task-board report",
       "tests/validate_repo.py",
       "ops/progress.json"
     ],
-    "completionCriteria": "Artifact/relic target assignments persist to normalized enemy_states[].hero_task_state, saved target and spawn commander selection can reuse reachable artifact tasks, collected or missing artifact targets complete/invalidate through lifecycle reconciliation, normalized task state accepts target_kind artifact, focused runtime tests prove assignment/reuse/collection behavior, validation passes, and no save-version migration is introduced.",
-    "startedAt": "2026-05-30T12:51:50Z",
-    "updatedAt": "2026-05-30T12:55:34Z",
-    "notes": "Completed. Artifact/relic targets now persist as strategic AI hero tasks and reconcile through saved-task continuity.",
+    "completionCriteria": "Exposed player-hero target assignments persist to normalized enemy_states[].hero_task_state, saved target and spawn commander selection can reuse reachable hero-hunt tasks from current hero positions, missing hero targets invalidate through lifecycle reconciliation, queued hero-intercept battles close matching active hero-hunt tasks, normalized task state accepts target_kind hero, focused runtime tests prove assignment/reuse/movement/invalidation/intercept closure behavior, validation passes, and no save-version migration is introduced.",
+    "startedAt": "2026-05-30T12:59:22Z",
+    "updatedAt": "2026-05-30T13:07:30Z",
+    "notes": "Completed. Exposed player-hero hunt targets now persist as strategic AI hero tasks, can be reused from moved hero positions, and close when a hero-intercept battle is queued.",
+    "completedAt": "2026-05-30T13:07:30Z",
     "validation": {
       "status": "pass",
-      "updatedAt": "2026-05-30T12:55:34Z",
-      "sliceId": "strategic-ai-artifact-task-board-10184",
+      "updatedAt": "2026-05-30T13:07:30Z",
+      "sliceId": "strategic-ai-hero-hunt-task-board-10184",
       "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_encounter_objective_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_retask_cancellation_report.tscn (passed)",
@@ -40417,30 +40523,31 @@
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_actor_lifecycle_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/ai_hero_task_resumption_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "evidence": {
         "implemented": [
-          "Task-state normalization now accepts target_kind artifact.",
-          "Live artifact/relic target assignments now persist into normalized enemy_states[].hero_task_state.",
-          "Saved strategic AI task selection can rebuild artifact plans from live artifact placements.",
-          "Artifact tasks reconcile against live placement state: missing targets invalidate, externally collected relics invalidate, and own collected relics complete.",
-          "Enemy artifact pickup resolution completes matching active artifact tasks when the AI secures the relic.",
-          "Focused runtime coverage proves River Pass warcrest_ruin relic assignment, saved-task reuse, normalization preservation, missing-target invalidation, externally collected invalidation, and completed task closure after pickup."
+          "Task-state normalization now accepts target_kind hero.",
+          "Live exposed-player-hero target assignments now persist into normalized enemy_states[].hero_task_state.",
+          "Saved strategic AI task selection rebuilds hero-hunt plans from the current player hero position instead of stale assignment coordinates.",
+          "Hero-hunt tasks reconcile missing player hero targets as invalid_target_missing.",
+          "Queued hero-intercept battles complete the matching active hero-hunt task.",
+          "Focused runtime coverage proves River Pass hero_lyra assignment, saved-task reuse after movement from 8,4 to 8,3, missing-target invalidation, normalization preservation, and task closure when Mireclaw queues a hero_intercept battle."
         ],
         "sourceDocs": [
           "PLAN.md",
-          "docs/strategic-ai-artifact-task-board-report.md"
+          "docs/strategic-ai-hero-hunt-task-board-report.md"
         ],
         "savePolicy": "hero_task_state_live_persist_no_save_migration",
         "saveVersion": 9,
-        "focusedReport": "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
-        "residualRisk": "This slice closes artifact/relic target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
+        "focusedReport": "AI_HERO_TASK_HERO_HUNT_REPORT",
+        "residualRisk": "This slice closes hero-hunt target task-board continuity; full release-ready strategic AI still needs long-run generated-map quality, stronger global objective planning, deeper multi-army grouping, retreat/defense policy, adventure spell planning, and live-client pacing review."
       }
-    },
-    "completedAt": "2026-05-30T12:55:34Z"
+    }
   },
   "validation": {
     "status": "pass",

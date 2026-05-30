@@ -1701,6 +1701,7 @@ static func _queue_hero_intercept_battle(
 		return {}
 	session.battle = payload
 	session.game_state = "battle"
+	EnemyAdventureRulesScript._ai_hero_task_finish_live_assignment(session, faction_id, encounter, "completed", "valid")
 	var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
 	return {
 		"battle_started": true,
@@ -2801,7 +2802,7 @@ static func _normalize_hero_task_status(value: Variant) -> String:
 
 static func _normalize_hero_task_target_kind(value: Variant) -> String:
 	var target_kind := String(value)
-	if target_kind in ["resource", "town", "artifact", "encounter", "commander", "front"]:
+	if target_kind in ["resource", "town", "artifact", "encounter", "hero", "commander", "front"]:
 		return target_kind
 	return ""
 
