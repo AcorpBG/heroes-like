@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-opportunistic-hero-intercept-10184",
-  "currentSliceTitle": "Strategic AI Opportunistic Hero Intercept",
+  "currentSliceId": "strategic-ai-recruitment-market-coverage-10184",
+  "currentSliceTitle": "Strategic AI Recruitment Market Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed. Active non-defensive raids now retarget nearby exposed player heroes when the intercept is reachable and risk-ready, while defense/support/objective/guarded-claim work remains protected.",
+  "currentSliceNotes": "Completed. Enemy recruitment now uses live town market coverage for wood/ore unit costs and consumes market usage caps when automatic recruitment buys missing materials.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T01:52:00Z",
+  "updatedAt": "2026-05-31T02:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,94 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-recruitment-market-coverage-10184",
+      "title": "Strategic AI Recruitment Market Coverage",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner-directed strategic AI production-readiness continuation",
+      "planRef": "PLAN.md Current strategic AI follow-up / recruitment economy execution",
+      "purpose": "Make enemy recruitment use built town markets to cover wood and ore unit costs, so AI towns can convert gold into actual garrison, raid, rebuild, and planned-task troops instead of stalling on raw stockpile gaps.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Enemy recruitment affordability and spending use the same town-market cost coverage as enemy construction; market usage caps are consumed when automatic coverage buys or sells resources; a live AI recruitment fixture proves a market-backed town with gold but no wood can still recruit a wood-cost unit.",
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "changing player market UI behavior",
+        "broad economy rebalance",
+        "new report-only gates"
+      ],
+      "startedAt": "2026-05-31T02:12:00Z",
+      "updatedAt": "2026-05-31T02:35:00Z",
+      "completedAt": "2026-05-31T02:35:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned-task recruitment prep still passes, including a new market-backed recruitment case where Duskfen has gold, no wood, a market, and recruits wood-cost Mudglass Slingers while consuming wood buy cap."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn task execution still completes reserved resource-front tasks and persists task-board state after market-backed recruitment affordability changes."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, retreat, support, guarded-claim, and route-recovery behavior still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "result": "pass",
+          "summary": "Strategic planner task scoring and task-board report still pass."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/runtime_market_cap_persistence_report.tscn",
+          "result": "pass",
+          "summary": "Market cap persistence behavior still passes after automatic cost coverage now writes market_usage when it buys or sells."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/active_scenario_ai_town_start_economy_report.tscn",
+          "result": "pass",
+          "summary": "Active scenario AI town start economy report still passes with market-backed recruitment coverage available."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "notes": [
+        "Completed. Enemy recruitment pressure reports and real recruitment now evaluate affordability through town market coverage, then apply the same market coverage before spending final recruit costs. Automatic market coverage persists usage caps when it buys or sells resources."
+      ]
+    },
     {
       "id": "strategic-ai-opportunistic-hero-intercept-10184",
       "title": "Strategic AI Opportunistic Hero Intercept",
@@ -40372,12 +40460,12 @@
     "status": "passed"
   },
   "active_slice": {
-    "sliceId": "strategic-ai-defended-neutral-town-assault-10184",
+    "sliceId": "strategic-ai-recruitment-market-coverage-10184",
     "status": "completed",
-    "updatedAt": "2026-05-30T21:40:00Z",
-    "summary": "Completed. AI commanders now plan, risk-gate, battle, and capture defended neutral towns through live systems; active retake armies can override planned reservations for urgent town recovery; broader strategic AI production readiness remains open."
+    "updatedAt": "2026-05-31T02:35:00Z",
+    "summary": "Completed. Enemy recruitment now uses live town market coverage for wood/ore unit costs and consumes market usage caps when automatic recruitment buys missing materials; broader strategic AI production readiness remains open."
   },
-  "currentSliceUpdatedAt": "2026-05-30T21:40:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T02:35:00Z",
   "validationHistory": [
     {
       "status": "pass",

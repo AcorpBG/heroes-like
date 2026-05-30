@@ -9926,6 +9926,8 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 				local_usage["buy"] = buy_bucket
 			deficit -= 1
 			actions.append("%s bought 1 %s for %d gold" % [_town_name(town), resource_key, int(buy_quote.get("gold_value", 0))])
+	if not actions.is_empty() and current_day > 0:
+		town["market_usage"] = local_usage
 	return actions
 
 static func _town_battlefront_profile(town: Dictionary) -> Dictionary:
