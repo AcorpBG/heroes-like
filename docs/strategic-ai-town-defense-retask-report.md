@@ -14,6 +14,8 @@ Later follow-up: `strategic-ai-town-defense-arrival-10184` makes arrival at that
 
 Current follow-up: `strategic-ai-defense-overcommit-control-10184` keeps useful pressure commanders from piling onto town or resource defense fronts that are already covered by current garrison plus committed defenders.
 
+Related follow-up: `strategic-ai-town-defender-rotation-10184` keeps defended town fronts visible to strategic AI pressure while the defender is needed, then releases the stationed commander when the town front is cleared.
+
 The shared headless simulation harness now broadens that proof through `strategic_ai_multi_scenario_town_defense_retask` and `live_enemy_town_defense_retask_across_scenario_breadth`. It runs the normal enemy end-turn cycle across `river-pass`, `prismhearth-watch`, `glassroad-sundering`, `glassfen-breakers`, and `ninefold-confluence`, covering 9 enemy faction cases.
 
 Implemented behavior:
@@ -28,6 +30,8 @@ Implemented behavior:
 - Town-defense candidate selection now subtracts current garrison strength and other active same-faction town-defense commitments before retasking another commander.
 - Resource-site defense candidate selection now subtracts active same-faction site-defense commitments before retasking another commander.
 - Covered town and resource fronts leave active pressure targets untouched instead of rewriting their previous-target metadata.
+- Town-defense arrivals now leave Duskfen as an active defended/stabilizing front for strategic pressure, recruitment, and garrison scoring instead of hiding it behind commander metadata only.
+- Stationed town defenders release back to the commander roster when the defended front is cleared, so a commander is not pinned to a safe town until a stale timer expires.
 
 Validation evidence:
 - `AI_TOWN_DEFENSE_RETASK_REPORT`
@@ -45,6 +49,7 @@ Validation evidence:
 - `target_assignment_event_count = 13`
 - `covered_town_defense_does_not_retask_second_commander`
 - `covered_resource_defense_does_not_retask_second_commander`
+- `stationed_town_defender_releases_when_front_clears`
 - `no_hero_task_state_write_no_save_migration`
 - `save_version_before`
 - `save_version_after`

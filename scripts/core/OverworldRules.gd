@@ -8564,6 +8564,8 @@ static func _normalize_town_front_state(value: Variant) -> Dictionary:
 		"faction_id": String(value.get("faction_id", "")) if value is Dictionary else "",
 		"last_change_day": max(0, int(value.get("last_change_day", 0))) if value is Dictionary else 0,
 		"stabilize_until_day": max(0, int(value.get("stabilize_until_day", 0))) if value is Dictionary else 0,
+		"defense_until_day": max(0, int(value.get("defense_until_day", 0))) if value is Dictionary else 0,
+		"last_defended_day": max(0, int(value.get("last_defended_day", 0))) if value is Dictionary else 0,
 		"last_owner": String(value.get("last_owner", "")) if value is Dictionary else "",
 		"capture_count": max(0, int(value.get("capture_count", 0))) if value is Dictionary else 0,
 		"source": String(value.get("source", "")) if value is Dictionary else "",
@@ -8755,6 +8757,37 @@ static func _town_front_state(session: SessionStateStoreScript.SessionData, town
 				% [days_remaining, "" if days_remaining == 1 else "s"]
 				if days_remaining > 0
 				else "the reclaimed walls are still being stabilized"
+			)
+			return result
+		"defend":
+			if owner != "enemy":
+				return result
+			var defend_until_day: int = max(
+				int(front.get("defense_until_day", 0)),
+				int(front.get("stabilize_until_day", 0))
+			)
+			var defend_days_remaining: int = max(0, defend_until_day - int(session.day) + 1) if session != null else 0
+			if defend_days_remaining <= 0 and not bool(recovery.get("active", false)):
+				return result
+			var defense_pressure_bonus: int = int(recovery.get("pressure", 0)) * 8
+			defense_pressure_bonus += int(logistics.get("support_gap", 0)) * 10
+			defense_pressure_bonus += int(logistics.get("threatened_count", 0)) * 12
+			defense_pressure_bonus += max(0, defend_days_remaining - 1) * 10
+			if bool(capital_project.get("vulnerable", false)):
+				defense_pressure_bonus += 14
+			result["active"] = true
+			result["mode"] = "stabilizing"
+			result["days_remaining"] = defend_days_remaining
+			result["priority_bonus"] = base_priority + defense_pressure_bonus
+			result["garrison_bonus"] = 70 + defense_pressure_bonus
+			result["build_bonus"] = 42 + int(recovery.get("pressure", 0)) * 8 + max(0, defend_days_remaining - 1) * 8
+			result["summary"] = "%s is holding %s after a defensive stand." % [enemy_label, _town_name(town)]
+			result["compact_summary"] = "defend %s" % _town_name(town)
+			result["public_clause"] = (
+				"the reclaimed walls stay under defender watch for %d day%s"
+				% [defend_days_remaining, "" if defend_days_remaining == 1 else "s"]
+				if defend_days_remaining > 0
+				else "the reclaimed walls are still under defender watch"
 			)
 			return result
 		_:

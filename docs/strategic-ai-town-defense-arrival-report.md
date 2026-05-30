@@ -9,6 +9,7 @@ This slice closes the live gap after town-defense retargeting. A raid that reach
 Implemented behavior:
 - `EnemyAdventureRules._resolve_arrived_target(...)` now routes enemy-owned `town` targets with `town_defense` reason codes into `_defend_town_target(...)`.
 - `_defend_town_target(...)` merges the arrived raid host into the town garrison, writes live front defense fields, marks the town as AI-defended, stores the commander as `ai_defender_commander_state`, completes the saved hero task, and emits `ai_town_defended`.
+- Defended town fronts remain visible through `OverworldRules.town_front_state(...)` as active stabilization pressure while the defender watch is live, so town governor scoring and reinforcement routing can still see the front.
 - The stationed commander is synced to the enemy commander roster as active on `town_defense:<town_id>` so the same commander cannot immediately be redeployed elsewhere.
 - `BattleRules.create_town_assault_payload(...)` uses a stationed AI defender commander when present, so the strengthened town assault battle uses the actual defending commander instead of always falling back to the generic town captain.
 - Town-assault survivor sync preserves or clears stationed defender metadata as the town remains enemy-owned or changes owner.
@@ -21,6 +22,7 @@ Focused evidence:
 - `garrison_strength_before`
 - `garrison_strength_after`
 - `stationed_commander_id`
+- `front_active_after_defense`
 - `town_assault_enemy_commander_id`
 - `unit_bog_brute`
 - `duskfen_bastion`
@@ -28,4 +30,4 @@ Focused evidence:
 Boundaries:
 - No save migration.
 - No broad strategic-AI production-ready claim.
-- No full defensive assignment release policy; this slice makes arrival produce real town-defense consequences and keeps the commander stationed until later battle/aftermath handling changes that state.
+- Defender release/rotation is handled by later `strategic-ai-town-defender-rotation-10184`; this slice focuses on arrival consequences.
