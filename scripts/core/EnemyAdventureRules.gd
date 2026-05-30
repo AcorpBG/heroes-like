@@ -3600,6 +3600,7 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 	if commander_state.is_empty():
 		return {}
 	var updated := commander_state.duplicate(true)
+	var pre_outcome_memory := _normalized_commander_memory(updated)
 	var record := _normalized_commander_record({}, updated)
 	record["last_outcome"] = outcome_id
 	match outcome_id:
@@ -3646,7 +3647,11 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_TOWN_DEFENDED)
 		_:
 			updated = _normalize_enemy_progression(updated)
+	if not pre_outcome_memory.is_empty():
+		updated["target_memory"] = pre_outcome_memory
 	updated["last_outcome"] = outcome_id
+	updated = _record_commander_adaptive_task_memory(updated, outcome_id)
+	var updated_memory := _normalized_commander_memory(updated)
 	var spellbook = updated.get("spellbook", {})
 	if not (spellbook is Dictionary):
 		spellbook = {}
@@ -3660,7 +3665,7 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 						"starting_spell_ids": spellbook.get("known_spell_ids", []),
 					}
 				),
-				updated
+				updated_memory
 			),
 			record
 		),
@@ -4491,6 +4496,68 @@ static func record_rivalry(
 	updated["target_memory"] = memory
 	return _apply_commander_memory_metadata(updated, memory)
 
+static func _record_commander_adaptive_task_memory(commander_state: Dictionary, outcome_id: String) -> Dictionary:
+	if commander_state.is_empty() or outcome_id == "":
+		return commander_state
+	var memory := _normalized_commander_memory(commander_state)
+	var target_kind := _commander_memory_target_kind_for_outcome(outcome_id, memory)
+	if target_kind == "":
+		return _apply_commander_memory_metadata(commander_state, memory)
+	var updated := commander_state.duplicate(true)
+	var success_counts := _normalized_commander_target_kind_counts(memory.get("target_success_counts", {}))
+	var failure_counts := _normalized_commander_target_kind_counts(memory.get("target_failure_counts", {}))
+	if outcome_id == COMMANDER_OUTCOME_DEFEATED:
+		failure_counts[target_kind] = clampi(int(failure_counts.get(target_kind, 0)) + 1, 1, 9)
+		memory["last_failure_target_kind"] = target_kind
+		memory["last_failure_outcome"] = outcome_id
+	elif outcome_id == COMMANDER_OUTCOME_DEPLOYED or outcome_id == COMMANDER_OUTCOME_STALEMATE:
+		return _apply_commander_memory_metadata(updated, memory)
+	else:
+		success_counts[target_kind] = clampi(int(success_counts.get(target_kind, 0)) + 1, 1, 9)
+		memory["last_success_target_kind"] = target_kind
+		memory["last_success_outcome"] = outcome_id
+	memory["target_success_counts"] = success_counts
+	memory["target_failure_counts"] = failure_counts
+	return _apply_commander_memory_metadata(updated, memory)
+
+static func _commander_memory_target_kind_for_outcome(outcome_id: String, memory: Dictionary) -> String:
+	var remembered_kind := String(memory.get("last_target_kind", ""))
+	if remembered_kind == "":
+		remembered_kind = String(memory.get("focus_target_kind", ""))
+	if (
+		remembered_kind == "resource"
+		or remembered_kind == "town"
+		or remembered_kind == "artifact"
+		or remembered_kind == "encounter"
+		or remembered_kind == "hero"
+	):
+		return remembered_kind
+	match outcome_id:
+		COMMANDER_OUTCOME_RESOURCE_SECURED, COMMANDER_OUTCOME_SITE_DEFENDED:
+			return "resource"
+		COMMANDER_OUTCOME_ARTIFACT_SECURED:
+			return "artifact"
+		COMMANDER_OUTCOME_TOWN_CAPTURED, COMMANDER_OUTCOME_TOWN_DEFENDED, COMMANDER_OUTCOME_ASSAULT_VICTORY:
+			return "town"
+		COMMANDER_OUTCOME_OBJECTIVE_SECURED:
+			return "encounter"
+	return ""
+
+static func _commander_adaptive_task_fit_bonus(memory: Dictionary, target_kind: String) -> int:
+	if target_kind == "":
+		return 0
+	var success_counts := _normalized_commander_target_kind_counts(memory.get("target_success_counts", {}))
+	var failure_counts := _normalized_commander_target_kind_counts(memory.get("target_failure_counts", {}))
+	var successes: int = max(0, int(success_counts.get(target_kind, 0)))
+	var failures: int = max(0, int(failure_counts.get(target_kind, 0)))
+	var bonus: int = min(3, successes) * 16
+	bonus -= min(2, failures) * 10
+	if String(memory.get("last_success_target_kind", "")) == target_kind and successes > 0:
+		bonus += 10
+	if String(memory.get("last_failure_target_kind", "")) == target_kind and failures > successes:
+		bonus -= 8
+	return clampi(bonus, -28, 58)
+
 static func _normalized_commander_record(entry_value: Variant, commander_state_value: Variant = {}) -> Dictionary:
 	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
 	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
@@ -4533,6 +4600,12 @@ static func _normalized_commander_memory(entry_value: Variant, commander_state_v
 		"rival_id",
 		"rival_label",
 		"rivalry_count",
+		"target_success_counts",
+		"target_failure_counts",
+		"last_success_target_kind",
+		"last_success_outcome",
+		"last_failure_target_kind",
+		"last_failure_outcome",
 	]:
 		if entry.has(key):
 			raw_memory[String(key)] = entry[key]
@@ -4561,6 +4634,12 @@ static func _normalized_commander_memory(entry_value: Variant, commander_state_v
 		"rival_id": String(raw_memory.get("rival_id", "")),
 		"rival_label": String(raw_memory.get("rival_label", "")),
 		"rivalry_count": max(0, int(raw_memory.get("rivalry_count", 0))),
+		"target_success_counts": _normalized_commander_target_kind_counts(raw_memory.get("target_success_counts", {})),
+		"target_failure_counts": _normalized_commander_target_kind_counts(raw_memory.get("target_failure_counts", {})),
+		"last_success_target_kind": String(raw_memory.get("last_success_target_kind", "")),
+		"last_success_outcome": String(raw_memory.get("last_success_outcome", "")),
+		"last_failure_target_kind": String(raw_memory.get("last_failure_target_kind", "")),
+		"last_failure_outcome": String(raw_memory.get("last_failure_outcome", "")),
 	}
 	if (
 		String(memory.get("focus_target_id", "")) == ""
@@ -4569,9 +4648,26 @@ static func _normalized_commander_memory(entry_value: Variant, commander_state_v
 		and String(memory.get("front_label", "")) == ""
 		and int(memory.get("focus_pressure_count", 0)) <= 0
 		and int(memory.get("rivalry_count", 0)) <= 0
+		and (memory.get("target_success_counts", {}) as Dictionary).is_empty()
+		and (memory.get("target_failure_counts", {}) as Dictionary).is_empty()
+		and String(memory.get("last_success_target_kind", "")) == ""
+		and String(memory.get("last_failure_target_kind", "")) == ""
 	):
 		return {}
 	return memory
+
+static func _normalized_commander_target_kind_counts(value: Variant) -> Dictionary:
+	var counts := {}
+	if not (value is Dictionary):
+		return counts
+	for key_value in value.keys():
+		var key := String(key_value)
+		if not ["resource", "town", "artifact", "encounter", "hero"].has(key):
+			continue
+		var count := clampi(int(value[key_value]), 0, 9)
+		if count > 0:
+			counts[key] = count
+	return counts
 
 static func _commander_renown_from_record(record: Dictionary) -> int:
 	var deployments: int = max(0, int(record.get("deployments", 0)))
@@ -4610,7 +4706,9 @@ static func _apply_commander_memory_metadata(commander_state: Dictionary, memory
 	if commander_state.is_empty():
 		return {}
 	var commander := commander_state.duplicate(true)
-	var memory := _normalized_commander_memory(memory_source, commander)
+	var memory := _normalized_commander_memory(memory_source)
+	if memory.is_empty():
+		memory = _normalized_commander_memory(commander)
 	commander["target_memory"] = memory
 	commander["memory_brief"] = commander_memory_brief(memory)
 	commander["memory_summary"] = commander_memory_summary(memory)
@@ -5281,6 +5379,7 @@ static func _ai_commander_task_fit_bonus(
 			template.get("specialty_focus_ids", [])
 		)
 	)
+	var memory := _normalized_commander_memory(entry, commander_state)
 	var battle_traits := _normalize_string_array(
 		_merge_unique_strings(
 			commander_state.get("battle_traits", []),
@@ -5290,7 +5389,7 @@ static func _ai_commander_task_fit_bonus(
 	var target_kind := String(candidate.get("target_kind", ""))
 	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
 	var site_family := String(candidate.get("site_family", target_site_family(session, target_kind, String(candidate.get("target_placement_id", "")))))
-	var bonus := 0
+	var bonus := _commander_adaptive_task_fit_bonus(memory, target_kind)
 
 	match target_kind:
 		"town":
