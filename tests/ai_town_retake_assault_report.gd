@@ -13,13 +13,17 @@ func _run() -> void:
 	var case_report := _river_pass_retake_front_queues_town_battle()
 	if case_report.is_empty():
 		return
+	var risk_case_report := _weak_river_pass_retake_front_stages_before_town_battle()
+	if risk_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_town_retake_assault_no_save_migration",
-		"behavior_policy": "enemy_retake_front_town_targets_queue_town_defense_battles",
+		"behavior_policy": "enemy_retake_front_town_targets_queue_town_defense_battles_with_assault_risk_gating",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"risk_case": risk_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -37,7 +41,7 @@ func _river_pass_retake_front_queues_town_battle() -> Dictionary:
 	if String(retake_plan.get("target_kind", "")) != "town" or String(retake_plan.get("target_placement_id", "")) != "duskfen_bastion":
 		_fail("Retake-front target selector did not prefer Duskfen: %s" % JSON.stringify(retake_plan))
 		return {}
-	var raid := _retake_raid_seed(session)
+	var raid := _retake_raid_seed(session, "retake_assault_vaska", 8)
 	var live_plan := EnemyAdventureRules.ai_live_town_retake_target_selection_plan(session, config, raid)
 	if String(live_plan.get("target_kind", "")) != "town" or String(live_plan.get("target_placement_id", "")) != "duskfen_bastion":
 		_fail("Live retake-front target selector did not prefer Duskfen: %s" % JSON.stringify(live_plan))
@@ -98,22 +102,83 @@ func _river_pass_retake_front_queues_town_battle() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
-func _retake_raid_seed(session) -> Dictionary:
+func _weak_river_pass_retake_front_stages_before_town_battle() -> Dictionary:
+	var session = _base_session()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_captured_retake_front(session, "duskfen_bastion")
+	var config := _enemy_config()
+	var raid := _retake_raid_seed(session, "weak_retake_assault_vaska", 4)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	if not bool(result.get("ok", false)):
+		_fail("Weak retake risk fixture failed enemy turn: %s" % JSON.stringify(result))
+		return {}
+	var after_raid := _encounter(session, "weak_retake_assault_vaska")
+	if after_raid.is_empty():
+		_fail("Weak retake raid disappeared after enemy turn.")
+		return {}
+	if not session.battle.is_empty():
+		_fail("Weak retake assault incorrectly queued a town-defense battle: %s" % JSON.stringify(session.battle.get("context", {})))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	if "assault_risk_regroup" not in reason_codes and "assault_risk_staging" not in reason_codes:
+		_fail("Weak retake assault did not record assault-risk retask/staging reason: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_public_reason", "")) != "staging stronger assault":
+		_fail("Weak retake assault public reason was not staging stronger assault: %s" % JSON.stringify(after_raid))
+		return {}
+	if int(after_raid.get("assault_delay_until_day", 0)) <= int(session.day):
+		_fail("Weak retake assault did not set a future assault delay: %s" % JSON.stringify(after_raid))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Weak retake assault risk gating did not emit ai_target_assigned: %s" % JSON.stringify(result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Weak retake assault public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	_assert_saved_task_state(session)
+	if _failed:
+		return {}
+	return {
+		"case_id": "weak_retake_front_stages_before_town_battle",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"goal_distance": int(after_raid.get("goal_distance", 9999)),
+		"arrived": bool(after_raid.get("arrived", false)),
+		"battle_started": false,
+		"assault_delay_until_day": int(after_raid.get("assault_delay_until_day", 0)),
+		"target_public_reason": String(after_raid.get("target_public_reason", "")),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _retake_raid_seed(session, placement_id: String, bog_brute_count: int) -> Dictionary:
 	var raid := {
-		"placement_id": "retake_assault_vaska",
+		"placement_id": placement_id,
 		"encounter_id": "encounter_mire_raid",
 		"x": 7,
 		"y": 2,
 		"difficulty": "pressure",
-		"combat_seed": hash("%s:retake_assault_vaska" % String(session.scenario_id)),
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
 		"spawned_by_faction_id": MIRECLAW,
 		"days_active": 0,
 		"arrived": false,
 		"goal_distance": 9999,
 		"enemy_army": {
-			"id": "retake_assault_fixture_host",
+			"id": "%s_host" % placement_id,
 			"name": "Retake Assault Host",
-			"stacks": [{"unit_id": "unit_bog_brute", "count": 8}],
+			"stacks": [{"unit_id": "unit_bog_brute", "count": bog_brute_count}],
 		},
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
@@ -201,6 +266,17 @@ func _event_types(events: Variant) -> Array:
 				types.append(event_type)
 	types.sort()
 	return types
+
+func _string_array(value: Variant) -> Array:
+	var result := []
+	if not (value is Array):
+		return result
+	for item in value:
+		var text := String(item)
+		if text != "":
+			result.append(text)
+	result.sort()
+	return result
 
 func _assert_saved_task_state(session) -> void:
 	for state in session.overworld.get("enemy_states", []):
