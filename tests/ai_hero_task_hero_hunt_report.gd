@@ -188,6 +188,18 @@ func _active_raid_avoids_superior_nearby_player_hero_case() -> Dictionary:
 	_assert_task_status(session, "hero_vaska", "regroup", String(after_raid.get("target_placement_id", "")), "active", "valid")
 	if _failed:
 		return {}
+	_set_town_garrison(session, "duskfen_bastion", [{"unit_id": "unit_bog_brute", "count": 40}])
+	var support_town := _town(session, "duskfen_bastion")
+	var recruitment_destination := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, support_town, MIRECLAW)
+	if String(recruitment_destination.get("type", "")) != "raid" or String(recruitment_destination.get("raid_placement_id", "")) != "nearby_threat_avoidance_vaska":
+		_fail("Nearby threat avoidance did not become the town reinforcement destination: %s" % JSON.stringify(recruitment_destination))
+		return {}
+	if not bool(recruitment_destination.get("threat_recovery", false)):
+		_fail("Nearby threat reinforcement destination did not preserve threat recovery marker: %s" % JSON.stringify(recruitment_destination))
+		return {}
+	if int(recruitment_destination.get("raid_need", 0)) <= int(EnemyAdventureRules.desired_raid_strength(after_raid) - EnemyAdventureRules.raid_strength(after_raid)):
+		_fail("Nearby threat reinforcement did not exceed generic raid desired-strength need: %s" % JSON.stringify(recruitment_destination))
+		return {}
 	return {
 		"case_id": "active_raid_avoids_superior_nearby_player_hero",
 		"target_kind": String(after_raid.get("target_kind", "")),
@@ -198,6 +210,11 @@ func _active_raid_avoids_superior_nearby_player_hero_case() -> Dictionary:
 		"threat_distance": int(after_raid.get("player_threat_distance", 9999)),
 		"threat_strength": int(after_raid.get("player_threat_hero_strength", 0)),
 		"raid_strength": EnemyAdventureRules.raid_strength(after_raid),
+		"reinforcement_decision_rule": String(recruitment_destination.get("decision_rule", "")),
+		"reinforcement_type": String(recruitment_destination.get("type", "")),
+		"reinforcement_need": int(recruitment_destination.get("raid_need", 0)),
+		"reinforcement_target_strength": int(recruitment_destination.get("target_strength", 0)),
+		"reinforcement_threat_recovery": bool(recruitment_destination.get("threat_recovery", false)),
 		"reason_codes": reason_codes,
 		"event_types": event_types,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
@@ -876,6 +893,24 @@ func _first_player_town(session) -> Dictionary:
 		if town is Dictionary and String(town.get("owner", "neutral")) == "player":
 			return town
 	return {}
+
+func _town(session, placement_id: String) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			return town
+	return {}
+
+func _set_town_garrison(session, placement_id: String, garrison: Array) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["garrison"] = garrison.duplicate(true)
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not set garrison for town %s." % placement_id)
 
 func _append_encounter(session, encounter: Dictionary) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])

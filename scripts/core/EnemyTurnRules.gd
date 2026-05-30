@@ -1418,6 +1418,10 @@ static func _recruit_destination_report_payload(
 		payload["raid_placement_id"] = String(raid.get("placement_id", ""))
 		payload["raid_label"] = EnemyAdventureRulesScript.raid_display_name(raid)
 		payload["raid_need"] = int(best_raid.get("need", 0))
+		payload["target_strength"] = int(best_raid.get("target_strength", 0))
+		payload["threat_recovery"] = bool(best_raid.get("threat_recovery", false))
+		payload["threat_hero_id"] = String(best_raid.get("threat_hero_id", ""))
+		payload["threat_hero_strength"] = int(best_raid.get("threat_hero_strength", 0))
 		payload["supply_distance"] = int(best_raid.get("supply_distance", 0))
 		payload["target_id"] = String(raid.get("target_placement_id", ""))
 		payload["target_label"] = String(raid.get("target_label", raid.get("target_placement_id", "")))
@@ -1583,8 +1587,8 @@ static func _best_raid_reinforcement_target(
 			continue
 		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 			continue
-		var desired = EnemyAdventureRulesScript.desired_raid_strength(encounter)
 		var current = EnemyAdventureRulesScript.raid_strength(encounter)
+		var desired = _raid_reinforcement_target_strength(encounter, current)
 		var need = desired - current
 		if need <= 0:
 			continue
@@ -1615,6 +1619,9 @@ static func _best_raid_reinforcement_target(
 			site_family,
 			objective_anchor
 		)
+		if _raid_has_nearby_player_threat_recovery_need(encounter, current):
+			score += float(int(encounter.get("player_threat_hero_strength", 0))) * 0.35
+			score += 120.0
 		if String(encounter.get("target_kind", "")) == "town":
 			var target_town: Dictionary = _find_town_by_placement(
 				session,
@@ -1636,10 +1643,30 @@ static func _best_raid_reinforcement_target(
 				"index": index,
 				"encounter": encounter,
 				"need": need,
+				"target_strength": desired,
+				"threat_recovery": _raid_has_nearby_player_threat_recovery_need(encounter, current),
+				"threat_hero_id": String(encounter.get("player_threat_hero_id", "")),
+				"threat_hero_strength": int(encounter.get("player_threat_hero_strength", 0)),
 				"supply_distance": supply_distance,
 				"score": score,
 			}
 	return best
+
+static func _raid_reinforcement_target_strength(encounter: Dictionary, current_strength: int) -> int:
+	var desired: int = EnemyAdventureRulesScript.desired_raid_strength(encounter)
+	if _raid_has_nearby_player_threat_recovery_need(encounter, current_strength):
+		var threat_strength: int = max(0, int(encounter.get("player_threat_hero_strength", 0)))
+		desired = max(desired, int(ceili(float(threat_strength) * 0.92)))
+	return desired
+
+static func _raid_has_nearby_player_threat_recovery_need(encounter: Dictionary, current_strength: int) -> bool:
+	if encounter.is_empty():
+		return false
+	var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+	if "player_threat_avoidance" not in reason_codes and String(encounter.get("player_threat_hero_id", "")) == "":
+		return false
+	var threat_strength: int = max(0, int(encounter.get("player_threat_hero_strength", 0)))
+	return threat_strength > current_strength
 
 static func _best_commander_rebuild_target(
 	session: SessionStateStoreScript.SessionData,
