@@ -17,14 +17,18 @@ func _run() -> void:
 	var risk_case_report := _weak_hero_hunt_regroups_before_intercept_case()
 	if risk_case_report.is_empty():
 		return
+	var support_case_report := _hero_hunt_support_groups_before_intercept_case()
+	if support_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "hero_hunt_tasks_are_durable",
-		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating",
+		"schema_status": "hero_hunt_tasks_are_durable_with_support_grouping",
+		"behavior_policy": "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_and_support_grouping",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"risk_case": risk_case_report,
+		"support_case": support_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -199,6 +203,98 @@ func _weak_hero_hunt_regroups_before_intercept_case() -> Dictionary:
 		"reason_codes": reason_codes,
 		"event_types": event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _hero_hunt_support_groups_before_intercept_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for support fixture.")
+		return {}
+	var target_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var support_tile := _nearest_open_non_town_tile_excluding(session, Vector2i(target_tile.x + 1, target_tile.y), target_tile)
+	_move_player_hero(session, hero_id, target_tile)
+	_remove_mireclaw_hero_hunt_encounters(session)
+
+	var leader := _raid_seed(session, "hero_vaska", "hero_hunt_support_leader_vaska", target_tile)
+	leader["target_kind"] = "hero"
+	leader["target_placement_id"] = hero_id
+	leader["target_label"] = _hero_name(session, hero_id)
+	leader["target_x"] = target_tile.x
+	leader["target_y"] = target_tile.y
+	leader["goal_x"] = target_tile.x
+	leader["goal_y"] = target_tile.y
+	leader["goal_distance"] = 0
+	leader["arrived"] = true
+	leader["target_reason_codes"] = ["hero_hunt", "exposed_hero", "awaiting_support", "hero_hunt_task_fixture"]
+	leader["target_public_reason"] = "exposed hero"
+	leader["target_public_importance"] = "high"
+	leader["target_debug_reason"] = "hero hunt support grouping fixture"
+	leader = _set_raid_bog_brutes(leader, 8)
+	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
+	_append_encounter(session, leader)
+
+	var support := _raid_seed(session, "hero_sable", "hero_hunt_support_sable", support_tile)
+	support = _set_raid_bog_brutes(support, 5)
+	var assigned_support := EnemyAdventureRules.assign_target(session, config, support)
+	if String(assigned_support.get("target_kind", "")) != "hero" or String(assigned_support.get("target_placement_id", "")) != hero_id:
+		_fail("Hero hunt support did not select the exposed hero front: %s" % JSON.stringify(assigned_support))
+		return {}
+	var support_reason_codes := _string_array(assigned_support.get("target_reason_codes", []))
+	for required_code in ["active_front_support", "army_consolidation", "hero_hunt", "exposed_hero"]:
+		if required_code not in support_reason_codes:
+			_fail("Hero hunt support assignment missing %s: %s" % [required_code, JSON.stringify(assigned_support)])
+			return {}
+	if String(assigned_support.get("supporting_front_placement_id", "")) != "hero_hunt_support_leader_vaska":
+		_fail("Hero hunt support did not bind to the leader front: %s" % JSON.stringify(assigned_support))
+		return {}
+	_append_encounter(session, assigned_support)
+
+	var state := {}
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_leader := _encounter(session, "hero_hunt_support_leader_vaska")
+	if after_leader.is_empty():
+		_fail("Hero hunt support leader disappeared after advance.")
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	if "hero_hunt_support_sable" not in resolved:
+		_fail("Hero hunt support donor was not resolved after grouping: %s" % JSON.stringify(resolved))
+		return {}
+	var leader_reason_codes := _string_array(after_leader.get("target_reason_codes", []))
+	for required_code in ["army_consolidation", "hero_hunt", "exposed_hero"]:
+		if required_code not in leader_reason_codes:
+			_fail("Grouped hero hunt leader missing %s: %s" % [required_code, JSON.stringify(after_leader)])
+			return {}
+	var leader_strength_after := EnemyAdventureRules.raid_strength(after_leader)
+	if leader_strength_after <= leader_strength_before:
+		_fail("Hero hunt grouping did not increase leader strength: before %d after %d" % [leader_strength_before, leader_strength_after])
+		return {}
+	if int(after_leader.get("grouped_commander_support_count", 0)) < 1:
+		_fail("Hero hunt grouping did not count commander support: %s" % JSON.stringify(after_leader))
+		return {}
+	var events: Array = advance_result.get("events", []) if advance_result.get("events", []) is Array else []
+	var event_types := _event_types(events)
+	if "ai_raid_grouped" not in event_types:
+		_fail("Hero hunt support grouping did not emit ai_raid_grouped: %s" % JSON.stringify(advance_result))
+		return {}
+	_assert_task_status(session, "hero_sable", "hero", hero_id, "completed", "valid")
+	if _failed:
+		return {}
+	return {
+		"case_id": "hero_hunt_support_groups_before_intercept",
+		"target_kind": String(after_leader.get("target_kind", "")),
+		"target_id": String(after_leader.get("target_placement_id", "")),
+		"supporting_front_placement_id": String(assigned_support.get("supporting_front_placement_id", "")),
+		"support_reason_codes": support_reason_codes,
+		"leader_reason_codes": leader_reason_codes,
+		"leader_strength_before": leader_strength_before,
+		"leader_strength_after": leader_strength_after,
+		"grouped_commander_support_count": int(after_leader.get("grouped_commander_support_count", 0)),
+		"resolved_support": "hero_hunt_support_sable" in resolved,
+		"event_types": event_types,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
