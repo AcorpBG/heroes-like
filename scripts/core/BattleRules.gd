@@ -9070,9 +9070,10 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 	var recovery_message = _apply_town_defense_recovery(session, "loss")
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
-	var commander_aftermath := _resolve_enemy_commander_aftermath(
+	var commander_aftermath := _station_enemy_commander_after_town_capture(
 		session,
-		EnemyAdventureRulesScript.COMMANDER_OUTCOME_ASSAULT_VICTORY
+		String(context.get("town_placement_id", "")),
+		enemy_survivors
 	)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var collapse_aftermath := {}
@@ -9274,6 +9275,70 @@ static func _capture_town_after_assault(session: SessionStateStoreScript.Session
 	town["garrison"] = enemy_survivors.duplicate(true)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
+
+static func _station_enemy_commander_after_town_capture(
+	session: SessionStateStoreScript.SessionData,
+	town_placement_id: String,
+	enemy_survivors: Array
+) -> String:
+	if session == null or session.battle.is_empty() or town_placement_id == "":
+		return ""
+	var faction_id := _battle_enemy_faction_id(session)
+	if faction_id == "":
+		return ""
+	var commander_state = session.battle.get("enemy_hero", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return ""
+	var town_result = _find_town_by_placement(session, town_placement_id)
+	if int(town_result.get("index", -1)) < 0:
+		return ""
+	var town: Dictionary = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "enemy":
+		return ""
+	var updated_commander := EnemyAdventureRulesScript.advance_commander_record(
+		_apply_enemy_commander_battle_memory(session, commander_state),
+		EnemyAdventureRulesScript.COMMANDER_OUTCOME_TOWN_CAPTURED
+	)
+	updated_commander = EnemyAdventureRulesScript.sync_commander_army_continuity(
+		updated_commander,
+		{"stacks": enemy_survivors},
+		"town_defense:%s" % town_placement_id
+	)
+	session.battle["enemy_hero"] = updated_commander
+	var front: Dictionary = town.get("front", {}) if town.get("front", {}) is Dictionary else {}
+	front["state"] = String(front.get("state", "stabilizing")) if String(front.get("state", "")) != "" else "stabilizing"
+	front["faction_id"] = faction_id
+	front["last_defended_day"] = int(session.day)
+	front["defense_until_day"] = max(int(front.get("defense_until_day", 0)), int(session.day) + 3)
+	front["stabilize_until_day"] = max(int(front.get("stabilize_until_day", 0)), int(session.day) + 3)
+	front["source"] = "strategic_ai_defended_town_capture_stationing"
+	town["front"] = front
+	town["ai_defended_by_faction_id"] = faction_id
+	town["ai_defended_day"] = int(session.day)
+	town["ai_defense_until_day"] = max(int(town.get("ai_defense_until_day", 0)), int(session.day) + 3)
+	town["ai_defense_rating"] = max(int(town.get("ai_defense_rating", 0)), EnemyAdventureRulesScript._army_strength(enemy_survivors))
+	town["ai_defense_reinforced_strength"] = max(
+		int(town.get("ai_defense_reinforced_strength", 0)),
+		EnemyAdventureRulesScript._army_strength(enemy_survivors)
+	)
+	town["ai_defender_commander_state"] = updated_commander
+	town["ai_defender_roster_hero_id"] = String(updated_commander.get("roster_hero_id", ""))
+	var towns = session.overworld.get("towns", [])
+	towns[int(town_result.get("index", -1))] = town
+	session.overworld["towns"] = towns
+	EnemyAdventureRulesScript.sync_commander_state_to_roster(
+		session,
+		faction_id,
+		updated_commander,
+		EnemyAdventureRulesScript.COMMANDER_STATUS_ACTIVE,
+		"town_defense:%s" % town_placement_id,
+		-1,
+		EnemyAdventureRulesScript.COMMANDER_OUTCOME_TOWN_CAPTURED
+	)
+	return "%s holds %s as the new garrison commander." % [
+		EnemyAdventureRulesScript.commander_display_name(updated_commander),
+		_town_name(town),
+	]
 
 static func _set_player_hero_state(session: SessionStateStoreScript.SessionData, hero_state: Dictionary, hero_id: String) -> void:
 	if session == null or hero_id == "":
