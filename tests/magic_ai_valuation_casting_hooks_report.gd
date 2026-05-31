@@ -39,6 +39,10 @@ func _run() -> void:
 	if not bool(adventure_case.get("ok", false)):
 		_fail(String(adventure_case.get("error", "Adventure AI spell valuation case failed.")))
 		return
+	var adventure_tiebreak_case := _run_adventure_ai_spell_tiebreak_case()
+	if not bool(adventure_tiebreak_case.get("ok", false)):
+		_fail(String(adventure_tiebreak_case.get("error", "Adventure AI spell tiebreak case failed.")))
+		return
 
 	var payload := {
 		"ok": true,
@@ -51,8 +55,9 @@ func _run() -> void:
 		"battle_lethal_attack_priority": lethal_priority_case,
 		"battle_lethal_spell_priority": lethal_spell_case,
 		"adventure": adventure_case,
+		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -506,6 +511,79 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 		"runtime_hook_counts": report.get("runtime_hook_counts", {}),
 		"executor": executor_case,
 		"scouting_executor": scouting_executor_case,
+	}
+
+func _run_adventure_ai_spell_tiebreak_case() -> Dictionary:
+	var movement_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"id": "enemy_route_tiebreak_caster",
+			"name": "Enemy Route Tiebreak Caster",
+			"command": {"power": 1, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": [
+					"spell_waystride",
+					"spell_beacon_path",
+				],
+				"mana": {"current": 40, "max": 40},
+			},
+		}
+	)
+	var movement_report := EnemyAdventureRules.adventure_spell_valuation_report(
+		movement_hero,
+		{"current": 1, "max": 10},
+		{
+			"target_kind": "resource_site",
+			"target_label": "Distant Mill",
+			"objective_steps_remaining": 20,
+			"route_pressure": true,
+		}
+	)
+	if not bool(movement_report.get("ok", false)):
+		return {"ok": false, "error": "Movement tiebreak report failed: %s" % movement_report}
+	var movement_selected: Dictionary = movement_report.get("selected", {}) if movement_report.get("selected", {}) is Dictionary else {}
+	if String(movement_selected.get("spell_id", "")) != "spell_beacon_path":
+		return {"ok": false, "error": "Movement tiebreak should select higher movement_after spell_beacon_path, got %s candidates=%s" % [movement_selected, movement_report.get("candidates", [])]}
+
+	var scouting_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"id": "enemy_scout_tiebreak_caster",
+			"name": "Enemy Scout Tiebreak Caster",
+			"command": {"power": 1, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": [
+					"spell_survey_chain",
+					"spell_mire_flood_fenlight_12",
+				],
+				"mana": {"current": 40, "max": 40},
+			},
+		}
+	)
+	var scouting_report := EnemyAdventureRules.adventure_spell_valuation_report(
+		scouting_hero,
+		{"current": 1, "max": 1},
+		{
+			"target_kind": "scouting",
+			"target_label": "nearby targets",
+			"scouting_pressure": true,
+			"hidden_site_reveal": true,
+			"unscouted_target_count": 2,
+		}
+	)
+	if not bool(scouting_report.get("ok", false)):
+		return {"ok": false, "error": "Scouting tiebreak report failed: %s" % scouting_report}
+	var scouting_selected: Dictionary = scouting_report.get("selected", {}) if scouting_report.get("selected", {}) is Dictionary else {}
+	if String(scouting_selected.get("spell_id", "")) != "spell_mire_flood_fenlight_12":
+		return {"ok": false, "error": "Scouting tiebreak should select larger reveal spell_mire_flood_fenlight_12, got %s candidates=%s" % [scouting_selected, scouting_report.get("candidates", [])]}
+
+	return {
+		"ok": true,
+		"movement_selected_spell_id": String(movement_selected.get("spell_id", "")),
+		"movement_before": int(movement_selected.get("movement_before", 0)),
+		"movement_after": int(movement_selected.get("movement_after", 0)),
+		"movement_value_band": String(movement_selected.get("value_band", "")),
+		"scouting_selected_spell_id": String(scouting_selected.get("spell_id", "")),
+		"scouting_reveal_radius": int(scouting_selected.get("reveal_radius", 0)),
+		"scouting_value_band": String(scouting_selected.get("value_band", "")),
 	}
 
 func _run_adventure_executor_case() -> Dictionary:
