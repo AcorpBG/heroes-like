@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-resource-defense-battle-handoff-10184. Strategic AI production readiness remains open; Medium generated-map AI generalization is blocked on RMG package generation and full long-run generated-map matrix remains an explicit gap.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-spell-aware-task-launch-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-30T23:54:42Z",
+  "updatedAt": "2026-05-31T00:04:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,55 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-spell-aware-task-launch-10184",
+      "title": "Strategic AI Spell-Aware Task Launch",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make planned-task launch and spawn selection value live adventure movement spells so route-capable enemy commanders are selected for distant objectives and then use the existing movement-spell executor during raid advance.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-hero-hunt-task-board-report.md",
+        "docs/strategic-ai-planned-task-recruitment-prep-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd"
+      ],
+      "baselineChecks": [
+        "Existing active-raid adventure movement/scouting spells execute only after a raid exists.",
+        "Saved-task spawn scoring currently uses raw route distance and does not distinguish commanders with overworld movement spells."
+      ],
+      "completionCriteria": [
+        "Saved-task spawn-point and commander selection project castable movement spells into route tempo scoring.",
+        "The selected raid still uses the live adventure movement spell executor rather than a fake distance-only shortcut.",
+        "A focused Godot AI report proves a movement-spell commander can beat a closer non-spell route candidate and then casts/moves multiple steps on advance.",
+        "No save-version bump and no public event/debug leakage."
+      ],
+      "nonGoals": [
+        "Do not add new audit/report gates beyond focused behavioral validation.",
+        "Do not rebalance spell catalog numbers or battle spell behavior in this slice.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T00:00:22Z",
+      "updatedAt": "2026-05-31T00:04:30Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-05-31T00:04:30Z",
+      "completionNotes": "Planned-task commander and spawn selection now project castable adventure movement spells into route-tempo scoring. Focused validation proves Tarn wins a saved-task launch via Trailglyph tempo, spawns toward the saved objective, casts the live movement spell on raid advance, and moves four steps instead of the base one."
+    },
     {
       "id": "strategic-ai-resource-defense-battle-handoff-10184",
       "title": "Strategic AI Resource Defense Battle Handoff",
@@ -44511,37 +44560,35 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-30T23:54:42Z",
-    "sliceId": "strategic-ai-resource-defense-battle-handoff-10184",
+    "updatedAt": "2026-05-31T00:04:30Z",
+    "sliceId": "strategic-ai-spell-aware-task-launch-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Player resource reclaim now detects live stationed AI resource defenders before direct capture.",
-        "Defended resource reclaim creates a resource_assault battle payload using the stationed ai_defender_army and ai_defender_commander_state.",
-        "Resource defender battles preserve enemy survivor continuity on non-resolved outcomes and clear defender metadata only after player victory/resolution.",
-        "Player victory captures the resource through the normal resource-control path and routes the defeated AI commander into roster recovery.",
-        "A dedicated encounter_resource_defense template provides battlefield tags/objective context for defended field-site fights."
+        "Saved-task spawn scoring now projects castable adventure movement spells into route-tempo scoring for each deployable commander candidate.",
+        "Spawn candidate metadata keeps raw and effective route distance plus selected movement spell id/name/steps for internal selection without public debug leakage.",
+        "Route-capable commanders can beat closer non-spell candidates for planned objectives, then still use the existing live raid movement-spell executor during advance.",
+        "The focused River Pass case proves Tarn Fenhook wins a saved-task launch through Trailglyph tempo, spawns toward Ember Signal Post, casts Trailglyph, and moves four steps instead of the base one."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "commander_id": "hero_vaska",
-        "target_id": "river_free_company",
-        "battle_context": "resource_assault",
-        "enemy_strength_before": 168,
-        "battle_outcome": "victory",
-        "controller_after": "player",
-        "defender_status_after": "recovering",
-        "defender_metadata_cleared": true
+        "commander_id": "hero_tarn",
+        "spell_id": "spell_trailglyph",
+        "target_id": "river_signal_post",
+        "raw_goal_distance": 5,
+        "effective_goal_distance": 1,
+        "moved_steps_after_cast": 4
       },
-      "remaining_validation": "Medium generated-map AI generalization remains blocked on RMG package generation, full long-run generated-map strategic-AI matrix remains open, and live-client pacing/manual play remains needed.",
-      "policy": "Live strategic AI behavior slice; no report-only gate creation, campaign production, or production-ready claim."
+      "remaining_validation": "Full 100-seed generated-map strategic-AI matrix, Medium/generated-map generalization, deeper retreat/personality tuning, and live-client pacing/manual play remain open.",
+      "policy": "Live strategic AI behavior slice; no new broad report gate, campaign production, or production-ready claim."
     }
   }
 }

@@ -3034,10 +3034,12 @@ static func _spawn_point_candidate(
 	candidate["spawn_plan_source"] = plan_source
 	candidate["spawn_plan_target_kind"] = String(plan.get("target_kind", ""))
 	candidate["spawn_plan_target_id"] = String(plan.get("target_placement_id", ""))
+	candidate["spawn_plan_target_label"] = String(plan.get("target_label", plan.get("target_placement_id", "")))
 	candidate["spawn_plan_priority"] = priority
 	candidate["spawn_plan_goal_distance"] = goal_distance
 	candidate["spawn_plan_score"] = score
 	candidate["spawn_order"] = spawn_order
+	candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
 	if plan_source == "saved_task":
 		var ready_report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
 		if not ready_report.is_empty():
@@ -3086,6 +3088,7 @@ static func _ready_saved_task_spawn_candidate_for_point(
 			"saved_task",
 			spawn_order
 		)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
 		var ready_report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
 		if ready_report.is_empty():
 			continue
@@ -3118,11 +3121,87 @@ static func _spawn_point_candidate_from_plan(
 	candidate["spawn_plan_source"] = plan_source
 	candidate["spawn_plan_target_kind"] = String(plan.get("target_kind", ""))
 	candidate["spawn_plan_target_id"] = String(plan.get("target_placement_id", ""))
+	candidate["spawn_plan_target_label"] = String(plan.get("target_label", plan.get("target_placement_id", "")))
 	candidate["spawn_plan_priority"] = priority
 	candidate["spawn_plan_goal_distance"] = goal_distance
 	candidate["spawn_plan_score"] = score
 	candidate["spawn_order"] = spawn_order
 	return candidate
+
+static func _apply_spawn_plan_adventure_spell_projection(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	candidate: Dictionary
+) -> Dictionary:
+	if session == null or candidate.is_empty() or faction_id == "":
+		return candidate
+	var goal_distance := int(candidate.get("spawn_plan_goal_distance", 9999))
+	if goal_distance <= EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS or goal_distance >= 9999:
+		return candidate
+	var actor_id := String(candidate.get("roster_hero_id", ""))
+	if actor_id == "":
+		return candidate
+	var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state)
+	var commander_state: Dictionary = commander.get("commander_state", {}) if commander.get("commander_state", {}) is Dictionary else {}
+	if commander_state.is_empty():
+		commander_state = EnemyAdventureRulesScript.build_roster_commander_state(actor_id, faction_id, {}, commander)
+	if commander_state.is_empty():
+		return candidate
+	var movement := {
+		"current": EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS,
+		"max": clampi(
+			goal_distance,
+			EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS + 1,
+			EnemyAdventureRulesScript.RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS
+		),
+	}
+	var context := {
+		"target_kind": String(candidate.get("spawn_plan_target_kind", "")),
+		"target_label": String(candidate.get("spawn_plan_target_label", candidate.get("spawn_plan_target_id", ""))),
+		"objective_steps_remaining": goal_distance,
+		"route_pressure": true,
+	}
+	var report := EnemyAdventureRulesScript.adventure_spell_valuation_report(commander_state, movement, context)
+	var selected := _spawn_plan_selected_adventure_spell_candidate(report, "restore_movement")
+	if selected.is_empty():
+		return candidate
+	var movement_after := int(selected.get("movement_after", EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS))
+	var extra_steps: int = max(0, movement_after - EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS)
+	if extra_steps <= 0:
+		return candidate
+	var projected := candidate.duplicate(true)
+	var effective_distance: int = max(0, goal_distance - movement_after)
+	var tempo_bonus := (goal_distance - effective_distance) * 36
+	if effective_distance <= EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS:
+		tempo_bonus += 220
+	projected["spawn_plan_spell_tempo"] = true
+	projected["spawn_plan_spell_id"] = String(selected.get("spell_id", ""))
+	projected["spawn_plan_spell_name"] = String(selected.get("spell_name", selected.get("spell_id", "")))
+	projected["spawn_plan_spell_steps"] = movement_after
+	projected["spawn_plan_effective_goal_distance"] = effective_distance
+	projected["spawn_plan_score"] = int(projected.get("spawn_plan_score", 0)) + tempo_bonus
+	return projected
+
+static func _spawn_plan_selected_adventure_spell_candidate(report: Dictionary, effect_type: String) -> Dictionary:
+	var selected := {}
+	for candidate_value in report.get("candidates", []):
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		if String(candidate.get("effect_type", "")) != effect_type:
+			continue
+		if String(candidate.get("recommendation", "")) != "cast":
+			continue
+		if selected.is_empty() \
+			or EnemyAdventureRulesScript._adventure_band_rank(String(candidate.get("value_band", ""))) > EnemyAdventureRulesScript._adventure_band_rank(String(selected.get("value_band", ""))) \
+			or (
+				EnemyAdventureRulesScript._adventure_band_rank(String(candidate.get("value_band", ""))) == EnemyAdventureRulesScript._adventure_band_rank(String(selected.get("value_band", "")))
+				and int(candidate.get("movement_after", 0)) > int(selected.get("movement_after", 0))
+			):
+			selected = candidate
+	return selected
 
 static func _spawn_raid_encounter_id_from_plan(spawn_point: Dictionary, encounter_pool: Array, raid_counter: int) -> String:
 	if encounter_pool.is_empty():

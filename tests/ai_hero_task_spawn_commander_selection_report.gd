@@ -19,13 +19,16 @@ func _run() -> void:
 	var spawn_point_case := _target_aware_spawn_point_case()
 	if spawn_point_case.is_empty():
 		return
+	var spell_tempo_case := _spell_tempo_commander_spawn_point_case()
+	if spell_tempo_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "spawn_prefers_deployable_saved_task_commander",
-		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_spawn_point_selection",
+		"schema_status": "spawn_prefers_deployable_saved_task_commander_and_spell_tempo",
+		"behavior_policy": "saved_tasks_influence_live_commander_deployment_spawn_point_selection_and_adventure_spell_route_tempo",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, spell_tempo_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -190,6 +193,79 @@ func _target_aware_spawn_point_case() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _spell_tempo_commander_spawn_point_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["raid_counter"] = 0
+	state["commander_counter"] = 1
+	_update_enemy_state(session, state)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_resource_controller(session, "river_signal_post", "player")
+	_seed_task_board(session, [
+		_task("hero_sable", "river_free_company", 10, "planned", "valid"),
+		_task("hero_tarn", "river_signal_post", 10, "planned", "valid"),
+	])
+	state = _enemy_state(session)
+
+	var best_open := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if String(best_open.get("roster_hero_id", "")) != "hero_tarn":
+		_fail("Spell-tempo spawn selection should prefer Tarn's route spell over closer non-spell pressure: %s" % JSON.stringify(best_open))
+		return {}
+	if not bool(best_open.get("spawn_plan_spell_tempo", false)):
+		_fail("Spell-tempo spawn selection did not mark the movement-spell projection: %s" % JSON.stringify(best_open))
+		return {}
+	if String(best_open.get("spawn_plan_target_id", "")) != "river_signal_post":
+		_fail("Spell-tempo spawn selection should keep Tarn's saved signal-post target: %s" % JSON.stringify(best_open))
+		return {}
+	if int(best_open.get("spawn_plan_effective_goal_distance", 9999)) >= int(best_open.get("spawn_plan_goal_distance", 0)):
+		_fail("Spell-tempo projection did not improve effective route distance: %s" % JSON.stringify(best_open))
+		return {}
+
+	var spawn_result := EnemyTurnRules._spawn_raid(session, config, state)
+	if not bool(spawn_result.get("ok", false)):
+		_fail("Spell-tempo spawn result failed: %s" % JSON.stringify(spawn_result))
+		return {}
+	var raid := _latest_raid(session)
+	var start_x := int(raid.get("x", 0))
+	var start_y := int(raid.get("y", 0))
+	if String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")) != "hero_tarn":
+		_fail("Spell-tempo spawned raid did not deploy Tarn: %s" % JSON.stringify(raid))
+		return {}
+	if String(raid.get("target_placement_id", "")) != "river_signal_post":
+		_fail("Spell-tempo spawned raid did not target the signal post: %s" % JSON.stringify(raid))
+		return {}
+
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	var advance_events: Array = advance_result.get("events", []) if advance_result.get("events", []) is Array else []
+	var event_types := _event_types(advance_events)
+	if "ai_adventure_spell_cast" not in event_types:
+		_fail("Spell-tempo raid did not cast its live movement spell on advance: %s" % JSON.stringify(advance_result))
+		return {}
+	var after_raid := _latest_raid(session)
+	var moved_steps: int = abs(int(after_raid.get("x", 0)) - start_x) + abs(int(after_raid.get("y", 0)) - start_y)
+	if moved_steps <= 1:
+		_fail("Spell-tempo raid did not move more than the base step after casting: before=%d,%d after=%s" % [start_x, start_y, JSON.stringify(after_raid)])
+		return {}
+	if String(after_raid.get("last_adventure_spell_id", "")) == "":
+		_fail("Spell-tempo raid moved without preserving the cast spell metadata: %s" % JSON.stringify(after_raid))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(advance_events, 2)
+	if not bool(public_log.get("ok", false)):
+		_fail("Spell-tempo public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	return {
+		"case_id": "spawn_selection_values_saved_task_route_spell_tempo",
+		"selected_commander_id": String(best_open.get("roster_hero_id", "")),
+		"spell_id": String(best_open.get("spawn_plan_spell_id", "")),
+		"raw_goal_distance": int(best_open.get("spawn_plan_goal_distance", 0)),
+		"effective_goal_distance": int(best_open.get("spawn_plan_effective_goal_distance", 0)),
+		"moved_steps_after_cast": moved_steps,
+		"advance_event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _seed_task_board(session, tasks: Array) -> void:
 	var state := _enemy_state(session)
 	state["hero_task_state"] = {
@@ -320,6 +396,18 @@ func _string_array(value: Variant) -> Array:
 		var text := String(item)
 		if text != "" and text not in output:
 			output.append(text)
+	return output
+
+func _event_types(events: Variant) -> Array:
+	var output := []
+	if not (events is Array):
+		return output
+	for event_value in events:
+		if not (event_value is Dictionary):
+			continue
+		var event_type := String(event_value.get("event_type", ""))
+		if event_type != "" and event_type not in output:
+			output.append(event_type)
 	return output
 
 func _fail(message: String) -> void:
