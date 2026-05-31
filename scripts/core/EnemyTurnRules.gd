@@ -2169,6 +2169,10 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		raid_seed["target_kind"] = String(spawn_point.get("spawn_plan_target_kind", ""))
 		raid_seed["target_placement_id"] = String(spawn_point.get("spawn_plan_target_id", ""))
 		raid_seed["target_label"] = String(spawn_point.get("spawn_plan_target_label", ""))
+		raid_seed["target_x"] = int(spawn_point.get("spawn_plan_target_x", spawn_point.get("x", 0)))
+		raid_seed["target_y"] = int(spawn_point.get("spawn_plan_target_y", spawn_point.get("y", 0)))
+		raid_seed["goal_x"] = int(spawn_point.get("spawn_plan_goal_x", raid_seed["target_x"]))
+		raid_seed["goal_y"] = int(spawn_point.get("spawn_plan_goal_y", raid_seed["target_y"]))
 		raid_seed["target_reason_codes"] = spawn_point.get("spawn_plan_reason_codes", [])
 		raid_seed["target_public_reason"] = String(spawn_point.get("spawn_plan_public_reason", ""))
 		raid_seed["target_public_importance"] = String(spawn_point.get("spawn_plan_public_importance", "high"))
@@ -3468,6 +3472,10 @@ static func _spawn_point_candidate_from_plan(
 	candidate["spawn_plan_target_kind"] = String(plan.get("target_kind", ""))
 	candidate["spawn_plan_target_id"] = String(plan.get("target_placement_id", ""))
 	candidate["spawn_plan_target_label"] = String(plan.get("target_label", plan.get("target_placement_id", "")))
+	candidate["spawn_plan_target_x"] = int(plan.get("target_x", point.get("x", 0)))
+	candidate["spawn_plan_target_y"] = int(plan.get("target_y", point.get("y", 0)))
+	candidate["spawn_plan_goal_x"] = int(plan.get("goal_x", plan.get("target_x", point.get("x", 0))))
+	candidate["spawn_plan_goal_y"] = int(plan.get("goal_y", plan.get("target_y", point.get("y", 0))))
 	candidate["spawn_plan_priority"] = priority
 	candidate["spawn_plan_goal_distance"] = goal_distance
 	candidate["spawn_plan_score"] = score
@@ -4476,7 +4484,7 @@ static func _hero_task_record_sanitized_field_count(task: Dictionary) -> int:
 
 static func _normalize_hero_task_class(value: Variant) -> String:
 	var task_class := String(value)
-	if task_class in ["raid_town", "retake_site", "contest_site", "stabilize_front", "defend_front", "recover_commander", "rebuild_host", "reserve"]:
+	if task_class in ["raid_town", "retake_site", "contest_site", "stabilize_front", "defend_front", "scout_frontier", "recover_commander", "rebuild_host", "reserve"]:
 		return task_class
 	return ""
 
@@ -4489,6 +4497,8 @@ static func _normalize_hero_task_status(value: Variant) -> String:
 static func _normalize_hero_task_target_kind(value: Variant) -> String:
 	var target_kind := String(value)
 	if target_kind in ["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]:
+		return target_kind
+	if target_kind == "explore":
 		return target_kind
 	return ""
 
