@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-emergency-defense-launch-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-emergency-defense-recruitment-prep-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T00:15:03Z",
+  "updatedAt": "2026-05-31T00:26:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,55 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-emergency-defense-recruitment-prep-10184",
+      "title": "Strategic AI Emergency Defense Recruitment Prep",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy town recruitment recognize uncovered emergency town/resource defense gaps and reinforce the commander that will launch below normal raid pressure, instead of leaving fresh recruits in town while a base host responds.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-baseline-kpi-report.md",
+        "docs/strategic-ai-planned-task-recruitment-prep-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_town_defense_retask_report.gd"
+      ],
+      "baselineChecks": [
+        "Emergency defense launch now exists, but recruitment runs before launch and currently has no emergency-defense destination.",
+        "Fresh recruits can remain in town while the uncovered defensive responder launches at only base commander host strength."
+      ],
+      "completionCriteria": [
+        "Town recruitment can select an emergency-defense destination for an uncovered threatened town/resource front when garrison safety is not critical.",
+        "The destination reinforces the same deployable commander candidate through commander roster army continuity before launch.",
+        "The launched emergency defender shows increased live raid strength and public recruitment destination metadata.",
+        "Focused Godot validation proves below-threshold emergency defense recruitment prep and surrounding strategic-AI tests still pass."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not bypass existing launch, movement, battle, or stationing rules.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T00:18:38Z",
+      "updatedAt": "2026-05-31T00:26:30Z",
+      "completedAt": "2026-05-31T00:26:30Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ]
+    },
     {
       "id": "strategic-ai-emergency-defense-launch-10184",
       "title": "Strategic AI Emergency Defense Launch",
@@ -41637,21 +41686,22 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T00:15:03Z",
-    "sliceId": "strategic-ai-emergency-defense-launch-10184",
+    "updatedAt": "2026-05-31T00:26:30Z",
+    "sliceId": "strategic-ai-emergency-defense-recruitment-prep-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Emergency town/resource defense launches and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
+    "summary": "Emergency defense recruitment prep, first-deployment commander continuity reinforcement, and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T00:15:03Z",
+  "currentSliceUpdatedAt": "2026-05-31T00:26:30Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44607,32 +44657,35 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T00:15:03Z",
-    "sliceId": "strategic-ai-emergency-defense-launch-10184",
+    "updatedAt": "2026-05-31T00:26:30Z",
+    "sliceId": "strategic-ai-emergency-defense-recruitment-prep-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Threatened AI-owned towns/resources can now create emergency defensive spawn candidates below normal raid-pressure thresholds.",
-        "Emergency defenders still use open spawn points, deployable commanders, existing commander state construction, live raid army construction, and normal target assignment/advance logic.",
-        "Town and resource emergency launches carry the same target kind/id, public reason, debug reason, and defense reason-code metadata as active-raid retasks.",
-        "Existing committed-defense strength gates still prevent duplicate overcommit while uncovered defense gaps can launch a fresh commander."
+        "Enemy town recruitment now recognizes uncovered emergency town/resource defense fronts as a commander-preparation destination when local garrison safety is already covered.",
+        "Emergency preparation reinforces the selected deployable commander through roster army continuity before the below-threshold launch runs.",
+        "First-deployment commanders can now initialize roster army continuity for reinforcement instead of rejecting pre-launch recruitment because their commander_state is empty.",
+        "The focused River Pass resource case launches Vaska at 191 strength instead of the 149 base host after Duskfen sends two Bog Brutes to the emergency defender."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "town_target_id": "duskfen_bastion",
         "resource_target_id": "river_free_company",
         "pressure_before": 0,
         "raid_threshold": 999,
-        "town_spawned_commander_id": "hero_sable",
-        "resource_spawned_commander_id": "hero_vaska"
+        "spawned_commander_id": "hero_vaska",
+        "base_resource_strength": 149,
+        "strengthened_raid_strength": 191,
+        "prepared_unit_id": "unit_bog_brute",
+        "prepared_unit_count": 2
       },
       "remaining_validation": "Full 100-seed generated-map strategic-AI matrix, Medium/generated-map generalization, deeper retreat/personality tuning, and live-client pacing/manual play remain open.",
       "policy": "Live strategic AI behavior slice; no new broad report gate, campaign production, or production-ready claim."

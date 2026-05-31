@@ -4086,6 +4086,13 @@ static func reinforce_commander_roster_army(
 				return 0
 			var commander_state = entry.get("commander_state", {})
 			if not (commander_state is Dictionary) or commander_state.is_empty():
+				commander_state = build_roster_commander_state(
+					roster_hero_id,
+					faction_id,
+					{},
+					entry
+				)
+			if not (commander_state is Dictionary) or commander_state.is_empty():
 				return 0
 			var continuity: Dictionary = _normalized_commander_army_continuity(entry, commander_state)
 			var continuity_stacks: Array = continuity.get("stacks", []) if continuity.get("stacks", []) is Array else []

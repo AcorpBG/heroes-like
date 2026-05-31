@@ -651,6 +651,11 @@ static func ai_town_recruit_destination_event(
 			target_kind = "commander"
 			target_id = String(destination.get("roster_hero_id", ""))
 			target_label = String(destination.get("commander_label", target_id))
+		"emergency":
+			event_type = "ai_emergency_defender_prepared"
+			target_kind = "commander"
+			target_id = String(destination.get("roster_hero_id", ""))
+			target_label = String(destination.get("commander_label", target_id))
 		_:
 			pass
 	if target_label == "":
@@ -1073,6 +1078,7 @@ static func _reinforce_enemy_forces(
 	var raid_reinforcements = 0
 	var rebuild_batches = 0
 	var planned_batches = 0
+	var emergency_batches = 0
 	var events = []
 	for index in range(towns.size()):
 		var town = towns[index]
@@ -1089,8 +1095,9 @@ static func _reinforce_enemy_forces(
 		raid_reinforcements += int(recruit_result.get("raid_batches", 0))
 		rebuild_batches += int(recruit_result.get("rebuild_batches", 0))
 		planned_batches += int(recruit_result.get("planned_batches", 0))
+		emergency_batches += int(recruit_result.get("emergency_batches", 0))
 	if garrisoned_towns.is_empty() and raid_reinforcements <= 0:
-		if rebuild_batches <= 0 and planned_batches <= 0:
+		if rebuild_batches <= 0 and planned_batches <= 0 and emergency_batches <= 0:
 			return {"message": "", "events": events}
 
 	var parts = []
@@ -1102,6 +1109,8 @@ static func _reinforce_enemy_forces(
 		parts.append("rebuilds %d command host%s" % [rebuild_batches, "" if rebuild_batches == 1 else "s"])
 	if planned_batches > 0:
 		parts.append("prepares %d planned command host%s" % [planned_batches, "" if planned_batches == 1 else "s"])
+	if emergency_batches > 0:
+		parts.append("prepares %d emergency defender%s" % [emergency_batches, "" if emergency_batches == 1 else "s"])
 	return {
 		"message": "%s %s." % [String(config.get("label", faction_id)), " and ".join(parts)],
 		"events": events,
@@ -1118,6 +1127,7 @@ static func _recruit_town_forces(
 	var raid_batches = 0
 	var rebuild_batches = 0
 	var planned_batches = 0
+	var emergency_batches = 0
 	var events = []
 	var recruit_ids = []
 	var initial_destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
@@ -1151,7 +1161,7 @@ static func _recruit_town_forces(
 			)
 			if applied_count > 0:
 				raid_batches += 1
-		elif String(destination.get("type", "")) in ["rebuild", "planned"]:
+		elif String(destination.get("type", "")) in ["rebuild", "planned", "emergency"]:
 			applied_count = EnemyAdventureRulesScript.reinforce_commander_roster_army(
 				session,
 				faction_id,
@@ -1164,6 +1174,8 @@ static func _recruit_town_forces(
 			if applied_count > 0:
 				if String(destination.get("type", "")) == "planned":
 					planned_batches += 1
+				elif String(destination.get("type", "")) == "emergency":
+					emergency_batches += 1
 				else:
 					rebuild_batches += 1
 		else:
@@ -1193,6 +1205,7 @@ static func _recruit_town_forces(
 		"raid_batches": raid_batches,
 		"rebuild_batches": rebuild_batches,
 		"planned_batches": planned_batches,
+		"emergency_batches": emergency_batches,
 		"events": events,
 	}
 
@@ -1218,6 +1231,13 @@ static func _recruit_destination_from_breakdown(breakdown: Dictionary) -> Dictio
 				"base_encounter_id": String(breakdown.get("base_encounter_id", "")),
 				"target_strength": int(breakdown.get("target_strength", 0)),
 			}
+		"emergency":
+			return {
+				"type": "emergency",
+				"roster_hero_id": String(breakdown.get("roster_hero_id", "")),
+				"base_encounter_id": String(breakdown.get("base_encounter_id", "")),
+				"target_strength": int(breakdown.get("target_strength", 0)),
+			}
 		_:
 			return {"type": "garrison"}
 
@@ -1234,6 +1254,7 @@ static func _choose_recruit_destination_breakdown(
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
 	var best_planned = _best_planned_task_recruitment_target(session, config, faction_id, town)
+	var best_emergency = _best_emergency_defense_recruitment_target(session, config, faction_id, town)
 	var faction_front_state := _faction_front_state(session, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
@@ -1243,6 +1264,7 @@ static func _choose_recruit_destination_breakdown(
 	var rebuild_score = float(int(best_rebuild.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.85
 	rebuild_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.18
 	var planned_score = float(best_planned.get("score", 0.0))
+	var emergency_score = float(best_emergency.get("score", 0.0))
 	if current_defense < int(round(float(defense_target) * 0.72)):
 		return _recruit_destination_report_payload(
 			"garrison",
@@ -1260,6 +1282,26 @@ static func _choose_recruit_destination_breakdown(
 			local_front,
 			planned_score,
 			best_planned
+		)
+	if not best_emergency.is_empty() and emergency_score > max(garrison_score * 0.9, max(raid_score * 0.8, rebuild_score * 0.75)):
+		return _recruit_destination_report_payload(
+			"emergency",
+			"emergency_defense_preparation",
+			"prepares emergency defense",
+			["emergency_defense_preparation", "front_defense"],
+			"an uncovered threatened front needs a launch-ready defender",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front,
+			planned_score,
+			best_planned,
+			emergency_score,
+			best_emergency
 		)
 	if (
 		not best_rebuild.is_empty()
@@ -1395,7 +1437,9 @@ static func _recruit_destination_report_payload(
 	best_rebuild: Dictionary,
 	local_front: Dictionary,
 	planned_score: float = 0.0,
-	best_planned: Dictionary = {}
+	best_planned: Dictionary = {},
+	emergency_score: float = 0.0,
+	best_emergency: Dictionary = {}
 ) -> Dictionary:
 	var payload := {
 		"type": destination_type,
@@ -1407,6 +1451,7 @@ static func _recruit_destination_report_payload(
 		"raid_score": raid_score,
 		"rebuild_score": rebuild_score,
 		"planned_score": planned_score,
+		"emergency_score": emergency_score,
 		"defense_target": defense_target,
 		"current_defense": current_defense,
 		"garrison_gap": max(0, defense_target - current_defense),
@@ -1443,7 +1488,85 @@ static func _recruit_destination_report_payload(
 		payload["target_id"] = String(best_planned.get("target_id", ""))
 		payload["target_label"] = String(best_planned.get("target_label", best_planned.get("target_id", "")))
 		payload["goal_distance"] = int(best_planned.get("goal_distance", 0))
+	elif destination_type == "emergency":
+		payload["roster_hero_id"] = String(best_emergency.get("roster_hero_id", ""))
+		payload["commander_label"] = String(ContentService.get_hero(String(best_emergency.get("roster_hero_id", ""))).get("name", payload["roster_hero_id"]))
+		payload["emergency_need"] = int(best_emergency.get("need", 0))
+		payload["target_strength"] = int(best_emergency.get("target_strength", 0))
+		payload["base_encounter_id"] = String(best_emergency.get("base_encounter_id", ""))
+		payload["target_kind"] = String(best_emergency.get("target_kind", ""))
+		payload["target_id"] = String(best_emergency.get("target_id", ""))
+		payload["target_label"] = String(best_emergency.get("target_label", best_emergency.get("target_id", "")))
+		payload["goal_distance"] = int(best_emergency.get("goal_distance", 0))
+		payload["spawn_plan_source"] = String(best_emergency.get("spawn_plan_source", ""))
 	return payload
+
+static func _best_emergency_defense_recruitment_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	support_town: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or support_town.is_empty():
+		return {}
+	var base_encounter_id := _primary_raid_encounter_id(config)
+	if base_encounter_id == "":
+		return {}
+	var state := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	if state.is_empty():
+		return {}
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return {}
+	var occupied_commander_ids := EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var best := {}
+	var best_score := -1.0
+	for index in range(points.size()):
+		var point = points[index]
+		if not (point is Dictionary):
+			continue
+		var candidate := _emergency_defense_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			index
+		)
+		if candidate.is_empty():
+			continue
+		var current_strength := int(candidate.get("spawn_plan_current_strength", 0))
+		var target_strength := int(candidate.get("spawn_plan_target_strength", 0))
+		var need: int = max(0, target_strength - current_strength)
+		if need <= 0:
+			continue
+		var supply_distance: int = abs(int(support_town.get("x", 0)) - int(point.get("x", 0))) \
+			+ abs(int(support_town.get("y", 0)) - int(point.get("y", 0)))
+		var score := float(need) * 1.15
+		score += float(int(candidate.get("spawn_plan_priority", 0))) * 0.65
+		score += float(max(0, 18 - supply_distance) * 12)
+		score -= float(supply_distance * 4)
+		score -= float(max(0, int(candidate.get("spawn_plan_goal_distance", 0))) * 3)
+		if String(candidate.get("spawn_plan_target_kind", "")) == "town":
+			score += 45.0
+		if score > best_score:
+			best_score = score
+			best = {
+				"roster_hero_id": String(candidate.get("roster_hero_id", "")),
+				"need": need,
+				"score": score,
+				"target_kind": String(candidate.get("spawn_plan_target_kind", "")),
+				"target_id": String(candidate.get("spawn_plan_target_id", "")),
+				"target_label": String(candidate.get("spawn_plan_target_label", candidate.get("spawn_plan_target_id", ""))),
+				"goal_distance": int(candidate.get("spawn_plan_goal_distance", 0)),
+				"base_encounter_id": base_encounter_id,
+				"target_strength": target_strength,
+				"current_strength": current_strength,
+				"spawn_plan_source": String(candidate.get("spawn_plan_source", "")),
+				"supply_distance": supply_distance,
+			}
+	return best
 
 static func _best_planned_task_recruitment_target(
 	session: SessionStateStoreScript.SessionData,
@@ -3283,8 +3406,10 @@ static func _spawn_point_candidate_from_emergency_defense(
 		return {}
 	var priority := 210 if target_kind == "town" else 170
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	var current_strength := EnemyAdventureRulesScript.raid_strength(raid)
+	var target_strength := EnemyAdventureRulesScript.desired_raid_strength(raid)
 	var score := (priority * 100) - (goal_distance * 8) - spawn_order
-	score += EnemyAdventureRulesScript.raid_strength(raid)
+	score += current_strength
 	var candidate := point.duplicate(true)
 	candidate["roster_hero_id"] = roster_hero_id
 	candidate["spawn_plan_source"] = "emergency_town_defense" if target_kind == "town" else "emergency_resource_defense"
@@ -3294,6 +3419,8 @@ static func _spawn_point_candidate_from_emergency_defense(
 	candidate["spawn_plan_priority"] = priority
 	candidate["spawn_plan_goal_distance"] = goal_distance
 	candidate["spawn_plan_score"] = score
+	candidate["spawn_plan_current_strength"] = current_strength
+	candidate["spawn_plan_target_strength"] = target_strength
 	candidate["spawn_order"] = spawn_order
 	candidate["spawn_plan_reason_codes"] = reason_codes
 	candidate["spawn_plan_public_reason"] = String(raid.get("target_public_reason", "defending threatened town"))
