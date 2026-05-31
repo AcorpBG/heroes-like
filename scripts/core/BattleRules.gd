@@ -212,7 +212,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 			"player"
 		),
 		"enemy_hero": enemy_hero_state,
-		"enemy_hero_payload": _hero_payload_from_state(enemy_hero_state, {}, session, "enemy"),
+		"enemy_hero_payload": _enemy_hero_payload_from_state(enemy_hero_state, {}, session),
 		"stacks": [],
 		"turn_order": [],
 		"turn_index": 0,
@@ -1231,7 +1231,11 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		encounter,
 		encounter_placement
 	)
-	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
+	session.battle["enemy_hero_payload"] = _enemy_hero_payload_from_state(
+		session.battle.get("enemy_hero", {}),
+		session.battle.get("enemy_hero_payload", {}),
+		session
+	)
 
 	var current_turn_order = session.battle.get("turn_order", [])
 	if int(session.battle.get("round", 1)) <= 1 and current_turn_order is Array and current_turn_order.is_empty():
@@ -5971,7 +5975,11 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	session.battle[ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY] = true
 
 	session.battle["enemy_hero"] = resolution.get("hero", session.battle.get("enemy_hero", {}))
-	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
+	session.battle["enemy_hero_payload"] = _enemy_hero_payload_from_state(
+		session.battle.get("enemy_hero", {}),
+		session.battle.get("enemy_hero_payload", {}),
+		session
+	)
 	var message = String(resolution.get("message", ""))
 	var animation_resolution: Dictionary = resolution.duplicate(true)
 	animation_resolution["spell_id"] = String(action.get("spell_id", ""))
@@ -6665,7 +6673,11 @@ static func _record_enemy_commander_battle_continuity(
 		outcome_id
 	)
 	session.battle["enemy_hero"] = updated_state
-	session.battle["enemy_hero_payload"] = _hero_payload_from_state(updated_state, {}, session, "enemy")
+	session.battle["enemy_hero_payload"] = _enemy_hero_payload_from_state(
+		updated_state,
+		session.battle.get("enemy_hero_payload", {}),
+		session
+	)
 	EnemyAdventureRulesScript.sync_commander_state_to_roster(
 		session,
 		faction_id,
@@ -10619,6 +10631,28 @@ static func _hero_payload_from_state(
 		"mana_max": int(mana.get("max", 0)),
 		"battle_traits": battle_traits,
 	}
+
+static func _enemy_hero_payload_from_state(
+	hero_state: Dictionary,
+	existing_payload: Variant = {},
+	session: SessionStateStoreScript.SessionData = null
+) -> Dictionary:
+	var payload := _hero_payload_from_state(hero_state, {}, session, "enemy")
+	for key in ["id", "roster_hero_id", "hero_id", "name", "faction_id", "archetype", "command_path"]:
+		var value := String(hero_state.get(key, "")).strip_edges()
+		if value != "":
+			payload[key] = value
+	var command: Dictionary = hero_state.get("command", {}) if hero_state.get("command", {}) is Dictionary else {}
+	if not command.is_empty():
+		payload["command"] = command.duplicate(true)
+	var spellbook: Dictionary = hero_state.get("spellbook", {}) if hero_state.get("spellbook", {}) is Dictionary else {}
+	var known_spell_ids: Array = spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
+	if not known_spell_ids.is_empty():
+		payload["spellbook"] = spellbook.duplicate(true)
+	var existing: Dictionary = existing_payload if existing_payload is Dictionary else {}
+	if existing.is_empty():
+		return payload
+	return BattleAiRulesScript._merged_commander_ai_payload(payload, existing)
 
 static func _merge_spell_school_resistance(left: Variant, right: Variant) -> Dictionary:
 	var merged := SpellRulesScript.normalize_school_resistance(left)

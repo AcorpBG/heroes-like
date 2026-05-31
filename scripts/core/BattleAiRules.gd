@@ -489,8 +489,11 @@ static func _merged_commander_ai_payload(primary_payload: Dictionary, secondary_
 		command = secondary_command.duplicate(true)
 	elif not secondary_command.is_empty():
 		for key in ["attack", "defense", "power", "knowledge", "initiative"]:
-			if not command.has(key):
-				command[key] = secondary_command.get(key)
+			if not secondary_command.has(key):
+				continue
+			var secondary_value := int(secondary_command.get(key, 0))
+			if not command.has(key) or (int(command.get(key, 0)) == 0 and secondary_value > 0):
+				command[key] = secondary_value
 	if not command.is_empty():
 		merged["command"] = command
 
@@ -539,8 +542,10 @@ static func _merge_commander_spellbooks_for_ai(merged: Dictionary, secondary_pay
 		merged["spellbook"] = secondary_spellbook.duplicate(true)
 		return merged
 
-	var known_spell_ids := _normalize_string_array(spellbook.get("known_spell_ids", []))
-	for spell_id in _normalize_string_array(secondary_spellbook.get("known_spell_ids", [])):
+	var primary_known_spell_ids := _normalize_string_array(spellbook.get("known_spell_ids", []))
+	var secondary_known_spell_ids := _normalize_string_array(secondary_spellbook.get("known_spell_ids", []))
+	var known_spell_ids := primary_known_spell_ids.duplicate()
+	for spell_id in secondary_known_spell_ids:
 		if spell_id not in known_spell_ids:
 			known_spell_ids.append(spell_id)
 	if not known_spell_ids.is_empty():
@@ -548,7 +553,9 @@ static func _merge_commander_spellbooks_for_ai(merged: Dictionary, secondary_pay
 
 	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
 	var secondary_mana: Dictionary = secondary_spellbook.get("mana", {}) if secondary_spellbook.get("mana", {}) is Dictionary else {}
-	if mana.is_empty() and not secondary_mana.is_empty():
+	if primary_known_spell_ids.is_empty() and not secondary_known_spell_ids.is_empty() and not secondary_mana.is_empty():
+		spellbook["mana"] = secondary_mana.duplicate(true)
+	elif mana.is_empty() and not secondary_mana.is_empty():
 		spellbook["mana"] = secondary_mana.duplicate(true)
 	elif not mana.is_empty() and not secondary_mana.is_empty():
 		var merged_mana := mana.duplicate(true)
