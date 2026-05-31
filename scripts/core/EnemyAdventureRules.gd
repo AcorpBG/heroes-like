@@ -16236,62 +16236,69 @@ static func _path_distance_surface_cache_key(
 		map_size.y,
 		ignore_placement_id,
 		observer_faction_id,
-		_path_distance_encounter_signature(session),
-		_path_distance_resource_signature(session),
-		_path_distance_hero_signature(session),
+		_path_distance_encounter_fingerprint(session),
+		_path_distance_resource_fingerprint(session),
+		_path_distance_hero_fingerprint(session),
 	]
 
-static func _path_distance_encounter_signature(session: SessionStateStoreScript.SessionData) -> String:
+static func _path_distance_encounter_fingerprint(session: SessionStateStoreScript.SessionData) -> String:
 	var resolved_lookup := {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	if resolved_encounters is Array:
 		for value in resolved_encounters:
 			resolved_lookup[String(value)] = true
-	var parts := []
+	var fingerprint := _fingerprint_seed()
+	var count := 0
+	var unresolved_count := 0
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
 		var placement_id := String(encounter.get("placement_id", ""))
-		parts.append("%s:%d:%d:%d" % [
-			placement_id,
-			int(encounter.get("x", 0)),
-			int(encounter.get("y", 0)),
-			1 if resolved_lookup.has(placement_id) else 0,
-		])
-	parts.sort()
-	return ";".join(parts)
+		var resolved_flag := 1 if resolved_lookup.has(placement_id) else 0
+		count += 1
+		if resolved_flag == 0:
+			unresolved_count += 1
+		fingerprint = _fingerprint_mix(fingerprint, _stable_string_hash(placement_id))
+		fingerprint = _fingerprint_mix(fingerprint, int(encounter.get("x", 0)))
+		fingerprint = _fingerprint_mix(fingerprint, int(encounter.get("y", 0)))
+		fingerprint = _fingerprint_mix(fingerprint, resolved_flag)
+	return "%d:%d:%d" % [count, unresolved_count, fingerprint]
 
-static func _path_distance_resource_signature(session: SessionStateStoreScript.SessionData) -> String:
-	var parts := []
+static func _path_distance_resource_fingerprint(session: SessionStateStoreScript.SessionData) -> String:
+	var fingerprint := _fingerprint_seed()
+	var count := 0
+	var collected_count := 0
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		parts.append("%s:%d:%d:%d" % [
-			String(node.get("placement_id", "")),
-			int(node.get("x", 0)),
-			int(node.get("y", 0)),
-			1 if bool(node.get("collected", false)) else 0,
-		])
-	parts.sort()
-	return ";".join(parts)
+		var collected_flag := 1 if bool(node.get("collected", false)) else 0
+		count += 1
+		collected_count += collected_flag
+		fingerprint = _fingerprint_mix(fingerprint, _stable_string_hash(String(node.get("placement_id", ""))))
+		fingerprint = _fingerprint_mix(fingerprint, int(node.get("x", 0)))
+		fingerprint = _fingerprint_mix(fingerprint, int(node.get("y", 0)))
+		fingerprint = _fingerprint_mix(fingerprint, collected_flag)
+	return "%d:%d:%d" % [count, collected_count, fingerprint]
 
-static func _path_distance_hero_signature(session: SessionStateStoreScript.SessionData) -> String:
-	var parts := []
+static func _path_distance_hero_fingerprint(session: SessionStateStoreScript.SessionData) -> String:
+	var fingerprint := _fingerprint_seed()
+	var count := 0
+	var sheltered_count := 0
 	for hero_value in _player_hero_snapshots_for_intercept(session):
 		if not (hero_value is Dictionary):
 			continue
 		var hero: Dictionary = hero_value
 		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
-		parts.append("%s:%d:%d:%d" % [
-			String(hero.get("hero_id", hero.get("id", ""))),
-			int(position.get("x", -9999)),
-			int(position.get("y", -9999)),
-			1 if _player_hero_sheltered_in_town(session, hero) else 0,
-		])
-	parts.sort()
-	return ";".join(parts)
+		var sheltered_flag := 1 if _player_hero_sheltered_in_town(session, hero) else 0
+		count += 1
+		sheltered_count += sheltered_flag
+		fingerprint = _fingerprint_mix(fingerprint, _stable_string_hash(String(hero.get("hero_id", hero.get("id", "")))))
+		fingerprint = _fingerprint_mix(fingerprint, int(position.get("x", -9999)))
+		fingerprint = _fingerprint_mix(fingerprint, int(position.get("y", -9999)))
+		fingerprint = _fingerprint_mix(fingerprint, sheltered_flag)
+	return "%d:%d:%d" % [count, sheltered_count, fingerprint]
 
 static func raid_reinforcement_route_distance(
 	session: SessionStateStoreScript.SessionData,
@@ -17200,6 +17207,15 @@ static func _tile_index(pos: Vector2i, map_size: Vector2i) -> int:
 	if pos.x < 0 or pos.y < 0 or pos.x >= map_size.x or pos.y >= map_size.y:
 		return -1
 	return pos.y * map_size.x + pos.x
+
+static func _fingerprint_seed() -> int:
+	return 2166136261
+
+static func _stable_string_hash(value: String) -> int:
+	return int(value.hash()) & 0x7fffffff
+
+static func _fingerprint_mix(fingerprint: int, value: int) -> int:
+	return int((int(fingerprint) * 16777619 + (int(value) & 0x7fffffff)) & 0x7fffffff)
 
 static func _vector_from_index(index: int, map_size: Vector2i) -> Vector2i:
 	if index < 0 or map_size.x <= 0:

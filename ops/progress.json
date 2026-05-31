@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T14:45:00Z",
+  "updatedAt": "2026-05-31T15:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,47 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-path-surface-fingerprint-cache-10184",
+      "title": "Strategic AI Path Surface Fingerprint Cache",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T15:05:00Z",
+      "updatedAt": "2026-05-31T15:35:00Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / strategic-ai-path-surface-fingerprint-cache-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Reduce generated-map enemy-turn runtime by replacing allocation-heavy Strategic AI path-surface cache-key signatures with compact fingerprints.",
+      "implementationTargets": [
+        "Replace sorted per-call encounter/resource/hero signature strings with compact deterministic fingerprints over the same state inputs.",
+        "Preserve cache invalidation for session, scenario, day, map size, ignored placement, observer faction, unresolved encounters, collected resources, and visible player hero blockers.",
+        "Preserve strategic target choices, route blocking semantics, tactical AI behavior, and all balance/content values."
+      ],
+      "completionCriteria": "Focused Native RMG long-run smoke and tactical/strategic AI validation remain green, runtime telemetry does not regress, and no unit, spell, growth, economy, faction, town-cost, or balance content is changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No target-priority, combat, economy, or faction balance tuning.",
+        "No production-ready AI claim from one cache-key optimization."
+      ],
+      "validation": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same one-turn strict Small Native RMG enemy turn now 8818ms, down from 9081ms after the prior indexed path-search slice)",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16590)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Strategic AI path-surface cache keys now use compact fingerprints instead of sorted string signatures for encounter, resource, and player-hero state. The same cache invalidation inputs are preserved, focused Native RMG telemetry improved the one-turn enemy phase to 8818ms and the 2-seed/2-turn smoke max enemy turn to 16590ms, and no balance/content files were changed.",
+      "completedAt": "2026-05-31T15:35:00Z"
+    },
     {
       "id": "strategic-ai-indexed-path-search-10184",
       "title": "Strategic AI Indexed Path Search",
@@ -46399,12 +46440,12 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-indexed-path-search-10184",
+    "sliceId": "strategic-ai-path-surface-fingerprint-cache-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T14:45:00Z",
+    "updatedAt": "2026-05-31T15:35:00Z",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same seed one-turn smoke improved from 16591ms after the previous pathing slice to 9081ms enemy-turn runtime)",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16708)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same seed one-turn smoke improved from 9081ms after the previous indexed path-search slice to 8818ms enemy-turn runtime)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16590)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
@@ -46414,15 +46455,15 @@
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Strategic AI generated-map path-distance checks now use indexed blocked-tile lookups and cached per-start distance fields, reducing the same strict Small enemy turn to 9081ms without changing balance content."
+    "summary": "Strategic AI path-surface cache-key construction now uses compact state fingerprints, reducing the same strict Small enemy turn to 8818ms without changing balance content."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T14:45:00Z"
+    "updatedAt": "2026-05-31T15:35:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T14:45:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T15:35:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -49636,11 +49677,11 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T14:45:00Z",
-    "sliceId": "strategic-ai-indexed-path-search-10184",
+    "updatedAt": "2026-05-31T15:35:00Z",
+    "sliceId": "strategic-ai-path-surface-fingerprint-cache-10184",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same seed one-turn smoke improved from 16591ms after the previous pathing slice to 9081ms enemy-turn runtime)",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16708)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same seed one-turn smoke improved from 9081ms after the previous indexed path-search slice to 8818ms enemy-turn runtime)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16590)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
@@ -49652,16 +49693,15 @@
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules cached pathing surfaces now include integer-index blocked-tile lookups for encounter, resource, hero, and terrain blockers.",
-        "EnemyAdventureRules._next_step_toward now uses integer tile indexes for visited and parent state while preserving route blocking and goal-tile exceptions.",
-        "EnemyAdventureRules._path_distance now caches per-start distance fields inside the stable pathing surface and resolves resource/terrain-blocked goal tiles with final-step semantics.",
-        "The same strict Small Native RMG one-turn smoke preserved the event mix and row behavior while reducing enemy-turn runtime from 16591ms after the previous slice to 9081ms."
+        "EnemyAdventureRules path-surface cache keys now replace sorted encounter/resource/hero signature arrays with compact deterministic fingerprints.",
+        "The fingerprints preserve the same invalidation inputs for encounter placement/position/resolved state, resource placement/position/collected state, and player hero id/position/sheltered state.",
+        "The same strict Small Native RMG one-turn smoke preserved the event mix and row behavior while reducing enemy-turn runtime from 9081ms after the previous slice to 8818ms."
       ],
       "focused_case": {
-        "case_id": "strategic_ai_indexed_path_search",
-        "previous_path_slice_turn_runtime_msec": 16591,
-        "indexed_path_turn_runtime_msec": 9081,
-        "two_seed_two_turn_max_turn_runtime_msec": 16708,
+        "case_id": "strategic_ai_path_surface_fingerprint_cache",
+        "previous_indexed_path_turn_runtime_msec": 9081,
+        "fingerprint_cache_key_turn_runtime_msec": 8818,
+        "two_seed_two_turn_max_turn_runtime_msec": 16590,
         "two_seed_two_turn_behavior_bug_count": 0,
         "two_seed_two_turn_stalled_turn_count": 0,
         "two_seed_two_turn_enemy_activity_event_count": 14
