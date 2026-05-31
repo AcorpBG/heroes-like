@@ -1667,7 +1667,7 @@ static func _scoutable_target_candidates(
 	if session == null or faction_id == "" or radius <= 0:
 		return []
 	var output := []
-	for candidate_value in _target_candidates(session, config, origin):
+	for candidate_value in _target_candidates(session, config, origin, true):
 		if not (candidate_value is Dictionary):
 			continue
 		var candidate: Dictionary = candidate_value
@@ -2126,6 +2126,43 @@ static func _enemy_scouted_target_priority_bonus(
 	if _enemy_target_scouted(session, faction_id, target_kind, target_id):
 		return RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS
 	return 0
+
+static func _enemy_target_currently_visible(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	target_x: int,
+	target_y: int
+) -> bool:
+	if session == null or faction_id == "":
+		return false
+	var target_tile := Vector2i(target_x, target_y)
+	for source_value in _enemy_hero_sighting_sources(session, config, faction_id):
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		var distance: int = abs(target_tile.x - int(source.get("x", 0))) + abs(target_tile.y - int(source.get("y", 0)))
+		if distance <= int(source.get("radius", 0)):
+			return true
+	return false
+
+static func _enemy_nonhero_target_known(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	target_kind: String,
+	target_id: String,
+	target_x: int,
+	target_y: int,
+	force_known: bool = false
+) -> bool:
+	if force_known:
+		return true
+	if target_kind == "town":
+		return true
+	if _enemy_target_scouted(session, faction_id, target_kind, target_id):
+		return true
+	return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y)
 
 static func _enemy_scouted_target_key(target_kind: String, target_id: String) -> String:
 	return "%s:%s" % [target_kind, target_id]
@@ -6772,7 +6809,12 @@ static func raid_pillage_weight(encounter: Dictionary) -> int:
 	var current_strength: int = max(1, raid_strength(encounter))
 	return clamp(int(ceili(float(current_strength) / float(base_strength))), 1, 3)
 
-static func _target_candidates(session: SessionStateStoreScript.SessionData, config: Dictionary, origin_pos: Vector2i) -> Array:
+static func _target_candidates(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin_pos: Vector2i,
+	include_unscouted: bool = false
+) -> Array:
 	var seen = {}
 	var candidates = []
 	var faction_id = String(config.get("faction_id", ""))
@@ -6821,7 +6863,8 @@ static func _target_candidates(session: SessionStateStoreScript.SessionData, con
 			node,
 			origin_pos,
 			config,
-			faction_id
+			faction_id,
+			include_unscouted
 		)
 
 	for node in session.overworld.get("artifact_nodes", []):
@@ -6833,7 +6876,8 @@ static func _target_candidates(session: SessionStateStoreScript.SessionData, con
 			origin_pos,
 			_artifact_target_priority(session, node),
 			config,
-			faction_id
+			faction_id,
+			include_unscouted
 		)
 
 	for encounter in session.overworld.get("encounters", []):
@@ -6845,7 +6889,8 @@ static func _target_candidates(session: SessionStateStoreScript.SessionData, con
 			origin_pos,
 			_encounter_target_priority(session, encounter),
 			config,
-			faction_id
+			faction_id,
+			include_unscouted
 		)
 
 	_append_delivery_interception_candidates(session, candidates, seen, origin_pos, config, faction_id)
@@ -6944,7 +6989,8 @@ static func _append_resource_candidate(
 	node: Variant,
 	origin_pos: Vector2i,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	include_unscouted: bool = false
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -6953,8 +6999,21 @@ static func _append_resource_candidate(
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 	if placement_id == "" or seen.has(seen_key) or not _resource_node_contestable_by_faction(node, site, faction_id):
 		return
-	seen[seen_key] = true
 	var goal_tile = Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var force_known := priority_target_bonus(config, placement_id) > 0 \
+		or target_is_objective_anchor(session, "resource", placement_id)
+	if not include_unscouted and not _enemy_nonhero_target_known(
+		session,
+		config,
+		faction_id,
+		"resource",
+		placement_id,
+		goal_tile.x,
+		goal_tile.y,
+		force_known
+	):
+		return
+	seen[seen_key] = true
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
 	if goal_distance >= 9999:
 		return
@@ -6991,7 +7050,8 @@ static func _append_artifact_candidate(
 	origin_pos: Vector2i,
 	priority: int,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	include_unscouted: bool = false
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -6999,8 +7059,21 @@ static func _append_artifact_candidate(
 	var seen_key = "artifact:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key) or bool(node.get("collected", false)):
 		return
-	seen[seen_key] = true
 	var goal_tile = Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var force_known := priority_target_bonus(config, placement_id) > 0 \
+		or target_is_objective_anchor(session, "artifact", placement_id)
+	if not include_unscouted and not _enemy_nonhero_target_known(
+		session,
+		config,
+		faction_id,
+		"artifact",
+		placement_id,
+		goal_tile.x,
+		goal_tile.y,
+		force_known
+	):
+		return
+	seen[seen_key] = true
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
 	if goal_distance >= 9999:
 		return
@@ -7045,7 +7118,8 @@ static func _append_encounter_candidate(
 	origin_pos: Vector2i,
 	priority: int,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	include_unscouted: bool = false
 ) -> void:
 	if not (encounter is Dictionary):
 		return
@@ -7057,11 +7131,23 @@ static func _append_encounter_candidate(
 	var seen_key = "encounter:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key):
 		return
+	var priority_bonus := priority_target_bonus(config, placement_id)
+	var objective_anchor = _encounter_is_objective_anchor(session, encounter)
+	if not include_unscouted and not _enemy_nonhero_target_known(
+		session,
+		config,
+		faction_id,
+		"encounter",
+		placement_id,
+		int(encounter.get("x", 0)),
+		int(encounter.get("y", 0)),
+		priority_bonus > 0 or objective_anchor
+	):
+		return
 	seen[seen_key] = true
 	var staging_tiles = _encounter_staging_tiles(session, encounter)
 	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
 	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
-	var priority_bonus := priority_target_bonus(config, placement_id)
 	if goal_distance >= 9999 and priority_bonus > 0:
 		var encounter_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var direct_distance: int = abs(origin_pos.x - encounter_tile.x) + abs(origin_pos.y - encounter_tile.y)
@@ -7071,7 +7157,6 @@ static func _append_encounter_candidate(
 	if goal_distance >= 9999:
 		return
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-	var objective_anchor = _encounter_is_objective_anchor(session, encounter)
 	var object_breakdown := neutral_encounter_object_valuation_breakdown(session, config, encounter, origin_pos, faction_id)
 	var reason_codes: Array = _normalize_string_array(object_breakdown.get("reason_codes", []))
 	if reason_codes.is_empty():
