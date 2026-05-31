@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: stale hero-hunt position revalidation and lost-trail retargeting.",
+  "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T06:35:00Z",
+  "updatedAt": "2026-05-31T02:15:44Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,74 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-lost-hero-task-reconciliation-10184",
+      "title": "Strategic AI Lost Hero Task Reconciliation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Invalidate hero-hunt task-board entries when the AI no longer has a current or remembered legal sighting of the target hero, freeing the commander to replan onto known strategic work instead of being blocked by a dead trail.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd"
+      ],
+      "baselineChecks": [
+        "Saved hero-hunt spawn plans already reject hidden heroes, but task reconciliation can leave a stale hero task marked valid until expiry.",
+        "A valid-looking lost hero task blocks the assigned commander from taking replacement town/resource/artifact/encounter/scouting work."
+      ],
+      "completionCriteria": [
+        "Hero-hunt task reconciliation requires a faction-known current or remembered hero sighting before preserving a planned/reserved/active hero task.",
+        "When the sighting is gone, the task is marked invalid_lost_hero_sighting instead of remaining valid or suspended.",
+        "The released commander can immediately receive a replacement planned non-hero task from known strategic targets in the same planner pass.",
+        "Focused coverage proves the lost hero task cannot produce a saved spawn plan, is invalidated during reconciliation, and is replaced by a non-hero task."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not introduce omniscient hero tracking.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T02:14:39Z",
+      "updatedAt": "2026-05-31T02:15:44Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
+      ],
+      "completedAt": "2026-05-31T02:15:44Z",
+      "evidence": {
+        "implemented": [
+          "Hero-hunt task reconciliation now requires faction-known player hero sighting memory before preserving a planned/reserved/active hero task.",
+          "If the target hero still exists but is no longer currently visible or remembered by that faction, the task is marked invalid_lost_hero_sighting.",
+          "Invalidating the lost hero task releases the commander in the same planning pass, allowing the strategic planner to assign a replacement known non-hero objective instead of leaving the commander blocked by a dead trail."
+        ],
+        "focused_case": {
+          "case_id": "stale_hero_hunt_task_reconciles_and_replans",
+          "old_task_validation": "invalid_lost_hero_sighting",
+          "replacement_status": "planned",
+          "replacement_target_kind": "town",
+          "replacement_target_id": "riverwatch_hold",
+          "saved_spawn_plan_before_reconcile": "empty",
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-stale-hero-hunt-revalidation-10184",
       "title": "Strategic AI Stale Hero Hunt Revalidation",
@@ -39753,6 +39821,32 @@
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       },
       "residualRisk": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review."
+    },
+    {
+      "sliceId": "strategic-ai-lost-hero-task-reconciliation-10184",
+      "completedAt": "2026-05-31T02:15:44Z",
+      "summary": "Stale hero-hunt tasks with no legal AI sighting now invalidate and free the commander to replan onto known strategic work.",
+      "evidence": {
+        "case_id": "stale_hero_hunt_task_reconciles_and_replans",
+        "old_task_validation": "invalid_lost_hero_sighting",
+        "replacement_status": "planned",
+        "replacement_target_kind": "town",
+        "replacement_target_id": "riverwatch_hold",
+        "saved_spawn_plan_before_reconcile": "empty",
+        "save_version": 9
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -42694,54 +42788,30 @@
     }
   ],
   "lastValidation": {
-    "status": "pass",
-    "updatedAt": "2026-05-31T06:35:00Z",
-    "sliceId": "strategic-ai-stale-hero-hunt-revalidation-10184",
+    "sliceId": "strategic-ai-lost-hero-task-reconciliation-10184",
+    "status": "passed",
+    "updatedAt": "2026-05-31T02:15:44Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "python3 tests/validate_repo.py (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "git diff --check (passed)",
+      "python3 tests/validate_repo.py (passed)",
+      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
     ],
-    "evidence": {
-      "implemented": [
-        "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
-        "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
-        "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
-        "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
-        "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
-      ],
-      "focused_case": {
-        "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
-        "battle_started": false,
-        "remembered_tile": {
-          "x": 8,
-          "y": 4
-        },
-        "actual_tile": {
-          "x": 0,
-          "y": 4
-        },
-        "stale_sighting_cleared": true,
-        "stale_task_validation": "invalid_stale_hero_sighting",
-        "retargeted_kind": "resource",
-        "retargeted_id": "river_free_company",
-        "save_version": 9
-      },
-      "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
-      "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
-    }
+    "summary": "Lost hero-hunt task reconciliation passed focused and adjacent task-board/live-turn checks."
   },
-  "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T04:40:00Z",
+  "active_slice": {
+    "id": "",
+    "title": "",
+    "status": "none",
+    "updatedAt": "2026-05-31T02:15:44Z"
+  },
+  "currentSliceUpdatedAt": "2026-05-31T02:15:44Z",
   "validationHistory": [
     {
       "status": "pass",

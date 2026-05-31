@@ -26,6 +26,9 @@ func _run() -> void:
 	var stale_position_case_report := _stale_hero_hunt_arrival_clears_lost_trail_case()
 	if stale_position_case_report.is_empty():
 		return
+	var stale_task_case_report := _stale_hero_hunt_task_reconciles_and_replans_case()
+	if stale_task_case_report.is_empty():
+		return
 	var arbitration_case_report := _hero_intercept_arbitration_prefers_ready_high_value_hunt()
 	if arbitration_case_report.is_empty():
 		return
@@ -49,6 +52,7 @@ func _run() -> void:
 		"threat_avoidance_case": threat_avoidance_case_report,
 		"risk_case": risk_case_report,
 		"stale_position_case": stale_position_case_report,
+		"stale_task_case": stale_task_case_report,
 		"arbitration_case": arbitration_case_report,
 		"support_case": support_case_report,
 		"stall_case": stall_case_report,
@@ -484,6 +488,72 @@ func _stale_hero_hunt_arrival_clears_lost_trail_case() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _stale_hero_hunt_task_reconciles_and_replans_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 6
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for stale task reconciliation fixture.")
+		return {}
+	var hidden_tile := _hidden_player_hero_tile_for_enemy(session, hero_id)
+	if _failed:
+		return {}
+	_clear_mireclaw_resource_claims(session)
+	_remove_mireclaw_active_raids(session)
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"scouted_targets": [
+				{
+					"target_kind": "resource",
+					"target_id": "river_free_company",
+					"target_label": "River Free Company",
+					"x": int(_resource_node(session, "river_free_company").get("x", 0)),
+					"y": int(_resource_node(session, "river_free_company").get("y", 0)),
+					"scouted_day": int(session.day),
+					"expires_day": int(session.day) + 4,
+					"source_kind": "fixture",
+					"source_id": "lost_hero_replan_fixture",
+					"state_policy": "ai_known_world_memory",
+				}
+			],
+			"player_hero_sightings": [],
+		}
+	)
+	_seed_task_board(session, [_task("hero_vaska", hero_id, "planned", "valid")])
+	var before_spawn_plan := EnemyAdventureRules._ai_hero_task_spawn_saved_plan_for_actor(
+		session,
+		MIRECLAW,
+		"hero_vaska",
+		{"x": int(_town(session, "duskfen_bastion").get("x", 0)), "y": int(_town(session, "duskfen_bastion").get("y", 0))}
+	)
+	if not before_spawn_plan.is_empty():
+		_fail("Lost hero task should not produce a legal saved spawn plan before reconciliation: %s" % JSON.stringify(before_spawn_plan))
+		return {}
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, _enemy_state(session))
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "invalid", "invalid_lost_hero_sighting")
+	if _failed:
+		return {}
+	var replacement := _first_open_task_for_actor_except(session, "hero_vaska", "hero", hero_id)
+	if replacement.is_empty():
+		_fail("Lost hero task did not free the commander for a replacement task: %s" % JSON.stringify(_task_state(session)))
+		return {}
+	if String(replacement.get("task_status", "")) != "planned" or String(replacement.get("target_kind", "")) == "hero":
+		_fail("Replacement after lost hero sighting should be a planned non-hero task: %s" % JSON.stringify(replacement))
+		return {}
+	return {
+		"case_id": "stale_hero_hunt_task_reconciles_and_replans",
+		"hidden_tile": {"x": hidden_tile.x, "y": hidden_tile.y},
+		"old_task_validation": "invalid_lost_hero_sighting",
+		"replacement_target_kind": String(replacement.get("target_kind", "")),
+		"replacement_target_id": String(replacement.get("target_id", "")),
+		"replacement_status": String(replacement.get("task_status", "")),
+		"planned_count": int(plan_result.get("planned_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _hero_intercept_arbitration_prefers_ready_high_value_hunt() -> Dictionary:
 	var session = _base_session()
 	session.day = 3
@@ -872,6 +942,22 @@ func _assert_task_status(session, actor_id: String, target_kind: String, target_
 			return
 	_fail("Missing task %s/%s/%s in %s" % [actor_id, target_kind, target_id, JSON.stringify(task_state)])
 
+func _first_open_task_for_actor_except(session, actor_id: String, excluded_kind: String, excluded_id: String) -> Dictionary:
+	var task_state := _task_state(session)
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("actor_id", "")) != actor_id:
+			continue
+		if String(task.get("task_status", "")) not in ["planned", "reserved", "active"]:
+			continue
+		if String(task.get("target_kind", "")) == excluded_kind and String(task.get("target_id", "")) == excluded_id:
+			continue
+		return task
+	return {}
+
 func _defeat_battle_side(session, side: String) -> void:
 	var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
 	for index in range(stacks.size()):
@@ -982,6 +1068,23 @@ func _nearby_open_non_town_tile_at_distance(session, center: Vector2i, min_dista
 	_fail("Could not find open non-town tile %d-%d steps from %s." % [min_distance, max_distance, str(center)])
 	return center
 
+func _hidden_player_hero_tile_for_enemy(session, hero_id: String) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for y in range(map_size.y - 1, -1, -1):
+		for x in range(map_size.x - 1, -1, -1):
+			if OverworldRules.tile_is_blocked(session, x, y):
+				continue
+			var tile := Vector2i(x, y)
+			if _player_town_at(session, tile):
+				continue
+			_move_player_hero(session, hero_id, tile)
+			_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
+			var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+			if EnemyAdventureRules._known_player_hero_snapshot_for_ai(session, MIRECLAW, hero).is_empty():
+				return tile
+	_fail("Could not find hidden player hero tile for %s." % hero_id)
+	return Vector2i(0, 0)
+
 func _player_town_at(session, tile: Vector2i) -> bool:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "neutral")) == "player":
@@ -999,6 +1102,12 @@ func _town(session, placement_id: String) -> Dictionary:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return town
+	return {}
+
+func _resource_node(session, placement_id: String) -> Dictionary:
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return node
 	return {}
 
 func _set_town_garrison(session, placement_id: String, garrison: Array) -> void:

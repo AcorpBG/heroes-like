@@ -11394,6 +11394,8 @@ static func _ai_hero_task_reconciled_hero_task(
 	var hero := _player_hero_snapshot_for_task(session, target_id)
 	if hero.is_empty():
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	if _known_player_hero_snapshot_for_ai(session, faction_id, hero).is_empty():
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_lost_hero_sighting")
 	return task
 
 static func _ai_hero_task_reconciled_regroup_task(
