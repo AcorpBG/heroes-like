@@ -4,6 +4,10 @@ const SCENARIO_ID := "river-pass"
 const FACTION_ID := "faction_mireclaw"
 const PRIMARY_SITE := "river_free_company"
 const COMPANION_SITE := "river_signal_post"
+const SPELL_SITE := "site_control_report_roadside_sanctum"
+const SPELL_SITE_TEMPLATE := "site_roadside_sanctum"
+const SPELL_SITE_REWARD := "spell_waystride"
+const SPELL_SITE_COMMANDER := "hero_vaska"
 const SIMPLE_PICKUPS := ["north_wood", "southern_ore", "eastern_cache"]
 const SCORE_KEYS := [
 	"base_value",
@@ -85,7 +89,31 @@ func _run() -> void:
 	if _failed:
 		return
 
-	var public_leak_check := _public_leak_check([assignment_event, seizure_event])
+	var spell_site_case := _run_spell_site_learning_case()
+	if not bool(spell_site_case.get("learned_spell_in_raid", false)):
+		_fail("Captured spell site did not add %s to the active AI commander spellbook: %s" % [SPELL_SITE_REWARD, spell_site_case])
+		return
+	if not bool(spell_site_case.get("learned_spell_in_roster", false)):
+		_fail("Captured spell site did not sync %s to the AI commander roster: %s" % [SPELL_SITE_REWARD, spell_site_case])
+		return
+	var spell_event: Dictionary = spell_site_case.get("event", {})
+	_assert_event(
+		spell_event,
+		"ai_site_seized",
+		SPELL_SITE,
+		"route pressure",
+		["site_seized", "route_pressure", "player_town_support"]
+	)
+	if String(spell_event.get("learned_spell_id", "")) != SPELL_SITE_REWARD:
+		_fail("Spell-site event did not expose learned spell id %s: %s" % [SPELL_SITE_REWARD, spell_event])
+		return
+	if not String(spell_site_case.get("message", "")).contains("learns Waystride"):
+		_fail("Spell-site seizure message did not expose learned spell reward: %s" % String(spell_site_case.get("message", "")))
+		return
+	if _failed:
+		return
+
+	var public_leak_check := _public_leak_check([assignment_event, seizure_event, spell_event])
 	if not bool(public_leak_check.get("ok", false)):
 		_fail(String(public_leak_check.get("error", "public leak check failed")))
 		return
@@ -103,6 +131,7 @@ func _run() -> void:
 			"resource_ordering": true,
 			"assignment_event": true,
 			"countercapture_controller_flip": true,
+			"spell_site_learning": true,
 			"signal_post_denial_reason": true,
 			"public_surface_compactness": true,
 		},
@@ -118,6 +147,7 @@ func _run() -> void:
 		"seizure_event": seizure_event,
 		"site_controller_before": String(seizure_case.get("controller_before", "")),
 		"site_controller_after": String(seizure_case.get("controller_after", "")),
+		"spell_site_case": spell_site_case,
 		"enemy_state_delta": seizure_case.get("enemy_state_delta", {}),
 		"seizure_message": String(seizure_case.get("message", "")),
 		"signal_post_reason_check": {
@@ -149,6 +179,27 @@ func _run_seizure_case() -> Dictionary:
 		"controller_after": _resource_controller(session, PRIMARY_SITE),
 		"enemy_state_delta": _state_delta(before_state, after_state),
 		"event": _event_by_type_and_target(events, "ai_site_seized", PRIMARY_SITE),
+		"events": events,
+		"message": String(result.get("message", "")),
+	}
+
+func _run_spell_site_learning_case() -> Dictionary:
+	var session = _base_session()
+	_add_spell_site_node(session)
+	_add_spell_site_raid(session)
+	var before_state := _enemy_state_with_roster(session)
+	var result := EnemyAdventureRules.advance_raids(session, _enemy_config(), FACTION_ID, before_state.duplicate(true))
+	var after_raid := _encounter_by_placement(session, "site_control_report_spell_site_raid")
+	var learned_in_raid := _commander_knows_spell(after_raid.get("enemy_commander_state", {}), SPELL_SITE_REWARD)
+	var learned_in_roster := _roster_commander_knows_spell(session, FACTION_ID, SPELL_SITE_COMMANDER, SPELL_SITE_REWARD)
+	var events: Array = result.get("events", [])
+	return {
+		"controller_after": _resource_controller(session, SPELL_SITE),
+		"learned_spell_in_raid": learned_in_raid,
+		"learned_spell_in_roster": learned_in_roster,
+		"known_spells_after": after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("known_spell_ids", []),
+		"roster_known_spells_after": _roster_commander_spell_ids(session, FACTION_ID, SPELL_SITE_COMMANDER),
+		"event": _event_by_type_and_target(events, "ai_site_seized", SPELL_SITE),
 		"events": events,
 		"message": String(result.get("message", "")),
 	}
@@ -214,6 +265,55 @@ func _add_site_raid(session) -> void:
 			"target_debug_reason": "denies 40 gold daily, recruit denial, player-town support",
 		}
 	)
+	session.overworld["encounters"] = encounters
+
+func _add_spell_site_node(session) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	nodes.append({
+		"placement_id": SPELL_SITE,
+		"site_id": SPELL_SITE_TEMPLATE,
+		"x": 1,
+		"y": 4,
+		"collected": true,
+		"collected_by_faction_id": "player",
+		"collected_day": max(1, int(session.day)),
+	})
+	session.overworld["resource_nodes"] = nodes
+
+func _add_spell_site_raid(session) -> void:
+	var raid := {
+		"placement_id": "site_control_report_spell_site_raid",
+		"encounter_id": "encounter_mire_raid",
+		"x": 1,
+		"y": 4,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [SCENARIO_ID, "site_control_report_spell_site_raid"]),
+		"spawned_by_faction_id": FACTION_ID,
+		"days_active": 0,
+		"arrived": true,
+		"goal_distance": 0,
+		"target_kind": "resource",
+		"target_placement_id": SPELL_SITE,
+		"target_label": "Roadside Sanctum",
+		"target_x": 1,
+		"target_y": 4,
+		"goal_x": 1,
+		"goal_y": 4,
+		"target_public_reason": "income and route vision denial",
+		"target_reason_codes": ["persistent_income_denial", "route_vision", "player_town_support"],
+		"target_public_importance": "high",
+		"target_debug_reason": "spell-site learning fixture",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		SPELL_SITE_COMMANDER,
+		FACTION_ID,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
+	)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 
 func _assert_resource_order(target_ids: Array) -> void:
@@ -312,6 +412,41 @@ func _event_by_type_and_target(events: Array, event_type: String, target_id: Str
 			return event
 	return {}
 
+func _encounter_by_placement(session, placement_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter
+	return {}
+
+func _commander_knows_spell(commander_state: Variant, spell_id: String) -> bool:
+	if not (commander_state is Dictionary):
+		return false
+	var spellbook = commander_state.get("spellbook", {})
+	if not (spellbook is Dictionary):
+		return false
+	for known_spell_id in spellbook.get("known_spell_ids", []):
+		if String(known_spell_id) == spell_id:
+			return true
+	return false
+
+func _roster_commander_knows_spell(session, faction_id: String, roster_hero_id: String, spell_id: String) -> bool:
+	return spell_id in _roster_commander_spell_ids(session, faction_id, roster_hero_id)
+
+func _roster_commander_spell_ids(session, faction_id: String, roster_hero_id: String) -> Array:
+	for state in session.overworld.get("enemy_states", []):
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		for entry in state.get("commander_roster", []):
+			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
+				continue
+			var spellbook = entry.get("commander_state", {}).get("spellbook", {})
+			if spellbook is Dictionary and spellbook.get("known_spell_ids", []) is Array:
+				var ids := []
+				for spell_id_value in spellbook.get("known_spell_ids", []):
+					ids.append(String(spell_id_value))
+				return ids
+	return []
+
 func _set_resource_controller(session, placement_id: String, faction_id: String) -> void:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
 	for index in range(nodes.size()):
@@ -351,6 +486,11 @@ func _enemy_state() -> Dictionary:
 		"commander_counter": 0,
 		"commander_roster": [],
 	}
+
+func _enemy_state_with_roster(session) -> Dictionary:
+	var state := _enemy_state()
+	state["commander_roster"] = EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
+	return state
 
 func _fail(message: String) -> void:
 	var payload := {

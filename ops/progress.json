@@ -40,6 +40,99 @@
   },
   "plannedSlices": [
     {
+      "id": "strategic-ai-spell-site-learning-10184",
+      "title": "Strategic AI Spell Site Learning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make AI commanders actually learn spell rewards from captured strategic spell sites so magic-site valuation becomes live strategic capability rather than score-only intent.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/magic-ai-valuation-casting-hooks-report.md",
+        "docs/strategic-ai-site-control-proof-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_site_control_proof_report.gd"
+      ],
+      "baselineChecks": [
+        "Resource-site valuation already gives strategic value to sites with learn_spell_id.",
+        "AI resource capture currently transfers site control, rewards, pressure, and commander outcome memory, but does not prove the capturing commander learns the spell."
+      ],
+      "completionCriteria": [
+        "When an AI commander captures a resource site with learn_spell_id, the commander spellbook gains that spell if it was not already known.",
+        "The learned spell is synced back into the enemy commander roster so later battle/adventure spell valuation can use it.",
+        "The public site-seizure event/message exposes the learned spell without leaking internal score/debug fields.",
+        "Existing site-control, AI spell valuation, and strategic AI behavior gates remain valid."
+      ],
+      "nonGoals": [
+        "Do not add a report-only audit gate.",
+        "Do not implement full AI town spell-study automation in this slice.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T04:42:39Z",
+      "updatedAt": "2026-05-31T04:48:27Z",
+      "completedAt": "2026-05-31T04:48:27Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_site_control_proof_report.tscn",
+          "result": "passed",
+          "summary": "Site-control proof now shows an AI commander capturing a spell site, learning spell_waystride in the active commander spellbook, syncing it into the saved commander roster, and surfacing the learned spell in the public event/message."
+        },
+        {
+          "command": "godot --headless --path . tests/magic_ai_valuation_casting_hooks_report.tscn",
+          "result": "passed",
+          "summary": "AI battle/adventure spell valuation and movement/scouting spell execution remain valid with learned spell continuity."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event log boundary remains compact and leak-free."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "Live strategic AI task execution, site seizures, continuation retargeting, and commander progress remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "passed",
+          "summary": "Planned task prep, ready launches, and same-turn movement remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "result": "passed",
+          "summary": "Focused strict-Small Native RMG strategic AI long-run smoke still executes real end turns and preserves the known full-matrix remaining-validation blocker."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors in the pending diff."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "implementedBehavior": "AI resource-site capture now applies learn_spell_id rewards to the capturing commander spellbook through SpellRules.learn_spell.",
+        "rosterContinuity": "The learned spell is synced back into enemy_states[].commander_roster after post-objective continuation retargeting so later battle and adventure spell valuation can use it.",
+        "publicSurface": "Site-seizure messages and public event records expose the learned spell name/id while preserving existing score/debug leak checks.",
+        "nonClaim": "This completes one strategic AI behavior slice only; it does not claim full production-ready strategic AI."
+      }
+    },
+    {
       "id": "strategic-ai-personality-regroup-threshold-10184",
       "title": "Strategic AI Personality Regroup Threshold",
       "status": "completed",
@@ -33388,6 +33481,45 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-spell-site-learning-10184",
+      "title": "Strategic AI Spell Site Learning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T04:48:27Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_site_control_proof_report.gd",
+        "tests/magic_ai_valuation_casting_hooks_report.gd",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-31T04:48:27Z",
+        "sliceId": "strategic-ai-spell-site-learning-10184",
+        "commands": [
+          "godot --headless --path . tests/ai_site_control_proof_report.tscn (passed)",
+          "godot --headless --path . tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+          "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn (passed)",
+          "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+          "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "AI resource-site capture now applies learn_spell_id rewards to the capturing commander spellbook through SpellRules.learn_spell.",
+            "The learned spell is synced back into enemy_states[].commander_roster after post-objective continuation retargeting so later battle and adventure spell valuation can use it.",
+            "Site-seizure messages and public event records expose the learned spell name/id while preserving existing score/debug leak checks."
+          ],
+          "nonClaim": "This completes one strategic AI behavior slice only; it does not claim full production-ready strategic AI."
+        }
+      }
+    },
+    {
       "id": "strategic-ai-personality-regroup-threshold-10184",
       "title": "Strategic AI Personality Regroup Threshold",
       "status": "completed",
@@ -44325,28 +44457,27 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-personality-regroup-threshold-10184",
+    "sliceId": "strategic-ai-spell-site-learning-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T04:38:23Z",
+    "updatedAt": "2026-05-31T04:48:27Z",
     "commands": [
-      "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "godot --headless --path . tests/ai_town_defense_retask_report.tscn (passed)",
-      "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "godot --headless --path . tests/ai_town_retake_assault_report.tscn (passed)",
-      "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn (passed)",
-      "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "godot --headless --path . tests/ai_site_control_proof_report.tscn (passed)",
+      "godot --headless --path . tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn (passed)",
+      "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Strategic AI regroup and defense decisions now use faction personality thresholds while preserving focused raid, defense, grouping, task, public-event, and repo validation gates."
+    "summary": "AI spell-learning sites now grant live commander spells on capture and preserve those spells through roster continuity, with focused strategic AI and repo gates passing."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T04:38:23Z"
+    "updatedAt": "2026-05-31T04:48:27Z"
   },
   "currentSliceUpdatedAt": "2026-05-31T04:26:07Z",
   "validationHistory": [
