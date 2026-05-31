@@ -40,6 +40,76 @@
   },
   "plannedSlices": [
     {
+      "id": "strategic-ai-artifact-front-support-10184",
+      "title": "Strategic AI Artifact Front Support",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T08:14:00Z",
+      "updatedAt": "2026-05-31T08:34:00Z",
+      "source": "owner-directed strategic AI production-readiness continuation; real live behavior change, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-artifact-front-support-10184",
+      "sourceDocs": [],
+      "purpose": "Make artifact objectives participate in active-front support and nearby raid grouping so valuable relic pushes can attract reinforcement before guard redirection or claim resolution.",
+      "implementationTargets": [
+        "Artifact fronts with artifact_pressure, guarded_artifact_claim, guarded-claim resume, or explicit support need can be selected by ai_active_front_support_target_selection_plan.",
+        "Support raids assigned to the same artifact front use shared-front reservations, active_front_support reason codes, and can merge into the leader through the existing raid grouping path.",
+        "Grouped artifact leaders preserve commander continuity, support counters, public ai_raid_grouped events, and normal guarded-claim redirect/resume behavior."
+      ],
+      "completionCriteria": "Active AI commanders can reinforce and group for artifact fronts, focused artifact runtime coverage proves support assignment, shared-front tasking, grouping, guard redirect preservation, and adjacent strategic AI tests remain green without a save-version bump.",
+      "nonGoals": [
+        "No new broad audit gate or report-only surface.",
+        "No new strategic AI architecture path parallel to active-front support.",
+        "No final strategic AI production-readiness claim."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn",
+          "result": "pass",
+          "summary": "Artifact objective runtime coverage now proves active-front support assignment to a guarded artifact, shared support tasking, raid grouping into the leader, preserved guard redirect, and no premature relic collection."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_encounter_objective_report.tscn",
+          "result": "pass",
+          "summary": "Encounter objective support, risk gating, grouping, and task continuity remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Resource support, regroup, guarded claim, route recovery, commander risk, and town resupply behavior remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution and objective continuation remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planning, recruitment preparation, launch, and same-turn movement remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "summary": "Artifact objectives now participate in active-front support and nearby raid grouping. A support commander can reinforce a guarded relic front, merge into the leader, preserve public grouping events and commander continuity, and let the strengthened leader proceed through the existing guard-clearance redirect without collecting the relic early.",
+      "notes": "Completed as a live behavior slice. This extends the existing active-front system to artifact targets instead of adding report-only gates or a parallel AI support path.",
+      "completedAt": "2026-05-31T08:34:00Z"
+    },
+    {
       "id": "strategic-ai-site-claim-recruits-10184",
       "title": "Strategic AI Site Claim Recruits",
       "status": "completed",
