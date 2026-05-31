@@ -3161,7 +3161,7 @@ static func _best_open_spawn_point(
 			continue
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
-	return best if not best.is_empty() else _first_open_spawn_point(session, config)
+	return best
 
 static func _spawn_point_candidate(
 	session: SessionStateStoreScript.SessionData,

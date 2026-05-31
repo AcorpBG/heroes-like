@@ -16,13 +16,16 @@ func _run() -> void:
 	var sighting_case := _hero_targets_require_ai_sighting()
 	if sighting_case.is_empty():
 		return
+	var empty_fallback_case := _empty_target_fallback_does_not_hunt_hidden_hero()
+	if empty_fallback_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
-		"behavior_policy": "enemy_hero_pressure_uses_current_or_recent_ai_sightings_not_omniscient_player_state",
+		"behavior_policy": "enemy_hero_pressure_uses_current_or_recent_ai_sightings_and_empty_target_fallbacks_do_not_use_omniscient_player_state",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -112,6 +115,39 @@ func _hero_targets_require_ai_sighting() -> Dictionary:
 		"sighting_count": int(memory_result.get("sighting_count", 0)),
 	}
 
+func _empty_target_fallback_does_not_hunt_hidden_hero() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_primary_hero_position(session, 0, 4)
+	_make_no_known_targets_session(session)
+	var origin := {"x": 7, "y": 2}
+	var chosen := EnemyAdventureRules.choose_target(session, config, origin, {})
+	if chosen.is_empty():
+		_fail("No-candidate target fallback should hold at an owned town when one is reachable.")
+		return {}
+	if String(chosen.get("target_kind", "")) == "hero":
+		_fail("No-candidate target fallback used hidden active hero coordinates: %s" % JSON.stringify(chosen))
+		return {}
+	if String(chosen.get("target_kind", "")) != "regroup":
+		_fail("No-candidate target fallback should regroup/hold, got %s" % JSON.stringify(chosen))
+		return {}
+	if "no_known_targets" not in _normalize_string_array(chosen.get("target_reason_codes", [])):
+		_fail("No-candidate regroup fallback did not explain no_known_targets: %s" % JSON.stringify(chosen))
+		return {}
+	var state := _enemy_state(session)
+	state["pressure"] = 999
+	_update_enemy_state(session, state)
+	if EnemyTurnRules._can_launch_raid(session, config, state, MIRECLAW):
+		_fail("Fresh pressure should not launch a targetless raid when no legitimate candidates exist.")
+		return {}
+	return {
+		"case_id": "empty_target_fallback_does_not_hunt_hidden_hero",
+		"fallback_target_kind": String(chosen.get("target_kind", "")),
+		"fallback_target_id": String(chosen.get("target_placement_id", "")),
+		"fallback_goal_distance": int(chosen.get("goal_distance", -1)),
+		"pressure_launch_allowed_without_target": false,
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -133,6 +169,37 @@ func _set_primary_hero_position(session, x: int, y: int) -> void:
 	session.overworld["hero_position"] = {"x": x, "y": y}
 	session.overworld["active_hero_id"] = String(hero.get("id", "hero_lyra"))
 	session.overworld["player_heroes"] = [hero]
+
+func _make_no_known_targets_session(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("placement_id", "")) == "duskfen_bastion":
+			town["owner"] = "enemy"
+			town["controlling_faction_id"] = MIRECLAW
+		else:
+			town["owner"] = "inactive"
+			town["controlling_faction_id"] = ""
+		towns[index] = town
+	session.overworld["towns"] = towns
+
+	session.overworld["resource_nodes"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
+
+func _normalize_string_array(value: Variant) -> Array:
+	var output := []
+	if not (value is Array):
+		return output
+	for item in value:
+		var text := String(item)
+		if text != "":
+			output.append(text)
+	return output
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(RIVER_PASS)

@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-fresh-launch-commander-fit-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-no-omniscient-empty-target-fallback-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T01:42:00Z",
+  "updatedAt": "2026-05-31T02:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,76 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-no-omniscient-empty-target-fallback-10184",
+      "title": "Strategic AI No Omniscient Empty Target Fallback",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Remove the last-resort hidden active-hero targeting fallback from strategic AI target selection so no-candidate turns hold/regroup under same-rules knowledge instead of using omniscient player coordinates.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Hero candidates require current or recent AI sightings, but choose_target still falls back to the active player hero when all target candidates are empty.",
+        "That fallback can use live hidden coordinates and violates the strategic AI same-rules/no-perfect-information requirement."
+      ],
+      "completionCriteria": [
+        "Empty target scoring returns a regroup/hold target at an owned AI town when possible, not the active player hero.",
+        "No owned-town fallback exists only when the faction truly has no valid owned town to hold.",
+        "Focused validation proves hidden active heroes are not selected by the no-candidate fallback.",
+        "Existing hero-sighting, target-selection, planner, and live-turn strategic AI reports continue to pass."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not retune battle balance, economy, RMG, or faction content.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T02:06:00Z",
+      "updatedAt": "2026-05-31T02:28:00Z",
+      "completedAt": "2026-05-31T02:28:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules.choose_target no longer falls back to the active player hero when normal target candidates are empty.",
+          "No-candidate active raids now return a no_known_targets regroup/hold plan at a reachable owned AI town when possible.",
+          "EnemyTurnRules._best_open_spawn_point no longer turns an empty candidate set into the first configured spawn point, preventing fresh targetless pressure launches.",
+          "Known-world memory coverage now proves hidden active heroes are not selected by the no-candidate fallback."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "hidden_hero_position": {"x": 0, "y": 4},
+          "fallback_target_kind": "regroup",
+          "fallback_target_id": "duskfen_bastion",
+          "fallback_goal_distance": 1,
+          "pressure_launch_allowed_without_target": false
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, and live-client pacing/manual play remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-fresh-launch-commander-fit-10184",
       "title": "Strategic AI Fresh Launch Commander Fit",
@@ -41856,10 +41926,12 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T01:42:00Z",
-    "sliceId": "strategic-ai-fresh-launch-commander-fit-10184",
+    "updatedAt": "2026-05-31T02:28:00Z",
+    "sliceId": "strategic-ai-no-omniscient-empty-target-fallback-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
@@ -41867,15 +41939,14 @@
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Fresh pressure launches now score commander-target fit before deployment; focused strategic-AI regressions passed and full production readiness remains open."
+    "summary": "No-candidate strategic AI fallback no longer targets hidden active heroes; idle pressure regroups at known owned towns and fresh targetless launches are blocked. Focused strategic-AI regressions passed and full production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T01:42:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T02:28:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44828,13 +44899,15 @@
       }
     }
   ],
-  "currentSlice": "none selected; latest completed slice strategic-ai-fresh-launch-commander-fit-10184",
+  "currentSlice": "none selected; latest completed slice strategic-ai-no-omniscient-empty-target-fallback-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T01:42:00Z",
-    "sliceId": "strategic-ai-fresh-launch-commander-fit-10184",
+    "updatedAt": "2026-05-31T02:28:00Z",
+    "sliceId": "strategic-ai-no-omniscient-empty-target-fallback-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
@@ -44842,26 +44915,27 @@
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Fresh pressure spawn-point scoring now evaluates all deployable commander candidates against fitted live target plans instead of selecting one roster hero before target scoring.",
-        "Saved-task and emergency defense launch priorities remain ahead of fresh pressure launches.",
-        "Fresh spawn plans persist target kind, target id, labels, reason metadata, commander fit bonus, and fit profile through raid creation.",
-        "Adventure spell route projection still applies to saved and fresh spawn-plan candidates."
+        "EnemyAdventureRules.choose_target no longer falls back to the active player hero when normal target candidates are empty.",
+        "No-candidate active raids now return a no_known_targets regroup/hold plan at a reachable owned AI town when possible.",
+        "EnemyTurnRules._best_open_spawn_point no longer turns an empty candidate set into the first configured spawn point, preventing fresh targetless pressure launches.",
+        "Known-world memory coverage now proves hidden active heroes are not selected by the no-candidate fallback."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "plain_rotation_pick": "hero_sable",
-        "selected_commander_id": "hero_vaska",
-        "selected_target_kind": "encounter",
-        "selected_target_id": "river_pass_hollow_mire",
-        "commander_fit_bonus": 78,
-        "commander_fit_profile": "raider/might"
+        "hidden_hero_position": {
+          "x": 0,
+          "y": 4
+        },
+        "fallback_target_kind": "regroup",
+        "fallback_target_id": "duskfen_bastion",
+        "fallback_goal_distance": 1,
+        "pressure_launch_allowed_without_target": false
       },
       "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, and live-client pacing/manual play remain open.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
