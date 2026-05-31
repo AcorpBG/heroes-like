@@ -68,6 +68,8 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	_assert_event(result.get("events", []), "ai_target_assigned", "river_signal_post")
 	_assert_event(result.get("events", []), "ai_site_seized", "river_free_company")
 	_assert_event(result.get("events", []), "ai_site_seized", "river_signal_post")
+	_assert_site_transition_event(result.get("events", []), "river_free_company", "player", MIRECLAW)
+	_assert_site_transition_event(result.get("events", []), "river_signal_post", "player", MIRECLAW)
 	if _failed:
 		return {}
 	var task_board := _assert_live_task_board(session)
@@ -277,6 +279,20 @@ func _assert_event(events: Variant, event_type: String, target_id: String) -> vo
 		if event is Dictionary and String(event.get("event_type", "")) == event_type and String(event.get("target_id", "")) == target_id:
 			return
 	_fail("Missing event %s for %s in %s" % [event_type, target_id, JSON.stringify(events)])
+
+func _assert_site_transition_event(events: Variant, target_id: String, expected_before: String, expected_after: String) -> void:
+	if not (events is Array):
+		_fail("Events payload is not an array for site transition %s" % target_id)
+		return
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		if String(event.get("event_type", "")) != "ai_site_seized" or String(event.get("target_id", "")) != target_id:
+			continue
+		if String(event.get("target_controller_before", "")) != expected_before or String(event.get("target_controller_after", "")) != expected_after:
+			_fail("Site transition event %s expected %s->%s, got %s" % [target_id, expected_before, expected_after, JSON.stringify(event)])
+		return
+	_fail("Missing site transition event for %s in %s" % [target_id, JSON.stringify(events)])
 
 func _assert_progression(before: Dictionary, after: Dictionary, expected_outcome: String, label: String) -> void:
 	if after.is_empty():

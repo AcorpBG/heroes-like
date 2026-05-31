@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:42:54Z",
+  "updatedAt": "2026-05-31T03:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,100 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-site-event-task-transition-10184",
+      "title": "Strategic AI Site Event Task Transition",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make AI resource-site control events carry authoritative controller transition data and use those durable events for commander task-transition summaries when a raid captures a site and immediately retargets.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_state_boundary_report.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd",
+        "tests/ai_glassroad_defense_proof_report.gd"
+      ],
+      "baselineChecks": [
+        "Snapshot-derived arrival summaries can miss a resource capture when the same commander immediately continues to another target.",
+        "The ai_site_seized event has the target identity but not enough before/after controller data to drive task transitions without snapshot inference."
+      ],
+      "completionCriteria": [
+        "AI site-control events include target_controller_before and target_controller_after for resource captures.",
+        "Commander task transition summaries can derive ai_site_seized arrivals from the durable turn event stream even if the active raid immediately retargeted.",
+        "Focused coverage proves the Glassroad relay retake-to-defend transition is detected from the actual enemy turn."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not change combat balance, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T03:45:25Z",
+      "updatedAt": "2026-05-31T03:59:00Z",
+      "completedAt": "2026-05-31T03:59:00Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "River Pass live enemy turn completed reserved resource tasks and emitted controller before/after site-seized events."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_commander_role_turn_transcript_report.tscn",
+          "result": "passed",
+          "summary": "Commander transcript derives site-seized arrivals from the turn event stream for River Pass and Glassroad."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_state_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Glassroad relay retake-to-defend transition is detected from an actual enemy turn arrival."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_glassroad_defense_proof_report.tscn",
+          "result": "passed",
+          "summary": "Glassroad defense proof accepts current pacing and faction-specific economy stabilization build behavior."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Existing distant/understrength resource-front regroup and support behavior still holds."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_site_control_proof_report.tscn",
+          "result": "passed",
+          "summary": "Resource seizure event surface includes controller transition fields."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event log remains compact after site event controller fields."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI state/event behavior slice; tests are validation only.",
+        "completedBehavior": "AI resource-site seizures now preserve controller transitions in events, commander transcripts merge event-derived arrivals, and nearby unguarded resource retakes are no longer blocked by the distant-front strength gate."
+      }
+    },
     {
       "id": "strategic-ai-duplicate-task-reservation-recovery-10184",
       "title": "Strategic AI Duplicate Task Reservation Recovery",
