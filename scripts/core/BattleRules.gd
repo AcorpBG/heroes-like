@@ -5951,8 +5951,12 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 
 static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
 	var target = _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
+	var raw_enemy_hero: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
+	var resolved_enemy_hero := BattleAiRulesScript._commander_payload_for_tactical_scoring(raw_enemy_hero)
+	if resolved_enemy_hero.is_empty():
+		resolved_enemy_hero = raw_enemy_hero
 	var resolution = SpellRulesScript.resolve_battle_spell(
-		session.battle.get("enemy_hero", {}),
+		resolved_enemy_hero,
 		session.battle,
 		active_stack,
 		target,
