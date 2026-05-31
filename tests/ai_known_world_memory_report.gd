@@ -22,6 +22,9 @@ func _run() -> void:
 	var nonhero_case := _nonhero_targets_require_visibility_or_memory()
 	if nonhero_case.is_empty():
 		return
+	var delivery_case := _convoy_interception_requires_known_route_and_hero()
+	if delivery_case.is_empty():
+		return
 	var ordinary_scouting_case := _ordinary_scouting_records_nonhero_memory()
 	if ordinary_scouting_case.is_empty():
 		return
@@ -40,7 +43,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -211,6 +214,93 @@ func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
 		"scoutable_unknown_resource": true,
 		"known_resource_candidate": true,
 		"known_world_target_id": "river_free_company",
+	}
+
+func _convoy_interception_requires_known_route_and_hero() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	var hero_id := String(session.overworld.get("active_hero_id", "hero_lyra"))
+	_set_primary_hero_position(session, 0, 4)
+	_make_hidden_hero_delivery_session(session, hero_id)
+	var origin := Vector2i(7, 2)
+	var hidden_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if not _first_delivery_candidate(hidden_candidates, "hero", hero_id).is_empty():
+		_fail("Hidden convoy route should not be targetable before route source memory: %s" % JSON.stringify(hidden_candidates))
+		return {}
+
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"scouted_targets": [
+				{
+					"target_kind": "resource",
+					"target_id": "river_free_company",
+					"target_label": "Riverwatch Free Company Yard",
+					"x": 0,
+					"y": 4,
+					"scouted_day": int(session.day),
+					"expires_day": int(session.day) + 3,
+					"source_spell_id": "spell_far_glass",
+				}
+			],
+			"player_hero_sightings": [],
+		}
+	)
+	var source_only_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if not _first_delivery_candidate(source_only_candidates, "hero", hero_id).is_empty():
+		_fail("Known convoy source should not reveal a hidden hero endpoint: %s" % JSON.stringify(source_only_candidates))
+		return {}
+
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"scouted_targets": [
+				{
+					"target_kind": "resource",
+					"target_id": "river_free_company",
+					"target_label": "Riverwatch Free Company Yard",
+					"x": 0,
+					"y": 4,
+					"scouted_day": int(session.day),
+					"expires_day": int(session.day) + 3,
+					"source_spell_id": "spell_far_glass",
+				}
+			],
+			"player_hero_sightings": [
+				{
+					"hero_id": hero_id,
+					"hero_label": "Lyra",
+					"x": 5,
+					"y": 2,
+					"army_strength": 96,
+					"seen_day": int(session.day),
+					"expires_day": int(session.day) + 2,
+					"source_kind": "town",
+					"source_id": "duskfen_bastion",
+				}
+			],
+		}
+	)
+	var known_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	var delivery_candidate := _first_delivery_candidate(known_candidates, "hero", hero_id)
+	if delivery_candidate.is_empty():
+		_fail("Known convoy source plus remembered hero endpoint did not create delivery interception: %s" % JSON.stringify(known_candidates))
+		return {}
+	if int(delivery_candidate.get("target_x", -1)) != 5 or int(delivery_candidate.get("target_y", -1)) != 2:
+		_fail("Hero-bound convoy interception used live hidden position instead of remembered hero sighting: %s" % JSON.stringify(delivery_candidate))
+		return {}
+	return {
+		"case_id": "convoy_interception_requires_known_route_and_hero",
+		"hidden_delivery_candidate": false,
+		"source_only_delivery_candidate": false,
+		"known_delivery_target": {
+			"target_kind": String(delivery_candidate.get("target_kind", "")),
+			"target_id": String(delivery_candidate.get("target_placement_id", "")),
+			"x": int(delivery_candidate.get("target_x", -1)),
+			"y": int(delivery_candidate.get("target_y", -1)),
+		},
 	}
 
 func _ordinary_scouting_records_nonhero_memory() -> Dictionary:
@@ -465,6 +555,27 @@ func _make_hidden_resource_target_session(session) -> void:
 	session.overworld["resolved_encounters"] = []
 	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
 
+func _make_hidden_hero_delivery_session(session, hero_id: String) -> void:
+	_make_hidden_resource_target_session(session)
+	var resources: Array = session.overworld.get("resource_nodes", [])
+	for index in range(resources.size()):
+		if not (resources[index] is Dictionary):
+			continue
+		var node: Dictionary = resources[index]
+		if String(node.get("placement_id", "")) != "river_free_company":
+			continue
+		node["delivery_controller_id"] = "player"
+		node["delivery_origin_town_id"] = "riverwatch_hold"
+		node["delivery_arrival_day"] = int(session.day) + 2
+		node["delivery_target_kind"] = "hero"
+		node["delivery_target_id"] = hero_id
+		node["delivery_target_label"] = "Lyra"
+		node["delivery_manifest"] = {"unit_river_guard": 4}
+		resources[index] = node
+		session.overworld["resource_nodes"] = resources
+		return
+	_fail("Could not configure hidden hero delivery route.")
+
 func _make_hidden_neutral_town_session(session) -> void:
 	var towns: Array = session.overworld.get("towns", [])
 	for index in range(towns.size()):
@@ -536,6 +647,20 @@ func _candidate_has_target(candidates: Array, target_kind: String, target_id: St
 		if String(candidate.get("target_kind", "")) == target_kind and String(candidate.get("target_placement_id", "")) == target_id:
 			return true
 	return false
+
+func _first_delivery_candidate(candidates: Array, target_kind: String, target_id: String) -> Dictionary:
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		if String(candidate.get("delivery_intercept_node_placement_id", "")) == "":
+			continue
+		if String(candidate.get("target_kind", "")) != target_kind:
+			continue
+		if String(candidate.get("target_placement_id", "")) != target_id:
+			continue
+		return candidate
+	return {}
 
 func _first_enemy_raid_for_kind(session, target_kind: String) -> Dictionary:
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []

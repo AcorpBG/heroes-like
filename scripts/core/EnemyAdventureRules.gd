@@ -7489,6 +7489,16 @@ static func _append_delivery_interception_candidates(
 		var delivery_state: Dictionary = OverworldRulesScript._resource_site_delivery_state(session, node, site)
 		if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
 			continue
+		if not _enemy_nonhero_target_known(
+			session,
+			config,
+			faction_id,
+			"resource",
+			placement_id,
+			int(node.get("x", 0)),
+			int(node.get("y", 0))
+		):
+			continue
 		seen[seen_key] = true
 		match String(delivery_state.get("target_kind", "")):
 			"town":
@@ -7515,6 +7525,18 @@ static func _delivery_town_candidate(
 	var town: Dictionary = town_result.get("town", {})
 	if String(town.get("owner", "neutral")) != "player":
 		return {}
+	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
+	if not _enemy_nonhero_target_known(
+		session,
+		config,
+		faction_id,
+		"town",
+		String(town.get("placement_id", "")),
+		int(town.get("x", 0)),
+		int(town.get("y", 0)),
+		objective_anchor
+	):
+		return {}
 	var staging_tiles = _town_staging_tiles(session, town)
 	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
 	if goal_distance >= 9999:
@@ -7523,7 +7545,6 @@ static func _delivery_town_candidate(
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
-	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
 	var priority = 210 + int(min(180.0, float(int(delivery_state.get("manifest_value", 0))) / 9.0))
 	priority += int(max(0, 3 - int(delivery_state.get("days_remaining", 0)))) * 24
 	priority += _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
@@ -7574,6 +7595,9 @@ static func _delivery_hero_candidate(
 	var hero: Dictionary = _find_player_hero(session, String(delivery_state.get("target_id", "")))
 	if hero.is_empty():
 		return {}
+	hero = _known_player_hero_snapshot_for_ai(session, faction_id, hero)
+	if hero.is_empty():
+		return {}
 	var goal_tile := _player_hero_goal_tile(hero)
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
 	if goal_distance >= 9999:
@@ -7584,7 +7608,7 @@ static func _delivery_hero_candidate(
 		priority += 28
 	if bool(hero.get("is_primary", false)):
 		priority += 20
-	var hero_strength: int = _army_strength(hero.get("army", {}).get("stacks", []))
+	var hero_strength: int = _known_player_hero_strength(hero)
 	if hero_strength <= 110:
 		priority += 34
 	elif hero_strength <= 180:

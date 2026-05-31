@@ -40,6 +40,75 @@
   },
   "plannedSlices": [
     {
+      "id": "strategic-ai-convoy-interception-known-world-gating-10184",
+      "title": "Strategic AI Convoy Interception Known World Gating",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy convoy-interception target selection depend on known/scouted route sources and faction-known hero endpoints instead of omniscient active delivery state.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Delivery interception candidates currently iterate all active player-controlled delivery nodes without requiring the enemy faction to know the source route.",
+        "Hero-bound delivery interception currently uses the live player hero position instead of faction-known hero sightings or memory."
+      ],
+      "completionCriteria": [
+        "Enemy convoy-interception candidates require the delivery source resource/site to be currently visible or remembered in known-world memory.",
+        "Town-bound convoy interception requires a known/visible player town endpoint before precise town pressure is generated.",
+        "Hero-bound convoy interception requires a current or remembered legal hero sighting and uses the known hero tile/strength for route pressure.",
+        "Focused coverage proves hidden convoy routes and hidden hero endpoints are not targetable, while known source plus remembered hero sighting restores the candidate."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not introduce omniscient convoy or hero tracking.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T02:32:15Z",
+      "updatedAt": "2026-05-31T02:36:19Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/core_systems_regression_smoke.tscn (failed twice in unrelated obstruction-line battle regression: \"obstruction-line coverage did not hold a weak advance on the current lane\")"
+      ],
+      "evidence": {
+        "implemented": [
+          "Enemy convoy-interception candidates now require the delivery source resource/site to be currently visible or remembered in known-world memory.",
+          "Town-bound convoy interception now requires a known/visible player town endpoint before precise relief-lane pressure is generated.",
+          "Hero-bound convoy interception now requires a current or remembered legal hero sighting and uses that known hero tile and strength instead of hidden live hero coordinates."
+        ],
+        "focused_case": {
+          "case_id": "convoy_interception_requires_known_route_and_hero",
+          "hidden_delivery_candidate": false,
+          "source_only_delivery_candidate": false,
+          "known_delivery_target": {
+            "target_kind": "hero",
+            "target_id": "hero_lyra",
+            "x": 5,
+            "y": 2
+          },
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review. A separate core systems smoke obstruction-line failure remains outside this slice.",
+        "policy": "Live strategic AI behavior slice; reports/tests were validation only."
+      },
+      "completedAt": "2026-05-31T02:36:19Z"
+    },
+    {
       "id": "strategic-ai-hero-front-support-sighting-gate-10184",
       "title": "Strategic AI Hero Front Support Sighting Gate",
       "status": "completed",
@@ -42991,7 +43060,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T02:29:32Z",
+  "currentSliceUpdatedAt": "2026-05-31T02:36:19Z",
   "validationHistory": [
     {
       "status": "pass",
