@@ -10,7 +10,7 @@ const REPORT_ID := "BATTLE_AI_WITHDRAWAL_DECISION_REPORT"
 var _report := {
 	"ok": true,
 	"report_id": REPORT_ID,
-	"slice": "battle-ai-enemy-hero-payload-bridge-10184",
+	"slice": "battle-ai-force-sync-payload-continuity-10184",
 	"policy": "battle_ai_enemy_withdrawal_decision_v1",
 	"cases": {},
 }
@@ -26,6 +26,7 @@ func _run() -> void:
 	_validate_argument_commander_payload_bridge()
 	_validate_template_commander_payload_fallback()
 	_validate_outcome_payload_continuity()
+	_validate_force_sync_payload_continuity()
 	_validate_runtime_enemy_retreat()
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0)
@@ -190,6 +191,45 @@ func _validate_outcome_payload_continuity() -> void:
 		"roster_known_spell_count": _known_spell_ids(roster_enemy).size(),
 		"last_outcome": String(roster_enemy.get("last_outcome", "")),
 		"battle_wins": int(roster_enemy.get("battle_wins", 0)),
+	}
+
+func _validate_force_sync_payload_continuity() -> void:
+	var session := _withdrawal_session(100, 100, true, false, 220, 220)
+	session.battle["enemy_hero"] = {
+		"roster_hero_id": "hero_thornwake_veyra_seedseer",
+		"faction_id": "faction_thornwake",
+	}
+	session.battle["enemy_hero_payload"] = {
+		"roster_hero_id": "hero_thornwake_veyra_seedseer",
+		"faction_id": "faction_thornwake",
+		"name": "Veyra Seedseer",
+		"command_path": "magic",
+		"archetype": "rootoracle",
+		"command": {"power": 8, "knowledge": 8},
+		"battle_traits": ["bogwise", "ambusher"],
+		"spellbook": {
+			"known_spell_ids": ["spell_root_loam_thorn_10"],
+			"mana": {"current": 40, "max": 40},
+		},
+	}
+	BattleRulesScript._sync_enemy_force_from_battle(session, false)
+	var synced_encounter := {}
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	if not encounters.is_empty() and encounters[0] is Dictionary:
+		synced_encounter = encounters[0]
+	var synced_commander: Dictionary = synced_encounter.get("enemy_commander_state", {}) if synced_encounter.get("enemy_commander_state", {}) is Dictionary else {}
+	if "spell_root_loam_thorn_10" not in _known_spell_ids(synced_commander):
+		_fail("force sync dropped learned payload spell from overworld encounter commander: %s" % JSON.stringify(synced_commander))
+		return
+	var battle_enemy: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
+	if "spell_root_loam_thorn_10" not in _known_spell_ids(battle_enemy):
+		_fail("force sync did not merge learned payload spell into battle enemy hero: %s" % JSON.stringify(battle_enemy))
+		return
+	_report["cases"]["force_sync_payload_continuity"] = {
+		"battle_known_spell_count": _known_spell_ids(battle_enemy).size(),
+		"encounter_known_spell_count": _known_spell_ids(synced_commander).size(),
+		"synced_roster_hero_id": String(synced_commander.get("roster_hero_id", "")),
+		"synced_command_path": String(synced_commander.get("command_path", "")),
 	}
 
 func _validate_runtime_enemy_retreat() -> void:

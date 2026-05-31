@@ -9097,6 +9097,7 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 	if session == null or session.battle.is_empty():
 		return
 	var context = session.battle.get("context", {})
+	var synced_enemy_commander_state := _enemy_commander_state_for_force_sync(session)
 	if _is_town_assault_context(context):
 		var town_result = _find_town_by_placement(session, String(context.get("town_placement_id", "")))
 		if int(town_result.get("index", -1)) < 0:
@@ -9111,7 +9112,7 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 				"town_placement_id": String(context.get("town_placement_id", "")),
 			}
 		)
-		var enemy_commander_state = session.battle.get("enemy_hero", {})
+		var enemy_commander_state = synced_enemy_commander_state
 		if enemy_commander_state is Dictionary and not enemy_commander_state.is_empty():
 			if String(town.get("owner", "neutral")) == "enemy":
 				town["ai_defender_commander_state"] = enemy_commander_state.duplicate(true)
@@ -9134,7 +9135,7 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 				"resource_placement_id": String(context.get("resource_placement_id", "")),
 			}
 		)
-		var enemy_commander_state = session.battle.get("enemy_hero", {})
+		var enemy_commander_state = synced_enemy_commander_state
 		var summary := OverworldRulesScript.update_resource_defender_after_battle(
 			session,
 			String(context.get("resource_placement_id", "")),
@@ -9163,13 +9164,28 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 			}
 		),
 	}
-	var enemy_commander_state = session.battle.get("enemy_hero", {})
+	var enemy_commander_state = synced_enemy_commander_state
 	if enemy_commander_state is Dictionary and not enemy_commander_state.is_empty():
 		encounter["enemy_commander_state"] = enemy_commander_state.duplicate(true)
 	encounters[int(encounter_result.get("index", -1))] = encounter
 	session.overworld["encounters"] = encounters
 	if encounter_resolved:
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
+
+static func _enemy_commander_state_for_force_sync(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {}
+	var commander_state = session.battle.get("enemy_hero", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {}
+	commander_state = _enemy_commander_state_with_payload(session, commander_state)
+	session.battle["enemy_hero"] = commander_state
+	session.battle["enemy_hero_payload"] = _enemy_hero_payload_from_state(
+		commander_state,
+		session.battle.get("enemy_hero_payload", {}),
+		session
+	)
+	return commander_state
 
 static func _battle_survivor_stacks(session: SessionStateStoreScript.SessionData, side: String, filters: Dictionary = {}) -> Array:
 	var survivors = []
