@@ -86,6 +86,12 @@ func _run() -> void:
 	if String(seizure_case.get("controller_after", "")) != FACTION_ID:
 		_fail("Expected %s controller after seizure, got %s" % [FACTION_ID, seizure_case.get("controller_after", "")])
 		return
+	if int(seizure_case.get("after_strength", 0)) <= int(seizure_case.get("before_strength", 0)):
+		_fail("Resource seizure did not add claim recruits to the active AI host: %s" % seizure_case)
+		return
+	if int(seizure_case.get("claim_recruit_total", 0)) <= 0:
+		_fail("Resource seizure did not record claim recruits on the active AI host: %s" % seizure_case)
+		return
 	if _failed:
 		return
 
@@ -137,7 +143,24 @@ func _run() -> void:
 	if _failed:
 		return
 
-	var public_leak_check := _public_leak_check([assignment_event, seizure_event, spell_event, opportunistic_spell_event])
+	var opportunistic_recruit_site_case := _run_opportunistic_recruit_site_claim_case()
+	if int(opportunistic_recruit_site_case.get("after_strength", 0)) <= int(opportunistic_recruit_site_case.get("before_strength", 0)):
+		_fail("Opportunistic recruit site did not add claim recruits to the active AI host: %s" % opportunistic_recruit_site_case)
+		return
+	if int(opportunistic_recruit_site_case.get("claim_recruit_total", 0)) <= 0:
+		_fail("Opportunistic recruit site did not record claim recruits on the active AI host: %s" % opportunistic_recruit_site_case)
+		return
+	if String(opportunistic_recruit_site_case.get("last_opportunistic_pickup_placement_id", "")) != PRIMARY_SITE:
+		_fail("Opportunistic recruit-site fixture did not claim %s: %s" % [PRIMARY_SITE, opportunistic_recruit_site_case])
+		return
+
+	var public_leak_check := _public_leak_check([
+		assignment_event,
+		seizure_event,
+		spell_event,
+		opportunistic_spell_event,
+		opportunistic_recruit_site_case.get("event", {}),
+	])
 	if not bool(public_leak_check.get("ok", false)):
 		_fail(String(public_leak_check.get("error", "public leak check failed")))
 		return
@@ -155,8 +178,10 @@ func _run() -> void:
 			"resource_ordering": true,
 			"assignment_event": true,
 			"countercapture_controller_flip": true,
+			"claim_recruits_join_active_host": true,
 			"spell_site_learning": true,
 			"opportunistic_spell_site_learning": true,
+			"opportunistic_claim_recruits_join_active_host": true,
 			"signal_post_denial_reason": true,
 			"public_surface_compactness": true,
 		},
@@ -174,6 +199,7 @@ func _run() -> void:
 		"site_controller_after": String(seizure_case.get("controller_after", "")),
 		"spell_site_case": spell_site_case,
 		"opportunistic_spell_site_case": opportunistic_spell_site_case,
+		"opportunistic_recruit_site_case": opportunistic_recruit_site_case,
 		"enemy_state_delta": seizure_case.get("enemy_state_delta", {}),
 		"seizure_message": String(seizure_case.get("message", "")),
 		"signal_post_reason_check": {
@@ -196,14 +222,47 @@ func _run_seizure_case() -> Dictionary:
 	_set_resource_controller(session, PRIMARY_SITE, "player")
 	var before := _resource_controller(session, PRIMARY_SITE)
 	_add_site_raid(session)
+	var before_raid := _encounter_by_placement(session, "site_control_report_free_company_seizure_raid")
+	var before_strength := EnemyAdventureRules.raid_strength(before_raid)
 	var before_state := _enemy_state()
 	var result := EnemyAdventureRules.advance_raids(session, _enemy_config(), FACTION_ID, before_state.duplicate(true))
+	var after_raid := _encounter_by_placement(session, "site_control_report_free_company_seizure_raid")
 	var after_state: Dictionary = result.get("state", {})
 	var events: Array = result.get("events", [])
 	return {
 		"controller_before": before,
 		"controller_after": _resource_controller(session, PRIMARY_SITE),
+		"before_strength": before_strength,
+		"after_strength": EnemyAdventureRules.raid_strength(after_raid),
+		"claim_recruits": after_raid.get("last_site_claim_recruits", {}),
+		"claim_recruit_total": _recruit_total(after_raid.get("last_site_claim_recruits", {})),
+		"commander_rebuild_need_after": int(after_raid.get("enemy_commander_state", {}).get("army_rebuild_need", -1)) if after_raid.get("enemy_commander_state", {}) is Dictionary else -1,
 		"enemy_state_delta": _state_delta(before_state, after_state),
+		"event": _event_by_type_and_target(events, "ai_site_seized", PRIMARY_SITE),
+		"events": events,
+		"message": String(result.get("message", "")),
+	}
+
+func _run_opportunistic_recruit_site_claim_case() -> Dictionary:
+	var session = _base_session()
+	_set_resource_controller(session, PRIMARY_SITE, "player")
+	_set_resource_controller(session, COMPANION_SITE, "player")
+	_add_opportunistic_recruit_site_raid(session)
+	var before_raid := _encounter_by_placement(session, "site_control_report_opportunistic_recruit_site_raid")
+	var before_strength := EnemyAdventureRules.raid_strength(before_raid)
+	var before_state := _enemy_state_with_roster(session)
+	var result := EnemyAdventureRules.advance_raids(session, _enemy_config(), FACTION_ID, before_state.duplicate(true))
+	var after_raid := _encounter_by_placement(session, "site_control_report_opportunistic_recruit_site_raid")
+	var events: Array = result.get("events", [])
+	return {
+		"controller_after": _resource_controller(session, PRIMARY_SITE),
+		"before_strength": before_strength,
+		"after_strength": EnemyAdventureRules.raid_strength(after_raid),
+		"claim_recruits": after_raid.get("last_site_claim_recruits", {}),
+		"claim_recruit_total": _recruit_total(after_raid.get("last_site_claim_recruits", {})),
+		"last_opportunistic_pickup_kind": String(after_raid.get("last_opportunistic_pickup_kind", "")),
+		"last_opportunistic_pickup_placement_id": String(after_raid.get("last_opportunistic_pickup_placement_id", "")),
+		"commander_rebuild_need_after": int(after_raid.get("enemy_commander_state", {}).get("army_rebuild_need", -1)) if after_raid.get("enemy_commander_state", {}) is Dictionary else -1,
 		"event": _event_by_type_and_target(events, "ai_site_seized", PRIMARY_SITE),
 		"events": events,
 		"message": String(result.get("message", "")),
@@ -288,32 +347,39 @@ func _assignment_event_from_breakdown(session, config: Dictionary, breakdown: Di
 	return EnemyAdventureRules.ai_target_assignment_event(session, config, actor, {})
 
 func _add_site_raid(session) -> void:
-	var encounters: Array = session.overworld.get("encounters", [])
-	encounters.append(
-		{
-			"placement_id": "site_control_report_free_company_seizure_raid",
-			"encounter_id": "encounter_mire_raid",
-			"x": 0,
-			"y": 4,
-			"difficulty": "pressure",
-			"combat_seed": hash("%s:%s" % [SCENARIO_ID, "site_control_report_free_company_seizure_raid"]),
-			"spawned_by_faction_id": FACTION_ID,
-			"days_active": 0,
-			"arrived": true,
-			"goal_distance": 0,
-			"target_kind": "resource",
-			"target_placement_id": PRIMARY_SITE,
-			"target_label": "Riverwatch Free Company Yard",
-			"target_x": 0,
-			"target_y": 4,
-			"goal_x": 0,
-			"goal_y": 4,
-			"target_public_reason": "recruit and income denial",
-			"target_reason_codes": ["persistent_income_denial", "recruit_denial", "player_town_support"],
-			"target_public_importance": "high",
-			"target_debug_reason": "denies 40 gold daily, recruit denial, player-town support",
-		}
+	var raid := {
+		"placement_id": "site_control_report_free_company_seizure_raid",
+		"encounter_id": "encounter_mire_raid",
+		"x": 0,
+		"y": 4,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [SCENARIO_ID, "site_control_report_free_company_seizure_raid"]),
+		"spawned_by_faction_id": FACTION_ID,
+		"days_active": 0,
+		"arrived": true,
+		"goal_distance": 0,
+		"target_kind": "resource",
+		"target_placement_id": PRIMARY_SITE,
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 0,
+		"target_y": 4,
+		"goal_x": 0,
+		"goal_y": 4,
+		"target_public_reason": "recruit and income denial",
+		"target_reason_codes": ["persistent_income_denial", "recruit_denial", "player_town_support"],
+		"target_public_importance": "high",
+		"target_debug_reason": "denies 40 gold daily, recruit denial, player-town support",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		SPELL_SITE_COMMANDER,
+		FACTION_ID,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
 	)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 
 func _add_spell_site_node(session) -> void:
@@ -388,6 +454,42 @@ func _add_opportunistic_spell_site_raid(session) -> void:
 		"target_reason_codes": ["persistent_income_denial", "recruit_denial", "player_town_support"],
 		"target_public_importance": "high",
 		"target_debug_reason": "opportunistic spell-site learning fixture",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		SPELL_SITE_COMMANDER,
+		FACTION_ID,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
+	)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+func _add_opportunistic_recruit_site_raid(session) -> void:
+	var raid := {
+		"placement_id": "site_control_report_opportunistic_recruit_site_raid",
+		"encounter_id": "encounter_mire_raid",
+		"x": 0,
+		"y": 4,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [SCENARIO_ID, "site_control_report_opportunistic_recruit_site_raid"]),
+		"spawned_by_faction_id": FACTION_ID,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 4,
+		"target_kind": "resource",
+		"target_placement_id": COMPANION_SITE,
+		"target_label": "River Signal Post",
+		"target_x": 4,
+		"target_y": 4,
+		"goal_x": 4,
+		"goal_y": 4,
+		"target_public_reason": "income and route vision denial",
+		"target_reason_codes": ["persistent_income_denial", "route_vision", "player_town_support"],
+		"target_public_importance": "high",
+		"target_debug_reason": "opportunistic recruit-site claim fixture",
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
 		raid,
@@ -478,6 +580,14 @@ func _state_delta(before: Dictionary, after: Dictionary) -> Dictionary:
 		"treasury_before": before.get("treasury", {}),
 		"treasury_after": after.get("treasury", {}),
 	}
+
+func _recruit_total(recruits: Variant) -> int:
+	var total := 0
+	if not (recruits is Dictionary):
+		return total
+	for unit_id in recruits.keys():
+		total += max(0, int(recruits.get(unit_id, 0)))
+	return total
 
 func _target_ids(targets: Array) -> Array:
 	var ids := []
