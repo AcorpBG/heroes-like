@@ -1376,6 +1376,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var max_row_runtime_msec := 0
 	var max_turn_runtime_msec := 0
 	var setup_runtime_msec := 0
+	var nearest_tactical_battle_target := {}
 	for row_value in rows:
 		if not (row_value is Dictionary):
 			continue
@@ -1408,6 +1409,14 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 					near_battle_town_or_hero_turn_count += 1
 				best_min_goal_distance = mini(best_min_goal_distance, int(handoff.get("min_goal_distance", 9999)))
 				best_min_tactical_battle_goal_distance = mini(best_min_tactical_battle_goal_distance, int(handoff.get("min_tactical_battle_goal_distance", 9999)))
+				var nearest_turn_target: Dictionary = handoff.get("nearest_tactical_battle_target", {}) if handoff.get("nearest_tactical_battle_target", {}) is Dictionary else {}
+				if not nearest_turn_target.is_empty() \
+						and (nearest_tactical_battle_target.is_empty() or int(nearest_turn_target.get("goal_distance", 9999)) < int(nearest_tactical_battle_target.get("goal_distance", 9999))):
+					nearest_tactical_battle_target = nearest_turn_target.duplicate(true)
+					nearest_tactical_battle_target["seed"] = String(row.get("seed", ""))
+					nearest_tactical_battle_target["seed_ordinal"] = int(row.get("seed_ordinal", 0))
+					nearest_tactical_battle_target["turn_index"] = int(turn_value.get("turn_index", 0))
+					nearest_tactical_battle_target["day"] = int(turn_value.get("day", 0))
 				total_movement_distance_delta += int(handoff.get("movement_distance_delta_total", 0))
 		var row_event_counts: Dictionary = row.get("event_counts", {}) if row.get("event_counts", {}) is Dictionary else {}
 		for key in row_event_counts.keys():
@@ -1435,12 +1444,16 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"battle_handoff_candidate_turn_count": battle_handoff_candidate_turn_count,
 		"near_battle_target_turn_count": near_battle_target_turn_count,
 		"near_battle_town_or_hero_turn_count": near_battle_town_or_hero_turn_count,
+		"natural_tactical_battle_pressure_turn_count": battle_handoff_candidate_turn_count,
+		"natural_tactical_battle_arrival_turn_count": near_battle_town_or_hero_turn_count,
 		"best_min_active_raid_goal_distance": best_min_goal_distance,
 		"best_min_tactical_battle_goal_distance": best_min_tactical_battle_goal_distance,
+		"nearest_tactical_battle_target": nearest_tactical_battle_target,
 		"movement_distance_delta_total": total_movement_distance_delta,
 		"battle_interrupt_count": battle_interrupt_count,
 		"auto_resolved_battle_count": auto_resolved_battle_count,
 		"tactical_battle_queued_count": tactical_battle_queued_count,
+		"natural_tactical_battle_queue_event_count": tactical_battle_queued_count,
 		"stalled_turn_count": total_stalled_turns,
 		"stalled_turn_pct": int(round(float(total_stalled_turns) * 100.0 / float(max(1, total_turns_completed)))),
 		"event_counts": event_counts,
@@ -1478,6 +1491,16 @@ static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_
 			"blocker_id": "strategic_ai_long_run_no_battle_handoff",
 			"severity": "production_gap",
 			"summary": "Generated-map AI maintained town/hero battle pressure for an extended run but did not reach a battle handoff.",
+		})
+	if requested_turn_count >= 14 \
+			and int(summary.get("battle_handoff_candidate_turn_count", 0)) > 0 \
+			and int(summary.get("near_battle_town_or_hero_turn_count", 0)) <= 0 \
+			and int(summary.get("tactical_battle_queued_count", 0)) <= 0:
+		rows.append({
+			"blocker_id": "strategic_ai_long_run_no_natural_tactical_arrival",
+			"severity": "remaining_validation",
+			"summary": "Generated-map AI maintained town/hero pressure, but no natural town/hero target reached tactical battle handoff range in this run; closest distance was %d." % int(summary.get("best_min_tactical_battle_goal_distance", 9999)),
+			"nearest_tactical_battle_target": summary.get("nearest_tactical_battle_target", {}),
 		})
 	var target_planning_count := int(summary.get("target_assignment_count", 0)) \
 		+ int(summary.get("commander_task_planned_count", 0)) \

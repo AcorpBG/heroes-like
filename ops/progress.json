@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-generated-town-battle-handoff-proof-10184",
-  "currentSliceTitle": "Strategic AI Generated Town Battle Handoff Proof",
+  "currentSliceId": "strategic-ai-natural-battle-handoff-matrix-10184",
+  "currentSliceTitle": "Strategic AI Natural Battle Handoff Matrix",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Native RMG generated-map in-range town assault handoff proof: the focused case starts a live town-defense battle and emits observable queue evidence without touching unit, spell, growth, economy, faction, town-cost, or authored balance content.",
+  "currentSliceNotes": "Completed natural Native RMG generated-map battle-handoff evidence improvement: longer runs now expose natural tactical pressure, arrival, queue counts, closest tactical target context, and a precise no-natural-arrival blocker without touching balance content.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T19:52:06Z",
+  "updatedAt": "2026-05-31T20:11:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,60 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-natural-battle-handoff-matrix-10184",
+      "title": "Strategic AI Natural Battle Handoff Matrix",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active tactical/strategic AI production-readiness goal after explicit Native RMG in-range town handoff proof passed",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Move from injected generated-map handoff proof toward natural generated-map evidence by running longer Native RMG AI sessions and exposing whether town or hero targets actually reach live tactical battle handoff range.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 480 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "Longer Native RMG generated-map runs expose natural town/hero battle-handoff readiness distinctly from generic encounter/resource pressure, count any live tactical queue events, and either prove natural handoffs occur or leave a precise non-production blocker with nearest tactical town/hero distances; tactical order and repository validation remain green; no balance-content changes.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming production readiness before full 100-seed eight-week evidence"
+      ],
+      "startedAt": "2026-05-31T19:54:48Z",
+      "updatedAt": "2026-05-31T20:11:50Z",
+      "validation": [
+        "Started after strategic-ai-generated-town-battle-handoff-proof-10184 proved injected in-range Native RMG town targets can enter live town-defense battle handoff. Next evidence must cover natural longer-run arrivals.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 480 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | PASS process; 1/1 row, 14/14 turns, 55 enemy activity events, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, natural_tactical_battle_pressure_turn_count=14, natural_tactical_battle_arrival_turn_count=0, natural_tactical_battle_queue_event_count=0, closest natural tactical target distance=8 on day 12; report emits strategic_ai_long_run_no_natural_tactical_arrival plus full-matrix remaining-validation blocker.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | PASS process; 2/2 rows, 8/8 turns, 33 enemy activity events, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, natural_tactical_battle_pressure_turn_count=8, natural_tactical_battle_arrival_turn_count=0, closest natural tactical target distance=12 on seed 2.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn | PASS.",
+        "python3 tests/validate_repo.py | PASS.",
+        "jq empty ops/progress.json | PASS.",
+        "git diff --check | PASS.",
+        "git diff -- content/ | clean; no unit, spell, growth, economy, faction, town-cost, or authored balance content changes."
+      ],
+      "summary": "Completed. Long-run generated-map reports now expose natural tactical pressure, natural arrival, tactical queue counts, and nearest tactical target context. Current evidence shows active town pressure but no natural town/hero target reaches battle handoff range in the focused runs, so production readiness remains blocked by natural-arrival/runtime/full-matrix evidence.",
+      "notes": [
+        "No unit, spell, growth, economy, faction, town-cost, or authored balance content changes were made.",
+        "This is not production readiness. Remaining work includes reducing or explaining natural town/hero arrival distance over longer runs, optimizing long-run runtime enough for broader matrices, full 100-seed eight-week execution, Medium/generalized generated-map behavior when unblocked, and live-client pacing review."
+      ]
+    },
     {
       "id": "strategic-ai-generated-town-battle-handoff-proof-10184",
       "title": "Strategic AI Generated Town Battle Handoff Proof",
@@ -47985,12 +48039,12 @@
     "summary": "BattleAiRules side payload lookup now derives missing player/enemy AI payloads from commander state so internal damage estimates and trait/objective scoring stay aligned on resumed or synthetic battle states without changing balance content."
   },
   "active_slice": {
-    "id": "strategic-ai-generated-town-battle-handoff-proof-10184",
-    "title": "Strategic AI Generated Town Battle Handoff Proof",
+    "id": "strategic-ai-natural-battle-handoff-matrix-10184",
+    "title": "Strategic AI Natural Battle Handoff Matrix",
     "status": "completed",
-    "updatedAt": "2026-05-31T19:52:06Z"
+    "updatedAt": "2026-05-31T20:11:50Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T19:52:06Z",
+  "currentSliceUpdatedAt": "2026-05-31T20:11:50Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -51201,14 +51255,14 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-generated-town-battle-handoff-proof-10184",
+  "currentSlice": "strategic-ai-natural-battle-handoff-matrix-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T19:52:06Z",
-    "sliceId": "strategic-ai-generated-town-battle-handoff-proof-10184",
+    "updatedAt": "2026-05-31T20:11:50Z",
+    "sliceId": "strategic-ai-natural-battle-handoff-matrix-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn (passed with warning status; 19 pass, 0 fail, 1 warning, 1 deferred; generated Native RMG town handoff case passed with town_defense battle and queue event evidence)",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused Native RMG smoke; 1/1 rows, 2/2 turns, behavior_bug_count 0, stalled_turn_count 0, tactical_battle_queued_count key present; report keeps expected full-matrix scope blocker)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 480 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused Native RMG run; 1/1 row, 14/14 turns, natural tactical pressure 14 turns, natural arrivals 0, queue events 0, closest tactical town target distance 8; emits no-natural-tactical-arrival blocker)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused Native RMG smoke; 2/2 rows, 8/8 turns, natural tactical pressure 8 turns, natural arrivals 0, closest tactical town target distance 12)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -51217,23 +51271,24 @@
     ],
     "evidence": {
       "implemented": [
-        "Enemy town-defense and hero-intercept handoff paths now return observable AI queue events when they create live battle payloads.",
-        "The headless harness includes a Native RMG disk-package generated-map case that seeds an in-range AI town target and proves the live town-defense battle handoff starts.",
-        "Strategic long-run handoff telemetry now includes tactical_battle_queued_count so town and hero tactical queue events remain visible in generated-map reports."
+        "Strategic long-run handoff summary now exposes natural tactical pressure, natural tactical arrival, tactical queue counts, and nearest tactical target context with seed, day, and turn.",
+        "Focused long-run blockers now distinguish no natural town/hero arrival from a true missed battle handoff after arrival.",
+        "The current Native RMG focused evidence shows AI maintains town pressure, but town/hero tactical targets do not naturally reach handoff range within the measured windows."
       ],
       "focused_case": {
-        "case_id": "native_rmg_in_range_town_target_queues_battle",
-        "startup_source": "native_rmg_disk_package",
-        "faction_id": "faction_sunvault",
-        "roster_hero_id": "hero_solera",
-        "target_town_id": "native_rmg_town_start_01",
-        "battle_context_type": "town_defense",
-        "battle_started": true,
-        "battle_queue_event_count": 1
+        "case_id": "strategic_ai_long_run_no_natural_tactical_arrival",
+        "seed": "strategic-ai-long-run-smoke-native-small-001",
+        "turn_count": 14,
+        "natural_tactical_battle_pressure_turn_count": 14,
+        "natural_tactical_battle_arrival_turn_count": 0,
+        "natural_tactical_battle_queue_event_count": 0,
+        "closest_tactical_target_distance": 8,
+        "closest_tactical_target_kind": "town",
+        "closest_tactical_target_id": "native_rmg_town_start_01"
       },
       "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need broader natural generated-map battle-arrival evidence, full 100-seed eight-week matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
-      "policy": "Generated-map tactical battle handoff proof only; no content balance changes and no production-ready AI claim."
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need natural generated-map town/hero arrival fixes or stronger evidence, runtime optimization for broader matrices, full 100-seed eight-week matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "Natural generated-map tactical handoff evidence only; no content balance changes and no production-ready AI claim."
     }
   }
 }
