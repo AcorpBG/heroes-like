@@ -102,6 +102,9 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
 		_fail("Long-run matrix observed no enemy activity: %s" % JSON.stringify(summary))
 		return false
+	if int(summary.get("target_integrity_violation_count", 0)) > 0:
+		_fail("Long-run matrix observed self-looking strategic AI target labels: %s" % JSON.stringify(summary))
+		return false
 	if required_event_type.strip_edges() != "":
 		var event_counts: Dictionary = summary.get("event_counts", {}) if summary.get("event_counts", {}) is Dictionary else {}
 		if int(event_counts.get(required_event_type.strip_edges(), 0)) <= 0:
@@ -127,6 +130,9 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		if String(row.get("signature", "")) == "":
 			_fail("Long-run matrix row missing signature: %s" % JSON.stringify(row))
 			return false
+		if int(row.get("target_integrity_violation_count", 0)) > 0:
+			_fail("Long-run matrix row has strategic AI target-integrity violations: %s" % JSON.stringify(row))
+			return false
 		if int(row.get("setup_runtime_msec", -1)) < 0 or int(row.get("row_runtime_msec", 0)) <= 0:
 			_fail("Long-run matrix row missing setup/row runtime telemetry: %s" % JSON.stringify(row))
 			return false
@@ -137,6 +143,10 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 				return false
 			if int(turn_result.get("turn_runtime_msec", -1)) < 0:
 				_fail("Long-run matrix turn result missing runtime telemetry: %s" % JSON.stringify(turn_result))
+				return false
+			var target_integrity_violations: Array = turn_result.get("target_integrity_violations", []) if turn_result.get("target_integrity_violations", []) is Array else []
+			if not target_integrity_violations.is_empty():
+				_fail("Long-run matrix turn has strategic AI target-integrity violations: %s" % JSON.stringify(turn_result))
 				return false
 	if int(summary.get("max_row_runtime_msec", 0)) <= 0 or int(summary.get("max_turn_runtime_msec", -1)) < 0:
 		_fail("Long-run matrix summary missing runtime telemetry: %s" % JSON.stringify(summary))
