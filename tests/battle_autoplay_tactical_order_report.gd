@@ -100,6 +100,48 @@ func _validate_tactical_order_argument_commander_payload() -> Dictionary:
 	if float(bridged_scores.get("strike", 0.0)) <= float(baseline_scores.get("strike", 0.0)):
 		_fail("Vanguard argument commander payload did not improve non-spell strike scoring: baseline=%s bridged=%s" % [JSON.stringify(baseline), JSON.stringify(bridged)])
 		return {}
+	var enemy_battle_state := session.battle.duplicate(true)
+	enemy_battle_state["enemy_hero"] = commander.duplicate(true)
+	var enemy_state_fallback := BattleAiRules.choose_stack_tactical_order(enemy_battle_state, active_stack, "player")
+	var enemy_state_scores: Dictionary = enemy_state_fallback.get("candidate_scores", {}) if enemy_state_fallback.get("candidate_scores", {}) is Dictionary else {}
+	if String(enemy_state_fallback.get("commander_payload_source", "")) != "battle":
+		_fail("Enemy battle-state commander fallback did not report battle payload source: %s" % JSON.stringify(enemy_state_fallback))
+		return {}
+	if float(enemy_state_scores.get("strike", 0.0)) <= float(baseline_scores.get("strike", 0.0)):
+		_fail("Enemy battle-state vanguard commander did not improve non-spell strike scoring: baseline=%s fallback=%s" % [JSON.stringify(baseline), JSON.stringify(enemy_state_fallback)])
+		return {}
+	if enemy_battle_state.has("enemy_hero_payload"):
+		_fail("Enemy battle-state commander fallback mutated source battle state: %s" % JSON.stringify(enemy_battle_state))
+		return {}
+	var player_session := _adjacent_ranged_session()
+	player_session.battle["battlefield_tags"] = ["elevated_fire"]
+	var player_active := BattleRulesScript.get_active_stack(player_session.battle)
+	var player_baseline := BattleAiRules.choose_stack_tactical_order(player_session.battle, player_active, "enemy")
+	var player_commander := {
+		"hero_id": "test_player_vanguard_commander",
+		"archetype": "marshal",
+		"command_path": "might",
+		"battle_traits": ["vanguard"],
+		"command": {"attack": 0, "defense": 0, "power": 0, "knowledge": 0},
+	}
+	var player_battle_state := player_session.battle.duplicate(true)
+	player_battle_state["player_commander_state"] = player_commander.duplicate(true)
+	var player_state_fallback := BattleAiRules.choose_stack_tactical_order(player_battle_state, player_active, "enemy")
+	var player_baseline_scores: Dictionary = player_baseline.get("candidate_scores", {}) if player_baseline.get("candidate_scores", {}) is Dictionary else {}
+	var player_state_scores: Dictionary = player_state_fallback.get("candidate_scores", {}) if player_state_fallback.get("candidate_scores", {}) is Dictionary else {}
+	var player_action_key := String(player_state_fallback.get("action", ""))
+	if String(player_state_fallback.get("commander_payload_source", "")) != "battle":
+		_fail("Player battle-state commander fallback did not report battle payload source: %s" % JSON.stringify(player_state_fallback))
+		return {}
+	if player_action_key == "" or not player_baseline_scores.has(player_action_key) or not player_state_scores.has(player_action_key):
+		_fail("Player battle-state commander fallback did not expose comparable action score evidence: baseline=%s fallback=%s" % [JSON.stringify(player_baseline), JSON.stringify(player_state_fallback)])
+		return {}
+	if float(player_state_scores.get(player_action_key, 0.0)) <= float(player_baseline_scores.get(player_action_key, 0.0)):
+		_fail("Player battle-state vanguard commander did not improve non-spell action scoring: baseline=%s fallback=%s" % [JSON.stringify(player_baseline), JSON.stringify(player_state_fallback)])
+		return {}
+	if player_battle_state.has("player_hero"):
+		_fail("Player battle-state commander fallback mutated source battle state: %s" % JSON.stringify(player_battle_state))
+		return {}
 	if session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"):
 		_fail("Argument commander payload bridge mutated source battle state: %s" % JSON.stringify(session.battle))
 		return {}
@@ -109,7 +151,14 @@ func _validate_tactical_order_argument_commander_payload() -> Dictionary:
 		"bridged_source": String(bridged.get("commander_payload_source", "")),
 		"baseline_strike_score": float(baseline_scores.get("strike", 0.0)),
 		"bridged_strike_score": float(bridged_scores.get("strike", 0.0)),
+		"enemy_battle_state_source": String(enemy_state_fallback.get("commander_payload_source", "")),
+		"enemy_battle_state_strike_score": float(enemy_state_scores.get("strike", 0.0)),
+		"player_battle_state_source": String(player_state_fallback.get("commander_payload_source", "")),
+		"player_battle_state_action": player_action_key,
+		"player_battle_state_action_score": float(player_state_scores.get(player_action_key, 0.0)),
 		"source_battle_mutated": session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"),
+		"enemy_battle_state_mutated": enemy_battle_state.has("enemy_hero_payload"),
+		"player_battle_state_mutated": player_battle_state.has("player_hero"),
 	}
 
 func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:

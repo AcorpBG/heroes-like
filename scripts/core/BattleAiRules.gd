@@ -553,7 +553,8 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	var resolved_target_side := target_side if target_side != "" else _opposing_side(acting_side)
 	if acting_side == "" or resolved_target_side == "" or acting_side == resolved_target_side:
 		return {}
-	var scoring_battle := _battle_with_side_hero_payload(battle, acting_side, commander_payload)
+	var resolved_commander_payload := _side_commander_state_for_ai(battle, acting_side, commander_payload)
+	var scoring_battle := _battle_with_side_hero_payload(battle, acting_side, resolved_commander_payload)
 	var targets := _alive_stacks_for_side(scoring_battle, resolved_target_side)
 	if targets.is_empty():
 		return {}
@@ -589,10 +590,27 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	report["candidate_scores"] = candidate_scores
 	return report
 
+static func _side_commander_state_for_ai(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
+	if not commander_payload.is_empty():
+		return commander_payload
+	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
+	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
+	if not existing_payload.is_empty():
+		return existing_payload
+	var state_key := "player_commander_state" if side == "player" else "enemy_hero"
+	var existing_state: Dictionary = battle.get(state_key, {}) if battle.get(state_key, {}) is Dictionary else {}
+	if not existing_state.is_empty():
+		return existing_state
+	return {}
+
 static func _side_commander_payload_source(battle: Dictionary, side: String, commander_payload: Dictionary) -> String:
 	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
 	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
 	if not existing_payload.is_empty():
+		return "battle"
+	var state_key := "player_commander_state" if side == "player" else "enemy_hero"
+	var existing_state: Dictionary = battle.get(state_key, {}) if battle.get(state_key, {}) is Dictionary else {}
+	if not existing_state.is_empty():
 		return "battle"
 	if not commander_payload.is_empty():
 		return "argument"
