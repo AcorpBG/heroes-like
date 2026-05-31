@@ -18,14 +18,18 @@ func _run() -> void:
 	var guarded_case_report := _guarded_artifact_claim_retargets_to_guard_case()
 	if guarded_case_report.is_empty():
 		return
+	var support_case_report := _active_front_supports_and_groups_for_artifact_case()
+	if support_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "artifact_relic_tasks_are_durable",
-		"behavior_policy": "artifact_targets_use_saved_task_continuity_and_guarded_claim_routing",
+		"behavior_policy": "artifact_targets_use_saved_task_continuity_and_guarded_claim_routing_with_active_front_support",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"guarded_claim_case": guarded_case_report,
+		"support_case": support_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -272,6 +276,113 @@ func _guarded_artifact_claim_retargets_to_guard_case() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _active_front_supports_and_groups_for_artifact_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	var relic := _artifact_node(session, RELIC_TARGET_ID)
+	if relic.is_empty():
+		return {}
+	var approach_tiles := _artifact_support_approach_tiles(session, relic)
+	if approach_tiles.size() < 2:
+		_fail("Could not find artifact support approach tiles for %s." % RELIC_TARGET_ID)
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(_artifact_guard_encounter(relic))
+	session.overworld["encounters"] = encounters
+
+	var leader: Dictionary = _raid_seed(session, "hero_vaska", "artifact_support_leader_vaska", {"x": approach_tiles[0].x, "y": approach_tiles[0].y})
+	leader["target_kind"] = "artifact"
+	leader["target_placement_id"] = RELIC_TARGET_ID
+	leader["target_label"] = ArtifactRules.describe_artifact(String(relic.get("artifact_id", "")))
+	leader["target_x"] = int(relic.get("x", 0))
+	leader["target_y"] = int(relic.get("y", 0))
+	leader["goal_x"] = int(relic.get("x", 0))
+	leader["goal_y"] = int(relic.get("y", 0))
+	leader["target_reason_codes"] = ["artifact_pressure", "guarded_artifact_claim", "awaiting_support"]
+	leader["target_public_reason"] = "command relic"
+	leader["target_public_importance"] = "high"
+	leader["target_debug_reason"] = "artifact active-front support fixture leader"
+	leader = _set_raid_bog_brutes(leader, 7)
+	_append_encounter(session, leader)
+	_seed_task_board(session, [_task("hero_vaska", RELIC_TARGET_ID, "active", "valid")])
+
+	var support: Dictionary = _raid_seed(session, "hero_sable", "artifact_support_sable", {"x": approach_tiles[1].x, "y": approach_tiles[1].y})
+	support = _set_raid_bog_brutes(support, 3)
+	var assigned_support := EnemyAdventureRules.assign_target(session, config, support)
+	if String(assigned_support.get("target_kind", "")) != "artifact" or String(assigned_support.get("target_placement_id", "")) != RELIC_TARGET_ID:
+		_fail("Artifact active-front support assignment did not reinforce the relic front: %s" % JSON.stringify(assigned_support))
+		return {}
+	var support_reason_codes := _string_array(assigned_support.get("target_reason_codes", []))
+	if "active_front_support" not in support_reason_codes or "artifact_pressure" not in support_reason_codes:
+		_fail("Artifact active-front support assignment missed support/artifact reason codes: %s" % JSON.stringify(assigned_support))
+		return {}
+	if String(assigned_support.get("supporting_front_placement_id", "")) != "artifact_support_leader_vaska":
+		_fail("Artifact active-front support assignment did not remember the supported leader: %s" % JSON.stringify(assigned_support))
+		return {}
+	_assert_task_status(session, "hero_vaska", "artifact", RELIC_TARGET_ID, "active", "valid")
+	_assert_task_status(session, "hero_sable", "artifact", RELIC_TARGET_ID, "active", "valid")
+	if _failed:
+		return {}
+
+	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
+	var support_strength_before := EnemyAdventureRules.raid_strength(assigned_support)
+	_append_encounter(session, assigned_support)
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	var after_leader := _encounter(session, "artifact_support_leader_vaska")
+	if after_leader.is_empty():
+		_fail("Artifact support leader disappeared after grouping.")
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	if "artifact_support_sable" not in resolved:
+		_fail("Artifact support raid was not removed from active pressure after grouping: %s" % JSON.stringify(resolved))
+		return {}
+	var leader_strength_after := EnemyAdventureRules.raid_strength(after_leader)
+	if leader_strength_after < leader_strength_before + support_strength_before:
+		_fail("Artifact leader did not absorb support strength: before %d support %d after %d" % [leader_strength_before, support_strength_before, leader_strength_after])
+		return {}
+	if int(after_leader.get("grouped_commander_support_count", 0)) < 1:
+		_fail("Artifact commander-led support was not counted on the grouped front: %s" % JSON.stringify(after_leader))
+		return {}
+	if String(after_leader.get("target_kind", "")) != "encounter" or String(after_leader.get("target_placement_id", "")) != "warcrest_ruin_guard":
+		_fail("Grouped artifact leader did not preserve guarded-claim redirect to the guard: %s" % JSON.stringify(after_leader))
+		return {}
+	var event_types := _event_types(advance_result.get("events", []))
+	if "ai_raid_grouped" not in event_types or "ai_target_assigned" not in event_types:
+		_fail("Artifact active-front support did not emit grouping and redirect events: %s" % JSON.stringify(advance_result))
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(advance_result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Artifact active-front support public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	_assert_task_status(session, "hero_vaska", "artifact", RELIC_TARGET_ID, "active", "valid")
+	_assert_task_status(session, "hero_sable", "artifact", RELIC_TARGET_ID, "completed", "valid")
+	if _failed:
+		return {}
+	var guarded_node := _artifact_node(session, RELIC_TARGET_ID)
+	if bool(guarded_node.get("collected", false)):
+		_fail("Grouped artifact front collected the relic before clearing its guard: %s" % JSON.stringify(guarded_node))
+		return {}
+	return {
+		"case_id": "active_front_support_groups_for_guarded_artifact",
+		"leader_id": "artifact_support_leader_vaska",
+		"support_id": "artifact_support_sable",
+		"target_id": RELIC_TARGET_ID,
+		"support_assignment_reason_codes": support_reason_codes,
+		"supporting_front_placement_id": String(assigned_support.get("supporting_front_placement_id", "")),
+		"leader_strength_before": leader_strength_before,
+		"support_strength_before": support_strength_before,
+		"leader_strength_after": leader_strength_after,
+		"grouped_commander_support_count": int(after_leader.get("grouped_commander_support_count", 0)),
+		"redirect_target_kind": String(after_leader.get("target_kind", "")),
+		"redirect_target_id": String(after_leader.get("target_placement_id", "")),
+		"artifact_collected_before_guard_clear": bool(guarded_node.get("collected", false)),
+		"event_types": event_types,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _seed_task_board(session, tasks: Array) -> void:
 	var state := _enemy_state(session)
 	state["hero_task_state"] = {
@@ -331,6 +442,49 @@ func _raid_seed(session, roster_hero_id: String, placement_id: String, origin: D
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _set_raid_bog_brutes(raid: Dictionary, count: int) -> Dictionary:
+	var updated := raid.duplicate(true)
+	var army := {
+		"id": "%s_host" % String(updated.get("placement_id", "artifact_objective")),
+		"name": "Artifact Objective Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": max(0, count)}],
+	}
+	updated["enemy_army"] = army
+	var commander_state = updated.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		updated["enemy_commander_state"] = EnemyAdventureRules.sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(updated.get("encounter_id", updated.get("id", "")))
+		)
+	return updated
+
+func _artifact_support_approach_tiles(session, relic: Dictionary) -> Array:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	var artifact_tile := Vector2i(int(relic.get("x", 0)), int(relic.get("y", 0)))
+	for first_delta in [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]:
+		var leader_tile: Vector2i = artifact_tile + first_delta
+		if _support_tile_blocked(session, leader_tile, map_size):
+			continue
+		for second_delta in [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]:
+			var support_tile: Vector2i = leader_tile + second_delta
+			if support_tile == artifact_tile:
+				continue
+			if _support_tile_blocked(session, support_tile, map_size):
+				continue
+			return [leader_tile, support_tile]
+	return []
+
+func _support_tile_blocked(session, tile: Vector2i, map_size: Vector2i) -> bool:
+	if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+		return true
+	return OverworldRules.tile_is_blocked(session, tile.x, tile.y)
+
+func _append_encounter(session, encounter: Dictionary) -> void:
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(encounter)
+	session.overworld["encounters"] = encounters
 
 func _guarded_artifact_claim_raid(session, relic: Dictionary) -> Dictionary:
 	var raid := {

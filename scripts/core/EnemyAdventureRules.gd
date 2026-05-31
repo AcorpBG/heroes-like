@@ -804,6 +804,9 @@ static func _active_front_needs_support(front: Dictionary, config: Dictionary = 
 		"resource_risk_staging",
 		"resource_risk_regroup",
 		"objective_front",
+		"artifact_pressure",
+		"guarded_artifact_claim",
+		"guard_cleared",
 	]:
 		if code in reason_codes:
 			return true
@@ -824,10 +827,10 @@ static func _active_front_support_candidate(
 	var target_kind := String(front.get("target_kind", ""))
 	var target_id := String(front.get("target_placement_id", ""))
 	var front_reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
-	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter", "hero", "resource"]:
+	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter", "hero", "resource", "artifact"]:
 		target_kind = String(front.get("previous_target_kind", ""))
 		target_id = String(front.get("previous_target_placement_id", ""))
-	if target_kind not in ["town", "encounter", "hero", "resource"] or target_id == "":
+	if target_kind not in ["town", "encounter", "hero", "resource", "artifact"] or target_id == "":
 		return {}
 	var target_label := ""
 	var target_x := 0
@@ -892,6 +895,18 @@ static func _active_front_support_candidate(
 			target_y = int(node.get("y", 0))
 			goal_tiles = [Vector2i(target_x, target_y)]
 			objective_anchor = _objective_proximity_bonus(session, target_x, target_y) > 0
+		"artifact":
+			var artifact_result := _find_artifact_by_placement(session, target_id)
+			if int(artifact_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = artifact_result.get("node", {})
+			if bool(node.get("collected", false)):
+				return {}
+			target_label = ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", "")))
+			target_x = int(node.get("x", 0))
+			target_y = int(node.get("y", 0))
+			goal_tiles = [Vector2i(target_x, target_y)]
+			objective_anchor = target_is_objective_anchor(session, "artifact", target_id)
 	if goal_tiles.is_empty():
 		return {}
 	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
@@ -913,6 +928,9 @@ static func _active_front_support_candidate(
 		"resource_risk_staging",
 		"resource_risk_regroup",
 		"exposed_hero",
+		"artifact_pressure",
+		"guarded_artifact_claim",
+		"guard_cleared",
 	]:
 		if code in front_reason_codes and code not in reason_codes:
 			reason_codes.append(code)
@@ -924,6 +942,8 @@ static func _active_front_support_candidate(
 		reason_codes.append("hero_hunt")
 	if target_kind == "resource" and "site_contested" not in reason_codes:
 		reason_codes.append("site_contested")
+	if target_kind == "artifact" and "artifact_pressure" not in reason_codes:
+		reason_codes.append("artifact_pressure")
 	var strength_gap: int = max(0, desired_raid_strength(front) - raid_strength(front))
 	var committed_support_strength := _active_front_committed_support_strength(
 		session,
@@ -939,6 +959,8 @@ static func _active_front_support_candidate(
 	var support_priority_base := 180
 	if target_kind == "hero":
 		support_priority_base = 470
+	elif target_kind == "artifact":
+		support_priority_base = 300
 	var priority: int = int(max(
 		0,
 		_weighted_priority(
@@ -1322,7 +1344,7 @@ static func group_nearby_raids_for_town_assault(
 	if session == null or leader.is_empty() or leader_index < 0 or leader_index >= encounters.size():
 		return {"encounter": leader, "grouped": false, "events": []}
 	var target_kind := String(leader.get("target_kind", ""))
-	if target_kind not in ["town", "encounter", "hero", "resource"]:
+	if target_kind not in ["town", "encounter", "hero", "resource", "artifact"]:
 		return {"encounter": leader, "grouped": false, "events": []}
 	if raid_regroup_needed(leader, config, faction_id):
 		return {"encounter": leader, "grouped": false, "events": []}
@@ -1479,6 +1501,18 @@ static func _raid_grouping_target_view(
 				"target_x": int(node.get("x", 0)),
 				"target_y": int(node.get("y", 0)),
 			}
+		"artifact":
+			var artifact_result := _find_artifact_by_placement(session, target_id)
+			if int(artifact_result.get("index", -1)) < 0:
+				return {}
+			var node: Dictionary = artifact_result.get("node", {})
+			if bool(node.get("collected", false)):
+				return {}
+			return {
+				"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
+				"target_x": int(node.get("x", 0)),
+				"target_y": int(node.get("y", 0)),
+			}
 	return {}
 
 static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes: Array) -> Array:
@@ -1491,6 +1525,8 @@ static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes
 		output.append("hero_hunt")
 	elif target_kind == "resource":
 		output.append("site_contested")
+	elif target_kind == "artifact":
+		output.append("artifact_pressure")
 	for code in [
 		"guard_clearance",
 		"site_contested",
@@ -1500,6 +1536,9 @@ static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes
 		"hero_hunt_risk_regroup",
 		"resource_risk_staging",
 		"resource_risk_regroup",
+		"guarded_artifact_claim",
+		"guard_cleared",
+		"artifact_pressure",
 	]:
 		if code in leader_reason_codes and code not in output:
 			output.append(code)
