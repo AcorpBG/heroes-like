@@ -30,6 +30,9 @@ func _run() -> void:
 	var spell_study_case := _live_enemy_turn_studies_town_spell()
 	if spell_study_case.is_empty():
 		return
+	var task_fit_spell_study_case := _live_enemy_turn_studies_task_fit_overworld_spell()
+	if task_fit_spell_study_case.is_empty():
+		return
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
@@ -61,9 +64,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_building_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
+		"behavior_policy": "town_building_task_fit_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -180,6 +183,77 @@ func _live_enemy_turn_studies_town_spell() -> Dictionary:
 		"accessible_spell_count": accessible.size(),
 		"known_spells_before": int(before_known.get(actor_id, 0)),
 		"known_spells_after": after_known_count,
+		"event_types": _event_types(events),
+	}
+
+func _live_enemy_turn_studies_task_fit_overworld_spell() -> Dictionary:
+	var session = _base_session()
+	_set_enemy_treasury(session, TREASURY)
+	_prepare_spell_study_town(session)
+	var accessible := TownRules.accessible_spell_ids(_town_by_id(session, DUSKFEN))
+	var accessible_overworld := _spell_ids_with_context(accessible, "overworld")
+	var accessible_battle := _spell_ids_with_context(accessible, "battle")
+	if accessible_overworld.is_empty() or accessible_battle.is_empty():
+		_fail("Task-fit spell-study fixture needs both overworld and battle spells: accessible=%s" % JSON.stringify(accessible))
+		return {}
+	var actor_id := "hero_sable"
+	var before_state := _enemy_state(session)
+	before_state["pressure"] = 0
+	before_state["raid_counter"] = 0
+	before_state["commander_counter"] = 0
+	before_state["hero_task_state"] = {
+		"schema_version": 1,
+		"planner_epoch": 1,
+		"tasks": [
+			{
+				"task_id": "test_task_fit_spell_study_explore",
+				"owner_faction_id": FACTION_ID,
+				"actor_kind": "commander_roster",
+				"actor_id": actor_id,
+				"task_class": "scout_frontier",
+				"task_status": "planned",
+				"target_kind": "explore",
+				"target_id": "explore:5:5",
+				"target_x": 5,
+				"target_y": 5,
+				"priority_reason_codes": ["strategic_task_planner", "exploration"],
+				"assigned_day": int(session.day),
+				"expires_day": int(session.day) + 10,
+			},
+		],
+	}
+	_update_enemy_state(session, before_state)
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	var events: Array = result.get("events", []) if result.get("events", []) is Array else []
+	var study_event := _event_by_type(events, "ai_commander_studied_spell")
+	if study_event.is_empty():
+		_fail("Task-fit spell-study turn did not emit town spell study: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	var studied_actor_id := String(study_event.get("actor_id", ""))
+	var learned_spell_id := String(study_event.get("learned_spell_id", ""))
+	if studied_actor_id != actor_id:
+		_fail("Exploration task-fit spell study used wrong commander: expected=%s event=%s" % [actor_id, JSON.stringify(study_event)])
+		return {}
+	if String(ContentService.get_spell(learned_spell_id).get("context", "")) != "overworld":
+		_fail("Exploration commander should study an overworld spell, learned=%s event=%s" % [learned_spell_id, JSON.stringify(study_event)])
+		return {}
+	var role := String(ContentService.get_spell(learned_spell_id).get("primary_role", ""))
+	if role.find("movement") < 0 and role.find("scout") < 0:
+		_fail("Exploration commander learned overworld spell without movement/scouting role: spell=%s role=%s" % [learned_spell_id, role])
+		return {}
+	var after_state := _commander_state(session, actor_id)
+	if not SpellRules.knows_spell(after_state, learned_spell_id):
+		_fail("Task-fit learned spell did not persist in commander spellbook: actor=%s spell=%s" % [actor_id, learned_spell_id])
+		return {}
+	return {
+		"case_id": "live_enemy_turn_task_fit_spell_study_prefers_overworld",
+		"actor_id": actor_id,
+		"task_kind": "explore",
+		"learned_spell_id": learned_spell_id,
+		"learned_spell_context": "overworld",
+		"learned_spell_role": role,
+		"accessible_overworld_spell_count": accessible_overworld.size(),
+		"accessible_battle_spell_count": accessible_battle.size(),
 		"event_types": _event_types(events),
 	}
 
@@ -839,6 +913,16 @@ func _known_spell_count(commander_state: Dictionary) -> int:
 	var spellbook: Dictionary = commander_state.get("spellbook", {}) if commander_state.get("spellbook", {}) is Dictionary else {}
 	var known: Array = spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
 	return known.size()
+
+func _spell_ids_with_context(spell_ids: Array, context: String) -> Array:
+	var output := []
+	for spell_id_value in spell_ids:
+		var spell_id := String(spell_id_value)
+		if spell_id == "":
+			continue
+		if String(ContentService.get_spell(spell_id).get("context", "")) == context:
+			output.append(spell_id)
+	return output
 
 func _active_raid_count(session) -> int:
 	var count := 0

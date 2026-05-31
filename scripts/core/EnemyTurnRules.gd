@@ -1271,6 +1271,10 @@ static func _enemy_spell_study_score(
 	var command_path := String(commander_state.get("command_path", hero_template.get("command_path", "")))
 	var archetype := String(commander_state.get("archetype", ""))
 	var task_kind := String(task.get("target_kind", ""))
+	var overworld_task := task_kind in ["explore", "resource", "artifact", "objective"]
+	var combat_task := task_kind in ["hero", "town", "encounter"]
+	if task_kind != "":
+		score += 30.0
 	if command_path == "magic":
 		score += 28.0
 		score += float(max(0, int(command.get("power", 0)))) * 3.0
@@ -1278,6 +1282,14 @@ static func _enemy_spell_study_score(
 	else:
 		score += 8.0
 	if context == "overworld":
+		if overworld_task:
+			score += 110.0
+			if effect_type == "restore_movement" or primary_role.find("movement") >= 0:
+				score += 34.0
+			if effect_type.find("reveal") >= 0 or primary_role.find("scout") >= 0:
+				score += 32.0
+		elif combat_task:
+			score -= 24.0
 		if task_kind in ["resource", "artifact", "encounter", "town", "explore", "objective"]:
 			score += 24.0
 		if effect_type == "restore_movement" or primary_role.find("movement") >= 0:
@@ -1287,6 +1299,10 @@ static func _enemy_spell_study_score(
 		if archetype in ["pathfinder", "outrider", "roadwarden", "warrenhunter", "relaysurveyor"]:
 			score += 14.0
 	else:
+		if combat_task:
+			score += 54.0
+		elif overworld_task:
+			score -= 46.0
 		if task_kind in ["hero", "town", "encounter", "resource", "artifact"]:
 			score += 18.0
 		if "damage" in categories or effect_type == "damage_enemy":
