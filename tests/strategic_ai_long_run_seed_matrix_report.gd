@@ -2,24 +2,48 @@ extends Node
 
 const HeadlessSimulationHarnessRulesScript = preload("res://scripts/core/HeadlessSimulationHarnessRules.gd")
 const REPORT_ID := "STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT"
+const DEFAULT_SEED_COUNT := 1
+const DEFAULT_TURN_COUNT := 1
+const DEFAULT_BATTLE_STEP_LIMIT := 96
+const DEFAULT_PRESSURE_FLOOR := 999
+const DEFAULT_SEED_PREFIX := "strategic-ai-long-run-smoke-native-small"
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var report: Dictionary = HeadlessSimulationHarnessRulesScript.build_strategic_ai_long_run_seed_matrix_report({
-		"seed_count": 1,
-		"turn_count": 1,
-		"battle_step_limit": 96,
-		"pressure_floor": 999,
-		"seed_prefix": "strategic-ai-long-run-smoke-native-small",
-	})
-	if not _assert_report(report):
+	var config := _config_from_environment()
+	var report: Dictionary = HeadlessSimulationHarnessRulesScript.build_strategic_ai_long_run_seed_matrix_report(config)
+	if not _assert_report(report, int(config.get("seed_count", DEFAULT_SEED_COUNT)), int(config.get("turn_count", DEFAULT_TURN_COUNT))):
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
 	get_tree().quit(0)
 
-func _assert_report(report: Dictionary) -> bool:
+func _config_from_environment() -> Dictionary:
+	return {
+		"seed_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_SEEDS", DEFAULT_SEED_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET),
+		"turn_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_TURNS", DEFAULT_TURN_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET),
+		"battle_step_limit": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT", DEFAULT_BATTLE_STEP_LIMIT, 1, 2048),
+		"pressure_floor": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR", DEFAULT_PRESSURE_FLOOR, 0, 9999),
+		"seed_prefix": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX", DEFAULT_SEED_PREFIX),
+	}
+
+func _env_int(name: String, fallback: int, min_value: int, max_value: int) -> int:
+	var raw: String = OS.get_environment(name).strip_edges()
+	if raw == "" or not raw.is_valid_int():
+		return fallback
+	var value: int = max(min_value, int(raw))
+	if max_value > 0:
+		value = min(value, max_value)
+	return value
+
+func _env_string(name: String, fallback: String) -> String:
+	var raw: String = OS.get_environment(name).strip_edges()
+	if raw == "":
+		return fallback
+	return raw
+
+func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_count: int) -> bool:
 	if String(report.get("schema_id", "")) != HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID:
 		_fail("Long-run matrix schema mismatch: %s" % JSON.stringify(report))
 		return false
@@ -37,11 +61,17 @@ func _assert_report(report: Dictionary) -> bool:
 		_fail("Long-run matrix must not use authored scenarios as the balance surface: %s" % JSON.stringify(policy))
 		return false
 	var summary: Dictionary = report.get("summary", {}) if report.get("summary", {}) is Dictionary else {}
-	if int(summary.get("row_count", 0)) != 1:
-		_fail("Long-run matrix smoke row count mismatch: %s" % JSON.stringify(summary))
+	if int(report.get("seed_count", 0)) != expected_seed_count:
+		_fail("Long-run matrix requested seed count mismatch: %s" % JSON.stringify(report))
 		return false
-	if int(summary.get("setup_ok_count", 0)) != 1:
-		_fail("Long-run matrix must start every Native RMG smoke seed: %s" % JSON.stringify(summary))
+	if int(report.get("turn_count", 0)) != expected_turn_count:
+		_fail("Long-run matrix requested turn count mismatch: %s" % JSON.stringify(report))
+		return false
+	if int(summary.get("row_count", 0)) != expected_seed_count:
+		_fail("Long-run matrix row count mismatch: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("setup_ok_count", 0)) != expected_seed_count:
+		_fail("Long-run matrix must start every configured Native RMG seed: %s" % JSON.stringify(summary))
 		return false
 	if int(summary.get("turns_completed", 0)) <= 0:
 		_fail("Long-run matrix completed no turns: %s" % JSON.stringify(summary))
@@ -50,8 +80,8 @@ func _assert_report(report: Dictionary) -> bool:
 		_fail("Long-run matrix observed no enemy activity: %s" % JSON.stringify(summary))
 		return false
 	var rows: Array = report.get("rows", []) if report.get("rows", []) is Array else []
-	if rows.size() != 1:
-		_fail("Long-run matrix rows were not emitted.")
+	if rows.size() != expected_seed_count:
+		_fail("Long-run matrix emitted %d rows, expected %d." % [rows.size(), expected_seed_count])
 		return false
 	for row in rows:
 		if not (row is Dictionary):
@@ -67,9 +97,17 @@ func _assert_report(report: Dictionary) -> bool:
 			_fail("Long-run matrix row missing signature: %s" % JSON.stringify(row))
 			return false
 	var blockers: Array = report.get("blocker_rows", []) if report.get("blocker_rows", []) is Array else []
-	if _blocker_row(blockers, "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run").is_empty():
-		_fail("Focused smoke must preserve the full 100-seed eight-week remaining-validation blocker: %s" % JSON.stringify(blockers))
-		return false
+	var full_matrix_blocker := _blocker_row(blockers, "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run")
+	var is_full_matrix := expected_seed_count >= HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET \
+		and expected_turn_count >= HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET
+	if is_full_matrix:
+		if not full_matrix_blocker.is_empty():
+			_fail("Full-target strategic AI matrix must not preserve the focused-run blocker: %s" % JSON.stringify(blockers))
+			return false
+	else:
+		if full_matrix_blocker.is_empty():
+			_fail("Focused strategic AI matrix must preserve the full 100-seed eight-week remaining-validation blocker: %s" % JSON.stringify(blockers))
+			return false
 	var target_planning_count := int(summary.get("target_assignment_count", 0)) \
 		+ int(summary.get("commander_task_planned_count", 0)) \
 		+ int(summary.get("task_board_open_count", 0)) \
