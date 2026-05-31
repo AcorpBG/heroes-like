@@ -1060,11 +1060,13 @@ static func advance_raids(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	state: Dictionary = {}
+	state: Dictionary = {},
+	options: Dictionary = {}
 ) -> Dictionary:
 	DifficultyRulesScript.normalize_session(session)
 	var encounters = session.overworld.get("encounters", [])
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var only_placement_ids := _normalize_string_array(options.get("only_placement_ids", []))
 	var total_pillage = {}
 	var marching_counts = {}
 	var pressure_counts = {}
@@ -1074,6 +1076,8 @@ static func advance_raids(
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
 		if not _is_active_raid(encounter, faction_id, resolved_encounters):
+			continue
+		if not only_placement_ids.is_empty() and String(encounter.get("placement_id", "")) not in only_placement_ids:
 			continue
 
 		encounter = ensure_raid_army(encounter, session)

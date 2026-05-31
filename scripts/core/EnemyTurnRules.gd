@@ -917,12 +917,53 @@ static func _run_empire_cycle(
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages, "events": events}
 
+	var launched_placement_ids := []
 	while _can_launch_raid(session, config, state, faction_id):
 		var spawn_result = _spawn_raid(session, config, state)
 		if spawn_result.is_empty():
 			break
 		messages.append(String(spawn_result.get("message", "")))
 		_append_event_records(events, spawn_result.get("events", []))
+		var launched_id := String(spawn_result.get("placement_id", ""))
+		if launched_id != "" and launched_id not in launched_placement_ids:
+			launched_placement_ids.append(launched_id)
+
+	if not launched_placement_ids.is_empty():
+		var launch_advance_result = EnemyAdventureRulesScript.advance_raids(
+			session,
+			config,
+			faction_id,
+			state,
+			{"only_placement_ids": launched_placement_ids}
+		)
+		state = launch_advance_result.get("state", state)
+		state = _latest_enemy_state(session, faction_id, state)
+		_append_event_records(events, launch_advance_result.get("events", []))
+		var launch_advance_message = String(launch_advance_result.get("message", ""))
+		if launch_advance_message != "":
+			messages.append(launch_advance_message)
+
+		var launched_defense_result = _queue_town_defense_battle(session, config, faction_id)
+		_append_event_records(events, launched_defense_result.get("events", []))
+		var launched_defense_message = String(launched_defense_result.get("message", ""))
+		if launched_defense_message != "":
+			messages.append(launched_defense_message)
+		if bool(launched_defense_result.get("battle_started", false)):
+			state = _latest_enemy_state(session, faction_id, state)
+			state["treasury"] = treasury
+			state["posture"] = "raiding"
+			return {"state": state, "messages": messages, "events": events}
+
+		var launched_intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
+		_append_event_records(events, launched_intercept_result.get("events", []))
+		var launched_intercept_message = String(launched_intercept_result.get("message", ""))
+		if launched_intercept_message != "":
+			messages.append(launched_intercept_message)
+		if bool(launched_intercept_result.get("battle_started", false)):
+			state = _latest_enemy_state(session, faction_id, state)
+			state["treasury"] = treasury
+			state["posture"] = "raiding"
+			return {"state": state, "messages": messages, "events": events}
 
 	var siege_message = _advance_siege(session, config, state, faction_id)
 	if siege_message != "":
@@ -2201,6 +2242,8 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		target_suffix = " toward %s" % String(raid.get("target_label", ""))
 	return {
 		"ok": true,
+		"placement_id": placement_id,
+		"roster_hero_id": roster_hero_id,
 		"message": "%s dispatches %s at %d,%d%s." % [
 			String(config.get("label", config.get("faction_id", "Enemy"))),
 			encounter_name,

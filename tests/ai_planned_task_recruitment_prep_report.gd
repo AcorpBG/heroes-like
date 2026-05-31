@@ -42,6 +42,9 @@ func _run() -> void:
 	var ready_launch_case := _prepared_saved_task_launches_below_pressure()
 	if ready_launch_case.is_empty():
 		return
+	var same_turn_launch_case := _prepared_saved_task_launch_moves_same_turn()
+	if same_turn_launch_case.is_empty():
+		return
 	var unplanned_gate_case := _unplanned_low_pressure_raid_stays_blocked()
 	if unplanned_gate_case.is_empty():
 		return
@@ -51,7 +54,7 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_building_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -393,6 +396,49 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 		"active_raids_after": after_raids,
 	}
 
+func _prepared_saved_task_launch_moves_same_turn() -> Dictionary:
+	var session = _base_session()
+	var config := _high_threshold_config()
+	_set_enemy_treasury(session, TREASURY)
+	_prepare_ready_launch_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 1
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var result := EnemyTurnRules._run_empire_cycle(session, config, state, false)
+	var events: Array = result.get("events", []) if result.get("events", []) is Array else []
+	var assigned_index := _event_index(events, "ai_target_assigned")
+	var prepared_index := _event_index(events, "ai_commander_prepared")
+	if prepared_index < 0:
+		_fail("Same-turn launch movement did not prepare a commander: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	if assigned_index < 0:
+		_fail("Same-turn launch movement did not emit target assignment: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	var launched := _first_active_raid_with_days(session, 1)
+	if launched.is_empty():
+		_fail("Same-turn launch movement did not leave an advanced active raid: %s" % JSON.stringify(session.overworld.get("encounters", [])))
+		return {}
+	if _raid_on_spawn_point(config, launched):
+		_fail("Same-turn launched raid remained on its spawn point: %s" % JSON.stringify(launched))
+		return {}
+	if int(launched.get("goal_distance", 9999)) >= 9999 and not bool(launched.get("arrived", false)):
+		_fail("Same-turn launched raid did not receive a live route target: %s" % JSON.stringify(launched))
+		return {}
+	return {
+		"case_id": "prepared_saved_task_launch_moves_same_turn",
+		"placement_id": String(launched.get("placement_id", "")),
+		"target_kind": String(launched.get("target_kind", "")),
+		"target_id": String(launched.get("target_placement_id", "")),
+		"days_active": int(launched.get("days_active", 0)),
+		"goal_distance": int(launched.get("goal_distance", 9999)),
+		"position": {"x": int(launched.get("x", 0)), "y": int(launched.get("y", 0))},
+		"event_types": _event_types(events),
+	}
+
 func _unplanned_low_pressure_raid_stays_blocked() -> Dictionary:
 	var session = _base_session()
 	var config := _high_threshold_config()
@@ -522,6 +568,24 @@ func _active_raid_count(session) -> int:
 		if encounter is Dictionary and String(encounter.get("spawned_by_faction_id", "")) == FACTION_ID:
 			count += 1
 	return count
+
+func _first_active_raid_with_days(session, minimum_days: int) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != FACTION_ID:
+			continue
+		if int(encounter.get("days_active", 0)) >= minimum_days:
+			return encounter
+	return {}
+
+func _raid_on_spawn_point(config: Dictionary, raid: Dictionary) -> bool:
+	for point in config.get("spawn_points", []):
+		if not (point is Dictionary):
+			continue
+		if int(point.get("x", -999)) == int(raid.get("x", 0)) and int(point.get("y", -999)) == int(raid.get("y", 0)):
+			return true
+	return false
 
 func _has_task_for_actor(state: Dictionary, actor_id: String) -> bool:
 	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}

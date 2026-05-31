@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "",
+  "currentSliceNotes": "No active slice selected; continue with the next production-impacting strategic AI behavior gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T04:15:05Z",
+  "updatedAt": "2026-05-31T04:22:38Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,108 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-same-turn-launch-movement-10184",
+      "title": "Strategic AI Same-Turn Launch Movement",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make newly launched AI commanders advance during the same enemy turn they are dispatched, without giving already-active raids a second move.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd"
+      ],
+      "baselineChecks": [
+        "The enemy empire cycle advances existing raids, queues battles, and only then launches new raids.",
+        "Newly spawned and assigned raids currently sit on their spawn point until the next enemy turn."
+      ],
+      "completionCriteria": [
+        "Spawned raid results expose placement ids so the empire cycle can distinguish new raids from already-active raids.",
+        "After launching raids, the empire cycle advances only the newly launched placements and does not double-move existing raids.",
+        "Same-turn launched raids can trigger the normal post-move town-defense and hero-intercept battle queues.",
+        "Focused coverage proves a prepared launch-ready commander moves on the same turn it is dispatched."
+      ],
+      "nonGoals": [
+        "Do not change raid pressure thresholds or low-pressure unplanned launch gates.",
+        "Do not give already-active raids an extra movement pass.",
+        "Do not add broad report-only gates.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T04:18:06Z",
+      "updatedAt": "2026-05-31T04:22:38Z",
+      "completedAt": "2026-05-31T04:22:38Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "passed",
+          "summary": "Prepared saved-task launch coverage proves a newly dispatched commander advances on the same enemy turn, leaves the spawn point, keeps a live route target, and preserves low-pressure unplanned launch gates."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "result": "passed",
+          "summary": "Spawn commander selection coverage remains valid after exposing spawned placement ids."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "Live task execution remains valid with same-turn launch movement and route pickups."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "passed",
+          "summary": "Hero-hunt intercept and avoidance behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup and retreat behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_town_retake_assault_report.tscn",
+          "result": "passed",
+          "summary": "Town retake assault behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn",
+          "result": "passed",
+          "summary": "Raid assault grouping behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event log boundary remains compact and leak-free."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "plannedBehavior": "Newly launched AI commanders should leave the spawn point immediately while existing raids keep one move per turn.",
+        "implementedBehavior": "Enemy empire turns now collect placement ids for newly spawned raids, advance only those placements immediately, then run normal post-move town-defense and hero-intercept battle queues.",
+        "doubleMoveGuard": "EnemyAdventureRules.advance_raids accepts only_placement_ids, so already-active raids are filtered out of the launch movement pass."
+      }
+    },
     {
       "id": "strategic-ai-midmove-hero-reaction-10184",
       "title": "Strategic AI Mid-Move Hero Reaction",
@@ -41081,6 +41183,68 @@
           "summary": "No whitespace errors."
         }
       ]
+    },
+    {
+      "id": "strategic-ai-same-turn-launch-movement-10184",
+      "completedAt": "2026-05-31T04:22:38Z",
+      "summary": "Newly launched strategic AI commanders now advance during the same enemy turn, while existing active raids are excluded from the launch-only movement pass.",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "passed",
+          "summary": "Prepared saved-task launch coverage proves a newly dispatched commander advances on the same enemy turn, leaves the spawn point, keeps a live route target, and preserves low-pressure unplanned launch gates."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "result": "passed",
+          "summary": "Spawn commander selection coverage remains valid after exposing spawned placement ids."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "Live task execution remains valid with same-turn launch movement and route pickups."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "passed",
+          "summary": "Hero-hunt intercept and avoidance behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup and retreat behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_town_retake_assault_report.tscn",
+          "result": "passed",
+          "summary": "Town retake assault behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn",
+          "result": "passed",
+          "summary": "Raid assault grouping behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event log boundary remains compact and leak-free."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -44022,29 +44186,31 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-active-hero-target-known-gating-10184",
+    "sliceId": "strategic-ai-same-turn-launch-movement-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T02:20:01Z",
+    "updatedAt": "2026-05-31T04:22:38Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "godot --headless --path . tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+      "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "godot --headless --path . tests/ai_town_retake_assault_report.tscn (passed)",
+      "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Active hero targets now require known hero sighting memory and lost en-route hunts retarget before arrival."
+    "summary": "Newly launched strategic AI commanders now advance in the same enemy turn without double-moving existing raids."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T04:15:05Z"
+    "updatedAt": "2026-05-31T04:22:38Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T04:15:05Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:22:38Z",
   "validationHistory": [
     {
       "status": "pass",
