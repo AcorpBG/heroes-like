@@ -7,6 +7,7 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
+static var _path_distance_surface_cache: Dictionary = {}
 
 const COMMANDER_STATUS_AVAILABLE := "available"
 const COMMANDER_STATUS_ACTIVE := "active"
@@ -50,6 +51,7 @@ const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
 const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
 const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
 const RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS := 48
+const PATH_DISTANCE_SURFACE_CACHE_LIMIT := 96
 const AI_HERO_SIGHTING_MEMORY_DAYS := 3
 const AI_HERO_SIGHTING_MAX_RECORDS := 16
 const AI_HERO_TOWN_SIGHT_RADIUS := 7
@@ -16102,21 +16104,24 @@ static func _next_step_toward(
 ) -> Vector2i:
 	if goal_tiles.is_empty():
 		return start
-	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	var encounter_blocked = _occupied_tiles(session, ignore_placement_id)
-	var resource_blocked = _resource_body_blocked_tiles(session, ignore_placement_id)
-	var hero_blocked = _player_hero_blocked_tiles(session, observer_faction_id)
-	var terrain_blocked = _impassable_terrain_tiles(session)
+	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
+	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
+	var encounter_blocked: Dictionary = path_context.get("encounter_blocked", {})
+	var resource_blocked: Dictionary = path_context.get("resource_blocked", {})
+	var hero_blocked: Dictionary = path_context.get("hero_blocked", {})
+	var terrain_blocked: Dictionary = path_context.get("terrain_blocked", {})
 	var goal_lookup := _tile_lookup(goal_tiles)
 	var visited = {}
 	var queue = [start]
 	var parents = {}
 	visited[_pos_key(start)] = true
 	var found_key = ""
+	var head := 0
 
-	while not queue.is_empty():
-		var current: Vector2i = queue.pop_front()
-		if current in goal_tiles:
+	while head < queue.size():
+		var current: Vector2i = queue[head]
+		head += 1
+		if goal_lookup.has(_pos_key(current)):
 			found_key = _pos_key(current)
 			break
 
@@ -16150,20 +16155,23 @@ static func _path_distance(
 		return 9999
 	if start in goal_tiles:
 		return 0
-	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	var encounter_blocked = _occupied_tiles(session, ignore_placement_id)
-	var resource_blocked = _resource_body_blocked_tiles(session, ignore_placement_id)
-	var hero_blocked = _player_hero_blocked_tiles(session, observer_faction_id)
-	var terrain_blocked = _impassable_terrain_tiles(session)
+	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
+	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
+	var encounter_blocked: Dictionary = path_context.get("encounter_blocked", {})
+	var resource_blocked: Dictionary = path_context.get("resource_blocked", {})
+	var hero_blocked: Dictionary = path_context.get("hero_blocked", {})
+	var terrain_blocked: Dictionary = path_context.get("terrain_blocked", {})
 	var goal_lookup := _tile_lookup(goal_tiles)
 	var visited = {}
-	var queue = [{"pos": start, "distance": 0}]
+	var queue := [start]
+	var distances := {_pos_key(start): 0}
 	visited[_pos_key(start)] = true
+	var head := 0
 
-	while not queue.is_empty():
-		var current = queue.pop_front()
-		var pos: Vector2i = current["pos"]
-		var distance = int(current["distance"])
+	while head < queue.size():
+		var pos: Vector2i = queue[head]
+		head += 1
+		var distance := int(distances.get(_pos_key(pos), 0))
 		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var next: Vector2i = pos + delta
 			var key = _pos_key(next)
@@ -16171,11 +16179,106 @@ static func _path_distance(
 				continue
 			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked, map_size):
 				continue
-			if next in goal_tiles:
+			if goal_lookup.has(key):
 				return distance + 1
 			visited[key] = true
-			queue.append({"pos": next, "distance": distance + 1})
+			distances[key] = distance + 1
+			queue.append(next)
 	return 9999
+
+static func _path_distance_surface_context(
+	session: SessionStateStoreScript.SessionData,
+	ignore_placement_id: String,
+	observer_faction_id: String
+) -> Dictionary:
+	var cache_key := _path_distance_surface_cache_key(session, ignore_placement_id, observer_faction_id)
+	if cache_key != "" and _path_distance_surface_cache.has(cache_key):
+		return _path_distance_surface_cache[cache_key]
+	var context := {
+		"map_size": OverworldRulesScript.derive_map_size(session),
+		"encounter_blocked": _occupied_tiles(session, ignore_placement_id),
+		"resource_blocked": _resource_body_blocked_tiles(session, ignore_placement_id),
+		"hero_blocked": _player_hero_blocked_tiles(session, observer_faction_id),
+		"terrain_blocked": _impassable_terrain_tiles(session),
+	}
+	if cache_key != "":
+		if _path_distance_surface_cache.size() >= PATH_DISTANCE_SURFACE_CACHE_LIMIT:
+			_path_distance_surface_cache.clear()
+		_path_distance_surface_cache[cache_key] = context
+	return context
+
+static func _path_distance_surface_cache_key(
+	session: SessionStateStoreScript.SessionData,
+	ignore_placement_id: String,
+	observer_faction_id: String
+) -> String:
+	if session == null:
+		return ""
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	return "%s|%s|%d|%d|%d|%s|%s|%s|%s|%s" % [
+		String(session.session_id),
+		String(session.scenario_id),
+		int(session.day),
+		map_size.x,
+		map_size.y,
+		ignore_placement_id,
+		observer_faction_id,
+		_path_distance_encounter_signature(session),
+		_path_distance_resource_signature(session),
+		_path_distance_hero_signature(session),
+	]
+
+static func _path_distance_encounter_signature(session: SessionStateStoreScript.SessionData) -> String:
+	var resolved_lookup := {}
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	if resolved_encounters is Array:
+		for value in resolved_encounters:
+			resolved_lookup[String(value)] = true
+	var parts := []
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		var placement_id := String(encounter.get("placement_id", ""))
+		parts.append("%s:%d:%d:%d" % [
+			placement_id,
+			int(encounter.get("x", 0)),
+			int(encounter.get("y", 0)),
+			1 if resolved_lookup.has(placement_id) else 0,
+		])
+	parts.sort()
+	return ";".join(parts)
+
+static func _path_distance_resource_signature(session: SessionStateStoreScript.SessionData) -> String:
+	var parts := []
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		parts.append("%s:%d:%d:%d" % [
+			String(node.get("placement_id", "")),
+			int(node.get("x", 0)),
+			int(node.get("y", 0)),
+			1 if bool(node.get("collected", false)) else 0,
+		])
+	parts.sort()
+	return ";".join(parts)
+
+static func _path_distance_hero_signature(session: SessionStateStoreScript.SessionData) -> String:
+	var parts := []
+	for hero_value in _player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+		parts.append("%s:%d:%d:%d" % [
+			String(hero.get("hero_id", hero.get("id", ""))),
+			int(position.get("x", -9999)),
+			int(position.get("y", -9999)),
+			1 if _player_hero_sheltered_in_town(session, hero) else 0,
+		])
+	parts.sort()
+	return ";".join(parts)
 
 static func raid_reinforcement_route_distance(
 	session: SessionStateStoreScript.SessionData,
