@@ -927,6 +927,8 @@ static func _run_empire_cycle(
 		var launched_id := String(spawn_result.get("placement_id", ""))
 		if launched_id != "" and launched_id not in launched_placement_ids:
 			launched_placement_ids.append(launched_id)
+		if String(spawn_result.get("spawn_plan_source", "")).begins_with("emergency_"):
+			break
 
 	if not launched_placement_ids.is_empty():
 		var launch_advance_result = EnemyAdventureRulesScript.advance_raids(
@@ -2244,6 +2246,7 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		"ok": true,
 		"placement_id": placement_id,
 		"roster_hero_id": roster_hero_id,
+		"spawn_plan_source": String(spawn_point.get("spawn_plan_source", "")),
 		"message": "%s dispatches %s at %d,%d%s." % [
 			String(config.get("label", config.get("faction_id", "Enemy"))),
 			encounter_name,
@@ -3564,7 +3567,8 @@ static func _emergency_defense_spawn_candidate_for_point(
 		occupied_commander_ids,
 		roster
 	)
-	var best := {}
+	var best_town := {}
+	var best_resource := {}
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -3617,9 +3621,12 @@ static func _emergency_defense_spawn_candidate_for_point(
 			)
 			if candidate.is_empty():
 				continue
-			if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
-				best = candidate
-	return best
+			if String(candidate.get("spawn_plan_target_kind", "")) == "town":
+				if best_town.is_empty() or _spawn_point_candidate_beats(candidate, best_town):
+					best_town = candidate
+			elif best_resource.is_empty() or _spawn_point_candidate_beats(candidate, best_resource):
+				best_resource = candidate
+	return best_town if not best_town.is_empty() else best_resource
 
 static func _emergency_defense_redirect_applies(raid: Dictionary) -> bool:
 	var kind := String(raid.get("target_kind", ""))
@@ -3753,6 +3760,10 @@ static func _spawn_raid_encounter_id_from_plan(spawn_point: Dictionary, encounte
 	return String(encounter_pool[raid_counter % encounter_pool.size()])
 
 static func _spawn_point_candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
+	var candidate_emergency_town := String(candidate.get("spawn_plan_source", "")) == "emergency_town_defense"
+	var best_emergency_town := String(best.get("spawn_plan_source", "")) == "emergency_town_defense"
+	if candidate_emergency_town != best_emergency_town:
+		return candidate_emergency_town
 	if int(candidate.get("spawn_plan_score", 0)) == int(best.get("spawn_plan_score", 0)):
 		if int(candidate.get("spawn_plan_goal_distance", 9999)) == int(best.get("spawn_plan_goal_distance", 9999)):
 			return int(candidate.get("spawn_order", 9999)) < int(best.get("spawn_order", 9999))

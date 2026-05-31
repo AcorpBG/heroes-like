@@ -3,6 +3,7 @@ extends Node
 const REPORT_ID := "AI_RAID_REGROUP_RETREAT_REPORT"
 const RIVER_PASS := "river-pass"
 const MIRECLAW := "faction_mireclaw"
+const EMBERCOURT := "faction_embercourt"
 
 var _failed := false
 
@@ -37,11 +38,14 @@ func _run() -> void:
 	var commander_risk_case := _commander_risk_tolerance_changes_live_town_gate()
 	if commander_risk_case.is_empty():
 		return
+	var personality_regroup_case := _faction_personality_changes_regroup_threshold()
+	if personality_regroup_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_failed_regroups_rebuild_route_occupancy_and_commander_risk_tolerance_shapes_live_gates",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_failed_regroups_rebuild_route_occupancy_commander_risk_tolerance_and_faction_personality_shape_live_gates",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
@@ -51,6 +55,7 @@ func _run() -> void:
 		"route_occupancy_regroup_case": route_occupancy_regroup_case,
 		"failed_regroup_case": failed_regroup_case,
 		"commander_risk_case": commander_risk_case,
+		"personality_regroup_case": personality_regroup_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -744,6 +749,53 @@ func _commander_risk_tolerance_changes_live_town_gate() -> Dictionary:
 		"cautious_redirect_reasons": redirect_reason_codes,
 	}
 
+func _faction_personality_changes_regroup_threshold() -> Dictionary:
+	var session = _base_session()
+	var ember_config := _strategy_only_config(EMBERCOURT)
+	var mire_config := _strategy_only_config(MIRECLAW)
+	var selected := {}
+	for count in range(1, 60):
+		var raid := _personality_regroup_probe_raid(session, count)
+		var ember_report := EnemyAdventureRules.raid_regroup_threshold_report(raid, ember_config, EMBERCOURT)
+		var mire_report := EnemyAdventureRules.raid_regroup_threshold_report(raid, mire_config, MIRECLAW)
+		if (
+			bool(ember_report.get("regroup_needed", false))
+			and not bool(mire_report.get("regroup_needed", true))
+			and int(ember_report.get("strategy_floor", 0)) > int(mire_report.get("strategy_floor", 0))
+		):
+			selected = {
+				"count": count,
+				"raid": raid,
+				"ember_report": ember_report,
+				"mire_report": mire_report,
+			}
+			break
+	if selected.is_empty():
+		_fail("Could not find a live strength split between defensive and raider regroup thresholds.")
+		return {}
+	var ember_report: Dictionary = selected.get("ember_report", {})
+	var mire_report: Dictionary = selected.get("mire_report", {})
+	if float(ember_report.get("strategy_multiplier", 1.0)) <= float(mire_report.get("strategy_multiplier", 1.0)):
+		_fail("Faction strategy multipliers did not separate regroup behavior: ember=%s mire=%s" % [JSON.stringify(ember_report), JSON.stringify(mire_report)])
+		return {}
+	if int(ember_report.get("base_floor", 0)) != int(mire_report.get("base_floor", -1)):
+		_fail("Personality regroup fixture changed base floor instead of strategy floor: ember=%s mire=%s" % [JSON.stringify(ember_report), JSON.stringify(mire_report)])
+		return {}
+	return {
+		"case_id": "faction_personality_changes_regroup_threshold",
+		"stack_count": int(selected.get("count", 0)),
+		"current_strength": int(ember_report.get("current_strength", 0)),
+		"desired_strength": int(ember_report.get("desired_strength", 0)),
+		"base_floor": int(ember_report.get("base_floor", 0)),
+		"ember_strategy_floor": int(ember_report.get("strategy_floor", 0)),
+		"mire_strategy_floor": int(mire_report.get("strategy_floor", 0)),
+		"ember_multiplier": float(ember_report.get("strategy_multiplier", 1.0)),
+		"mire_multiplier": float(mire_report.get("strategy_multiplier", 1.0)),
+		"ember_regroup_needed": bool(ember_report.get("regroup_needed", false)),
+		"mire_regroup_needed": bool(mire_report.get("regroup_needed", false)),
+		"reason_codes": _string_array(selected.get("raid", {}).get("target_reason_codes", [])),
+	}
+
 func _understrength_raid(session, config: Dictionary) -> Dictionary:
 	var raid := {
 		"placement_id": "regroup_vaska_understrength",
@@ -767,6 +819,44 @@ func _understrength_raid(session, config: Dictionary) -> Dictionary:
 			"id": "regroup_fixture_host",
 			"name": "Damaged Raid Host",
 			"stacks": [{"unit_id": "unit_bog_brute", "count": 1}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _personality_regroup_probe_raid(session, stack_count: int) -> Dictionary:
+	var raid := {
+		"placement_id": "personality_regroup_probe",
+		"encounter_id": "encounter_mire_raid",
+		"x": 8,
+		"y": 1,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:personality_regroup_probe:%d" % [String(session.scenario_id), stack_count]),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 0,
+		"target_y": 4,
+		"goal_x": 0,
+		"goal_y": 4,
+		"target_reason_codes": ["persistent_income_denial", "site_contested", "personality_regroup_fixture"],
+		"target_public_reason": "site denial pressure",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "personality_regroup_probe_host",
+			"name": "Personality Regroup Host",
+			"stacks": [{"unit_id": "unit_mire_slinger", "count": max(1, stack_count)}],
 		},
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
@@ -1047,6 +1137,12 @@ func _enemy_config() -> Dictionary:
 			return config
 	_fail("Could not find enemy config for %s" % MIRECLAW)
 	return {}
+
+func _strategy_only_config(faction_id: String) -> Dictionary:
+	return {
+		"faction_id": faction_id,
+		"label": String(ContentService.get_faction(faction_id).get("name", faction_id)),
+	}
 
 func _enemy_state(session) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):

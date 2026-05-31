@@ -753,7 +753,7 @@ static func ai_active_front_support_target_selection_plan(
 		var front: Dictionary = front_value
 		if String(front.get("placement_id", "")) == current_placement_id:
 			continue
-		if not _active_front_needs_support(front):
+		if not _active_front_needs_support(front, config, faction_id):
 			continue
 		var candidate := _active_front_support_candidate(session, config, faction_id, front, origin_pos, current_placement_id)
 		if candidate.is_empty():
@@ -762,7 +762,7 @@ static func ai_active_front_support_target_selection_plan(
 			best = candidate
 	return best
 
-static func _active_front_needs_support(front: Dictionary) -> bool:
+static func _active_front_needs_support(front: Dictionary, config: Dictionary = {}, faction_id: String = "") -> bool:
 	if front.is_empty():
 		return false
 	var reason_codes := _normalize_string_array(front.get("target_reason_codes", []))
@@ -785,7 +785,7 @@ static func _active_front_needs_support(front: Dictionary) -> bool:
 	]:
 		if code in reason_codes:
 			return true
-	if raid_regroup_needed(front):
+	if raid_regroup_needed(front, config, faction_id):
 		return true
 	var desired := desired_raid_strength(front)
 	var strength := raid_strength(front)
@@ -1278,7 +1278,7 @@ static func group_nearby_raids_for_town_assault(
 	var target_kind := String(leader.get("target_kind", ""))
 	if target_kind not in ["town", "encounter", "hero", "resource"]:
 		return {"encounter": leader, "grouped": false, "events": []}
-	if raid_regroup_needed(leader):
+	if raid_regroup_needed(leader, config, faction_id):
 		return {"encounter": leader, "grouped": false, "events": []}
 	var town_id := String(leader.get("target_placement_id", ""))
 	var leader_id := String(leader.get("placement_id", ""))
@@ -2383,7 +2383,7 @@ static func _redirect_understrength_raid_to_regroup(
 		return _refresh_target(session, raid, faction_id)
 	if String(raid.get("target_kind", "")) == "explore":
 		return raid
-	if not raid_regroup_needed(raid):
+	if not raid_regroup_needed(raid, config, faction_id):
 		return raid
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	if regroup_town.is_empty():
@@ -2417,6 +2417,9 @@ static func _redirect_unreachable_raid_target(
 	if String(raid.get("target_kind", "")) == "" or String(raid.get("target_kind", "")) == "regroup":
 		return raid
 	if not _raid_target_valid(session, raid):
+		return raid
+	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "town_defense" in active_reason_codes or "site_defense" in active_reason_codes or "defend_front" in active_reason_codes:
 		return raid
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var goal_tiles := _goal_tiles_from_raid(session, raid, faction_id)
@@ -2873,7 +2876,12 @@ static func resource_arrival_ready_report(
 	var current_tile := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 	var target_distance := _path_distance(session, current_tile, [target_tile], String(raid.get("placement_id", "")), faction_id)
-	if guard_strength <= 0 and target_distance <= RAID_BASE_MOVEMENT_STEPS and not raid_regroup_needed(raid):
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	var defending_owned_site := (
+		String(node.get("collected_by_faction_id", "")) == faction_id
+		and ("site_defense" in reason_codes or "defend_front" in reason_codes or "front_stabilization" in reason_codes)
+	)
+	if guard_strength <= 0 and target_distance <= RAID_BASE_MOVEMENT_STEPS and (defending_owned_site or not raid_regroup_needed(raid, config, faction_id)):
 		return {
 			"ready": true,
 			"host_strength": host_strength,
@@ -3493,7 +3501,7 @@ static func _redirect_raid_to_threatened_town_defense(
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
-	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
+	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid, config, faction_id):
 		return raid
 	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
@@ -3589,7 +3597,7 @@ static func _redirect_raid_to_threatened_resource_defense(
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
-	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid):
+	if String(raid.get("target_kind", "")) == "regroup" or raid_regroup_needed(raid, config, faction_id):
 		return raid
 	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
@@ -7173,15 +7181,85 @@ static func desired_raid_strength(encounter: Dictionary) -> int:
 			multiplier += 0.06
 	return int(round(float(base_strength) * multiplier)) + veterancy_bonus
 
-static func raid_regroup_needed(encounter: Dictionary) -> bool:
+static func raid_regroup_needed(encounter: Dictionary, config: Dictionary = {}, faction_id: String = "") -> bool:
+	return bool(raid_regroup_threshold_report(encounter, config, faction_id).get("regroup_needed", false))
+
+static func raid_regroup_threshold_report(encounter: Dictionary, config: Dictionary = {}, faction_id: String = "") -> Dictionary:
 	if encounter.is_empty():
-		return false
-	if bool(encounter.get("arrived", false)) and String(encounter.get("target_kind", "")) != "regroup":
-		return false
+		return {
+			"regroup_needed": false,
+			"reason": "missing_raid",
+			"current_strength": 0,
+			"desired_strength": 0,
+			"base_floor": 0,
+			"strategy_floor": 0,
+			"strategy_multiplier": 1.0,
+			"reason_codes": [],
+		}
 	var desired: int = max(1, desired_raid_strength(encounter))
 	var current: int = max(0, raid_strength(encounter))
-	var regroup_floor: int = max(45, int(round(float(desired) * 0.55)))
-	return current > 0 and current < regroup_floor
+	var base_floor: int = max(45, int(round(float(desired) * 0.55)))
+	var report := {
+		"regroup_needed": false,
+		"reason": "ready",
+		"current_strength": current,
+		"desired_strength": desired,
+		"base_floor": base_floor,
+		"strategy_floor": base_floor,
+		"strategy_multiplier": 1.0,
+		"reason_codes": _normalize_string_array(encounter.get("target_reason_codes", [])),
+	}
+	if bool(encounter.get("arrived", false)) and String(encounter.get("target_kind", "")) != "regroup":
+		report["reason"] = "arrived_at_non_regroup_target"
+		return report
+	if current <= 0:
+		report["reason"] = "no_live_host"
+		return report
+	var adjusted := _strategy_regroup_floor(encounter, config, faction_id, base_floor, desired)
+	report["strategy_floor"] = int(adjusted.get("strategy_floor", base_floor))
+	report["strategy_multiplier"] = float(adjusted.get("strategy_multiplier", 1.0))
+	report["regroup_needed"] = current < int(report.get("strategy_floor", base_floor))
+	report["reason"] = "below_strategy_regroup_floor" if bool(report.get("regroup_needed", false)) else "above_strategy_regroup_floor"
+	return report
+
+static func _strategy_regroup_floor(
+	encounter: Dictionary,
+	config: Dictionary,
+	faction_id: String,
+	base_floor: int,
+	desired: int
+) -> Dictionary:
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", encounter.get("spawned_by_faction_id", "")))
+	if resolved_faction_id == "" or config.is_empty():
+		return {"strategy_floor": base_floor, "strategy_multiplier": 1.0}
+	var strategy := enemy_strategy(config, resolved_faction_id)
+	var garrison_bias := strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
+	var raid_bias := strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+	var target_kind := String(encounter.get("target_kind", ""))
+	var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+	var multiplier := 1.0
+	multiplier += clamp(garrison_bias - 1.0, -0.45, 0.55) * 0.25
+	multiplier -= clamp(raid_bias - 1.0, -0.45, 0.55) * 0.22
+	match target_kind:
+		"town":
+			multiplier -= clamp(strategy_scalar(strategy, "raid", "town_siege_weight", 1.0) - 1.0, -0.45, 0.55) * 0.12
+		"hero":
+			multiplier -= clamp(strategy_scalar(strategy, "raid", "hero_hunt_weight", 1.0) - 1.0, -0.45, 0.55) * 0.14
+		"resource":
+			multiplier -= clamp(strategy_scalar(strategy, "raid", "site_denial_weight", 1.0) - 1.0, -0.45, 0.55) * 0.1
+	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes or "front_stabilization" in reason_codes:
+		multiplier += max(0.0, garrison_bias - 1.0) * 0.18
+	if "player_threat_avoidance" in reason_codes or "threat_avoidance_regroup" in reason_codes:
+		multiplier = max(multiplier, 1.1)
+	multiplier = clamp(multiplier, 0.78, 1.24)
+	var min_floor: int = max(35, int(round(float(desired) * 0.42)))
+	var max_floor: int = max(45, int(round(float(desired) * 0.82)))
+	return {
+		"strategy_floor": clamp(int(round(float(base_floor) * multiplier)), min_floor, max_floor),
+		"strategy_multiplier": multiplier,
+	}
 
 static func raid_pillage_weight(encounter: Dictionary) -> int:
 	var base_strength: int = max(
@@ -9122,6 +9200,29 @@ static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionDat
 	if options.is_empty():
 		options.append(Vector2i(encounter_x, encounter_y))
 	return options
+
+static func _resource_staging_tiles(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Array:
+	var options = []
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	var node_x = int(node.get("x", 0))
+	var node_y = int(node.get("y", 0))
+	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var nx: int = node_x + delta.x
+		var ny: int = node_y + delta.y
+		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
+			continue
+		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
+			continue
+		options.append(Vector2i(nx, ny))
+	if options.is_empty():
+		options.append(Vector2i(node_x, node_y))
+	return options
+
+static func _raid_is_resource_defense_order(raid: Dictionary) -> bool:
+	if String(raid.get("target_kind", "")) != "resource":
+		return false
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	return "site_defense" in reason_codes or "defend_front" in reason_codes or "front_stabilization" in reason_codes
 
 static func _resource_target_priority(session: SessionStateStoreScript.SessionData, node: Variant, faction_id: String) -> int:
 	if not (node is Dictionary):
@@ -14739,7 +14840,7 @@ static func _regroup_raid_at_town(
 	raid["last_regroup_strength_delta"] = transferred_strength
 
 	var resumed_target_event := {}
-	var ready_to_resume := not raid_regroup_needed(raid)
+	var ready_to_resume := not raid_regroup_needed(raid, config, faction_id)
 	if ready_to_resume:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		var resume_result := _resume_previous_target_after_regroup(session, config, raid, faction_id)
@@ -15048,6 +15149,10 @@ static func _goal_tiles_from_raid(
 				return [explore_tile]
 			return [Vector2i(int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))), int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0)))))]
 		"resource", "artifact":
+			if String(raid.get("target_kind", "")) == "resource" and _raid_is_resource_defense_order(raid):
+				var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
+				if int(resource_result.get("index", -1)) >= 0:
+					return _resource_staging_tiles(session, resource_result.get("node", {}))
 			return [Vector2i(int(raid.get("target_x", int(raid.get("goal_x", 0)))), int(raid.get("target_y", int(raid.get("goal_y", 0)))))]
 		"encounter":
 			var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
@@ -15341,12 +15446,17 @@ static func _refresh_target(
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) >= 0:
 				var node = resource_result.get("node", {})
+				var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+				var goal_tiles := [target_tile]
+				if _raid_is_resource_defense_order(raid):
+					goal_tiles = _resource_staging_tiles(session, node)
+				var goal_tile := _best_goal_tile(session, origin, goal_tiles, observer_faction_id)
 				raid["target_label"] = String(ContentService.get_resource_site(String(node.get("site_id", ""))).get("name", "Resource Site"))
-				raid["target_x"] = int(node.get("x", 0))
-				raid["target_y"] = int(node.get("y", 0))
-				raid["goal_x"] = int(node.get("x", 0))
-				raid["goal_y"] = int(node.get("y", 0))
-				raid["goal_distance"] = _path_distance(session, origin, [Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))], String(raid.get("placement_id", "")), observer_faction_id)
+				raid["target_x"] = target_tile.x
+				raid["target_y"] = target_tile.y
+				raid["goal_x"] = goal_tile.x
+				raid["goal_y"] = goal_tile.y
+				raid["goal_distance"] = _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), observer_faction_id)
 		"artifact":
 			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(artifact_result.get("index", -1)) >= 0:
