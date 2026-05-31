@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:20:12Z",
+  "updatedAt": "2026-05-31T03:27:44Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,88 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-target-selection-route-occupancy-10184",
+      "title": "Strategic AI Target Selection Route Occupancy",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy target assignment use the same faction-scoped player-hero route occupancy as live raid movement before committing to non-hero objectives.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Live raid movement uses faction-scoped player-hero occupied tiles, but target candidate route feasibility can still use generic path distance.",
+        "AI can select a non-hero objective whose only route is currently blocked by a player hero visible to that same faction, then discover the route problem during execution."
+      ],
+      "completionCriteria": [
+        "General target candidate generation uses faction-scoped route distance and best-goal selection for town, resource, artifact, encounter, delivery, exploration, and hero candidates.",
+        "Saved-task, active-front support, and retake target plans use faction-scoped route feasibility before returning a plan.",
+        "Focused coverage proves target assignment avoids a same-faction visible hero-blocked non-hero objective while preserving the cross-faction non-blocking route case."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not change combat balance, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T03:22:17Z",
+      "updatedAt": "2026-05-31T03:27:44Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
+          "status": "pass",
+          "evidence": "AI_KNOWN_WORLD_MEMORY_REPORT ok=true; target_assignment_respects_faction_scoped_route_occupancy keeps Mireclaw on resource:river_free_company at distance 12 while Embercourt rejects that blocked non-hero resource and selects hero:hero_lyra."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_HERO_HUNT_REPORT ok=true."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT ok=true."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_STRATEGIC_PLANNER_REPORT ok=true."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "evidence": "VALIDATION PASSED."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "pass",
+          "evidence": "ops/progress.json parses as JSON."
+        },
+        {
+          "command": "git diff --check",
+          "status": "pass",
+          "evidence": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "implementation": [
+          "General target candidate generation now evaluates route distance and goal tile choice with the acting faction's player-hero occupancy layer.",
+          "Saved-task, active-front support, live-task, retake, delivery interception, exploration, regroup, and target refresh paths now use faction-scoped route feasibility where they have an acting faction.",
+          "Target assignment now rejects non-hero objectives whose route is blocked by a player hero visible to that same faction before committing the commander task."
+        ],
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review. A separate core systems smoke obstruction-line failure remains outside this slice."
+      },
+      "completedAt": "2026-05-31T03:27:44Z"
+    },
     {
       "id": "strategic-ai-faction-scoped-hero-route-vision-10184",
       "title": "Strategic AI Faction-Scoped Hero Route Vision",
@@ -43452,7 +43534,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T03:20:12Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:27:44Z",
   "validationHistory": [
     {
       "status": "pass",
