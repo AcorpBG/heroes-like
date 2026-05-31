@@ -22,6 +22,9 @@ func _run() -> void:
 	var nonhero_case := _nonhero_targets_require_visibility_or_memory()
 	if nonhero_case.is_empty():
 		return
+	var neutral_town_case := _neutral_towns_require_visibility_or_memory()
+	if neutral_town_case.is_empty():
+		return
 	var exploration_case := _exploration_arrival_reassigns_visible_resource()
 	if exploration_case.is_empty():
 		return
@@ -31,7 +34,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, exploration_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, neutral_town_case, exploration_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -204,6 +207,50 @@ func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
 		"known_world_target_id": "river_free_company",
 	}
 
+func _neutral_towns_require_visibility_or_memory() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 12)
+	_make_hidden_neutral_town_session(session)
+	var origin := Vector2i(7, 2)
+	var hidden_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if _candidate_has_target(hidden_candidates, "town", "hidden_neutral_hold"):
+		_fail("Hidden neutral town should not be targetable before current visibility or scouting memory: %s" % JSON.stringify(hidden_candidates))
+		return {}
+	var scoutable := EnemyAdventureRules._scoutable_target_candidates(session, config, MIRECLAW, origin, 20)
+	if not _candidate_has_target(scoutable, "town", "hidden_neutral_hold"):
+		_fail("Scouting discovery path should still see unknown neutral towns: %s" % JSON.stringify(scoutable))
+		return {}
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"scouted_targets": [
+				{
+					"target_kind": "town",
+					"target_id": "hidden_neutral_hold",
+					"target_label": "Hidden Neutral Hold",
+					"x": 0,
+					"y": 4,
+					"scouted_day": int(session.day),
+					"expires_day": int(session.day) + 3,
+					"source_spell_id": "spell_far_glass",
+				}
+			],
+		}
+	)
+	var known_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if not _candidate_has_target(known_candidates, "town", "hidden_neutral_hold"):
+		_fail("Scouted neutral-town memory did not make the town targetable: %s" % JSON.stringify(known_candidates))
+		return {}
+	return {
+		"case_id": "neutral_towns_require_visibility_or_memory",
+		"hidden_candidate_count": hidden_candidates.size(),
+		"scoutable_unknown_neutral_town": true,
+		"known_neutral_town_candidate": true,
+		"known_world_target_id": "hidden_neutral_hold",
+	}
+
 func _exploration_arrival_reassigns_visible_resource() -> Dictionary:
 	var session = _base_session()
 	var config := _ordinary_target_config()
@@ -302,6 +349,37 @@ func _make_hidden_resource_target_session(session) -> void:
 		node["delivery_manifest"] = {}
 		resources.append(node)
 	session.overworld["resource_nodes"] = resources
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
+
+func _make_hidden_neutral_town_session(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("placement_id", "")) == "duskfen_bastion":
+			town["owner"] = "enemy"
+			town["controlling_faction_id"] = MIRECLAW
+		else:
+			town["owner"] = "inactive"
+			town["controlling_faction_id"] = ""
+		towns[index] = town
+	towns.append({
+		"placement_id": "hidden_neutral_hold",
+		"town_id": "town_duskfen",
+		"name": "Hidden Neutral Hold",
+		"x": 0,
+		"y": 4,
+		"owner": "neutral",
+		"garrison": [],
+		"available_recruits": {},
+		"buildings": [],
+	})
+	session.overworld["towns"] = towns
+	session.overworld["resource_nodes"] = []
 	session.overworld["artifact_nodes"] = []
 	session.overworld["encounters"] = []
 	session.overworld["resolved_encounters"] = []

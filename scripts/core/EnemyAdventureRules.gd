@@ -2160,8 +2160,6 @@ static func _enemy_nonhero_target_known(
 ) -> bool:
 	if force_known:
 		return true
-	if target_kind == "town":
-		return true
 	if _enemy_target_scouted(session, faction_id, target_kind, target_id):
 		return true
 	return _enemy_target_currently_visible(session, config, faction_id, target_x, target_y)
@@ -6910,16 +6908,16 @@ static func _target_candidates(
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var siege_target_id = String(config.get("siege_target_placement_id", ""))
 	if siege_target_id != "":
-		_append_town_candidate(session, candidates, seen, siege_target_id, origin_pos, 320, config, faction_id)
+		_append_town_candidate(session, candidates, seen, siege_target_id, origin_pos, 320, config, faction_id, include_unscouted)
 
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 260, config, faction_id)
+				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 260, config, faction_id, include_unscouted)
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 220, config, faction_id)
+				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 220, config, faction_id, include_unscouted)
 
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
@@ -6931,7 +6929,7 @@ static func _target_candidates(
 			base_priority += 50
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 20
-		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id)
+		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted)
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
 			continue
@@ -6942,7 +6940,7 @@ static func _target_candidates(
 			base_priority += 25
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 45
-		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id)
+		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted)
 
 	for node in session.overworld.get("resource_nodes", []):
 		_append_resource_candidate(
@@ -6998,7 +6996,8 @@ static func _append_town_candidate(
 	origin_pos: Vector2i,
 	priority: int,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	include_unscouted: bool = false
 ) -> void:
 	var seen_key = "town:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key):
@@ -7011,6 +7010,19 @@ static func _append_town_candidate(
 	var neutral_expansion := owner == "neutral"
 	if owner != "player" and not neutral_expansion:
 		return
+	var objective_anchor := _town_is_objective_anchor(session, placement_id)
+	var force_known := priority_target_bonus(config, placement_id) > 0 or objective_anchor
+	if neutral_expansion and not include_unscouted and not _enemy_nonhero_target_known(
+		session,
+		config,
+		faction_id,
+		"town",
+		placement_id,
+		int(town.get("x", 0)),
+		int(town.get("y", 0)),
+		force_known
+	):
+		return
 
 	seen[seen_key] = true
 	var staging_tiles = _town_staging_tiles(session, town)
@@ -7018,7 +7030,6 @@ static func _append_town_candidate(
 	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
 	if goal_distance >= 9999:
 		return
-	var objective_anchor = _town_is_objective_anchor(session, placement_id)
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
 	var reason_codes := ["town_expansion", "neutral_town_claim"] if neutral_expansion else ["town_siege"]
 	if neutral_expansion and _town_garrison_strength(town) > 0:
