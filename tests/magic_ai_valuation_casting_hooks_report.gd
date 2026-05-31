@@ -390,15 +390,34 @@ func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
 	var live_action := BattleAiRules.choose_enemy_action(battle, active, linekeeper_hero)
 	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_lantern_phalanx":
 		return {"ok": false, "error": "Spell report payload bridge live choice should stay aligned with report, got %s report=%s" % [live_action, bridged_report]}
+	var battle_state := battle.duplicate(true)
+	battle_state["enemy_hero"] = linekeeper_hero.duplicate(true)
+	var battle_state_report := BattleAiRules.battle_spell_choice_report(battle_state, active, {})
+	if not bool(battle_state_report.get("ok", false)):
+		return {"ok": false, "error": "Battle-state enemy hero fallback report failed: %s" % battle_state_report}
+	var battle_state_selected: Dictionary = battle_state_report.get("selected", {}) if battle_state_report.get("selected", {}) is Dictionary else {}
+	if String(battle_state_report.get("commander_payload_source", "")) != "battle":
+		return {"ok": false, "error": "Battle-state enemy hero fallback did not record battle payload source: %s" % battle_state_report}
+	if String(battle_state_selected.get("spell_id", "")) != "spell_lantern_phalanx":
+		return {"ok": false, "error": "Battle-state enemy hero fallback report lost the spellbook: %s" % battle_state_report}
+	var battle_state_action := BattleAiRules.choose_enemy_action(battle_state, active, {})
+	if String(battle_state_action.get("action", "")) != "cast_spell" or String(battle_state_action.get("spell_id", "")) != "spell_lantern_phalanx":
+		return {"ok": false, "error": "Battle-state enemy hero fallback live choice should cast the battle hero spell, got %s report=%s" % [battle_state_action, battle_state_report]}
+	if battle_state.has("enemy_hero_payload"):
+		return {"ok": false, "error": "Battle-state enemy hero fallback mutated the source battle: %s" % battle_state}
 	if battle.has("enemy_hero_payload"):
 		return {"ok": false, "error": "Spell report payload bridge mutated the source battle: %s" % battle}
 	return {
 		"ok": true,
 		"selected_spell_id": String(bridged_selected.get("spell_id", "")),
 		"commander_payload_source": String(bridged_report.get("commander_payload_source", "")),
+		"battle_state_payload_source": String(battle_state_report.get("commander_payload_source", "")),
+		"battle_state_selected_spell_id": String(battle_state_selected.get("spell_id", "")),
+		"battle_state_live_action": String(battle_state_action.get("action", "")),
 		"selected_value_band": String(bridged_selected.get("value_band", "")),
 		"live_action": String(live_action.get("action", "")),
 		"source_battle_mutated": battle.has("enemy_hero_payload"),
+		"battle_state_source_mutated": battle_state.has("enemy_hero_payload"),
 	}
 
 func _run_battle_ai_lethal_attack_priority_case() -> Dictionary:

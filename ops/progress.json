@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T15:35:00Z",
+  "updatedAt": "2026-05-31T16:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,46 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-battle-state-enemy-hero-fallback-10184",
+      "title": "Battle AI Battle-State Enemy Hero Fallback",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T15:45:00Z",
+      "updatedAt": "2026-05-31T16:00:00Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / battle-ai-battle-state-enemy-hero-fallback-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make tactical battle AI consistently use the battle's enemy commander spellcasting state when the direct caller argument is empty, so report and live-action paths do not silently lose known spells in battle-state-only call sites.",
+      "implementationTargets": [
+        "Resolve enemy hero state for tactical AI from the direct enemy_hero argument first, then battle.enemy_hero, then battle.enemy_hero_payload.",
+        "Use the resolved enemy hero state for battle spell candidate generation, selected-spell scoring, lethal spell checks, and public spell-choice payload source reporting.",
+        "Keep source battle dictionaries immutable while adding scoring-only commander payloads to duplicated battle state.",
+        "Preserve all unit, spell, growth, economy, faction, and town-cost balance content."
+      ],
+      "completionCriteria": "Focused battle AI spell valuation and tactical-order reports prove battle-state-only enemy hero fallback; tactical/strategic AI adjacent reports and repository validation remain green; no balance/content files are changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No combat balance tuning or benchmark target tuning.",
+        "No production-ready AI claim from one tactical fallback fix."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed; battle_spell_report_payload_bridge now proves battle-state-only enemy hero fallback, battle payload source reporting, live cast action, and no source battle mutation)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Tactical battle AI now resolves enemy commander spellcasting state from the direct argument first, then battle.enemy_hero, then battle.enemy_hero_payload. Spell reports, live enemy action choice, spell scoring, and lethal spell checks use that resolved state, so battle-state-only callers keep known spells without mutating the source battle. No unit, spell, growth, economy, faction, town-cost, or balance content was changed.",
+      "completedAt": "2026-05-31T16:00:00Z"
+    },
     {
       "id": "strategic-ai-path-surface-fingerprint-cache-10184",
       "title": "Strategic AI Path Surface Fingerprint Cache",
