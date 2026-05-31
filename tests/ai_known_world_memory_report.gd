@@ -47,13 +47,16 @@ func _run() -> void:
 	var faction_scoped_route_case := _hero_route_occupancy_uses_moving_faction_sight()
 	if faction_scoped_route_case.is_empty():
 		return
+	var assignment_route_case := _target_assignment_respects_faction_scoped_route_occupancy()
+	if assignment_route_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
-		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy",
+		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy_for_movement_and_assignment",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -575,6 +578,39 @@ func _hero_route_occupancy_uses_moving_faction_sight() -> Dictionary:
 		"embercourt_distance": ember_distance,
 	}
 
+func _target_assignment_respects_faction_scoped_route_occupancy() -> Dictionary:
+	var session = _base_session()
+	_make_faction_scoped_route_corridor(session)
+	_add_corridor_resource_target(session)
+	var mire_config := _priority_target_config(MIRECLAW, "river_free_company")
+	var ember_config := _priority_target_config(EMBERCOURT, "river_free_company")
+	var mire_plan := EnemyAdventureRules.choose_target(
+		session,
+		mire_config,
+		{"x": 12, "y": 4},
+		{}
+	)
+	var ember_plan := EnemyAdventureRules.choose_target(
+		session,
+		ember_config,
+		{"x": 12, "y": 4},
+		{}
+	)
+	if String(mire_plan.get("target_kind", "")) != "resource" or String(mire_plan.get("target_placement_id", "")) != "river_free_company":
+		_fail("Mireclaw assignment should keep the resource target when its faction cannot see the route-blocking hero: %s" % JSON.stringify(mire_plan))
+		return {}
+	if String(ember_plan.get("target_kind", "")) == "resource" and String(ember_plan.get("target_placement_id", "")) == "river_free_company":
+		_fail("Embercourt assignment should not select a non-hero objective behind its visible hero blocker: %s" % JSON.stringify(ember_plan))
+		return {}
+	return {
+		"case_id": "target_assignment_respects_faction_scoped_route_occupancy",
+		"blocked_resource_id": "river_free_company",
+		"mireclaw_target": "%s:%s" % [String(mire_plan.get("target_kind", "")), String(mire_plan.get("target_placement_id", ""))],
+		"embercourt_target": "%s:%s" % [String(ember_plan.get("target_kind", "")), String(ember_plan.get("target_placement_id", ""))],
+		"mireclaw_goal_distance": int(mire_plan.get("goal_distance", -1)),
+		"embercourt_goal_distance": int(ember_plan.get("goal_distance", -1)),
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -694,6 +730,19 @@ func _make_faction_scoped_route_corridor(session) -> void:
 		"buildings": [],
 	})
 	session.overworld["towns"] = towns
+
+func _add_corridor_resource_target(session) -> void:
+	session.overworld["resource_nodes"] = [{
+		"placement_id": "river_free_company",
+		"site_id": "site_riverwatch_free_company_yard",
+		"x": 0,
+		"y": 4,
+		"collected": true,
+		"collected_by_faction_id": "player",
+		"response_until_day": 0,
+		"response_security_rating": 0,
+		"delivery_manifest": {},
+	}]
 
 func _make_hidden_hero_delivery_session(session, hero_id: String) -> void:
 	_make_hidden_resource_target_session(session)
@@ -984,6 +1033,14 @@ func _ordinary_target_config() -> Dictionary:
 	var config := _enemy_config().duplicate(true)
 	config["priority_target_placement_ids"] = []
 	config["priority_target_bonus"] = 0
+	return config
+
+func _priority_target_config(faction_id: String, placement_id: String) -> Dictionary:
+	var config := _enemy_config().duplicate(true)
+	config["faction_id"] = faction_id
+	config["label"] = String(ContentService.get_faction(faction_id).get("name", faction_id))
+	config["priority_target_placement_ids"] = [placement_id]
+	config["priority_target_bonus"] = 400
 	return config
 
 func _enemy_state(session) -> Dictionary:

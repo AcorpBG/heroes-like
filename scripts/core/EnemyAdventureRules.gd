@@ -454,7 +454,7 @@ static func artifact_target_valuation_breakdown(
 	if resolved_faction_id == "":
 		resolved_faction_id = String(config.get("faction_id", ""))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var goal_distance := _path_distance(session, origin_pos, [target_tile], "")
+	var goal_distance := _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
 	if goal_distance >= 9999:
 		return {}
 	var roles := _normalize_string_array(artifact.get("roles", []))
@@ -684,10 +684,11 @@ const AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS := [
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
 	var had_memory := not commander_target_memory(raid.get("enemy_commander_state", {})).is_empty()
 	var task_record_for_assignment := {}
 	if _raid_target_valid(session, raid):
-		raid = _refresh_target(session, raid)
+		raid = _refresh_target(session, raid, faction_id)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
 		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
@@ -852,7 +853,7 @@ static func _active_front_support_candidate(
 			target_label = String(hero.get("name", target_id))
 			target_x = hero_tile.x
 			target_y = hero_tile.y
-			goal_tiles = _hero_target_goal_tiles(session, origin_pos, hero_tile, current_placement_id)
+			goal_tiles = _hero_target_goal_tiles(session, origin_pos, hero_tile, current_placement_id, faction_id)
 			objective_anchor = true
 		"resource":
 			var node_result := _find_resource_by_placement(session, target_id)
@@ -869,10 +870,10 @@ static func _active_front_support_candidate(
 			objective_anchor = _objective_proximity_bonus(session, target_x, target_y) > 0
 	if goal_tiles.is_empty():
 		return {}
-	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id)
+	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile := _best_goal_tile(session, origin_pos, goal_tiles)
+	var goal_tile := _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
 	var reason_codes := ["active_front_support", "army_consolidation"]
 	for code in [
 		"town_siege",
@@ -1015,10 +1016,10 @@ static func ai_live_town_retake_target_selection_plan(
 		if _ai_hero_task_live_target_reserved(session, faction_id, "town", town_id, current_placement_id, _ai_hero_task_actor_id_from_raid(raid), true):
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
-		var goal_distance := _path_distance(session, origin_pos, staging_tiles, current_placement_id)
+		var goal_distance := _path_distance(session, origin_pos, staging_tiles, current_placement_id, faction_id)
 		if goal_distance >= 9999:
 			continue
-		var goal_tile := _best_goal_tile(session, origin_pos, staging_tiles)
+		var goal_tile := _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
 		var objective_anchor := _town_is_objective_anchor(session, town_id)
 		var reason_codes := ["town_siege", "retake_front"]
 		if objective_anchor:
@@ -2518,7 +2519,7 @@ static func _redirect_raid_to_nearby_exposed_hero(
 		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
 			continue
 		var goal_tile := _player_hero_goal_tile(hero)
-		var distance: int = _hero_target_goal_distance(session, origin, goal_tile)
+		var distance: int = _hero_target_goal_distance(session, origin, goal_tile, faction_id)
 		if distance > RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE:
 			continue
 		var probe := raid.duplicate(true)
@@ -2600,7 +2601,7 @@ static func _redirect_raid_to_nearby_exposed_hero(
 	raid["target_public_reason"] = "exposed hero"
 	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = "retargeted to nearby exposed hero"
-	raid = _refresh_target(session, raid)
+	raid = _refresh_target(session, raid, faction_id)
 	var current_target := _current_target_snapshot(raid)
 	var commander_state = raid.get("enemy_commander_state", {})
 	if commander_state is Dictionary and not commander_state.is_empty():
@@ -2688,7 +2689,7 @@ static func _redirect_raid_away_from_nearby_player_threat(
 		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
 			continue
 		var goal_tile := _player_hero_goal_tile(hero)
-		var distance: int = _hero_target_goal_distance(session, origin, goal_tile)
+		var distance: int = _hero_target_goal_distance(session, origin, goal_tile, faction_id)
 		if distance > RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS:
 			continue
 		var hero_strength: int = _known_player_hero_strength(hero)
@@ -6092,7 +6093,7 @@ static func _no_known_target_exploration_plan(
 				continue
 			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
 				continue
-			var route_distance := _path_distance(session, origin_pos, [tile], "")
+			var route_distance := _path_distance(session, origin_pos, [tile], "", faction_id)
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
 				continue
 			var frontier_score := _enemy_exploration_frontier_score(sources, tile)
@@ -6171,7 +6172,7 @@ static func _no_known_target_regroup_plan(
 		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
 			continue
 		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var distance := _path_distance(session, origin_pos, [town_tile], "")
+		var distance := _path_distance(session, origin_pos, [town_tile], "", faction_id)
 		if distance >= 9999:
 			continue
 		if (
@@ -7260,8 +7261,8 @@ static func _append_town_candidate(
 
 	seen[seen_key] = true
 	var staging_tiles = _town_staging_tiles(session, town)
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
-	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
+	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id)
 	if goal_distance >= 9999:
 		return
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
@@ -7348,7 +7349,7 @@ static func _append_resource_candidate(
 	):
 		return
 	seen[seen_key] = true
-	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
+	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "", faction_id)
 	if goal_distance >= 9999:
 		return
 	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
@@ -7408,7 +7409,7 @@ static func _append_artifact_candidate(
 	):
 		return
 	seen[seen_key] = true
-	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
+	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "", faction_id)
 	if goal_distance >= 9999:
 		return
 	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id)
@@ -7480,8 +7481,8 @@ static func _append_encounter_candidate(
 		return
 	seen[seen_key] = true
 	var staging_tiles = _encounter_staging_tiles(session, encounter)
-	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
+	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id)
+	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
 	if goal_distance >= 9999 and priority_bonus > 0:
 		var encounter_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var direct_distance: int = abs(origin_pos.x - encounter_tile.x) + abs(origin_pos.y - encounter_tile.y)
@@ -7604,10 +7605,10 @@ static func _delivery_town_candidate(
 	):
 		return {}
 	var staging_tiles = _town_staging_tiles(session, town)
-	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "")
+	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id)
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
+	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
@@ -7665,7 +7666,7 @@ static func _delivery_hero_candidate(
 	if hero.is_empty():
 		return {}
 	var goal_tile := _player_hero_goal_tile(hero)
-	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
+	var goal_distance = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id)
 	if goal_distance >= 9999:
 		return {}
 	var priority = 195 + int(min(170.0, float(int(delivery_state.get("manifest_value", 0))) / 10.0))
@@ -7758,7 +7759,7 @@ static func _append_hero_target_candidate(
 	if hero_id == "":
 		return
 	var goal_tile := _player_hero_goal_tile(hero)
-	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile)
+	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile, faction_id)
 	if goal_distance >= 9999:
 		return
 	var priority = 95
@@ -8083,7 +8084,7 @@ static func neutral_encounter_object_valuation_breakdown(
 	var representation: Dictionary = neutral_metadata.get("representation", {}) if neutral_metadata.get("representation", {}) is Dictionary else {}
 	var target_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 	var staging_tiles := _encounter_staging_tiles(session, encounter)
-	var goal_distance := _path_distance(session, origin_pos, staging_tiles, "")
+	var goal_distance := _path_distance(session, origin_pos, staging_tiles, "", resolved_faction_id)
 	var objective_anchor := _encounter_is_objective_anchor(session, encounter)
 	var baseline_priority := _encounter_target_priority(session, encounter)
 	var route_pressure_value := 0
@@ -8831,7 +8832,7 @@ static func resource_target_score_breakdown(
 	var site_family := String(site.get("family", ""))
 	var label := String(site.get("name", "Resource Site"))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var goal_distance := _path_distance(session, origin_pos, [target_tile], "")
+	var goal_distance := _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
 	var claim_value := _target_resource_value(_resource_site_claim_rewards(site))
 	var income_value := _target_resource_value(site.get("control_income", {}))
 	var strategy := enemy_strategy(config, resolved_faction_id)
@@ -10805,10 +10806,10 @@ static func _ai_hero_task_plan_from_saved_task(
 	var goal_tiles: Array = target.get("goal_tiles", []) if target.get("goal_tiles", []) is Array else []
 	if goal_tiles.is_empty():
 		return {}
-	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id)
+	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile: Vector2i = _best_goal_tile(session, origin_pos, goal_tiles)
+	var goal_tile: Vector2i = _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
 	if "saved_hero_task" not in reason_codes:
 		reason_codes.append("saved_hero_task")
@@ -10991,7 +10992,8 @@ static func _ai_hero_task_live_plan_from_task(
 		return {}
 	var node: Dictionary = node_result.get("node", {})
 	var goal_tile := Vector2i(int(node.get("x", task.get("target_x", 0))), int(node.get("y", task.get("target_y", 0))))
-	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")))
+	var faction_id := String(raid.get("spawned_by_faction_id", ""))
+	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")), faction_id)
 	if goal_distance >= 9999:
 		return {}
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
@@ -13296,7 +13298,7 @@ static func _resolve_hero_intercept_target(
 		retargeted["target_y"] = current_tile.y
 		retargeted["goal_x"] = current_tile.x
 		retargeted["goal_y"] = current_tile.y
-		retargeted["goal_distance"] = _hero_target_goal_distance(session, raid_tile, current_tile)
+		retargeted["goal_distance"] = _hero_target_goal_distance(session, raid_tile, current_tile, faction_id)
 		retargeted["arrived"] = int(retargeted.get("goal_distance", 9999)) == 0
 		var reason_codes := _normalize_string_array(retargeted.get("target_reason_codes", []))
 		for code in ["hero_reacquired", "current_sighting"]:
