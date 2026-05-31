@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:10:06Z",
+  "updatedAt": "2026-05-31T03:20:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,88 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-faction-scoped-hero-route-vision-10184",
+      "title": "Strategic AI Faction-Scoped Hero Route Vision",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make player-hero route occupancy use the moving AI faction's own current sight sources instead of sharing all enemy factions' visibility.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Player-hero route occupancy is currently derived from any enemy faction sight source, which can leak one faction's scouting into another faction's pathing.",
+        "Live raid movement should route around visible player heroes without granting cross-faction perfect information."
+      ],
+      "completionCriteria": [
+        "Live raid movement path search scopes player-hero route blocking to the moving faction's current sight sources.",
+        "Hero-hunt movement still uses adjacent intercept behavior for the targeted hero tile.",
+        "Focused coverage proves a faction does not route around a player hero only sighted by another enemy faction, while the same-faction visible case still blocks."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not change combat balance, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T03:13:25Z",
+      "updatedAt": "2026-05-31T03:20:12Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
+          "status": "pass",
+          "evidence": "AI_KNOWN_WORLD_MEMORY_REPORT ok=true; hero_route_occupancy_uses_moving_faction_sight reports Mireclaw route distance 12 while Embercourt route distance is 9999 in a one-lane corridor where only Embercourt currently sees the player hero."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_HERO_HUNT_REPORT ok=true."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT ok=true."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_STRATEGIC_PLANNER_REPORT ok=true."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "evidence": "VALIDATION PASSED."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "pass",
+          "evidence": "ops/progress.json parses as JSON."
+        },
+        {
+          "command": "git diff --check",
+          "status": "pass",
+          "evidence": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "implementation": [
+          "Live raid movement now passes the moving faction id into route-distance and next-step path search.",
+          "Player-hero occupied route blockers are now generated only from the observer faction's current sight sources.",
+          "Targeted hero-hunt pathing still treats an occupied target hero tile as an adjacent intercept problem instead of depending on shared enemy sight."
+        ],
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review. A separate core systems smoke obstruction-line failure remains outside this slice."
+      },
+      "completedAt": "2026-05-31T03:20:12Z"
+    },
     {
       "id": "strategic-ai-player-hero-route-occupancy-10184",
       "title": "Strategic AI Player Hero Route Occupancy",
@@ -43370,7 +43452,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T03:10:06Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:20:12Z",
   "validationHistory": [
     {
       "status": "pass",
