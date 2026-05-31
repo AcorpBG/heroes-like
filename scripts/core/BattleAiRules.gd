@@ -762,8 +762,12 @@ static func _damage_spell_score(
 ) -> float:
 	var damage_projection := SpellRulesScript.battle_spell_damage_projection(enemy_hero, battle, target, spell)
 	var damage := int(damage_projection.get("final_damage", 0))
-	var score := _attack_score(active_stack, target, battle, true) + 1.5
+	var raw_damage: int = max(1, int(damage_projection.get("raw_damage", damage)))
+	var resistance_pct: int = int(damage_projection.get("resistance_pct", 0))
+	var damage_efficiency := clampf(float(damage) / float(raw_damage), 0.0, 1.0)
+	var score := (_attack_score(active_stack, target, battle, true) + 1.5) * (0.35 + (damage_efficiency * 0.65))
 	score += min(1.0, float(damage) / float(max(1, int(target.get("total_health", 0))))) * 6.0
+	score -= float(resistance_pct) * 0.06
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
@@ -830,11 +834,18 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 		return -9999.0
 	var success_chance := float(max(0, 100 - SpellRulesScript.control_resistance_pct(battle, target, spell))) / 100.0
 	var score := 3.0 + (_attack_score(active_stack, target, battle, true) * 0.35)
+	var already_controlled := _stack_has_control_effect(target, battle)
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
 		score += 3.0 * success_chance
 		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id) * success_chance
+	elif status_id != "":
+		score -= 4.0
+	if already_controlled:
+		score -= 5.0
 	if _health_ratio(target) > 0.5:
 		score += 1.25
+	if success_chance <= 0.25:
+		score -= 2.0
 	if bool(target.get("ranged", false)) and int(target.get("shots_remaining", 0)) > 0:
 		score += 1.0
 	if _stack_cohesion_total(target, battle) <= 4:
@@ -1849,6 +1860,9 @@ static func _spell_buff_already_active(active_stack: Dictionary, battle: Diction
 		if SpellRulesScript.effect_bonus_for_kind(active_stack, battle, key) < int(modifiers[key]):
 			return false
 	return true
+
+static func _stack_has_control_effect(stack: Dictionary, battle: Dictionary) -> bool:
+	return SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED, STATUS_ROOTED])
 
 static func _status_effect_from_spell(spell: Dictionary) -> Dictionary:
 	var status_effect = spell.get("effect", {}).get("status_effect", {})
