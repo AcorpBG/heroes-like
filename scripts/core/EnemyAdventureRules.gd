@@ -12318,14 +12318,14 @@ static func _resolve_arrived_target(
 			var resource_guard := _resource_guard_encounter_for_node(session, node, site)
 			if not resource_guard.is_empty():
 				return _redirect_claim_to_guard_encounter(session, config, raid, state, faction_id, resource_guard, "resource")
-			return _secure_resource_target(session, raid, state, faction_id)
+			return _secure_resource_target(session, raid, state, faction_id, config)
 		"artifact":
 			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 			var artifact_node: Dictionary = artifact_result.get("node", {})
 			var artifact_guard := _artifact_guard_encounter_for_node(session, artifact_node)
 			if not artifact_guard.is_empty():
 				return _redirect_claim_to_guard_encounter(session, config, raid, state, faction_id, artifact_guard, "artifact")
-			return _secure_artifact_target(session, raid, state, faction_id)
+			return _secure_artifact_target(session, raid, state, faction_id, config)
 		"encounter":
 			var ready_report := encounter_arrival_ready_report(session, raid, faction_id, config)
 			if not bool(ready_report.get("ready", true)):
@@ -12352,7 +12352,8 @@ static func _secure_resource_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var node_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 	var node = node_result.get("node", {})
@@ -12446,7 +12447,7 @@ static func _secure_resource_target(
 	)
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
 		"ai_site_seized",
 		updated_raid,
 		{
@@ -12466,7 +12467,17 @@ static func _secure_resource_target(
 		}
 	)
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
-	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
+	var continuation := _continue_mobile_raid_after_field_objective(
+		session,
+		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		updated_raid,
+		state,
+		faction_id
+	)
+	var events := [event]
+	if not continuation.get("ai_event", {}).is_empty():
+		events.append(continuation.get("ai_event", {}))
+	return {"encounter": continuation.get("encounter", updated_raid), "state": state, "event_message": message, "ai_events": events}
 
 static func _defend_resource_target(
 	session: SessionStateStoreScript.SessionData,
@@ -12837,7 +12848,8 @@ static func _secure_artifact_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	config: Dictionary = {}
 ) -> Dictionary:
 	var node_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 	var node = node_result.get("node", {})
@@ -12901,7 +12913,7 @@ static func _secure_artifact_target(
 		reason_codes.push_front("artifact_secured")
 	var event := build_ai_event_record(
 		session,
-		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
 		"ai_artifact_secured",
 		updated_raid,
 		{
@@ -12920,11 +12932,21 @@ static func _secure_artifact_target(
 			"state_policy": "durable_state_reference",
 		}
 	)
+	var continuation := _continue_mobile_raid_after_field_objective(
+		session,
+		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		updated_raid,
+		state,
+		faction_id
+	)
+	var events := [event]
+	if not continuation.get("ai_event", {}).is_empty():
+		events.append(continuation.get("ai_event", {}))
 	return {
-		"encounter": updated_raid,
+		"encounter": continuation.get("encounter", updated_raid),
 		"state": state,
 		"event_message": secured_message,
-		"ai_event": event,
+		"ai_events": events,
 		"artifact_claim": claim_result,
 		"artifact_bonus_report": artifact_bonus_report,
 	}
@@ -13045,7 +13067,48 @@ static func _contest_encounter_target(
 			"state_policy": "durable_state_reference",
 		}
 	)
-	return {"encounter": resolved_raid, "state": state, "event_message": message, "ai_event": event}
+	var continuation := _continue_mobile_raid_after_field_objective(
+		session,
+		config,
+		resolved_raid,
+		state,
+		faction_id
+	)
+	var events := [event]
+	if not continuation.get("ai_event", {}).is_empty():
+		events.append(continuation.get("ai_event", {}))
+	return {"encounter": continuation.get("encounter", resolved_raid), "state": state, "event_message": message, "ai_events": events}
+
+static func _continue_mobile_raid_after_field_objective(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"encounter": raid, "state": state, "ai_event": {}}
+	var army := _normalize_army_payload(raid.get("enemy_army", {}))
+	if _army_strength(army.get("stacks", [])) <= 0:
+		return {"encounter": raid, "state": state, "ai_event": {}}
+	var previous_target := _current_target_snapshot(raid)
+	var continued := _clear_regroup_target(raid.duplicate(true))
+	continued["post_objective_continuation_day"] = int(session.day)
+	continued["previous_completed_target_kind"] = String(previous_target.get("target_kind", ""))
+	continued["previous_completed_target_placement_id"] = String(previous_target.get("target_placement_id", ""))
+	continued["previous_completed_target_label"] = String(previous_target.get("target_label", ""))
+	continued = assign_target(session, config, continued)
+	var next_target := _current_target_snapshot(continued)
+	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
+		return {"encounter": raid, "state": state, "ai_event": {}}
+	if not _raid_target_valid(session, continued):
+		return {"encounter": raid, "state": state, "ai_event": {}}
+	continued["arrived"] = false
+	continued["post_objective_continuation"] = true
+	var event := ai_target_assignment_event(session, config, continued, previous_target)
+	if event.is_empty():
+		event = ai_target_assignment_event(session, config, continued, {})
+	return {"encounter": continued, "state": state, "ai_event": event}
 
 static func _resume_guarded_claim_after_guard_clear(
 	session: SessionStateStoreScript.SessionData,

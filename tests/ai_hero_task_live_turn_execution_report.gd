@@ -51,8 +51,8 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		return {}
 	var vaska := _encounter(session, "live_turn_vaska_free_company")
 	var sable := _encounter(session, "live_turn_sable_signal_post")
-	_assert_target(vaska, "river_free_company", "Vaska turn raid")
-	_assert_target(sable, "river_signal_post", "Sable companion turn raid")
+	_assert_continued_after_resource(vaska, "river_free_company", "Vaska turn raid")
+	_assert_continued_after_resource(sable, "river_signal_post", "Sable companion turn raid")
 	if _failed:
 		return {}
 	var free_company_after := _resource_controller(session, "river_free_company")
@@ -101,6 +101,10 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		"signal_post_after": signal_post_after,
 		"vaska_target_id": String(vaska.get("target_placement_id", "")),
 		"sable_target_id": String(sable.get("target_placement_id", "")),
+		"vaska_completed_target_id": String(vaska.get("previous_completed_target_placement_id", "")),
+		"sable_completed_target_id": String(sable.get("previous_completed_target_placement_id", "")),
+		"vaska_continued": bool(vaska.get("post_objective_continuation", false)),
+		"sable_continued": bool(sable.get("post_objective_continuation", false)),
 		"vaska_arrived": bool(vaska.get("arrived", false)),
 		"sable_arrived": bool(sable.get("arrived", false)),
 		"event_types": event_types,
@@ -252,12 +256,18 @@ func _commander_progress_snapshot(session, roster_hero_id: String) -> Dictionary
 	_fail("Could not find commander progress for %s" % roster_hero_id)
 	return {}
 
-func _assert_target(raid: Dictionary, expected_target_id: String, label: String) -> void:
-	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != expected_target_id:
-		_fail("%s expected resource %s, got %s" % [label, expected_target_id, JSON.stringify(raid)])
+func _assert_continued_after_resource(raid: Dictionary, completed_target_id: String, label: String) -> void:
+	if String(raid.get("previous_completed_target_kind", "")) != "resource" or String(raid.get("previous_completed_target_placement_id", "")) != completed_target_id:
+		_fail("%s did not preserve completed resource target %s: %s" % [label, completed_target_id, JSON.stringify(raid)])
 		return
-	if not bool(raid.get("arrived", false)):
-		_fail("%s did not arrive after starting on the live target tile: %s" % [label, JSON.stringify(raid)])
+	if not bool(raid.get("post_objective_continuation", false)):
+		_fail("%s did not continue after securing resource %s: %s" % [label, completed_target_id, JSON.stringify(raid)])
+		return
+	if String(raid.get("target_placement_id", "")) == completed_target_id or String(raid.get("target_kind", "")) == "":
+		_fail("%s did not receive a fresh target after completed resource %s: %s" % [label, completed_target_id, JSON.stringify(raid)])
+		return
+	if bool(raid.get("arrived", false)):
+		_fail("%s should be marching toward the continuation target, not idling arrived: %s" % [label, JSON.stringify(raid)])
 
 func _assert_event(events: Variant, event_type: String, target_id: String) -> void:
 	if not (events is Array):

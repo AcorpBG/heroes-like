@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-emergency-defense-recruitment-prep-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-post-objective-raid-continuation-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T00:26:30Z",
+  "updatedAt": "2026-05-31T00:33:09Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,54 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-post-objective-raid-continuation-10184",
+      "title": "Strategic AI Post-Objective Raid Continuation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Keep successful mobile AI commanders applying map pressure by chaining resource/artifact/site objective completion into a fresh live target assignment instead of leaving them arrived on already-completed objects.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-baseline-kpi-report.md",
+        "docs/strategic-ai-live-turn-execution-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd"
+      ],
+      "baselineChecks": [
+        "Resource/artifact/site success completes the current live task, but the mobile raid can remain arrived on the completed target.",
+        "Resolved field-objective hosts should keep moving unless the objective explicitly stations them as defenders or town garrisons."
+      ],
+      "completionCriteria": [
+        "Successful mobile resource/artifact/site raids immediately choose a fresh valid target from their current tile.",
+        "Continuation emits a normal target-assignment event and records a fresh live assignment without corrupting the completed task.",
+        "Stationing behaviors for town defense, resource defense, and post-capture town garrisons remain unchanged.",
+        "Focused Godot validation proves resource completion chains to new targets and strategic-AI regressions still pass."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not alter battle resolution, town garrison stationing, or defensive-stationing lifecycles.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T00:30:00Z",
+      "updatedAt": "2026-05-31T00:33:09Z",
+      "completedAt": "2026-05-31T00:33:09Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ]
+    },
     {
       "id": "strategic-ai-emergency-defense-recruitment-prep-10184",
       "title": "Strategic AI Emergency Defense Recruitment Prep",
@@ -41686,22 +41734,22 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T00:26:30Z",
-    "sliceId": "strategic-ai-emergency-defense-recruitment-prep-10184",
+    "updatedAt": "2026-05-31T00:33:09Z",
+    "sliceId": "strategic-ai-post-objective-raid-continuation-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Emergency defense recruitment prep, first-deployment commander continuity reinforcement, and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
+    "summary": "Post-objective mobile raid continuation and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T00:26:30Z",
+  "currentSliceUpdatedAt": "2026-05-31T00:33:09Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44657,35 +44705,33 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T00:26:30Z",
-    "sliceId": "strategic-ai-emergency-defense-recruitment-prep-10184",
+    "updatedAt": "2026-05-31T00:33:09Z",
+    "sliceId": "strategic-ai-post-objective-raid-continuation-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Enemy town recruitment now recognizes uncovered emergency town/resource defense fronts as a commander-preparation destination when local garrison safety is already covered.",
-        "Emergency preparation reinforces the selected deployable commander through roster army continuity before the below-threshold launch runs.",
-        "First-deployment commanders can now initialize roster army continuity for reinforcement instead of rejecting pre-launch recruitment because their commander_state is empty.",
-        "The focused River Pass resource case launches Vaska at 191 strength instead of the 149 base host after Duskfen sends two Bog Brutes to the emergency defender."
+        "Mobile AI commanders that complete resource, artifact, or non-stationary encounter objectives now immediately choose a fresh live target from their current tile.",
+        "Continuation uses the normal assign_target path, records a fresh live commander task assignment, and emits the usual ai_target_assigned public event.",
+        "Completed objective metadata is preserved on the raid while the current target switches away from the already-secured object.",
+        "Stationing lifecycles for town defense, resource defense, and captured neutral-town garrisons remain unchanged."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "resource_target_id": "river_free_company",
-        "pressure_before": 0,
-        "raid_threshold": 999,
-        "spawned_commander_id": "hero_vaska",
-        "base_resource_strength": 149,
-        "strengthened_raid_strength": 191,
-        "prepared_unit_id": "unit_bog_brute",
-        "prepared_unit_count": 2
+        "vaska_completed_target_id": "river_free_company",
+        "vaska_continuation_target_id": "north_wood",
+        "sable_completed_target_id": "river_signal_post",
+        "sable_continuation_target_id": "midway_shrine",
+        "continuation_arrived": false,
+        "post_objective_continuation": true
       },
       "remaining_validation": "Full 100-seed generated-map strategic-AI matrix, Medium/generated-map generalization, deeper retreat/personality tuning, and live-client pacing/manual play remain open.",
       "policy": "Live strategic AI behavior slice; no new broad report gate, campaign production, or production-ready claim."
