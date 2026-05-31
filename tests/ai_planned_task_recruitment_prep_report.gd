@@ -33,6 +33,9 @@ func _run() -> void:
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
+	var surplus_garrison_case := _surplus_garrison_prepares_planned_commander_without_recruits()
+	if surplus_garrison_case.is_empty():
+		return
 	var unit_fit_case := _recruitment_unit_priority_follows_destination()
 	if unit_fit_case.is_empty():
 		return
@@ -55,9 +58,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_building_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
+		"behavior_policy": "town_building_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure_plus_surplus_garrison_mobilization",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, planned_case, surplus_garrison_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -223,6 +226,89 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 		"after_strength": after_strength,
 		"planned_batches": int(recruit_result.get("planned_batches", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
+	}
+
+func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_enemy_treasury(session, {
+		"gold": 0,
+		"wood": 0,
+		"ore": 0,
+		"aetherglass": 0,
+		"embergrain": 0,
+		"peatwax": 0,
+		"verdant_grafts": 0,
+		"brass_scrip": 0,
+		"memory_salt": 0,
+	})
+	_prepare_surplus_garrison_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Expected planned tasks before surplus-garrison mobilization, got %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	if not (town.get("available_recruits", {}) is Dictionary) or not Dictionary(town.get("available_recruits", {})).is_empty():
+		_fail("Surplus-garrison fixture should have no recruitable units: %s" % JSON.stringify(town.get("available_recruits", {})))
+		return {}
+	var destination := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID)
+	if String(destination.get("type", "")) != "planned":
+		_fail("Expected surplus-garrison town to choose planned preparation, got %s" % JSON.stringify(destination))
+		return {}
+	var actor_id := String(destination.get("roster_hero_id", ""))
+	var before_strength := _commander_strength(session, actor_id)
+	var before_garrison_strength := EnemyTurnRules._army_strength(town.get("garrison", []))
+	var defense_target := int(destination.get("defense_target", 0))
+	var treasury: Dictionary = _enemy_state(session).get("treasury", {}) if _enemy_state(session).get("treasury", {}) is Dictionary else {}
+	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
+	if int(recruit_result.get("mobilized_batches", 0)) < 1:
+		_fail("Expected surplus garrison to mobilize into planned commander prep, got %s" % JSON.stringify(recruit_result))
+		return {}
+	var after_strength := _commander_strength(session, actor_id)
+	if after_strength <= before_strength:
+		_fail("Surplus garrison mobilization did not increase commander continuity: before=%d after=%d actor=%s" % [before_strength, after_strength, actor_id])
+		return {}
+	var mobilized_town: Dictionary = recruit_result.get("town", {}) if recruit_result.get("town", {}) is Dictionary else {}
+	var after_garrison_strength := EnemyTurnRules._army_strength(mobilized_town.get("garrison", []))
+	if after_garrison_strength >= before_garrison_strength:
+		_fail("Surplus garrison mobilization did not consume actual town garrison: before=%d after=%d" % [before_garrison_strength, after_garrison_strength])
+		return {}
+	if after_garrison_strength < defense_target:
+		_fail("Surplus garrison mobilization stripped below defense target: target=%d after=%d" % [defense_target, after_garrison_strength])
+		return {}
+	if not Dictionary(mobilized_town.get("available_recruits", {})).is_empty():
+		_fail("Surplus garrison mobilization should not create or consume recruit pool entries: %s" % JSON.stringify(mobilized_town.get("available_recruits", {})))
+		return {}
+	var prepared_event := _event_by_type(recruit_result.get("events", []), "ai_commander_prepared")
+	if prepared_event.is_empty():
+		_fail("Surplus garrison mobilization did not emit ai_commander_prepared: %s" % JSON.stringify(recruit_result.get("events", [])))
+		return {}
+	var reason_codes := _string_array(prepared_event.get("target_reason_codes", []))
+	if reason_codes.is_empty():
+		reason_codes = _string_array(prepared_event.get("reason_codes", []))
+	if "surplus_garrison_mobilization" not in reason_codes:
+		_fail("Surplus garrison event missed reason code: %s" % JSON.stringify(prepared_event))
+		return {}
+	return {
+		"case_id": "surplus_garrison_prepares_planned_commander_without_recruits",
+		"actor_id": actor_id,
+		"before_strength": before_strength,
+		"after_strength": after_strength,
+		"before_garrison_strength": before_garrison_strength,
+		"after_garrison_strength": after_garrison_strength,
+		"defense_target": defense_target,
+		"mobilized_batches": int(recruit_result.get("mobilized_batches", 0)),
+		"event_type": String(prepared_event.get("event_type", "")),
+		"reason_codes": reason_codes,
 	}
 
 func _recruitment_unit_priority_follows_destination() -> Dictionary:
@@ -541,6 +627,15 @@ func _prepare_ready_launch_recruiting_town(session) -> void:
 			{"unit_id": "unit_mire_slinger", "count": 18},
 		],
 		"available_recruits": {PREP_UNIT: 99},
+	})
+
+func _prepare_surplus_garrison_town(session) -> void:
+	_update_duskfen_town(session, {
+		"garrison": [
+			{"unit_id": "unit_bog_brute", "count": 90},
+			{"unit_id": "unit_mire_slinger", "count": 90},
+		],
+		"available_recruits": {},
 	})
 
 func _prepare_critical_recruiting_town(session) -> void:
