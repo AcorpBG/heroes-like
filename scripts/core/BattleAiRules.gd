@@ -1007,8 +1007,13 @@ static func _spell_candidate_score(
 static func _commander_spell_role_modifier(enemy_hero: Dictionary, behavior: Dictionary) -> float:
 	if enemy_hero.is_empty() or behavior.is_empty():
 		return 0.0
+	var hero_template := _commander_template_for_spell_role(enemy_hero)
 	var command_path := String(enemy_hero.get("command_path", "")).strip_edges()
+	if command_path == "":
+		command_path = String(hero_template.get("command_path", "")).strip_edges()
 	var archetype := String(enemy_hero.get("archetype", "")).strip_edges()
+	if archetype == "":
+		archetype = String(hero_template.get("archetype", "")).strip_edges()
 	var effect_type := String(behavior.get("effect_type", ""))
 	var primary_role := String(behavior.get("primary_role", ""))
 	var role_categories := _normalize_string_array(behavior.get("role_categories", []))
@@ -1032,6 +1037,16 @@ static func _commander_spell_role_modifier(enemy_hero: Dictionary, behavior: Dic
 		if effect_type == "damage_enemy" or effect_type == "initiative_buff":
 			modifier += 1.0
 	return modifier
+
+static func _commander_template_for_spell_role(enemy_hero: Dictionary) -> Dictionary:
+	for key in ["roster_hero_id", "hero_id", "id"]:
+		var hero_id := String(enemy_hero.get(key, "")).strip_edges()
+		if hero_id == "":
+			continue
+		var hero_template := ContentService.get_hero(hero_id)
+		if not hero_template.is_empty():
+			return hero_template
+	return {}
 
 static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
 	var status_effect := _status_effect_from_spell(spell)
