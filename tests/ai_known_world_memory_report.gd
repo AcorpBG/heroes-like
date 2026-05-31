@@ -40,13 +40,16 @@ func _run() -> void:
 	var post_move_scouting_case := _moving_exploration_refreshes_memory_before_same_turn_retarget()
 	if post_move_scouting_case.is_empty():
 		return
+	var hero_route_occupancy_case := _nonhero_route_avoids_player_hero_occupied_tile()
+	if hero_route_occupancy_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
-		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets_and_refreshes_post_move_scouting_before_retargeting",
+		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_player_hero_route_occupancy",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -518,6 +521,34 @@ func _moving_exploration_refreshes_memory_before_same_turn_retarget() -> Diction
 		"event_types": _event_types(result.get("events", [])),
 	}
 
+func _nonhero_route_avoids_player_hero_occupied_tile() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_make_hidden_resource_target_session(session)
+	_set_primary_hero_position(session, 5, 4)
+	_add_resource_route_raid(session, 6, 4, "river_free_company")
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	_update_enemy_state(session, result.get("state", _enemy_state(session)))
+	var raid := _encounter_by_id(session, "known_world_resource_route_probe")
+	if raid.is_empty():
+		_fail("Resource route occupancy fixture lost the route probe: %s" % JSON.stringify(result))
+		return {}
+	if int(raid.get("x", -1)) == 5 and int(raid.get("y", -1)) == 4:
+		_fail("Non-hero AI route stepped onto a live player hero tile: %s" % JSON.stringify(raid))
+		return {}
+	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Route occupancy fixture should stay on protected resource objective, got %s" % JSON.stringify(raid))
+		return {}
+	return {
+		"case_id": "nonhero_route_avoids_player_hero_occupied_tile",
+		"start": {"x": 6, "y": 4},
+		"blocked_hero_tile": {"x": 5, "y": 4},
+		"after_move": {"x": int(raid.get("x", -1)), "y": int(raid.get("y", -1))},
+		"target_kind": String(raid.get("target_kind", "")),
+		"target_id": String(raid.get("target_placement_id", "")),
+		"event_types": _event_types(result.get("events", [])),
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -713,6 +744,42 @@ func _add_moving_exploration_raid(session, x: int, y: int, target_x: int, target
 	session.overworld["encounters"] = [raid]
 	session.overworld["resolved_encounters"] = []
 
+func _add_resource_route_raid(session, x: int, y: int, target_id: String) -> void:
+	var target := _resource_node(session, target_id)
+	if target.is_empty():
+		_fail("Could not find resource route target %s" % target_id)
+		return
+	var raid := {
+		"placement_id": "known_world_resource_route_probe",
+		"encounter_id": "encounter_mire_raid",
+		"x": x,
+		"y": y,
+		"difficulty": "pressure",
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"target_kind": "resource",
+		"target_placement_id": target_id,
+		"target_label": "Route Occupancy Resource",
+		"target_x": int(target.get("x", 0)),
+		"target_y": int(target.get("y", 0)),
+		"goal_x": int(target.get("x", 0)),
+		"goal_y": int(target.get("y", 0)),
+		"goal_distance": abs(x - int(target.get("x", 0))) + abs(y - int(target.get("y", 0))),
+		"target_reason_codes": ["active_front_support", "route_occupancy_fixture"],
+		"target_public_reason": "holding protected route",
+		"target_public_importance": "medium",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session
+	)
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	session.overworld["encounters"] = [raid]
+	session.overworld["resolved_encounters"] = []
+
 func _candidate_has_target(candidates: Array, target_kind: String, target_id: String) -> bool:
 	for candidate_value in candidates:
 		if not (candidate_value is Dictionary):
@@ -746,6 +813,18 @@ func _first_enemy_raid_for_kind(session, target_kind: String) -> Dictionary:
 			continue
 		if String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW and String(encounter.get("target_kind", "")) == target_kind:
 			return encounter
+	return {}
+
+func _encounter_by_id(session, placement_id: String) -> Dictionary:
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and String(encounter_value.get("placement_id", "")) == placement_id:
+			return encounter_value
+	return {}
+
+func _resource_node(session, placement_id: String) -> Dictionary:
+	for node_value in session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == placement_id:
+			return node_value
 	return {}
 
 func _first_task_for_kind(session, target_kind: String) -> Dictionary:
