@@ -23,6 +23,9 @@ func _run() -> void:
 	var risk_case_report := _weak_hero_hunt_regroups_before_intercept_case()
 	if risk_case_report.is_empty():
 		return
+	var stale_position_case_report := _stale_hero_hunt_arrival_clears_lost_trail_case()
+	if stale_position_case_report.is_empty():
+		return
 	var arbitration_case_report := _hero_intercept_arbitration_prefers_ready_high_value_hunt()
 	if arbitration_case_report.is_empty():
 		return
@@ -45,6 +48,7 @@ func _run() -> void:
 		"opportunity_case": opportunity_case_report,
 		"threat_avoidance_case": threat_avoidance_case_report,
 		"risk_case": risk_case_report,
+		"stale_position_case": stale_position_case_report,
 		"arbitration_case": arbitration_case_report,
 		"support_case": support_case_report,
 		"stall_case": stall_case_report,
@@ -393,6 +397,90 @@ func _weak_hero_hunt_regroups_before_intercept_case() -> Dictionary:
 		"reason_codes": reason_codes,
 		"event_types": event_types,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _stale_hero_hunt_arrival_clears_lost_trail_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 4
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for stale-position fixture.")
+		return {}
+	var remembered_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var actual_tile := _nearest_open_non_town_tile_excluding(session, Vector2i(0, 12), remembered_tile)
+	_move_player_hero(session, hero_id, actual_tile)
+	_remove_mireclaw_active_raids(session)
+	_seed_task_board(session, [_task("hero_vaska", hero_id, "active", "valid")])
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"player_hero_sightings": [
+				{
+					"hero_id": hero_id,
+					"hero_label": _hero_name(session, hero_id),
+					"x": remembered_tile.x,
+					"y": remembered_tile.y,
+					"army_strength": 96,
+					"seen_day": int(session.day) - 2,
+					"expires_day": int(session.day) + 2,
+					"source_kind": "commander",
+					"source_id": "stale_hero_hunt_vaska",
+					"confidence": "recent",
+				}
+			],
+			"scouted_targets": [],
+		}
+	)
+	var raid := _raid_seed(session, "hero_vaska", "stale_position_hero_hunt_vaska", remembered_tile)
+	raid["target_kind"] = "hero"
+	raid["target_placement_id"] = hero_id
+	raid["target_label"] = _hero_name(session, hero_id)
+	raid["target_x"] = remembered_tile.x
+	raid["target_y"] = remembered_tile.y
+	raid["goal_x"] = remembered_tile.x
+	raid["goal_y"] = remembered_tile.y
+	raid["goal_distance"] = 0
+	raid["arrived"] = true
+	raid["target_reason_codes"] = ["hero_hunt", "exposed_hero", "stale_position_fixture"]
+	raid["target_public_reason"] = "exposed hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "stale hero target fixture"
+	raid = _set_raid_bog_brutes(raid, 60)
+	_append_encounter(session, raid)
+	var intercept_result := EnemyTurnRules._queue_hero_intercept_battle(session, config, MIRECLAW)
+	if bool(intercept_result.get("battle_started", false)) or not session.battle.is_empty():
+		_fail("Stale hero hunt queued a battle away from the current hero tile: %s" % JSON.stringify(intercept_result))
+		return {}
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	var after_raid := _encounter(session, "stale_position_hero_hunt_vaska")
+	if after_raid.is_empty():
+		_fail("Stale hero hunt raid disappeared after lost-trail revalidation.")
+		return {}
+	if String(after_raid.get("target_kind", "")) == "hero" and String(after_raid.get("target_placement_id", "")) == hero_id:
+		_fail("Stale hero hunt remained assigned to the lost hero trail: %s" % JSON.stringify(after_raid))
+		return {}
+	if not _memory_hero_sighting_record(session, hero_id).is_empty():
+		_fail("Stale hero hunt did not clear the lost hero sighting: %s" % JSON.stringify(_memory_hero_sighting_record(session, hero_id)))
+		return {}
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "invalid", "invalid_stale_hero_sighting")
+	if _failed:
+		return {}
+	var event_types := _event_types(advance_result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Stale hero hunt retarget did not emit ai_target_assigned: %s" % JSON.stringify(advance_result))
+		return {}
+	return {
+		"case_id": "stale_hero_hunt_arrival_clears_lost_trail",
+		"battle_started": false,
+		"remembered_tile": {"x": remembered_tile.x, "y": remembered_tile.y},
+		"actual_tile": {"x": actual_tile.x, "y": actual_tile.y},
+		"retargeted_kind": String(after_raid.get("target_kind", "")),
+		"retargeted_id": String(after_raid.get("target_placement_id", "")),
+		"lost_sighting_cleared": true,
+		"event_types": event_types,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -758,6 +846,19 @@ func _update_enemy_state(session, replacement: Dictionary) -> void:
 func _task_state(session) -> Dictionary:
 	var state := _enemy_state(session)
 	return state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+
+func _patch_enemy_memory(session, memory: Dictionary) -> void:
+	var state := _enemy_state(session)
+	state["known_world_memory"] = memory
+	_update_enemy_state(session, state)
+
+func _memory_hero_sighting_record(session, hero_id: String) -> Dictionary:
+	var state := _enemy_state(session)
+	var memory: Dictionary = state.get("known_world_memory", {}) if state.get("known_world_memory", {}) is Dictionary else {}
+	for record_value in memory.get("player_hero_sightings", []):
+		if record_value is Dictionary and String(record_value.get("hero_id", "")) == hero_id:
+			return record_value
+	return {}
 
 func _assert_task_status(session, actor_id: String, target_kind: String, target_id: String, expected_status: String, expected_validation: String) -> void:
 	var task_state := _task_state(session)
