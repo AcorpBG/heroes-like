@@ -102,6 +102,17 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
 		_fail("Long-run matrix observed no enemy activity: %s" % JSON.stringify(summary))
 		return false
+	for required_summary_key in [
+		"battle_handoff_candidate_turn_count",
+		"near_battle_target_turn_count",
+		"best_min_active_raid_goal_distance",
+		"movement_distance_delta_total",
+		"battle_interrupt_count",
+		"auto_resolved_battle_count",
+	]:
+		if not summary.has(required_summary_key):
+			_fail("Long-run matrix summary missing battle-handoff coverage key %s: %s" % [required_summary_key, JSON.stringify(summary)])
+			return false
 	if int(summary.get("target_integrity_violation_count", 0)) > 0:
 		_fail("Long-run matrix observed self-looking strategic AI target labels: %s" % JSON.stringify(summary))
 		return false
@@ -140,6 +151,13 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		for turn_result in turn_results:
 			if not (turn_result is Dictionary):
 				_fail("Long-run matrix turn result is not a dictionary: %s" % JSON.stringify(row))
+				return false
+			var handoff_summary: Dictionary = turn_result.get("battle_handoff_summary", {}) if turn_result.get("battle_handoff_summary", {}) is Dictionary else {}
+			if handoff_summary.is_empty():
+				_fail("Long-run matrix turn result missing battle-handoff summary: %s" % JSON.stringify(turn_result))
+				return false
+			if not handoff_summary.has("active_raid_count") or not handoff_summary.has("min_goal_distance") or not handoff_summary.has("nearest_active_target"):
+				_fail("Long-run matrix battle-handoff summary missing active raid distance evidence: %s" % JSON.stringify(handoff_summary))
 				return false
 			if int(turn_result.get("turn_runtime_msec", -1)) < 0:
 				_fail("Long-run matrix turn result missing runtime telemetry: %s" % JSON.stringify(turn_result))

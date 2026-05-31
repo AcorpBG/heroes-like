@@ -32030,6 +32030,61 @@
       "completedAt": "2026-05-31T19:04:00Z"
     },
     {
+      "id": "strategic-ai-generated-battle-handoff-coverage-10184",
+      "title": "Strategic AI Generated Battle Handoff Coverage",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active tactical/strategic AI production-readiness goal after generated target-integrity fix",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Make Native RMG long-run strategic AI evidence expose whether strategic pressure reaches real battle handoffs and tactical AI resolution, then fix any real AI behavior gap found without changing balance content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-long-run-seed-matrix-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "Generated-map long-run evidence reports battle handoff opportunity/interrupt/tactical-resolution coverage clearly; any zero-battle gap is explicit as a production gap rather than hidden; focused tactical order and full headless harness remain green; no unit, spell, growth, economy, faction, town-cost, or balance content changes.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "claiming production readiness before full matrix evidence"
+      ],
+      "startedAt": "2026-05-31T19:22:00Z",
+      "updatedAt": "2026-05-31T19:44:00Z",
+      "validation": [
+        "Baseline evidence before this slice: 4-seed/4-turn Native RMG smoke had 48 enemy activity events, 15 target assignments, and 0 battle interrupts, leaving tactical/strategic co-tuning evidence weak.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | PASS process; 14/14 turns, 55 enemy activity events, battle_handoff_candidate_turn_count=14, best_min_active_raid_goal_distance=1, battle_interrupt_count=0, town_battle_queued_count=0; report now surfaces strategic_ai_long_run_no_battle_handoff plus full-matrix remaining-validation blocker.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | PASS process; normal smoke includes battle_handoff_summary per turn and battle-handoff aggregate fields while preserving only the full-matrix remaining-validation blocker.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn | PASS; tactical order, spell order, spell conservation, commander payload, immediate-threat, and overkill-discipline checks remain green.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/headless_simulation_harness_report.tscn | PASS/WARNING; 18 pass, 0 fail, 1 warning, 1 deferred, harness_signature=65fb34ba.",
+        "python3 tests/validate_repo.py | PASS.",
+        "jq empty ops/progress.json | PASS.",
+        "git diff --check | PASS.",
+        "git diff -- content/ | clean; no unit, spell, growth, economy, faction, town-cost, or balance content changes."
+      ],
+      "summary": "Completed. Native RMG long-run strategic AI rows now include per-turn battle-handoff summaries for active raid target kinds, nearest active target distance, near-battle pressure, movement events, and battle queue coverage; extended runs now preserve a specific no-battle-handoff production-gap blocker when strategic town/hero pressure never reaches tactical battle resolution. No balance/content data was changed.",
+      "notes": [
+        "This slice intentionally does not claim production readiness. It exposes the next real AI behavior target: generated-map strategic pressure needs to reach tactical battle handoffs under long-run Native RMG evidence."
+      ],
+      "completedAt": "2026-05-31T19:44:00Z"
+    },
+    {
       "id": "ux-polish-player-comprehension-10184",
       "title": "UX Polish Player Comprehension",
       "status": "pending",
