@@ -870,11 +870,29 @@ func _commander_risk_tolerance_changes_live_town_gate() -> Dictionary:
 		return {}
 	var aggressive_report: Dictionary = selected.get("aggressive_report", {})
 	var cautious_report: Dictionary = selected.get("cautious_report", {})
+	var minimal_cautious_raid: Dictionary = selected.get("cautious_raid", {}).duplicate(true)
+	minimal_cautious_raid["enemy_commander_state"] = {
+		"roster_hero_id": "hero_sable",
+		"last_outcome": EnemyAdventureRules.COMMANDER_OUTCOME_DEFEATED,
+	}
+	var minimal_cautious_report := EnemyAdventureRules._town_assault_advance_risk_report(session, minimal_cautious_raid, town, config)
 	if float(aggressive_report.get("risk_tolerance_scale", 1.0)) >= float(cautious_report.get("risk_tolerance_scale", 1.0)):
 		_fail("Commander risk scales did not separate aggressive/cautious reports: aggressive=%s cautious=%s" % [JSON.stringify(aggressive_report), JSON.stringify(cautious_report)])
 		return {}
 	if int(aggressive_report.get("base_required_strength", 0)) != int(cautious_report.get("base_required_strength", 0)):
 		_fail("Risk fixture changed base requirement instead of commander tolerance: aggressive=%s cautious=%s" % [JSON.stringify(aggressive_report), JSON.stringify(cautious_report)])
+		return {}
+	if float(minimal_cautious_report.get("risk_tolerance_scale", 1.0)) <= 1.0:
+		_fail("Minimal cautious commander did not inherit template risk tolerance: %s" % JSON.stringify(minimal_cautious_report))
+		return {}
+	if absf(float(minimal_cautious_report.get("risk_tolerance_scale", 1.0)) - float(cautious_report.get("risk_tolerance_scale", 1.0))) > 0.001:
+		_fail("Minimal cautious commander risk tolerance diverged from full commander state: minimal=%s full=%s" % [JSON.stringify(minimal_cautious_report), JSON.stringify(cautious_report)])
+		return {}
+	if bool(minimal_cautious_report.get("ready", true)):
+		_fail("Minimal cautious commander should remain gated by inherited risk tolerance: %s" % JSON.stringify(minimal_cautious_report))
+		return {}
+	if minimal_cautious_raid.get("enemy_commander_state", {}).has("battle_traits"):
+		_fail("Minimal risk commander fallback mutated source raid state: %s" % JSON.stringify(minimal_cautious_raid))
 		return {}
 	var cautious_redirect := EnemyAdventureRules.redirect_town_assault_for_risk(
 		session,
@@ -901,6 +919,10 @@ func _commander_risk_tolerance_changes_live_town_gate() -> Dictionary:
 		"cautious_scale": float(cautious_report.get("risk_tolerance_scale", 1.0)),
 		"cautious_required_strength": int(cautious_report.get("required_strength", 0)),
 		"cautious_ready": bool(cautious_report.get("ready", true)),
+		"minimal_cautious_scale": float(minimal_cautious_report.get("risk_tolerance_scale", 1.0)),
+		"minimal_cautious_required_strength": int(minimal_cautious_report.get("required_strength", 0)),
+		"minimal_cautious_ready": bool(minimal_cautious_report.get("ready", true)),
+		"minimal_cautious_source_mutated": minimal_cautious_raid.get("enemy_commander_state", {}).has("battle_traits"),
 		"cautious_redirect_kind": String(cautious_redirect.get("target_kind", "")),
 		"cautious_redirect_id": String(cautious_redirect.get("target_placement_id", "")),
 		"cautious_redirect_reasons": redirect_reason_codes,
