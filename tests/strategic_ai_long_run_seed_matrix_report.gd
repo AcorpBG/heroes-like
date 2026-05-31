@@ -106,16 +106,29 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		"battle_handoff_candidate_turn_count",
 		"near_battle_target_turn_count",
 		"near_battle_town_or_hero_turn_count",
+		"natural_tactical_battle_pressure_turn_count",
+		"natural_tactical_battle_arrival_turn_count",
 		"best_min_active_raid_goal_distance",
 		"best_min_tactical_battle_goal_distance",
+		"nearest_tactical_battle_target",
 		"movement_distance_delta_total",
 		"battle_interrupt_count",
 		"auto_resolved_battle_count",
 		"tactical_battle_queued_count",
+		"natural_tactical_battle_queue_event_count",
 	]:
 		if not summary.has(required_summary_key):
 			_fail("Long-run matrix summary missing battle-handoff coverage key %s: %s" % [required_summary_key, JSON.stringify(summary)])
 			return false
+	if int(summary.get("natural_tactical_battle_pressure_turn_count", 0)) != int(summary.get("battle_handoff_candidate_turn_count", 0)):
+		_fail("Long-run matrix natural tactical pressure count diverged from handoff candidate count: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("natural_tactical_battle_arrival_turn_count", 0)) != int(summary.get("near_battle_town_or_hero_turn_count", 0)):
+		_fail("Long-run matrix natural tactical arrival count diverged from near town/hero count: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("natural_tactical_battle_queue_event_count", 0)) != int(summary.get("tactical_battle_queued_count", 0)):
+		_fail("Long-run matrix natural tactical queue count diverged from tactical queue count: %s" % JSON.stringify(summary))
+		return false
 	if int(summary.get("target_integrity_violation_count", 0)) > 0:
 		_fail("Long-run matrix observed self-looking strategic AI target labels: %s" % JSON.stringify(summary))
 		return false

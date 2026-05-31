@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after the latest completed generated-map handoff proof; next tactical/strategic AI production-readiness work should broaden natural Native RMG battle-handoff/generalization evidence before any production-ready claim.
+- Current implementation slice: none selected after the latest natural generated-map battle-handoff evidence slice; next tactical/strategic AI production-readiness work should address the measured natural-arrival/runtime gap before any production-ready claim.
+- Latest completed slice: `strategic-ai-natural-battle-handoff-matrix-10184`.
 - Latest completed slice: `strategic-ai-generated-town-battle-handoff-proof-10184`.
 - Latest completed slice: `strategic-ai-generated-battle-handoff-behavior-10184`.
 - Latest completed slice: `strategic-ai-generated-battle-handoff-coverage-10184`.
