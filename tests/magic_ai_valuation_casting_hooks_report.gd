@@ -14,6 +14,10 @@ func _run() -> void:
 	if not bool(resistance_case.get("ok", false)):
 		_fail(String(resistance_case.get("error", "Battle AI resistance targeting case failed.")))
 		return
+	var damage_status_case := _run_battle_ai_damage_status_targeting_case()
+	if not bool(damage_status_case.get("ok", false)):
+		_fail(String(damage_status_case.get("error", "Battle AI damage status targeting case failed.")))
+		return
 
 	var adventure_case := _run_adventure_ai_spell_case()
 	if not bool(adventure_case.get("ok", false)):
@@ -25,9 +29,10 @@ func _run() -> void:
 		"report_id": REPORT_ID,
 		"battle": battle_case,
 		"battle_resistance_targeting": resistance_case,
+		"battle_damage_status_targeting": damage_status_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -150,6 +155,56 @@ func _run_battle_ai_resistance_targeting_case() -> Dictionary:
 		"selected_target_id": String(selected.get("target_battle_id", "")),
 		"protected_target_resistance": 80,
 		"protected_target_already_controlled": true,
+		"live_action": String(live_action.get("action", "")),
+	}
+
+func _run_battle_ai_damage_status_targeting_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Damage-Rider Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_obituary_mark"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var controlled_effect := SpellRules.build_battle_effect(
+		"status_staggered",
+		"Staggered",
+		{"attack": -1},
+		2,
+		{"round": 2},
+		"test",
+		"seed_staggered"
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_mark_caster", "enemy", "Enemy Mark Caster", 7, 10, 70, []),
+			_stack("player_already_controlled", "player", "Player Already Controlled", 10, 10, 100, [controlled_effect]),
+			_stack("player_fresh_mark_target", "player", "Player Fresh Mark Target", 10, 10, 100, []),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_mark_caster")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Damage status targeting report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("target_battle_id", "")) != "player_fresh_mark_target":
+		return {"ok": false, "error": "Damage status-rider report should mark the fresh target, got %s candidates=%s" % [selected, report.get("candidates", [])]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("target_battle_id", "")) != "player_fresh_mark_target":
+		return {"ok": false, "error": "Damage status-rider live choice should mark the fresh target, got %s" % live_action}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"selected_target_id": String(selected.get("target_battle_id", "")),
+		"avoided_target_id": "player_already_controlled",
+		"avoided_target_already_controlled": true,
 		"live_action": String(live_action.get("action", "")),
 	}
 
