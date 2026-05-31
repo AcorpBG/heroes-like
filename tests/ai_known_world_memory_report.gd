@@ -37,13 +37,16 @@ func _run() -> void:
 	var exploration_case := _exploration_arrival_reassigns_visible_resource()
 	if exploration_case.is_empty():
 		return
+	var post_move_scouting_case := _moving_exploration_refreshes_memory_before_same_turn_retarget()
+	if post_move_scouting_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
-		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
+		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets_and_refreshes_post_move_scouting_before_retargeting",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -476,6 +479,45 @@ func _exploration_arrival_reassigns_visible_resource() -> Dictionary:
 		"event_types": _event_types(result.get("events", [])),
 	}
 
+func _moving_exploration_refreshes_memory_before_same_turn_retarget() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 12)
+	_make_hidden_resource_target_session(session)
+	_add_moving_exploration_raid(session, 6, 4, 5, 4)
+	if not _memory_target_record(session, "resource", "river_free_company").is_empty():
+		_fail("Post-move scouting fixture should start without resource memory: %s" % JSON.stringify(_enemy_memory(session)))
+		return {}
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	_update_enemy_state(session, result.get("state", _enemy_state(session)))
+	var record := _memory_target_record(session, "resource", "river_free_company")
+	if record.is_empty():
+		_fail("Moving exploration commander did not refresh newly reached sight line before same-turn retarget: %s" % JSON.stringify(result))
+		return {}
+	if String(record.get("source_kind", "")) != "commander":
+		_fail("Post-move scout memory should use commander source kind: %s" % JSON.stringify(record))
+		return {}
+	if String(record.get("source_id", "")) != "known_world_moving_exploration_probe":
+		_fail("Post-move scout memory should use the moved commander source id: %s" % JSON.stringify(record))
+		return {}
+	var reassigned := _first_enemy_raid_for_kind(session, "resource")
+	if reassigned.is_empty():
+		_fail("Moving exploration commander did not retarget newly visible resource in the same advance: %s" % JSON.stringify(session.overworld.get("encounters", [])))
+		return {}
+	if String(reassigned.get("target_placement_id", "")) != "river_free_company":
+		_fail("Moving exploration commander retargeted the wrong post-move sight target: %s" % JSON.stringify(reassigned))
+		return {}
+	return {
+		"case_id": "moving_exploration_refreshes_memory_before_same_turn_retarget",
+		"start": {"x": 6, "y": 4},
+		"post_move": {"x": int(reassigned.get("x", -1)), "y": int(reassigned.get("y", -1))},
+		"memory_source_kind": String(record.get("source_kind", "")),
+		"memory_source_id": String(record.get("source_id", "")),
+		"reassigned_target_kind": String(reassigned.get("target_kind", "")),
+		"reassigned_target_id": String(reassigned.get("target_placement_id", "")),
+		"event_types": _event_types(result.get("events", [])),
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -625,6 +667,38 @@ func _add_exploration_raid(session, x: int, y: int) -> void:
 		"goal_x": x,
 		"goal_y": y,
 		"goal_distance": 0,
+		"target_reason_codes": ["no_known_targets", "frontier_scouting", "search_contact"],
+		"target_public_reason": "scouting the frontier",
+		"target_public_importance": "medium",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session
+	)
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	session.overworld["encounters"] = [raid]
+	session.overworld["resolved_encounters"] = []
+
+func _add_moving_exploration_raid(session, x: int, y: int, target_x: int, target_y: int) -> void:
+	var raid := {
+		"placement_id": "known_world_moving_exploration_probe",
+		"encounter_id": "encounter_mire_raid",
+		"x": x,
+		"y": y,
+		"difficulty": "pressure",
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"target_kind": "explore",
+		"target_placement_id": "explore:%d:%d" % [target_x, target_y],
+		"target_label": "Frontier scout %d,%d" % [target_x, target_y],
+		"target_x": target_x,
+		"target_y": target_y,
+		"goal_x": target_x,
+		"goal_y": target_y,
+		"goal_distance": abs(x - target_x) + abs(y - target_y),
 		"target_reason_codes": ["no_known_targets", "frontier_scouting", "search_contact"],
 		"target_public_reason": "scouting the frontier",
 		"target_public_importance": "medium",

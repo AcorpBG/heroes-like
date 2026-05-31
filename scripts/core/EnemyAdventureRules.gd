@@ -1089,6 +1089,7 @@ static func advance_raids(
 		encounter = _redirect_raid_away_from_nearby_player_threat(session, config, encounter, faction_id)
 		encounter = _redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)
 		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id)
+		_clear_stale_hero_sighting_after_target_change(session, faction_id, previous_target, encounter)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
 			event_records.append(assignment_event)
@@ -1142,6 +1143,11 @@ static func advance_raids(
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")))
 		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
 		encounter["arrived"] = int(encounter.get("goal_distance", 9999)) == 0
+		encounters[index] = encounter
+		session.overworld["encounters"] = encounters
+		if String(encounter.get("target_kind", "")) != "hero":
+			var post_move_memory_result := refresh_enemy_known_world_memory(session, config, state)
+			state = post_move_memory_result.get("state", state)
 
 		var post_move_grouping_result := group_nearby_raids_for_town_assault(
 			session,
@@ -5973,6 +5979,38 @@ static func _current_target_snapshot(raid: Dictionary) -> Dictionary:
 		"target_x": int(raid.get("target_x", raid.get("goal_x", 0))),
 		"target_y": int(raid.get("target_y", raid.get("goal_y", 0))),
 	}
+
+static func _clear_stale_hero_sighting_after_target_change(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	previous_target: Dictionary,
+	raid: Dictionary
+) -> void:
+	if session == null or faction_id == "" or previous_target.is_empty() or raid.is_empty():
+		return
+	if String(previous_target.get("target_kind", "")) != "hero":
+		return
+	var hero_id := String(previous_target.get("target_placement_id", ""))
+	if hero_id == "":
+		return
+	if _target_signature(previous_target) == _target_signature(_current_target_snapshot(raid)):
+		return
+	var hero := _find_player_hero(session, hero_id)
+	var raid_tile := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var hero_missing_or_elsewhere := hero.is_empty()
+	if not hero.is_empty():
+		var hero_tile := _player_hero_goal_tile(hero)
+		hero_missing_or_elsewhere = abs(raid_tile.x - hero_tile.x) + abs(raid_tile.y - hero_tile.y) > 1
+	if not hero_missing_or_elsewhere:
+		return
+	var previous_hero_task_raid := raid.duplicate(true)
+	previous_hero_task_raid["target_kind"] = "hero"
+	previous_hero_task_raid["target_placement_id"] = hero_id
+	previous_hero_task_raid["target_label"] = String(previous_target.get("target_label", hero_id))
+	previous_hero_task_raid["target_x"] = int(previous_target.get("target_x", raid.get("x", 0)))
+	previous_hero_task_raid["target_y"] = int(previous_target.get("target_y", raid.get("y", 0)))
+	_remove_enemy_player_hero_sighting(session, faction_id, hero_id)
+	_ai_hero_task_finish_live_assignment(session, faction_id, previous_hero_task_raid, "invalid", "invalid_stale_hero_sighting")
 
 static func _target_signature(target: Dictionary) -> String:
 	if target.is_empty():
@@ -11584,6 +11622,9 @@ static func _ai_hero_task_finish_live_assignment(
 		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
 		var changed := false
 		var next_tasks := []
+		var finishable_statuses := ["planned", "reserved", "active"]
+		if validation == "invalid_stale_hero_sighting":
+			finishable_statuses.append("cancelled")
 		for task_value in tasks:
 			if not (task_value is Dictionary):
 				continue
@@ -11591,7 +11632,7 @@ static func _ai_hero_task_finish_live_assignment(
 			if String(task.get("actor_id", "")) == actor_id \
 					and String(task.get("target_kind", "")) == target_kind \
 					and String(task.get("target_id", "")) == target_id \
-					and String(task.get("task_status", "")) in ["planned", "reserved", "active"]:
+					and String(task.get("task_status", "")) in finishable_statuses:
 				task = task.duplicate(true)
 				task["task_status"] = task_status
 				task["last_validation"] = validation
@@ -13268,6 +13309,7 @@ static func _resolve_hero_intercept_target(
 	_remove_enemy_player_hero_sighting(session, faction_id, hero_id)
 	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "invalid", "invalid_stale_hero_sighting")
 	var lost_target := _retarget_after_lost_hero_sighting(session, config, raid, faction_id, hero_id)
+	_remove_enemy_player_hero_sighting(session, faction_id, hero_id)
 	return {
 		"encounter": lost_target.get("encounter", raid),
 		"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
