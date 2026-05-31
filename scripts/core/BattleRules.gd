@@ -6609,8 +6609,14 @@ static func _resolve_enemy_commander_aftermath(
 	var commander_state = session.battle.get("enemy_hero", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return ""
+	commander_state = _enemy_commander_state_with_payload(session, commander_state)
 	commander_state = _apply_enemy_commander_battle_memory(session, commander_state)
 	session.battle["enemy_hero"] = commander_state
+	session.battle["enemy_hero_payload"] = _enemy_hero_payload_from_state(
+		commander_state,
+		session.battle.get("enemy_hero_payload", {}),
+		session
+	)
 	return EnemyAdventureRulesScript.apply_resolved_commander_aftermath(
 		session,
 		_battle_enemy_faction_id(session),
@@ -6665,6 +6671,7 @@ static func _record_enemy_commander_battle_continuity(
 	var commander_state = session.battle.get("enemy_hero", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return
+	commander_state = _enemy_commander_state_with_payload(session, commander_state)
 	var faction_id := _battle_enemy_faction_id(session)
 	if faction_id == "":
 		return
@@ -6687,6 +6694,17 @@ static func _record_enemy_commander_battle_continuity(
 		-1,
 		outcome_id
 	)
+
+static func _enemy_commander_state_with_payload(
+	session: SessionStateStoreScript.SessionData,
+	commander_state: Dictionary
+) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return commander_state
+	var payload: Dictionary = session.battle.get("enemy_hero_payload", {}) if session.battle.get("enemy_hero_payload", {}) is Dictionary else {}
+	if payload.is_empty():
+		return commander_state
+	return BattleAiRulesScript._merged_commander_ai_payload(commander_state, payload)
 
 static func _apply_enemy_commander_battle_memory(
 	session: SessionStateStoreScript.SessionData,

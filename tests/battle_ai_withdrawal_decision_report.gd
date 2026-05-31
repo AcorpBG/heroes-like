@@ -2,6 +2,7 @@ extends Node
 
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
+const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 const REPORT_ID := "BATTLE_AI_WITHDRAWAL_DECISION_REPORT"
@@ -24,6 +25,7 @@ func _run() -> void:
 	_validate_commander_personality_withdrawal()
 	_validate_argument_commander_payload_bridge()
 	_validate_template_commander_payload_fallback()
+	_validate_outcome_payload_continuity()
 	_validate_runtime_enemy_retreat()
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0)
@@ -130,6 +132,64 @@ func _validate_template_commander_payload_fallback() -> void:
 		"template_scale": template_scale,
 		"template_candidate_scores": template_decision.get("candidate_scores", {}),
 		"source_battle_mutated": template_session.battle.get("enemy_hero_payload", {}).has("battle_traits"),
+	}
+
+func _validate_outcome_payload_continuity() -> void:
+	var session := _withdrawal_session(100, 100, true, false, 220, 220)
+	session.overworld["enemy_states"] = [
+		{
+			"faction_id": "faction_thornwake",
+			"commander_roster": [
+				{
+					"roster_hero_id": "hero_thornwake_veyra_seedseer",
+					"status": "active",
+					"active_placement_id": "withdrawal_fixture",
+					"commander_state": {
+						"roster_hero_id": "hero_thornwake_veyra_seedseer",
+						"faction_id": "faction_thornwake",
+					},
+				},
+			],
+		},
+	]
+	var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
+	if not stacks.is_empty() and stacks[0] is Dictionary:
+		stacks[0]["faction_id"] = "faction_thornwake"
+		session.battle["stacks"] = stacks
+	session.battle["enemy_hero"] = {
+		"roster_hero_id": "hero_thornwake_veyra_seedseer",
+		"faction_id": "faction_thornwake",
+	}
+	session.battle["enemy_hero_payload"] = {
+		"roster_hero_id": "hero_thornwake_veyra_seedseer",
+		"faction_id": "faction_thornwake",
+		"name": "Veyra Seedseer",
+		"command_path": "magic",
+		"archetype": "rootoracle",
+		"command": {"power": 8, "knowledge": 8},
+		"battle_traits": ["bogwise", "ambusher"],
+		"spellbook": {
+			"known_spell_ids": ["spell_root_loam_thorn_10"],
+			"mana": {"current": 40, "max": 40},
+		},
+	}
+	BattleRulesScript._record_enemy_commander_battle_continuity(
+		session,
+		EnemyAdventureRulesScript.COMMANDER_OUTCOME_STALEMATE
+	)
+	var battle_enemy: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
+	var roster_enemy := _roster_commander_state(session, "faction_thornwake", "hero_thornwake_veyra_seedseer")
+	if "spell_root_loam_thorn_10" not in _known_spell_ids(battle_enemy):
+		_fail("outcome continuity dropped learned payload spell from battle enemy hero: %s" % JSON.stringify(battle_enemy))
+		return
+	if "spell_root_loam_thorn_10" not in _known_spell_ids(roster_enemy):
+		_fail("outcome continuity did not sync learned payload spell to strategic commander roster: %s" % JSON.stringify(roster_enemy))
+		return
+	_report["cases"]["outcome_payload_continuity"] = {
+		"battle_known_spell_count": _known_spell_ids(battle_enemy).size(),
+		"roster_known_spell_count": _known_spell_ids(roster_enemy).size(),
+		"last_outcome": String(roster_enemy.get("last_outcome", "")),
+		"battle_wins": int(roster_enemy.get("battle_wins", 0)),
 	}
 
 func _validate_runtime_enemy_retreat() -> void:
@@ -291,6 +351,19 @@ func _expect_event(label: String, battle: Dictionary, battle_id: String, event_i
 		):
 			return
 	_fail("%s missing event %s/%s for %s in %s." % [label, event_id, state, battle_id, BattleRulesScript.animation_event_queue(battle)])
+
+func _roster_commander_state(session: SessionStateStoreScript.SessionData, faction_id: String, roster_hero_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		for entry in state.get("commander_roster", []):
+			if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+				return entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+	return {}
+
+func _known_spell_ids(commander_state: Dictionary) -> Array:
+	var spellbook: Dictionary = commander_state.get("spellbook", {}) if commander_state.get("spellbook", {}) is Dictionary else {}
+	return spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
 
 func _expect_equal(label: String, observed: String, expected: String) -> void:
 	if observed != expected:
