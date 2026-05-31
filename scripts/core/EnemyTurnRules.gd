@@ -1796,10 +1796,43 @@ static func _can_launch_raid(
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
 		return false
 	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
+	var emergency_defense_plan := _emergency_defense_launch_ready_report(session, config, state, faction_id)
 	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
-	if int(state.get("pressure", 0)) < raid_threshold and launch_ready_plan.is_empty():
+	if int(state.get("pressure", 0)) < raid_threshold and launch_ready_plan.is_empty() and emergency_defense_plan.is_empty():
 		return false
 	return not _best_open_spawn_point(session, config, state, faction_id).is_empty()
+
+static func _emergency_defense_launch_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return {}
+	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var best := {}
+	for index in range(points.size()):
+		var point = points[index]
+		if not (point is Dictionary):
+			continue
+		var candidate := _emergency_defense_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			index
+		)
+		if candidate.is_empty():
+			continue
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
+	return best
 
 static func _planned_task_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
@@ -1982,6 +2015,14 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		"arrived": false,
 		"goal_distance": 9999,
 	}
+	if String(spawn_point.get("spawn_plan_source", "")).begins_with("emergency_"):
+		raid_seed["target_kind"] = String(spawn_point.get("spawn_plan_target_kind", ""))
+		raid_seed["target_placement_id"] = String(spawn_point.get("spawn_plan_target_id", ""))
+		raid_seed["target_label"] = String(spawn_point.get("spawn_plan_target_label", ""))
+		raid_seed["target_reason_codes"] = spawn_point.get("spawn_plan_reason_codes", [])
+		raid_seed["target_public_reason"] = String(spawn_point.get("spawn_plan_public_reason", ""))
+		raid_seed["target_public_importance"] = String(spawn_point.get("spawn_plan_public_importance", "high"))
+		raid_seed["target_debug_reason"] = String(spawn_point.get("spawn_plan_debug_reason", ""))
 	raid_seed["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
 		raid_seed,
 		roster_hero_id,
@@ -2983,6 +3024,17 @@ static func _spawn_point_candidate(
 ) -> Dictionary:
 	if faction_id == "" or point.is_empty():
 		return {}
+	var emergency_defense_candidate := _emergency_defense_spawn_candidate_for_point(
+		session,
+		config,
+		state,
+		faction_id,
+		point,
+		occupied_commander_ids,
+		spawn_order
+	)
+	if not emergency_defense_candidate.is_empty():
+		return emergency_defense_candidate
 	var ready_saved_candidate := _ready_saved_task_spawn_candidate_for_point(
 		session,
 		config,
@@ -3126,6 +3178,127 @@ static func _spawn_point_candidate_from_plan(
 	candidate["spawn_plan_goal_distance"] = goal_distance
 	candidate["spawn_plan_score"] = score
 	candidate["spawn_order"] = spawn_order
+	return candidate
+
+static func _emergency_defense_spawn_candidate_for_point(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	spawn_order: int
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	var base_encounter_id := _primary_raid_encounter_id(config)
+	if base_encounter_id == "":
+		return {}
+	var roster: Variant = state.get("commander_roster", [])
+	var candidates: Array = EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		roster
+	)
+	var best := {}
+	for commander_value in candidates:
+		if not (commander_value is Dictionary):
+			continue
+		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		var probe := {
+			"placement_id": "__emergency_defense_probe:%s:%d" % [roster_hero_id, spawn_order],
+			"encounter_id": base_encounter_id,
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"difficulty": "pressure",
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+		}
+		probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+			probe,
+			roster_hero_id,
+			faction_id,
+			session,
+			occupied_commander_ids,
+			roster
+		)
+		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+		var town_defense := EnemyAdventureRulesScript._redirect_raid_to_threatened_town_defense(
+			session,
+			config,
+			probe.duplicate(true),
+			faction_id
+		)
+		var resource_defense := EnemyAdventureRulesScript._redirect_raid_to_threatened_resource_defense(
+			session,
+			config,
+			probe.duplicate(true),
+			faction_id
+		)
+		for redirected_value in [town_defense, resource_defense]:
+			if not (redirected_value is Dictionary):
+				continue
+			var redirected: Dictionary = redirected_value
+			if not _emergency_defense_redirect_applies(redirected):
+				continue
+			var candidate := _spawn_point_candidate_from_emergency_defense(
+				point,
+				redirected,
+				roster_hero_id,
+				spawn_order
+			)
+			if candidate.is_empty():
+				continue
+			if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+				best = candidate
+	return best
+
+static func _emergency_defense_redirect_applies(raid: Dictionary) -> bool:
+	var kind := String(raid.get("target_kind", ""))
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if kind == "town":
+		return "town_defense" in reason_codes and "front_stabilization" in reason_codes
+	if kind == "resource":
+		return "site_defense" in reason_codes and "defend_front" in reason_codes
+	return false
+
+static func _spawn_point_candidate_from_emergency_defense(
+	point: Dictionary,
+	raid: Dictionary,
+	roster_hero_id: String,
+	spawn_order: int
+) -> Dictionary:
+	var target_kind := String(raid.get("target_kind", ""))
+	var target_id := String(raid.get("target_placement_id", ""))
+	if target_kind == "" or target_id == "" or roster_hero_id == "":
+		return {}
+	var goal_distance := int(raid.get("goal_distance", 9999))
+	if goal_distance >= 9999:
+		return {}
+	var priority := 210 if target_kind == "town" else 170
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	var score := (priority * 100) - (goal_distance * 8) - spawn_order
+	score += EnemyAdventureRulesScript.raid_strength(raid)
+	var candidate := point.duplicate(true)
+	candidate["roster_hero_id"] = roster_hero_id
+	candidate["spawn_plan_source"] = "emergency_town_defense" if target_kind == "town" else "emergency_resource_defense"
+	candidate["spawn_plan_target_kind"] = target_kind
+	candidate["spawn_plan_target_id"] = target_id
+	candidate["spawn_plan_target_label"] = String(raid.get("target_label", target_id))
+	candidate["spawn_plan_priority"] = priority
+	candidate["spawn_plan_goal_distance"] = goal_distance
+	candidate["spawn_plan_score"] = score
+	candidate["spawn_order"] = spawn_order
+	candidate["spawn_plan_reason_codes"] = reason_codes
+	candidate["spawn_plan_public_reason"] = String(raid.get("target_public_reason", "defending threatened town"))
+	candidate["spawn_plan_public_importance"] = String(raid.get("target_public_importance", "high"))
+	candidate["spawn_plan_debug_reason"] = String(raid.get("target_debug_reason", "emergency defensive launch"))
 	return candidate
 
 static func _apply_spawn_plan_adventure_spell_projection(
