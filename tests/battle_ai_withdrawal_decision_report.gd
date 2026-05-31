@@ -9,7 +9,7 @@ const REPORT_ID := "BATTLE_AI_WITHDRAWAL_DECISION_REPORT"
 var _report := {
 	"ok": true,
 	"report_id": REPORT_ID,
-	"slice": "battle-ai-commander-withdrawal-personality-10184",
+	"slice": "battle-ai-enemy-hero-payload-bridge-10184",
 	"policy": "battle_ai_enemy_withdrawal_decision_v1",
 	"cases": {},
 }
@@ -22,6 +22,7 @@ func _run() -> void:
 	_validate_surrender_decision()
 	_validate_locked_withdrawal()
 	_validate_commander_personality_withdrawal()
+	_validate_argument_commander_payload_bridge()
 	_validate_runtime_enemy_retreat()
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0)
@@ -77,6 +78,24 @@ func _validate_commander_personality_withdrawal() -> void:
 		"cautious_action": String(cautious_decision.get("action", "")),
 		"cautious_scale": cautious_scale,
 		"cautious_candidate_scores": cautious_decision.get("candidate_scores", {}),
+	}
+
+func _validate_argument_commander_payload_bridge() -> void:
+	var bridge_session := _withdrawal_session(38, 100, true, false, 76, 240)
+	var active_stack := BattleRulesScript.get_active_stack(bridge_session.battle)
+	var decision := BattleAiRulesScript.choose_enemy_action(bridge_session.battle, active_stack, _cautious_commander_payload())
+	_expect_equal("argument-only commander split pressure action", String(decision.get("action", "")), "retreat")
+	_expect_candidate_score("argument-only commander split pressure candidate score", decision, "retreat")
+	if float(decision.get("commander_withdrawal_urgency_scale", 1.0)) <= 1.0:
+		_fail("argument-only commander payload did not increase withdrawal urgency: %s" % JSON.stringify(decision))
+		return
+	if bridge_session.battle.has("enemy_hero_payload"):
+		_fail("argument-only commander payload bridge mutated the source battle: %s" % JSON.stringify(bridge_session.battle))
+		return
+	_report["cases"]["argument_commander_payload_bridge"] = {
+		"action": String(decision.get("action", "")),
+		"urgency_scale": float(decision.get("commander_withdrawal_urgency_scale", 1.0)),
+		"source_battle_mutated": bridge_session.battle.has("enemy_hero_payload"),
 	}
 
 func _validate_runtime_enemy_retreat() -> void:
@@ -156,9 +175,10 @@ func _withdrawal_session(
 		"player_commander_state": {},
 		"player_commander_source": {"type": "active_hero", "hero_id": "hero_report"},
 		"enemy_hero": {},
-		"enemy_hero_payload": enemy_commander,
 		"field_objectives": [],
 	}
+	if not enemy_commander.is_empty():
+		session.battle["enemy_hero_payload"] = enemy_commander
 	return session
 
 func _aggressive_commander_payload() -> Dictionary:

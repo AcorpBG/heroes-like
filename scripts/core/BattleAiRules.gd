@@ -406,18 +406,19 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		return {}
 
-	var targets := _alive_stacks_for_side(battle, "player")
+	var scoring_battle := _battle_with_enemy_hero_payload(battle, enemy_hero)
+	var targets := _alive_stacks_for_side(scoring_battle, "player")
 	if targets.is_empty():
 		return {}
 
-	var best_spell := _best_spell_action(battle, active_stack, enemy_hero, targets)
-	var best_attack := _best_attack_action(battle, active_stack, targets)
-	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, battle, active_stack)
-	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, battle, enemy_hero)
-	var defend_score := _defend_score(battle, active_stack, targets)
-	var advance_score := _advance_score(battle, active_stack, targets)
-	var distance := int(battle.get("distance", 1))
-	var force_engaged_attack := _must_force_engaged_attack(active_stack, battle, targets, best_attack)
+	var best_spell := _best_spell_action(scoring_battle, active_stack, enemy_hero, targets)
+	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
+	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
+	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, enemy_hero)
+	var defend_score := _defend_score(scoring_battle, active_stack, targets)
+	var advance_score := _advance_score(scoring_battle, active_stack, targets)
+	var distance := int(scoring_battle.get("distance", 1))
+	var force_engaged_attack := _must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
 	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
@@ -442,7 +443,7 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		candidate_scores[String(best_attack.get("action", "attack"))] = float(best_attack.get("score", 0.0))
 	if not best_spell.is_empty():
 		candidate_scores["cast_spell"] = float(best_spell.get("score", 0.0))
-	var withdrawal_candidate := _enemy_withdrawal_action(battle, active_stack, targets, best)
+	var withdrawal_candidate := _enemy_withdrawal_action(scoring_battle, active_stack, targets, best)
 	if not withdrawal_candidate.is_empty():
 		candidate_scores[String(withdrawal_candidate.get("action", "withdraw"))] = float(withdrawal_candidate.get("score", 0.0))
 		if _candidate_beats(withdrawal_candidate, best):
@@ -452,6 +453,16 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if String(report.get("action", "")) in ["retreat", "surrender"]:
 		report["scoring_policy"] = ENEMY_WITHDRAWAL_SCORING_POLICY
 	return report
+
+static func _battle_with_enemy_hero_payload(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
+	if battle.is_empty() or enemy_hero.is_empty():
+		return battle
+	var existing_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
+	if not existing_payload.is_empty():
+		return battle
+	var scored := battle.duplicate(true)
+	scored["enemy_hero_payload"] = enemy_hero.duplicate(true)
+	return scored
 
 static func _candidate_is_lethal_attack(candidate: Dictionary, battle: Dictionary, active_stack: Dictionary) -> bool:
 	if candidate.is_empty():
