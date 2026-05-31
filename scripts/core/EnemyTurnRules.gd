@@ -1268,8 +1268,12 @@ static func _enemy_spell_study_score(
 	var effect_type := String(effect.get("type", ""))
 	var command: Dictionary = commander_state.get("command", {}) if commander_state.get("command", {}) is Dictionary else {}
 	var hero_template := ContentService.get_hero(String(roster_entry.get("roster_hero_id", commander_state.get("roster_hero_id", ""))))
-	var command_path := String(commander_state.get("command_path", hero_template.get("command_path", "")))
-	var archetype := String(commander_state.get("archetype", ""))
+	var command_path := String(commander_state.get("command_path", "")).strip_edges()
+	if command_path == "":
+		command_path = String(hero_template.get("command_path", "")).strip_edges()
+	var archetype := String(commander_state.get("archetype", "")).strip_edges()
+	if archetype == "":
+		archetype = String(hero_template.get("archetype", "")).strip_edges()
 	var task_kind := String(task.get("target_kind", ""))
 	var overworld_task := task_kind in ["explore", "resource", "artifact", "objective"]
 	var combat_task := task_kind in ["hero", "town", "encounter"]
