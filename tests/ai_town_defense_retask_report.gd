@@ -29,11 +29,19 @@ func _run() -> void:
 	var release_case := _stationed_town_defender_releases_when_front_clears()
 	if release_case.is_empty():
 		return
+	var emergency_launch_case := _emergency_town_defense_launches_below_pressure_threshold()
+	if emergency_launch_case.is_empty():
+		return
+	var emergency_resource_launch_case := _emergency_resource_defense_launches_below_pressure_threshold()
+	if emergency_resource_launch_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_town_defense_retask_rotation_no_save_migration",
-		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders_and_resource_fronts_station_defenders",
+		"schema_status": "live_town_defense_retask_rotation_and_emergency_launch_no_save_migration",
+		"schema_status_legacy": "live_town_defense_retask_rotation_no_save_migration",
+		"behavior_policy": "active_raids_defend_threatened_owned_town_fronts_and_below_threshold_emergency_launches_cover_unassigned_defense_gaps_without_overcommitting",
+		"behavior_policy_legacy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"overcommit_case": overcommit_case,
@@ -41,6 +49,8 @@ func _run() -> void:
 		"resource_stationing_case": resource_stationing_case,
 		"resource_battle_case": resource_battle_case,
 		"release_case": release_case,
+		"emergency_launch_case": emergency_launch_case,
+		"emergency_resource_launch_case": emergency_resource_launch_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -235,6 +245,114 @@ func _stationed_town_defender_releases_when_front_clears() -> Dictionary:
 		"stationed_status_before_clear": String(stationed_entry.get("status", "")),
 		"released_status_after_clear": String(released_entry.get("status", "")),
 		"defender_metadata_cleared": not released_town.has("ai_defender_commander_state"),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _emergency_town_defense_launches_below_pressure_threshold() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config().duplicate(true)
+	config["raid_threshold"] = 999
+	config["pressure_per_day"] = 0
+	config["pressure_per_enemy_town"] = 0
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["treasury"] = {}
+	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 7, "y": 2})
+	_set_stabilizing_front(session, "duskfen_bastion")
+	_set_town_garrison(session, "duskfen_bastion", [])
+	_set_town_available_recruits(session, "duskfen_bastion", {})
+	if EnemyTurnRules.active_raid_count(session, MIRECLAW) != 0:
+		_fail("Emergency launch fixture expected no active raids before turn.")
+		return {}
+
+	var result := EnemyTurnRules._run_empire_cycle(session, config, state, false)
+	var spawned := _latest_enemy_raid(session)
+	if spawned.is_empty():
+		_fail("Emergency defense launch did not spawn a raid below pressure threshold: %s" % JSON.stringify(result))
+		return {}
+	if String(spawned.get("target_kind", "")) != "town" or String(spawned.get("target_placement_id", "")) != "duskfen_bastion":
+		_fail("Emergency defense launch targeted the wrong front: %s" % JSON.stringify(spawned))
+		return {}
+	var reason_codes := _string_array(spawned.get("target_reason_codes", []))
+	if "town_defense" not in reason_codes or "front_stabilization" not in reason_codes:
+		_fail("Emergency defense launch missed defense reason codes: %s" % JSON.stringify(spawned))
+		return {}
+	if int(state.get("pressure", 0)) != 0:
+		_fail("Emergency defense fixture should start below pressure threshold.")
+		return {}
+	if EnemyAdventureRules.raid_strength(spawned) <= 0:
+		_fail("Emergency defense launch did not build a real raid army: %s" % JSON.stringify(spawned))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Emergency defense launch did not emit target assignment event: %s" % JSON.stringify(result))
+		return {}
+	var replacement_selection := EnemyAdventureRules.select_raid_commander_roster_hero_id(session, MIRECLAW, 0)
+	var commander_id := String(spawned.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+	if commander_id != "" and replacement_selection == commander_id:
+		_fail("Emergency defender commander remained selectable after launch: %s" % replacement_selection)
+		return {}
+	return {
+		"case_id": "below_threshold_emergency_town_defense_launches_commander",
+		"pressure_before": 0,
+		"raid_threshold": int(config.get("raid_threshold", 0)),
+		"spawned_placement_id": String(spawned.get("placement_id", "")),
+		"spawned_commander_id": commander_id,
+		"target_id": String(spawned.get("target_placement_id", "")),
+		"goal_distance": int(spawned.get("goal_distance", 9999)),
+		"raid_strength": EnemyAdventureRules.raid_strength(spawned),
+		"event_types": event_types,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _emergency_resource_defense_launches_below_pressure_threshold() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config().duplicate(true)
+	config["raid_threshold"] = 999
+	config["pressure_per_day"] = 0
+	config["pressure_per_enemy_town"] = 0
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["treasury"] = {}
+	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 0, "y": 4})
+	_set_resource_controller(session, "river_free_company", MIRECLAW)
+	_set_resource_defense_front(session, "river_free_company")
+	_set_town_available_recruits(session, "duskfen_bastion", {})
+	if EnemyTurnRules.active_raid_count(session, MIRECLAW) != 0:
+		_fail("Emergency resource fixture expected no active raids before turn.")
+		return {}
+
+	var result := EnemyTurnRules._run_empire_cycle(session, config, state, false)
+	var spawned := _latest_enemy_raid(session)
+	if spawned.is_empty():
+		_fail("Emergency resource defense launch did not spawn a raid below pressure threshold: %s" % JSON.stringify(result))
+		return {}
+	if String(spawned.get("target_kind", "")) != "resource" or String(spawned.get("target_placement_id", "")) != "river_free_company":
+		_fail("Emergency resource defense launch targeted the wrong front: %s" % JSON.stringify(spawned))
+		return {}
+	var reason_codes := _string_array(spawned.get("target_reason_codes", []))
+	if "site_defense" not in reason_codes or "defend_front" not in reason_codes:
+		_fail("Emergency resource defense launch missed defense reason codes: %s" % JSON.stringify(spawned))
+		return {}
+	if EnemyAdventureRules.raid_strength(spawned) <= 0:
+		_fail("Emergency resource defense launch did not build a real raid army: %s" % JSON.stringify(spawned))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Emergency resource defense launch did not emit target assignment event: %s" % JSON.stringify(result))
+		return {}
+	return {
+		"case_id": "below_threshold_emergency_resource_defense_launches_commander",
+		"pressure_before": 0,
+		"raid_threshold": int(config.get("raid_threshold", 0)),
+		"spawned_placement_id": String(spawned.get("placement_id", "")),
+		"spawned_commander_id": String(spawned.get("enemy_commander_state", {}).get("roster_hero_id", "")),
+		"target_id": String(spawned.get("target_placement_id", "")),
+		"goal_distance": int(spawned.get("goal_distance", 9999)),
+		"raid_strength": EnemyAdventureRules.raid_strength(spawned),
+		"event_types": event_types,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -640,6 +758,30 @@ func _clear_town_front(session, placement_id: String) -> void:
 		return
 	_fail("Could not find town %s for front-clear fixture." % placement_id)
 
+func _set_town_garrison(session, placement_id: String, garrison: Array) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["garrison"] = garrison.duplicate(true)
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not find town %s for garrison fixture." % placement_id)
+
+func _set_town_available_recruits(session, placement_id: String, recruits: Dictionary) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["available_recruits"] = recruits.duplicate(true)
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not find town %s for recruit fixture." % placement_id)
+
 func _set_player_position(session, position: Dictionary) -> void:
 	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
 	var heroes: Array = session.overworld.get("heroes", [])
@@ -750,6 +892,14 @@ func _battle_side_strength(battle: Dictionary, side: String) -> int:
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter
+	return {}
+
+func _latest_enemy_raid(session) -> Dictionary:
+	var encounters: Array = session.overworld.get("encounters", [])
+	for index in range(encounters.size() - 1, -1, -1):
+		var encounter = encounters[index]
+		if encounter is Dictionary and String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW:
 			return encounter
 	return {}
 
