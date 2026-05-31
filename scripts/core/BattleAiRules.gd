@@ -420,9 +420,12 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	var best := {"action": "defend", "score": defend_score}
 	if not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if not best_spell.is_empty() and (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
-		best = best_spell
-	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available:
+	if not best_spell.is_empty():
+		if lethal_spell_available and not lethal_attack_available:
+			best = best_spell
+		elif (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
+			best = best_spell
+	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available and not lethal_spell_available:
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -547,7 +550,7 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 			_increment_count(family_counts, String(public_candidate.get("effect_type", "")))
 			for hook in public_candidate.get("runtime_hooks", []):
 				_increment_count(hook_counts, String(hook))
-			if selected.is_empty() or _candidate_beats(candidate, selected):
+			if selected.is_empty() or _spell_candidate_beats(candidate, selected, battle, enemy_hero):
 				selected = candidate
 
 	var public_selected := {}
@@ -581,9 +584,18 @@ static func _best_spell_action(
 		return {}
 	var best := {}
 	for candidate in _battle_spell_candidates(battle, active_stack, enemy_hero, targets):
-		if candidate is Dictionary and _candidate_beats(candidate, best):
+		if candidate is Dictionary and _spell_candidate_beats(candidate, best, battle, enemy_hero):
 			best = candidate
 	return best
+
+static func _spell_candidate_beats(candidate: Dictionary, current_best: Dictionary, battle: Dictionary, enemy_hero: Dictionary) -> bool:
+	if current_best.is_empty():
+		return true
+	var candidate_lethal := _candidate_is_lethal_damage_spell(candidate, battle, enemy_hero)
+	var best_lethal := _candidate_is_lethal_damage_spell(current_best, battle, enemy_hero)
+	if candidate_lethal != best_lethal:
+		return candidate_lethal
+	return _candidate_beats(candidate, current_best)
 
 static func _battle_spell_candidates(
 	battle: Dictionary,
