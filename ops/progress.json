@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T16:00:00Z",
+  "updatedAt": "2026-05-31T16:30:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,46 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-tactical-order-commander-state-fallback-10184",
+      "title": "Battle AI Tactical Order Commander-State Fallback",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T16:15:00Z",
+      "updatedAt": "2026-05-31T16:30:00Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / battle-ai-tactical-order-commander-state-fallback-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make shared non-spell tactical order scoring consistently use battle-side commander state for player and enemy stacks when a caller does not pass an explicit commander payload.",
+      "implementationTargets": [
+        "Resolve tactical-order commander state from the direct argument first, then side-specific battle payloads, then full battle commander state fields.",
+        "Use the resolved state to build scoring-only commander payloads without mutating source battle dictionaries.",
+        "Report commander payload source as battle when player_commander_state, player_hero, enemy_hero, or enemy_hero_payload supplies the scoring state.",
+        "Preserve all unit, spell, growth, economy, faction, and town-cost balance content."
+      ],
+      "completionCriteria": "Focused tactical-order report proves both player and enemy battle-state commander fallback; adjacent battle AI, strategic AI, and repository validation remain green; no balance/content files are changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No combat balance tuning or benchmark target tuning.",
+        "No production-ready AI claim from one tactical fallback fix."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed; tactical-order report now proves enemy_hero and player_commander_state battle-state fallback, battle payload source reporting, improved commander-trait scoring, and no source battle mutation)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Shared non-spell tactical order scoring now resolves commander state from the direct argument first, then side-specific battle payloads, then full battle commander state fields. The report fixture proves both enemy and player battle-state fallback paths improve commander-trait scoring without mutating source battle dictionaries. No unit, spell, growth, economy, faction, town-cost, or balance content was changed.",
+      "completedAt": "2026-05-31T16:30:00Z"
+    },
     {
       "id": "battle-ai-battle-state-enemy-hero-fallback-10184",
       "title": "Battle AI Battle-State Enemy Hero Fallback",
