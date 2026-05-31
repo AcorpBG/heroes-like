@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T02:50:43Z",
+  "updatedAt": "2026-05-31T03:01:02Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,87 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-post-move-scouting-memory-10184",
+      "title": "Strategic AI Post-Move Scouting Memory",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make moved AI commanders refresh known-world memory before same-turn arrival/retarget decisions so exploration acts on newly reached sight lines instead of stale pre-move positions.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "advance_raids mutates local encounter coordinates during movement but writes session.overworld.encounters only after arrival resolution and loop completion.",
+        "Same-turn exploration retargeting and known-world refresh can read pre-move commander sight sources."
+      ],
+      "completionCriteria": [
+        "Moved AI commanders commit their current tile to the session before arrival/retarget decisions that depend on sight sources.",
+        "Known-world memory refresh runs after commander movement so newly visible non-hero targets can be used immediately.",
+        "Focused coverage proves a moving exploration commander discovers a resource from its post-move tile and retargets it in the same advance."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not change combat, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T02:54:16Z",
+      "updatedAt": "2026-05-31T03:01:02Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
+          "status": "pass",
+          "evidence": "AI_KNOWN_WORLD_MEMORY_REPORT ok=true; moving_exploration_refreshes_memory_before_same_turn_retarget records commander source known_world_moving_exploration_probe at post-move tile 5,4 and retargets river_free_company in the same advance."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_HERO_HUNT_REPORT ok=true; stale hero trails remain cleared and stale hero tasks resolve as invalid_stale_hero_sighting."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT ok=true."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_STRATEGIC_PLANNER_REPORT ok=true."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "evidence": "VALIDATION PASSED."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "pass",
+          "evidence": "ops/progress.json parses as JSON."
+        },
+        {
+          "command": "git diff --check",
+          "status": "pass",
+          "evidence": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "implementation": [
+          "advance_raids now commits each moved commander position to session.overworld before sight-dependent post-move grouping and arrival/retarget resolution.",
+          "Non-hero commander movement refreshes known-world memory after movement, letting exploration/resource/town/object scouting affect same-turn target selection.",
+          "Hero-target retasks now clear stale hero sightings when the hero is missing or no longer near the remembered trail, and stale hero invalidation overrides generic retask cancellation."
+        ]
+      },
+      "completedAt": "2026-05-31T03:01:02Z"
+    },
     {
       "id": "strategic-ai-multihero-spawn-occupancy-10184",
       "title": "Strategic AI Multihero Spawn Occupancy",
@@ -43207,7 +43288,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T02:50:43Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:01:02Z",
   "validationHistory": [
     {
       "status": "pass",
