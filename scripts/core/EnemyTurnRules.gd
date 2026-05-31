@@ -77,6 +77,12 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 					existing_state.get("commander_roster", [])
 				),
 			}
+			var known_world_memory := EnemyAdventureRulesScript.normalize_enemy_known_world_memory(
+				existing_state.get("known_world_memory", {}),
+				int(session.day)
+			)
+			if not known_world_memory.is_empty():
+				normalized_state["known_world_memory"] = known_world_memory
 			if existing_state.has("hero_task_state"):
 				var task_state_report := normalize_optional_hero_task_state(existing_state.get("hero_task_state", {}))
 				if bool(task_state_report.get("ok", false)) and bool(task_state_report.get("normalized_present", false)):
@@ -782,8 +788,11 @@ static func _run_empire_cycle(
 	state["captured_artifact_ids"] = _normalize_string_array(state.get("captured_artifact_ids", []))
 	if town_entries.is_empty():
 		if active_raid_count(session, faction_id) > 0:
+			var no_town_memory_result := EnemyAdventureRulesScript.refresh_enemy_known_world_memory(session, config, state)
+			state = no_town_memory_result.get("state", state)
 			var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
 			state = raid_result.get("state", state)
+			state = _latest_enemy_state(session, faction_id, state)
 			_append_event_records(events, raid_result.get("events", []))
 			var raid_message = String(raid_result.get("message", ""))
 			if raid_message != "":
@@ -794,6 +803,7 @@ static func _run_empire_cycle(
 			if defense_message != "":
 				messages.append(defense_message)
 			if bool(defense_result.get("battle_started", false)):
+				state = _latest_enemy_state(session, faction_id, state)
 				state["posture"] = "raiding"
 				return {"state": state, "messages": messages, "events": events}
 			var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
@@ -802,6 +812,7 @@ static func _run_empire_cycle(
 			if intercept_message != "":
 				messages.append(intercept_message)
 			if bool(intercept_result.get("battle_started", false)):
+				state = _latest_enemy_state(session, faction_id, state)
 				state["posture"] = "raiding"
 				return {"state": state, "messages": messages, "events": events}
 			state["posture"] = "raiding"
@@ -821,6 +832,9 @@ static func _run_empire_cycle(
 		if muster_message != "":
 			messages.append(muster_message)
 		session.overworld["towns"] = towns
+
+	var memory_result := EnemyAdventureRulesScript.refresh_enemy_known_world_memory(session, config, state)
+	state = memory_result.get("state", state)
 
 	var pre_build_task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
 	state = pre_build_task_plan_result.get("state", state)
@@ -870,6 +884,7 @@ static func _run_empire_cycle(
 
 	var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
 	state = raid_result.get("state", state)
+	state = _latest_enemy_state(session, faction_id, state)
 	_append_event_records(events, raid_result.get("events", []))
 	treasury = _normalize_resource_pool(state.get("treasury", treasury))
 	var raid_message = String(raid_result.get("message", ""))
@@ -886,6 +901,7 @@ static func _run_empire_cycle(
 	if defense_message != "":
 		messages.append(defense_message)
 	if bool(defense_result.get("battle_started", false)):
+		state = _latest_enemy_state(session, faction_id, state)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages, "events": events}
@@ -896,6 +912,7 @@ static func _run_empire_cycle(
 	if intercept_message != "":
 		messages.append(intercept_message)
 	if bool(intercept_result.get("battle_started", false)):
+		state = _latest_enemy_state(session, faction_id, state)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages, "events": events}
@@ -914,6 +931,16 @@ static func _run_empire_cycle(
 	state["treasury"] = treasury
 	state["posture"] = _determine_posture(session, config, state, faction_id, towns)
 	return {"state": state, "messages": messages, "events": events}
+
+static func _latest_enemy_state(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	fallback: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return fallback
+	var latest := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	return latest if not latest.is_empty() else fallback
 
 static func _enemy_activity_origin(town_entries: Array, config: Dictionary) -> Dictionary:
 	for entry_value in town_entries:

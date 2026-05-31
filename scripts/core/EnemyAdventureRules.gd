@@ -50,6 +50,11 @@ const RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS := 6
 const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
 const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
 const RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS := 48
+const AI_HERO_SIGHTING_MEMORY_DAYS := 3
+const AI_HERO_SIGHTING_MAX_RECORDS := 16
+const AI_HERO_TOWN_SIGHT_RADIUS := 7
+const AI_HERO_RAID_SIGHT_RADIUS := 5
+const AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS := 3
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 const COMMANDER_ROLE_RAIDER := "raider"
 const COMMANDER_ROLE_DEFENDER := "defender"
@@ -1716,6 +1721,327 @@ static func _record_enemy_scouting_reveal(
 		)
 	return _merge_enemy_scouted_target_records(session, faction_id, records)
 
+static func normalize_enemy_known_world_memory(value: Variant, current_day: int = 0) -> Dictionary:
+	if not (value is Dictionary):
+		return {}
+	var source: Dictionary = value
+	var memory := {"schema_version": 1}
+	var scouted_targets := _normalize_enemy_scouted_target_records(source.get("scouted_targets", []), current_day)
+	if not scouted_targets.is_empty():
+		memory["scouted_targets"] = scouted_targets
+		memory["last_scouted_day"] = max(0, int(source.get("last_scouted_day", scouted_targets[0].get("scouted_day", 0))))
+	var hero_sightings := _normalize_enemy_hero_sighting_records(source.get("player_hero_sightings", []), current_day)
+	if not hero_sightings.is_empty():
+		memory["player_hero_sightings"] = hero_sightings
+		memory["last_hero_sighting_day"] = max(0, int(source.get("last_hero_sighting_day", hero_sightings[0].get("seen_day", 0))))
+	if not memory.has("scouted_targets") and not memory.has("player_hero_sightings"):
+		return {}
+	return memory
+
+static func refresh_enemy_known_world_memory(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary
+) -> Dictionary:
+	if session == null or not (state is Dictionary):
+		return {"state": state, "sighting_count": 0}
+	var faction_id := String(state.get("faction_id", config.get("faction_id", "")))
+	if faction_id == "":
+		return {"state": state, "sighting_count": 0}
+	var records := _current_enemy_player_hero_sighting_records(session, config, faction_id)
+	var updated_state := state.duplicate(true)
+	var memory := normalize_enemy_known_world_memory(updated_state.get("known_world_memory", {}), int(session.day))
+	if memory.is_empty():
+		memory = {"schema_version": 1}
+	var merged_sightings := _merge_enemy_hero_sighting_record_arrays(
+		memory.get("player_hero_sightings", []),
+		records,
+		int(session.day)
+	)
+	if not merged_sightings.is_empty():
+		memory["player_hero_sightings"] = merged_sightings
+		memory["last_hero_sighting_day"] = int(merged_sightings[0].get("seen_day", session.day))
+	elif memory.has("player_hero_sightings"):
+		memory.erase("player_hero_sightings")
+	if memory.has("scouted_targets"):
+		memory["scouted_targets"] = _normalize_enemy_scouted_target_records(memory.get("scouted_targets", []), int(session.day))
+	if not memory.has("scouted_targets") and not memory.has("player_hero_sightings"):
+		updated_state.erase("known_world_memory")
+	else:
+		memory["schema_version"] = 1
+		updated_state["known_world_memory"] = memory
+	_sync_enemy_state_known_world_memory(session, faction_id, updated_state.get("known_world_memory", {}))
+	return {"state": updated_state, "sighting_count": records.size()}
+
+static func _normalize_enemy_scouted_target_records(value: Variant, current_day: int = 0) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for record_value in value:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		var target_kind := String(record.get("target_kind", ""))
+		var target_id := String(record.get("target_id", ""))
+		if target_kind == "" or target_id == "":
+			continue
+		var scouted_day: int = max(0, int(record.get("scouted_day", 0)))
+		var expires_day: int = max(scouted_day, int(record.get("expires_day", scouted_day + RAID_ADVENTURE_SCOUTING_MEMORY_DAYS)))
+		if current_day > 0 and expires_day < current_day:
+			continue
+		normalized.append(
+			{
+				"target_kind": target_kind,
+				"target_id": target_id,
+				"target_label": String(record.get("target_label", target_id)),
+				"x": int(record.get("x", 0)),
+				"y": int(record.get("y", 0)),
+				"scouted_day": scouted_day,
+				"expires_day": expires_day,
+				"source_spell_id": String(record.get("source_spell_id", "")),
+				"source_spell_name": String(record.get("source_spell_name", "")),
+				"source_raid_id": String(record.get("source_raid_id", "")),
+				"state_policy": "ai_known_world_memory",
+			}
+		)
+	normalized.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("scouted_day", 0)) == int(b.get("scouted_day", 0)):
+			return String(a.get("target_label", "")) < String(b.get("target_label", ""))
+		return int(a.get("scouted_day", 0)) > int(b.get("scouted_day", 0))
+	)
+	while normalized.size() > RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS:
+		normalized.pop_back()
+	return normalized
+
+static func _normalize_enemy_hero_sighting_records(value: Variant, current_day: int = 0) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for record_value in value:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		var hero_id := String(record.get("hero_id", ""))
+		if hero_id == "":
+			continue
+		var seen_day: int = max(0, int(record.get("seen_day", 0)))
+		var expires_day: int = max(seen_day, int(record.get("expires_day", seen_day + AI_HERO_SIGHTING_MEMORY_DAYS)))
+		if current_day > 0 and expires_day < current_day:
+			continue
+		normalized.append(
+			{
+				"hero_id": hero_id,
+				"hero_label": String(record.get("hero_label", hero_id)),
+				"x": int(record.get("x", 0)),
+				"y": int(record.get("y", 0)),
+				"army_strength": max(0, int(record.get("army_strength", 0))),
+				"seen_day": seen_day,
+				"expires_day": expires_day,
+				"source_kind": String(record.get("source_kind", "")),
+				"source_id": String(record.get("source_id", "")),
+				"confidence": String(record.get("confidence", "recent")),
+				"state_policy": "ai_known_world_memory",
+			}
+		)
+	normalized.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("seen_day", 0)) == int(b.get("seen_day", 0)):
+			return String(a.get("hero_id", "")) < String(b.get("hero_id", ""))
+		return int(a.get("seen_day", 0)) > int(b.get("seen_day", 0))
+	)
+	while normalized.size() > AI_HERO_SIGHTING_MAX_RECORDS:
+		normalized.pop_back()
+	return normalized
+
+static func _merge_enemy_hero_sighting_record_arrays(existing_value: Variant, records_value: Variant, current_day: int) -> Array:
+	var by_id := {}
+	for record in _normalize_enemy_hero_sighting_records(existing_value, current_day):
+		by_id[String(record.get("hero_id", ""))] = record
+	for record in _normalize_enemy_hero_sighting_records(records_value, current_day):
+		var hero_id := String(record.get("hero_id", ""))
+		if hero_id == "":
+			continue
+		if not by_id.has(hero_id) or int(record.get("seen_day", 0)) >= int(by_id[hero_id].get("seen_day", 0)):
+			by_id[hero_id] = record
+	var merged := []
+	for hero_id in by_id.keys():
+		merged.append(by_id[hero_id])
+	return _normalize_enemy_hero_sighting_records(merged, current_day)
+
+static func _sync_enemy_state_known_world_memory(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	memory: Variant
+) -> void:
+	if session == null or faction_id == "":
+		return
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for index in range(states.size()):
+		if not (states[index] is Dictionary) or String(states[index].get("faction_id", "")) != faction_id:
+			continue
+		var state: Dictionary = states[index]
+		var normalized := normalize_enemy_known_world_memory(memory, int(session.day))
+		if normalized.is_empty():
+			state.erase("known_world_memory")
+		else:
+			state["known_world_memory"] = normalized
+		states[index] = state
+		session.overworld["enemy_states"] = states
+		return
+
+static func _current_enemy_player_hero_sighting_records(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	var records := []
+	var sources := _enemy_hero_sighting_sources(session, config, faction_id)
+	if sources.is_empty():
+		return records
+	for hero_value in _player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		var hero_id := String(hero.get("id", ""))
+		if hero_id == "":
+			continue
+		var hero_tile := _player_hero_goal_tile(hero)
+		var best_source := {}
+		var best_distance := 9999
+		for source_value in sources:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var distance: int = abs(hero_tile.x - int(source.get("x", 0))) + abs(hero_tile.y - int(source.get("y", 0)))
+			if distance > int(source.get("radius", 0)):
+				continue
+			if best_source.is_empty() or distance < best_distance:
+				best_source = source
+				best_distance = distance
+		if best_source.is_empty():
+			continue
+		records.append(
+			{
+				"hero_id": hero_id,
+				"hero_label": String(hero.get("name", hero_id)),
+				"x": hero_tile.x,
+				"y": hero_tile.y,
+				"army_strength": _known_player_hero_strength(hero),
+				"seen_day": int(session.day),
+				"expires_day": int(session.day) + AI_HERO_SIGHTING_MEMORY_DAYS,
+				"source_kind": String(best_source.get("kind", "")),
+				"source_id": String(best_source.get("id", "")),
+				"confidence": "current",
+				"state_policy": "ai_known_world_memory",
+			}
+		)
+	return records
+
+static func _enemy_hero_sighting_sources(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	var sources := []
+	if session == null or faction_id == "":
+		return sources
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+			continue
+		var radius := AI_HERO_TOWN_SIGHT_RADIUS
+		if OverworldRulesScript.town_strategic_role(town) in ["capital", "stronghold"]:
+			radius += 1
+		sources.append({
+			"kind": "town",
+			"id": String(town.get("placement_id", "")),
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+			"radius": radius,
+		})
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		sources.append({
+			"kind": "commander",
+			"id": String(encounter.get("placement_id", "")),
+			"x": int(encounter.get("x", 0)),
+			"y": int(encounter.get("y", 0)),
+			"radius": AI_HERO_RAID_SIGHT_RADIUS,
+		})
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("collected_by_faction_id", "")) != faction_id:
+			continue
+		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
+		var site_radius: int = max(0, int(site.get("vision_radius", 0)))
+		if site_radius <= 0:
+			continue
+		sources.append({
+			"kind": "resource_site",
+			"id": String(node.get("placement_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"radius": max(AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS, site_radius),
+		})
+	return sources
+
+static func _known_player_hero_snapshot_for_ai(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	hero: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or hero.is_empty():
+		return {}
+	var hero_id := String(hero.get("id", ""))
+	if hero_id == "":
+		return {}
+	for record in _current_enemy_player_hero_sighting_records(session, {}, faction_id):
+		if String(record.get("hero_id", "")) != hero_id:
+			continue
+		var current := hero.duplicate(true)
+		current["position"] = {"x": int(record.get("x", 0)), "y": int(record.get("y", 0))}
+		current["known_army_strength"] = max(0, int(record.get("army_strength", 0)))
+		current["ai_sighting_confidence"] = "current"
+		current["ai_sighting_seen_day"] = int(record.get("seen_day", 0))
+		return current
+	var remembered := _enemy_player_hero_sighting_record(session, faction_id, hero_id)
+	if remembered.is_empty():
+		return {}
+	var recent := hero.duplicate(true)
+	recent["position"] = {"x": int(remembered.get("x", 0)), "y": int(remembered.get("y", 0))}
+	recent["known_army_strength"] = max(0, int(remembered.get("army_strength", 0)))
+	recent["name"] = String(remembered.get("hero_label", hero_id))
+	recent["ai_sighting_confidence"] = "recent"
+	recent["ai_sighting_seen_day"] = int(remembered.get("seen_day", 0))
+	return recent
+
+static func _enemy_player_hero_sighting_record(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	hero_id: String
+) -> Dictionary:
+	if session == null or faction_id == "" or hero_id == "":
+		return {}
+	for state_value in session.overworld.get("enemy_states", []):
+		if not (state_value is Dictionary) or String(state_value.get("faction_id", "")) != faction_id:
+			continue
+		var memory := normalize_enemy_known_world_memory(state_value.get("known_world_memory", {}), int(session.day))
+		for record_value in memory.get("player_hero_sightings", []):
+			if record_value is Dictionary and String(record_value.get("hero_id", "")) == hero_id:
+				return record_value
+	return {}
+
+static func _known_player_hero_strength(hero: Dictionary) -> int:
+	if hero.has("known_army_strength"):
+		return max(0, int(hero.get("known_army_strength", 0)))
+	return _army_strength(hero.get("army", {}).get("stacks", []))
+
 static func _merge_enemy_scouted_target_records(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
@@ -2008,8 +2334,11 @@ static func _redirect_raid_to_nearby_exposed_hero(
 	var best_score := -999999.0
 	var best_distance := 9999
 	var best_strength := -1
-	for hero in _player_hero_snapshots_for_intercept(session):
-		if not (hero is Dictionary):
+	for hero_value in _player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = _known_player_hero_snapshot_for_ai(session, faction_id, hero_value)
+		if hero.is_empty():
 			continue
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
@@ -2035,7 +2364,7 @@ static func _redirect_raid_to_nearby_exposed_hero(
 		if not bool(readiness_report.get("ready", false)):
 			continue
 		var strength: int = raid_strength(probe)
-		var hero_strength: int = int(readiness_report.get("hero_strength", _army_strength(hero.get("army", {}).get("stacks", []))))
+		var hero_strength: int = int(readiness_report.get("hero_strength", _known_player_hero_strength(hero)))
 		var required: int = max(1, int(readiness_report.get("required_strength", 1)))
 		var strength_margin: int = strength - required
 		var score: float = 260.0
@@ -2175,8 +2504,11 @@ static func _redirect_raid_away_from_nearby_player_threat(
 	var best_threat: Dictionary = {}
 	var best_distance := 9999
 	var best_strength := -1
-	for hero in _player_hero_snapshots_for_intercept(session):
-		if not (hero is Dictionary):
+	for hero_value in _player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = _known_player_hero_snapshot_for_ai(session, faction_id, hero_value)
+		if hero.is_empty():
 			continue
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "" or _player_hero_sheltered_in_town(session, hero):
@@ -2185,7 +2517,7 @@ static func _redirect_raid_away_from_nearby_player_threat(
 		var distance: int = _hero_target_goal_distance(session, origin, goal_tile)
 		if distance > RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS:
 			continue
-		var hero_strength: int = _army_strength(hero.get("army", {}).get("stacks", []))
+		var hero_strength: int = _known_player_hero_strength(hero)
 		if hero_strength < int(ceili(float(host_strength) * RAID_NEARBY_PLAYER_THREAT_STRENGTH_RATIO)):
 			continue
 		var probe := raid.duplicate(true)
@@ -2441,7 +2773,7 @@ static func _town_assault_advance_risk_report(
 static func _hero_intercept_advance_risk_report(raid: Dictionary, hero: Dictionary, config: Dictionary = {}) -> Dictionary:
 	var hunter_strength := raid_strength(raid)
 	var desired_strength := desired_raid_strength(raid)
-	var hero_strength := _army_strength(hero.get("army", {}).get("stacks", []))
+	var hero_strength := _known_player_hero_strength(hero)
 	var desired_floor := int(round(float(desired_strength) * 0.65))
 	var hero_floor := int(round(float(hero_strength) * 0.85))
 	var base_required_strength: int = max(75, desired_floor, hero_floor)
@@ -6904,7 +7236,9 @@ static func _hero_target_candidates(
 	for hero_value in session.overworld.get("player_heroes", []):
 		if not (hero_value is Dictionary):
 			continue
-		var hero: Dictionary = hero_value
+		var hero: Dictionary = _known_player_hero_snapshot_for_ai(session, faction_id, hero_value)
+		if hero.is_empty():
+			continue
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "":
 			continue
@@ -6921,7 +7255,9 @@ static func _hero_target_candidates(
 				if position_source is Dictionary:
 					active_hero["position"] = position_source.duplicate(true)
 			active_hero["is_primary"] = true
-			_append_hero_target_candidate(session, candidates, active_hero, origin_pos, config, faction_id, active_hero_id)
+			var known_active_hero := _known_player_hero_snapshot_for_ai(session, faction_id, active_hero)
+			if not known_active_hero.is_empty():
+				_append_hero_target_candidate(session, candidates, known_active_hero, origin_pos, config, faction_id, active_hero_id)
 	return candidates
 
 static func _append_hero_target_candidate(
@@ -6945,7 +7281,7 @@ static func _append_hero_target_candidate(
 		priority += 26
 	if bool(hero.get("is_primary", false)):
 		priority += 18
-	var army_strength: int = _army_strength(hero.get("army", {}).get("stacks", []))
+	var army_strength: int = _known_player_hero_strength(hero)
 	if army_strength <= 110:
 		priority += 26
 	elif army_strength <= 180:

@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue with the next production-impacting strategic AI behavior gap.
+- Latest completed slice: `strategic-ai-known-world-memory-10184`.
 - Latest completed slice: `strategic-ai-post-objective-raid-continuation-10184`.
 - Latest completed slice: `strategic-ai-emergency-defense-recruitment-prep-10184`.
 - Latest completed slice: `strategic-ai-emergency-defense-launch-10184`.
