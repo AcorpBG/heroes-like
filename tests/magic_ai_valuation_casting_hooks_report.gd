@@ -1,5 +1,7 @@
 extends Node
 
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+
 const REPORT_ID := "MAGIC_AI_VALUATION_CASTING_HOOKS_REPORT"
 
 func _ready() -> void:
@@ -21,6 +23,10 @@ func _run() -> void:
 	var commander_role_case := _run_battle_ai_commander_role_spell_case()
 	if not bool(commander_role_case.get("ok", false)):
 		_fail(String(commander_role_case.get("error", "Battle AI commander role spell case failed.")))
+		return
+	var live_template_cast_case := _run_battle_ai_live_template_spell_cast_case()
+	if not bool(live_template_cast_case.get("ok", false)):
+		_fail(String(live_template_cast_case.get("error", "Battle AI live template spell cast case failed.")))
 		return
 	var cleanse_ward_case := _run_battle_ai_cleanse_active_ward_case()
 	if not bool(cleanse_ward_case.get("ok", false)):
@@ -59,6 +65,7 @@ func _run() -> void:
 		"battle_resistance_targeting": resistance_case,
 		"battle_damage_status_targeting": damage_status_case,
 		"battle_commander_role_spell": commander_role_case,
+		"battle_live_template_spell_cast": live_template_cast_case,
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
 		"battle_spell_report_payload_bridge": spell_report_payload_case,
@@ -67,7 +74,7 @@ func _run() -> void:
 		"adventure": adventure_case,
 		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -350,6 +357,70 @@ func _run_battle_ai_commander_role_spell_case() -> Dictionary:
 		"template_fallback_live_action": String(minimal_live_action.get("action", "")),
 		"template_spellbook_fallback_live_action": String(minimal_spellbook_live_action.get("action", "")),
 		"battle_state_template_spellbook_action": String(battle_state_spellbook_action.get("action", "")),
+	}
+
+func _run_battle_ai_live_template_spell_cast_case() -> Dictionary:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-live-template-spell-cast-report",
+		"battle-ai-live-template-spell-cast-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = {
+		"round": 2,
+		"distance": 2,
+		"terrain": "forest",
+		"tags": [],
+		"battlefield_tags": [],
+		"combat_seed": 44012,
+		"stacks": [
+			_stack("enemy_template_caster", "enemy", "Enemy Template Caster", 6, 10, 60, []),
+			_stack("player_ranged_front", "player", "Player Ranged Front", 14, 12, 168, [], {
+				"cohesion": 8,
+				"ranged": true,
+				"shots_remaining": 7,
+			}),
+		],
+		"turn_order": ["enemy_template_caster", "player_ranged_front"],
+		"turn_index": 0,
+		"active_stack_id": "enemy_template_caster",
+		"selected_target_id": "player_ranged_front",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"enemy_hero": {"roster_hero_id": "hero_thornwake_veyra_seedseer"},
+		"enemy_hero_payload": {},
+		"player_commander_state": {},
+		"field_objectives": [],
+	}
+	var active := BattleRules.get_active_stack(session.battle)
+	var decision := BattleAiRules.choose_enemy_action(session.battle, active, {})
+	if String(decision.get("action", "")) != "cast_spell" or String(decision.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Minimal Veyra live battle decision should cast Briar Bind before execution: %s" % decision}
+	var result := BattleRules._cast_enemy_spell(session, active, decision)
+	if not bool(result.get("ok", false)):
+		return {"ok": false, "error": "Minimal Veyra live battle cast failed after template spell decision: result=%s decision=%s battle=%s" % [result, decision, session.battle]}
+	var target_after := _stack_by_id(session.battle, "player_ranged_front")
+	if not SpellRules.has_effect_id(target_after, session.battle, "status_rooted"):
+		return {"ok": false, "error": "Minimal Veyra live battle cast did not apply Briar Bind to the target: %s" % target_after}
+	var enemy_hero: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
+	var spellbook: Dictionary = enemy_hero.get("spellbook", {}) if enemy_hero.get("spellbook", {}) is Dictionary else {}
+	var known_spell_ids: Array = spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
+	if "spell_briar_bind" not in known_spell_ids:
+		return {"ok": false, "error": "Minimal Veyra live battle cast did not persist inherited spellbook: %s" % enemy_hero}
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	if int(mana.get("current", 0)) >= int(mana.get("max", 0)):
+		return {"ok": false, "error": "Minimal Veyra live battle cast did not spend template-derived mana: %s" % mana}
+	return {
+		"ok": true,
+		"decision_spell_id": String(decision.get("spell_id", "")),
+		"result_state": String(result.get("state", "")),
+		"target_effect_applied": SpellRules.has_effect_id(target_after, session.battle, "status_rooted"),
+		"known_spell_count": known_spell_ids.size(),
+		"mana_after": int(mana.get("current", 0)),
 	}
 
 func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
