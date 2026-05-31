@@ -6610,31 +6610,21 @@ static func plan_enemy_hero_task_board(
 	var target_claims := _ai_hero_task_planner_target_claims(next_tasks)
 	var planned_count := 0
 	var events := []
-	for commander_value in roster:
-		if not (commander_value is Dictionary):
+	var assigned_tasks := _ai_hero_task_planner_global_task_assignments(
+		session,
+		config,
+		faction_id,
+		roster,
+		origins[0],
+		candidates,
+		target_claims,
+		next_tasks,
+		next_tasks.size() + 1
+	)
+	for task_value in assigned_tasks:
+		if not (task_value is Dictionary):
 			continue
-		var commander: Dictionary = commander_value
-		var actor_id := String(commander.get("roster_hero_id", ""))
-		if actor_id == "":
-			continue
-		if _normalize_commander_status(commander.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE:
-			continue
-		if not commander_can_deploy(commander):
-			continue
-		if _ai_hero_task_planner_actor_has_open_task(next_tasks, actor_id):
-			continue
-		var task := _ai_hero_task_planner_task_for_actor(
-			session,
-			config,
-			faction_id,
-			actor_id,
-			origins[0],
-			candidates,
-			target_claims,
-			next_tasks.size() + planned_count + 1
-		)
-		if task.is_empty():
-			continue
+		var task: Dictionary = task_value
 		next_tasks.append(task)
 		roster = _adopt_commander_role_on_roster(roster, faction_id, task, "strategic_planner")
 		working_state["commander_roster"] = roster
@@ -6687,66 +6677,197 @@ static func _ai_hero_task_planner_task_for_actor(
 		if not (candidate_value is Dictionary):
 			continue
 		var candidate: Dictionary = candidate_value
-		var candidate_origin: Dictionary = candidate.get("planner_origin", origin) if candidate.get("planner_origin", {}) is Dictionary else origin
-		var target_kind := String(candidate.get("target_kind", ""))
-		var target_id := String(candidate.get("target_placement_id", ""))
-		if (target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"] and target_kind != "explore") or target_id == "":
+		if not _ai_hero_task_planner_candidate_available_for_assignment(session, faction_id, candidate, target_claims):
 			continue
-		if int(candidate.get("priority", 0)) <= 0:
-			continue
-		var task_class := _ai_hero_task_planner_class_for_candidate(candidate)
-		var reservation := _ai_hero_task_default_reservation(task_class, target_kind, target_id)
-		var reservation_key := String(reservation.get("reservation_key", ""))
-		if reservation_key != "" and target_claims.has(reservation_key):
-			continue
-		if _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id).is_empty():
-			continue
-		var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
-		if reason_codes.is_empty():
-			reason_codes = _default_reason_codes_for_target(target_kind, target_id, {})
-		if "strategic_task_planner" not in reason_codes:
-			reason_codes.append("strategic_task_planner")
-		var assigned_day := int(session.day)
-		var source_role := _ai_hero_task_role_for_task_class(task_class, target_kind)
-		var task_id := ai_hero_task_candidate_id(
-			String(session.scenario_id),
+		return _ai_hero_task_planner_task_from_candidate(
+			session,
 			faction_id,
 			actor_id,
-			task_class,
-			target_kind,
-			target_id,
-			assigned_day,
-			max(1, sequence)
+			origin,
+			candidate,
+			sequence
 		)
-		return {
-			"task_id": task_id,
-			"owner_faction_id": faction_id,
-			"actor_kind": "commander_roster",
-			"actor_id": actor_id,
-			"source_kind": "commander_role_adapter",
-			"source_id": _ai_hero_task_source_id(String(session.scenario_id), faction_id, actor_id, source_role, target_kind, target_id, assigned_day),
-			"source_role": source_role,
-			"source_policy": AI_HERO_TASK_STATE_POLICY,
-			"task_class": task_class,
-			"task_status": "planned",
-			"target_kind": target_kind,
-			"target_id": target_id,
-			"front_id": commander_role_front_id(String(session.scenario_id), target_kind, target_id),
-			"origin_kind": String(candidate_origin.get("kind", "town")),
-			"origin_id": String(candidate_origin.get("placement_id", commander_role_origin_id(String(session.scenario_id), faction_id))),
-			"origin_x": int(candidate_origin.get("x", 0)),
-			"origin_y": int(candidate_origin.get("y", 0)),
-			"priority_reason_codes": reason_codes,
-			"assigned_day": assigned_day,
-			"expires_day": assigned_day + 10,
-			"continuity_policy": "persist_until_invalid",
-			"route_policy": "derive_route_on_turn",
-			"last_validation": "valid",
-			"reservation": reservation,
-			"commander_fit_bonus": int(candidate.get("commander_fit_bonus", 0)),
-			"commander_fit_profile": String(candidate.get("commander_fit_profile", "")),
-		}
 	return {}
+
+static func _ai_hero_task_planner_global_task_assignments(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	roster: Array,
+	origin: Dictionary,
+	candidates: Array,
+	target_claims: Dictionary,
+	existing_tasks: Array,
+	sequence_start: int
+) -> Array:
+	var proposals := []
+	for commander_value in roster:
+		if not (commander_value is Dictionary):
+			continue
+		var commander: Dictionary = commander_value
+		var actor_id := String(commander.get("roster_hero_id", ""))
+		if actor_id == "":
+			continue
+		if _normalize_commander_status(commander.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE:
+			continue
+		if not commander_can_deploy(commander):
+			continue
+		if _ai_hero_task_planner_actor_has_open_task(existing_tasks, actor_id):
+			continue
+		var fitted_candidates := _ai_hero_task_planner_candidates_for_commander(
+			session,
+			faction_id,
+			actor_id,
+			candidates
+		)
+		for candidate_value in fitted_candidates:
+			if not (candidate_value is Dictionary):
+				continue
+			var candidate: Dictionary = candidate_value
+			if not _ai_hero_task_planner_candidate_available_for_assignment(session, faction_id, candidate, target_claims):
+				continue
+			var task_class := _ai_hero_task_planner_class_for_candidate(candidate)
+			var target_kind := String(candidate.get("target_kind", ""))
+			var target_id := String(candidate.get("target_placement_id", ""))
+			var reservation := _ai_hero_task_default_reservation(task_class, target_kind, target_id)
+			proposals.append({
+				"actor_id": actor_id,
+				"candidate": candidate,
+				"priority": int(candidate.get("priority", 0)),
+				"commander_fit_bonus": int(candidate.get("commander_fit_bonus", 0)),
+				"goal_distance": int(candidate.get("goal_distance", 9999)),
+				"reservation_key": String(reservation.get("reservation_key", "")),
+				"target_key": "%s:%s" % [target_kind, target_id],
+			})
+	proposals.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return _ai_hero_task_planner_proposal_beats(a, b)
+	)
+	var assigned := []
+	var assigned_actors := {}
+	var selected_claims := target_claims.duplicate(true)
+	var sequence: int = max(1, sequence_start)
+	for proposal_value in proposals:
+		if not (proposal_value is Dictionary):
+			continue
+		var proposal: Dictionary = proposal_value
+		var actor_id := String(proposal.get("actor_id", ""))
+		if actor_id == "" or assigned_actors.has(actor_id):
+			continue
+		var reservation_key := String(proposal.get("reservation_key", ""))
+		if reservation_key != "" and selected_claims.has(reservation_key):
+			continue
+		var candidate: Dictionary = proposal.get("candidate", {}) if proposal.get("candidate", {}) is Dictionary else {}
+		var task := _ai_hero_task_planner_task_from_candidate(
+			session,
+			faction_id,
+			actor_id,
+			origin,
+			candidate,
+			sequence
+		)
+		if task.is_empty():
+			continue
+		assigned.append(task)
+		assigned_actors[actor_id] = true
+		if reservation_key != "":
+			selected_claims[reservation_key] = true
+		sequence += 1
+	return assigned
+
+static func _ai_hero_task_planner_candidate_available_for_assignment(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	candidate: Dictionary,
+	target_claims: Dictionary
+) -> bool:
+	var target_kind := String(candidate.get("target_kind", ""))
+	var target_id := String(candidate.get("target_placement_id", ""))
+	if (target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"] and target_kind != "explore") or target_id == "":
+		return false
+	if int(candidate.get("priority", 0)) <= 0:
+		return false
+	var task_class := _ai_hero_task_planner_class_for_candidate(candidate)
+	var reservation := _ai_hero_task_default_reservation(task_class, target_kind, target_id)
+	var reservation_key := String(reservation.get("reservation_key", ""))
+	if reservation_key != "" and target_claims.has(reservation_key):
+		return false
+	if _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id).is_empty():
+		return false
+	return true
+
+static func _ai_hero_task_planner_task_from_candidate(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	origin: Dictionary,
+	candidate: Dictionary,
+	sequence: int
+) -> Dictionary:
+	if session == null or actor_id == "" or candidate.is_empty():
+		return {}
+	var candidate_origin: Dictionary = candidate.get("planner_origin", origin) if candidate.get("planner_origin", {}) is Dictionary else origin
+	var target_kind := String(candidate.get("target_kind", ""))
+	var target_id := String(candidate.get("target_placement_id", ""))
+	if (target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"] and target_kind != "explore") or target_id == "":
+		return {}
+	var task_class := _ai_hero_task_planner_class_for_candidate(candidate)
+	var reservation := _ai_hero_task_default_reservation(task_class, target_kind, target_id)
+	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+	if reason_codes.is_empty():
+		reason_codes = _default_reason_codes_for_target(target_kind, target_id, {})
+	if "strategic_task_planner" not in reason_codes:
+		reason_codes.append("strategic_task_planner")
+	var assigned_day := int(session.day)
+	var source_role := _ai_hero_task_role_for_task_class(task_class, target_kind)
+	var task_id := ai_hero_task_candidate_id(
+		String(session.scenario_id),
+		faction_id,
+		actor_id,
+		task_class,
+		target_kind,
+		target_id,
+		assigned_day,
+		max(1, sequence)
+	)
+	return {
+		"task_id": task_id,
+		"owner_faction_id": faction_id,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"source_kind": "commander_role_adapter",
+		"source_id": _ai_hero_task_source_id(String(session.scenario_id), faction_id, actor_id, source_role, target_kind, target_id, assigned_day),
+		"source_role": source_role,
+		"source_policy": AI_HERO_TASK_STATE_POLICY,
+		"task_class": task_class,
+		"task_status": "planned",
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"front_id": commander_role_front_id(String(session.scenario_id), target_kind, target_id),
+		"origin_kind": String(candidate_origin.get("kind", "town")),
+		"origin_id": String(candidate_origin.get("placement_id", commander_role_origin_id(String(session.scenario_id), faction_id))),
+		"origin_x": int(candidate_origin.get("x", 0)),
+		"origin_y": int(candidate_origin.get("y", 0)),
+		"priority_reason_codes": reason_codes,
+		"assigned_day": assigned_day,
+		"expires_day": assigned_day + 10,
+		"continuity_policy": "persist_until_invalid",
+		"route_policy": "derive_route_on_turn",
+		"last_validation": "valid",
+		"reservation": reservation,
+		"commander_fit_bonus": int(candidate.get("commander_fit_bonus", 0)),
+		"commander_fit_profile": String(candidate.get("commander_fit_profile", "")),
+	}
+
+static func _ai_hero_task_planner_proposal_beats(a: Dictionary, b: Dictionary) -> bool:
+	if int(a.get("priority", 0)) != int(b.get("priority", 0)):
+		return int(a.get("priority", 0)) > int(b.get("priority", 0))
+	if int(a.get("commander_fit_bonus", 0)) != int(b.get("commander_fit_bonus", 0)):
+		return int(a.get("commander_fit_bonus", 0)) > int(b.get("commander_fit_bonus", 0))
+	if int(a.get("goal_distance", 9999)) != int(b.get("goal_distance", 9999)):
+		return int(a.get("goal_distance", 9999)) < int(b.get("goal_distance", 9999))
+	if String(a.get("actor_id", "")) != String(b.get("actor_id", "")):
+		return String(a.get("actor_id", "")) < String(b.get("actor_id", ""))
+	return String(a.get("target_key", "")) < String(b.get("target_key", ""))
 
 static func _ai_hero_task_planner_candidates_for_commander(
 	session: SessionStateStoreScript.SessionData,

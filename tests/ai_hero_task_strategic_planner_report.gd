@@ -19,6 +19,9 @@ func _run() -> void:
 	var personality_case := _planner_uses_commander_personality_fit()
 	if personality_case.is_empty():
 		return
+	var global_fit_case := _planner_assigns_specialized_target_globally()
+	if global_fit_case.is_empty():
+		return
 	var adaptive_case := _planner_uses_commander_outcome_memory()
 	if adaptive_case.is_empty():
 		return
@@ -32,11 +35,12 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "coordinated_task_planner_live_behavior",
-		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_scores_targets_by_commander_identity_adaptive_outcome_memory_live_role_continuity_and_duplicate_reservation_recovery",
+		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_scores_targets_by_global_commander_identity_adaptive_outcome_memory_live_role_continuity_and_duplicate_reservation_recovery",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": planner_case,
 		"multi_origin_case": multi_origin_case,
 		"personality_case": personality_case,
+		"global_fit_case": global_fit_case,
 		"adaptive_case": adaptive_case,
 		"role_adoption_case": role_adoption_case,
 		"duplicate_recovery_case": duplicate_recovery_case,
@@ -209,6 +213,98 @@ func _planner_uses_commander_personality_fit() -> Dictionary:
 		"magic_target_key": "%s:%s" % [String(sable_task.get("target_kind", "")), String(sable_task.get("target_id", ""))],
 		"magic_fit_bonus": int(sable_task.get("commander_fit_bonus", 0)),
 		"magic_fit_profile": String(sable_task.get("commander_fit_profile", "")),
+	}
+
+func _planner_assigns_specialized_target_globally() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var origin := {"kind": "town", "placement_id": "duskfen_bastion", "x": 7, "y": 2}
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("Global-fit fixture expected an active hero id")
+		return {}
+	var candidates := [
+		{
+			"target_kind": "artifact",
+			"target_placement_id": "trailsinger_cache",
+			"target_label": "Trailsinger Cache",
+			"target_x": 2,
+			"target_y": 0,
+			"goal_x": 2,
+			"goal_y": 0,
+			"goal_distance": 5,
+			"priority": 120,
+			"target_reason_codes": ["artifact_pressure", "magic_support"],
+			"target_public_reason": "magic relic",
+			"target_public_importance": "medium",
+		},
+		{
+			"target_kind": "hero",
+			"target_placement_id": hero_id,
+			"target_label": "Exposed Hero",
+			"target_x": 1,
+			"target_y": 2,
+			"goal_x": 1,
+			"goal_y": 2,
+			"goal_distance": 5,
+			"priority": 20,
+			"target_reason_codes": ["hero_hunt", "exposed_hero"],
+			"target_public_reason": "exposed hero",
+			"target_public_importance": "high",
+		},
+	]
+	var vaska_greedy_task := EnemyAdventureRules._ai_hero_task_planner_task_for_actor(
+		session,
+		config,
+		MIRECLAW,
+		"hero_vaska",
+		origin,
+		candidates,
+		{},
+		1
+	)
+	if String(vaska_greedy_task.get("target_kind", "")) != "artifact":
+		_fail("Global-fit fixture expected roster-order Vaska to greedily claim artifact before global assignment, got %s" % JSON.stringify(vaska_greedy_task))
+		return {}
+	var roster := [
+		_commander_entry(session, MIRECLAW, "hero_vaska"),
+		_commander_entry(session, MIRECLAW, "hero_sable"),
+	]
+	var assignments := EnemyAdventureRules._ai_hero_task_planner_global_task_assignments(
+		session,
+		config,
+		MIRECLAW,
+		roster,
+		origin,
+		candidates,
+		{},
+		[],
+		1
+	)
+	if assignments.size() < 2:
+		_fail("Global-fit assignment should allocate both commanders, got %s" % JSON.stringify(assignments))
+		return {}
+	var vaska_task := _task_for_actor_id(assignments, "hero_vaska")
+	var sable_task := _task_for_actor_id(assignments, "hero_sable")
+	if String(sable_task.get("target_kind", "")) != "artifact" or String(sable_task.get("target_id", "")) != "trailsinger_cache":
+		_fail("Global-fit assignment should reserve magic artifact for Sable, got %s assignments=%s" % [JSON.stringify(sable_task), JSON.stringify(assignments)])
+		return {}
+	if String(vaska_task.get("target_kind", "")) != "hero" or String(vaska_task.get("target_id", "")) != hero_id:
+		_fail("Global-fit assignment should move Vaska to the alternate hero pressure target, got %s assignments=%s" % [JSON.stringify(vaska_task), JSON.stringify(assignments)])
+		return {}
+	if int(sable_task.get("commander_fit_bonus", 0)) <= int(vaska_greedy_task.get("commander_fit_bonus", 0)):
+		_fail("Global-fit fixture expected Sable's artifact fit to beat Vaska's artifact fit: sable=%s vaska=%s" % [JSON.stringify(sable_task), JSON.stringify(vaska_greedy_task)])
+		return {}
+	return {
+		"case_id": "global_commander_task_assignment_preserves_specialist_target",
+		"greedy_first_actor": "hero_vaska",
+		"greedy_first_target_key": "%s:%s" % [String(vaska_greedy_task.get("target_kind", "")), String(vaska_greedy_task.get("target_id", ""))],
+		"specialist_actor": "hero_sable",
+		"specialist_target_key": "%s:%s" % [String(sable_task.get("target_kind", "")), String(sable_task.get("target_id", ""))],
+		"specialist_fit_bonus": int(sable_task.get("commander_fit_bonus", 0)),
+		"alternate_actor": "hero_vaska",
+		"alternate_target_key": "%s:%s" % [String(vaska_task.get("target_kind", "")), String(vaska_task.get("target_id", ""))],
+		"alternate_fit_bonus": int(vaska_task.get("commander_fit_bonus", 0)),
 	}
 
 func _planner_uses_commander_outcome_memory() -> Dictionary:
@@ -568,6 +664,12 @@ func _planned_task_for_actor(tasks: Array, actor_id: String, excluded_target_id:
 		if String(task.get("target_id", "")) == excluded_target_id:
 			continue
 		return task
+	return {}
+
+func _task_for_actor_id(tasks: Array, actor_id: String) -> Dictionary:
+	for task_value in tasks:
+		if task_value is Dictionary and String(task_value.get("actor_id", "")) == actor_id:
+			return task_value
 	return {}
 
 func _task_for_target_status(tasks: Array, target_id: String, status: String) -> Dictionary:
