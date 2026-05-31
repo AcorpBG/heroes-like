@@ -31974,6 +31974,62 @@
       "completedAt": "2026-05-31T18:16:09Z"
     },
     {
+      "id": "strategic-ai-generated-regroup-target-integrity-10184",
+      "title": "Strategic AI Generated Regroup Target Integrity",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Native RMG long-run smoke evidence after strategic-ai-headless-resource-task-persistence-10184",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Fix generated-map strategic AI regroup/resume target integrity so raids never retarget to their own active host/raid label after regroup, without changing balance content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=4 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/headless_simulation_harness_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "Generated-map long-run evidence has no self-targeting raid/regroup labels or behavior-bug rows; focused regroup tests pass; full headless harness remains failure-free under its existing warning/deferred policy; no unit, spell, growth, economy, faction, town-cost, or balance content changes.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "claiming full production readiness before full matrix evidence"
+      ],
+      "startedAt": "2026-05-31T18:18:22Z",
+      "updatedAt": "2026-05-31T19:04:00Z",
+      "validation": [
+        "Baseline suspicious evidence: focused Native RMG smoke seed strategic-ai-long-run-smoke-native-small-003 emitted a public summary with 'Mireclaw Raid targets Mireclaw Raid (resuming objective pressure)' after regroup, which is not acceptable production AI readability.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | PASS; reproducing seed 003 now reports 'Mireclaw Raid targets Guarded Pass' and 'Mireclaw Raid breaks Guarded Pass', target_integrity_violation_count=0.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn | PASS.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=4 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | focused Native RMG smoke completed 4/4 rows and 16/16 turns; behavior_bug_count=0; target_integrity_violation_count=0; report remains needs_attention only because full 100-seed eight-week production matrix was not run.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/headless_simulation_harness_report.tscn | PASS/WARNING; 18 pass, 0 fail, 1 warning, 1 deferred, harness_signature=65fb34ba.",
+        "python3 tests/validate_repo.py | PASS.",
+        "jq empty ops/progress.json | PASS.",
+        "git diff --check | PASS.",
+        "git diff -- content/ | clean; no unit, spell, growth, economy, faction, town-cost, or balance content changes."
+      ],
+      "summary": "Completed. Generated-map strategic AI encounter/guard targets now resolve to player-readable guarded-pass/frontier-guard labels during assignment, regroup resumption, guarded-claim redirects, target refresh, contestation, grouping, and candidate planning; the long-run Native RMG report now fails self-looking actor/target public labels without changing unit, spell, growth, economy, faction, or town-cost content.",
+      "notes": [
+        "Do not touch balance/content data; fix strategic AI behavior or generated-map AI evidence only."
+      ],
+      "completedAt": "2026-05-31T19:04:00Z"
+    },
+    {
       "id": "ux-polish-player-comprehension-10184",
       "title": "UX Polish Player Comprehension",
       "status": "pending",

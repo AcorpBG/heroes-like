@@ -919,10 +919,9 @@ static func _explicit_objective_target_view(
 	var encounter_result := _find_encounter_by_placement(session, target_id)
 	if int(encounter_result.get("index", -1)) >= 0:
 		var encounter: Dictionary = encounter_result.get("encounter", {})
-		var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 		return {
 			"target_kind": "encounter",
-			"target_label": String(encounter_template.get("name", target_id)),
+			"target_label": _encounter_target_label(session, encounter, target_id),
 			"target_x": int(encounter.get("x", 0)),
 			"target_y": int(encounter.get("y", 0)),
 			"goal_tiles": _encounter_staging_tiles(session, encounter),
@@ -1098,8 +1097,7 @@ static func _active_front_support_candidate(
 			var encounter: Dictionary = encounter_result.get("encounter", {})
 			if OverworldRulesScript.is_encounter_resolved(session, encounter):
 				return {}
-			var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-			target_label = String(encounter_template.get("name", target_id))
+			target_label = _encounter_target_label(session, encounter, target_id)
 			target_x = int(encounter.get("x", 0))
 			target_y = int(encounter.get("y", 0))
 			goal_tiles = _encounter_staging_tiles(session, encounter)
@@ -1814,9 +1812,8 @@ static func _raid_grouping_target_view(
 			var encounter: Dictionary = encounter_result.get("encounter", {})
 			if OverworldRulesScript.is_encounter_resolved(session, encounter):
 				return {}
-			var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return {
-				"target_label": String(encounter_template.get("name", target_id)),
+				"target_label": _encounter_target_label(session, encounter, target_id),
 				"target_x": int(encounter.get("x", 0)),
 				"target_y": int(encounter.get("y", 0)),
 			}
@@ -4062,7 +4059,7 @@ static func _redirect_claim_to_guard_encounter(
 	var previous_target := _current_target_snapshot(raid)
 	var redirected := raid.duplicate(true)
 	var guard_id := String(guard_encounter.get("placement_id", ""))
-	var guard_label := String(ContentService.get_encounter(String(guard_encounter.get("encounter_id", guard_encounter.get("id", "")))).get("name", "the guard"))
+	var guard_label := _encounter_target_label(session, guard_encounter, "the guard")
 	redirected["previous_target_kind"] = String(raid.get("target_kind", ""))
 	redirected["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
 	redirected["previous_target_label"] = String(raid.get("target_label", ""))
@@ -7891,8 +7888,7 @@ static func describe_contestation(session: SessionStateStoreScript.SessionData, 
 			continue
 		if public_only and not OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", -1)), int(encounter.get("y", -1))):
 			continue
-		var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-		var label = String(encounter_template.get("name", encounter.get("placement_id", "frontier camp")))
+		var label = _encounter_target_label(session, encounter, String(encounter.get("placement_id", "frontier camp")))
 		if label != "" and label not in contested_fronts:
 			contested_fronts.append(label)
 
@@ -8408,7 +8404,6 @@ static func _append_encounter_candidate(
 			goal_tile = encounter_tile
 	if goal_distance >= 9999:
 		return
-	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var object_breakdown := neutral_encounter_object_valuation_breakdown(session, config, encounter, origin_pos, faction_id)
 	var reason_codes: Array = _normalize_string_array(object_breakdown.get("reason_codes", []))
 	if reason_codes.is_empty():
@@ -8428,7 +8423,7 @@ static func _append_encounter_candidate(
 		{
 			"target_kind": "encounter",
 			"target_placement_id": placement_id,
-			"target_label": String(encounter_template.get("name", "Frontier Camp")),
+			"target_label": _encounter_target_label(session, encounter, "Frontier Camp"),
 			"target_x": int(encounter.get("x", 0)),
 			"target_y": int(encounter.get("y", 0)),
 			"goal_x": goal_tile.x,
@@ -9107,7 +9102,7 @@ static func neutral_encounter_object_valuation_breakdown(
 		"object_backed": object_backed,
 		"object_placement_id": String(encounter.get("object_placement_id", "")),
 		"authored_bundle_id": String(encounter.get("authored_metadata", {}).get("bundle_id", "")) if encounter.get("authored_metadata", {}) is Dictionary else "",
-		"target_label": String(ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", "")))).get("name", placement_id)),
+		"target_label": _encounter_target_label(session, encounter, placement_id),
 		"target_x": target_tile.x,
 		"target_y": target_tile.y,
 		"goal_distance": goal_distance,
@@ -12010,9 +12005,8 @@ static func _ai_hero_task_target_snapshot_for_plan(
 			var encounter: Dictionary = encounter_result.get("encounter", {})
 			if OverworldRulesScript.is_encounter_resolved(session, encounter):
 				return {}
-			var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return {
-				"target_label": String(encounter_template.get("name", target_id)),
+				"target_label": _encounter_target_label(session, encounter, target_id),
 				"target_x": int(encounter.get("x", 0)),
 				"target_y": int(encounter.get("y", 0)),
 				"goal_tiles": _encounter_staging_tiles(session, encounter),
@@ -12033,6 +12027,49 @@ static func _ai_hero_task_target_snapshot_for_plan(
 				"goal_tiles": [tile],
 			}
 	return {}
+
+static func _encounter_target_label(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	fallback: String = "the outpost"
+) -> String:
+	var guard_link: Dictionary = encounter.get("guard_link", {}) if encounter.get("guard_link", {}) is Dictionary else {}
+	var guarded_target_id := String(guard_link.get("target_placement_id", ""))
+	if guarded_target_id != "":
+		var guarded_label := _guarded_target_label(session, guarded_target_id)
+		if guarded_label != "":
+			return "Guard for %s" % guarded_label
+	var native_guard_id := String(encounter.get("native_guard_object_id", encounter.get("object_id", "")))
+	var connection_ids: Array = encounter.get("connection_ids", []) if encounter.get("connection_ids", []) is Array else []
+	if String(encounter.get("connection_id", "")) != "" \
+			or not connection_ids.is_empty() \
+			or native_guard_id.find("connection_guard") >= 0:
+		return "Guarded Pass"
+	var kind := String(encounter.get("kind", encounter.get("package_kind", "")))
+	if kind == "guard" or String(encounter.get("package_kind", "")) == "guard":
+		return "Frontier Guard"
+	var explicit_label := String(encounter.get("target_label", encounter.get("label", ""))).strip_edges()
+	if explicit_label != "":
+		return explicit_label
+	var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	return String(encounter_template.get("name", fallback))
+
+static func _guarded_target_label(session: SessionStateStoreScript.SessionData, target_id: String) -> String:
+	if session == null or target_id == "":
+		return ""
+	var town_result := _find_town_by_placement(session, target_id)
+	if int(town_result.get("index", -1)) >= 0:
+		return _town_name(town_result.get("town", {}))
+	var resource_result := _find_resource_by_placement(session, target_id)
+	if int(resource_result.get("index", -1)) >= 0:
+		var node: Dictionary = resource_result.get("node", {})
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		return String(site.get("name", target_id))
+	var artifact_result := _find_artifact_by_placement(session, target_id)
+	if int(artifact_result.get("index", -1)) >= 0:
+		var artifact_node: Dictionary = artifact_result.get("node", {})
+		return ArtifactRulesScript.describe_artifact(String(artifact_node.get("artifact_id", "")))
+	return ""
 
 static func _exploration_target_tile_from_id(target_id: String) -> Vector2i:
 	if not target_id.begins_with("explore:"):
@@ -15810,9 +15847,10 @@ static func _contest_encounter_target(
 				COMMANDER_OUTCOME_OBJECTIVE_SECURED
 			)
 			_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
+			var encounter_label := _encounter_target_label(session, encounter_state, "the outpost")
 			var contest_message := "%s locks down %s and turns it into a live front." % [
 				_raid_name(updated_raid),
-				String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
+				encounter_label,
 			]
 			var contest_event := build_ai_event_record(
 				session,
@@ -15822,7 +15860,7 @@ static func _contest_encounter_target(
 				{
 					"target_kind": "encounter",
 					"target_placement_id": String(encounter_state.get("placement_id", "")),
-					"target_label": String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
+					"target_label": encounter_label,
 					"target_x": int(encounter_state.get("x", 0)),
 					"target_y": int(encounter_state.get("y", 0)),
 					"target_reason_codes": ["site_contested", "objective_front"],
@@ -15856,14 +15894,15 @@ static func _contest_encounter_target(
 	)
 	_ai_hero_task_finish_live_assignment(session, faction_id, resolved_raid, "completed", "valid")
 	var encounter_template = ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", ""))))
+	var encounter_label := _encounter_target_label(session, encounter_state, "the frontier camp")
 	var spoils = _reward_resources_for_empire(encounter_template.get("rewards", {}))
 	state["treasury"] = _merge_resources(state.get("treasury", {}), spoils)
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + _pressure_from_rewards(encounter_template.get("rewards", {}))
-	var message = "%s breaks %s." % [_raid_name(resolved_raid), String(encounter_template.get("name", "the frontier camp"))]
+	var message = "%s breaks %s." % [_raid_name(resolved_raid), encounter_label]
 	if not spoils.is_empty():
 		message = "%s breaks %s and absorbs %s." % [
 			_raid_name(resolved_raid),
-			String(encounter_template.get("name", "the frontier camp")),
+			encounter_label,
 			_describe_resource_set(spoils),
 		]
 	var resume_result := _resume_guarded_claim_after_guard_clear(session, config, resolved_raid, state, faction_id)
@@ -15886,7 +15925,7 @@ static func _contest_encounter_target(
 		{
 			"target_kind": "encounter",
 			"target_placement_id": placement_id,
-			"target_label": String(encounter_template.get("name", "the frontier camp")),
+			"target_label": encounter_label,
 			"target_x": int(encounter_state.get("x", 0)),
 			"target_y": int(encounter_state.get("y", 0)),
 			"target_reason_codes": reason_codes,
@@ -17073,7 +17112,7 @@ static func _refresh_target(
 				var placement = encounter_result.get("encounter", {})
 				var staging_tiles = _encounter_staging_tiles(session, placement)
 				var goal_tile = _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
-				raid["target_label"] = String(ContentService.get_encounter(String(placement.get("encounter_id", placement.get("id", "")))).get("name", "Frontier Camp"))
+				raid["target_label"] = _encounter_target_label(session, placement, "Frontier Camp")
 				raid["target_x"] = int(placement.get("x", 0))
 				raid["target_y"] = int(placement.get("y", 0))
 				raid["goal_x"] = goal_tile.x

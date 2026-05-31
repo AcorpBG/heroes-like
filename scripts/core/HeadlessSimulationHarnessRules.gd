@@ -996,6 +996,7 @@ static func _strategic_ai_long_run_seed_row(
 	var auto_resolved_battle_count := 0
 	var stalled_turn_count := 0
 	var enemy_activity_event_count := 0
+	var target_integrity_violations := []
 	for turn_index in range(turn_count):
 		if session.scenario_status != "in_progress":
 			break
@@ -1015,7 +1016,12 @@ static func _strategic_ai_long_run_seed_row(
 		var events: Array = result.get("enemy_activity_events", []) if result.get("enemy_activity_events", []) is Array else []
 		enemy_activity_event_count += events.size()
 		_strategic_ai_count_event_types(row["event_counts"], events)
+		var turn_target_integrity_violations := _strategic_ai_target_integrity_violations(events, String(result.get("enemy_activity_summary", "")))
+		for violation in turn_target_integrity_violations:
+			target_integrity_violations.append("turn_%d:%s" % [turn_index + 1, String(violation)])
 		var turn_ok := bool(result.get("ok", false))
+		if not turn_target_integrity_violations.is_empty():
+			turn_ok = false
 		all_turns_ok = all_turns_ok and turn_ok
 		turns_completed += 1
 		if events.is_empty():
@@ -1026,6 +1032,7 @@ static func _strategic_ai_long_run_seed_row(
 			"ok": turn_ok,
 			"enemy_activity_event_count": events.size(),
 			"enemy_activity_summary": String(result.get("enemy_activity_summary", "")),
+			"target_integrity_violations": turn_target_integrity_violations,
 			"game_state": String(session.game_state),
 			"scenario_status": String(session.scenario_status),
 			"turn_runtime_msec": turn_runtime_msec,
@@ -1046,7 +1053,10 @@ static func _strategic_ai_long_run_seed_row(
 			"turn_runtime_msec": turn_runtime_msec,
 		})
 		if not turn_ok:
-			failures.append("turn_%d_failed" % (turn_index + 1))
+			if turn_target_integrity_violations.is_empty():
+				failures.append("turn_%d_failed" % (turn_index + 1))
+			else:
+				failures.append("turn_%d_target_integrity_failed" % (turn_index + 1))
 			break
 		if String(session.game_state) == "battle" and not session.battle.is_empty():
 			battle_interrupt_count += 1
@@ -1064,6 +1074,8 @@ static func _strategic_ai_long_run_seed_row(
 	row["battle_interrupt_count"] = battle_interrupt_count
 	row["auto_resolved_battle_count"] = auto_resolved_battle_count
 	row["stalled_turn_count"] = stalled_turn_count
+	row["target_integrity_violations"] = target_integrity_violations
+	row["target_integrity_violation_count"] = target_integrity_violations.size()
 	row["final_day"] = int(session.day)
 	row["final_game_state"] = String(session.game_state)
 	row["final_scenario_status"] = String(session.scenario_status)
@@ -1084,6 +1096,7 @@ static func _strategic_ai_long_run_seed_row(
 		"final_town_owners": row.get("final_town_owners", {}),
 		"final_task_summary": row.get("final_task_summary", {}),
 		"failures": failures,
+		"target_integrity_violations": target_integrity_violations,
 	})
 	_strategic_ai_long_run_progress(progress_callback, _strategic_ai_long_run_row_progress_payload("row_complete", row, seed_index, seed_count))
 	return row
@@ -1157,12 +1170,58 @@ static func _strategic_ai_count_event_types(output: Dictionary, events: Array) -
 			continue
 		output[event_type] = int(output.get(event_type, 0)) + 1
 
+static func _strategic_ai_target_integrity_violations(events: Array, enemy_activity_summary: String = "") -> Array:
+	var violations := []
+	for event_value in events:
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		var event_type := String(event.get("event_type", ""))
+		if event_type not in [
+			"ai_target_assigned",
+			"ai_site_contested",
+			"ai_site_seized",
+			"ai_raid_regrouped",
+			"ai_town_assault_battle_queued",
+			"ai_town_defense_battle_queued",
+		]:
+			continue
+		var actor_label := _strategic_ai_event_label_key(String(event.get("actor_label", "")))
+		var target_label := _strategic_ai_event_label_key(String(event.get("target_label", "")))
+		if actor_label == "" or target_label == "":
+			continue
+		if actor_label == target_label:
+			violations.append("%s_self_target_label:%s" % [event_type, String(event.get("target_label", ""))])
+	var summary := enemy_activity_summary.strip_edges()
+	if summary != "":
+		for event_value in events:
+			if not (event_value is Dictionary):
+				continue
+			var event: Dictionary = event_value
+			var actor_label := String(event.get("actor_label", "")).strip_edges()
+			var target_label := String(event.get("target_label", "")).strip_edges()
+			if actor_label == "" or target_label == "":
+				continue
+			if _strategic_ai_event_label_key(actor_label) != _strategic_ai_event_label_key(target_label):
+				continue
+			if summary.find("%s targets %s" % [actor_label, target_label]) >= 0 \
+					or summary.find("%s breaks %s" % [actor_label, target_label]) >= 0:
+				violations.append("summary_self_target_label:%s" % target_label)
+	return violations
+
+static func _strategic_ai_event_label_key(label: String) -> String:
+	var cleaned := label.strip_edges().to_lower()
+	while cleaned.find("  ") >= 0:
+		cleaned = cleaned.replace("  ", " ")
+	return cleaned
+
 static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: int, requested_turn_count: int) -> Dictionary:
 	var setup_ok_count := 0
 	var row_ok_count := 0
 	var behavior_bug_count := 0
 	var total_turns_completed := 0
 	var total_enemy_events := 0
+	var total_target_integrity_violations := 0
 	var battle_interrupt_count := 0
 	var auto_resolved_battle_count := 0
 	var total_stalled_turns := 0
@@ -1186,6 +1245,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 			behavior_bug_count += 1
 		total_turns_completed += int(row.get("turns_completed", 0))
 		total_enemy_events += int(row.get("enemy_activity_event_count", 0))
+		total_target_integrity_violations += int(row.get("target_integrity_violation_count", 0))
 		battle_interrupt_count += int(row.get("battle_interrupt_count", 0))
 		auto_resolved_battle_count += int(row.get("auto_resolved_battle_count", 0))
 		total_stalled_turns += int(row.get("stalled_turn_count", 0))
@@ -1216,6 +1276,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"turns_completed": total_turns_completed,
 		"turn_completion_pct": int(round(float(total_turns_completed) * 100.0 / float(requested_turn_total))),
 		"enemy_activity_event_count": total_enemy_events,
+		"target_integrity_violation_count": total_target_integrity_violations,
 		"battle_interrupt_count": battle_interrupt_count,
 		"auto_resolved_battle_count": auto_resolved_battle_count,
 		"stalled_turn_count": total_stalled_turns,
@@ -1240,6 +1301,8 @@ static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_
 		rows.append({"blocker_id": "native_rmg_seed_setup_failure", "severity": "bug", "summary": "At least one native generated-map seed failed setup."})
 	if int(summary.get("behavior_bug_count", 0)) > 0:
 		rows.append({"blocker_id": "strategic_ai_long_run_behavior_bug", "severity": "bug", "summary": "At least one generated-map strategic AI long-run row failed during turns or battle resolution."})
+	if int(summary.get("target_integrity_violation_count", 0)) > 0:
+		rows.append({"blocker_id": "strategic_ai_long_run_target_integrity_violation", "severity": "bug", "summary": "At least one generated-map strategic AI event used the same public actor and target label."})
 	if int(summary.get("turns_completed", 0)) <= 0:
 		rows.append({"blocker_id": "strategic_ai_long_run_no_turns", "severity": "bug", "summary": "The long-run matrix completed no generated-map turns."})
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
