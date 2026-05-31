@@ -2165,7 +2165,7 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		"arrived": false,
 		"goal_distance": 9999,
 	}
-	if String(spawn_point.get("spawn_plan_source", "")).begins_with("emergency_") or String(spawn_point.get("spawn_plan_source", "")) == "fresh_target":
+	if String(spawn_point.get("spawn_plan_target_kind", "")) != "" and String(spawn_point.get("spawn_plan_target_id", "")) != "":
 		raid_seed["target_kind"] = String(spawn_point.get("spawn_plan_target_kind", ""))
 		raid_seed["target_placement_id"] = String(spawn_point.get("spawn_plan_target_id", ""))
 		raid_seed["target_label"] = String(spawn_point.get("spawn_plan_target_label", ""))
@@ -3278,7 +3278,15 @@ static func _fresh_spawn_target_candidate_for_point(
 		Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
 	)
 	if target_candidates.is_empty():
-		return {}
+		return _exploration_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
 	var commander_candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
 		session,
 		faction_id,
@@ -3314,6 +3322,79 @@ static func _fresh_spawn_target_candidate_for_point(
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _exploration_spawn_candidate_for_point(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	spawn_order: int
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	var plan := EnemyAdventureRulesScript._no_known_target_exploration_plan(
+		session,
+		config,
+		Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
+	)
+	if plan.is_empty():
+		return {}
+	var commander_candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
+	if commander_candidates.is_empty():
+		return {}
+	var best := {}
+	for commander_value in commander_candidates:
+		if not (commander_value is Dictionary):
+			continue
+		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		var candidate := _spawn_point_candidate_from_plan(
+			point,
+			plan,
+			roster_hero_id,
+			"exploration",
+			spawn_order + int(commander_value.get("rotation_order", 0))
+		)
+		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + _exploration_commander_spawn_bonus(session, faction_id, roster_hero_id)
+		candidate["spawn_plan_public_importance"] = "medium"
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _exploration_commander_spawn_bonus(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String
+) -> int:
+	if session == null or faction_id == "" or roster_hero_id == "":
+		return 0
+	var entry := EnemyAdventureRulesScript._commander_roster_entry(
+		EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id),
+		roster_hero_id
+	)
+	var commander_state: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+	var hero_template := ContentService.get_hero(roster_hero_id)
+	var bonus := 0
+	var focus_ids := _normalize_string_array(
+		commander_state.get("specialty_focus_ids", hero_template.get("specialty_focus_ids", []))
+	)
+	if "wayfinder" in focus_ids:
+		bonus += 45
+	if "spellwright" in focus_ids:
+		bonus += 20
+	if String(commander_state.get("archetype", hero_template.get("archetype", ""))) in ["scout", "raider", "pathfinder"]:
+		bonus += 25
+	return bonus
 
 static func _ready_saved_task_spawn_candidate_for_point(
 	session: SessionStateStoreScript.SessionData,

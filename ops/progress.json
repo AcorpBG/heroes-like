@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-known-nonhero-target-gating-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-no-known-target-exploration-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:16:00Z",
+  "updatedAt": "2026-05-31T03:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,81 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-no-known-target-exploration-10184",
+      "title": "Strategic AI No-Known-Target Exploration",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy commanders without legitimate known targets scout reachable frontier tiles instead of immediately holding/regrouping, so the anti-omniscience policy still produces active map exploration and later target discovery.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Known-world target gating now prevents ordinary hidden resources, artifacts, and encounters from being selected omnisciently.",
+        "When no candidates remain, choose_target falls back to regrouping at an owned town, which is too passive for production strategic AI."
+      ],
+      "completionCriteria": [
+        "No-known-target commanders select deterministic reachable exploration waypoints when useful frontier tiles exist.",
+        "Exploration targets move through normal raid movement and public target-assignment surfaces.",
+        "Arriving at an exploration waypoint refreshes assignment so newly visible targets can become live objectives, while regroup remains a fallback when no exploration waypoint exists.",
+        "Focused validation proves hidden targets are not selected directly and no-known-target behavior uses exploration instead of passive regroup when frontier scouting is possible."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not reintroduce omniscient direct targeting of hidden objects.",
+        "Do not change battle balance, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T03:35:00Z",
+      "updatedAt": "2026-05-31T03:55:00Z",
+      "completedAt": "2026-05-31T03:55:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
+          "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
+          "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
+          "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
+          "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "fallback_target_kind": "explore",
+          "fallback_target_id": "explore:0:1",
+          "fallback_goal_distance": 8,
+          "fresh_pressure_launch_allowed": true,
+          "live_exploration_raid_id": "faction_mireclaw_raid_1",
+          "exploration_arrival_reassigned_target": "resource:river_free_company",
+          "save_version": 9
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-known-nonhero-target-gating-10184",
       "title": "Strategic AI Known Non-Hero Target Gating",
@@ -39104,6 +39179,48 @@
         "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "sliceId": "strategic-ai-no-known-target-exploration-10184",
+      "completedAt": "2026-05-31T03:55:00Z",
+      "summary": "Completed. No-known-target enemy commanders now scout reachable frontier tiles and fresh pressure can launch exploration commanders; strategic AI production readiness remains open.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
+          "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
+          "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
+          "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
+          "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "fallback_target_kind": "explore",
+          "fallback_target_id": "explore:0:1",
+          "fallback_goal_distance": 8,
+          "fresh_pressure_launch_allowed": true,
+          "live_exploration_raid_id": "faction_mireclaw_raid_1",
+          "exploration_arrival_reassigned_target": "resource:river_free_company",
+          "save_version": 9
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -40459,6 +40576,7 @@
     }
   },
   "validationResults": [
+    "2026-05-31 strategic AI no-known-target exploration: no-known-target commanders now scout reachable frontier tiles, fresh pressure can launch exploration commanders, and exploration arrivals reassign to newly visible targets under the known-world rules. Focused known-world report, adjacent strategic-AI reports, and repository validation passed.",
     "2026-05-31 strategic AI known non-hero target gating: ordinary resource/artifact/encounter candidates now require current AI visibility or scouted known-world memory, while explicit priority/objective targets and scouting discovery remain live. Focused known-world memory report plus adjacent strategic AI reports and repository validation passed.",
     "2026-05-26 Native RMG economy source support: all-rare town costs and generated required-source caches passed. Runtime-inclusive scorecard 30/30; Native RMG generated package routes 56/56 reachable with 42/42 required rare routes guarded; breadth 120/120 routes reachable with 90 guarded rare routes; TownShell all-rare UI 6/6; validate_repo passed. Authored rare-source breadth paused by owner scope.",
     "2026-05-25 generated package source guard-pressure scorecard: strict Small generated/native package player/enemy town source routes now require guarded economy-source pressure while preserving route-derived acquisition inside the 30-turn runway. Evidence passes 3/3 guarded generated towns, 3 guarded source routes, max acquisition day 3 of limit 6, and runtime-inclusive economy/town scorecard 33/33. This is not campaign production work.",
@@ -42045,8 +42163,8 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T03:16:00Z",
-    "sliceId": "strategic-ai-known-nonhero-target-gating-10184",
+    "updatedAt": "2026-05-31T03:55:00Z",
+    "sliceId": "strategic-ai-no-known-target-exploration-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -42065,27 +42183,28 @@
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
-        "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
-        "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
-        "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
-        "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
+        "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
+        "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
+        "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
+        "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
+        "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "target_kind": "resource",
-        "target_id": "river_free_company",
-        "hidden_candidate_count": 0,
-        "scoutable_unknown_resource": true,
-        "known_resource_candidate": true,
+        "fallback_target_kind": "explore",
+        "fallback_target_id": "explore:0:1",
+        "fallback_goal_distance": 8,
+        "fresh_pressure_launch_allowed": true,
+        "live_exploration_raid_id": "faction_mireclaw_raid_1",
+        "exploration_arrival_reassigned_target": "resource:river_free_company",
         "save_version": 9
       },
-      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
+      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
     }
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T03:16:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:55:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -45077,13 +45196,55 @@
         "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-31T03:55:00Z",
+      "sliceId": "strategic-ai-no-known-target-exploration-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
+          "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
+          "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
+          "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
+          "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "fallback_target_kind": "explore",
+          "fallback_target_id": "explore:0:1",
+          "fallback_goal_distance": 8,
+          "fresh_pressure_launch_allowed": true,
+          "live_exploration_raid_id": "faction_mireclaw_raid_1",
+          "exploration_arrival_reassigned_target": "resource:river_free_company",
+          "save_version": 9
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
-  "currentSlice": "none selected; latest completed slice strategic-ai-known-nonhero-target-gating-10184",
+  "currentSlice": "none selected; latest completed slice strategic-ai-no-known-target-exploration-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T03:16:00Z",
-    "sliceId": "strategic-ai-known-nonhero-target-gating-10184",
+    "updatedAt": "2026-05-31T03:55:00Z",
+    "sliceId": "strategic-ai-no-known-target-exploration-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -45102,22 +45263,23 @@
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
-        "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
-        "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
-        "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
-        "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
+        "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
+        "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
+        "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
+        "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
+        "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "target_kind": "resource",
-        "target_id": "river_free_company",
-        "hidden_candidate_count": 0,
-        "scoutable_unknown_resource": true,
-        "known_resource_candidate": true,
+        "fallback_target_kind": "explore",
+        "fallback_target_id": "explore:0:1",
+        "fallback_goal_distance": 8,
+        "fresh_pressure_launch_allowed": true,
+        "live_exploration_raid_id": "faction_mireclaw_raid_1",
+        "exploration_arrival_reassigned_target": "resource:river_free_company",
         "save_version": 9
       },
-      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
+      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
     }
   }
