@@ -2608,6 +2608,130 @@ static func _strategic_ai_live_resource_site_defense(input_config: Dictionary) -
 		deferred
 	)
 
+static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dictionary = {}) -> Dictionary:
+	var scenario_id := String(input_config.get("strategic_ai_emergency_fit_scenario_id", "river-pass"))
+	var faction_id := String(input_config.get("strategic_ai_emergency_fit_faction_id", "faction_mireclaw"))
+	var defense_target_id := String(input_config.get("strategic_ai_emergency_fit_target_id", "river_free_company"))
+	var expected_defender_id := String(input_config.get("strategic_ai_emergency_fit_expected_hero_id", "hero_sable"))
+	var rotation_first_id := String(input_config.get("strategic_ai_emergency_fit_rotation_first_hero_id", "hero_vaska"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var scenario := ContentService.get_scenario(scenario_id)
+	if scenario.is_empty():
+		deferred.append("Missing strategic AI emergency-defense commander-fit scenario %s." % scenario_id)
+		return _case(
+			"strategic_ai_emergency_defense_commander_fit",
+			"emergency_defense_launch_uses_commander_fit",
+			"deferred",
+			{"scenario_id": scenario_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var config := _enemy_config_for_scenario(scenario, faction_id)
+	if config.is_empty():
+		deferred.append("%s has no enemy faction config for %s." % [scenario_id, faction_id])
+		return _case(
+			"strategic_ai_emergency_defense_commander_fit",
+			"emergency_defense_launch_uses_commander_fit",
+			"deferred",
+			{"scenario_id": scenario_id, "faction_id": faction_id, "deferred_count": deferred.size()},
+			{"deferred": deferred, "warnings": warnings, "failures": failures},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var state := _enemy_state_for_faction(session, faction_id)
+	if state.is_empty():
+		failures.append("No enemy state for %s in %s." % [faction_id, scenario_id])
+	else:
+		state["pressure"] = 0
+		state["commander_counter"] = 0
+		state["commander_roster"] = _emergency_defense_fit_roster(session, faction_id, [rotation_first_id, expected_defender_id])
+		_update_enemy_state(session, state)
+	_set_resource_controller(session, defense_target_id, faction_id, failures)
+	_set_resource_defense_front(session, defense_target_id, faction_id, failures)
+	var defense_node := _resource_node_by_placement(session, defense_target_id)
+	_set_player_position(session, {"x": int(defense_node.get("x", 0)), "y": int(defense_node.get("y", 0))})
+	state = _enemy_state_for_faction(session, faction_id)
+	var emergency_plan := EnemyTurnRules._emergency_defense_launch_ready_report(session, config, state, faction_id)
+	var selected_hero_id := String(emergency_plan.get("roster_hero_id", ""))
+	var selected_fit_bonus := int(emergency_plan.get("spawn_plan_commander_fit_bonus", 0))
+	var selected_source := String(emergency_plan.get("spawn_plan_source", ""))
+	if emergency_plan.is_empty():
+		failures.append("Emergency defense launch produced no ready plan.")
+	if selected_hero_id != expected_defender_id:
+		failures.append("Emergency defense selected %s instead of defensive-fit commander %s." % [selected_hero_id, expected_defender_id])
+	if selected_hero_id == rotation_first_id:
+		failures.append("Emergency defense still followed rotation-first commander selection.")
+	if selected_fit_bonus <= 0:
+		failures.append("Emergency defense plan did not expose a positive commander-fit bonus.")
+	if selected_source != "emergency_resource_defense":
+		failures.append("Emergency defense selected wrong plan source %s." % selected_source)
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_emergency_defense_commander_fit",
+		"emergency_defense_launch_uses_commander_fit",
+		status,
+		{
+			"scenario_id": scenario_id,
+			"faction_id": faction_id,
+			"target_id": defense_target_id,
+			"selected_hero_id": selected_hero_id,
+			"expected_hero_id": expected_defender_id,
+			"rotation_first_hero_id": rotation_first_id,
+			"commander_fit_bonus": selected_fit_bonus,
+			"warning_count": warnings.size(),
+			"failure_count": failures.size(),
+		},
+		{
+			"emergency_plan": emergency_plan,
+			"target_reason_codes": _string_array(emergency_plan.get("spawn_plan_reason_codes", [])),
+			"warnings": warnings,
+			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
+static func _emergency_defense_fit_roster(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	available_hero_ids: Array
+) -> Array:
+	var available := {}
+	for hero_id_value in available_hero_ids:
+		var hero_id := String(hero_id_value)
+		if hero_id != "":
+			available[hero_id] = true
+	var roster := []
+	for entry_value in EnemyAdventureRules.normalize_commander_roster(
+		session,
+		faction_id,
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var hero_id := String(entry.get("roster_hero_id", ""))
+		if available.has(hero_id):
+			entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+			entry["recovery_day"] = 0
+		else:
+			entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_RECOVERING
+			entry["recovery_day"] = int(session.day) + 30
+		roster.append(entry)
+	return roster
+
 static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> Dictionary:
 	var scenario_id := String(input_config.get("strategic_ai_live_retake_scenario_id", "river-pass"))
 	var faction_id := String(input_config.get("strategic_ai_live_retake_faction_id", "faction_mireclaw"))

@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T11:45:00Z",
+  "updatedAt": "2026-05-31T11:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,47 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-emergency-defense-commander-fit-10184",
+      "title": "Strategic AI Emergency Defense Commander Fit",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T11:50:00Z",
+      "updatedAt": "2026-05-31T11:55:00Z",
+      "source": "owner direction to work only on tactical and strategic AI, not game balance",
+      "planRef": "PLAN.md Current tactical state / strategic-ai-emergency-defense-commander-fit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Improve strategic AI hero selection for emergency defensive launches without changing balance/content numbers.",
+      "implementationTargets": [
+        "Make emergency town/resource defense launch candidates include commander task-fit scoring.",
+        "Make defensive town task fit favor defensive commander profiles instead of applying pure assault-town bonuses.",
+        "Add focused headless validation proving a defensive-fit commander is selected for an emergency resource-defense launch ahead of a rotation-first raider."
+      ],
+      "completionCriteria": "Focused strategic AI validation proves emergency defensive launches select the better defensive-fit commander; adjacent strategic AI behavior reports remain green; no content balance files are changed.",
+      "nonGoals": [
+        "No unit stat, ability, spell, growth, economy, town cost, or faction balance changes.",
+        "No broad balance benchmark tuning in this slice.",
+        "No production-ready AI claim from one commander-selection correction."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; report status needs_attention by design because full 100-seed eight-week validation remains explicit)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Emergency defensive launches now include commander task-fit scoring, and defensive town task-fit no longer treats defense assignments like pure town assaults.",
+      "completedAt": "2026-05-31T11:55:00Z"
+    },
     {
       "id": "battle-ai-damage-status-rider-targeting-10184",
       "title": "Battle AI Damage Status-Rider Targeting",
@@ -45768,9 +45809,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T07:48:00Z"
+    "updatedAt": "2026-05-31T11:55:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T07:48:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T11:55:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -48984,43 +49025,36 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T11:45:00Z",
-    "sliceId": "battle-ai-damage-status-rider-targeting-10184",
+    "updatedAt": "2026-05-31T11:55:00Z",
+    "sliceId": "strategic-ai-emergency-defense-commander-fit-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_resistance_countercontrol_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_battle_spell_behavior_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json --gate > tmp/battle_ai_status_rider_quick.json (passed; structural failures empty, balance status still needs_tuning)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; report status needs_attention by design because full 100-seed eight-week validation remains explicit)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Live BattleAiRules damage spell scoring now treats a status/debuff rider as fresh value only when the target does not already have that status and is not already under another control status.",
-        "Damage spell status riders now receive a small penalty when the target is already controlled, while the raw damage value remains available for kill or damage decisions.",
-        "The magic AI valuation report now proves spell_obituary_mark chooses a fresh target instead of wasting its status rider on an already-staggered target."
+        "Emergency defense spawn candidates now include commander task-fit scoring before selecting which available hero answers a threatened town or resource front.",
+        "Defensive town task-fit no longer applies pure assault-town bonuses; it leans toward defense-command and defensive-focus signals while preserving existing assault behavior for offensive town tasks.",
+        "A focused headless report proves a defensive-fit commander is selected for an emergency resource-defense launch ahead of the rotation-first raider."
       ],
       "focused_case": {
-        "case_id": "damage_status_rider_targets_fresh_stack",
-        "spell_id": "spell_obituary_mark",
-        "selected_target_id": "player_fresh_mark_target",
-        "avoided_target_id": "player_already_controlled",
-        "avoided_target_already_controlled": true,
-        "live_action": "cast_spell"
+        "case_id": "emergency_defense_launch_uses_commander_fit",
+        "target_id": "river_free_company",
+        "selected_hero_id": "hero_sable",
+        "rotation_first_hero_id": "hero_vaska",
+        "commander_fit_bonus": 64,
+        "spawn_plan_source": "emergency_resource_defense"
       },
-      "content_balance_policy": "No unit, spell, growth, faction, economy, or balance content files were changed in this slice.",
-      "benchmark_smoke": {
-        "case_id": "quick_fast_benchmark_smoke",
-        "structural_failures": [],
-        "balance_status": "needs_tuning",
-        "balance_outlier_count": 9,
-        "side_bias_points_week_1": 3.33,
-        "total_spell_casts": 838
-      },
-      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need full-seed generated-map and spell-enabled balance evidence, strategic pacing review, and production-readiness verification.",
-      "policy": "AI-only tactical targeting correction; no content balance changes and no production-ready AI claim."
+      "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need full generated-map long-run matrices, Medium/generalized behavior evidence, and live-client pacing review before production-readiness claims.",
+      "policy": "AI-only strategic commander-selection correction; no content balance changes and no production-ready AI claim."
     }
   }
 }

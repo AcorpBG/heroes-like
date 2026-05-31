@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue tactical/strategic AI work without touching unit, spell, growth, or faction content balance unless the owner explicitly selects a balance slice.
+- Latest completed slice: `strategic-ai-emergency-defense-commander-fit-10184`.
 - Latest completed slice: `battle-ai-damage-status-rider-targeting-10184`.
 - Latest completed slice: `battle-strategic-ai-resistance-aware-spell-tuning-10184`.
 - Latest completed slice: `strategic-ai-global-commander-task-assignment-10184`.

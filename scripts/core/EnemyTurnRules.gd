@@ -4079,6 +4079,7 @@ static func _emergency_defense_spawn_candidate_for_point(
 			)
 			if candidate.is_empty():
 				continue
+			candidate = _apply_spawn_plan_commander_fit(session, faction_id, candidate)
 			if String(candidate.get("spawn_plan_target_kind", "")) == "town":
 				if best_town.is_empty() or _spawn_point_candidate_beats(candidate, best_town):
 					best_town = candidate
@@ -4130,6 +4131,39 @@ static func _spawn_point_candidate_from_emergency_defense(
 	candidate["spawn_plan_public_reason"] = String(raid.get("target_public_reason", "defending threatened town"))
 	candidate["spawn_plan_public_importance"] = String(raid.get("target_public_importance", "high"))
 	candidate["spawn_plan_debug_reason"] = String(raid.get("target_debug_reason", "emergency defensive launch"))
+	return candidate
+
+static func _apply_spawn_plan_commander_fit(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	candidate: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or candidate.is_empty():
+		return candidate
+	var actor_id := String(candidate.get("roster_hero_id", ""))
+	var target_kind := String(candidate.get("spawn_plan_target_kind", ""))
+	var target_id := String(candidate.get("spawn_plan_target_id", ""))
+	if actor_id == "" or target_kind == "" or target_id == "":
+		return candidate
+	var fit_candidate := {
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+		"target_reason_codes": _normalize_string_array(candidate.get("spawn_plan_reason_codes", [])),
+		"site_family": EnemyAdventureRulesScript.target_site_family(session, target_kind, target_id),
+	}
+	var fit_bonus := EnemyAdventureRulesScript._ai_commander_task_fit_bonus(
+		session,
+		faction_id,
+		actor_id,
+		fit_candidate
+	)
+	candidate["spawn_plan_commander_fit_bonus"] = fit_bonus
+	candidate["spawn_plan_commander_fit_profile"] = EnemyAdventureRulesScript._ai_commander_task_fit_profile(
+		session,
+		faction_id,
+		actor_id
+	)
+	candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + (fit_bonus * 100)
 	return candidate
 
 static func _apply_spawn_plan_adventure_spell_projection(
