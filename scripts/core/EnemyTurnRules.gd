@@ -2413,8 +2413,14 @@ static func _can_launch_raid(
 		return false
 	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
 	var emergency_defense_plan := _emergency_defense_launch_ready_report(session, config, state, faction_id)
+	var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
 	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
-	if int(state.get("pressure", 0)) < raid_threshold and launch_ready_plan.is_empty() and emergency_defense_plan.is_empty():
+	if (
+		int(state.get("pressure", 0)) < raid_threshold
+		and launch_ready_plan.is_empty()
+		and emergency_defense_plan.is_empty()
+		and active_front_support_plan.is_empty()
+	):
 		return false
 	return not _best_open_spawn_point(session, config, state, faction_id).is_empty()
 
@@ -2483,6 +2489,38 @@ static func _planned_task_launch_ready_report(
 			continue
 		if best.is_empty() or int(report.get("spawn_plan_score", 0)) > int(best.get("spawn_plan_score", 0)):
 			best = report
+	return best
+
+static func _active_front_support_launch_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return {}
+	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var best := {}
+	for index in range(points.size()):
+		var point = points[index]
+		if not (point is Dictionary):
+			continue
+		var candidate := _active_front_support_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			index
+		)
+		if candidate.is_empty():
+			continue
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
 	return best
 
 static func _spawn_point_candidate_ready_launch_report(
@@ -2643,6 +2681,15 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		raid_seed["target_public_reason"] = String(spawn_point.get("spawn_plan_public_reason", ""))
 		raid_seed["target_public_importance"] = String(spawn_point.get("spawn_plan_public_importance", "high"))
 		raid_seed["target_debug_reason"] = String(spawn_point.get("spawn_plan_debug_reason", ""))
+		for support_key in [
+			"supporting_front_placement_id",
+			"supporting_front_target_kind",
+			"supporting_front_target_id",
+			"support_strength_gap",
+			"support_committed_strength",
+		]:
+			if spawn_point.has(support_key):
+				raid_seed[support_key] = spawn_point.get(support_key)
 	raid_seed["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
 		raid_seed,
 		roster_hero_id,
@@ -3733,6 +3780,17 @@ static func _spawn_point_candidate(
 	)
 	if not ready_saved_candidate.is_empty():
 		return ready_saved_candidate
+	var active_front_support_candidate := _active_front_support_spawn_candidate_for_point(
+		session,
+		config,
+		state,
+		faction_id,
+		point,
+		occupied_commander_ids,
+		spawn_order
+	)
+	if not active_front_support_candidate.is_empty():
+		return active_front_support_candidate
 	var saved_candidate := _saved_task_spawn_candidate_for_point(
 		session,
 		config,
@@ -3793,6 +3851,78 @@ static func _saved_task_spawn_candidate_for_point(
 			"saved_task",
 			spawn_order + int(commander_value.get("rotation_order", 0))
 		)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _active_front_support_spawn_candidate_for_point(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	spawn_order: int
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	var base_encounter_id := _primary_raid_encounter_id(config)
+	if base_encounter_id == "":
+		return {}
+	var roster: Variant = state.get("commander_roster", [])
+	var candidates: Array = EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		roster
+	)
+	var best := {}
+	for commander_value in candidates:
+		if not (commander_value is Dictionary):
+			continue
+		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		var probe := {
+			"placement_id": "__active_front_support_probe:%s:%d" % [roster_hero_id, spawn_order],
+			"encounter_id": base_encounter_id,
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"difficulty": "pressure",
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+		}
+		probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+			probe,
+			roster_hero_id,
+			faction_id,
+			session,
+			occupied_commander_ids,
+			roster
+		)
+		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+		var plan := EnemyAdventureRulesScript.ai_active_front_support_target_selection_plan(
+			session,
+			config,
+			probe
+		)
+		if plan.is_empty():
+			continue
+		var candidate := _spawn_point_candidate_from_plan(
+			point,
+			plan,
+			roster_hero_id,
+			"active_front_support",
+			spawn_order + int(commander_value.get("rotation_order", 0))
+		)
+		candidate["spawn_plan_current_strength"] = EnemyAdventureRulesScript.raid_strength(probe)
+		candidate["spawn_plan_target_strength"] = EnemyAdventureRulesScript.desired_raid_strength(probe)
+		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 75000
+		candidate = _apply_spawn_plan_commander_fit(session, faction_id, candidate)
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
@@ -4017,6 +4147,15 @@ static func _spawn_point_candidate_from_plan(
 	candidate["spawn_plan_public_reason"] = String(plan.get("target_public_reason", ""))
 	candidate["spawn_plan_public_importance"] = String(plan.get("target_public_importance", "high"))
 	candidate["spawn_plan_debug_reason"] = String(plan.get("target_debug_reason", ""))
+	for support_key in [
+		"supporting_front_placement_id",
+		"supporting_front_target_kind",
+		"supporting_front_target_id",
+		"support_strength_gap",
+		"support_committed_strength",
+	]:
+		if plan.has(support_key):
+			candidate[support_key] = plan.get(support_key)
 	return candidate
 
 static func _emergency_defense_spawn_candidate_for_point(

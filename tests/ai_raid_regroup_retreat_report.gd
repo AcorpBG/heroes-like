@@ -20,6 +20,9 @@ func _run() -> void:
 	var resource_support_case := _resource_front_risk_requests_support()
 	if resource_support_case.is_empty():
 		return
+	var resource_support_launch_case := _resource_front_support_launches_below_pressure()
+	if resource_support_launch_case.is_empty():
+		return
 	var resource_consolidation_case := _resource_front_support_consolidates_into_capture_ready_host()
 	if resource_consolidation_case.is_empty():
 		return
@@ -55,6 +58,7 @@ func _run() -> void:
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
+		"resource_support_launch_case": resource_support_launch_case,
 		"resource_consolidation_case": resource_consolidation_case,
 		"neutral_town_grouping_case": neutral_town_grouping_case,
 		"unreachable_route_case": unreachable_route_case,
@@ -333,6 +337,71 @@ func _resource_front_risk_requests_support() -> Dictionary:
 		"support_target_id": String(support_plan.get("target_placement_id", "")),
 		"support_reason_codes": support_reason_codes,
 		"support_strength_gap": int(support_plan.get("support_strength_gap", 0)),
+	}
+
+func _resource_front_support_launches_below_pressure() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_resource_controller(session, "river_free_company", "player")
+	var weak_raid := _fragile_resource_claim_raid(session)
+	var risk_report := EnemyAdventureRules.resource_arrival_ready_report(session, weak_raid, MIRECLAW, config)
+	if bool(risk_report.get("ready", true)):
+		_fail("Support-launch fixture leader should need reinforcement first: %s" % JSON.stringify(risk_report))
+		return {}
+	var leader := EnemyAdventureRules.redirect_resource_objective_for_risk(session, config, weak_raid, MIRECLAW, risk_report)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(leader)
+	session.overworld["encounters"] = encounters
+	state = _enemy_state(session)
+	var can_launch := EnemyTurnRules._can_launch_raid(session, config, state, MIRECLAW)
+	if not can_launch:
+		_fail("Active-front support did not satisfy launch readiness below generic pressure.")
+		return {}
+	var spawn_point := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if String(spawn_point.get("spawn_plan_source", "")) != "active_front_support":
+		_fail("Best below-pressure spawn point did not select active-front support: %s" % JSON.stringify(spawn_point))
+		return {}
+	var spawn_result := EnemyTurnRules._spawn_raid(session, config, state)
+	if spawn_result.is_empty():
+		_fail("Active-front support launch returned an empty spawn result.")
+		return {}
+	if String(spawn_result.get("spawn_plan_source", "")) != "active_front_support":
+		_fail("Spawn result did not preserve active-front support source: %s" % JSON.stringify(spawn_result))
+		return {}
+	var support_id := String(spawn_result.get("placement_id", ""))
+	var support := _encounter(session, support_id)
+	if support.is_empty():
+		_fail("Spawned active-front support host is missing: %s" % JSON.stringify(spawn_result))
+		return {}
+	if String(support.get("target_kind", "")) != "resource" or String(support.get("target_placement_id", "")) != "river_free_company":
+		_fail("Spawned support did not reinforce the resource front: %s" % JSON.stringify(support))
+		return {}
+	if String(support.get("supporting_front_placement_id", "")) != "resource_risk_vaska":
+		_fail("Spawned support did not remember the supported front: %s" % JSON.stringify(support))
+		return {}
+	var support_reason_codes := _string_array(support.get("target_reason_codes", []))
+	if "active_front_support" not in support_reason_codes or "site_contested" not in support_reason_codes:
+		_fail("Spawned support missed support/resource reason codes: %s" % JSON.stringify(support))
+		return {}
+	var event_types := _event_types(spawn_result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Active-front support launch did not emit target assignment: %s" % JSON.stringify(spawn_result))
+		return {}
+	return {
+		"case_id": "resource_front_support_launches_below_generic_pressure",
+		"can_launch_below_pressure": can_launch,
+		"spawn_plan_source": String(spawn_point.get("spawn_plan_source", "")),
+		"support_id": support_id,
+		"support_target_kind": String(support.get("target_kind", "")),
+		"support_target_id": String(support.get("target_placement_id", "")),
+		"supporting_front_placement_id": String(support.get("supporting_front_placement_id", "")),
+		"support_reason_codes": support_reason_codes,
+		"event_types": event_types,
+		"state_pressure_after_launch": int(state.get("pressure", 0)),
 	}
 
 func _resource_front_support_consolidates_into_capture_ready_host() -> Dictionary:
