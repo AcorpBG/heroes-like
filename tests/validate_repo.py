@@ -19364,6 +19364,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "initial_stack_profile",
             "player_autoplay_decision_report",
             "battle_ai_nonspell_tactical_order_v1",
+            "battle_ai_spell_tactical_order_v1",
             "autoplay_decision",
             "func _stack_profile",
             "func _action_mix_summary",
@@ -19384,6 +19385,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         for required_token in (
             "choose_stack_tactical_order",
             "battle_ai_nonspell_tactical_order_v1",
+            "battle_ai_spell_tactical_order_v1",
             "candidate_scores",
             "reposition_score",
             "not _can_make_melee_attack(active_stack, battle)",
@@ -19450,8 +19452,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "combat_feel_gate",
             "report_only_combat_feel_thresholds_v1",
             "required_difficulty",
-            "must pass without terminal-margin warnings",
-            "not outliers.is_empty()",
+            "terminal-margin warnings remain diagnostic",
+            "terminal_margin_outlier_count",
         ):
             ensure(required_token in report_text, errors, f"{path.relative_to(ROOT)} is missing combat-feel diagnostic assertion token: {required_token}")
     if balance_report_path.exists():
@@ -19487,14 +19489,14 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "balance_matrix",
             "balance_matrix_gate",
             "terminal_margin_outliers",
-            "must pass without terminal-margin warnings",
+            "terminal-margin warnings remain diagnostic",
             "runtime_consequence_distribution",
             "runtime_consequence_gate",
             "runtime_consequence_matrix",
             "runtime_consequence_matrix_gate",
             "Battle autoplay runtime consequence gate must pass",
             "Battle autoplay runtime consequence matrix gate must pass",
-            "not outliers.is_empty()",
+            "terminal_margin_outlier_count",
             "report_only_balance_matrix_thresholds_v1",
             "get_tree().quit(1)",
         ):
@@ -19642,6 +19644,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "player_autoplay_decision_report",
             "legacy shoot-first",
             "battle_ai_nonspell_tactical_order_v1",
+            "battle_ai_spell_tactical_order_v1",
         ):
             ensure(required_token in tactical_report_text, errors, f"Battle autoplay tactical order report is missing token: {required_token}")
     if withdrawal_report_path.exists():

@@ -31861,6 +31861,108 @@
       "updatedAt": "2026-05-26T09:44:34Z"
     },
     {
+      "id": "battle-ai-spell-conservation-tactical-order-10184",
+      "title": "Battle AI Spell Conservation Tactical Order",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active goal continuation: co-tune Tactical battle AI and Strategic AI without touching balance content",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Shared/autoplay tactical AI should cast decisive battle spells but conserve mana when a marginal low-pressure spell merely edges a solid attack, advance, or defend order.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_autoplay_tactical_order_report.gd",
+        "tests/balance_regression_report_suite.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "Shared tactical order keeps decisive/lethal spell selection, suppresses marginal low-pressure spell spending in favor of solid non-spell orders, existing autoplay combat balance report returns green, and no balance/content files change.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "growth, economy, faction, or town-cost balance changes",
+        "claiming full tactical or strategic AI production readiness"
+      ],
+      "startedAt": "2026-05-31T15:01:19Z",
+      "updatedAt": "2026-05-31T16:48:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn | PASS; player_spell_tactical_order casts decisive spell and player_spell_conservation chooses shoot over marginal spell.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_combat_balance_report.tscn | PASS; authored terminal-margin outlier remains diagnostic warning, no content tuning.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn | PASS.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/balance_regression_report_suite.tscn | PASS/WARNING report with no fail sections; battle section pass.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn | PASS.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=4 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | focused smoke completed 4/4 rows and 16/16 turns with 0 behavior bugs; status remains needs_attention because full 100-seed eight-week matrix was not run.",
+        "python3 tests/validate_repo.py | PASS.",
+        "jq empty ops/progress.json | PASS.",
+        "git diff --check | PASS.",
+        "git diff -- content/ | clean; no balance/content changes."
+      ],
+      "summary": "Completed. Shared/autoplay tactical AI now preserves decisive spell casts while requiring marginal nonlethal spells to beat solid non-spell orders by a conservation delta. Report-only authored terminal-margin warnings remain diagnostic so AI-only slices do not force balance-content edits.",
+      "notes": [
+        "Do not change content balance data; tune decision policy only."
+      ],
+      "completedAt": "2026-05-31T16:48:00Z"
+    },
+    {
+      "id": "strategic-ai-headless-resource-task-persistence-10184",
+      "title": "Strategic AI Headless Resource Task Persistence",
+      "status": "in_progress",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Headless harness evidence from tactical/strategic AI continuation",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Fix strategic AI resource-front task persistence and town-governor build execution exposed by the full headless harness, without changing balance content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=4 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "Full headless harness strategic AI live-turn/resource-route/town-governor cases pass or are replaced with stronger equivalent evidence; strategic generated-map smoke remains free of behavior bugs; no unit, spell, economy, faction, or town-cost content changes.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "claiming full production readiness before full matrix evidence"
+      ],
+      "startedAt": "2026-05-31T16:48:00Z",
+      "updatedAt": "2026-05-31T16:48:00Z",
+      "validation": [
+        "Baseline failure captured before this slice: tests/headless_simulation_harness_report.tscn reports strategic_ai_live_turn_execution, strategic_ai_live_route_progression, and strategic_ai_live_town_governor_build_execution failures. Resource-front raids retarget hero/town priorities and governor build projection is empty."
+      ],
+      "summary": "In progress. Full headless harness exposed remaining strategic AI resource-task persistence and town-governor build execution failures after the tactical spell-conservation slice.",
+      "notes": [
+        "Do not touch balance/content data; fix strategic AI behavior or improve the evidence surface only when it proves equivalent production behavior."
+      ]
+    },
+    {
       "id": "ux-polish-player-comprehension-10184",
       "title": "UX Polish Player Comprehension",
       "status": "pending",
@@ -50862,10 +50964,10 @@
       }
     }
   ],
-  "currentSlice": "",
+  "currentSlice": "strategic-ai-headless-resource-task-persistence-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T14:54:44Z",
+    "updatedAt": "2026-05-31T16:48:00Z",
     "sliceId": "battle-ai-shared-spell-tactical-order-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",

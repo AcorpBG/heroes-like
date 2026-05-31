@@ -51,6 +51,9 @@ func _run() -> void:
 	var spell_tactical_order_case := _validate_player_spell_tactical_order()
 	if not bool(spell_tactical_order_case.get("ok", false)):
 		return
+	var spell_conservation_case := _validate_player_spell_conservation()
+	if not bool(spell_conservation_case.get("ok", false)):
+		return
 
 	var payload := {
 		"ok": true,
@@ -65,6 +68,7 @@ func _run() -> void:
 		"battle_rules_commander_payload_fallback": battle_rules_payload_fallback_case,
 		"battle_ai_commander_payload_fallback": battle_ai_payload_fallback_case,
 		"player_spell_tactical_order": spell_tactical_order_case,
+		"player_spell_conservation": spell_conservation_case,
 		"selected_target_id": String(session.battle.get("selected_target_id", "")),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
@@ -417,6 +421,29 @@ func _validate_player_spell_tactical_order() -> Dictionary:
 		"target_health_after": int(after_target.get("total_health", 0)),
 	}
 
+func _validate_player_spell_conservation() -> Dictionary:
+	var session := _player_spell_conservation_session()
+	var active_stack := BattleRulesScript.get_active_stack(session.battle)
+	var commander: Dictionary = session.battle.get("player_commander_state", {})
+	var tactical_order := BattleAiRules.choose_stack_tactical_order(session.battle, active_stack, "enemy", commander)
+	var candidate_scores: Dictionary = tactical_order.get("candidate_scores", {}) if tactical_order.get("candidate_scores", {}) is Dictionary else {}
+	if not candidate_scores.has("cast_spell"):
+		_fail("Spell conservation fixture should keep spell score evidence even when conserving mana: %s" % JSON.stringify(tactical_order))
+		return {}
+	if String(tactical_order.get("action", "")) == "cast_spell":
+		_fail("Low-pressure spell conservation fixture should shoot instead of spending mana on a marginal buff: %s" % JSON.stringify(tactical_order))
+		return {}
+	if String(tactical_order.get("action", "")) != "shoot":
+		_fail("Low-pressure spell conservation fixture should preserve the strong ranged order: %s" % JSON.stringify(tactical_order))
+		return {}
+	return {
+		"ok": true,
+		"action": String(tactical_order.get("action", "")),
+		"scoring_policy": String(tactical_order.get("scoring_policy", "")),
+		"shoot_score": float(candidate_scores.get("shoot", 0.0)),
+		"cast_spell_score": float(candidate_scores.get("cast_spell", 0.0)),
+	}
+
 func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
 	var session := SessionStateStoreScript.SessionData.new(
 		"battle-autoplay-tactical-order-report",
@@ -488,6 +515,50 @@ func _player_spell_tactical_order_session() -> SessionStateStoreScript.SessionDa
 			"command": {"attack": 0, "defense": 0, "power": 3, "knowledge": 8},
 			"spellbook": {
 				"known_spell_ids": ["spell_cinder_burst"],
+				"mana": {"current": 20, "max": 20}
+			}
+		},
+		"enemy_hero": {},
+		"field_objectives": [],
+	}
+	return session
+
+func _player_spell_conservation_session() -> SessionStateStoreScript.SessionData:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-spell-conservation-tactical-order-report",
+		"battle-ai-spell-conservation-tactical-order-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = {
+		"round": 1,
+		"max_rounds": 99,
+		"distance": 2,
+		"terrain": "plains",
+		"battlefield_tags": ["open_lane"],
+		"combat_seed": 445566,
+		"stacks": [
+			_stack("player_marksman", "player", "player_marksman", true, 10, 10, 100, 8, 9, 6, 4, 8, 3, 3),
+			_stack("enemy_low_pressure", "enemy", "enemy_low_pressure", false, 4, 8, 32, 1, 1, 1, 1, 7, 8, 3),
+		],
+		"turn_order": ["player_marksman"],
+		"turn_index": 0,
+		"active_stack_id": "player_marksman",
+		"selected_target_id": "enemy_low_pressure",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"player_commander_state": {
+			"hero_id": "player_spell_conservation_commander",
+			"name": "Player Spell Conservation Commander",
+			"archetype": "marshal",
+			"command_path": "might",
+			"command": {"attack": 0, "defense": 0, "power": 1, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_stone_veil"],
 				"mana": {"current": 20, "max": 20}
 			}
 		},
