@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T11:05:00Z",
+  "updatedAt": "2026-05-31T11:15:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,48 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-global-commander-task-assignment-10184",
+      "title": "Strategic AI Global Commander Task Assignment",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T11:10:00Z",
+      "updatedAt": "2026-05-31T11:15:00Z",
+      "completedAt": "2026-05-31T11:15:00Z",
+      "source": "active strategic AI production-readiness goal; live planner quality improvement, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-global-commander-task-assignment-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make the pre-deployment strategic planner allocate planned tasks from the best commander-target pairings across the whole available roster, so specialized heroes do not lose their best jobs to earlier roster entries.",
+      "implementationTargets": [
+        "Build candidate task proposals for all deployable commanders and known targets using the existing commander fit, route, reservation, and target validation rules.",
+        "Rank proposals globally by fitted priority, commander fit, route distance, actor id, and target id.",
+        "Select unique actors and exclusive target reservations from the global proposal list, then adopt commander role state and emit existing planned-task events."
+      ],
+      "completionCriteria": "A strategic-planner fixture proves a later roster commander with stronger fit receives the contested specialized target while the earlier commander is assigned an alternate valid task; existing strategic AI reports and repo gates stay green.",
+      "nonGoals": [
+        "No broad AI audit gate.",
+        "No battle/unit/economy rebalance.",
+        "No full strategic AI production-ready claim."
+      ],
+      "baselineChecks": [],
+      "validation": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. The strategic task planner now ranks commander-target proposals globally, assigns unique actors and target reservations from the best fitted pairings, and preserves existing role adoption/event behavior."
+    },
     {
       "id": "strategic-ai-post-recruit-surplus-mobilization-10184",
       "title": "Strategic AI Post-Recruit Surplus Mobilization",
@@ -48860,28 +48902,48 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T11:05:00Z",
-    "sliceId": "strategic-ai-post-recruit-surplus-mobilization-10184",
+    "updatedAt": "2026-05-31T11:15:00Z",
+    "sliceId": "strategic-ai-global-commander-task-assignment-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Enemy town recruitment now re-evaluates field needs after buying units and can mobilize safe surplus garrison into the selected active raid, planned task, emergency defender, or rebuild destination in the same turn.",
-        "Critical garrison and defense-target checks remain authoritative, so reserve transfers only occur from surplus above the desired town defense strength.",
-        "Same-turn reserve transfer events reuse existing destination event contracts with surplus_garrison_mobilization reason codes.",
-        "If recruitment has just prepared an emergency defender, post-recruit surplus mobilization will not pivot into an unrelated planned task in the same pass unless emergency remains the selected field need."
+        "The strategic task planner now builds candidate task proposals for every deployable commander against the known target set using existing commander-fit, route, reservation, and target-snapshot rules.",
+        "Planned tasks are selected from a global proposal ranking instead of greedy roster order, with one task per actor and exclusive target reservations preserved.",
+        "Selected global assignments still adopt live commander role state, persist the normal task schema, and emit existing ai_commander_task_planned events.",
+        "The legacy per-actor task helper remains available for focused scoring and compatibility fixtures, but live planning uses global allocation."
       ],
       "focused_case": {
+        "case_id": "global_commander_task_assignment_preserves_specialist_target",
+        "greedy_first_actor": "hero_vaska",
+        "greedy_first_target_key": "artifact:trailsinger_cache",
+        "specialist_actor": "hero_sable",
+        "specialist_target_key": "artifact:trailsinger_cache",
+        "specialist_fit_bonus": 120,
+        "alternate_actor": "hero_vaska",
+        "alternate_target_key": "hero:hero_lyra",
+        "alternate_fit_bonus": 110
+      },
+      "live_planner_case": {
+        "case_id": "river_pass_predeployment_planner_seeds_and_activates_distinct_tasks",
+        "planned_count": 10,
+        "spawned_commander_id": "hero_vaska",
+        "spawned_target_key": "town:riverwatch_hold",
+        "save_version": 9
+      },
+      "recruitment_followup_case": {
         "case_id": "recruitment_and_surplus_garrison_prepare_same_commander",
-        "actor_id": "hero_sable",
+        "actor_id": "hero_mireclaw_brakka_mudkeel",
         "before_strength": 0,
         "after_strength": 212,
         "before_garrison_strength": 3060,
@@ -48894,18 +48956,6 @@
           "planned_task_preparation",
           "strategic_task_planner",
           "surplus_garrison_mobilization"
-        ]
-      },
-      "emergency_priority_case": {
-        "case_id": "below_threshold_emergency_resource_defense_recruits_commander_before_launch",
-        "base_resource_strength": 149,
-        "strengthened_raid_strength": 191,
-        "spawned_commander_id": "hero_vaska",
-        "target_id": "river_free_company",
-        "recruits_left": 2,
-        "prep_reason_codes": [
-          "emergency_defense_preparation",
-          "front_defense"
         ]
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
