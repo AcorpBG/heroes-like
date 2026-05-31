@@ -2762,7 +2762,7 @@ static func _redirect_raid_away_from_nearby_player_threat(
 		int(best_threat.get("hero_strength", 0)),
 		host_strength,
 	]
-	raid = _refresh_target(session, raid)
+	raid = _refresh_target(session, raid, faction_id)
 	_ai_hero_task_record_live_assignment(session, config, raid, _current_target_snapshot(raid), {})
 	return raid
 
@@ -2907,7 +2907,7 @@ static func redirect_resource_objective_for_risk(
 		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
 		raid["target_reason_codes"] = ["resource_risk_regroup", "regroup_understrength", "army_consolidation", "site_contested"]
 		raid["resource_regroup_started_day"] = int(session.day)
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in ["resource_risk_staging", "awaiting_support", "site_contested"]:
 		if code not in reason_codes:
@@ -3116,7 +3116,7 @@ static func redirect_town_assault_for_risk(
 			if code not in raid["target_reason_codes"]:
 				raid["target_reason_codes"].append(code)
 		raid["assault_regroup_started_day"] = int(session.day)
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in ["assault_risk_staging", "awaiting_support", "town_siege"] + preserved_town_codes:
 		if code not in reason_codes:
@@ -3170,7 +3170,7 @@ static func redirect_hero_intercept_for_risk(
 		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
 		raid["target_reason_codes"] = ["hero_hunt_risk_regroup", "regroup_understrength", "army_consolidation", "hero_hunt"]
 		raid["hero_hunt_regroup_started_day"] = int(session.day)
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in ["hero_hunt_risk_shadow", "awaiting_support", "hero_hunt"]:
 		if code not in reason_codes:
@@ -3269,7 +3269,7 @@ static func redirect_encounter_objective_for_risk(
 		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
 		raid["target_reason_codes"] = ["encounter_risk_regroup", "regroup_understrength", "army_consolidation", "objective_front"]
 		raid["encounter_regroup_started_day"] = int(session.day)
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in ["encounter_risk_staging", "awaiting_support", "objective_front"]:
 		if code not in reason_codes:
@@ -3413,7 +3413,7 @@ static func _redirect_claim_to_guard_encounter(
 	redirected["target_reason_codes"] = reason_codes
 	redirected["arrived"] = false
 	redirected["guard_claim_redirect_day"] = int(session.day)
-	redirected = _refresh_target(session, redirected)
+	redirected = _refresh_target(session, redirected, faction_id)
 	var retask_event := ai_target_assignment_event(session, config, redirected, previous_target)
 	if retask_event.is_empty():
 		retask_event = ai_target_assignment_event(session, config, redirected, {})
@@ -3449,7 +3449,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	var current_id := String(raid.get("target_placement_id", ""))
 	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if current_kind == "town" and current_id == town_id and "town_defense" in current_codes:
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	raid["previous_target_kind"] = current_kind
 	raid["previous_target_placement_id"] = current_id
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
@@ -3463,7 +3463,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	raid["arrived"] = false
 	raid["town_defense_started_day"] = int(session.day)
 	raid["town_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "town", town_id)
-	return _refresh_target(session, raid)
+	return _refresh_target(session, raid, faction_id)
 
 static func _best_threatened_defense_town(
 	session: SessionStateStoreScript.SessionData,
@@ -3491,7 +3491,7 @@ static func _best_threatened_defense_town(
 		if String(front_state.get("mode", "")) != "stabilizing":
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
-		var distance := _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")))
+		var distance := _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id)
 		if distance >= 9999:
 			continue
 		var defense_need := _town_defense_commitment_need(town, front_state)
@@ -3536,7 +3536,7 @@ static func _redirect_raid_to_threatened_resource_defense(
 	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
 		return raid
 	if String(raid.get("target_kind", "")) == "town" and "town_defense" in active_reason_codes:
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	var defense_node := _best_threatened_resource_defense(session, config, raid, faction_id)
 	if defense_node.is_empty():
 		return raid
@@ -3547,7 +3547,7 @@ static func _redirect_raid_to_threatened_resource_defense(
 	var current_id := String(raid.get("target_placement_id", ""))
 	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if current_kind == "resource" and current_id == resource_id and _resource_defense_reason_active(current_codes):
-		return _refresh_target(session, raid)
+		return _refresh_target(session, raid, faction_id)
 	var site := ContentService.get_resource_site(String(defense_node.get("site_id", "")))
 	raid["previous_target_kind"] = current_kind
 	raid["previous_target_placement_id"] = current_id
@@ -3562,7 +3562,7 @@ static func _redirect_raid_to_threatened_resource_defense(
 	raid["arrived"] = false
 	raid["site_defense_started_day"] = int(session.day)
 	raid["site_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "resource", resource_id)
-	return _refresh_target(session, raid)
+	return _refresh_target(session, raid, faction_id)
 
 static func _best_threatened_resource_defense(
 	session: SessionStateStoreScript.SessionData,
@@ -3588,7 +3588,7 @@ static func _best_threatened_resource_defense(
 		var front_state := _resource_defense_front_state(session, node, site, faction_id, known_threat)
 		if not bool(front_state.get("active", false)):
 			continue
-		var distance := _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")))
+		var distance := _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")), faction_id)
 		if distance >= 9999:
 			continue
 		var defense_need := _resource_defense_commitment_need(site, front_state)
@@ -3771,7 +3771,7 @@ static func _nearest_regroup_town(
 		if _town_faction_id(town) != faction_id:
 			continue
 		var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var distance := _path_distance(session, current, [tile], String(raid.get("placement_id", "")))
+		var distance := _path_distance(session, current, [tile], String(raid.get("placement_id", "")), faction_id)
 		if distance >= 9999:
 			continue
 		if distance < fallback_distance or (distance == fallback_distance and String(town.get("placement_id", "")) < String(fallback.get("placement_id", ""))):
@@ -11881,10 +11881,10 @@ static func _turn_transcript_active_raid_snapshots(
 		if not (commander_state is Dictionary):
 			commander_state = {}
 		var current := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
-		var goal_tiles := _goal_tiles_from_raid(session, encounter)
+		var goal_tiles := _goal_tiles_from_raid(session, encounter, faction_id)
 		var goal_distance := int(encounter.get("goal_distance", 9999))
 		if not goal_tiles.is_empty():
-			goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")))
+			goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
 			if goal_distance == 9999 and current in goal_tiles:
 				goal_distance = 0
 		var target := _current_target_snapshot(encounter)
@@ -14161,7 +14161,7 @@ static func _resume_guarded_claim_after_guard_clear(
 	resumed.erase("guarded_claim_target_label")
 	resumed["arrived"] = false
 	resumed["guarded_claim_resumed_day"] = int(session.day)
-	resumed = _refresh_target(session, resumed)
+	resumed = _refresh_target(session, resumed, faction_id)
 	var retask_event := ai_target_assignment_event(session, config, resumed, previous_target)
 	if retask_event.is_empty():
 		retask_event = ai_target_assignment_event(session, config, resumed, {})
@@ -14263,7 +14263,7 @@ static func _regroup_raid_at_town(
 	var ready_to_resume := not raid_regroup_needed(raid)
 	if ready_to_resume:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
-		var resume_result := _resume_previous_target_after_regroup(session, config, raid)
+		var resume_result := _resume_previous_target_after_regroup(session, config, raid, faction_id)
 		raid = resume_result.get("raid", raid)
 		resumed_target_event = resume_result.get("ai_event", {})
 	elif transferred_count <= 0:
@@ -14313,9 +14313,13 @@ static func _regroup_raid_at_town(
 static func _resume_previous_target_after_regroup(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	faction_id: String = ""
 ) -> Dictionary:
 	var resumed := raid.duplicate(true)
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
 	var previous_kind := String(resumed.get("previous_target_kind", ""))
 	var previous_id := String(resumed.get("previous_target_placement_id", ""))
 	if previous_kind not in ["resource", "town", "artifact", "encounter", "hero"] or previous_id == "":
@@ -14330,11 +14334,11 @@ static func _resume_previous_target_after_regroup(
 	resumed["target_debug_reason"] = _previous_target_debug_reason_for_resume(resumed, previous_kind)
 	resumed["arrived"] = false
 	resumed["regroup_resumed_target_day"] = int(session.day)
-	resumed = _refresh_target(session, resumed)
+	resumed = _refresh_target(session, resumed, resolved_faction_id)
 	if not _raid_target_valid(session, resumed):
 		return {"raid": _clear_regroup_target(resumed), "ai_event": {}}
 	var origin := Vector2i(int(resumed.get("x", 0)), int(resumed.get("y", 0)))
-	var goal_tiles := _goal_tiles_from_raid(session, resumed)
+	var goal_tiles := _goal_tiles_from_raid(session, resumed, resolved_faction_id)
 	var goal_distance := int(resumed.get("goal_distance", 9999))
 	if goal_distance >= 9999 and not (origin in goal_tiles):
 		return {"raid": _clear_regroup_target(resumed), "ai_event": {}}
@@ -14671,13 +14675,14 @@ static func _path_distance(
 static func raid_reinforcement_route_distance(
 	session: SessionStateStoreScript.SessionData,
 	support_town: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	observer_faction_id: String = ""
 ) -> int:
 	if session == null or support_town.is_empty() or raid.is_empty():
 		return 9999
 	var start := Vector2i(int(support_town.get("x", 0)), int(support_town.get("y", 0)))
 	var goal := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	return _path_distance(session, start, [goal], String(raid.get("placement_id", "")))
+	return _path_distance(session, start, [goal], String(raid.get("placement_id", "")), observer_faction_id)
 
 static func _tile_lookup(tiles: Array) -> Dictionary:
 	var lookup = {}

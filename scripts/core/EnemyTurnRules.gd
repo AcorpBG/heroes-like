@@ -1747,7 +1747,8 @@ static func _best_raid_reinforcement_target(
 			supply_distance = EnemyAdventureRulesScript.raid_reinforcement_route_distance(
 				session,
 				support_town,
-				encounter
+				encounter,
+				faction_id
 			)
 			if supply_distance >= 9999:
 				continue
