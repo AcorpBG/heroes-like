@@ -667,6 +667,9 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 	var executor_case := _run_adventure_executor_case()
 	if not bool(executor_case.get("ok", false)):
 		return executor_case
+	var minimal_executor_case := _run_adventure_minimal_template_executor_case()
+	if not bool(minimal_executor_case.get("ok", false)):
+		return minimal_executor_case
 	var scouting_executor_case := _run_adventure_scouting_executor_case()
 	if not bool(scouting_executor_case.get("ok", false)):
 		return scouting_executor_case
@@ -679,6 +682,7 @@ func _run_adventure_ai_spell_case() -> Dictionary:
 		"selected_recommendation": String(selected.get("recommendation", "")),
 		"runtime_hook_counts": report.get("runtime_hook_counts", {}),
 		"executor": executor_case,
+		"minimal_template_executor": minimal_executor_case,
 		"scouting_executor": scouting_executor_case,
 	}
 
@@ -832,6 +836,92 @@ func _run_adventure_executor_case() -> Dictionary:
 		"final_x": int(after_raid.get("x", 0)),
 		"final_y": int(after_raid.get("y", 0)),
 		"mana_after": int(mana.get("current", 0)),
+		"event_types": event_types,
+	}
+
+func _run_adventure_minimal_template_executor_case() -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		"river-pass",
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	OverworldRules.refresh_fog_of_war(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	var faction_id := "faction_mireclaw"
+	var config := _enemy_config(session, faction_id)
+	var minimal_commander := {
+		"roster_hero_id": "hero_tarn",
+		"faction_id": faction_id,
+	}
+	var movement_report := EnemyAdventureRules.adventure_spell_valuation_report(
+		minimal_commander,
+		{"current": 2, "max": 10},
+		{
+			"target_kind": "resource",
+			"target_label": "Midway Shrine",
+			"objective_steps_remaining": 5,
+			"route_pressure": true,
+		}
+	)
+	if not bool(movement_report.get("ok", false)):
+		return {"ok": false, "error": "Minimal adventure spell valuation report failed: %s" % movement_report}
+	var selected: Dictionary = movement_report.get("selected", {}) if movement_report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("spell_id", "")) != "spell_trailglyph":
+		return {"ok": false, "error": "Minimal Tarn should inherit Trailglyph from template, got %s report=%s" % [selected, movement_report]}
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "adventure_spell_minimal_template_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 4,
+			"y": 0,
+			"difficulty": "pressure",
+			"combat_seed": 44006,
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+			"target_kind": "resource",
+			"target_placement_id": "midway_shrine",
+			"target_label": "Midway Shrine",
+			"target_x": 4,
+			"target_y": 2,
+			"enemy_army": {
+				"id": "adventure_spell_minimal_template_raid",
+				"name": "Minimal Template Spell Raid",
+				"stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 12}],
+			},
+			"enemy_commander_state": minimal_commander,
+		},
+		session
+	)
+	session.overworld["encounters"] = [raid]
+	var result := EnemyAdventureRules.advance_raids(session, config, faction_id, _enemy_state(session, faction_id))
+	var after_raid := _encounter(session, "adventure_spell_minimal_template_raid")
+	if after_raid.is_empty():
+		return {"ok": false, "error": "Minimal adventure spell executor raid disappeared."}
+	if int(after_raid.get("x", 0)) != 4 or int(after_raid.get("y", 0)) != 2:
+		return {"ok": false, "error": "Minimal adventure spell executor did not move to target: %s" % after_raid}
+	if String(after_raid.get("last_adventure_spell_id", "")) != "spell_trailglyph":
+		return {"ok": false, "error": "Minimal adventure spell executor did not cast inherited Trailglyph: %s" % after_raid}
+	var commander_state: Dictionary = after_raid.get("enemy_commander_state", {}) if after_raid.get("enemy_commander_state", {}) is Dictionary else {}
+	var spellbook: Dictionary = commander_state.get("spellbook", {}) if commander_state.get("spellbook", {}) is Dictionary else {}
+	var known_spell_ids: Array = spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
+	if "spell_trailglyph" not in known_spell_ids:
+		return {"ok": false, "error": "Minimal adventure spell executor did not persist inherited spellbook after cast: %s" % commander_state}
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	if int(mana.get("current", 0)) >= int(mana.get("max", 0)):
+		return {"ok": false, "error": "Minimal adventure spell executor did not spend template-derived mana: %s" % mana}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_adventure_spell_cast" not in event_types:
+		return {"ok": false, "error": "Minimal adventure spell executor did not emit ai_adventure_spell_cast: %s" % result}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"spell_id": String(after_raid.get("last_adventure_spell_id", "")),
+		"movement_steps": int(after_raid.get("last_adventure_spell_movement_steps", 0)),
+		"mana_after": int(mana.get("current", 0)),
+		"known_spell_count": known_spell_ids.size(),
 		"event_types": event_types,
 	}
 

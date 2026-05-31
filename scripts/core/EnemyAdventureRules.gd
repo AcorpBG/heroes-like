@@ -340,7 +340,7 @@ static func adventure_spell_valuation_report(
 	movement_state: Dictionary,
 	strategic_context: Dictionary = {}
 ) -> Dictionary:
-	var hero := SpellRulesScript.ensure_hero_spellbook(hero_state.duplicate(true))
+	var hero := _commander_adventure_spell_state(hero_state)
 	var movement := movement_state.duplicate(true)
 	var candidates := []
 	var effect_type_counts := {}
@@ -380,6 +380,32 @@ static func adventure_spell_valuation_report(
 		"candidates": candidates,
 		"runtime_policy": "valuation_with_enemy_movement_and_scouting_spell_executors",
 	}
+
+static func _commander_adventure_spell_state(commander_state: Dictionary) -> Dictionary:
+	if commander_state.is_empty():
+		return SpellRulesScript.ensure_hero_spellbook({})
+	var resolved := commander_state.duplicate(true)
+	var hero_template := _commander_template_for_state(resolved)
+	for key in ["id", "name", "faction_id", "archetype", "command_path"]:
+		if String(resolved.get(key, "")).strip_edges() == "" and String(hero_template.get(key, "")).strip_edges() != "":
+			resolved[key] = String(hero_template.get(key, ""))
+	if not resolved.has("battle_traits"):
+		var template_traits := _normalize_string_array(hero_template.get("battle_traits", []))
+		if not template_traits.is_empty():
+			resolved["battle_traits"] = template_traits
+	else:
+		resolved["battle_traits"] = _normalize_string_array(resolved.get("battle_traits", []))
+	var command: Dictionary = resolved.get("command", {}) if resolved.get("command", {}) is Dictionary else {}
+	var template_command: Dictionary = hero_template.get("command", {}) if hero_template.get("command", {}) is Dictionary else {}
+	if command.is_empty() and not template_command.is_empty():
+		command = template_command.duplicate(true)
+	elif not template_command.is_empty():
+		for key in ["attack", "defense", "power", "knowledge", "initiative"]:
+			if not command.has(key):
+				command[key] = int(template_command.get(key, 0))
+	if not command.is_empty():
+		resolved["command"] = command
+	return SpellRulesScript.ensure_hero_spellbook(resolved, hero_template)
 
 static func artifact_reward_valuation_report(
 	session: SessionStateStoreScript.SessionData,
@@ -1746,6 +1772,7 @@ static func _maybe_cast_raid_adventure_movement_spell(
 	var commander_state = raid.get("enemy_commander_state", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
+	var spell_commander_state := _commander_adventure_spell_state(commander_state)
 	var movement := {
 		"current": RAID_BASE_MOVEMENT_STEPS,
 		"max": clampi(goal_distance, RAID_BASE_MOVEMENT_STEPS + 1, RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS),
@@ -1756,12 +1783,12 @@ static func _maybe_cast_raid_adventure_movement_spell(
 		"objective_steps_remaining": goal_distance,
 		"route_pressure": true,
 	}
-	var report := adventure_spell_valuation_report(commander_state, movement, context)
+	var report := adventure_spell_valuation_report(spell_commander_state, movement, context)
 	var selected := _selected_adventure_spell_candidate(report, "restore_movement")
 	if selected.is_empty() or String(selected.get("recommendation", "")) != "cast":
 		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
 	var spell_id := String(selected.get("spell_id", ""))
-	var cast_result := SpellRulesScript.cast_overworld_spell(commander_state, movement, spell_id)
+	var cast_result := SpellRulesScript.cast_overworld_spell(spell_commander_state, movement, spell_id)
 	if not bool(cast_result.get("ok", false)):
 		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
 	var updated_raid := raid.duplicate(true)
@@ -1813,9 +1840,10 @@ static func _maybe_cast_raid_adventure_scouting_spell(
 	var commander_state = raid.get("enemy_commander_state", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return {"encounter": raid, "events": []}
+	var spell_commander_state := _commander_adventure_spell_state(commander_state)
 	if int(raid.get("last_adventure_scout_spell_day", -9999)) == int(session.day):
 		return {"encounter": raid, "events": []}
-	var max_radius := _known_scouting_spell_max_radius(commander_state)
+	var max_radius := _known_scouting_spell_max_radius(spell_commander_state)
 	if max_radius <= 0:
 		return {"encounter": raid, "events": []}
 	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
@@ -1827,7 +1855,7 @@ static func _maybe_cast_raid_adventure_scouting_spell(
 		"max": RAID_BASE_MOVEMENT_STEPS,
 	}
 	var report := adventure_spell_valuation_report(
-		commander_state,
+		spell_commander_state,
 		movement,
 		{
 			"target_kind": "scouting",
@@ -1847,7 +1875,7 @@ static func _maybe_cast_raid_adventure_scouting_spell(
 	var selected_radius_targets := _scoutable_target_candidates(session, config, faction_id, origin, reveal_radius)
 	if selected_radius_targets.is_empty():
 		return {"encounter": raid, "events": []}
-	var cast_result := SpellRulesScript.cast_overworld_spell(commander_state, movement, spell_id)
+	var cast_result := SpellRulesScript.cast_overworld_spell(spell_commander_state, movement, spell_id)
 	if not bool(cast_result.get("ok", false)):
 		return {"encounter": raid, "events": []}
 	reveal_radius = max(reveal_radius, int(cast_result.get("fog_reveal_radius", 0)))
