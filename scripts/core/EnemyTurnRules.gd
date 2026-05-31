@@ -1499,7 +1499,6 @@ static func _recruit_town_forces(
 	var planned_batches = 0
 	var emergency_batches = 0
 	var mobilized_batches = 0
-	var recruited_any = false
 	var events = []
 	var recruit_ids = []
 	var initial_destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
@@ -1555,7 +1554,6 @@ static func _recruit_town_forces(
 			garrisoned = true
 		if applied_count <= 0:
 			continue
-		recruited_any = true
 		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, applied_count)
 		var final_cost := _scale_resource_pool(cost, applied_count)
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, final_cost, int(session.day))
@@ -1572,7 +1570,11 @@ static func _recruit_town_forces(
 		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_recruitment)
 		if not destination_event.is_empty():
 			events.append(destination_event)
-	if not recruited_any:
+	var mobilize_allowed := true
+	if emergency_batches > 0:
+		var post_recruit_destination := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+		mobilize_allowed = String(post_recruit_destination.get("type", "garrison")) == "emergency"
+	if mobilize_allowed:
 		var mobilize_result := _mobilize_surplus_garrison_for_field_need(session, config, town, faction_id)
 		town = mobilize_result.get("town", town)
 		mobilized_batches += int(mobilize_result.get("mobilized_batches", 0))

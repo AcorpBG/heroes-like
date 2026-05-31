@@ -407,8 +407,11 @@ func _emergency_resource_defense_prepares_commander_before_launch(base_resource_
 	if "ai_town_recruited" not in event_types:
 		_fail("Emergency resource prep did not recruit units before launch: %s" % JSON.stringify(result))
 		return {}
-	var prep_event := _first_event_of_type(result.get("events", []), "ai_emergency_defender_prepared")
 	var commander_id := String(spawned.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+	var prep_event := _first_event_of_type_for_target(result.get("events", []), "ai_emergency_defender_prepared", commander_id)
+	if prep_event.is_empty():
+		_fail("Emergency prep did not include the launched commander: commander=%s events=%s" % [commander_id, JSON.stringify(result.get("events", []))])
+		return {}
 	if String(prep_event.get("target_id", "")) != commander_id:
 		_fail("Emergency prep did not target the launched commander: event=%s commander=%s" % [JSON.stringify(prep_event), commander_id])
 		return {}
@@ -1105,6 +1108,14 @@ func _first_event_of_type(events: Variant, event_type: String) -> Dictionary:
 		return {}
 	for event in events:
 		if event is Dictionary and String(event.get("event_type", "")) == event_type:
+			return event
+	return {}
+
+func _first_event_of_type_for_target(events: Variant, event_type: String, target_id: String) -> Dictionary:
+	if not (events is Array):
+		return {}
+	for event in events:
+		if event is Dictionary and String(event.get("event_type", "")) == event_type and String(event.get("target_id", "")) == target_id:
 			return event
 	return {}
 

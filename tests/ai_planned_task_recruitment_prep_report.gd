@@ -36,6 +36,9 @@ func _run() -> void:
 	var surplus_garrison_case := _surplus_garrison_prepares_planned_commander_without_recruits()
 	if surplus_garrison_case.is_empty():
 		return
+	var post_recruit_surplus_case := _recruitment_and_surplus_garrison_prepare_same_commander()
+	if post_recruit_surplus_case.is_empty():
+		return
 	var unit_fit_case := _recruitment_unit_priority_follows_destination()
 	if unit_fit_case.is_empty():
 		return
@@ -58,9 +61,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_building_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure_plus_surplus_garrison_mobilization",
+		"behavior_policy": "town_building_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, planned_case, surplus_garrison_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -311,6 +314,75 @@ func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictiona
 		"reason_codes": reason_codes,
 	}
 
+func _recruitment_and_surplus_garrison_prepare_same_commander() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_enemy_treasury(session, TREASURY)
+	_prepare_recruiting_surplus_garrison_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Expected planned tasks before post-recruit surplus mobilization, got %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	var destination := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID)
+	if String(destination.get("type", "")) != "planned":
+		_fail("Expected recruit-plus-surplus town to choose planned preparation, got %s" % JSON.stringify(destination))
+		return {}
+	var actor_id := String(destination.get("roster_hero_id", ""))
+	var before_strength := _commander_strength(session, actor_id)
+	var before_garrison_strength := EnemyTurnRules._army_strength(town.get("garrison", []))
+	var defense_target := int(destination.get("defense_target", 0))
+	var treasury := TREASURY.duplicate(true)
+	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
+	if int(recruit_result.get("planned_batches", 0)) < 1:
+		_fail("Expected normal recruitment to prepare planned commander before reserve mobilization: %s" % JSON.stringify(recruit_result))
+		return {}
+	if int(recruit_result.get("mobilized_batches", 0)) < 1:
+		_fail("Expected post-recruit surplus mobilization to continue preparing planned commander: %s" % JSON.stringify(recruit_result))
+		return {}
+	var after_strength := _commander_strength(session, actor_id)
+	if after_strength <= before_strength:
+		_fail("Recruit-plus-surplus prep did not increase commander continuity: before=%d after=%d actor=%s" % [before_strength, after_strength, actor_id])
+		return {}
+	var mobilized_town: Dictionary = recruit_result.get("town", {}) if recruit_result.get("town", {}) is Dictionary else {}
+	var after_garrison_strength := EnemyTurnRules._army_strength(mobilized_town.get("garrison", []))
+	if after_garrison_strength >= before_garrison_strength:
+		_fail("Post-recruit surplus mobilization did not consume actual town garrison: before=%d after=%d" % [before_garrison_strength, after_garrison_strength])
+		return {}
+	if after_garrison_strength < defense_target:
+		_fail("Post-recruit surplus mobilization stripped below defense target: target=%d after=%d" % [defense_target, after_garrison_strength])
+		return {}
+	var prepared_events := _events_by_type(recruit_result.get("events", []), "ai_commander_prepared")
+	if prepared_events.size() < 2:
+		_fail("Expected recruit and surplus commander-prepared events, got %s" % JSON.stringify(recruit_result.get("events", [])))
+		return {}
+	var surplus_event := _event_with_reason(prepared_events, "surplus_garrison_mobilization")
+	if surplus_event.is_empty():
+		_fail("Post-recruit surplus mobilization event missed reason code: %s" % JSON.stringify(prepared_events))
+		return {}
+	return {
+		"case_id": "recruitment_and_surplus_garrison_prepare_same_commander",
+		"actor_id": actor_id,
+		"before_strength": before_strength,
+		"after_strength": after_strength,
+		"before_garrison_strength": before_garrison_strength,
+		"after_garrison_strength": after_garrison_strength,
+		"defense_target": defense_target,
+		"planned_batches": int(recruit_result.get("planned_batches", 0)),
+		"mobilized_batches": int(recruit_result.get("mobilized_batches", 0)),
+		"prepared_event_count": prepared_events.size(),
+		"surplus_reason_codes": _event_reason_codes(surplus_event),
+	}
+
 func _recruitment_unit_priority_follows_destination() -> Dictionary:
 	var config := _enemy_config()
 	var garrison_destination := {
@@ -498,17 +570,18 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 	if after_raids <= before_raids:
 		_fail("Ready planned task did not spawn below generic pressure: %s" % JSON.stringify(spawn_result))
 		return {}
+	var launched_actor_id := String(ready_report.get("actor_id", actor_id))
 	var raid := _raid_for_actor_target(
 		session,
-		actor_id,
+		launched_actor_id,
 		String(ready_report.get("target_kind", "")),
 		String(ready_report.get("target_id", ""))
 	)
 	if raid.is_empty():
-		_fail("Ready planned task did not produce its matching raid: ready=%s" % JSON.stringify(ready_report))
+		_fail("Ready planned task did not produce its matching raid: ready=%s spawn=%s" % [JSON.stringify(ready_report), JSON.stringify(spawn_result)])
 		return {}
-	if String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")) != actor_id:
-		_fail("Ready launch used the wrong commander: expected=%s raid=%s" % [actor_id, JSON.stringify(raid)])
+	if String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")) != launched_actor_id:
+		_fail("Ready launch used the wrong commander: expected=%s raid=%s" % [launched_actor_id, JSON.stringify(raid)])
 		return {}
 	if String(raid.get("target_placement_id", "")) != String(ready_report.get("target_id", "")):
 		_fail("Ready launch did not preserve planned target: ready=%s raid=%s" % [JSON.stringify(ready_report), JSON.stringify(raid)])
@@ -523,7 +596,7 @@ func _prepared_saved_task_launches_below_pressure() -> Dictionary:
 		"case_id": "prepared_saved_task_launches_below_generic_pressure",
 		"pressure": int(state.get("pressure", 0)),
 		"raid_threshold": int(config.get("raid_threshold", 0)),
-		"actor_id": actor_id,
+		"actor_id": launched_actor_id,
 		"prepared_strength": prepared_strength,
 		"target_strength": int(ready_report.get("target_strength", 0)),
 		"locked_encounter_id": locked_encounter_id,
@@ -636,6 +709,15 @@ func _prepare_surplus_garrison_town(session) -> void:
 			{"unit_id": "unit_mire_slinger", "count": 90},
 		],
 		"available_recruits": {},
+	})
+
+func _prepare_recruiting_surplus_garrison_town(session) -> void:
+	_update_duskfen_town(session, {
+		"garrison": [
+			{"unit_id": "unit_bog_brute", "count": 90},
+			{"unit_id": "unit_mire_slinger", "count": 90},
+		],
+		"available_recruits": {PREP_UNIT: 1},
 	})
 
 func _prepare_critical_recruiting_town(session) -> void:
@@ -834,6 +916,29 @@ func _event_by_type(events: Array, event_type: String) -> Dictionary:
 		if event is Dictionary and String(event.get("event_type", "")) == event_type:
 			return event
 	return {}
+
+func _events_by_type(events: Variant, event_type: String) -> Array:
+	var output := []
+	if not (events is Array):
+		return output
+	for event in events:
+		if event is Dictionary and String(event.get("event_type", "")) == event_type:
+			output.append(event)
+	return output
+
+func _event_with_reason(events: Array, reason_code: String) -> Dictionary:
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		if reason_code in _event_reason_codes(event):
+			return event
+	return {}
+
+func _event_reason_codes(event: Dictionary) -> Array:
+	var reason_codes := _string_array(event.get("target_reason_codes", []))
+	if reason_codes.is_empty():
+		reason_codes = _string_array(event.get("reason_codes", []))
+	return reason_codes
 
 func _raid_for_actor_target(session, actor_id: String, target_kind: String, target_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

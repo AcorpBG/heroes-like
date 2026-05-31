@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T10:55:00Z",
+  "updatedAt": "2026-05-31T11:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,46 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-post-recruit-surplus-mobilization-10184",
+      "title": "Strategic AI Post-Recruit Surplus Mobilization",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T07:30:24Z",
+      "updatedAt": "2026-05-31T11:05:00Z",
+      "completedAt": "2026-05-31T11:05:00Z",
+      "source": "active strategic AI production-readiness goal; real live behavior change, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-post-recruit-surplus-mobilization-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Let enemy towns combine same-turn recruitment with surplus garrison mobilization when a planned, emergency, rebuild, or active raid destination still needs field strength after buying recruits.",
+      "implementationTargets": [
+        "After normal recruitment, re-evaluate the destination and safely mobilize surplus garrison units if the selected field need remains stronger than local defense needs.",
+        "Keep critical garrison and defense-target safeguards intact so towns do not strip themselves below required defense.",
+        "Emit the existing commander-prepared/raid-reinforced destination events with surplus_garrison_mobilization reason codes for the reserve transfer."
+      ],
+      "completionCriteria": "A live planned-task fixture proves a town can both recruit units and mobilize surplus reserves into the same commander prep in one turn, increasing commander strength beyond recruitment alone while preserving the defense target; adjacent strategic AI tests remain green.",
+      "nonGoals": [
+        "No new broad strategic AI report gate.",
+        "No economy rebalance or unit stat tuning.",
+        "No final strategic AI release-readiness claim."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Enemy town logistics now re-evaluate after recruitment and mobilize safe surplus garrison into still-understrength field objectives, while preserving emergency-prep priority and town defense targets."
+    },
     {
       "id": "strategic-ai-town-defense-commander-continuity-10184",
       "title": "Strategic AI Town Defense Commander Continuity",
@@ -48820,8 +48860,8 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T10:55:00Z",
-    "sliceId": "strategic-ai-town-defense-commander-continuity-10184",
+    "updatedAt": "2026-05-31T11:05:00Z",
+    "sliceId": "strategic-ai-post-recruit-surplus-mobilization-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
@@ -48834,45 +48874,38 @@
     ],
     "evidence": {
       "implemented": [
-        "Town-defense reinforcement now compares the existing stationed defender's committed strength with the incoming support column before changing the defender slot.",
-        "Weaker or equal support columns fold their armies into the town garrison, resolve the field raid, and return the incoming commander to available status with empty army continuity.",
-        "Stronger support columns may rotate into the town defender slot, and the replaced defender is released with empty army continuity so committed garrison forces are not duplicated.",
-        "Town-defense helper paths centralize stationing and empty-army release roster sync for reinforcement handoffs."
+        "Enemy town recruitment now re-evaluates field needs after buying units and can mobilize safe surplus garrison into the selected active raid, planned task, emergency defender, or rebuild destination in the same turn.",
+        "Critical garrison and defense-target checks remain authoritative, so reserve transfers only occur from surplus above the desired town defense strength.",
+        "Same-turn reserve transfer events reuse existing destination event contracts with surplus_garrison_mobilization reason codes.",
+        "If recruitment has just prepared an emergency defender, post-recruit surplus mobilization will not pivot into an unrelated planned task in the same pass unless emergency remains the selected field need."
       ],
       "focused_case": {
-        "case_id": "duplicate_assault_reinforces_newly_captured_town",
-        "owner_after_capture": "enemy",
-        "garrison_before_support": 170,
-        "garrison_after_support": 339,
-        "support_strength": 169,
-        "support_resolved": true,
-        "support_field_strength_after": 0,
-        "stationed_commander_id": "hero_vaska",
-        "support_commander_status_after": "available",
-        "support_commander_army_after": 0,
-        "event_types": [
-          "ai_town_defended"
-        ],
-        "reason_codes": [
-          "town_defense",
-          "front_stabilization",
-          "garrison_reinforced",
-          "town_expansion",
-          "neutral_town_claim",
-          "post_capture_support"
-        ],
-        "message": "Mireclaw Raid reaches Duskfen Bastion and folds 13 units into the defense."
+        "case_id": "recruitment_and_surplus_garrison_prepare_same_commander",
+        "actor_id": "hero_sable",
+        "before_strength": 0,
+        "after_strength": 212,
+        "before_garrison_strength": 3060,
+        "after_garrison_strength": 3018,
+        "defense_target": 406,
+        "planned_batches": 1,
+        "mobilized_batches": 1,
+        "prepared_event_count": 2,
+        "surplus_reason_codes": [
+          "planned_task_preparation",
+          "strategic_task_planner",
+          "surplus_garrison_mobilization"
+        ]
       },
-      "rotation_case": {
-        "case_id": "stronger_support_rotates_town_defender_without_duplication",
-        "garrison_before_support": 170,
-        "garrison_after_support": 482,
-        "stationed_commander_id": "hero_sable",
-        "released_commander_id": "hero_vaska",
-        "released_commander_status": "available",
-        "released_commander_army_after": 0,
-        "event_types": [
-          "ai_town_defended"
+      "emergency_priority_case": {
+        "case_id": "below_threshold_emergency_resource_defense_recruits_commander_before_launch",
+        "base_resource_strength": 149,
+        "strengthened_raid_strength": 191,
+        "spawned_commander_id": "hero_vaska",
+        "target_id": "river_free_company",
+        "recruits_left": 2,
+        "prep_reason_codes": [
+          "emergency_defense_preparation",
+          "front_defense"
         ]
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
