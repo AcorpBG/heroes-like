@@ -6,6 +6,7 @@ const DEFAULT_SEED_COUNT := 1
 const DEFAULT_TURN_COUNT := 1
 const DEFAULT_BATTLE_STEP_LIMIT := 96
 const DEFAULT_PRESSURE_FLOOR := 999
+const DEFAULT_SEED_OFFSET := 0
 const DEFAULT_SEED_PREFIX := "strategic-ai-long-run-smoke-native-small"
 
 func _ready() -> void:
@@ -25,6 +26,7 @@ func _config_from_environment() -> Dictionary:
 		"turn_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_TURNS", DEFAULT_TURN_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET),
 		"battle_step_limit": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT", DEFAULT_BATTLE_STEP_LIMIT, 1, 2048),
 		"pressure_floor": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR", DEFAULT_PRESSURE_FLOOR, 0, 9999),
+		"seed_offset": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET", DEFAULT_SEED_OFFSET, 0, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET - 1),
 		"seed_prefix": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX", DEFAULT_SEED_PREFIX),
 	}
 	if _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS", 0, 0, 1) > 0:
@@ -73,6 +75,16 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 	if int(report.get("seed_count", 0)) != expected_seed_count:
 		_fail("Long-run matrix requested seed count mismatch: %s" % JSON.stringify(report))
 		return false
+	var shard: Dictionary = report.get("seed_shard", {}) if report.get("seed_shard", {}) is Dictionary else {}
+	if shard.is_empty():
+		_fail("Long-run matrix report is missing seed-shard metadata: %s" % JSON.stringify(report))
+		return false
+	if int(shard.get("seed_count", 0)) != expected_seed_count:
+		_fail("Long-run matrix seed-shard count mismatch: %s" % JSON.stringify(shard))
+		return false
+	if int(shard.get("start_ordinal", 0)) < 1 or int(shard.get("end_ordinal", 0)) < int(shard.get("start_ordinal", 0)):
+		_fail("Long-run matrix seed-shard ordinal range is invalid: %s" % JSON.stringify(shard))
+		return false
 	if int(report.get("turn_count", 0)) != expected_turn_count:
 		_fail("Long-run matrix requested turn count mismatch: %s" % JSON.stringify(report))
 		return false
@@ -98,6 +110,9 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 			return false
 		if String(row.get("startup_source", "")) != "native_rmg_disk_package":
 			_fail("Long-run matrix row did not use native disk package startup: %s" % JSON.stringify(row))
+			return false
+		if int(row.get("seed_ordinal", 0)) < int(shard.get("start_ordinal", 1)) or int(row.get("seed_ordinal", 0)) > int(shard.get("end_ordinal", 1)):
+			_fail("Long-run matrix row seed ordinal is outside shard range: row=%s shard=%s" % [JSON.stringify(row), JSON.stringify(shard)])
 			return false
 		if String(row.get("size_class_id", "")) != "homm3_small":
 			_fail("Long-run matrix smoke must stay in strict Small scope: %s" % JSON.stringify(row))

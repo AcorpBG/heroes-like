@@ -11,6 +11,7 @@ This slice adds an executable Native RMG generated-map strategic AI seed-matrix 
 - The runner starts Native RMG disk-package skirmish sessions only, advances real `OverworldRules.end_turn(...)` turns, tracks enemy activity, task-board state, town ownership, raid counts, and battle interrupts.
 - Battle interrupts are auto-resolved through the existing scored battle autoplay path so queued strategic fights do not stop the long-run turn simulation.
 - Native/generated enemy faction configs now receive runtime strategic AI defaults when package configs are skeletal: pressure cadence, raid thresholds, raid encounter pools, pillage policy, and spawn points from owned enemy towns.
+- The runner supports deterministic shard offsets through `HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET`, and reports `seed_shard` metadata with `seed_offset`, `start_ordinal`, `end_ordinal`, and per-row `seed_ordinal`.
 
 ## Focused Evidence
 
@@ -18,11 +19,16 @@ Focused smoke command:
 
 `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn`
 
+Focused shard smoke command:
+
+`HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn`
+
 Current focused Native RMG smoke surface:
 
 - `startup_source = native_rmg_disk_package`
 - `size_class_id = homm3_small`
 - `turns_completed = 1`
+- `seed_shard` identifies the requested seed shard; `seed_ordinal` keeps each generated-map row tied to the global deterministic seed ordinal instead of only the local row index
 - enemy activity is observed through real `OverworldRules.end_turn(...)`
 - `target_assignment_count` tracks active raid target assignment events
 - `commander_task_planned_count` tracks coordinated planner events when commanders receive durable pre-deployment tasks
