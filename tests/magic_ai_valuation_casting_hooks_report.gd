@@ -18,6 +18,10 @@ func _run() -> void:
 	if not bool(damage_status_case.get("ok", false)):
 		_fail(String(damage_status_case.get("error", "Battle AI damage status targeting case failed.")))
 		return
+	var commander_role_case := _run_battle_ai_commander_role_spell_case()
+	if not bool(commander_role_case.get("ok", false)):
+		_fail(String(commander_role_case.get("error", "Battle AI commander role spell case failed.")))
+		return
 	var cleanse_ward_case := _run_battle_ai_cleanse_active_ward_case()
 	if not bool(cleanse_ward_case.get("ok", false)):
 		_fail(String(cleanse_ward_case.get("error", "Battle AI cleanse active ward case failed.")))
@@ -54,6 +58,7 @@ func _run() -> void:
 		"battle": battle_case,
 		"battle_resistance_targeting": resistance_case,
 		"battle_damage_status_targeting": damage_status_case,
+		"battle_commander_role_spell": commander_role_case,
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
 		"battle_spell_report_payload_bridge": spell_report_payload_case,
@@ -62,7 +67,7 @@ func _run() -> void:
 		"adventure": adventure_case,
 		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -235,6 +240,67 @@ func _run_battle_ai_damage_status_targeting_case() -> Dictionary:
 		"selected_target_id": String(selected.get("target_battle_id", "")),
 		"avoided_target_id": "player_already_controlled",
 		"avoided_target_already_controlled": true,
+		"live_action": String(live_action.get("action", "")),
+	}
+
+func _run_battle_ai_commander_role_spell_case() -> Dictionary:
+	var baseline_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Generic Caster",
+			"command_path": "might",
+			"archetype": "generic",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_cinder_burst", "spell_briar_bind"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var hexcaller_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Hexcaller Caster",
+			"command_path": "magic",
+			"archetype": "hexcaller",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_cinder_burst", "spell_briar_bind"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_role_caster", "enemy", "Enemy Role Caster", 6, 10, 60, []),
+			_stack("player_front", "player", "Player Front", 14, 12, 168, [], {
+				"cohesion": 8,
+				"ranged": true,
+				"shots_remaining": 7,
+			}),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_role_caster")
+	var baseline_report := BattleAiRules.battle_spell_choice_report(battle, active, baseline_hero)
+	if not bool(baseline_report.get("ok", false)):
+		return {"ok": false, "error": "Commander role baseline spell report failed: %s" % baseline_report}
+	var hexcaller_report := BattleAiRules.battle_spell_choice_report(battle, active, hexcaller_hero)
+	if not bool(hexcaller_report.get("ok", false)):
+		return {"ok": false, "error": "Commander role hexcaller spell report failed: %s" % hexcaller_report}
+	var baseline_selected: Dictionary = baseline_report.get("selected", {}) if baseline_report.get("selected", {}) is Dictionary else {}
+	var hexcaller_selected: Dictionary = hexcaller_report.get("selected", {}) if hexcaller_report.get("selected", {}) is Dictionary else {}
+	if String(hexcaller_selected.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Hexcaller commander should prefer the control spell, baseline=%s hexcaller=%s" % [baseline_report, hexcaller_report]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, hexcaller_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Hexcaller live choice should cast Briar Bind, got %s report=%s" % [live_action, hexcaller_report]}
+	return {
+		"ok": true,
+		"baseline_selected_spell_id": String(baseline_selected.get("spell_id", "")),
+		"hexcaller_selected_spell_id": String(hexcaller_selected.get("spell_id", "")),
+		"hexcaller_effect_type": String(hexcaller_selected.get("effect_type", "")),
 		"live_action": String(live_action.get("action", "")),
 	}
 

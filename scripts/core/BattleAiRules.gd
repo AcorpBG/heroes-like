@@ -1002,7 +1002,36 @@ static func _spell_candidate_score(
 			score = _buff_spell_score(battle, active_stack, target, _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))), spell)
 		_:
 			score = -9999.0
-	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior)
+	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior) + _commander_spell_role_modifier(enemy_hero, behavior)
+
+static func _commander_spell_role_modifier(enemy_hero: Dictionary, behavior: Dictionary) -> float:
+	if enemy_hero.is_empty() or behavior.is_empty():
+		return 0.0
+	var command_path := String(enemy_hero.get("command_path", "")).strip_edges()
+	var archetype := String(enemy_hero.get("archetype", "")).strip_edges()
+	var effect_type := String(behavior.get("effect_type", ""))
+	var primary_role := String(behavior.get("primary_role", ""))
+	var role_categories := _normalize_string_array(behavior.get("role_categories", []))
+	var modifier := 0.0
+	if command_path == "magic":
+		modifier += 0.65
+	elif command_path == "might" and effect_type in ["damage_enemy", "attack_buff"]:
+		modifier += 0.25
+	if archetype in ["hexcaller", "starseer", "rootoracle", "denaugur", "drumoracle", "fogprophet", "funeralhexer"]:
+		if effect_type == "control_enemy" or role_categories.has("control") or primary_role == "control_enemy":
+			modifier += 2.4
+		elif effect_type == "damage_enemy" and role_categories.has("debuff"):
+			modifier += 0.7
+	if archetype in ["warden", "castellan", "solarphysician", "recoverywarden", "granary", "sporedoctor", "graftprophet"]:
+		if effect_type in ["recover_ally", "cleanse_ally", "defense_buff"] or role_categories.has("recovery") or role_categories.has("countermagic"):
+			modifier += 1.6
+	if archetype in ["raider", "marshal", "packlord", "batterycaptain", "siegelock", "briarmarshal", "contractmarshal", "pitmarshal", "huntleader"]:
+		if effect_type == "damage_enemy" or effect_type == "attack_buff" or role_categories.has("damage"):
+			modifier += 1.25
+	if archetype in ["artillerist", "sharpshooter", "beaconscribe", "pressuremath", "slagalchemist", "heatrice"]:
+		if effect_type == "damage_enemy" or effect_type == "initiative_buff":
+			modifier += 1.0
+	return modifier
 
 static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
 	var status_effect := _status_effect_from_spell(spell)
