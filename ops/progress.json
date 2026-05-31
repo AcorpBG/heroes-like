@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T04:08:25Z",
+  "updatedAt": "2026-05-31T04:15:05Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,86 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-midmove-hero-reaction-10184",
+      "title": "Strategic AI Mid-Move Hero Reaction",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make active AI commanders re-evaluate exposed-hero intercepts and superior-player-hero avoidance after movement steps, so they can pursue or retreat during the same turn instead of waiting one full enemy turn.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd"
+      ],
+      "baselineChecks": [
+        "Active raid hero-intercept and superior-hero avoidance checks run before movement, but not after a step changes tactical proximity.",
+        "A commander can spend the rest of its turn marching past a newly reachable exposed hero or into a superior hero threat radius."
+      ],
+      "completionCriteria": [
+        "After each live movement step, eligible non-defensive raids re-run exposed-hero opportunistic intercept selection.",
+        "After each live movement step, eligible non-defensive raids re-run superior-player-hero avoidance and can redirect to regroup immediately.",
+        "Mid-move retargeting emits normal target-assignment events and preserves previous target metadata.",
+        "Focused coverage proves both mid-move intercept and mid-move threat-avoidance cases."
+      ],
+      "nonGoals": [
+        "Do not bypass existing sighting, risk, defense, support, guarded-claim, or regroup gates.",
+        "Do not add broad report-only gates.",
+        "Do not change combat balance, economy balance, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T04:12:35Z",
+      "updatedAt": "2026-05-31T04:15:05Z",
+      "completedAt": "2026-05-31T04:15:05Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "passed",
+          "summary": "Hero-hunt coverage proves mid-move exposed-hero intercept and mid-move superior-hero avoidance with target-assignment events and previous-target metadata."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "Live resource task execution and route-pickup behavior remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup, guarded-claim, route-occupancy, and resource-front support behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event boundary remains compact and leak-free."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "plannedBehavior": "AI commanders should react to hero opportunities and threats created by their own movement within the same turn.",
+        "completedBehavior": "Active AI raids now re-evaluate exposed-hero intercepts and superior-player-hero avoidance after movement steps, preserving previous targets and emitting standard target-assignment events."
+      }
+    },
     {
       "id": "strategic-ai-route-opportunistic-pickups-10184",
       "title": "Strategic AI Route Opportunistic Pickups",
@@ -40959,6 +41039,48 @@
           "summary": "No whitespace errors."
         }
       ]
+    },
+    {
+      "id": "strategic-ai-midmove-hero-reaction-10184",
+      "completedAt": "2026-05-31T04:15:05Z",
+      "summary": "Active strategic AI commanders now react to exposed or superior player heroes created by their own movement in the same turn.",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "passed",
+          "summary": "Hero-hunt coverage proves mid-move exposed-hero intercept and mid-move superior-hero avoidance with target-assignment events and previous-target metadata."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "Live resource task execution and route-pickup behavior remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup, guarded-claim, route-occupancy, and resource-front support behavior still passes."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event boundary remains compact and leak-free."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -43920,9 +44042,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T04:08:25Z"
+    "updatedAt": "2026-05-31T04:15:05Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T04:08:25Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:15:05Z",
   "validationHistory": [
     {
       "status": "pass",
