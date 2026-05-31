@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-no-known-target-exploration-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-neutral-town-known-world-gating-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:55:00Z",
+  "updatedAt": "2026-05-31T04:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,82 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-neutral-town-known-world-gating-10184",
+      "title": "Strategic AI Neutral Town Known-World Gating",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Stop ordinary neutral-town expansion from reading all map towns omnisciently by requiring current AI visibility or known-world scouting memory, while preserving explicit player-town, objective, and priority town pressure.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd",
+        "tests/ai_neutral_town_expansion_report.gd"
+      ],
+      "baselineChecks": [
+        "Resources/artifacts/encounters are known-world gated, but neutral towns are still appended as target candidates directly from live town state.",
+        "No-known-target exploration now exists, so hidden neutral towns can be discovered through scouting instead of direct omniscient expansion."
+      ],
+      "completionCriteria": [
+        "Ordinary neutral towns require current AI visibility or scouted known-world memory before becoming expansion candidates.",
+        "Player towns and explicit objective/priority towns remain eligible so core pressure and authored objectives remain live.",
+        "Scouting discovery can still inspect unknown neutral towns and create memory for later expansion.",
+        "Focused validation proves hidden neutral towns are not targeted directly, become scoutable, and become eligible after scouted memory or current visibility."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not weaken existing neutral-town capture, defended assault, or stationing behavior once a town is legitimately known.",
+        "Do not retune combat, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T04:05:00Z",
+      "updatedAt": "2026-05-31T04:25:00Z",
+      "completedAt": "2026-05-31T04:25:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
+          "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
+          "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
+          "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
+          "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "target_kind": "town",
+          "target_id": "hidden_neutral_hold",
+          "hidden_candidate_count": 0,
+          "scoutable_unknown_neutral_town": true,
+          "known_neutral_town_candidate": true,
+          "visible_neutral_expansion_preserved": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-no-known-target-exploration-10184",
       "title": "Strategic AI No-Known-Target Exploration",
@@ -39221,6 +39297,49 @@
         "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "sliceId": "strategic-ai-neutral-town-known-world-gating-10184",
+      "completedAt": "2026-05-31T04:25:00Z",
+      "summary": "Completed. Ordinary neutral-town expansion now obeys AI visibility and known-world scouting memory instead of direct omniscient town discovery; strategic AI production readiness remains open.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
+          "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
+          "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
+          "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
+          "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "target_kind": "town",
+          "target_id": "hidden_neutral_hold",
+          "hidden_candidate_count": 0,
+          "scoutable_unknown_neutral_town": true,
+          "known_neutral_town_candidate": true,
+          "visible_neutral_expansion_preserved": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      },
+      "residualRisk": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review."
     }
   ],
   "docsReadyEvidence": [
@@ -42163,48 +42282,48 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T03:55:00Z",
-    "sliceId": "strategic-ai-no-known-target-exploration-10184",
+    "updatedAt": "2026-05-31T04:25:00Z",
+    "sliceId": "strategic-ai-neutral-town-known-world-gating-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
-        "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
-        "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
-        "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
-        "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
+        "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
+        "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
+        "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
+        "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
+        "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "fallback_target_kind": "explore",
-        "fallback_target_id": "explore:0:1",
-        "fallback_goal_distance": 8,
-        "fresh_pressure_launch_allowed": true,
-        "live_exploration_raid_id": "faction_mireclaw_raid_1",
-        "exploration_arrival_reassigned_target": "resource:river_free_company",
+        "target_kind": "town",
+        "target_id": "hidden_neutral_hold",
+        "hidden_candidate_count": 0,
+        "scoutable_unknown_neutral_town": true,
+        "known_neutral_town_candidate": true,
+        "visible_neutral_expansion_preserved": true,
         "save_version": 9
       },
-      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
+      "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
     }
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T03:55:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:25:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -45238,48 +45357,90 @@
         "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-31T04:25:00Z",
+      "sliceId": "strategic-ai-neutral-town-known-world-gating-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
+          "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
+          "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
+          "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
+          "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "target_kind": "town",
+          "target_id": "hidden_neutral_hold",
+          "hidden_candidate_count": 0,
+          "scoutable_unknown_neutral_town": true,
+          "known_neutral_town_candidate": true,
+          "visible_neutral_expansion_preserved": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
-  "currentSlice": "none selected; latest completed slice strategic-ai-no-known-target-exploration-10184",
+  "currentSlice": "none selected; latest completed slice strategic-ai-neutral-town-known-world-gating-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T03:55:00Z",
-    "sliceId": "strategic-ai-no-known-target-exploration-10184",
+    "updatedAt": "2026-05-31T04:25:00Z",
+    "sliceId": "strategic-ai-neutral-town-known-world-gating-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules.choose_target now prefers a deterministic reachable explore target when normal known target candidates are empty, falling back to passive regroup only when no frontier scout waypoint exists.",
-        "Explore targets are first-class raid targets with validity, refresh, movement, arrival, target assignment events, and post-arrival reassignment through the existing live target selector.",
-        "EnemyTurnRules fresh raid spawning can now dispatch exploration commanders when pressure is high but no legitimate known target candidates exist, with scout/wayfinder-style commanders favored by spawn scoring.",
-        "Exploration arrival can convert newly visible resources/artifacts/encounters into normal objectives through the same current-visibility and known-world memory rules, without direct hidden-object targeting.",
-        "Focused known-world coverage proves no-known-target behavior avoids hidden hero coordinates, dispatches a live exploration raid, preserves ordinary hidden resource gating, and reassigns from an exploration arrival to a newly visible resource."
+        "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
+        "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
+        "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
+        "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
+        "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "fallback_target_kind": "explore",
-        "fallback_target_id": "explore:0:1",
-        "fallback_goal_distance": 8,
-        "fresh_pressure_launch_allowed": true,
-        "live_exploration_raid_id": "faction_mireclaw_raid_1",
-        "exploration_arrival_reassigned_target": "resource:river_free_company",
+        "target_kind": "town",
+        "target_id": "hidden_neutral_hold",
+        "hidden_candidate_count": 0,
+        "scoutable_unknown_neutral_town": true,
+        "known_neutral_town_candidate": true,
+        "visible_neutral_expansion_preserved": true,
         "save_version": 9
       },
-      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, richer multi-front exploration doctrine, deeper economy/army timing, and manual live-client pacing remain open.",
+      "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
     }
   }
