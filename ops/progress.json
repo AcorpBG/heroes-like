@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T10:16:03Z",
+  "updatedAt": "2026-05-31T10:56:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,45 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-long-run-configurable-matrix-10184",
+      "title": "Strategic AI Long-Run Configurable Matrix",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T10:32:00Z",
+      "updatedAt": "2026-05-31T10:56:00Z",
+      "source": "active production-readiness goal to co-tune tactical battle AI and strategic AI without touching balance content",
+      "planRef": "PLAN.md Current tactical state / strategic-ai-long-run-configurable-matrix-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Let the strategic AI long-run Native RMG seed-matrix report execute configurable multi-seed and multi-turn runs instead of only the hardcoded one-seed one-turn smoke, without weakening production-readiness blockers.",
+      "implementationTargets": [
+        "Add environment-driven seed, turn, battle-step, pressure-floor, and seed-prefix configuration to the existing strategic AI long-run report scene.",
+        "Generalize report assertions so the default smoke remains strict while opt-in larger Native RMG runs validate every emitted seed row.",
+        "Keep the full 100-seed eight-week matrix as an explicit remaining-validation blocker unless the configured run reaches that target."
+      ],
+      "completionCriteria": "Default and opt-in multi-seed strategic AI long-run report runs pass, repository gates remain green, and no unit, spell, growth, economy, faction, or town-cost balance content is changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No production-ready strategic AI claim from a smaller focused matrix.",
+        "No authored-scenario balance surface changes."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; default 1-seed 1-turn Native RMG smoke preserved the full-matrix blocker)",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX=strategic-ai-config-smoke GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 2 rows, 4 turns completed, 16 enemy activity events, 7 target assignments, full-matrix blocker preserved)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. The strategic AI long-run Native RMG report now accepts environment-configured seed, turn, battle-step, pressure-floor, and seed-prefix values, validates every configured generated-map row, and preserves the 100-seed eight-week blocker unless the configured run reaches the production target.",
+      "completedAt": "2026-05-31T10:56:00Z"
+    },
     {
       "id": "battle-ai-engaged-melee-attack-10184",
       "title": "Battle AI Engaged Melee Attack",
@@ -46093,9 +46132,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T10:16:03Z"
+    "updatedAt": "2026-05-31T10:56:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T10:16:03Z",
+  "currentSliceUpdatedAt": "2026-05-31T10:56:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -49309,35 +49348,36 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T10:16:03Z",
-    "sliceId": "battle-ai-engaged-melee-attack-10184",
+    "updatedAt": "2026-05-31T10:56:00Z",
+    "sliceId": "strategic-ai-long-run-configurable-matrix-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json --gate > tmp/battle_ai_engaged_melee_quick.json (passed; structural_failures empty, balance_status needs_tuning)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX=strategic-ai-config-smoke GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Live BattleAiRules now applies an engaged-melee no-progress guard before choosing defend.",
-        "Adjacent non-ranged enemy stacks with valid melee attacks choose strike when no hostile-ranged-pressure exception applies.",
-        "The shared nonspell tactical order helper uses the same guard.",
-        "The fast benchmark already carried this guard, so live tactical AI is now aligned with the benchmark policy."
+        "The strategic AI long-run Native RMG report can now be configured through environment variables for seed count, turn count, battle step limit, pressure floor, and seed prefix.",
+        "Default one-seed smoke behavior remains intact.",
+        "Opt-in 2-seed 2-turn Native RMG execution validates every emitted row and preserves remaining full-matrix validation blockers.",
+        "The report keeps Native RMG generated maps only and does not use authored scenarios as a balance surface."
       ],
-      "focused_case": {
-        "case_id": "enemy_engaged_melee",
-        "live_action": "strike",
-        "defend_score": 12.5,
-        "strike_score": 0.75,
-        "tactical_order_action": "strike"
+      "focused_matrix": {
+        "seed_count": 2,
+        "turn_count": 2,
+        "row_count": 2,
+        "turns_completed": 4,
+        "enemy_activity_event_count": 16,
+        "target_assignment_count": 7,
+        "remaining_validation_blocker": "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run"
       },
       "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need full generated-map long-run matrices, Medium/generalized behavior evidence, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
-      "policy": "AI-only tactical no-progress correction; no content balance changes and no production-ready AI claim."
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need the full generated-map long-run matrix, Medium/generalized behavior evidence, deeper army/economy timing, retreat/personality tuning, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "AI-only strategic validation harness improvement; no content balance changes and no production-ready AI claim."
     }
   }
 }
