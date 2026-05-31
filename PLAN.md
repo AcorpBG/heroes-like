@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after `strategic-ai-broader-handoff-generalization-10184`; next tactical/strategic AI production-readiness work should either expand Native RMG generated-map evidence toward the full 100-seed eight-week target or implement the next real AI behavior gap exposed by that broader evidence, without balance-content edits.
+- Current implementation slice: none selected after `strategic-ai-production-shard-offset3-10184`; next tactical/strategic AI production-readiness work should continue toward the full Native RMG 100-seed eight-week target or fix the next real tactical/strategic AI behavior gap exposed, without balance-content edits.
+- Latest completed slice: `strategic-ai-production-shard-offset3-10184`.
 - Latest completed slice: `strategic-ai-broader-handoff-generalization-10184`.
 - Latest completed slice: `strategic-ai-tactical-pressure-march-10184`.
 - Latest completed slice: `strategic-ai-natural-battle-handoff-matrix-10184`.

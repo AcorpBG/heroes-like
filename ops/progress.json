@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-broader-handoff-generalization-10184",
-  "currentSliceTitle": "Strategic AI Broader Handoff Generalization",
+  "currentSliceId": "strategic-ai-production-shard-offset3-10184",
+  "currentSliceTitle": "Strategic AI Production Shard Offset 3",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed broader Native RMG generated-map tactical/strategic AI handoff evidence slice: 3-seed/8-turn generated-map smoke completed cleanly and 2-seed/18-turn generated-map smoke produced two natural battle arrivals, one hero intercept and one town defense, with zero behavior bugs, zero target-integrity violations, and zero stalls. No unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content was changed. Production readiness remains open pending the full 100-seed eight-week generated-map target and deeper live-client review.",
+  "currentSliceNotes": "Completed Native RMG generated-map tactical/strategic AI shard over fresh seed ordinals 4-8. The shard exposed a late resource-only pressure gap, implemented a focused battle-pressure floor in EnemyAdventureRules, and reran the shard cleanly with 5/5 rows ok, zero behavior bugs, zero target-integrity violations, five natural battle arrivals, and no balance-content edits. Production readiness remains open pending the full 100-seed eight-week Native RMG matrix and broader live-client review.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T21:57:36Z",
+  "updatedAt": "2026-05-31T22:47:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,67 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-production-shard-offset3-10184",
+      "title": "Strategic AI Production Shard Offset 3",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active tactical/strategic AI production-readiness goal after broader handoff evidence covered seed ordinals 1-3 short and 1-2 longer",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Move toward the full Native RMG 100-seed eight-week production target by running a fresh generated-map shard beyond already-covered seed ordinals and implementing any real tactical/strategic AI behavior fix exposed.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "Fresh Native RMG shard over seed ordinals 4-8 completes without behavior bugs, target-integrity violations, stalls, or balance-content edits; any newly exposed tactical/strategic AI behavior gap is fixed with focused validation or recorded precisely as a remaining production blocker; tactical order and repository validation remain green.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming production readiness before full 100-seed eight-week evidence"
+      ],
+      "startedAt": "2026-05-31T22:00:33Z",
+      "completedAt": "2026-05-31T22:47:32Z",
+      "updatedAt": "2026-05-31T22:47:32Z",
+      "validation": [
+        "Started after strategic-ai-broader-handoff-generalization-10184 completed cleanly; this shard intentionally starts at seed offset 3 to cover new generated maps.",
+        "Pre-fix shard run over seed ordinals 4-8 completed 5/5 rows with zero behavior bugs and zero target-integrity violations, but exposed a late pressure gap: 65 turns completed, 241 enemy activity events, 3 natural tactical battle arrivals, 3 auto-resolved battles, 6 stalled turns, and one resource-only seed with no active player town/hero pressure by day 19.",
+        "Implemented a focused late battle-pressure floor in scripts/core/EnemyAdventureRules.gd: after day 10, if a faction has at least three active raids, no other active raid is pressuring a player town/hero, and the current raid is on resource/regroup/explore/encounter/artifact work without needing regroup, it may preempt toward a reachable player hero/town target with a battle_pressure_floor reason.",
+        "Focused seed ordinal 8 rerun passed with zero behavior bugs and zero target-integrity violations; the exposed resource-only case retargeted on day 16 to Lyra Emberwell with public reason 'restoring battle pressure', reached a hero_intercept battle, and auto-resolved it.",
+        "Post-fix shard rerun over seed ordinals 4-8 completed 5/5 rows with zero behavior bugs, zero target-integrity violations, 57 turns completed, 203 enemy activity events, 42 natural tactical battle pressure turns, 5 natural tactical battle arrivals, 5 battle interrupts, 5 auto-resolved battles, all rows terminal defeat, and stalled turns reduced to 4 early quiet turns.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn passed.",
+        "python3 tests/validate_repo.py passed.",
+        "jq empty ops/progress.json passed.",
+        "git diff --check passed.",
+        "git diff -- content/ was empty, confirming no unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content files changed."
+      ],
+      "summary": "Completed. Fresh Native RMG seed ordinals 4-8 exposed and then validated a focused strategic AI fix for late resource-only raid pressure without balance-content edits.",
+      "notes": [
+        "Do not touch unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content.",
+        "This shard moved toward production readiness by fixing one real generated-map strategic pressure gap, but it is not a production-ready claim.",
+        "The remaining four stalled turns in the post-fix shard are early quiet turns and remain production-readiness review evidence rather than the late no-pressure failure fixed by this slice.",
+        "The full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim."
+      ]
+    },
     {
       "id": "strategic-ai-broader-handoff-generalization-10184",
       "title": "Strategic AI Broader Handoff Generalization",
@@ -48147,12 +48208,12 @@
     "summary": "BattleAiRules side payload lookup now derives missing player/enemy AI payloads from commander state so internal damage estimates and trait/objective scoring stay aligned on resumed or synthetic battle states without changing balance content."
   },
   "active_slice": {
-    "id": "strategic-ai-broader-handoff-generalization-10184",
-    "title": "Strategic AI Broader Handoff Generalization",
+    "id": "strategic-ai-production-shard-offset3-10184",
+    "title": "Strategic AI Production Shard Offset 3",
     "status": "completed",
-    "updatedAt": "2026-05-31T21:57:36Z"
+    "updatedAt": "2026-05-31T22:47:32Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T21:57:36Z",
+  "currentSliceUpdatedAt": "2026-05-31T22:47:32Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -51363,14 +51424,15 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-broader-handoff-generalization-10184",
+  "currentSlice": "strategic-ai-production-shard-offset3-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T21:57:36Z",
-    "sliceId": "strategic-ai-broader-handoff-generalization-10184",
+    "updatedAt": "2026-05-31T22:47:32Z",
+    "sliceId": "strategic-ai-production-shard-offset3-10184",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=3 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=8 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 720 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused Native RMG broader smoke; 3/3 rows ok, 24/24 turns completed, behavior bugs 0, target-integrity violations 0, stalled turns 0, enemy activity events 91, tactical battle pressure turns 24, best tactical battle target distance 2; no natural battle arrival in this short window)",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused Native RMG longer smoke; 2/2 rows ok, behavior bugs 0, target-integrity violations 0, stalled turns 0, enemy activity events 85, tactical battle pressure turns 20, natural tactical battle arrival turns 2, battle interrupts 2, auto-resolved battles 2: hero_intercept and town_defense)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (pre-fix evidence completed; 5/5 rows ok, behavior bugs 0, target-integrity violations 0, turns completed 65, enemy activity events 241, natural tactical battle arrivals 3, battle interrupts 3, auto-resolved battles 3, stalled turns 6; exposed seed ordinal 8 late resource-only pressure gap)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=7 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (post-fix focused seed ordinal 8 passed; behavior bugs 0, target-integrity violations 0, day 16 hero_intercept via restoring battle pressure, battle interrupts 1, auto-resolved battles 1)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (post-fix shard passed; 5/5 rows ok, behavior bugs 0, target-integrity violations 0, turns completed 57, enemy activity events 203, natural tactical battle pressure turns 42, natural tactical battle arrivals 5, battle interrupts 5, auto-resolved battles 5, terminal defeat rows 5, stalled turns 4)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -51379,34 +51441,31 @@
     ],
     "evidence": {
       "implemented": [
-        "Broader generated-map evidence now covers 3 short Native RMG smoke seeds and 2 longer Native RMG handoff seeds after the tactical-pressure march implementation.",
-        "The 3-seed/8-turn evidence completed 24/24 turns with zero behavior bugs, zero target-integrity violations, zero stalls, and active tactical battle pressure in every completed turn.",
-        "The 2-seed/18-turn evidence produced two natural generated-map battle arrivals: one hero_intercept on day 16 and one town_defense on day 10, both auto-resolved successfully.",
-        "No newly exposed tactical/strategic AI behavior defect required a code patch in this slice.",
+        "Fresh Native RMG seed ordinals 4-8 exposed a strategic AI pressure defect where a late generated-map row kept active raids on resource-only work without active player town/hero battle pressure.",
+        "EnemyAdventureRules now applies a late battle-pressure floor after day 10 when a faction has at least three active raids, no other active raid is pressuring a player town/hero, and a non-understrength raid is still assigned to resource/regroup/explore/encounter/artifact work.",
+        "The focused seed ordinal 8 rerun proved the fix retargeted the exposed resource-only raid toward a player hero on day 16 with reason 'restoring battle pressure', reached a hero_intercept battle, and auto-resolved it.",
+        "The full post-fix shard over seed ordinals 4-8 completed cleanly with five natural battle arrivals and zero behavior bugs or target-integrity violations.",
         "No unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content files were changed."
       ],
       "focused_case": {
-        "case_id": "strategic_ai_broader_handoff_generalization",
-        "short_seed_count": 3,
-        "short_turn_count": 8,
-        "short_turns_completed": 24,
-        "short_behavior_bug_count": 0,
-        "short_target_integrity_violation_count": 0,
-        "long_seed_count": 2,
-        "long_turn_count": 18,
-        "long_turns_completed": 24,
-        "long_natural_tactical_battle_pressure_turn_count": 20,
-        "long_natural_tactical_battle_arrival_turn_count": 2,
-        "long_battle_interrupt_count": 2,
-        "long_auto_resolved_battle_count": 2,
-        "arrival_contexts": [
-          "hero_intercept",
-          "town_defense"
-        ]
+        "case_id": "strategic_ai_production_shard_offset3",
+        "seed_offset": 3,
+        "seed_count": 5,
+        "turn_count": 18,
+        "post_fix_row_ok_count": 5,
+        "post_fix_behavior_bug_count": 0,
+        "post_fix_target_integrity_violation_count": 0,
+        "post_fix_turns_completed": 57,
+        "post_fix_natural_tactical_battle_pressure_turn_count": 42,
+        "post_fix_natural_tactical_battle_arrival_turn_count": 5,
+        "post_fix_battle_interrupt_count": 5,
+        "post_fix_auto_resolved_battle_count": 5,
+        "post_fix_terminal_defeat_rows": 5,
+        "post_fix_stalled_turn_count": 4
       },
       "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-      "remaining_validation": "The broader active goal remains open: this is broader focused smoke evidence, not production readiness. Tactical and strategic AI still need the full 100-seed eight-week Native RMG matrix, Medium/generalized behavior evidence, runtime optimization, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
-      "policy": "Broader generated-map tactical/strategic AI handoff evidence; no content balance changes and no production-ready AI claim."
+      "remaining_validation": "The broader active goal remains open: this shard fixes one real generated-map strategic pressure gap, but production readiness still needs the full 100-seed eight-week Native RMG matrix, Medium/generalized behavior evidence, runtime optimization, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "AI-only generated-map strategic pressure implementation; no content balance changes and no production-ready AI claim."
     }
   }
 }

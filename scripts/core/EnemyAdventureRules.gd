@@ -47,6 +47,10 @@ const RAID_BASE_MOVEMENT_STEPS := 1
 const RAID_TACTICAL_PRESSURE_MOVEMENT_STEPS := 3
 const RAID_TACTICAL_PRESSURE_SUPPORT_GROUP_RADIUS := 3
 const RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS := 6
+const RAID_BATTLE_PRESSURE_FLOOR_DAY := 10
+const RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS := 3
+const RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE := 48
+const RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS := 140
 const RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE := 4
 const RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS := 3
 const RAID_NEARBY_PLAYER_THREAT_STRENGTH_RATIO := 1.15
@@ -751,6 +755,7 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 	var task_record_for_assignment := {}
 	if _raid_target_valid(session, raid):
 		raid = _refresh_target(session, raid, faction_id)
+		raid = _maybe_preempt_for_battle_pressure_floor(session, config, raid, faction_id)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
 		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
@@ -810,6 +815,105 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 			)
 		_ai_hero_task_record_live_assignment(session, config, raid, current_target, task_record_for_assignment)
 	return raid
+
+static func _maybe_preempt_for_battle_pressure_floor(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return raid
+	if int(session.day) < RAID_BATTLE_PRESSURE_FLOOR_DAY:
+		return raid
+	var current_kind := String(raid.get("target_kind", ""))
+	if current_kind in ["town", "hero"]:
+		return raid
+	if current_kind not in ["resource", "regroup", "explore", "encounter", "artifact"]:
+		return raid
+	if raid_regroup_needed(raid, config, faction_id):
+		return raid
+	var placement_id := String(raid.get("placement_id", ""))
+	if _active_player_battle_pressure_raid_count(session, faction_id, placement_id) > 0:
+		return raid
+	var active_count := _active_raid_count_for_faction(session, faction_id)
+	if active_count < RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS:
+		return raid
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	for candidate_value in _target_candidates(session, config, origin):
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value.duplicate(true)
+		var target_kind := String(candidate.get("target_kind", ""))
+		if target_kind not in ["town", "hero"]:
+			continue
+		if target_kind == "town" and not _candidate_targets_player_town(session, candidate):
+			continue
+		var goal_distance := int(candidate.get("goal_distance", 9999))
+		if goal_distance < 0 or goal_distance > RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE:
+			continue
+		var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+		if "battle_pressure_floor" not in reason_codes:
+			reason_codes.append("battle_pressure_floor")
+		candidate["target_reason_codes"] = reason_codes
+		candidate["priority"] = max(
+			0,
+			int(candidate.get("priority", 0))
+			+ RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS
+			+ min(80, max(0, int(session.day) - RAID_BATTLE_PRESSURE_FLOOR_DAY) * 8)
+			+ (active_count * 6)
+		)
+		candidate["target_public_reason"] = "restoring battle pressure"
+		candidate["target_public_importance"] = "high"
+		candidate["target_debug_reason"] = "late generated-map shard had active raids but no active player town/hero pressure"
+		if best.is_empty() or _candidate_beats(candidate, best):
+			best = candidate
+	if best.is_empty():
+		return raid
+	var updated := raid.duplicate(true)
+	updated.merge(best, true)
+	return updated
+
+static func _active_raid_count_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	if session == null or faction_id == "":
+		return 0
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var count := 0
+	for encounter_value in session.overworld.get("encounters", []):
+		if _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			count += 1
+	return count
+
+static func _active_player_battle_pressure_raid_count(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	excluded_placement_id: String = ""
+) -> int:
+	if session == null or faction_id == "":
+		return 0
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var count := 0
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if excluded_placement_id != "" and String(encounter.get("placement_id", "")) == excluded_placement_id:
+			continue
+		match String(encounter.get("target_kind", "")):
+			"hero":
+				count += 1
+			"town":
+				var town_result := _find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
+				if int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player":
+					count += 1
+	return count
+
+static func _candidate_targets_player_town(session: SessionStateStoreScript.SessionData, candidate: Dictionary) -> bool:
+	if session == null or candidate.is_empty():
+		return false
+	var town_result := _find_town_by_placement(session, String(candidate.get("target_placement_id", "")))
+	return int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player"
 
 static func _live_task_plan_can_preempt_explicit_objective(config: Dictionary, plan: Dictionary) -> bool:
 	if plan.is_empty():
