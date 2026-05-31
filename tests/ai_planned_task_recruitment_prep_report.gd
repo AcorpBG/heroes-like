@@ -27,6 +27,9 @@ func _run() -> void:
 	var live_turn_case := _live_turn_plans_before_same_turn_recruitment()
 	if live_turn_case.is_empty():
 		return
+	var spell_study_case := _live_enemy_turn_studies_town_spell()
+	if spell_study_case.is_empty():
+		return
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
@@ -52,9 +55,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_building_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
+		"behavior_policy": "town_building_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_and_ready_tasks_launch_below_generic_pressure",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, planned_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -121,6 +124,56 @@ func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 		"build_event_index": build_index,
 		"prepared_event_index": prepared_index,
 		"build_reason_codes": build_reason_codes,
+		"event_types": _event_types(events),
+	}
+
+func _live_enemy_turn_studies_town_spell() -> Dictionary:
+	var session = _base_session()
+	_set_enemy_treasury(session, TREASURY)
+	_prepare_spell_study_town(session)
+	var before_state := _enemy_state(session)
+	before_state["pressure"] = 0
+	before_state["raid_counter"] = 0
+	before_state["commander_counter"] = 0
+	before_state.erase("hero_task_state")
+	_update_enemy_state(session, before_state)
+	var before_known := _known_spell_count_by_commander(session)
+	var accessible := TownRules.accessible_spell_ids(_town_by_id(session, DUSKFEN))
+	if accessible.is_empty():
+		_fail("Spell-study fixture town has no accessible spells.")
+		return {}
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	var events: Array = result.get("events", []) if result.get("events", []) is Array else []
+	var study_event := _event_by_type(events, "ai_commander_studied_spell")
+	if study_event.is_empty():
+		_fail("Live enemy turn did not emit town spell study: %s" % JSON.stringify(_event_types(events)))
+		return {}
+	var actor_id := String(study_event.get("actor_id", ""))
+	var learned_spell_id := String(study_event.get("learned_spell_id", ""))
+	if actor_id == "" or learned_spell_id == "":
+		_fail("Spell-study event missing actor or learned spell id: %s" % JSON.stringify(study_event))
+		return {}
+	if learned_spell_id not in accessible:
+		_fail("Enemy commander learned a spell not accessible in the source town: spell=%s accessible=%s" % [learned_spell_id, JSON.stringify(accessible)])
+		return {}
+	var after_state := _commander_state(session, actor_id)
+	if after_state.is_empty():
+		_fail("Could not find commander after spell study: actor=%s" % actor_id)
+		return {}
+	if not SpellRules.knows_spell(after_state, learned_spell_id):
+		_fail("Learned spell did not persist in commander spellbook: actor=%s spell=%s state=%s" % [actor_id, learned_spell_id, JSON.stringify(after_state.get("spellbook", {}))])
+		return {}
+	var after_known_count := _known_spell_count(after_state)
+	if after_known_count <= int(before_known.get(actor_id, 0)):
+		_fail("Commander known-spell count did not increase: actor=%s before=%d after=%d" % [actor_id, int(before_known.get(actor_id, 0)), after_known_count])
+		return {}
+	return {
+		"case_id": "live_enemy_turn_studies_town_spell",
+		"actor_id": actor_id,
+		"learned_spell_id": learned_spell_id,
+		"accessible_spell_count": accessible.size(),
+		"known_spells_before": int(before_known.get(actor_id, 0)),
+		"known_spells_after": after_known_count,
 		"event_types": _event_types(events),
 	}
 
@@ -504,6 +557,32 @@ func _prepare_market_recruiting_town(session) -> void:
 		"market_usage": {},
 	})
 
+func _prepare_spell_study_town(session) -> void:
+	var built_buildings := ["building_town_hall"]
+	for building_id in _magic_building_ids_for_town(session, DUSKFEN):
+		if building_id not in built_buildings:
+			built_buildings.append(building_id)
+	_update_duskfen_town(session, {
+		"built_buildings": built_buildings,
+		"last_build_day": int(session.day),
+		"garrison": [
+			{"unit_id": "unit_bog_brute", "count": 12},
+			{"unit_id": "unit_mire_slinger", "count": 18},
+		],
+		"available_recruits": {},
+	})
+
+func _magic_building_ids_for_town(session, placement_id: String) -> Array:
+	var town_state := _town_by_id(session, placement_id)
+	var town_template := ContentService.get_town(String(town_state.get("town_id", "")))
+	var building_ids := []
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		var building_id := String(building_id_value)
+		var building := ContentService.get_building(building_id)
+		if int(building.get("spell_tier", 0)) > 0:
+			building_ids.append(building_id)
+	return building_ids
+
 func _update_duskfen_town(session, patch: Dictionary) -> void:
 	var towns: Array = session.overworld.get("towns", [])
 	for index in range(towns.size()):
@@ -561,6 +640,28 @@ func _commander_continuity(session, actor_id: String) -> Dictionary:
 		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == actor_id:
 			return EnemyAdventureRules.commander_army_continuity(entry)
 	return {}
+
+func _commander_state(session, actor_id: String) -> Dictionary:
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == actor_id:
+			var commander: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+			return commander
+	return {}
+
+func _known_spell_count_by_commander(session) -> Dictionary:
+	var counts := {}
+	for entry in EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID):
+		if not (entry is Dictionary):
+			continue
+		var actor_id := String(entry.get("roster_hero_id", ""))
+		var commander: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+		counts[actor_id] = _known_spell_count(commander)
+	return counts
+
+func _known_spell_count(commander_state: Dictionary) -> int:
+	var spellbook: Dictionary = commander_state.get("spellbook", {}) if commander_state.get("spellbook", {}) is Dictionary else {}
+	var known: Array = spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
+	return known.size()
 
 func _active_raid_count(session) -> int:
 	var count := 0
