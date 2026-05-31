@@ -14759,7 +14759,16 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 			valid = int(encounter_result.get("index", -1)) >= 0 and not OverworldRulesScript.is_encounter_resolved(session, encounter_result.get("encounter", {}))
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
-			valid = hero_target_id == "" or not _find_player_hero(session, hero_target_id).is_empty()
+			if hero_target_id == "":
+				valid = true
+			else:
+				var hero := _find_player_hero(session, hero_target_id)
+				var raid_faction := String(raid.get("spawned_by_faction_id", ""))
+				valid = (
+					not hero.is_empty()
+					and raid_faction != ""
+					and not _known_player_hero_snapshot_for_ai(session, raid_faction, hero).is_empty()
+				)
 		"explore":
 			var target_id := String(raid.get("target_placement_id", ""))
 			var goal_tile := _exploration_target_tile_from_id(target_id)
