@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:59:00Z",
+  "updatedAt": "2026-05-31T04:08:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,86 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-route-opportunistic-pickups-10184",
+      "title": "Strategic AI Route Opportunistic Pickups",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make active AI commanders claim safe unguarded resource and artifact objectives they are standing on or march through without abandoning their assigned strategic target.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd"
+      ],
+      "baselineChecks": [
+        "Active raid movement currently resolves only the assigned target on arrival.",
+        "A commander can stand on or march over a safe unguarded reward/site and ignore it if it is not the current assignment."
+      ],
+      "completionCriteria": [
+        "Active non-retiring AI raids claim safe unguarded resources on their current tile before moving and after each movement step.",
+        "Active non-retiring AI raids claim safe unguarded artifacts on their current tile before moving and after each movement step.",
+        "Opportunistic pickups emit normal public AI events and update state/commander progression without finishing or replacing the current live assignment.",
+        "Focused live-turn coverage proves a marching commander keeps its original target after an opportunistic route pickup."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not let opportunistic pickups bypass guards, risk gates, regroup/retreat duties, or defense objectives.",
+        "Do not change combat balance, economy balance, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T04:03:28Z",
+      "updatedAt": "2026-05-31T04:08:25Z",
+      "completedAt": "2026-05-31T04:08:25Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "River Pass live-turn coverage proves opportunistic route resource pickup preserves the assigned encounter target and emits public site-seized transition data."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_event_surfacing_report.tscn",
+          "result": "passed",
+          "summary": "Existing strategic AI assignment, seizure, and contest event surfaces remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event boundary remains compact and leak-free."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup, guarded-claim, route-occupancy, and resource-front support behavior still passes."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "plannedBehavior": "AI commanders should opportunistically harvest safe route objectives while continuing the assigned strategic route.",
+        "completedBehavior": "Active AI raids now opportunistically claim safe unguarded resource and artifact objectives on their current tile or route steps while preserving their assigned strategic target and normal guarded/defensive/regroup exclusions."
+      }
+    },
     {
       "id": "strategic-ai-site-event-task-transition-10184",
       "title": "Strategic AI Site Event Task Transition",
@@ -40837,6 +40917,48 @@
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ]
+    },
+    {
+      "id": "strategic-ai-route-opportunistic-pickups-10184",
+      "completedAt": "2026-05-31T04:08:25Z",
+      "summary": "Active strategic AI commanders now claim safe unguarded route resources/artifacts without abandoning assigned objectives.",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "passed",
+          "summary": "River Pass live-turn coverage proves opportunistic route resource pickup preserves the assigned encounter target and emits public site-seized transition data."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_event_surfacing_report.tscn",
+          "result": "passed",
+          "summary": "Existing strategic AI assignment, seizure, and contest event surfaces remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event boundary remains compact and leak-free."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup, guarded-claim, route-occupancy, and resource-front support behavior still passes."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -43798,9 +43920,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T02:20:01Z"
+    "updatedAt": "2026-05-31T04:08:25Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T03:27:44Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:08:25Z",
   "validationHistory": [
     {
       "status": "pass",

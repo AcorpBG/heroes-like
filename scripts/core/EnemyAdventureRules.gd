@@ -1113,6 +1113,19 @@ static func advance_raids(
 					event_records.append(event_value)
 		encounter["days_active"] = max(0, int(encounter.get("days_active", 0))) + 1
 
+		var pre_move_pickup := _resolve_opportunistic_route_objective(session, config, encounter, state, faction_id)
+		if bool(pre_move_pickup.get("resolved", false)):
+			encounter = pre_move_pickup.get("encounter", encounter)
+			state = pre_move_pickup.get("state", state)
+			var pre_move_message := String(pre_move_pickup.get("event_message", ""))
+			if pre_move_message != "":
+				event_messages.append(pre_move_message)
+			for pre_move_event_value in pre_move_pickup.get("ai_events", []):
+				if pre_move_event_value is Dictionary and not pre_move_event_value.is_empty():
+					event_records.append(pre_move_event_value)
+			encounters[index] = encounter
+			session.overworld["encounters"] = encounters
+
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
@@ -1141,6 +1154,18 @@ static func advance_raids(
 			encounter["x"] = next_step.x
 			encounter["y"] = next_step.y
 			current = next_step
+			var route_pickup := _resolve_opportunistic_route_objective(session, config, encounter, state, faction_id)
+			if bool(route_pickup.get("resolved", false)):
+				encounter = route_pickup.get("encounter", encounter)
+				state = route_pickup.get("state", state)
+				var route_message := String(route_pickup.get("event_message", ""))
+				if route_message != "":
+					event_messages.append(route_message)
+				for route_event_value in route_pickup.get("ai_events", []):
+					if route_event_value is Dictionary and not route_event_value.is_empty():
+						event_records.append(route_event_value)
+				encounters[index] = encounter
+				session.overworld["encounters"] = encounters
 
 		goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
@@ -13299,6 +13324,326 @@ static func _best_goal_tile(
 			best_distance = distance
 			best_tile = tile
 	return best_tile
+
+static func _resolve_opportunistic_route_objective(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	if not _raid_allows_opportunistic_route_pickups(raid):
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	if _tile_has_unresolved_route_pickup_blocker(session, current, raid, faction_id):
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	var assigned_kind := String(raid.get("target_kind", ""))
+	var assigned_id := String(raid.get("target_placement_id", ""))
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	for index in range(nodes.size()):
+		var node_value = nodes[index]
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+			continue
+		var node_id := String(node.get("placement_id", ""))
+		if assigned_kind == "resource" and assigned_id == node_id:
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id):
+			continue
+		if not _resource_guard_encounter_for_node(session, node, site).is_empty():
+			continue
+		return _secure_opportunistic_route_resource(session, config, raid, state, faction_id, index, node, site)
+	var artifact_nodes: Array = session.overworld.get("artifact_nodes", []) if session.overworld.get("artifact_nodes", []) is Array else []
+	for index in range(artifact_nodes.size()):
+		var node_value = artifact_nodes[index]
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+			continue
+		var node_id := String(node.get("placement_id", ""))
+		if assigned_kind == "artifact" and assigned_id == node_id:
+			continue
+		if bool(node.get("collected", false)):
+			continue
+		if not _artifact_guard_encounter_for_node(session, node).is_empty():
+			continue
+		return _secure_opportunistic_route_artifact(session, config, raid, state, faction_id, index, node)
+	return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+
+static func _raid_allows_opportunistic_route_pickups(raid: Dictionary) -> bool:
+	if raid.is_empty() or bool(raid.get("raid_retired_to_rebuild", false)):
+		return false
+	var target_kind := String(raid.get("target_kind", ""))
+	if target_kind in ["regroup", "hero"]:
+		return false
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	for blocked_code in [
+		"town_defense",
+		"site_defense",
+		"defend_front",
+		"front_stabilization",
+		"regroup_understrength",
+		"guard_cleared",
+		"guarded_resource_claim",
+		"guarded_artifact_claim",
+		"hero_intercept",
+		"hero_hunt",
+	]:
+		if blocked_code in reason_codes:
+			return false
+	return true
+
+static func _tile_has_unresolved_route_pickup_blocker(
+	session: SessionStateStoreScript.SessionData,
+	tile: Vector2i,
+	raid: Dictionary,
+	faction_id: String
+) -> bool:
+	if session == null:
+		return false
+	var actor_id := String(raid.get("placement_id", ""))
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) == actor_id:
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) == faction_id:
+			continue
+		if OverworldRulesScript.is_encounter_resolved(session, encounter):
+			continue
+		if Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))) == tile:
+			return true
+	return false
+
+static func _secure_opportunistic_route_resource(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	node_index: int,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	if node_index < 0 or node_index >= nodes.size():
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	var previous_node: Dictionary = node.duplicate(true)
+	var previous_controller := String(node.get("collected_by_faction_id", ""))
+	var route_node := node.duplicate(true)
+	var escorted_route := int(previous_node.get("response_until_day", 0)) >= session.day
+	var escort_strength: int = max(0, int(previous_node.get("response_security_rating", 0)))
+	var delivery_value := _recruit_payload_value(previous_node.get("delivery_manifest", {}))
+	var delivery_target_label := String(previous_node.get("delivery_target_label", "the front"))
+	if delivery_target_label == "":
+		delivery_target_label = "the front"
+	route_node["collected"] = true
+	route_node["collected_by_faction_id"] = faction_id
+	route_node["collected_day"] = session.day
+	route_node["response_origin"] = ""
+	route_node["response_source_town_id"] = ""
+	route_node["response_last_day"] = 0
+	route_node["response_until_day"] = 0
+	route_node["response_commander_id"] = ""
+	route_node["response_security_rating"] = 0
+	route_node["delivery_controller_id"] = ""
+	route_node["delivery_origin_town_id"] = ""
+	route_node["delivery_target_kind"] = ""
+	route_node["delivery_target_id"] = ""
+	route_node["delivery_target_label"] = ""
+	route_node["delivery_arrival_day"] = 0
+	route_node["delivery_manifest"] = {}
+	nodes[node_index] = route_node
+	session.overworld["resource_nodes"] = nodes
+
+	var spoils := _reward_resources_for_empire(_resource_site_claim_rewards(site))
+	state["treasury"] = _merge_resources(state.get("treasury", {}), spoils)
+	state["pressure"] = max(0, int(state.get("pressure", 0))) + _resource_site_pressure_value(site)
+	if escorted_route:
+		state["pressure"] += max(1, escort_strength)
+	if delivery_value > 0:
+		state["pressure"] = max(0, int(state.get("pressure", 0))) + clamp(int(ceili(float(delivery_value) / 220.0)), 1, 3)
+	var updated_raid := _record_adventure_objective_success(
+		session,
+		faction_id,
+		raid,
+		COMMANDER_OUTCOME_RESOURCE_SECURED
+	)
+	updated_raid["last_opportunistic_pickup_kind"] = "resource"
+	updated_raid["last_opportunistic_pickup_placement_id"] = String(route_node.get("placement_id", ""))
+	updated_raid["last_opportunistic_pickup_day"] = int(session.day)
+	var message := "%s claims %s while marching." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
+	if not spoils.is_empty():
+		message = "%s claims %s while marching and strips %s." % [
+			_raid_name(updated_raid),
+			String(site.get("name", "the site")),
+			_describe_resource_set(spoils),
+		]
+	if delivery_value > 0:
+		message = "%s The convoy bound for %s is scattered." % [message.trim_suffix("."), delivery_target_label]
+	elif escorted_route:
+		message = "%s claims %s while marching and breaks its escorted logistics route." % [
+			_raid_name(updated_raid),
+			String(site.get("name", "the site")),
+		]
+	elif _resource_site_is_persistent(site):
+		message = "%s claims %s while marching and denies its logistics route." % [
+			_raid_name(updated_raid),
+			String(site.get("name", "the site")),
+		]
+	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
+		session,
+		previous_node,
+		site,
+		previous_controller,
+		faction_id
+	)
+	if disruption_message != "":
+		message = "%s %s" % [message, disruption_message]
+	var seized_codes := ["site_seized", "route_pressure"]
+	seized_codes.append_array(
+		_resource_target_reason_codes(
+			site,
+			previous_controller == "player",
+			_resource_site_is_persistent(site),
+			_target_resource_value(site.get("control_income", {})),
+			_recruit_payload_value(site.get("claim_recruits", {})) + _recruit_payload_value(site.get("weekly_recruits", {})),
+			_resource_route_pressure_value(site),
+			_linked_player_town_bonus(session, previous_node)
+		)
+	)
+	var target := {
+		"target_kind": "resource",
+		"target_placement_id": String(route_node.get("placement_id", "")),
+		"target_label": String(site.get("name", "the site")),
+		"target_x": int(route_node.get("x", 0)),
+		"target_y": int(route_node.get("y", 0)),
+		"target_reason_codes": seized_codes,
+		"target_public_reason": _public_reason_from_codes(seized_codes),
+		"target_public_importance": "high" if previous_controller == "player" or _resource_site_is_persistent(site) else "medium",
+		"target_debug_reason": "opportunistic route resource pickup",
+	}
+	var event := build_ai_event_record(
+		session,
+		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_site_seized",
+		updated_raid,
+		target,
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+			"target_controller_before": previous_controller,
+			"target_controller_after": faction_id,
+		}
+	)
+	return {"resolved": true, "encounter": updated_raid, "state": state, "event_message": message, "ai_events": [event]}
+
+static func _secure_opportunistic_route_artifact(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	node_index: int,
+	node: Dictionary
+) -> Dictionary:
+	var nodes: Array = session.overworld.get("artifact_nodes", []) if session.overworld.get("artifact_nodes", []) is Array else []
+	if node_index < 0 or node_index >= nodes.size():
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	var route_node := node.duplicate(true)
+	route_node["collected"] = true
+	route_node["collected_by_faction_id"] = faction_id
+	route_node["collected_day"] = session.day
+	nodes[node_index] = route_node
+	session.overworld["artifact_nodes"] = nodes
+
+	var captured_artifacts := []
+	if state.get("captured_artifact_ids", []) is Array:
+		for artifact_id_value in state.get("captured_artifact_ids", []):
+			var artifact_id := String(artifact_id_value)
+			if artifact_id != "" and artifact_id not in captured_artifacts:
+				captured_artifacts.append(artifact_id)
+	var claimed_artifact_id := String(route_node.get("artifact_id", ""))
+	if claimed_artifact_id != "" and claimed_artifact_id not in captured_artifacts:
+		captured_artifacts.append(claimed_artifact_id)
+	state["captured_artifact_ids"] = captured_artifacts
+	state["pressure"] = max(0, int(state.get("pressure", 0))) + _artifact_pressure_value(claimed_artifact_id)
+	var updated_raid := raid.duplicate(true)
+	var claim_result := {}
+	var artifact_bonus_report := {}
+	if claimed_artifact_id != "":
+		var commander_state = updated_raid.get("enemy_commander_state", {})
+		if commander_state is Dictionary and not commander_state.is_empty():
+			claim_result = ArtifactRulesScript.claim_artifact(
+				commander_state,
+				claimed_artifact_id,
+				"Secured",
+				true
+			)
+			if bool(claim_result.get("ok", false)):
+				var updated_commander: Dictionary = claim_result.get("hero", commander_state)
+				updated_raid["enemy_commander_state"] = updated_commander
+				artifact_bonus_report = ArtifactRulesScript.artifact_equip_runtime_report(updated_commander)
+	updated_raid = _record_adventure_objective_success(
+		session,
+		faction_id,
+		updated_raid,
+		COMMANDER_OUTCOME_ARTIFACT_SECURED
+	)
+	var progressed_commander = updated_raid.get("enemy_commander_state", {})
+	if progressed_commander is Dictionary and not progressed_commander.is_empty():
+		artifact_bonus_report = ArtifactRulesScript.artifact_equip_runtime_report(progressed_commander)
+	updated_raid["last_opportunistic_pickup_kind"] = "artifact"
+	updated_raid["last_opportunistic_pickup_placement_id"] = String(route_node.get("placement_id", ""))
+	updated_raid["last_opportunistic_pickup_day"] = int(session.day)
+	var message := "%s secures %s while marching." % [
+		_raid_name(updated_raid),
+		ArtifactRulesScript.describe_artifact(claimed_artifact_id),
+	]
+	if bool(claim_result.get("ok", false)) and bool(claim_result.get("auto_equipped", false)):
+		message = "%s %s equips it immediately." % [
+			message,
+			raid_commander_display_name(updated_raid),
+		]
+	var reason_codes := ["artifact_secured", "route_pressure"]
+	var target := {
+		"target_kind": "artifact",
+		"target_placement_id": String(route_node.get("placement_id", "")),
+		"target_label": ArtifactRulesScript.describe_artifact(claimed_artifact_id),
+		"target_x": int(route_node.get("x", 0)),
+		"target_y": int(route_node.get("y", 0)),
+		"target_reason_codes": reason_codes,
+		"target_public_reason": _public_reason_from_codes(reason_codes),
+		"target_public_importance": "high",
+		"target_debug_reason": "opportunistic route artifact pickup",
+	}
+	var event := build_ai_event_record(
+		session,
+		config if not config.is_empty() else {"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_artifact_secured",
+		updated_raid,
+		target,
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {
+		"resolved": true,
+		"encounter": updated_raid,
+		"state": state,
+		"event_message": message,
+		"ai_events": [event],
+		"artifact_claim": claim_result,
+		"artifact_bonus_report": artifact_bonus_report,
+	}
 
 static func _resolve_arrived_target(
 	session: SessionStateStoreScript.SessionData,
