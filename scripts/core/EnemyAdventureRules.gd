@@ -845,6 +845,9 @@ static func _active_front_support_candidate(
 			var hero := _player_hero_snapshot_for_task(session, target_id)
 			if hero.is_empty():
 				return {}
+			hero = _known_player_hero_snapshot_for_ai(session, faction_id, hero)
+			if hero.is_empty():
+				return {}
 			var hero_tile := _player_hero_goal_tile(hero)
 			target_label = String(hero.get("name", target_id))
 			target_x = hero_tile.x
@@ -1235,7 +1238,7 @@ static func group_nearby_raids_for_town_assault(
 	var leader_id := String(leader.get("placement_id", ""))
 	if town_id == "" or leader_id == "":
 		return {"encounter": leader, "grouped": false, "events": []}
-	var target_view := _raid_grouping_target_view(session, target_kind, town_id)
+	var target_view := _raid_grouping_target_view(session, target_kind, town_id, faction_id)
 	if target_view.is_empty():
 		return {"encounter": leader, "grouped": false, "events": []}
 	var donor_index := _best_nearby_assault_support_raid_index(
@@ -1330,7 +1333,8 @@ static func group_nearby_raids_for_town_assault(
 static func _raid_grouping_target_view(
 	session: SessionStateStoreScript.SessionData,
 	target_kind: String,
-	target_id: String
+	target_id: String,
+	faction_id: String = ""
 ) -> Dictionary:
 	match target_kind:
 		"town":
@@ -1362,6 +1366,10 @@ static func _raid_grouping_target_view(
 			var hero := _player_hero_snapshot_for_task(session, target_id)
 			if hero.is_empty():
 				return {}
+			if faction_id != "":
+				hero = _known_player_hero_snapshot_for_ai(session, faction_id, hero)
+				if hero.is_empty():
+					return {}
 			var hero_tile := _player_hero_goal_tile(hero)
 			return {
 				"target_label": String(hero.get("name", target_id)),

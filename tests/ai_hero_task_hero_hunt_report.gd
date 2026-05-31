@@ -32,6 +32,9 @@ func _run() -> void:
 	var active_lost_case_report := _active_hero_hunt_retargets_when_sighting_lost_case()
 	if active_lost_case_report.is_empty():
 		return
+	var hidden_support_case_report := _hidden_hero_front_support_uses_sighting_gate_case()
+	if hidden_support_case_report.is_empty():
+		return
 	var arbitration_case_report := _hero_intercept_arbitration_prefers_ready_high_value_hunt()
 	if arbitration_case_report.is_empty():
 		return
@@ -57,6 +60,7 @@ func _run() -> void:
 		"stale_position_case": stale_position_case_report,
 		"stale_task_case": stale_task_case_report,
 		"active_lost_case": active_lost_case_report,
+		"hidden_support_case": hidden_support_case_report,
 		"arbitration_case": arbitration_case_report,
 		"support_case": support_case_report,
 		"stall_case": stall_case_report,
@@ -65,6 +69,85 @@ func _run() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _hidden_hero_front_support_uses_sighting_gate_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 6
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for hidden support fixture.")
+		return {}
+	var last_known_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var support_tile := _nearest_open_non_town_tile_excluding(session, Vector2i(last_known_tile.x + 1, last_known_tile.y), last_known_tile)
+	_remove_mireclaw_active_raids(session)
+	_move_player_hero(session, hero_id, last_known_tile)
+	var hidden_tile := _hidden_player_hero_tile_for_enemy(session, hero_id)
+
+	var leader := _raid_seed(session, "hero_vaska", "hidden_hero_front_leader_vaska", last_known_tile)
+	leader["target_kind"] = "hero"
+	leader["target_placement_id"] = hero_id
+	leader["target_label"] = _hero_name(session, hero_id)
+	leader["target_x"] = last_known_tile.x
+	leader["target_y"] = last_known_tile.y
+	leader["goal_x"] = last_known_tile.x
+	leader["goal_y"] = last_known_tile.y
+	leader["goal_distance"] = 0
+	leader["arrived"] = true
+	leader["target_reason_codes"] = ["hero_hunt", "awaiting_support", "hero_hunt_risk_regroup", "hidden_hero_front_fixture"]
+	leader["target_public_reason"] = "exposed hero"
+	leader["target_public_importance"] = "high"
+	leader["target_debug_reason"] = "hidden hero front support sighting gate fixture"
+	leader = _set_raid_bog_brutes(leader, 60)
+	_append_encounter(session, leader)
+
+	var support := _raid_seed(session, "hero_sable", "hidden_hero_front_support_sable", support_tile)
+	support = _set_raid_bog_brutes(support, 5)
+	var assigned_support := EnemyAdventureRules.assign_target(session, config, support)
+	if String(assigned_support.get("target_kind", "")) == "hero" and String(assigned_support.get("target_placement_id", "")) == hero_id:
+		_fail("Hidden hero front support still used the live hidden hero coordinate: %s" % JSON.stringify(assigned_support))
+		return {}
+	if String(assigned_support.get("supporting_front_placement_id", "")) == "hidden_hero_front_leader_vaska":
+		_fail("Hidden hero front support still bound to the stale hero front: %s" % JSON.stringify(assigned_support))
+		return {}
+
+	var donor := _raid_seed(session, "hero_sable", "hidden_hero_front_group_donor_sable", support_tile)
+	donor["target_kind"] = "hero"
+	donor["target_placement_id"] = hero_id
+	donor["target_label"] = _hero_name(session, hero_id)
+	donor["target_x"] = last_known_tile.x
+	donor["target_y"] = last_known_tile.y
+	donor["goal_x"] = last_known_tile.x
+	donor["goal_y"] = last_known_tile.y
+	donor["goal_distance"] = 1
+	donor["target_reason_codes"] = ["active_front_support", "army_consolidation", "hero_hunt", "hidden_hero_front_fixture"]
+	donor["supporting_front_placement_id"] = "hidden_hero_front_leader_vaska"
+	donor = _set_raid_bog_brutes(donor, 20)
+	var grouping_encounters := [leader.duplicate(true), donor.duplicate(true)]
+	var grouping_result := EnemyAdventureRules.group_nearby_raids_for_town_assault(
+		session,
+		config,
+		grouping_encounters,
+		0,
+		grouping_encounters[0],
+		MIRECLAW,
+		[]
+	)
+	if bool(grouping_result.get("grouped", false)):
+		_fail("Hidden hero front grouping still used the live hidden hero coordinate: %s" % JSON.stringify(grouping_result))
+		return {}
+	if _failed:
+		return {}
+	return {
+		"case_id": "hidden_hero_front_support_uses_sighting_gate",
+		"hero_id": hero_id,
+		"last_known_tile": {"x": last_known_tile.x, "y": last_known_tile.y},
+		"hidden_tile": {"x": hidden_tile.x, "y": hidden_tile.y},
+		"support_target_kind": String(assigned_support.get("target_kind", "")),
+		"support_target_id": String(assigned_support.get("target_placement_id", "")),
+		"grouped_hidden_front": bool(grouping_result.get("grouped", false)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
 
 func _active_raid_opportunistically_intercepts_nearby_exposed_hero_case() -> Dictionary:
 	var session = _base_session()
