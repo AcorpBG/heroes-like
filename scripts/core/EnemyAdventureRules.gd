@@ -6322,6 +6322,9 @@ static func plan_enemy_hero_task_board(
 	for task_value in existing_tasks:
 		if task_value is Dictionary:
 			next_tasks.append(task_value)
+	var reservation_recovered_tasks := ai_hero_task_apply_reservations(next_tasks)
+	var reservation_recovery_changed := JSON.stringify(next_tasks) != JSON.stringify(reservation_recovered_tasks)
+	next_tasks = reservation_recovered_tasks
 
 	var candidates := _ai_hero_task_planner_candidates_from_origins(session, config, origins)
 	var target_claims := _ai_hero_task_planner_target_claims(next_tasks)
@@ -6363,7 +6366,7 @@ static func plan_enemy_hero_task_board(
 		if reservation_key != "":
 			target_claims[reservation_key] = true
 		planned_count += 1
-	if planned_count <= 0:
+	if planned_count <= 0 and not reservation_recovery_changed:
 		working_state["hero_task_state"] = {
 			"schema_version": 1,
 			"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))),
@@ -6373,7 +6376,7 @@ static func plan_enemy_hero_task_board(
 		return {"state": working_state, "planned_count": 0, "task_count": next_tasks.size(), "events": []}
 	working_state["hero_task_state"] = {
 		"schema_version": 1,
-		"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + 1,
+		"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + (1 if planned_count > 0 or reservation_recovery_changed else 0),
 		"tasks": _ai_hero_task_prune_live_tasks(next_tasks, int(session.day)),
 	}
 	_ai_hero_task_write_enemy_state_for_faction(session, faction_id, working_state)
@@ -9924,6 +9927,8 @@ static func ai_hero_task_apply_reservations(tasks_value: Variant) -> Array:
 		if not (tasks[index] is Dictionary):
 			continue
 		var task: Dictionary = tasks[index]
+		if not _ai_hero_task_reservation_arbitrates_status(String(task.get("task_status", ""))):
+			continue
 		var reservation: Dictionary = task.get("reservation", {})
 		if String(reservation.get("reservation_scope", "")) != "exclusive_target":
 			continue
@@ -9961,6 +9966,9 @@ static func ai_hero_task_apply_reservations(tasks_value: Variant) -> Array:
 			loser["invalidated_by_task_id"] = String(primary_task.get("task_id", ""))
 			tasks[loser_index] = loser
 	return tasks
+
+static func _ai_hero_task_reservation_arbitrates_status(status: String) -> bool:
+	return status in ["candidate", "planned", "reserved", "active", "suspended", "blocked"]
 
 static func ai_hero_task_transition_from_arrival(retake_task: Dictionary, arrival: Dictionary) -> Dictionary:
 	var task_target := "%s:%s" % [String(retake_task.get("target_kind", "")), String(retake_task.get("target_id", ""))]
