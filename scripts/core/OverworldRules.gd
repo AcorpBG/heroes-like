@@ -4984,6 +4984,10 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"ai_defender_army",
 		"ai_defender_commander_state",
 		"ai_defender_roster_hero_id",
+		"development_source_support",
+		"source_support_town_placement_id",
+		"source_support_faction_id",
+		"source_support_missing_resource_ids",
 	]:
 		if source.has(key):
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]

@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue with the next production-impacting strategic AI behavior gap.
+- Latest completed slice: `strategic-ai-active-town-runway-source-support-10184`.
 - Latest completed slice: `strategic-ai-empire-build-arbitration-10184`.
 - Latest completed slice: `strategic-ai-rare-resource-targeting-10184`.
 - Latest completed slice: `strategic-ai-town-spell-study-10184`.
