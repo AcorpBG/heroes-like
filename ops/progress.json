@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T19:45:00Z",
+  "updatedAt": "2026-05-31T20:10:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,47 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-spell-template-spellbook-fallback-10184",
+      "title": "Battle AI Spell Template Spellbook Fallback",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T19:55:00Z",
+      "updatedAt": "2026-05-31T20:10:00Z",
+      "completedAt": "2026-05-31T20:10:00Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / battle-ai-spell-template-spellbook-fallback-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make tactical battle spell AI preserve authored commander spell access when battle enemy_hero/enemy_hero_payload/argument state only carries roster_hero_id/hero_id/id and omits spellbook or command stats.",
+      "implementationTargets": [
+        "Normalize enemy battle spell valuation hero state through the authored hero template before enumerating known battle spells.",
+        "Make live enemy spell execution use that normalized commander spell state so template-derived spell selection can actually cast.",
+        "Prove a minimal Veyra battle commander can inherit authored battle spells and select/cast the expected control spell through both report and live action paths.",
+        "Preserve all unit, spell, growth, economy, faction, and town-cost balance content."
+      ],
+      "completionCriteria": "Focused magic AI report proves minimal battle commander spellbook fallback in both valuation and live enemy action; adjacent tactical and repository validation remain green; no balance/content files are changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No new spells or spell balance tuning.",
+        "No production-ready AI claim from one battle spell fallback fix."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 160 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Tactical battle spell valuation/live enemy action now normalize minimal commander state through authored hero templates before known-spell enumeration, restoring template starting battle spells, mana, command stats, and traits without mutating source battle state. Live enemy action now evaluates force-preservation withdrawal before non-lethal setup spells, so recovered template spellbooks cannot hide retreat/surrender pressure; lethal spell actions can still override when they decide the battle. Focused magic AI report proves minimal Veyra (roster_hero_id=hero_thornwake_veyra_seedseer) inherits Briar Bind through both argument and battle-state paths. No unit, spell, growth, economy, faction, town-cost, or other balance content changed."
+    },
     {
       "id": "strategic-ai-adventure-spell-template-fallback-10184",
       "title": "Strategic AI Adventure Spell Template Fallback",
