@@ -984,6 +984,7 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 2.5
 	if int(target.get("shots_remaining", 0)) > 0:
 		score += 1.0
+	score += _target_immediate_threat_score(attacker, target, battle)
 	score += (1.0 - _health_ratio(target)) * 3.0
 	score += (1.0 - (float(_stack_cohesion_total(target, battle)) / float(COHESION_MAX))) * 3.5
 	score += float(_stack_momentum_total(attacker, battle)) * 0.6
@@ -1180,6 +1181,7 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 	var success_chance := float(max(0, 100 - SpellRulesScript.control_resistance_pct(battle, target, spell))) / 100.0
 	var score := 3.0 + (_attack_score(active_stack, target, battle, true) * 0.35)
 	var already_controlled := _stack_has_control_effect(target, battle)
+	score += _target_immediate_threat_score(active_stack, target, battle) * 0.75
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
 		score += 3.0 * success_chance
 		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id) * success_chance
@@ -1198,6 +1200,34 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
 	return score * max(0.15, success_chance)
+
+static func _target_immediate_threat_score(defended_stack: Dictionary, target: Dictionary, battle: Dictionary) -> float:
+	if defended_stack.is_empty() or target.is_empty():
+		return 0.0
+	if String(defended_stack.get("side", "")) == "" or String(defended_stack.get("side", "")) == String(target.get("side", "")):
+		return 0.0
+	if _alive_count(defended_stack) <= 0 or _alive_count(target) <= 0:
+		return 0.0
+	var can_shoot := _can_make_ranged_attack(target, battle, defended_stack)
+	var can_strike := _can_make_melee_attack(target, battle, defended_stack)
+	if not can_shoot and not can_strike:
+		return 0.0
+	var is_ranged: bool = can_shoot
+	var attack_distance: int = _attack_distance_for_action(target, defended_stack, battle, is_ranged)
+	var projected_damage: int = _estimate_damage(target, defended_stack, battle, is_ranged, false, attack_distance)
+	var defended_health: int = max(1, int(defended_stack.get("total_health", 0)))
+	var defended_unit_hp: int = max(1, int(defended_stack.get("unit_hp", 1)))
+	var pressure: float = min(4.0, float(projected_damage) / float(defended_unit_hp) * 0.45)
+	pressure += min(4.0, float(projected_damage) / float(defended_health) * 4.0)
+	if projected_damage >= defended_health:
+		pressure += 4.0
+	elif projected_damage >= int(round(float(defended_health) * 0.5)):
+		pressure += 1.5
+	if can_shoot:
+		pressure += 0.75
+	if _stack_has_control_effect(target, battle):
+		pressure *= 0.45
+	return min(8.0, pressure)
 
 static func _recovery_spell_score(enemy_hero: Dictionary, battle: Dictionary, active_stack: Dictionary, spell: Dictionary) -> float:
 	return _recovery_spell_score_for_target(enemy_hero, battle, active_stack, active_stack, spell)
@@ -1576,6 +1606,7 @@ static func _enemy_withdrawal_action(
 	if pressure_ratio < minimum_pressure_gate and enemy_ratio > minimum_enemy_ratio_gate:
 		return {}
 	var best_score := float(current_best.get("score", 0.0)) if not current_best.is_empty() else 0.0
+	var preservation_best_score := _preservation_comparison_score(battle, active_stack, current_best, best_score)
 	var score := 5.0
 	score += (1.0 - enemy_ratio) * 10.0
 	score += maxf(0.0, player_ratio - enemy_ratio) * 6.0
@@ -1585,9 +1616,9 @@ static func _enemy_withdrawal_action(
 	if int(battle.get("round", 1)) >= 4:
 		score += 1.5
 	score *= urgency_scale
-	if best_score >= 9.0:
-		score -= (best_score - 8.5) * 0.8
-	if score < best_score + 0.35:
+	if preservation_best_score >= 9.0:
+		score -= (preservation_best_score - 8.5) * 0.8
+	if score < preservation_best_score + 0.35:
 		return {}
 	var action_id := ""
 	if surrender_allowed and (enemy_ratio <= 0.14 or active_ratio <= 0.12 or pressure_ratio >= 4.0):
@@ -1598,6 +1629,8 @@ static func _enemy_withdrawal_action(
 		action_id = "surrender"
 	if action_id == "":
 		return {}
+	if score < best_score + 0.35:
+		score = best_score + 0.35
 	return {
 		"action": action_id,
 		"score": score,
@@ -1610,7 +1643,25 @@ static func _enemy_withdrawal_action(
 		"commander_withdrawal_urgency_scale": urgency_scale,
 		"current_best_action": String(current_best.get("action", "")),
 		"current_best_score": best_score,
+		"preservation_comparison_score": preservation_best_score,
 	}
+
+static func _preservation_comparison_score(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	current_best: Dictionary,
+	best_score: float
+) -> float:
+	var action := String(current_best.get("action", ""))
+	if action not in ["shoot", "strike", "cast_spell"]:
+		return best_score
+	var target := _stack_by_battle_id(battle, String(current_best.get("target_battle_id", "")))
+	if target.is_empty() or String(target.get("side", "")) == String(active_stack.get("side", "")):
+		return best_score
+	var immediate_threat := _target_immediate_threat_score(active_stack, target, battle)
+	if immediate_threat <= 0.0:
+		return best_score
+	return max(0.0, best_score - immediate_threat)
 
 static func _enemy_withdrawal_urgency_scale(battle: Dictionary) -> float:
 	var commander := _hero_payload_for_side(battle, "enemy")

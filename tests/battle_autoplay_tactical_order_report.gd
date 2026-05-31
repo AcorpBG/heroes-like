@@ -36,6 +36,9 @@ func _run() -> void:
 	var overkill_target_case := _validate_enemy_overkill_target_discipline()
 	if not bool(overkill_target_case.get("ok", false)):
 		return
+	var immediate_threat_case := _validate_enemy_immediate_threat_targeting()
+	if not bool(immediate_threat_case.get("ok", false)):
+		return
 	var commander_payload_case := _validate_tactical_order_argument_commander_payload()
 	if not bool(commander_payload_case.get("ok", false)):
 		return
@@ -54,6 +57,7 @@ func _run() -> void:
 		"decision": decision,
 		"enemy_engaged_melee": enemy_engaged_case,
 		"enemy_overkill_target_discipline": overkill_target_case,
+		"enemy_immediate_threat_targeting": immediate_threat_case,
 		"argument_commander_payload": commander_payload_case,
 		"battle_rules_commander_payload_fallback": battle_rules_payload_fallback_case,
 		"battle_ai_commander_payload_fallback": battle_ai_payload_fallback_case,
@@ -113,6 +117,35 @@ func _validate_enemy_overkill_target_discipline() -> Dictionary:
 		"decoy_damage_estimate": decoy_estimate,
 		"dangerous_total_health": int(dangerous.get("total_health", 0)),
 		"dangerous_damage_estimate": dangerous_estimate,
+	}
+
+func _validate_enemy_immediate_threat_targeting() -> Dictionary:
+	var session := _enemy_immediate_threat_target_session()
+	var active_stack := BattleRulesScript.get_active_stack(session.battle)
+	var decision := BattleAiRules.choose_enemy_action(session.battle, active_stack, {})
+	if String(decision.get("action", "")) != "shoot" or String(decision.get("target_battle_id", "")) != "player_immediate_killer":
+		_fail("Enemy ranged stack should suppress immediate lethal pressure instead of chasing a weaker wounded decoy: %s" % JSON.stringify(decision))
+		return {}
+	var tactical_order := BattleAiRules.choose_stack_tactical_order(session.battle, active_stack, "player")
+	if String(tactical_order.get("action", "")) != "shoot" or String(tactical_order.get("target_battle_id", "")) != "player_immediate_killer":
+		_fail("Shared tactical order should use immediate-threat target selection: %s" % JSON.stringify(tactical_order))
+		return {}
+	var wounded := BattleRulesScript._get_stack_by_id(session.battle, "player_wounded_decoy")
+	var killer := BattleRulesScript._get_stack_by_id(session.battle, "player_immediate_killer")
+	var wounded_threat := BattleAiRules._target_immediate_threat_score(active_stack, wounded, session.battle)
+	var killer_threat := BattleAiRules._target_immediate_threat_score(active_stack, killer, session.battle)
+	if killer_threat <= wounded_threat:
+		_fail("Immediate threat fixture did not expose higher threat on killer: wounded=%s killer=%s" % [wounded_threat, killer_threat])
+		return {}
+	return {
+		"ok": true,
+		"live_action": String(decision.get("action", "")),
+		"live_target_id": String(decision.get("target_battle_id", "")),
+		"tactical_order_target_id": String(tactical_order.get("target_battle_id", "")),
+		"wounded_threat_score": wounded_threat,
+		"killer_threat_score": killer_threat,
+		"wounded_attack_score": BattleAiRules._attack_score(active_stack, wounded, session.battle, true),
+		"killer_attack_score": BattleAiRules._attack_score(active_stack, killer, session.battle, true),
 	}
 
 func _validate_tactical_order_argument_commander_payload() -> Dictionary:
@@ -430,6 +463,41 @@ func _enemy_overkill_target_session() -> SessionStateStoreScript.SessionData:
 		"turn_index": 0,
 		"active_stack_id": "enemy_marksmen",
 		"selected_target_id": "player_dangerous_ranged",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"player_commander_state": {},
+		"enemy_hero": {},
+		"field_objectives": [],
+	}
+	return session
+
+func _enemy_immediate_threat_target_session() -> SessionStateStoreScript.SessionData:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-immediate-threat-targeting-report",
+		"battle-ai-immediate-threat-targeting-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = {
+		"round": 2,
+		"max_rounds": 99,
+		"distance": 2,
+		"terrain": "plains",
+		"battlefield_tags": ["open_lane"],
+		"combat_seed": 13579,
+		"stacks": [
+			_stack("enemy_skirmishers", "enemy", "enemy_skirmishers", true, 4, 10, 40, 2, 2, 4, 4, 7, 3, 3),
+			_stack("player_wounded_decoy", "player", "player_wounded_decoy", false, 2, 10, 12, 1, 1, 1, 1, 4, 8, 3),
+			_stack("player_immediate_killer", "player", "player_immediate_killer", true, 12, 10, 120, 7, 7, 8, 4, 7, 8, 4),
+		],
+		"turn_order": ["enemy_skirmishers"],
+		"turn_index": 0,
+		"active_stack_id": "enemy_skirmishers",
+		"selected_target_id": "player_immediate_killer",
 		"recent_events": [],
 		"retreat_allowed": true,
 		"surrender_allowed": true,
