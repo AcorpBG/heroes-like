@@ -55,6 +55,8 @@ const AI_HERO_SIGHTING_MAX_RECORDS := 16
 const AI_HERO_TOWN_SIGHT_RADIUS := 7
 const AI_HERO_RAID_SIGHT_RADIUS := 5
 const AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS := 3
+const AI_EXPLORATION_MIN_ROUTE_DISTANCE := 3
+const AI_EXPLORATION_MAX_ROUTE_DISTANCE := 14
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 const COMMANDER_ROLE_RAIDER := "raider"
 const COMMANDER_ROLE_DEFENDER := "defender"
@@ -5828,6 +5830,9 @@ static func choose_target(
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos)
 	if candidates.is_empty():
+		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
+		if not exploration_plan.is_empty():
+			return exploration_plan
 		return _no_known_target_regroup_plan(session, config, origin_pos)
 
 	var repeated_rival_memory := _normalized_commander_memory(commander_source)
@@ -5866,6 +5871,90 @@ static func choose_target(
 		if _candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _no_known_target_exploration_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin_pos: Vector2i
+) -> Dictionary:
+	if session == null:
+		return {}
+	var faction_id := String(config.get("faction_id", ""))
+	if faction_id == "":
+		return {}
+	var sources := _enemy_hero_sighting_sources(session, config, faction_id)
+	if sources.is_empty():
+		return {}
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	var best := {}
+	var best_score := -999999
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
+			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
+				continue
+			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
+				continue
+			var route_distance := _path_distance(session, origin_pos, [tile], "")
+			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
+				continue
+			var frontier_score := _enemy_exploration_frontier_score(sources, tile)
+			var center_score := _enemy_exploration_center_score(map_size, tile)
+			var score: int = 280 + frontier_score + center_score - (route_distance * 7) - direct_distance
+			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			if (
+				best.is_empty()
+				or score > best_score
+				or (
+					score == best_score
+					and route_distance < int(best.get("goal_distance", 9999))
+				)
+				or (
+					score == best_score
+					and route_distance == int(best.get("goal_distance", 9999))
+					and target_id < String(best.get("target_placement_id", ""))
+				)
+			):
+				best_score = score
+				best = {
+					"target_kind": "explore",
+					"target_placement_id": target_id,
+					"target_label": "Frontier scout %d,%d" % [tile.x, tile.y],
+					"target_x": tile.x,
+					"target_y": tile.y,
+					"goal_x": tile.x,
+					"goal_y": tile.y,
+					"goal_distance": route_distance,
+					"priority": max(1, score),
+					"target_reason_codes": ["no_known_targets", "frontier_scouting", "search_contact"],
+					"target_public_reason": "scouting the frontier",
+					"target_public_importance": "medium",
+					"target_debug_reason": "no reachable known target candidates; scouting reachable frontier instead of holding passively",
+				}
+	return best
+
+static func _enemy_exploration_frontier_score(sources: Array, tile: Vector2i) -> int:
+	var best_gap := 9999
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		var distance: int = abs(tile.x - int(source.get("x", 0))) + abs(tile.y - int(source.get("y", 0)))
+		var gap: int = distance - int(source.get("radius", 0))
+		if gap > 0 and gap < best_gap:
+			best_gap = gap
+	if best_gap >= 9999:
+		return 0
+	return max(0, 90 - (best_gap * 12))
+
+static func _enemy_exploration_center_score(map_size: Vector2i, tile: Vector2i) -> int:
+	if map_size.x <= 0 or map_size.y <= 0:
+		return 0
+	var center := Vector2i(map_size.x / 2, map_size.y / 2)
+	var max_distance: int = max(1, center.x + center.y)
+	var distance: int = abs(tile.x - center.x) + abs(tile.y - center.y)
+	return max(0, 24 - int(round(float(distance) / float(max_distance) * 24.0)))
 
 static func _no_known_target_regroup_plan(
 	session: SessionStateStoreScript.SessionData,
@@ -5917,7 +6006,7 @@ static func _no_known_target_regroup_plan(
 		"target_reason_codes": ["no_known_targets", "army_consolidation", "town_defense"],
 		"target_public_reason": "holding known ground",
 		"target_public_importance": "low",
-		"target_debug_reason": "no reachable known target candidates; regrouping at owned town instead of using hidden player state",
+		"target_debug_reason": "no reachable known target candidates or frontier scout waypoints; regrouping at owned town instead of using hidden player state",
 	}
 
 static func ai_hero_task_live_target_selection_plan(
@@ -12806,10 +12895,41 @@ static func _resolve_arrived_target(
 					"risk_report": ready_report,
 				}
 			return _contest_encounter_target(session, raid, state, faction_id, config)
+		"explore":
+			return _resolve_exploration_target(session, config, raid, state, faction_id)
 		"regroup":
 			return _regroup_raid_at_town(session, raid, state, faction_id, config)
 		_:
 			return {"encounter": raid, "state": state, "event_message": ""}
+
+static func _resolve_exploration_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var previous_target := _current_target_snapshot(raid)
+	var continued := _clear_regroup_target(raid.duplicate(true))
+	continued["last_explored_x"] = int(raid.get("x", 0))
+	continued["last_explored_y"] = int(raid.get("y", 0))
+	continued["last_explored_day"] = int(session.day)
+	continued = assign_target(session, config, continued)
+	var next_target := _current_target_snapshot(continued)
+	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
+		return {"encounter": raid, "state": state, "event_message": ""}
+	continued["arrived"] = false
+	var event := ai_target_assignment_event(session, config, continued, previous_target)
+	if event.is_empty():
+		event = ai_target_assignment_event(session, config, continued, {})
+	return {
+		"encounter": continued,
+		"state": state,
+		"event_message": "",
+		"ai_event": event,
+	}
 
 static func _secure_resource_target(
 	session: SessionStateStoreScript.SessionData,
@@ -13985,6 +14105,13 @@ static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, 
 			if int(town_result.get("index", -1)) >= 0:
 				var town: Dictionary = town_result.get("town", {})
 				return [Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))]
+		"explore":
+			return [
+				Vector2i(
+					int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
+					int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
+				)
+			]
 		"resource", "artifact":
 			return [Vector2i(int(raid.get("target_x", int(raid.get("goal_x", 0)))), int(raid.get("target_y", int(raid.get("goal_y", 0)))))]
 		"encounter":
@@ -14174,6 +14301,16 @@ static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: 
 				raid["goal_x"] = goal_tile.x
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")))
+		"explore":
+			var goal_tile := Vector2i(
+				int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
+				int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
+			)
+			raid["target_x"] = goal_tile.x
+			raid["target_y"] = goal_tile.y
+			raid["goal_x"] = goal_tile.x
+			raid["goal_y"] = goal_tile.y
+			raid["goal_distance"] = _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")))
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) >= 0:
@@ -14276,6 +14413,21 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
 			valid = hero_target_id == "" or not _find_player_hero(session, hero_target_id).is_empty()
+		"explore":
+			var target_id := String(raid.get("target_placement_id", ""))
+			var goal_tile := Vector2i(
+				int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
+				int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
+			)
+			valid = (
+				target_id.begins_with("explore:")
+				and _path_distance(
+					session,
+					Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))),
+					[goal_tile],
+					String(raid.get("placement_id", ""))
+				) < 9999
+			)
 		_:
 			return false
 	if not valid:

@@ -22,13 +22,16 @@ func _run() -> void:
 	var nonhero_case := _nonhero_targets_require_visibility_or_memory()
 	if nonhero_case.is_empty():
 		return
+	var exploration_case := _exploration_arrival_reassigns_visible_resource()
+	if exploration_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, exploration_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -126,29 +129,35 @@ func _empty_target_fallback_does_not_hunt_hidden_hero() -> Dictionary:
 	var origin := {"x": 7, "y": 2}
 	var chosen := EnemyAdventureRules.choose_target(session, config, origin, {})
 	if chosen.is_empty():
-		_fail("No-candidate target fallback should hold at an owned town when one is reachable.")
+		_fail("No-candidate target fallback should produce an exploration or regroup plan.")
 		return {}
 	if String(chosen.get("target_kind", "")) == "hero":
 		_fail("No-candidate target fallback used hidden active hero coordinates: %s" % JSON.stringify(chosen))
 		return {}
-	if String(chosen.get("target_kind", "")) != "regroup":
-		_fail("No-candidate target fallback should regroup/hold, got %s" % JSON.stringify(chosen))
+	if String(chosen.get("target_kind", "")) != "explore":
+		_fail("No-candidate target fallback should scout reachable frontier before passive regroup, got %s" % JSON.stringify(chosen))
 		return {}
 	if "no_known_targets" not in _normalize_string_array(chosen.get("target_reason_codes", [])):
-		_fail("No-candidate regroup fallback did not explain no_known_targets: %s" % JSON.stringify(chosen))
+		_fail("No-candidate exploration fallback did not explain no_known_targets: %s" % JSON.stringify(chosen))
 		return {}
 	var state := _enemy_state(session)
 	state["pressure"] = 999
 	_update_enemy_state(session, state)
-	if EnemyTurnRules._can_launch_raid(session, config, state, MIRECLAW):
-		_fail("Fresh pressure should not launch a targetless raid when no legitimate candidates exist.")
+	if not EnemyTurnRules._can_launch_raid(session, config, state, MIRECLAW):
+		_fail("Fresh pressure should launch an exploration commander when no legitimate target candidates exist.")
+		return {}
+	var turn_result := EnemyTurnRules.run_enemy_turn(session)
+	var exploration_raid := _first_enemy_raid_for_kind(session, "explore")
+	if exploration_raid.is_empty():
+		_fail("Live enemy turn did not dispatch an exploration raid with no known targets: %s" % JSON.stringify(turn_result))
 		return {}
 	return {
 		"case_id": "empty_target_fallback_does_not_hunt_hidden_hero",
 		"fallback_target_kind": String(chosen.get("target_kind", "")),
 		"fallback_target_id": String(chosen.get("target_placement_id", "")),
 		"fallback_goal_distance": int(chosen.get("goal_distance", -1)),
-		"pressure_launch_allowed_without_target": false,
+		"pressure_launch_allowed_without_target": true,
+		"live_exploration_raid_id": String(exploration_raid.get("placement_id", "")),
 	}
 
 func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
@@ -193,6 +202,30 @@ func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
 		"scoutable_unknown_resource": true,
 		"known_resource_candidate": true,
 		"known_world_target_id": "river_free_company",
+	}
+
+func _exploration_arrival_reassigns_visible_resource() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 12)
+	_make_hidden_resource_target_session(session)
+	_add_exploration_raid(session, 5, 4)
+	var state := _enemy_state(session)
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	_update_enemy_state(session, result.get("state", _enemy_state(session)))
+	var reassigned := _first_enemy_raid_for_kind(session, "resource")
+	if reassigned.is_empty():
+		_fail("Exploration arrival did not reassign to newly visible resource: %s" % JSON.stringify(result))
+		return {}
+	if String(reassigned.get("target_placement_id", "")) != "river_free_company":
+		_fail("Exploration arrival reassigned to wrong resource: %s" % JSON.stringify(reassigned))
+		return {}
+	return {
+		"case_id": "exploration_arrival_reassigns_visible_resource",
+		"exploration_origin": {"x": 5, "y": 4},
+		"reassigned_target_kind": String(reassigned.get("target_kind", "")),
+		"reassigned_target_id": String(reassigned.get("target_placement_id", "")),
+		"event_types": _event_types(result.get("events", [])),
 	}
 
 func _base_session():
@@ -274,6 +307,38 @@ func _make_hidden_resource_target_session(session) -> void:
 	session.overworld["resolved_encounters"] = []
 	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
 
+func _add_exploration_raid(session, x: int, y: int) -> void:
+	var raid := {
+		"placement_id": "known_world_exploration_probe",
+		"encounter_id": "encounter_mire_raid",
+		"x": x,
+		"y": y,
+		"difficulty": "pressure",
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": true,
+		"target_kind": "explore",
+		"target_placement_id": "explore:%d:%d" % [x, y],
+		"target_label": "Frontier scout %d,%d" % [x, y],
+		"target_x": x,
+		"target_y": y,
+		"goal_x": x,
+		"goal_y": y,
+		"goal_distance": 0,
+		"target_reason_codes": ["no_known_targets", "frontier_scouting", "search_contact"],
+		"target_public_reason": "scouting the frontier",
+		"target_public_importance": "medium",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_vaska",
+		MIRECLAW,
+		session
+	)
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	session.overworld["encounters"] = [raid]
+	session.overworld["resolved_encounters"] = []
+
 func _candidate_has_target(candidates: Array, target_kind: String, target_id: String) -> bool:
 	for candidate_value in candidates:
 		if not (candidate_value is Dictionary):
@@ -282,6 +347,29 @@ func _candidate_has_target(candidates: Array, target_kind: String, target_id: St
 		if String(candidate.get("target_kind", "")) == target_kind and String(candidate.get("target_placement_id", "")) == target_id:
 			return true
 	return false
+
+func _first_enemy_raid_for_kind(session, target_kind: String) -> Dictionary:
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) in resolved:
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW and String(encounter.get("target_kind", "")) == target_kind:
+			return encounter
+	return {}
+
+func _event_types(events: Variant) -> Array:
+	var output := []
+	if not (events is Array):
+		return output
+	for event_value in events:
+		if event_value is Dictionary:
+			var event_type := String(event_value.get("event_type", ""))
+			if event_type != "" and event_type not in output:
+				output.append(event_type)
+	return output
 
 func _normalize_string_array(value: Variant) -> Array:
 	var output := []
