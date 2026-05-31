@@ -2802,8 +2802,36 @@ static func _queue_town_defense_battle(
 	session.battle = payload
 	session.game_state = "battle"
 	var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
+	var target := {
+		"target_kind": "town",
+		"target_placement_id": String(town.get("placement_id", "")),
+		"target_label": _town_name(town),
+		"target_x": int(town.get("x", 0)),
+		"target_y": int(town.get("y", 0)),
+		"target_reason_codes": _normalize_string_array(encounter.get("target_reason_codes", [])),
+		"target_public_reason": String(encounter.get("target_public_reason", "town assault")),
+		"target_public_importance": String(encounter.get("target_public_importance", "critical")),
+	}
+	var event := EnemyAdventureRulesScript.build_ai_event_record(
+		session,
+		config,
+		"ai_town_defense_battle_queued",
+		encounter,
+		target,
+		{
+			"summary": (
+				"%s launches an assault on %s." % [commander_name, _town_name(town)]
+				if commander_name != ""
+				else "%s launches an assault on %s." % [String(config.get("label", faction_id)), _town_name(town)]
+			),
+			"state_policy": "battle_handoff",
+			"public_importance": String(target.get("target_public_importance", "critical")),
+			"debug_reason": "strategic AI town target reached live battle handoff",
+		}
+	)
 	return {
 		"battle_started": true,
+		"events": [event] if not event.is_empty() else [],
 		"message": (
 			"%s launches an assault on %s." % [commander_name, _town_name(town)]
 			if commander_name != ""
@@ -2912,8 +2940,36 @@ static func _queue_hero_intercept_battle(
 	session.battle = payload
 	session.game_state = "battle"
 	var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
+	var target := {
+		"target_kind": "hero",
+		"target_placement_id": hero_id,
+		"target_label": String(hero.get("name", hero_id)),
+		"target_x": int(hero.get("position", {}).get("x", encounter.get("target_x", 0))),
+		"target_y": int(hero.get("position", {}).get("y", encounter.get("target_y", 0))),
+		"target_reason_codes": _normalize_string_array(encounter.get("target_reason_codes", [])),
+		"target_public_reason": String(encounter.get("target_public_reason", "hero intercept")),
+		"target_public_importance": String(encounter.get("target_public_importance", "high")),
+	}
+	var event := EnemyAdventureRulesScript.build_ai_event_record(
+		session,
+		config,
+		"ai_hero_intercept_battle_queued",
+		encounter,
+		target,
+		{
+			"summary": (
+				"%s cuts off %s in the field." % [commander_name, String(hero.get("name", "the hero"))]
+				if commander_name != ""
+				else "%s cuts off %s in the field." % [String(config.get("label", faction_id)), String(hero.get("name", "the hero"))]
+			),
+			"state_policy": "battle_handoff",
+			"public_importance": String(target.get("target_public_importance", "high")),
+			"debug_reason": "strategic AI hero target reached live battle handoff",
+		}
+	)
 	return {
 		"battle_started": true,
+		"events": [event] if not event.is_empty() else [],
 		"message": (
 			"%s cuts off %s in the field." % [commander_name, String(hero.get("name", "the hero"))]
 			if commander_name != ""

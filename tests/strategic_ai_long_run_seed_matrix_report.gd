@@ -111,6 +111,7 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		"movement_distance_delta_total",
 		"battle_interrupt_count",
 		"auto_resolved_battle_count",
+		"tactical_battle_queued_count",
 	]:
 		if not summary.has(required_summary_key):
 			_fail("Long-run matrix summary missing battle-handoff coverage key %s: %s" % [required_summary_key, JSON.stringify(summary)])

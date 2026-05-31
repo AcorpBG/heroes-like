@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected; next tactical/strategic AI work should build from the corrected generated-map handoff signal into longer Native RMG battle-handoff proof, Medium/generalized behavior when unblocked, tactical spell/counterplay breadth, and live-client pacing evidence without balance-content edits.
+- Current implementation slice: none selected after the latest completed generated-map handoff proof; next tactical/strategic AI production-readiness work should broaden natural Native RMG battle-handoff/generalization evidence before any production-ready claim.
+- Latest completed slice: `strategic-ai-generated-town-battle-handoff-proof-10184`.
 - Latest completed slice: `strategic-ai-generated-battle-handoff-behavior-10184`.
 - Latest completed slice: `strategic-ai-generated-battle-handoff-coverage-10184`.
 - Latest completed slice: `strategic-ai-generated-regroup-target-integrity-10184`.

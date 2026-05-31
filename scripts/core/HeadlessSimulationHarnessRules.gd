@@ -31,6 +31,7 @@ const REQUIRED_SUBSYSTEM_IDS := [
 	"strategic_ai_live_turn_execution",
 	"strategic_ai_live_route_progression",
 	"strategic_ai_live_town_governor_build_execution",
+	"strategic_ai_generated_town_battle_handoff",
 	"strategic_ai_live_town_defense_retask",
 	"strategic_ai_multi_scenario_town_defense_retask",
 	"strategic_ai_live_resource_site_defense",
@@ -165,6 +166,7 @@ static func build_report(input_config: Dictionary = {}) -> Dictionary:
 		_strategic_ai_live_turn_execution(input_config),
 		_strategic_ai_live_route_progression(input_config),
 		_strategic_ai_live_town_governor_build_execution(input_config),
+		_strategic_ai_generated_town_battle_handoff(input_config),
 		_strategic_ai_live_town_defense_retask(input_config),
 		_strategic_ai_multi_scenario_town_defense_retask(input_config),
 		_strategic_ai_live_resource_site_defense(input_config),
@@ -1323,7 +1325,7 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 				movement_event_count += 1
 				if event.has("goal_distance_before") and event.has("goal_distance_after"):
 					movement_distance_delta_total += int(event.get("goal_distance_before", 9999)) - int(event.get("goal_distance_after", 9999))
-			"ai_town_assault_battle_queued", "ai_town_defense_battle_queued":
+			"ai_town_assault_battle_queued", "ai_town_defense_battle_queued", "ai_hero_intercept_battle_queued":
 				battle_queue_event_count += 1
 	return {
 		"active_raid_count": active_raid_count,
@@ -1364,6 +1366,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var total_movement_distance_delta := 0
 	var battle_interrupt_count := 0
 	var auto_resolved_battle_count := 0
+	var tactical_battle_queued_count := 0
 	var total_stalled_turns := 0
 	var event_counts := {}
 	var terminal_status_counts := {}
@@ -1415,6 +1418,8 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		var final_task_summary: Dictionary = row.get("final_task_summary", {}) if row.get("final_task_summary", {}) is Dictionary else {}
 		task_board_open_count += int(final_task_summary.get("open_count", 0))
 		task_board_active_count += int(final_task_summary.get("active_count", 0))
+	var town_battle_queued_count := int(event_counts.get("ai_town_assault_battle_queued", 0)) + int(event_counts.get("ai_town_defense_battle_queued", 0))
+	tactical_battle_queued_count = town_battle_queued_count + int(event_counts.get("ai_hero_intercept_battle_queued", 0))
 	var requested_turn_total: int = max(1, requested_seed_count * requested_turn_count)
 	return {
 		"row_count": rows.size(),
@@ -1435,6 +1440,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"movement_distance_delta_total": total_movement_distance_delta,
 		"battle_interrupt_count": battle_interrupt_count,
 		"auto_resolved_battle_count": auto_resolved_battle_count,
+		"tactical_battle_queued_count": tactical_battle_queued_count,
 		"stalled_turn_count": total_stalled_turns,
 		"stalled_turn_pct": int(round(float(total_stalled_turns) * 100.0 / float(max(1, total_turns_completed)))),
 		"event_counts": event_counts,
@@ -1444,7 +1450,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"task_board_open_count": task_board_open_count,
 		"task_board_active_count": task_board_active_count,
 		"site_seized_count": int(event_counts.get("ai_site_seized", 0)),
-		"town_battle_queued_count": int(event_counts.get("ai_town_assault_battle_queued", 0)) + int(event_counts.get("ai_town_defense_battle_queued", 0)),
+		"town_battle_queued_count": town_battle_queued_count,
 		"total_row_runtime_msec": total_runtime_msec,
 		"setup_runtime_msec": setup_runtime_msec,
 		"max_row_runtime_msec": max_row_runtime_msec,
@@ -2135,6 +2141,141 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 			"save_policy": "hero_task_state_live_persist_no_save_migration",
 			"warnings": warnings,
 			"failures": failures,
+		},
+		warnings,
+		deferred
+	)
+
+static func _strategic_ai_generated_town_battle_handoff(input_config: Dictionary) -> Dictionary:
+	var seed := String(input_config.get("strategic_ai_generated_handoff_seed", "strategic-ai-generated-handoff-small-001"))
+	var template_id := String(input_config.get("strategic_ai_generated_handoff_template_id", "translated_rmg_template_049_v1"))
+	var profile_id := String(input_config.get("strategic_ai_generated_handoff_profile_id", "translated_rmg_profile_049_v1"))
+	var failures := []
+	var warnings := []
+	var deferred := []
+	var player_config := ScenarioSelectRulesScript.build_random_map_player_config(
+		seed,
+		template_id,
+		profile_id,
+		3,
+		"land",
+		false,
+		"homm3_small"
+	)
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		player_config,
+		"normal",
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	if not bool(setup.get("ok", false)):
+		failures.append("Native RMG generated handoff setup failed: %s." % String(setup.get("error_code", "")))
+		return _case(
+			"strategic_ai_generated_town_battle_handoff",
+			"native_rmg_in_range_town_target_queues_battle",
+			_status_from(failures, warnings, deferred),
+			{
+				"seed": seed,
+				"setup_ok": false,
+				"validation_status": String(validation.get("status", validation.get("validation_status", ""))),
+				"failure_count": failures.size(),
+			},
+			{"setup": setup, "failures": failures, "warnings": warnings, "deferred": deferred},
+			warnings,
+			deferred
+		)
+	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session == null or session.scenario_id == "":
+		failures.append("Native RMG generated handoff setup did not start a session.")
+		return _case(
+			"strategic_ai_generated_town_battle_handoff",
+			"native_rmg_in_range_town_target_queues_battle",
+			_status_from(failures, warnings, deferred),
+			{"seed": seed, "setup_ok": true, "failure_count": failures.size()},
+			{"failures": failures, "warnings": warnings, "deferred": deferred},
+			warnings,
+			deferred
+		)
+	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var player_town := _first_town_for_owner(session, "player")
+	var state := _first_enemy_state(session)
+	var faction_id := String(state.get("faction_id", ""))
+	var config := EnemyTurnRules._enemy_config_for_faction(session, faction_id)
+	var unit_id := _first_recruit_unit_id_for_faction(faction_id)
+	var roster_hero_id := _first_commander_hero_id_for_faction(session, faction_id)
+	if player_town.is_empty():
+		failures.append("Native RMG generated handoff session has no player town.")
+	if state.is_empty() or faction_id == "":
+		failures.append("Native RMG generated handoff session has no enemy state.")
+	if config.is_empty():
+		failures.append("Native RMG generated handoff session has no enemy config for %s." % faction_id)
+	if unit_id == "":
+		failures.append("Native RMG generated handoff session has no recruit unit for %s." % faction_id)
+	if roster_hero_id == "":
+		failures.append("Native RMG generated handoff session has no commander for %s." % faction_id)
+	var raid_id := "headless_generated_town_handoff_%s" % faction_id.replace("faction_", "")
+	var raid := {}
+	if failures.is_empty():
+		raid = _generated_town_handoff_raid_seed(session, faction_id, roster_hero_id, raid_id, player_town, unit_id)
+		var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+		encounters.append(raid)
+		session.overworld["encounters"] = encounters
+	var queue_result := {}
+	if failures.is_empty():
+		queue_result = EnemyTurnRules._queue_town_defense_battle(session, config, faction_id)
+	var events: Array = queue_result.get("events", []) if queue_result.get("events", []) is Array else []
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
+	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
+	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if failures.is_empty() and not bool(queue_result.get("battle_started", false)):
+		failures.append("Native RMG generated in-range town target did not start a battle: %s." % JSON.stringify(queue_result))
+	if failures.is_empty() and String(session.game_state) != "battle":
+		failures.append("Native RMG generated handoff did not put session into battle state.")
+	if failures.is_empty() and String(battle_context.get("type", "")) != "town_defense":
+		failures.append("Native RMG generated handoff queued wrong battle context: %s." % JSON.stringify(battle_context))
+	if failures.is_empty() and String(battle_context.get("town_placement_id", "")) != String(player_town.get("placement_id", "")):
+		failures.append("Native RMG generated handoff queued battle for wrong town: %s." % JSON.stringify(battle_context))
+	if failures.is_empty() and _event_count(events, "ai_town_defense_battle_queued") < 1:
+		failures.append("Native RMG generated handoff did not emit ai_town_defense_battle_queued.")
+	if failures.is_empty() and not bool(public_log.get("ok", false)):
+		failures.append("Public event boundary rejected Native RMG generated handoff events.")
+	if failures.is_empty() and not public_event_leak_tokens.is_empty():
+		failures.append("Public Native RMG generated handoff events leaked internal tokens: %s" % ", ".join(public_event_leak_tokens))
+	var handoff_summary := _strategic_ai_battle_handoff_summary(session, events)
+	var status := _status_from(failures, warnings, deferred)
+	return _case(
+		"strategic_ai_generated_town_battle_handoff",
+		"native_rmg_in_range_town_target_queues_battle",
+		status,
+		{
+			"seed": seed,
+			"scenario_id": String(session.scenario_id),
+			"startup_source": String(setup.get("startup_source", "")),
+			"validation_status": String(validation.get("status", validation.get("validation_status", ""))),
+			"faction_id": faction_id,
+			"roster_hero_id": roster_hero_id,
+			"unit_id": unit_id,
+			"target_town_id": String(player_town.get("placement_id", "")),
+			"battle_started": bool(queue_result.get("battle_started", false)),
+			"battle_context_type": String(battle_context.get("type", "")),
+			"battle_town_id": String(battle_context.get("town_placement_id", "")),
+			"battle_queue_event_count": _event_count(events, "ai_town_defense_battle_queued"),
+			"public_event_count": int(public_log.get("public_event_count", 0)),
+			"failure_count": failures.size(),
+			"warning_count": warnings.size(),
+		},
+		{
+			"raid": _raid_execution_signal(_encounter_by_placement(session, raid_id)),
+			"battle_context": battle_context,
+			"event_types": _event_types(events),
+			"handoff_summary": handoff_summary,
+			"public_event_leak_tokens": public_event_leak_tokens,
+			"native_rmg_generated_maps_only": true,
+			"failures": failures,
+			"warnings": warnings,
+			"deferred": deferred,
 		},
 		warnings,
 		deferred
@@ -4163,6 +4304,18 @@ static func _enemy_state_for_faction(session: SessionStateStoreScript.SessionDat
 			return state
 	return {}
 
+static func _first_enemy_state(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) != "":
+			return state
+	return {}
+
+static func _first_town_for_owner(session: SessionStateStoreScript.SessionData, owner: String) -> Dictionary:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "neutral")) == owner:
+			return town
+	return {}
+
 static func _first_commander_hero_id_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
 	var roster: Array = EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
 	for commander in roster:
@@ -4440,6 +4593,54 @@ static func _live_turn_raid_seed(
 		"days_active": 0,
 		"arrived": false,
 		"goal_distance": 9999,
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		faction_id,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+static func _generated_town_handoff_raid_seed(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	placement_id: String,
+	target_town: Dictionary,
+	unit_id: String
+) -> Dictionary:
+	var target_x := int(target_town.get("x", 0))
+	var target_y := int(target_town.get("y", 0))
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": target_x,
+		"y": target_y,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 1,
+		"arrived": true,
+		"goal_distance": 1,
+		"target_kind": "town",
+		"target_placement_id": String(target_town.get("placement_id", "")),
+		"target_label": String(target_town.get("name", target_town.get("placement_id", "Player Town"))),
+		"target_x": target_x,
+		"target_y": target_y,
+		"goal_x": target_x,
+		"goal_y": target_y,
+		"target_reason_codes": ["town_siege", "objective_front", "generated_map_handoff_probe"],
+		"target_public_reason": "generated town assault",
+		"target_public_importance": "critical",
+		"target_debug_reason": "Native RMG generated-map battle handoff proof",
+		"enemy_army": {
+			"id": "%s_host" % placement_id,
+			"name": "Generated Handoff Host",
+			"stacks": [{"unit_id": unit_id, "count": 80}],
+		},
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
 		raid,
