@@ -717,6 +717,8 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _clear_delivery_intercept_target(raid)
 		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
 		if plan.is_empty():
+			plan = ai_post_capture_town_support_target_selection_plan(session, config, raid)
+		if plan.is_empty():
 			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = ai_active_front_support_target_selection_plan(session, config, raid)
@@ -1100,6 +1102,79 @@ static func ai_live_town_retake_target_selection_plan(
 			best = candidate
 	return best
 
+static func ai_post_capture_town_support_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
+	if faction_id == "" or String(raid.get("target_kind", "")) != "town":
+		return {}
+	var town_id := String(raid.get("target_placement_id", ""))
+	if town_id == "":
+		return {}
+	var town_result := _find_town_by_placement(session, town_id)
+	if int(town_result.get("index", -1)) < 0:
+		return {}
+	var town: Dictionary = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		return {}
+	var previous_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	var had_capture_intent := false
+	for code in ["town_expansion", "neutral_town_claim", "neutral_town_siege", "town_siege", "objective_front"]:
+		if code in previous_reason_codes:
+			had_capture_intent = true
+			break
+	if not had_capture_intent:
+		return {}
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var front_active := (
+		bool(front_state.get("active", false))
+		and String(front_state.get("faction_id", faction_id)) == faction_id
+		and String(front_state.get("mode", "")) in ["stabilizing", "defend", "retake"]
+	)
+	var recently_defended := int(town.get("ai_defense_until_day", 0)) >= int(session.day)
+	if not front_active and not recently_defended:
+		return {}
+	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var staging_tiles := _town_staging_tiles(session, town)
+	var goal_distance := _path_distance(session, origin_pos, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	if goal_distance >= 9999:
+		return {}
+	var goal_tile := _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+	var reason_codes := ["town_defense", "front_stabilization", "garrison_reinforced", "post_capture_support"]
+	for code in previous_reason_codes:
+		if code in ["town_expansion", "neutral_town_claim", "neutral_town_siege", "objective_front"] and code not in reason_codes:
+			reason_codes.append(code)
+	return {
+		"target_kind": "town",
+		"target_placement_id": town_id,
+		"target_label": _town_name(town),
+		"target_x": int(town.get("x", 0)),
+		"target_y": int(town.get("y", 0)),
+		"goal_x": goal_tile.x,
+		"goal_y": goal_tile.y,
+		"goal_distance": goal_distance,
+		"priority": max(
+			0,
+			_weighted_priority(
+				config,
+				faction_id,
+				"town",
+				town_id,
+				260 + int(front_state.get("priority_bonus", 0)) + _town_strategic_priority_bonus(session, town, faction_id, _town_is_objective_anchor(session, town_id)),
+				"",
+				_town_is_objective_anchor(session, town_id)
+			) - _assignment_penalty(session, "town", town_id)
+		),
+		"target_reason_codes": reason_codes,
+		"target_public_reason": "reinforcing captured town",
+		"target_debug_reason": "previous town assault target is now an owned stabilizing front",
+		"target_public_importance": "high",
+	}
+
 static func advance_raids(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -1287,6 +1362,11 @@ static func advance_raids(
 			if not arrival_event.is_empty():
 				event_records.append(arrival_event)
 			if bool(encounter.get("raid_retired_to_rebuild", false)):
+				encounters[index] = encounter
+				continue
+			var updated_resolved_encounters = session.overworld.get("resolved_encounters", resolved_encounters)
+			if updated_resolved_encounters is Array and String(encounter.get("placement_id", "")) in updated_resolved_encounters:
+				resolved_encounters = updated_resolved_encounters
 				encounters[index] = encounter
 				continue
 		encounters[index] = encounter
@@ -3646,7 +3726,18 @@ static func _redirect_raid_to_threatened_town_defense(
 	raid["target_placement_id"] = town_id
 	raid["target_label"] = _town_name(defense_town)
 	raid["target_public_reason"] = "defending threatened town"
-	raid["target_reason_codes"] = ["town_defense", "front_stabilization"]
+	var defense_reason_codes := ["town_defense", "front_stabilization"]
+	if current_kind == "town" and current_id == town_id:
+		for code in current_codes:
+			if code in ["town_expansion", "neutral_town_claim", "neutral_town_siege", "objective_front"] and code not in defense_reason_codes:
+				defense_reason_codes.append(code)
+		if (
+			"town_expansion" in current_codes
+			or "neutral_town_claim" in current_codes
+			or "neutral_town_siege" in current_codes
+		):
+			defense_reason_codes.append("post_capture_support")
+	raid["target_reason_codes"] = defense_reason_codes
 	raid["target_public_importance"] = "high"
 	raid["target_debug_reason"] = "stabilizing owned town under player threat"
 	raid["arrived"] = false
@@ -14850,6 +14941,9 @@ static func _defend_town_target(
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + max(1, int(ceili(float(max(1, transferred_strength)) / 220.0)))
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	var defended_codes := ["town_defense", "front_stabilization", "garrison_reinforced"]
+	for code in _normalize_string_array(raid.get("target_reason_codes", [])):
+		if code in ["post_capture_support", "town_expansion", "neutral_town_claim", "neutral_town_siege", "objective_front"] and code not in defended_codes:
+			defended_codes.append(code)
 	var town_label := _town_name(town)
 	var message := "%s reaches %s and folds %d unit%s into the defense." % [
 		_raid_name(updated_raid),
