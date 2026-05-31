@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T23:59:00Z",
+  "updatedAt": "2026-05-31T13:29:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,48 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-path-distance-field-efficiency-10184",
+      "title": "Strategic AI Path Distance Field Efficiency",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T13:26:00Z",
+      "updatedAt": "2026-05-31T13:29:00Z",
+      "completedAt": "2026-05-31T13:29:00Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / strategic-ai-path-distance-field-efficiency-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Keep generated-map strategic AI planning behavior intact while reducing path-distance allocation overhead observed in Native RMG long-run AI turns.",
+      "implementationTargets": [
+        "Replace repeated per-tile distance-field Array initialization with a packed integer field suitable for route-distance BFS.",
+        "Reuse a single cardinal-neighbor constant inside strategic AI path-distance loops instead of allocating identical direction arrays repeatedly.",
+        "Preserve existing route blocking, observer-faction visibility, resource/body blocking, and target-reachability semantics.",
+        "Preserve all unit, spell, growth, economy, faction, and town-cost balance content."
+      ],
+      "completionCriteria": "Strategic AI routing/regroup/task reports and a focused Native RMG long-run smoke remain green; repository validation remains green; no content/balance files are changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No target-priority retuning or faction balance changes.",
+        "No production-ready strategic AI claim from a pathing efficiency slice."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 160 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "summary": "Strategic AI route-distance fields now use packed integer storage with direct fill initialization, and route/staging helpers reuse one cardinal-neighbor constant instead of repeatedly allocating the same direction arrays. Native RMG long-run smoke still completed two generated Small seeds over two turns with target assignment, active task boards, zero stalled turns, and no behavior bugs; focused tactical/strategic AI reports and repository validation remained green. No unit, spell, growth, economy, faction, town-cost, or other balance content changed."
+    },
     {
       "id": "battle-ai-side-payload-fallback-continuity-10184",
       "title": "Battle AI Side Payload Fallback Continuity",

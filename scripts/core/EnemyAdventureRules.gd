@@ -52,6 +52,12 @@ const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
 const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
 const RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS := 48
 const PATH_DISTANCE_SURFACE_CACHE_LIMIT := 96
+const PATH_CARDINAL_DELTAS := [
+	Vector2i(1, 0),
+	Vector2i(-1, 0),
+	Vector2i(0, 1),
+	Vector2i(0, -1),
+]
 const AI_HERO_SIGHTING_MEMORY_DAYS := 3
 const AI_HERO_SIGHTING_MAX_RECORDS := 16
 const AI_HERO_TOWN_SIGHT_RADIUS := 7
@@ -8410,7 +8416,7 @@ static func _hero_target_goal_distance(
 
 	var approach_tiles: Array = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+	for delta in PATH_CARDINAL_DELTAS:
 		var approach_tile: Vector2i = goal_tile + delta
 		if approach_tile.x < 0 or approach_tile.y < 0 or approach_tile.x >= map_size.x or approach_tile.y >= map_size.y:
 			continue
@@ -8437,7 +8443,7 @@ static func _hero_target_goal_tiles(
 		return [goal_tile]
 	var approach_tiles: Array = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+	for delta in PATH_CARDINAL_DELTAS:
 		var approach_tile: Vector2i = goal_tile + delta
 		if approach_tile.x < 0 or approach_tile.y < 0 or approach_tile.x >= map_size.x or approach_tile.y >= map_size.y:
 			continue
@@ -9623,7 +9629,7 @@ static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, to
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var town_x = int(town.get("x", 0))
 	var town_y = int(town.get("y", 0))
-	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+	for delta in PATH_CARDINAL_DELTAS:
 		var nx: int = town_x + delta.x
 		var ny: int = town_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
@@ -9640,7 +9646,7 @@ static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionDat
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var encounter_x = int(encounter.get("x", 0))
 	var encounter_y = int(encounter.get("y", 0))
-	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+	for delta in PATH_CARDINAL_DELTAS:
 		var nx: int = encounter_x + delta.x
 		var ny: int = encounter_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
@@ -9657,7 +9663,7 @@ static func _resource_staging_tiles(session: SessionStateStoreScript.SessionData
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var node_x = int(node.get("x", 0))
 	var node_y = int(node.get("y", 0))
-	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+	for delta in PATH_CARDINAL_DELTAS:
 		var nx: int = node_x + delta.x
 		var ny: int = node_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
@@ -16193,7 +16199,7 @@ static func _next_step_toward(
 			break
 		var current := _vector_from_index(current_index, map_size)
 
-		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		for delta in PATH_CARDINAL_DELTAS:
 			var next: Vector2i = current + delta
 			var next_index := _tile_index(next, map_size)
 			if visited.has(next_index):
@@ -16402,16 +16408,15 @@ static func _blocked_tile_index_lookup(blocked_tiles: Dictionary, map_size: Vect
 			lookup[index] = true
 	return lookup
 
-static func _path_distance_field_for_start(path_context: Dictionary, start_index: int) -> Array:
+static func _path_distance_field_for_start(path_context: Dictionary, start_index: int) -> PackedInt32Array:
 	var field_cache: Dictionary = path_context.get("distance_field_cache", {}) if path_context.get("distance_field_cache", {}) is Dictionary else {}
 	if field_cache.has(start_index):
 		return field_cache[start_index]
 	var map_size: Vector2i = path_context.get("map_size", Vector2i.ZERO)
 	var tile_count: int = max(0, map_size.x * map_size.y)
-	var distances := []
+	var distances := PackedInt32Array()
 	distances.resize(tile_count)
-	for index in range(tile_count):
-		distances[index] = -1
+	distances.fill(-1)
 	if start_index < 0 or start_index >= tile_count:
 		return distances
 	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
@@ -16426,7 +16431,7 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 		head += 1
 		var pos := _vector_from_index(pos_index, map_size)
 		var next_distance := int(distances[pos_index]) + 1
-		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		for delta in PATH_CARDINAL_DELTAS:
 			var next_index := _tile_index(pos + delta, map_size)
 			if next_index < 0 or int(distances[next_index]) >= 0:
 				continue
@@ -16440,7 +16445,7 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 
 static func _path_distance_to_goal_index(
 	goal_index: int,
-	distance_field: Array,
+	distance_field: PackedInt32Array,
 	map_size: Vector2i,
 	encounter_blocked: Dictionary,
 	resource_blocked: Dictionary,
@@ -16457,7 +16462,7 @@ static func _path_distance_to_goal_index(
 	var best_distance := -1
 	if resource_blocked.has(goal_index) or terrain_blocked.has(goal_index):
 		var goal := _vector_from_index(goal_index, map_size)
-		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		for delta in PATH_CARDINAL_DELTAS:
 			var neighbor_index := _tile_index(goal + delta, map_size)
 			if neighbor_index < 0 or neighbor_index >= distance_field.size():
 				continue
