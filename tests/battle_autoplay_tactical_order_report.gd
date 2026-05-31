@@ -30,6 +30,9 @@ func _run() -> void:
 	if not candidate_scores.has("strike") or not candidate_scores.has("defend") or not candidate_scores.has("advance"):
 		_fail("Autoplay decision is missing candidate score evidence: %s" % JSON.stringify(decision))
 		return
+	var enemy_engaged_case := _validate_enemy_engaged_melee_attack()
+	if not bool(enemy_engaged_case.get("ok", false)):
+		return
 
 	var payload := {
 		"ok": true,
@@ -37,10 +40,38 @@ func _run() -> void:
 		"policy": "shared_battle_ai_nonspell_tactical_scoring_for_balance_autoplay",
 		"initial_availability": initial_availability,
 		"decision": decision,
+		"enemy_engaged_melee": enemy_engaged_case,
 		"selected_target_id": String(session.battle.get("selected_target_id", "")),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _validate_enemy_engaged_melee_attack() -> Dictionary:
+	var session := _engaged_enemy_melee_session()
+	var active_stack := BattleRulesScript.get_active_stack(session.battle)
+	var decision := BattleAiRules.choose_enemy_action(session.battle, active_stack, {})
+	if String(decision.get("action", "")) != "strike":
+		_fail("Engaged enemy melee stack should strike instead of bracing into no-progress defense: %s" % JSON.stringify(decision))
+		return {}
+	var candidate_scores: Dictionary = decision.get("candidate_scores", {}) if decision.get("candidate_scores", {}) is Dictionary else {}
+	if not candidate_scores.has("defend") or not candidate_scores.has("strike"):
+		_fail("Engaged melee decision is missing defend/strike candidate evidence: %s" % JSON.stringify(decision))
+		return {}
+	if float(candidate_scores.get("defend", 0.0)) <= float(candidate_scores.get("strike", 0.0)):
+		_fail("Engaged melee fixture must prove strike beats a higher defend score only by no-progress guard: %s" % JSON.stringify(decision))
+		return {}
+	var tactical_order := BattleAiRules.choose_stack_tactical_order(session.battle, active_stack, "player")
+	if String(tactical_order.get("action", "")) != "strike":
+		_fail("Shared tactical order should also force engaged melee strike: %s" % JSON.stringify(tactical_order))
+		return {}
+	return {
+		"ok": true,
+		"live_action": String(decision.get("action", "")),
+		"live_target_id": String(decision.get("target_battle_id", "")),
+		"defend_score": float(candidate_scores.get("defend", 0.0)),
+		"strike_score": float(candidate_scores.get("strike", 0.0)),
+		"tactical_order_action": String(tactical_order.get("action", "")),
+	}
 
 func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
 	var session := SessionStateStoreScript.SessionData.new(
@@ -76,6 +107,40 @@ func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
 	}
 	return session
 
+func _engaged_enemy_melee_session() -> SessionStateStoreScript.SessionData:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-engaged-melee-attack-report",
+		"battle-ai-engaged-melee-attack-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = {
+		"round": 2,
+		"max_rounds": 99,
+		"distance": 0,
+		"terrain": "plains",
+		"battlefield_tags": [],
+		"combat_seed": 67890,
+		"stacks": [
+			_stack("enemy_guard", "enemy", "enemy_guard", false, 10, 10, 20, 1, 1, 2, 5, 2, 4, 3, ["brace"]),
+			_stack("player_wall", "player", "player_wall", false, 20, 20, 400, 1, 1, 1, 8, 7, 5, 3),
+		],
+		"turn_order": ["enemy_guard"],
+		"turn_index": 0,
+		"active_stack_id": "enemy_guard",
+		"selected_target_id": "player_wall",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"player_commander_state": {},
+		"enemy_hero": {},
+		"field_objectives": [],
+	}
+	return session
+
 func _stack(
 	unit_id: String,
 	side: String,
@@ -90,7 +155,8 @@ func _stack(
 	defense: int,
 	cohesion: int,
 	q: int,
-	r: int
+	r: int,
+	abilities: Array = []
 ) -> Dictionary:
 	return {
 		"unit_id": unit_id,
@@ -111,7 +177,7 @@ func _stack(
 		"ranged": ranged,
 		"shots_remaining": 4 if ranged else 0,
 		"retaliations_left": 1,
-		"abilities": [],
+		"abilities": abilities,
 		"hex": {"q": q, "r": r},
 	}
 

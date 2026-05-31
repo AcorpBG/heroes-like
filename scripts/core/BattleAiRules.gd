@@ -417,8 +417,9 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	var defend_score := _defend_score(battle, active_stack, targets)
 	var advance_score := _advance_score(battle, active_stack, targets)
 	var distance := int(battle.get("distance", 1))
-	var best := {"action": "defend", "score": defend_score}
-	if not best_attack.is_empty() and _candidate_beats(best_attack, best):
+	var force_engaged_attack := _must_force_engaged_attack(active_stack, battle, targets, best_attack)
+	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
+	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
 	if not best_spell.is_empty():
 		if lethal_spell_available and not lethal_attack_available:
@@ -501,8 +502,9 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	var best_attack := _best_attack_action(battle, active_stack, targets)
 	var defend_score := _defend_score(battle, active_stack, targets)
 	var advance_score := _advance_score(battle, active_stack, targets)
-	var best := {"action": "defend", "score": defend_score}
-	if not best_attack.is_empty() and _candidate_beats(best_attack, best):
+	var force_engaged_attack := _must_force_engaged_attack(active_stack, battle, targets, best_attack)
+	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
+	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
 	if int(battle.get("distance", 1)) > 0 or best_attack.is_empty():
 		var advance_candidate := {"action": "advance", "score": advance_score}
@@ -526,6 +528,20 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	report["scoring_policy"] = "battle_ai_nonspell_tactical_order_v1"
 	report["candidate_scores"] = candidate_scores
 	return report
+
+static func _must_force_engaged_attack(
+	active_stack: Dictionary,
+	battle: Dictionary,
+	targets: Array,
+	best_attack: Dictionary
+) -> bool:
+	if best_attack.is_empty() or int(battle.get("distance", 1)) > 0:
+		return false
+	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
+		return false
+	if _has_hostile_ranged_pressure(targets):
+		return false
+	return true
 
 static func battle_spell_choice_report(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary) -> Dictionary:
 	var errors := []
