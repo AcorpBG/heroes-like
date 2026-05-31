@@ -29,6 +29,9 @@ func _run() -> void:
 	var stale_task_case_report := _stale_hero_hunt_task_reconciles_and_replans_case()
 	if stale_task_case_report.is_empty():
 		return
+	var active_lost_case_report := _active_hero_hunt_retargets_when_sighting_lost_case()
+	if active_lost_case_report.is_empty():
+		return
 	var arbitration_case_report := _hero_intercept_arbitration_prefers_ready_high_value_hunt()
 	if arbitration_case_report.is_empty():
 		return
@@ -53,6 +56,7 @@ func _run() -> void:
 		"risk_case": risk_case_report,
 		"stale_position_case": stale_position_case_report,
 		"stale_task_case": stale_task_case_report,
+		"active_lost_case": active_lost_case_report,
 		"arbitration_case": arbitration_case_report,
 		"support_case": support_case_report,
 		"stall_case": stall_case_report,
@@ -551,6 +555,85 @@ func _stale_hero_hunt_task_reconciles_and_replans_case() -> Dictionary:
 		"replacement_target_id": String(replacement.get("target_id", "")),
 		"replacement_status": String(replacement.get("task_status", "")),
 		"planned_count": int(plan_result.get("planned_count", 0)),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _active_hero_hunt_retargets_when_sighting_lost_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 6
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for active lost-sighting fixture.")
+		return {}
+	var last_known_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var hidden_tile := _hidden_player_hero_tile_for_enemy(session, hero_id)
+	if _failed:
+		return {}
+	_clear_mireclaw_resource_claims(session)
+	_remove_mireclaw_active_raids(session)
+	var resource_node := _resource_node(session, "river_free_company")
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"scouted_targets": [
+				{
+					"target_kind": "resource",
+					"target_id": "river_free_company",
+					"target_label": "River Free Company",
+					"x": int(resource_node.get("x", 0)),
+					"y": int(resource_node.get("y", 0)),
+					"scouted_day": int(session.day),
+					"expires_day": int(session.day) + 4,
+					"source_kind": "fixture",
+					"source_id": "active_lost_hero_retarget_fixture",
+					"state_policy": "ai_known_world_memory",
+				}
+			],
+			"player_hero_sightings": [],
+		}
+	)
+	var raid_tile := _nearby_open_non_town_tile_at_distance(session, last_known_tile, 2, 4)
+	var raid := _raid_seed(session, "hero_vaska", "active_lost_hero_hunt_vaska", raid_tile)
+	raid["target_kind"] = "hero"
+	raid["target_placement_id"] = hero_id
+	raid["target_label"] = _hero_name(session, hero_id)
+	raid["target_x"] = last_known_tile.x
+	raid["target_y"] = last_known_tile.y
+	raid["goal_x"] = last_known_tile.x
+	raid["goal_y"] = last_known_tile.y
+	raid["goal_distance"] = 2
+	raid["arrived"] = false
+	raid["target_reason_codes"] = ["hero_hunt", "exposed_hero", "active_lost_sighting_fixture"]
+	raid["target_public_reason"] = "exposed hero"
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "active lost hero sighting fixture"
+	raid = _set_raid_bog_brutes(raid, 60)
+	_append_encounter(session, raid)
+
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	var after_raid := _encounter(session, "active_lost_hero_hunt_vaska")
+	if after_raid.is_empty():
+		_fail("Active lost-sighting hero hunt disappeared after advance.")
+		return {}
+	if String(after_raid.get("target_kind", "")) == "hero":
+		_fail("Active lost-sighting hero hunt stayed on hidden hero target: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_kind", "")) != "resource" or String(after_raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Active lost-sighting hero hunt did not retarget to known resource work: %s" % JSON.stringify(after_raid))
+		return {}
+	var event_types := _event_types(advance_result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Active lost-sighting hero hunt did not emit target assignment: %s" % JSON.stringify(advance_result))
+		return {}
+	return {
+		"case_id": "active_hero_hunt_retargets_when_sighting_lost",
+		"hidden_tile": {"x": hidden_tile.x, "y": hidden_tile.y},
+		"last_known_tile": {"x": last_known_tile.x, "y": last_known_tile.y},
+		"retargeted_kind": String(after_raid.get("target_kind", "")),
+		"retargeted_id": String(after_raid.get("target_placement_id", "")),
+		"event_types": event_types,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 

@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T02:15:44Z",
+  "updatedAt": "2026-05-31T02:20:01Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,81 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-active-hero-target-known-gating-10184",
+      "title": "Strategic AI Active Hero Target Known Gating",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make active hero-hunt raids revalidate fair hero sight or remembered sighting before preserving a hero target, so moving raids retarget immediately when the trail is gone instead of marching to dead coordinates.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd"
+      ],
+      "baselineChecks": [
+        "Task-board and saved-spawn hero plans require AI-known hero snapshots, but _raid_target_valid still accepts any existing player hero id for active raids.",
+        "An active hero hunt can keep a stale target valid before arrival and spend movement on dead coordinates instead of retargeting to known strategic work."
+      ],
+      "completionCriteria": [
+        "Active hero raid targets are valid only when the spawning faction has current or remembered legal hero sighting memory.",
+        "If an en-route hero hunt loses the trail before arrival, normal assignment clears that target and retargets to reachable known work in the same advance pass.",
+        "Current/recent legitimate hero sightings still keep hero hunts valid and allow existing hero-hunt behavior to continue.",
+        "Focused coverage proves an en-route lost hero hunt retargets before arrival and emits target assignment evidence."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not introduce omniscient hero tracking.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T02:18:03Z",
+      "updatedAt": "2026-05-31T02:20:01Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "completedAt": "2026-05-31T02:20:01Z",
+      "evidence": {
+        "implemented": [
+          "Active hero-target validity now requires the spawning faction to have a current or remembered legal player-hero sighting.",
+          "When an en-route hero hunt loses the trail before arrival, assign_target treats the hero target as invalid and retargets through normal strategic selection instead of marching to dead coordinates.",
+          "Legitimate current/recent hero sightings continue to support existing hero-hunt planning, risk gating, support grouping, and battle arbitration."
+        ],
+        "focused_case": {
+          "case_id": "active_hero_hunt_retargets_when_sighting_lost",
+          "last_known_tile": {
+            "x": 8,
+            "y": 4
+          },
+          "hidden_tile": {
+            "x": 1,
+            "y": 4
+          },
+          "retargeted_kind": "resource",
+          "retargeted_id": "river_free_company",
+          "event_types": [
+            "ai_target_assigned"
+          ],
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-lost-hero-task-reconciliation-10184",
       "title": "Strategic AI Lost Hero Task Reconciliation",
@@ -39847,6 +39922,39 @@
         "python3 tests/validate_repo.py (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
       ]
+    },
+    {
+      "sliceId": "strategic-ai-active-hero-target-known-gating-10184",
+      "completedAt": "2026-05-31T02:20:01Z",
+      "summary": "Active hero hunts with no legal sighting now abandon the hero target before movement and retarget to known strategic work.",
+      "evidence": {
+        "case_id": "active_hero_hunt_retargets_when_sighting_lost",
+        "last_known_tile": {
+          "x": 8,
+          "y": 4
+        },
+        "hidden_tile": {
+          "x": 1,
+          "y": 4
+        },
+        "retargeted_kind": "resource",
+        "retargeted_id": "river_free_company",
+        "event_types": [
+          "ai_target_assigned"
+        ],
+        "save_version": 9
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -42788,30 +42896,29 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-lost-hero-task-reconciliation-10184",
+    "sliceId": "strategic-ai-active-hero-target-known-gating-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T02:15:44Z",
+    "updatedAt": "2026-05-31T02:20:01Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)"
     ],
-    "summary": "Lost hero-hunt task reconciliation passed focused and adjacent task-board/live-turn checks."
+    "summary": "Active hero targets now require known hero sighting memory and lost en-route hunts retarget before arrival."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T02:15:44Z"
+    "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T02:15:44Z",
+  "currentSliceUpdatedAt": "2026-05-31T02:20:01Z",
   "validationHistory": [
     {
       "status": "pass",
