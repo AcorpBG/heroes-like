@@ -770,9 +770,12 @@ static func _damage_spell_score(
 	score -= float(resistance_pct) * 0.06
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
+	var status_rider_fresh := status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id) and not _stack_has_control_effect(target, battle)
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
 		if SpellRulesScript.target_is_immune_to_status(target, battle, status_id):
 			score -= 2.0
+		elif not status_rider_fresh:
+			score -= 1.5
 		else:
 			var success_chance := float(max(0, 100 - SpellRulesScript.control_resistance_pct(battle, target, spell))) / 100.0
 			score += 2.0 * success_chance
@@ -780,7 +783,7 @@ static func _damage_spell_score(
 		if status_id == STATUS_HARRIED and _health_ratio(target) <= 0.75:
 			score += 1.0
 	var status_modifiers = status_effect.get("modifiers", {})
-	if status_modifiers is Dictionary and int(status_modifiers.get("cohesion", 0)) < 0:
+	if status_rider_fresh and status_modifiers is Dictionary and int(status_modifiers.get("cohesion", 0)) < 0:
 		score += float(abs(int(status_modifiers.get("cohesion", 0)))) * 1.3
 	if _stack_cohesion_total(target, battle) <= 4:
 		score += 1.5
