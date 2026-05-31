@@ -19,6 +19,9 @@ func _run() -> void:
 	var spawn_point_case := _target_aware_spawn_point_case()
 	if spawn_point_case.is_empty():
 		return
+	var multihero_spawn_occupancy_case := _multihero_spawn_point_avoids_secondary_player_hero_case()
+	if multihero_spawn_occupancy_case.is_empty():
+		return
 	var spell_tempo_case := _spell_tempo_commander_spawn_point_case()
 	if spell_tempo_case.is_empty():
 		return
@@ -28,10 +31,10 @@ func _run() -> void:
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "saved_tasks_influence_live_commander_deployment_and_spawn_prefers_deployable_saved_task_commander_spell_tempo_and_fresh_fit",
-		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_and_adventure_spell_route_tempo",
+		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_and_prefers_deployable_saved_task_commander_spell_tempo_and_fresh_fit",
+		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_and_adventure_spell_route_tempo",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, spell_tempo_case, fresh_fit_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -193,6 +196,28 @@ func _target_aware_spawn_point_case() -> Dictionary:
 		"spawn_plan_goal_distance": int(best_open.get("spawn_plan_goal_distance", 0)),
 		"spawned_commander_id": String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")),
 		"target_id": String(raid.get("target_placement_id", "")),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _multihero_spawn_point_avoids_secondary_player_hero_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_primary_hero_position(session, 0, 4)
+	_add_secondary_player_hero(session, "hero_secondary_spawn_blocker", 7, 1)
+
+	var first_open := EnemyTurnRules._first_open_spawn_point(session, config)
+	if int(first_open.get("x", 0)) == 7 and int(first_open.get("y", 0)) == 1:
+		_fail("Enemy spawn point selection used a tile occupied by a secondary player hero: %s" % JSON.stringify(first_open))
+		return {}
+	if int(first_open.get("x", 0)) != 7 or int(first_open.get("y", 0)) != 3:
+		_fail("Secondary player hero should close first spawn point 7,1 and leave 7,3 as first open, got %s" % JSON.stringify(first_open))
+		return {}
+	return {
+		"case_id": "spawn_point_avoids_secondary_player_hero_tile",
+		"primary_hero_position": {"x": 0, "y": 4},
+		"secondary_hero_id": "hero_secondary_spawn_blocker",
+		"secondary_hero_position": {"x": 7, "y": 1},
+		"selected_spawn_point": first_open,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
@@ -439,6 +464,21 @@ func _set_primary_hero_position(session, x: int, y: int) -> void:
 	session.overworld["hero_position"] = {"x": x, "y": y}
 	session.overworld["active_hero_id"] = String(hero.get("id", "hero_lyra"))
 	session.overworld["player_heroes"] = [hero]
+
+func _add_secondary_player_hero(session, hero_id: String, x: int, y: int) -> void:
+	var hero := {
+		"id": hero_id,
+		"name": "Secondary Scout",
+		"owner": "player",
+		"position": {"x": x, "y": y},
+		"army": {"stacks": [{"unit_id": "unit_river_guard", "count": 1}]},
+	}
+	var player_heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	player_heroes.append(hero.duplicate(true))
+	session.overworld["player_heroes"] = player_heroes
+	var heroes: Array = session.overworld.get("heroes", []) if session.overworld.get("heroes", []) is Array else []
+	heroes.append(hero.duplicate(true))
+	session.overworld["heroes"] = heroes
 
 func _set_commander_recovering(session, actor_id: String, recovery_day: int) -> void:
 	var state := _enemy_state(session)
