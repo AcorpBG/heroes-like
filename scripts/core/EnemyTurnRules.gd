@@ -330,11 +330,7 @@ static func active_raid_count(session: SessionStateStoreScript.SessionData, fact
 	var count = 0
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
-			continue
-		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
-			continue
-		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
+		if not EnemyAdventureRulesScript.is_active_pressure_host(encounter, faction_id, resolved_encounters):
 			continue
 		count += 1
 	return count

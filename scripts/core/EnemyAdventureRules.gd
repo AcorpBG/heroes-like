@@ -16951,6 +16951,23 @@ static func _is_active_raid(encounter: Variant, faction_id: String, resolved_enc
 	var placement_id = String(encounter.get("placement_id", ""))
 	return not (resolved_encounters is Array and placement_id in resolved_encounters)
 
+static func is_active_pressure_host(encounter: Variant, faction_id: String = "", resolved_encounters: Variant = []) -> bool:
+	if not _is_active_raid(encounter, faction_id, resolved_encounters):
+		return false
+	var raid: Dictionary = encounter
+	if String(raid.get("difficulty", "")) == "pressure":
+		return true
+	if raid.has("days_active"):
+		return true
+	if String(raid.get("target_kind", "")) != "" and String(raid.get("target_placement_id", "")) != "":
+		return true
+	if bool(raid.get("commanderless_support_column", false)):
+		return true
+	var commander_state = raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		return true
+	return String(raid.get("delivery_intercept_node_placement_id", "")) != ""
+
 static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("towns", []).size()):
 		var town = session.overworld.get("towns", [])[index]
