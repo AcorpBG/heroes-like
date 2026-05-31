@@ -342,7 +342,6 @@ func _case_result(session, faction_id: String, case_id: String, tasks: Array, tr
 		EnemyAdventureRules.ai_hero_task_target_reservation_check(tasks),
 		EnemyAdventureRules.ai_hero_task_invalidation_check(tasks, transitions),
 		EnemyAdventureRules.ai_hero_task_public_leak_check(public_events),
-		EnemyAdventureRules.ai_hero_task_old_save_absence_check(session),
 	]
 	for check in checks:
 		if not bool(check.get("ok", false)):

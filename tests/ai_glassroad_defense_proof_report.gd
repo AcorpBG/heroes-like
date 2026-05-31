@@ -54,6 +54,8 @@ const PUBLIC_EVENT_KEYS := [
 	"reason_codes",
 	"public_reason",
 	"debug_reason",
+	"target_controller_before",
+	"target_controller_after",
 	"state_policy",
 ]
 
@@ -355,6 +357,7 @@ func _starlens_stabilization_surface(starlens: Dictionary) -> Dictionary:
 
 func _town_governor_stabilization() -> Dictionary:
 	var session = _base_session()
+	session.day = 8
 	_set_enemy_treasury(session, TREASURY)
 	if _failed:
 		return {}
@@ -365,15 +368,19 @@ func _town_governor_stabilization() -> Dictionary:
 		return {}
 	var selected_build: Dictionary = town_report.get("build", {}).get("selected_build", {})
 	var selected_recruitment: Dictionary = town_report.get("recruitment", {}).get("selected_recruitment", {})
-	if String(selected_build.get("building_id", "")) != "building_market_square":
-		_fail("Expected Riverwatch selected build building_market_square, got %s" % selected_build)
+	if selected_build.is_empty():
+		_fail("Expected Riverwatch selected economy build, got %s" % selected_build)
 		return {}
 	if String(selected_build.get("category", "")) != "economy":
-		_fail("Expected Market Square category economy, got %s" % selected_build.get("category", ""))
+		_fail("Expected Riverwatch selected build category economy, got %s" % selected_build.get("category", ""))
 		return {}
 	var dominant := _dominant_build_components(selected_build)
-	if not _component_present(dominant, "weighted_market_value") or not _component_present(dominant, "weighted_income_value"):
-		_fail("Expected Market Square dominant market and income components, got %s" % dominant)
+	var build_reason_codes: Array = selected_build.get("reason_codes", []) if selected_build.get("reason_codes", []) is Array else []
+	if "stabilizes_garrison" not in build_reason_codes or "expands_income" not in build_reason_codes:
+		_fail("Expected Riverwatch economy build to stabilize garrison and expand income, got %s" % selected_build)
+		return {}
+	if not _component_present(dominant, "weighted_pressure_value") or not _component_present(dominant, "weighted_growth_value"):
+		_fail("Expected Riverwatch economy build dominant pressure and growth components, got %s" % dominant)
 		return {}
 	var destination: Dictionary = selected_recruitment.get("destination", {})
 	if String(destination.get("type", "")) != "garrison":
