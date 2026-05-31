@@ -28,6 +28,10 @@ func _run() -> void:
 	if not bool(live_template_cast_case.get("ok", false)):
 		_fail(String(live_template_cast_case.get("error", "Battle AI live template spell cast case failed.")))
 		return
+	var rich_payload_cast_case := _run_battle_ai_rich_payload_spellbook_cast_case()
+	if not bool(rich_payload_cast_case.get("ok", false)):
+		_fail(String(rich_payload_cast_case.get("error", "Battle AI rich payload spellbook cast case failed.")))
+		return
 	var cleanse_ward_case := _run_battle_ai_cleanse_active_ward_case()
 	if not bool(cleanse_ward_case.get("ok", false)):
 		_fail(String(cleanse_ward_case.get("error", "Battle AI cleanse active ward case failed.")))
@@ -66,6 +70,7 @@ func _run() -> void:
 		"battle_damage_status_targeting": damage_status_case,
 		"battle_commander_role_spell": commander_role_case,
 		"battle_live_template_spell_cast": live_template_cast_case,
+		"battle_rich_payload_spellbook_cast": rich_payload_cast_case,
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
 		"battle_spell_report_payload_bridge": spell_report_payload_case,
@@ -74,7 +79,7 @@ func _run() -> void:
 		"adventure": adventure_case,
 		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, richer enemy payload spellbook merging for live battle casts, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -419,6 +424,94 @@ func _run_battle_ai_live_template_spell_cast_case() -> Dictionary:
 		"decision_spell_id": String(decision.get("spell_id", "")),
 		"result_state": String(result.get("state", "")),
 		"target_effect_applied": SpellRules.has_effect_id(target_after, session.battle, "status_rooted"),
+		"known_spell_count": known_spell_ids.size(),
+		"mana_after": int(mana.get("current", 0)),
+	}
+
+func _run_battle_ai_rich_payload_spellbook_cast_case() -> Dictionary:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-rich-payload-spellbook-cast-report",
+		"battle-ai-rich-payload-spellbook-cast-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = {
+		"round": 2,
+		"distance": 2,
+		"terrain": "forest",
+		"tags": [],
+		"battlefield_tags": [],
+		"combat_seed": 44014,
+		"stacks": [
+			_stack("enemy_payload_caster", "enemy", "Enemy Payload Caster", 6, 10, 60, []),
+			_stack("player_payload_fragile", "player", "Player Payload Fragile", 22, 10, 220, [], {
+				"ranged": true,
+				"shots_remaining": 5,
+			}),
+		],
+		"turn_order": ["enemy_payload_caster", "player_payload_fragile"],
+		"turn_index": 0,
+		"active_stack_id": "enemy_payload_caster",
+		"selected_target_id": "player_payload_fragile",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"enemy_hero": {
+			"roster_hero_id": "hero_thornwake_veyra_seedseer",
+			"spellbook": {
+				"known_spell_ids": [],
+				"mana": {"current": 40, "max": 40},
+			},
+		},
+		"enemy_hero_payload": {
+			"roster_hero_id": "hero_thornwake_veyra_seedseer",
+			"name": "Veyra Seedseer",
+			"faction_id": "faction_thornwake",
+			"command_path": "magic",
+			"archetype": "rootoracle",
+			"command": {"power": 8, "knowledge": 8},
+			"battle_traits": ["bogwise", "ambusher"],
+			"spellbook": {
+				"known_spell_ids": ["spell_root_loam_thorn_10"],
+				"mana": {"current": 40, "max": 40},
+			},
+		},
+		"player_commander_state": {},
+		"field_objectives": [],
+	}
+	var active := BattleRules.get_active_stack(session.battle)
+	var report := BattleAiRules.battle_spell_choice_report(session.battle, active, {})
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Rich payload spellbook report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("spell_id", "")) != "spell_root_loam_thorn_10":
+		return {"ok": false, "error": "Rich payload report should select learned Loam Thorn, got %s candidates=%s" % [selected, report.get("candidates", [])]}
+	var decision := BattleAiRules.choose_enemy_action(session.battle, active, {})
+	if String(decision.get("action", "")) != "cast_spell" or String(decision.get("spell_id", "")) != "spell_root_loam_thorn_10":
+		return {"ok": false, "error": "Rich payload live decision should cast learned Loam Thorn, got %s report=%s" % [decision, report]}
+	var result := BattleRules._cast_enemy_spell(session, active, decision)
+	if not bool(result.get("ok", false)):
+		return {"ok": false, "error": "Rich payload live battle cast failed: result=%s decision=%s battle=%s" % [result, decision, session.battle]}
+	var target_after := _stack_by_id(session.battle, "player_payload_fragile")
+	if int(target_after.get("total_health", 0)) >= 220:
+		return {"ok": false, "error": "Rich payload Loam Thorn should damage the target, got %s" % target_after}
+	var enemy_hero: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
+	var spellbook: Dictionary = enemy_hero.get("spellbook", {}) if enemy_hero.get("spellbook", {}) is Dictionary else {}
+	var known_spell_ids: Array = spellbook.get("known_spell_ids", []) if spellbook.get("known_spell_ids", []) is Array else []
+	if "spell_root_loam_thorn_10" not in known_spell_ids:
+		return {"ok": false, "error": "Rich payload live battle cast did not persist learned payload spellbook: %s" % enemy_hero}
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	if int(mana.get("current", 0)) >= 40:
+		return {"ok": false, "error": "Rich payload live battle cast did not spend live enemy mana: %s" % mana}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"decision_spell_id": String(decision.get("spell_id", "")),
+		"result_state": String(result.get("state", "")),
+		"target_remaining_health": int(target_after.get("total_health", 0)),
 		"known_spell_count": known_spell_ids.size(),
 		"mana_after": int(mana.get("current", 0)),
 	}
