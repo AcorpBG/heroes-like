@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T11:55:00Z",
+  "updatedAt": "2026-05-31T09:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,45 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-cleanse-recovery-urgent-filter-10184",
+      "title": "Battle AI Cleanse/Recovery Urgent Filter",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T09:30:00Z",
+      "updatedAt": "2026-05-31T09:35:00Z",
+      "source": "active production-readiness goal to co-tune tactical battle AI and strategic AI without touching balance content",
+      "planRef": "PLAN.md Current tactical state / battle-ai-cleanse-recovery-urgent-filter-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Prevent tactical battle AI from filtering out urgent cleanse/recovery spell candidates merely because the spell's buff component is already active.",
+      "implementationTargets": [
+        "Allow cleanse spells to remain candidates when the target has a matching cleanseable status even if the spell's modifier ward is already active.",
+        "Allow recovery spells to remain candidates when the target has missing health even if the spell's modifier ward is already active.",
+        "Add focused live BattleAiRules validation proving cleanse is selected for a debuffed ally despite an already-active ward modifier."
+      ],
+      "completionCriteria": "Focused live tactical AI validation proves urgent cleanse/recovery filtering works; adjacent magic and battle AI reports remain green; no balance content files are changed.",
+      "nonGoals": [
+        "No unit stat, ability, spell, growth, economy, faction, or town-cost changes.",
+        "No broad faction win-rate or spell-power tuning.",
+        "No production-ready AI claim from one tactical targeting correction."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_resistance_countercontrol_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_battle_spell_behavior_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Tactical spell AI no longer suppresses urgent cleanse/recovery candidates merely because the spell's ward modifiers are already active.",
+      "completedAt": "2026-05-31T09:35:00Z"
+    },
     {
       "id": "strategic-ai-emergency-defense-commander-fit-10184",
       "title": "Strategic AI Emergency Defense Commander Fit",
@@ -45809,9 +45848,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T11:55:00Z"
+    "updatedAt": "2026-05-31T09:35:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T11:55:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T09:35:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -49025,36 +49064,34 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T11:55:00Z",
-    "sliceId": "strategic-ai-emergency-defense-commander-fit-10184",
+    "updatedAt": "2026-05-31T09:35:00Z",
+    "sliceId": "battle-ai-cleanse-recovery-urgent-filter-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed process; report status needs_attention by design because full 100-seed eight-week validation remains explicit)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_resistance_countercontrol_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_battle_spell_behavior_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Emergency defense spawn candidates now include commander task-fit scoring before selecting which available hero answers a threatened town or resource front.",
-        "Defensive town task-fit no longer applies pure assault-town bonuses; it leans toward defense-command and defensive-focus signals while preserving existing assault behavior for offensive town tasks.",
-        "A focused headless report proves a defensive-fit commander is selected for an emergency resource-defense launch ahead of the rotation-first raider."
+        "Tactical battle AI no longer suppresses urgent cleanse candidates just because the cleanse spell's ward modifiers are already active on the target.",
+        "Tactical battle AI no longer suppresses urgent recovery candidates just because the recovery spell's ward modifiers are already active on the target.",
+        "The magic AI valuation report now proves spell_prism_bastion cleanses a staggered ally even when that ally already has equivalent ward modifiers."
       ],
       "focused_case": {
-        "case_id": "emergency_defense_launch_uses_commander_fit",
-        "target_id": "river_free_company",
-        "selected_hero_id": "hero_sable",
-        "rotation_first_hero_id": "hero_vaska",
-        "commander_fit_bonus": 64,
-        "spawn_plan_source": "emergency_resource_defense"
+        "case_id": "cleanse_active_ward_targets_debuffed_ally",
+        "spell_id": "spell_prism_bastion",
+        "selected_target_id": "enemy_warded_staggered",
+        "target_had_active_ward_modifiers": true,
+        "target_had_cleanseable_status": true,
+        "live_action": "cast_spell"
       },
       "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need full generated-map long-run matrices, Medium/generalized behavior evidence, and live-client pacing review before production-readiness claims.",
-      "policy": "AI-only strategic commander-selection correction; no content balance changes and no production-ready AI claim."
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need full generated-map long-run matrices, Medium/generalized behavior evidence, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "AI-only tactical spell-candidate filtering correction; no content balance changes and no production-ready AI claim."
     }
   }
 }
