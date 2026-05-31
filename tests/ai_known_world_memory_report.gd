@@ -19,13 +19,16 @@ func _run() -> void:
 	var empty_fallback_case := _empty_target_fallback_does_not_hunt_hidden_hero()
 	if empty_fallback_case.is_empty():
 		return
+	var nonhero_case := _nonhero_targets_require_visibility_or_memory()
+	if nonhero_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
-		"behavior_policy": "enemy_hero_pressure_uses_current_or_recent_ai_sightings_and_empty_target_fallbacks_do_not_use_omniscient_player_state",
+		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -148,6 +151,50 @@ func _empty_target_fallback_does_not_hunt_hidden_hero() -> Dictionary:
 		"pressure_launch_allowed_without_target": false,
 	}
 
+func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 4)
+	_make_hidden_resource_target_session(session)
+	var origin := Vector2i(7, 2)
+	var hidden_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if _candidate_has_target(hidden_candidates, "resource", "river_free_company"):
+		_fail("Hidden resource should not be targetable before current visibility or scouting memory: %s" % JSON.stringify(hidden_candidates))
+		return {}
+	var scoutable := EnemyAdventureRules._scoutable_target_candidates(session, config, MIRECLAW, origin, 20)
+	if not _candidate_has_target(scoutable, "resource", "river_free_company"):
+		_fail("Scouting discovery path should still see unknown nearby resources: %s" % JSON.stringify(scoutable))
+		return {}
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"scouted_targets": [
+				{
+					"target_kind": "resource",
+					"target_id": "river_free_company",
+					"target_label": "Riverwatch Free Company Yard",
+					"x": 0,
+					"y": 4,
+					"scouted_day": int(session.day),
+					"expires_day": int(session.day) + 3,
+					"source_spell_id": "spell_far_glass",
+				}
+			],
+		}
+	)
+	var known_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if not _candidate_has_target(known_candidates, "resource", "river_free_company"):
+		_fail("Scouted resource memory did not make resource targetable: %s" % JSON.stringify(known_candidates))
+		return {}
+	return {
+		"case_id": "nonhero_targets_require_visibility_or_memory",
+		"hidden_candidate_count": hidden_candidates.size(),
+		"scoutable_unknown_resource": true,
+		"known_resource_candidate": true,
+		"known_world_target_id": "river_free_company",
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -191,6 +238,51 @@ func _make_no_known_targets_session(session) -> void:
 	session.overworld["resolved_encounters"] = []
 	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
 
+func _make_hidden_resource_target_session(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("placement_id", "")) == "duskfen_bastion":
+			town["owner"] = "enemy"
+			town["controlling_faction_id"] = MIRECLAW
+		else:
+			town["owner"] = "inactive"
+			town["controlling_faction_id"] = ""
+		towns[index] = town
+	session.overworld["towns"] = towns
+
+	var resources := []
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("placement_id", "")) != "river_free_company":
+			continue
+		node["x"] = 0
+		node["y"] = 4
+		node["collected"] = true
+		node["collected_by_faction_id"] = "player"
+		node["response_until_day"] = 0
+		node["response_security_rating"] = 0
+		node["delivery_manifest"] = {}
+		resources.append(node)
+	session.overworld["resource_nodes"] = resources
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
+
+func _candidate_has_target(candidates: Array, target_kind: String, target_id: String) -> bool:
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		if String(candidate.get("target_kind", "")) == target_kind and String(candidate.get("target_placement_id", "")) == target_id:
+			return true
+	return false
+
 func _normalize_string_array(value: Variant) -> Array:
 	var output := []
 	if not (value is Array):
@@ -208,6 +300,12 @@ func _enemy_config() -> Dictionary:
 			return config
 	_fail("Could not find enemy config for %s" % MIRECLAW)
 	return {}
+
+func _ordinary_target_config() -> Dictionary:
+	var config := _enemy_config().duplicate(true)
+	config["priority_target_placement_ids"] = []
+	config["priority_target_bonus"] = 0
+	return config
 
 func _enemy_state(session) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):

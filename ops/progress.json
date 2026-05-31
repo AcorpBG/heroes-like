@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-no-omniscient-empty-target-fallback-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-known-nonhero-target-gating-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T02:28:00Z",
+  "updatedAt": "2026-05-31T03:16:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,80 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-known-nonhero-target-gating-10184",
+      "title": "Strategic AI Known Non-Hero Target Gating",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Move non-hero strategic target selection toward same-rules knowledge by gating ordinary resource, artifact, and neutral encounter candidates behind current AI visibility, scouting memory, or explicit objective/priority status.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Hero pressure now requires sightings, but ordinary resource/artifact/encounter target candidates still iterate live map state directly.",
+        "Known-world scouted target records currently add priority but do not gate target eligibility."
+      ],
+      "completionCriteria": [
+        "Ordinary resource, artifact, and neutral encounter candidates require current AI visibility or known-world scouting memory.",
+        "Explicit objective and priority targets remain eligible so authored scenario pressure does not disappear.",
+        "Scouting spell discovery can still inspect unknown nearby candidates to create known-world memory.",
+        "Focused validation proves a hidden non-hero target is ignored until it is scouted."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not change town/objective visibility policy in this slice.",
+        "Do not retune battle balance, economy, RMG, or faction content.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T02:46:00Z",
+      "updatedAt": "2026-05-31T03:16:00Z",
+      "completedAt": "2026-05-31T03:16:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
+          "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
+          "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
+          "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
+          "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "target_kind": "resource",
+          "target_id": "river_free_company",
+          "hidden_candidate_count": 0,
+          "scoutable_unknown_resource": true,
+          "known_resource_candidate": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-no-omniscient-empty-target-fallback-10184",
       "title": "Strategic AI No Omniscient Empty Target Fallback",
@@ -99,7 +173,10 @@
         ],
         "focused_case": {
           "scenario_id": "river-pass",
-          "hidden_hero_position": {"x": 0, "y": 4},
+          "hidden_hero_position": {
+            "x": 0,
+            "y": 4
+          },
           "fallback_target_kind": "regroup",
           "fallback_target_id": "duskfen_bastion",
           "fallback_goal_distance": 1,
@@ -38986,6 +39063,47 @@
         "git diff --check (passed)"
       ],
       "residualRisk": "Full strategic AI production readiness still needs broad generated-map long-run validation, Medium/generalized RMG behavior, deeper army/economy timing, retreat/personality tuning, and live-client pacing review."
+    },
+    {
+      "sliceId": "strategic-ai-known-nonhero-target-gating-10184",
+      "completedAt": "2026-05-31T03:16:00Z",
+      "summary": "Completed. Ordinary non-hero strategic targets are now gated by AI visibility or known-world scouting memory; explicit objective/priority pressure remains available. Strategic AI production readiness remains open.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
+          "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
+          "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
+          "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
+          "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "target_kind": "resource",
+          "target_id": "river_free_company",
+          "hidden_candidate_count": 0,
+          "scoutable_unknown_resource": true,
+          "known_resource_candidate": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
   "docsReadyEvidence": [
@@ -40341,6 +40459,7 @@
     }
   },
   "validationResults": [
+    "2026-05-31 strategic AI known non-hero target gating: ordinary resource/artifact/encounter candidates now require current AI visibility or scouted known-world memory, while explicit priority/objective targets and scouting discovery remain live. Focused known-world memory report plus adjacent strategic AI reports and repository validation passed.",
     "2026-05-26 Native RMG economy source support: all-rare town costs and generated required-source caches passed. Runtime-inclusive scorecard 30/30; Native RMG generated package routes 56/56 reachable with 42/42 required rare routes guarded; breadth 120/120 routes reachable with 90 guarded rare routes; TownShell all-rare UI 6/6; validate_repo passed. Authored rare-source breadth paused by owner scope.",
     "2026-05-25 generated package source guard-pressure scorecard: strict Small generated/native package player/enemy town source routes now require guarded economy-source pressure while preserving route-derived acquisition inside the 30-turn runway. Evidence passes 3/3 guarded generated towns, 3 guarded source routes, max acquisition day 3 of limit 6, and runtime-inclusive economy/town scorecard 33/33. This is not campaign production work.",
     "2026-05-25 generated package town source-route scorecard: strict Small generated/native package towns now prove 9/9 generated wood, ore, and faction-rare source routes reachable through live route rules after exact H3M masks. Runtime-inclusive economy/town scorecard passes 32/32, max common route length is 8 steps, max rare route length is 26 steps, and Linux debug/release plus Windows mingw debug/release native builds passed. This is not campaign production work.",
@@ -41926,8 +42045,8 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T02:28:00Z",
-    "sliceId": "strategic-ai-no-omniscient-empty-target-fallback-10184",
+    "updatedAt": "2026-05-31T03:16:00Z",
+    "sliceId": "strategic-ai-known-nonhero-target-gating-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -41939,14 +42058,34 @@
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "No-candidate strategic AI fallback no longer targets hidden active heroes; idle pressure regroups at known owned towns and fresh targetless launches are blocked. Focused strategic-AI regressions passed and full production readiness remains open."
+    "evidence": {
+      "implemented": [
+        "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
+        "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
+        "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
+        "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
+        "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
+      ],
+      "focused_case": {
+        "scenario_id": "river-pass",
+        "target_kind": "resource",
+        "target_id": "river_free_company",
+        "hidden_candidate_count": 0,
+        "scoutable_unknown_resource": true,
+        "known_resource_candidate": true,
+        "save_version": 9
+      },
+      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
+      "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+    }
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T02:28:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:16:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44897,13 +45036,54 @@
         ],
         "residualRisk": "This closes stale town-defender pinning and defended-front invisibility. Full release-ready strategic AI still needs broader generated-map long-run behavior, coordinated multi-front planning, richer attacker/defender rotation doctrine, economy timing, and manual live-client pacing checks."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-31T03:16:00Z",
+      "sliceId": "strategic-ai-known-nonhero-target-gating-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
+          "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
+          "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
+          "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
+          "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "target_kind": "resource",
+          "target_id": "river_free_company",
+          "hidden_candidate_count": 0,
+          "scoutable_unknown_resource": true,
+          "known_resource_candidate": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
-  "currentSlice": "none selected; latest completed slice strategic-ai-no-omniscient-empty-target-fallback-10184",
+  "currentSlice": "none selected; latest completed slice strategic-ai-known-nonhero-target-gating-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T02:28:00Z",
-    "sliceId": "strategic-ai-no-omniscient-empty-target-fallback-10184",
+    "updatedAt": "2026-05-31T03:16:00Z",
+    "sliceId": "strategic-ai-known-nonhero-target-gating-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -44915,29 +45095,29 @@
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules.choose_target no longer falls back to the active player hero when normal target candidates are empty.",
-        "No-candidate active raids now return a no_known_targets regroup/hold plan at a reachable owned AI town when possible.",
-        "EnemyTurnRules._best_open_spawn_point no longer turns an empty candidate set into the first configured spawn point, preventing fresh targetless pressure launches.",
-        "Known-world memory coverage now proves hidden active heroes are not selected by the no-candidate fallback."
+        "EnemyAdventureRules._target_candidates now carries an include_unscouted mode so normal target selection and scouting discovery use distinct knowledge policies.",
+        "Ordinary resource, artifact, and neutral encounter candidates are eligible only when currently visible to the AI or present in known_world_memory scouted targets.",
+        "Explicit objective and priority targets remain eligible so authored scenario pressure and objective fronts do not disappear behind scouting rules.",
+        "Enemy scouting spell discovery still inspects unknown nearby candidates and can create known-world memory for later live targeting.",
+        "Focused known-world memory coverage proves a hidden ordinary resource is ignored by normal target selection, discovered by the scoutable path, and targetable after scouted memory is patched."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "hidden_hero_position": {
-          "x": 0,
-          "y": 4
-        },
-        "fallback_target_kind": "regroup",
-        "fallback_target_id": "duskfen_bastion",
-        "fallback_goal_distance": 1,
-        "pressure_launch_allowed_without_target": false
+        "target_kind": "resource",
+        "target_id": "river_free_company",
+        "hidden_candidate_count": 0,
+        "scoutable_unknown_resource": true,
+        "known_resource_candidate": true,
+        "save_version": 9
       },
-      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, and live-client pacing/manual play remain open.",
+      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, stronger economy/army timing, and manual live-client pacing remain open.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
     }
   }
