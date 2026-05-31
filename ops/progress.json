@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T09:30:00Z",
+  "updatedAt": "2026-05-31T10:02:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,76 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-neutral-town-assault-grouping-10184",
+      "title": "Strategic AI Neutral Town Assault Grouping",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T09:46:00Z",
+      "updatedAt": "2026-05-31T10:02:00Z",
+      "completedAt": "2026-05-31T10:02:00Z",
+      "source": "active strategic AI production-readiness goal; real live behavior change, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-neutral-town-assault-grouping-10184",
+      "sourceDocs": [],
+      "purpose": "Let AI armies consolidate for neutral-town expansion and defended neutral-town assaults through the same live raid grouping path used for player-town assaults.",
+      "implementationTargets": [
+        "Town-assault grouping target validation treats neutral towns as valid hostile expansion targets, while still rejecting own-faction towns.",
+        "Same-target active raids adjacent to a neutral town can merge into the lead assault host and retire the support raid through the existing grouped-support lifecycle.",
+        "Grouping preserves public ai_raid_grouped events, town-expansion reason codes, commander continuity, and existing player-town grouping behavior."
+      ],
+      "completionCriteria": "A live raid fixture proves two active AI raids targeting the same neutral town consolidate into one stronger leader with the support raid resolved, and adjacent strategic AI regroup/support tests remain green.",
+      "nonGoals": [
+        "No broad report-only strategic AI audit.",
+        "No final strategic AI release-readiness claim.",
+        "No AI-vs-AI diplomacy system beyond hostile/non-owned town grouping validation."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Focused regroup/support coverage now proves neutral_town_assault_support_consolidates: leader strength rose from 378 to 546, support strength 168 resolved into the leader, ai_raid_grouped emitted, and town_expansion plus neutral_town_siege reason codes survived grouping."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+          "result": "pass",
+          "summary": "Neutral town planning, defended neutral-town assault risk gating, battle handoff, and capture/stationing remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution and durable resource/artifact task continuity remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment, ready launch, spell study, market-backed recruitment, and surplus garrison mobilization remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn",
+          "result": "pass",
+          "summary": "Artifact objective support and guarded artifact claim grouping remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passes."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON remains valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors in the tracked diff."
+        }
+      ],
+      "summary": "Active AI raids now consolidate for neutral-town expansion and defended neutral-town assaults through the same live grouping path as other major objectives, while own-faction town grouping remains limited to true defense/front-stabilization intents.",
+      "notes": "Completed as a live strategic AI behavior slice. The change fixes target validation and reason-code preservation for town grouping rather than adding a report-only surface."
+    },
     {
       "id": "strategic-ai-surplus-garrison-mobilization-10184",
       "title": "Strategic AI Surplus Garrison Mobilization",
@@ -48622,13 +48692,13 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T09:30:00Z",
-    "sliceId": "strategic-ai-surplus-garrison-mobilization-10184",
+    "updatedAt": "2026-05-31T10:02:00Z",
+    "sliceId": "strategic-ai-neutral-town-assault-grouping-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
@@ -48636,26 +48706,27 @@
     ],
     "evidence": {
       "implemented": [
-        "Enemy town reinforcement tracks whether normal recruitment actually applied a batch.",
-        "When no recruit batch was applied, safe towns evaluate active raid, planned task, emergency defender, and commander rebuild needs as surplus-garrison mobilization destinations.",
-        "Mobilization transfers only unit counts whose strength stays above the town defense target, removes them from actual garrison stacks, and applies them through existing raid/commander continuity helpers.",
-        "Mobilized reserve transfers emit existing public destination events with surplus_garrison_mobilization reason metadata.",
-        "Reinforcement summaries now account for reserve columns so mobilization is visible without adding a report-only surface."
+        "Town-assault grouping target validation now accepts neutral town expansion/siege targets and own-faction town defense/front-stabilization targets while still rejecting own towns without a defense intent.",
+        "Neutral-town siege reason codes are now valid town targets and are preserved during grouping.",
+        "Same-target neutral-town support raids can merge into the lead assault host through group_nearby_raids_for_town_assault.",
+        "Grouped neutral-town support hosts resolve through the existing grouped-support lifecycle and emit ai_raid_grouped.",
+        "Existing player-town, resource-front, artifact-front, recruitment, and neutral-town capture behavior remains green."
       ],
       "focused_case": {
-        "case_id": "surplus_garrison_prepares_planned_commander_without_recruits",
-        "actor_id": "hero_sable",
-        "destination_type": "planned",
-        "before_strength": 0,
-        "after_strength": 212,
-        "before_garrison_strength": 3060,
-        "after_garrison_strength": 2997,
-        "defense_target": 406,
-        "mobilized_batches": 1,
-        "event_type": "ai_commander_prepared",
+        "case_id": "neutral_town_assault_support_consolidates",
+        "target_town_id": "neutral_reed_crossing",
+        "leader_strength_before": 378,
+        "leader_strength_after": 546,
+        "donor_strength": 168,
+        "donor_resolved": true,
+        "event_types": [
+          "ai_raid_grouped"
+        ],
         "reason_codes": [
-          "planned_task",
-          "surplus_garrison_mobilization"
+          "town_expansion",
+          "neutral_town_siege",
+          "army_consolidation",
+          "town_siege"
         ]
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",

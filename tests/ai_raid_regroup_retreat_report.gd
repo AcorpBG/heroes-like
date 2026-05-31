@@ -23,6 +23,9 @@ func _run() -> void:
 	var resource_consolidation_case := _resource_front_support_consolidates_into_capture_ready_host()
 	if resource_consolidation_case.is_empty():
 		return
+	var neutral_town_grouping_case := _neutral_town_assault_support_consolidates()
+	if neutral_town_grouping_case.is_empty():
+		return
 	var unreachable_route_case := _valid_but_unreachable_target_reroutes_to_regroup()
 	if unreachable_route_case.is_empty():
 		return
@@ -48,11 +51,12 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_active_raids_resupply_at_friendly_towns_failed_regroups_rebuild_route_occupancy_commander_risk_tolerance_and_faction_personality_shape_live_gates",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_neutral_town_assaults_active_raids_resupply_at_friendly_towns_failed_regroups_rebuild_route_occupancy_commander_risk_tolerance_and_faction_personality_shape_live_gates",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
 		"resource_consolidation_case": resource_consolidation_case,
+		"neutral_town_grouping_case": neutral_town_grouping_case,
 		"unreachable_route_case": unreachable_route_case,
 		"garrison_routing_case": garrison_routing_case,
 		"town_resupply_case": town_resupply_case,
@@ -550,6 +554,83 @@ func _regroup_prefers_useful_garrison_town() -> Dictionary:
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
+func _neutral_town_assault_support_consolidates() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var neutral_town := {
+		"placement_id": "neutral_reed_crossing",
+		"town_id": "town_duskfen",
+		"name": "Neutral Reed Crossing",
+		"x": 6,
+		"y": 3,
+		"owner": "neutral",
+		"garrison": [{"unit_id": "unit_bog_brute", "count": 9}],
+		"available_recruits": {},
+		"buildings": [],
+	}
+	_append_enemy_town(session, neutral_town)
+	var leader := _neutral_town_expansion_raid(
+		session,
+		"neutral_town_leader_host",
+		"hero_vaska",
+		18,
+		Vector2i(5, 3)
+	)
+	var donor := _neutral_town_expansion_raid(
+		session,
+		"neutral_town_support_host",
+		"hero_sable",
+		8,
+		Vector2i(5, 4)
+	)
+	var encounters := [leader, donor]
+	session.overworld["encounters"] = encounters.duplicate(true)
+	session.overworld["resolved_encounters"] = []
+	var before_strength := EnemyAdventureRules.raid_strength(leader)
+	var donor_strength := EnemyAdventureRules.raid_strength(donor)
+	if EnemyAdventureRules.raid_regroup_needed(leader, config, MIRECLAW):
+		_fail("Neutral-town grouping leader should be assault-ready before grouping: %s" % JSON.stringify(leader))
+		return {}
+	var result := EnemyAdventureRules.group_nearby_raids_for_town_assault(
+		session,
+		config,
+		encounters,
+		0,
+		leader,
+		MIRECLAW,
+		[]
+	)
+	if not bool(result.get("grouped", false)):
+		_fail("Neutral-town assault support did not consolidate: %s" % JSON.stringify(result))
+		return {}
+	var grouped_leader: Dictionary = result.get("encounter", {}) if result.get("encounter", {}) is Dictionary else {}
+	var after_strength := EnemyAdventureRules.raid_strength(grouped_leader)
+	if after_strength <= before_strength:
+		_fail("Neutral-town grouping did not strengthen leader: before=%d after=%d result=%s" % [before_strength, after_strength, JSON.stringify(result)])
+		return {}
+	if not _resolved_contains(session, "neutral_town_support_host"):
+		_fail("Neutral-town grouping did not retire the support host into resolved encounters.")
+		return {}
+	var reason_codes := _string_array(grouped_leader.get("target_reason_codes", []))
+	if "army_consolidation" not in reason_codes or "neutral_town_siege" not in reason_codes or "town_expansion" not in reason_codes:
+		_fail("Neutral-town grouping lost expansion reason codes: %s" % JSON.stringify(grouped_leader))
+		return {}
+	var event_types := _event_types(result.get("events", []))
+	if "ai_raid_grouped" not in event_types:
+		_fail("Neutral-town grouping did not emit ai_raid_grouped: %s" % JSON.stringify(result))
+		return {}
+	return {
+		"case_id": "neutral_town_assault_support_consolidates",
+		"target_town_id": "neutral_reed_crossing",
+		"leader_strength_before": before_strength,
+		"leader_strength_after": after_strength,
+		"donor_strength": donor_strength,
+		"donor_resolved": _resolved_contains(session, "neutral_town_support_host"),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+	}
+
 func _active_raid_resupplies_while_passing_friendly_town() -> Dictionary:
 	var session = _base_session()
 	session.day = 2
@@ -985,6 +1066,50 @@ func _town_risk_probe_raid(session, placement_id: String, roster_hero_id: String
 		var commander_state: Dictionary = raid.get("enemy_commander_state", {})
 		commander_state["last_outcome"] = last_outcome
 		raid["enemy_commander_state"] = commander_state
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+func _neutral_town_expansion_raid(
+	session,
+	placement_id: String,
+	roster_hero_id: String,
+	stack_count: int,
+	origin: Vector2i
+) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": origin.x,
+		"y": origin.y,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 1,
+		"target_kind": "town",
+		"target_placement_id": "neutral_reed_crossing",
+		"target_label": "Neutral Reed Crossing",
+		"target_x": 6,
+		"target_y": 3,
+		"goal_x": 6,
+		"goal_y": 3,
+		"target_reason_codes": ["town_expansion", "neutral_town_siege"],
+		"target_public_reason": "claiming neutral town",
+		"target_public_importance": "high",
+		"enemy_army": {
+			"id": "%s_host" % placement_id,
+			"name": "Neutral Town Assault Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": max(1, stack_count)}],
+		},
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		roster_hero_id,
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
 func _guarded_resource_claim_raid(session) -> Dictionary:
