@@ -58,6 +58,28 @@ const AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS := 3
 const AI_EXPLORATION_MIN_ROUTE_DISTANCE := 3
 const AI_EXPLORATION_MAX_ROUTE_DISTANCE := 14
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
+const AI_RESOURCE_VALUE_BY_ID := {
+	"gold": 1,
+	"wood": 350,
+	"ore": 350,
+	"aetherglass": 700,
+	"embergrain": 700,
+	"peatwax": 700,
+	"verdant_grafts": 700,
+	"brass_scrip": 700,
+	"memory_salt": 700,
+	"experience": 1,
+}
+const AI_SCARCITY_RESOURCE_IDS := [
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 const COMMANDER_ROLE_RAIDER := "raider"
 const COMMANDER_ROLE_DEFENDER := "defender"
 const COMMANDER_ROLE_RETAKER := "retaker"
@@ -9013,7 +9035,11 @@ static func resource_target_score_breakdown(
 		base_value = 85 + int(min(45.0, float(weighted_claim_value) / 150.0))
 		persistent_income_value = int(min(45.0, float(weighted_income_value * 4) / 8.0)) if persistent else 0
 		recruit_value = int(min(70.0, float(recruit_payload_value) / 40.0))
-		scarcity_value = _resource_scarcity_value(session, _resource_site_claim_rewards(site))
+		scarcity_value = _resource_scarcity_value(
+			session,
+			_merge_resource_payloads(_resource_site_claim_rewards(site), site.get("control_income", {})),
+			resolved_faction_id
+		)
 		if player_controlled and persistent:
 			denial_value = 45 + int(min(35.0, float(weighted_income_value * 4) / 20.0)) + int(min(40.0, float(recruit_payload_value) / 80.0))
 		if player_controlled and int(node.get("response_until_day", 0)) >= int(session.day):
@@ -9046,10 +9072,10 @@ static func resource_target_score_breakdown(
 			- guard_cost
 			- assignment_penalty
 		)
-		debug_reason = _resource_target_debug_reason(site, player_controlled, persistent, claim_value, income_value, recruit_payload_value, route_pressure_value, town_enablement_value)
+		debug_reason = _resource_target_debug_reason(site, player_controlled, persistent, claim_value, income_value, recruit_payload_value, route_pressure_value, town_enablement_value, scarcity_value)
 	elif contestable:
 		debug_reason = "unreachable from current raid origin"
-	var reason_codes := _resource_target_reason_codes(site, player_controlled, persistent, income_value, recruit_payload_value, route_pressure_value, town_enablement_value)
+	var reason_codes := _resource_target_reason_codes(site, player_controlled, persistent, income_value, recruit_payload_value, route_pressure_value, town_enablement_value, scarcity_value)
 	var public_reason := _public_reason_from_codes(reason_codes)
 	var public_importance := _resource_target_public_importance(player_controlled, persistent, reason_codes, final_priority)
 
@@ -9245,25 +9271,97 @@ static func _resource_target_priority(session: SessionStateStoreScript.SessionDa
 	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
 	return priority
 
-static func _resource_scarcity_value(session: SessionStateStoreScript.SessionData, rewards: Variant) -> int:
+static func _resource_scarcity_value(
+	session: SessionStateStoreScript.SessionData,
+	rewards: Variant,
+	faction_id: String = ""
+) -> int:
 	if not (rewards is Dictionary):
 		return 0
-	var player_resources: Dictionary = session.overworld.get("resources", {})
+	var stockpile: Dictionary = _resource_scarcity_stockpile(session, faction_id)
+	var build_pressure: Dictionary = _enemy_town_build_resource_pressure(session, faction_id)
 	var value := 0
-	for resource_key in ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]:
+	for resource_key in AI_SCARCITY_RESOURCE_IDS:
 		var amount: int = max(0, int(rewards.get(resource_key, 0)))
 		if amount <= 0:
 			continue
-		var current: int = max(0, int(player_resources.get(resource_key, 0)))
-		if current < 4:
-			value += amount * 16
-		elif current < 7:
-			value += amount * 11
-		elif current < 10:
-			value += amount * 6
-	if max(0, int(player_resources.get("gold", 0))) < 1400:
+		var current: int = max(0, int(stockpile.get(resource_key, 0)))
+		var pressure: int = max(0, int(build_pressure.get(resource_key, 0)))
+		if resource_key in ["wood", "ore"]:
+			if current < 4:
+				value += amount * 16
+			elif current < 7:
+				value += amount * 11
+			elif current < 10:
+				value += amount * 6
+			if pressure > current:
+				value += min(70, (pressure - current) * 8)
+		else:
+			if current < 2:
+				value += amount * 44
+			elif current < 5:
+				value += amount * 32
+			elif current < 8:
+				value += amount * 20
+			elif current < 12 and pressure > 0:
+				value += amount * 10
+			if pressure > current:
+				value += min(120, (pressure - current) * 14)
+	if max(0, int(stockpile.get("gold", 0))) < 1400:
 		value += int(min(18.0, float(max(0, int(rewards.get("gold", 0)))) / 90.0))
-	return clampi(value, 0, 42)
+	return clampi(value, 0, 180)
+
+static func _resource_scarcity_stockpile(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> Dictionary:
+	if session == null:
+		return {}
+	if faction_id != "":
+		for state_value in session.overworld.get("enemy_states", []):
+			if not (state_value is Dictionary):
+				continue
+			var state: Dictionary = state_value
+			if String(state.get("faction_id", "")) == faction_id:
+				var treasury: Dictionary = state.get("treasury", {}) if state.get("treasury", {}) is Dictionary else {}
+				return treasury
+	var player_resources: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
+	return player_resources
+
+static func _enemy_town_build_resource_pressure(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> Dictionary:
+	var pressure := {}
+	if session == null or faction_id == "":
+		return pressure
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if _town_controller_faction_id_for_ai_resource_pressure(town) != faction_id:
+			continue
+		var option_ids: Array = OverworldRulesScript.get_town_build_options(town, int(session.day))
+		for building_id_value in option_ids:
+			var building := ContentService.get_building(String(building_id_value))
+			if building.is_empty():
+				continue
+			var cost: Dictionary = building.get("cost", {}) if building.get("cost", {}) is Dictionary else {}
+			for resource_key in AI_SCARCITY_RESOURCE_IDS:
+				var amount: int = max(0, int(cost.get(resource_key, 0)))
+				if amount <= 0:
+					continue
+				pressure[resource_key] = max(int(pressure.get(resource_key, 0)), amount)
+	return pressure
+
+static func _town_controller_faction_id_for_ai_resource_pressure(town: Dictionary) -> String:
+	var controller := String(town.get("controlling_faction_id", ""))
+	if String(town.get("owner", "neutral")) == "enemy" and controller != "":
+		return controller
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	return String(town_template.get("faction_id", ""))
 
 static func _resource_route_pressure_value(site: Dictionary) -> int:
 	var value := 0
@@ -9311,9 +9409,14 @@ static func _resource_target_debug_reason(
 	income_value: int,
 	recruit_payload_value: int,
 	route_pressure_value: int,
-	town_enablement_value: int
+	town_enablement_value: int,
+	scarcity_value: int = 0
 ) -> String:
 	var parts := []
+	if scarcity_value > 0:
+		var scarcity_payload := _merge_resource_payloads(_resource_site_claim_rewards(site), site.get("control_income", {}))
+		var scarcity_summary := _resource_payload_summary(scarcity_payload)
+		parts.append("scarce %s" % scarcity_summary if scarcity_summary != "" else "scarce resources")
 	if player_controlled and persistent:
 		if income_value > 0:
 			parts.append("denies %s daily" % _resource_payload_summary(site.get("control_income", {})))
@@ -9341,9 +9444,12 @@ static func _resource_target_reason_codes(
 	income_value: int,
 	recruit_payload_value: int,
 	route_pressure_value: int,
-	town_enablement_value: int
+	town_enablement_value: int,
+	scarcity_value: int = 0
 ) -> Array:
 	var codes := []
+	if scarcity_value > 0:
+		codes.append("resource_scarcity")
 	if player_controlled and persistent and income_value > 0:
 		codes.append("persistent_income_denial")
 	if recruit_payload_value > 0:
@@ -9392,6 +9498,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "income and route vision denial"
 	if "persistent_income_denial" in codes:
 		return "income denial"
+	if "resource_scarcity" in codes:
+		return "seeking scarce resources"
 	if "recruit_denial" in codes:
 		return "recruit denial"
 	if "route_vision" in codes:
@@ -13048,7 +13156,18 @@ static func _resource_payload_summary(payload: Variant) -> String:
 	if not (payload is Dictionary):
 		return "site value"
 	var parts := []
-	for key in ["gold", "wood", "ore", "experience"]:
+	for key in [
+		"gold",
+		"wood",
+		"ore",
+		"aetherglass",
+		"embergrain",
+		"peatwax",
+		"verdant_grafts",
+		"brass_scrip",
+		"memory_salt",
+		"experience",
+	]:
 		var amount: int = max(0, int(payload.get(key, 0)))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])
@@ -13323,18 +13442,32 @@ static func _encounter_target_priority(session: SessionStateStoreScript.SessionD
 static func _target_resource_value(rewards: Variant) -> int:
 	if not (rewards is Dictionary):
 		return 0
-	return max(0, int(rewards.get("gold", 0))) + (max(0, int(rewards.get("wood", 0))) * 350) + (max(0, int(rewards.get("ore", 0))) * 350) + max(0, int(rewards.get("experience", 0)))
+	var total := 0
+	for resource_key in AI_RESOURCE_VALUE_BY_ID.keys():
+		total += max(0, int(rewards.get(resource_key, 0))) * int(AI_RESOURCE_VALUE_BY_ID.get(resource_key, 0))
+	return total
 
 static func _target_resource_value_for_strategy(rewards: Variant, strategy: Dictionary) -> int:
 	if not (rewards is Dictionary):
 		return 0
 	var weights: Dictionary = strategy.get("resource_value_weights", {})
 	var total := 0.0
-	total += float(max(0, int(rewards.get("gold", 0)))) * float(weights.get("gold", 1.0))
-	total += float(max(0, int(rewards.get("wood", 0))) * 350) * float(weights.get("wood", 1.0))
-	total += float(max(0, int(rewards.get("ore", 0))) * 350) * float(weights.get("ore", 1.0))
-	total += float(max(0, int(rewards.get("experience", 0)))) * float(weights.get("experience", 1.0))
+	for resource_key in AI_RESOURCE_VALUE_BY_ID.keys():
+		total += (
+			float(max(0, int(rewards.get(resource_key, 0))) * int(AI_RESOURCE_VALUE_BY_ID.get(resource_key, 0)))
+			* float(weights.get(resource_key, 1.0))
+		)
 	return max(0, int(round(total)))
+
+static func _merge_resource_payloads(a: Variant, b: Variant) -> Dictionary:
+	var merged := {}
+	for value in [a, b]:
+		if not (value is Dictionary):
+			continue
+		for resource_key in value.keys():
+			var key := String(resource_key)
+			merged[key] = int(merged.get(key, 0)) + int(value.get(resource_key, 0))
+	return merged
 
 static func _resource_affinity_value(claim_value: int, income_value: int, weighted_claim_value: int, weighted_income_value: int) -> int:
 	var claim_delta: int = max(0, weighted_claim_value - claim_value)
@@ -15890,6 +16023,12 @@ static func _default_enemy_strategy() -> Dictionary:
 			"gold": 1.0,
 			"wood": 1.0,
 			"ore": 1.0,
+			"aetherglass": 1.0,
+			"embergrain": 1.0,
+			"peatwax": 1.0,
+			"verdant_grafts": 1.0,
+			"brass_scrip": 1.0,
+			"memory_salt": 1.0,
 			"experience": 1.0,
 		},
 		"site_family_weights": {

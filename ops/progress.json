@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected; continue with the next production-impacting strategic AI behavior gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T05:01:06Z",
+  "updatedAt": "2026-05-31T05:11:37Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,104 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-rare-resource-targeting-10184",
+      "title": "Strategic AI Rare Resource Targeting",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make AI resource-site targeting value all live rare resources using enemy treasury scarcity and near-term town development needs, so AI factions fight for resources required by their own economy instead of mostly valuing common resources.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_economy_pressure_report.gd"
+      ],
+      "baselineChecks": [
+        "Strategic AI resource_target_score_breakdown uses live target reports for resource task planning.",
+        "Existing resource valuation prices gold/wood/ore/experience strongly but rare resources are mostly invisible outside a player-stockpile scarcity bump.",
+        "The production strategic AI target requires enemy economy/site choices to use faction resources and resource-specific shortages."
+      ],
+      "completionCriteria": [
+        "AI target resource value includes all live rare resources in claim rewards and persistent income.",
+        "Scarcity scoring uses the enemy faction treasury when evaluating enemy targets, falling back to player resources only for player-facing calls.",
+        "Scarcity scoring includes near-term affordable/buildable town-development resource deficits for enemy-owned towns.",
+        "Resource target reason/debug payloads expose rare-resource pressure without leaking private debug into public summaries.",
+        "Focused validation proves a rare-starved enemy ranks a relevant rare-resource site above a comparable common-resource target."
+      ],
+      "nonGoals": [
+        "Do not add a broad new reporting gate.",
+        "Do not rebalance town costs or resource source placement in this slice.",
+        "Do not claim strategic AI release readiness from this single behavior."
+      ],
+      "startedAt": "2026-05-31T05:03:24Z",
+      "updatedAt": "2026-05-31T05:11:37Z",
+      "completedAt": "2026-05-31T05:11:37Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_economy_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Proves a peatwax-starved Mireclaw economy ranks a live peatwax source above a comparable wood source, with rare value, scarcity, reason, and debug evidence."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_faction_personality_evidence_report.tscn",
+          "status": "pass",
+          "notes": "Faction strategy resource weighting and public pressure evidence still pass with rare-resource target valuation."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_site_control_proof_report.tscn",
+          "status": "pass",
+          "notes": "Site target ordering, capture, event boundaries, and spell-site learning remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "status": "pass",
+          "notes": "Public AI event records remain compact and score-free."
+        },
+        {
+          "command": "godot --headless --path . tests/faction_scenario_ai_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Faction/scenario pressure rows still pass with rare-source pressure surfaced."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_commander_role_state_report.tscn",
+          "status": "pass",
+          "notes": "Commander role resource target proposals remain valid and public events stay compact."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_event_surfacing_report.tscn",
+          "status": "pass",
+          "notes": "AI event surfacing remains valid."
+        },
+        {
+          "command": "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "scoped_pass_with_existing_blocker",
+          "notes": "Focused Native RMG smoke row passed; report intentionally preserves remaining full 100-seed eight-week matrix blocker."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check",
+          "status": "pass",
+          "notes": "Progress JSON and whitespace checks passed before completion update."
+        }
+      ],
+      "evidence": [
+        "EnemyAdventureRules resource target value now prices every live rare resource, not only gold/wood/ore/experience.",
+        "Resource scarcity now uses enemy faction treasury for enemy target scoring and falls back to player resources only when no faction state is available.",
+        "Resource scarcity also reads near-term enemy-owned town build-option costs to identify development resource pressure.",
+        "AI pressure debug/reason rows now expose resource_scarcity and name rare resources in report/debug evidence while public events remain score-free.",
+        "Focused live target-scoring validation proves a rare-starved AI ranks a needed peatwax source over a comparable wood source."
+      ]
+    },
     {
       "id": "strategic-ai-town-spell-study-10184",
       "title": "Strategic AI Town Spell Study",
@@ -33569,6 +33667,71 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-rare-resource-targeting-10184",
+      "title": "Strategic AI Rare Resource Targeting",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T05:11:37Z",
+      "sourceRefs": [
+        "PLAN.md#current-tactical-state",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_economy_pressure_report.gd"
+      ],
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_economy_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Proves a peatwax-starved Mireclaw economy ranks a live peatwax source above a comparable wood source, with rare value, scarcity, reason, and debug evidence."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_faction_personality_evidence_report.tscn",
+          "status": "pass",
+          "notes": "Faction strategy resource weighting and public pressure evidence still pass with rare-resource target valuation."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_site_control_proof_report.tscn",
+          "status": "pass",
+          "notes": "Site target ordering, capture, event boundaries, and spell-site learning remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "status": "pass",
+          "notes": "Public AI event records remain compact and score-free."
+        },
+        {
+          "command": "godot --headless --path . tests/faction_scenario_ai_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Faction/scenario pressure rows still pass with rare-source pressure surfaced."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_commander_role_state_report.tscn",
+          "status": "pass",
+          "notes": "Commander role resource target proposals remain valid and public events stay compact."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_event_surfacing_report.tscn",
+          "status": "pass",
+          "notes": "AI event surfacing remains valid."
+        },
+        {
+          "command": "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "scoped_pass_with_existing_blocker",
+          "notes": "Focused Native RMG smoke row passed; report intentionally preserves remaining full 100-seed eight-week matrix blocker."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check",
+          "status": "pass",
+          "notes": "Progress JSON and whitespace checks passed before completion update."
+        }
+      ],
+      "summary": "AI resource-site targeting now values all live rare resources through enemy treasury scarcity and near-term town build needs, so rare-starved factions pursue required rare sources in the same target scoring path used by live commander tasks."
+    },
+    {
       "id": "strategic-ai-town-spell-study-10184",
       "title": "Strategic AI Town Spell Study",
       "status": "completed",
@@ -44620,9 +44783,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T05:01:06Z"
+    "updatedAt": "2026-05-31T05:11:37Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T05:01:06Z",
+  "currentSliceUpdatedAt": "2026-05-31T05:11:37Z",
   "validationHistory": [
     {
       "status": "pass",

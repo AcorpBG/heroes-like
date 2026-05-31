@@ -32,6 +32,11 @@ func _run() -> void:
 		return
 	cases.append(ore_case)
 
+	var rare_case := _run_rare_starved_targeting_case()
+	if rare_case.is_empty():
+		return
+	cases.append(rare_case)
+
 	var payload := {
 		"ok": true,
 		"scenario_id": SCENARIO_ID,
@@ -144,6 +149,79 @@ func _run_southern_ore_gate_case() -> Dictionary:
 		"opened_resource_order": target_ids,
 	}
 
+func _run_rare_starved_targeting_case() -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	session.day = 12
+	OverworldRules.normalize_overworld_state(session)
+	_set_enemy_treasury(session, {
+		"gold": 12000,
+		"wood": 12,
+		"ore": 12,
+		"aetherglass": 6,
+		"embergrain": 6,
+		"peatwax": 0,
+		"verdant_grafts": 6,
+		"brass_scrip": 6,
+		"memory_salt": 6,
+	})
+	_prepare_duskfen_for_peatwax_build_need(session)
+	_append_resource_node(session, {
+		"placement_id": "ai_test_peatwax_front",
+		"site_id": "site_peatwax_reed_yard",
+		"x": 8,
+		"y": 1,
+	})
+	_append_resource_node(session, {
+		"placement_id": "ai_test_common_wood_front",
+		"site_id": "site_brightwood_sawmill",
+		"x": 6,
+		"y": 1,
+	})
+	var config := _enemy_config()
+	var origin := {"x": 7, "y": 1}
+	var report := EnemyAdventureRules.resource_pressure_report(session, config, origin, FACTION_ID, 0)
+	var target_ids := []
+	for target in report.get("targets", []):
+		if target is Dictionary:
+			target_ids.append(String(target.get("placement_id", "")))
+	var rare_rank := target_ids.find("ai_test_peatwax_front")
+	var common_rank := target_ids.find("ai_test_common_wood_front")
+	if rare_rank < 0 or common_rank < 0:
+		_fail("rare-starved fixture missing synthetic rare/common targets: %s" % JSON.stringify(target_ids))
+		return {}
+	if rare_rank > common_rank:
+		_fail("rare-starved AI should rank peatwax pressure above comparable common wood: %s" % JSON.stringify(target_ids))
+		return {}
+	var rare_target := EnemyAdventureRules.resource_pressure_target_report(session, config, origin, "ai_test_peatwax_front", FACTION_ID)
+	var common_target := EnemyAdventureRules.resource_pressure_target_report(session, config, origin, "ai_test_common_wood_front", FACTION_ID)
+	var rare_breakdown: Dictionary = rare_target.get("score_breakdown", {})
+	var common_breakdown: Dictionary = common_target.get("score_breakdown", {})
+	if int(rare_breakdown.get("scarcity_value", 0)) <= int(common_breakdown.get("scarcity_value", 0)):
+		_fail("rare-starved peatwax target should carry stronger enemy-scarcity value: rare=%s common=%s" % [JSON.stringify(rare_breakdown), JSON.stringify(common_breakdown)])
+		return {}
+	var reason_codes: Array = rare_breakdown.get("reason_codes", []) if rare_breakdown.get("reason_codes", []) is Array else []
+	if "resource_scarcity" not in reason_codes:
+		_fail("rare-starved peatwax target should expose resource_scarcity reason code: %s" % JSON.stringify(rare_breakdown))
+		return {}
+	if int(rare_breakdown.get("weighted_claim_value", 0)) <= 0 or int(rare_breakdown.get("weighted_income_value", 0)) <= 0:
+		_fail("rare resources should contribute to weighted claim and income values: %s" % JSON.stringify(rare_breakdown))
+		return {}
+	if String(rare_breakdown.get("debug_reason", "")).find("peatwax") < 0:
+		_fail("rare-resource pressure should name the scarce rare in debug evidence: %s" % JSON.stringify(rare_breakdown))
+		return {}
+	return {
+		"case_id": "rare_starved_ai_prioritizes_required_rare_source",
+		"rare_rank": rare_rank + 1,
+		"common_rank": common_rank + 1,
+		"rare_target": rare_target,
+		"common_target": common_target,
+		"ranked_order_prefix": target_ids.slice(0, min(8, target_ids.size())),
+	}
+
 func _set_resource_controller(session, placement_id: String, faction_id: String) -> void:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
 	for index in range(nodes.size()):
@@ -165,6 +243,44 @@ func _resolve_encounter(session, placement_id: String) -> void:
 	if placement_id not in resolved:
 		resolved.append(placement_id)
 	session.overworld["resolved_encounters"] = resolved
+
+func _append_resource_node(session, node: Dictionary) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	nodes.append(node)
+	session.overworld["resource_nodes"] = nodes
+
+func _set_enemy_treasury(session, treasury: Dictionary) -> void:
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for index in range(states.size()):
+		var state = states[index]
+		if state is Dictionary and String(state.get("faction_id", "")) == FACTION_ID:
+			state["treasury"] = treasury.duplicate(true)
+			states[index] = state
+			session.overworld["enemy_states"] = states
+			return
+	states.append({
+		"faction_id": FACTION_ID,
+		"treasury": treasury.duplicate(true),
+		"commander_roster": [],
+	})
+	session.overworld["enemy_states"] = states
+
+func _prepare_duskfen_for_peatwax_build_need(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != "duskfen_bastion":
+			continue
+		town["built_buildings"] = [
+			"building_town_hall",
+			"building_market_square",
+			"building_mireclaw_chainboom_ferry",
+		]
+		town["last_build_day"] = 0
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not prepare duskfen peatwax build need")
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
