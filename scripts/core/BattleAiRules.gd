@@ -460,22 +460,113 @@ static func _battle_with_enemy_hero_payload(battle: Dictionary, enemy_hero: Dict
 	return _battle_with_side_hero_payload(battle, "enemy", enemy_hero)
 
 static func _enemy_hero_state_for_ai(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
+	var battle_enemy_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
 	if not enemy_hero.is_empty():
-		return enemy_hero
+		return _merged_commander_ai_payload(enemy_hero, battle_enemy_payload)
 	var battle_enemy_hero: Dictionary = battle.get("enemy_hero", {}) if battle.get("enemy_hero", {}) is Dictionary else {}
 	if not battle_enemy_hero.is_empty():
-		return battle_enemy_hero
-	var battle_enemy_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
+		return _merged_commander_ai_payload(battle_enemy_hero, battle_enemy_payload)
 	if not battle_enemy_payload.is_empty():
-		return battle_enemy_payload
+		return battle_enemy_payload.duplicate(true)
 	return {}
+
+static func _merged_commander_ai_payload(primary_payload: Dictionary, secondary_payload: Dictionary) -> Dictionary:
+	if primary_payload.is_empty():
+		return secondary_payload.duplicate(true)
+	if secondary_payload.is_empty():
+		return primary_payload.duplicate(true)
+	var merged := primary_payload.duplicate(true)
+	if not _commander_payloads_can_merge(primary_payload, secondary_payload):
+		return merged
+
+	for key in ["id", "roster_hero_id", "hero_id", "name", "faction_id", "archetype", "command_path"]:
+		if String(merged.get(key, "")).strip_edges() == "" and String(secondary_payload.get(key, "")).strip_edges() != "":
+			merged[key] = secondary_payload.get(key)
+
+	var command: Dictionary = merged.get("command", {}) if merged.get("command", {}) is Dictionary else {}
+	var secondary_command: Dictionary = secondary_payload.get("command", {}) if secondary_payload.get("command", {}) is Dictionary else {}
+	if command.is_empty() and not secondary_command.is_empty():
+		command = secondary_command.duplicate(true)
+	elif not secondary_command.is_empty():
+		for key in ["attack", "defense", "power", "knowledge", "initiative"]:
+			if not command.has(key):
+				command[key] = secondary_command.get(key)
+	if not command.is_empty():
+		merged["command"] = command
+
+	var traits := _normalize_string_array(merged.get("battle_traits", []))
+	for trait_id in _normalize_string_array(secondary_payload.get("battle_traits", [])):
+		if trait_id not in traits:
+			traits.append(trait_id)
+	if not traits.is_empty():
+		merged["battle_traits"] = traits
+
+	merged = _merge_commander_spellbooks_for_ai(merged, secondary_payload)
+	return merged
+
+static func _commander_payloads_can_merge(primary_payload: Dictionary, secondary_payload: Dictionary) -> bool:
+	var primary_tokens := _commander_identity_tokens(primary_payload)
+	var secondary_tokens := _commander_identity_tokens(secondary_payload)
+	if primary_tokens.is_empty() or secondary_tokens.is_empty():
+		return true
+	for primary_token in primary_tokens:
+		for secondary_token in secondary_tokens:
+			if _commander_identity_tokens_match(String(primary_token), String(secondary_token)):
+				return true
+	return false
+
+static func _commander_identity_tokens(payload: Dictionary) -> Array:
+	var tokens := []
+	for key in ["id", "roster_hero_id", "hero_id"]:
+		var token := String(payload.get(key, "")).strip_edges()
+		if token != "" and token not in tokens:
+			tokens.append(token)
+	return tokens
+
+static func _commander_identity_tokens_match(left_token: String, right_token: String) -> bool:
+	if left_token == "" or right_token == "":
+		return false
+	if left_token == right_token:
+		return true
+	return left_token.ends_with(":%s" % right_token) or right_token.ends_with(":%s" % left_token)
+
+static func _merge_commander_spellbooks_for_ai(merged: Dictionary, secondary_payload: Dictionary) -> Dictionary:
+	var spellbook: Dictionary = merged.get("spellbook", {}) if merged.get("spellbook", {}) is Dictionary else {}
+	var secondary_spellbook: Dictionary = secondary_payload.get("spellbook", {}) if secondary_payload.get("spellbook", {}) is Dictionary else {}
+	if secondary_spellbook.is_empty():
+		return merged
+	if spellbook.is_empty():
+		merged["spellbook"] = secondary_spellbook.duplicate(true)
+		return merged
+
+	var known_spell_ids := _normalize_string_array(spellbook.get("known_spell_ids", []))
+	for spell_id in _normalize_string_array(secondary_spellbook.get("known_spell_ids", [])):
+		if spell_id not in known_spell_ids:
+			known_spell_ids.append(spell_id)
+	if not known_spell_ids.is_empty():
+		spellbook["known_spell_ids"] = known_spell_ids
+
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	var secondary_mana: Dictionary = secondary_spellbook.get("mana", {}) if secondary_spellbook.get("mana", {}) is Dictionary else {}
+	if mana.is_empty() and not secondary_mana.is_empty():
+		spellbook["mana"] = secondary_mana.duplicate(true)
+	elif not mana.is_empty() and not secondary_mana.is_empty():
+		var merged_mana := mana.duplicate(true)
+		if not merged_mana.has("current") and secondary_mana.has("current"):
+			merged_mana["current"] = secondary_mana.get("current")
+		if not merged_mana.has("max") and secondary_mana.has("max"):
+			merged_mana["max"] = secondary_mana.get("max")
+		spellbook["mana"] = merged_mana
+
+	merged["spellbook"] = spellbook
+	return merged
 
 static func _battle_with_side_hero_payload(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
 	if battle.is_empty():
 		return battle
 	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
 	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
-	var source_payload := existing_payload if not existing_payload.is_empty() else commander_payload
+	var source_payload := _merged_commander_ai_payload(commander_payload, existing_payload) if not commander_payload.is_empty() else existing_payload
 	if source_payload.is_empty():
 		return battle
 	var normalized_payload := _commander_payload_for_tactical_scoring(source_payload)
