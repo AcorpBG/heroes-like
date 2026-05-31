@@ -3364,8 +3364,44 @@ static func _commander_state_from_risk_actor(raid: Dictionary) -> Dictionary:
 	if raid.get("enemy_commander_state", {}) is Dictionary:
 		var commander: Dictionary = raid.get("enemy_commander_state", {})
 		if not commander.is_empty():
-			return commander
-	return raid
+			return _commander_state_with_template_identity(commander)
+	return _commander_state_with_template_identity(raid)
+
+static func _commander_state_with_template_identity(commander_state: Dictionary) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var resolved := commander_state.duplicate(true)
+	var hero_template := _commander_template_for_state(resolved)
+	for key in ["name", "faction_id", "archetype", "command_path"]:
+		if String(resolved.get(key, "")).strip_edges() == "" and String(hero_template.get(key, "")).strip_edges() != "":
+			resolved[key] = String(hero_template.get(key, ""))
+	if not resolved.has("battle_traits"):
+		var template_traits := _normalize_string_array(hero_template.get("battle_traits", []))
+		if not template_traits.is_empty():
+			resolved["battle_traits"] = template_traits
+	else:
+		resolved["battle_traits"] = _normalize_string_array(resolved.get("battle_traits", []))
+	var command: Dictionary = resolved.get("command", {}) if resolved.get("command", {}) is Dictionary else {}
+	var template_command: Dictionary = hero_template.get("command", {}) if hero_template.get("command", {}) is Dictionary else {}
+	if command.is_empty() and not template_command.is_empty():
+		command = template_command.duplicate(true)
+	elif not template_command.is_empty():
+		for key in ["attack", "defense", "power", "knowledge", "initiative"]:
+			if not command.has(key):
+				command[key] = int(template_command.get(key, 0))
+	if not command.is_empty():
+		resolved["command"] = command
+	return resolved
+
+static func _commander_template_for_state(commander_state: Dictionary) -> Dictionary:
+	for key in ["roster_hero_id", "hero_id", "id"]:
+		var hero_id := String(commander_state.get(key, "")).strip_edges()
+		if hero_id == "":
+			continue
+		var hero_template := ContentService.get_hero(hero_id)
+		if not hero_template.is_empty():
+			return hero_template
+	return {}
 
 static func redirect_town_assault_for_risk(
 	session: SessionStateStoreScript.SessionData,
