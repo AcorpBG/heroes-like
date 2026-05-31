@@ -79,6 +79,12 @@ func _assert_report(first: Dictionary) -> bool:
 		return false
 	if not _assert_live_ai_town_governor_build_execution(live_town_governor_case):
 		return false
+	var generated_handoff_case := _find_case(first, "strategic_ai_generated_town_battle_handoff")
+	if generated_handoff_case.is_empty():
+		_fail("Headless simulation harness is missing generated-map town battle handoff evidence.")
+		return false
+	if not _assert_generated_ai_town_battle_handoff(generated_handoff_case):
+		return false
 	var live_defense_case := _find_case(first, "strategic_ai_live_town_defense_retask")
 	if live_defense_case.is_empty():
 		_fail("Headless simulation harness is missing live strategic AI town-defense retask evidence.")
@@ -239,6 +245,40 @@ func _assert_report(first: Dictionary) -> bool:
 		if serialized.find(token) >= 0:
 			_fail("Headless simulation compact report contains forbidden claim token: %s" % token)
 			return false
+	return true
+
+func _assert_generated_ai_town_battle_handoff(generated_handoff_case: Dictionary) -> bool:
+	if String(generated_handoff_case.get("status", "")) != "pass":
+		_fail("Generated-map strategic AI town battle handoff did not pass: %s" % JSON.stringify(generated_handoff_case))
+		return false
+	var summary: Dictionary = generated_handoff_case.get("summary", {}) if generated_handoff_case.get("summary", {}) is Dictionary else {}
+	var evidence: Dictionary = generated_handoff_case.get("evidence", {}) if generated_handoff_case.get("evidence", {}) is Dictionary else {}
+	if String(summary.get("startup_source", "")) != "native_rmg_disk_package":
+		_fail("Generated-map handoff did not use Native RMG disk package startup: %s" % JSON.stringify(summary))
+		return false
+	if not bool(summary.get("battle_started", false)):
+		_fail("Generated-map handoff did not start a battle: %s" % JSON.stringify(summary))
+		return false
+	if String(summary.get("battle_context_type", "")) != "town_defense":
+		_fail("Generated-map handoff used wrong battle context: %s" % JSON.stringify(summary))
+		return false
+	if String(summary.get("battle_town_id", "")) == "" or String(summary.get("battle_town_id", "")) != String(summary.get("target_town_id", "")):
+		_fail("Generated-map handoff queued the wrong town: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("battle_queue_event_count", 0)) < 1:
+		_fail("Generated-map handoff did not emit queue event evidence: %s" % JSON.stringify(summary))
+		return false
+	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
+	if "ai_town_defense_battle_queued" not in event_types:
+		_fail("Generated-map handoff evidence is missing ai_town_defense_battle_queued: %s" % JSON.stringify(event_types))
+		return false
+	var handoff_summary: Dictionary = evidence.get("handoff_summary", {}) if evidence.get("handoff_summary", {}) is Dictionary else {}
+	if int(handoff_summary.get("battle_queue_event_count", 0)) < 1:
+		_fail("Generated-map handoff summary did not count the queue event: %s" % JSON.stringify(handoff_summary))
+		return false
+	if not bool(evidence.get("native_rmg_generated_maps_only", false)):
+		_fail("Generated-map handoff evidence did not preserve Native RMG-only policy: %s" % JSON.stringify(evidence))
+		return false
 	return true
 
 func _assert_live_ai_recruitment_delivery(live_recruitment_case: Dictionary) -> bool:

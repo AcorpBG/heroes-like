@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "",
-  "currentSliceTitle": "",
-  "currentSliceStatus": "none",
-  "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work from the corrected generated-map handoff signal without touching unit, spell, growth, economy, faction, town-cost, or authored balance content unless the owner explicitly selects a balance slice.",
+  "currentSliceId": "strategic-ai-generated-town-battle-handoff-proof-10184",
+  "currentSliceTitle": "Strategic AI Generated Town Battle Handoff Proof",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed Native RMG generated-map in-range town assault handoff proof: the focused case starts a live town-defense battle and emits observable queue evidence without touching unit, spell, growth, economy, faction, town-cost, or authored balance content.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T14:39:36Z",
+  "updatedAt": "2026-05-31T19:52:06Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-generated-town-battle-handoff-proof-10184",
+      "title": "Strategic AI Generated Town Battle Handoff Proof",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active tactical/strategic AI production-readiness goal after corrected generated-map handoff evidence showed natural 14-turn probes did not reach town/hero battle range",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Add Native RMG generated-map proof that an in-range AI town target queues a real tactical battle through the live handoff path, and make the queue event observable to existing long-run handoff reports.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/headless_simulation_harness_report.tscn",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionCriteria": "A Native RMG disk-package session case proves an in-range generated-map enemy town target starts a live town-defense battle payload and emits public queue evidence; long-run handoff telemetry preserves the new event surface; tactical order and repository validation remain green; no unit, spell, growth, economy, faction, town-cost, or authored balance content changes.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming production readiness before full matrix evidence"
+      ],
+      "startedAt": "2026-05-31T19:32:51Z",
+      "updatedAt": "2026-05-31T19:52:06Z",
+      "validation": [
+        "Started from current state: corrected long-run evidence proves natural 14-turn Native RMG pressure did not reach town/hero battle range, so the next required proof is an explicit generated-map in-range handoff case through the live battle queue.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn | PASS/WARNING; 19 pass, 0 fail, 1 warning, 1 deferred, harness_signature=b9ed8c85. New strategic_ai_generated_town_battle_handoff case passed with Native RMG disk-package startup, faction_sunvault, hero_solera, target town native_rmg_town_start_01, battle_context=town_defense, battle_started=true, battle_queue_event_count=1.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | PASS process; 1/1 row, 2/2 turns, tactical_battle_queued_count summary key present, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0; report keeps expected full 100-seed eight-week remaining-validation blocker.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn | PASS.",
+        "python3 tests/validate_repo.py | PASS.",
+        "jq empty ops/progress.json | PASS.",
+        "git diff --check | PASS.",
+        "git diff -- content/ | clean; no unit, spell, growth, economy, faction, town-cost, or authored balance content changes."
+      ],
+      "summary": "Completed. Native RMG generated-map in-range town assault proof now starts a live town-defense battle payload through the existing enemy turn handoff path and emits queue-event evidence counted by the harness and long-run handoff telemetry.",
+      "notes": [
+        "No unit, spell, growth, economy, faction, town-cost, or authored balance content changes were made.",
+        "This is not production readiness. Remaining work includes broader natural Native RMG town/hero battle arrival evidence, full 100-seed eight-week matrix execution, Medium/generated-map generalization when unblocked, tactical spell/counterplay breadth, and live-client pacing review."
+      ]
+    },
     {
       "id": "strategic-ai-generated-battle-handoff-behavior-10184",
       "title": "Strategic AI Generated Battle Handoff Behavior",
@@ -47929,12 +47985,12 @@
     "summary": "BattleAiRules side payload lookup now derives missing player/enemy AI payloads from commander state so internal damage estimates and trait/objective scoring stay aligned on resumed or synthetic battle states without changing balance content."
   },
   "active_slice": {
-    "id": "",
-    "title": "",
-    "status": "none",
-    "updatedAt": "2026-05-31T19:38:00Z"
+    "id": "strategic-ai-generated-town-battle-handoff-proof-10184",
+    "title": "Strategic AI Generated Town Battle Handoff Proof",
+    "status": "completed",
+    "updatedAt": "2026-05-31T19:52:06Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T19:38:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T19:52:06Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -51145,16 +51201,15 @@
       }
     }
   ],
-  "currentSlice": "",
+  "currentSlice": "strategic-ai-generated-town-battle-handoff-proof-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T16:48:00Z",
-    "sliceId": "battle-ai-shared-spell-tactical-order-10184",
+    "updatedAt": "2026-05-31T19:52:06Z",
+    "sliceId": "strategic-ai-generated-town-battle-handoff-proof-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused generated-map smoke; behavior_bug_count 0, stalled_turn_count 0; report keeps expected full-matrix scope blocker)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/headless_simulation_harness_report.tscn (passed with warning status; 19 pass, 0 fail, 1 warning, 1 deferred; generated Native RMG town handoff case passed with town_defense battle and queue event evidence)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused Native RMG smoke; 1/1 rows, 2/2 turns, behavior_bug_count 0, stalled_turn_count 0, tactical_battle_queued_count key present; report keeps expected full-matrix scope blocker)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
@@ -51162,23 +51217,23 @@
     ],
     "evidence": {
       "implemented": [
-        "BattleAiRules shared tactical order now evaluates battle spell candidates for the acting side, not only enemy-side spell decisions.",
-        "Player autoplay can preserve a scored cast_spell decision, set the selected spell target, and execute it through BattleRules.cast_player_spell.",
-        "The focused tactical smoke proves a player-side spell order selects spell_cinder_burst with cast_spell score evidence and damages the target through the live battle rules."
+        "Enemy town-defense and hero-intercept handoff paths now return observable AI queue events when they create live battle payloads.",
+        "The headless harness includes a Native RMG disk-package generated-map case that seeds an in-range AI town target and proves the live town-defense battle handoff starts.",
+        "Strategic long-run handoff telemetry now includes tactical_battle_queued_count so town and hero tactical queue events remain visible in generated-map reports."
       ],
       "focused_case": {
-        "case_id": "player_spell_tactical_order",
-        "selected_spell_id": "spell_cinder_burst",
-        "selected_action": "cast_spell",
-        "target_battle_id": "enemy_spell_target",
-        "target_health_before": 64,
-        "target_health_after": 13,
-        "cast_spell_score": 27.83125,
-        "advance_score": 10.25
+        "case_id": "native_rmg_in_range_town_target_queues_battle",
+        "startup_source": "native_rmg_disk_package",
+        "faction_id": "faction_sunvault",
+        "roster_hero_id": "hero_solera",
+        "target_town_id": "native_rmg_town_start_01",
+        "battle_context_type": "town_defense",
+        "battle_started": true,
+        "battle_queue_event_count": 1
       },
       "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need broader generated-map long-run matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
-      "policy": "Tactical AI spell-order execution only; no content balance changes and no production-ready AI claim."
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need broader natural generated-map battle-arrival evidence, full 100-seed eight-week matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "Generated-map tactical battle handoff proof only; no content balance changes and no production-ready AI claim."
     }
   }
 }
