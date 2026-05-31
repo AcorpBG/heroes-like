@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.
+- Latest completed slice: `strategic-ai-path-distance-efficiency-10184`.
 - Latest completed slice: `strategic-ai-long-run-progress-telemetry-10184`.
 - Latest completed slice: `battle-ai-tactical-order-commander-payload-10184`.
 - Latest completed slice: `battle-ai-spell-report-payload-bridge-10184`.
