@@ -1150,6 +1150,16 @@ func _run_adventure_executor_case() -> Dictionary:
 	var mana: Dictionary = after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("mana", {})
 	if int(mana.get("current", 0)) >= 12:
 		return {"ok": false, "error": "Adventure spell executor did not spend commander mana: %s" % mana}
+	var roster_entry := _enemy_roster_entry(session, faction_id, "hero_tarn")
+	if roster_entry.is_empty():
+		return {"ok": false, "error": "Adventure spell executor did not keep Tarn in commander roster."}
+	if String(roster_entry.get("status", "")) != "active" or String(roster_entry.get("active_placement_id", "")) != "adventure_spell_executor_raid":
+		return {"ok": false, "error": "Adventure spell executor did not preserve active roster assignment: %s" % roster_entry}
+	var roster_commander: Dictionary = roster_entry.get("commander_state", {}) if roster_entry.get("commander_state", {}) is Dictionary else {}
+	var roster_spellbook: Dictionary = roster_commander.get("spellbook", {}) if roster_commander.get("spellbook", {}) is Dictionary else {}
+	var roster_mana: Dictionary = roster_spellbook.get("mana", {}) if roster_spellbook.get("mana", {}) is Dictionary else {}
+	if int(roster_mana.get("current", -1)) != int(mana.get("current", -2)):
+		return {"ok": false, "error": "Adventure spell executor did not sync spent mana to commander roster: raid=%s roster=%s" % [mana, roster_mana]}
 	var event_types := _event_types(result.get("events", []))
 	if "ai_adventure_spell_cast" not in event_types:
 		return {"ok": false, "error": "Adventure spell executor did not emit ai_adventure_spell_cast: %s" % result}
@@ -1165,6 +1175,7 @@ func _run_adventure_executor_case() -> Dictionary:
 		"final_x": int(after_raid.get("x", 0)),
 		"final_y": int(after_raid.get("y", 0)),
 		"mana_after": int(mana.get("current", 0)),
+		"roster_mana_after": int(roster_mana.get("current", 0)),
 		"event_types": event_types,
 	}
 
@@ -1241,6 +1252,12 @@ func _run_adventure_minimal_template_executor_case() -> Dictionary:
 	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
 	if int(mana.get("current", 0)) >= int(mana.get("max", 0)):
 		return {"ok": false, "error": "Minimal adventure spell executor did not spend template-derived mana: %s" % mana}
+	var roster_entry := _enemy_roster_entry(session, faction_id, "hero_tarn")
+	var roster_commander: Dictionary = roster_entry.get("commander_state", {}) if roster_entry.get("commander_state", {}) is Dictionary else {}
+	var roster_spellbook: Dictionary = roster_commander.get("spellbook", {}) if roster_commander.get("spellbook", {}) is Dictionary else {}
+	var roster_mana: Dictionary = roster_spellbook.get("mana", {}) if roster_spellbook.get("mana", {}) is Dictionary else {}
+	if int(roster_mana.get("current", -1)) != int(mana.get("current", -2)):
+		return {"ok": false, "error": "Minimal adventure spell executor did not sync template-derived mana to commander roster: raid=%s roster=%s" % [mana, roster_mana]}
 	var event_types := _event_types(result.get("events", []))
 	if "ai_adventure_spell_cast" not in event_types:
 		return {"ok": false, "error": "Minimal adventure spell executor did not emit ai_adventure_spell_cast: %s" % result}
@@ -1250,6 +1267,7 @@ func _run_adventure_minimal_template_executor_case() -> Dictionary:
 		"spell_id": String(after_raid.get("last_adventure_spell_id", "")),
 		"movement_steps": int(after_raid.get("last_adventure_spell_movement_steps", 0)),
 		"mana_after": int(mana.get("current", 0)),
+		"roster_mana_after": int(roster_mana.get("current", 0)),
 		"known_spell_count": known_spell_ids.size(),
 		"event_types": event_types,
 	}
@@ -1317,6 +1335,16 @@ func _run_adventure_scouting_executor_case() -> Dictionary:
 	var mana: Dictionary = after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("mana", {})
 	if int(mana.get("current", 0)) >= 16:
 		return {"ok": false, "error": "Adventure scouting executor did not spend commander mana: %s" % mana}
+	var roster_entry := _enemy_roster_entry(session, faction_id, "hero_tarn")
+	if roster_entry.is_empty():
+		return {"ok": false, "error": "Adventure scouting executor did not keep Tarn in commander roster."}
+	if String(roster_entry.get("status", "")) != "active" or String(roster_entry.get("active_placement_id", "")) != "adventure_spell_scouting_raid":
+		return {"ok": false, "error": "Adventure scouting executor did not preserve active roster assignment: %s" % roster_entry}
+	var roster_commander: Dictionary = roster_entry.get("commander_state", {}) if roster_entry.get("commander_state", {}) is Dictionary else {}
+	var roster_spellbook: Dictionary = roster_commander.get("spellbook", {}) if roster_commander.get("spellbook", {}) is Dictionary else {}
+	var roster_mana: Dictionary = roster_spellbook.get("mana", {}) if roster_spellbook.get("mana", {}) is Dictionary else {}
+	if int(roster_mana.get("current", -1)) != int(mana.get("current", -2)):
+		return {"ok": false, "error": "Adventure scouting executor did not sync spent mana to commander roster: raid=%s roster=%s" % [mana, roster_mana]}
 	var memory := _enemy_known_world_memory(session, faction_id)
 	var scouted_target_ids := _scouted_target_ids(memory)
 	if "resource:midway_shrine" not in scouted_target_ids:
@@ -1339,6 +1367,7 @@ func _run_adventure_scouting_executor_case() -> Dictionary:
 		"scouted_target_count": int(after_raid.get("last_adventure_scouted_target_count", 0)),
 		"selected_target_id": String(after_raid.get("target_placement_id", "")),
 		"mana_after": int(mana.get("current", 0)),
+		"roster_mana_after": int(roster_mana.get("current", 0)),
 		"memory_target_ids": scouted_target_ids,
 		"event_types": event_types,
 	}
@@ -1391,6 +1420,15 @@ func _enemy_state(session, faction_id: String) -> Dictionary:
 		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
 			return state
 	return {"faction_id": faction_id}
+
+func _enemy_roster_entry(session, faction_id: String, roster_hero_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		for entry in state.get("commander_roster", []):
+			if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+				return entry
+	return {}
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

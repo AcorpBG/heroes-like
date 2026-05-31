@@ -1403,6 +1403,17 @@ static func advance_raids(
 				resolved_encounters = updated_resolved_encounters
 				encounters[index] = encounter
 				continue
+		var final_commander_state = encounter.get("enemy_commander_state", {})
+		if final_commander_state is Dictionary and not final_commander_state.is_empty():
+			sync_commander_state_to_roster(
+				session,
+				faction_id,
+				final_commander_state,
+				COMMANDER_STATUS_ACTIVE,
+				String(encounter.get("placement_id", "")),
+				-1,
+				String(final_commander_state.get("last_outcome", ""))
+			)
 		encounters[index] = encounter
 
 		var target_label = String(encounter.get("target_label", "the frontier")).strip_edges()
@@ -1798,10 +1809,21 @@ static func _maybe_cast_raid_adventure_movement_spell(
 	if not bool(cast_result.get("ok", false)):
 		return {"encounter": raid, "movement_steps": RAID_BASE_MOVEMENT_STEPS, "events": []}
 	var updated_raid := raid.duplicate(true)
-	updated_raid["enemy_commander_state"] = cast_result.get("hero", commander_state)
+	var updated_commander = cast_result.get("hero", commander_state)
+	if not (updated_commander is Dictionary):
+		updated_commander = commander_state
+	updated_raid["enemy_commander_state"] = updated_commander
 	updated_raid["last_adventure_spell_id"] = spell_id
 	updated_raid["last_adventure_spell_day"] = int(session.day)
 	updated_raid["last_adventure_spell_movement_steps"] = int(cast_result.get("movement", {}).get("current", RAID_BASE_MOVEMENT_STEPS))
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		updated_commander,
+		COMMANDER_STATUS_ACTIVE,
+		String(updated_raid.get("placement_id", "")),
+		-1
+	)
 	var steps: int = clampi(
 		int(cast_result.get("movement", {}).get("current", RAID_BASE_MOVEMENT_STEPS)),
 		RAID_BASE_MOVEMENT_STEPS,
@@ -1895,11 +1917,22 @@ static func _maybe_cast_raid_adventure_scouting_spell(
 		reveal_radius
 	)
 	var updated_raid := raid.duplicate(true)
-	updated_raid["enemy_commander_state"] = cast_result.get("hero", commander_state)
+	var updated_commander = cast_result.get("hero", commander_state)
+	if not (updated_commander is Dictionary):
+		updated_commander = commander_state
+	updated_raid["enemy_commander_state"] = updated_commander
 	updated_raid["last_adventure_scout_spell_id"] = spell_id
 	updated_raid["last_adventure_scout_spell_day"] = int(session.day)
 	updated_raid["last_adventure_scout_reveal_radius"] = reveal_radius
 	updated_raid["last_adventure_scouted_target_count"] = scouted_records.size()
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		updated_commander,
+		COMMANDER_STATUS_ACTIVE,
+		String(updated_raid.get("placement_id", "")),
+		-1
+	)
 	var event := build_ai_event_record(
 		session,
 		config,
@@ -4774,6 +4807,35 @@ static func build_roster_commander_state(
 	)
 	return _apply_commander_role_metadata(with_metadata, record_source)
 
+static func _with_runtime_spellbook_state(base_state: Dictionary, runtime_state: Variant) -> Dictionary:
+	if not (runtime_state is Dictionary):
+		return base_state
+	var runtime_spellbook = runtime_state.get("spellbook", {})
+	if not (runtime_spellbook is Dictionary):
+		return base_state
+	var updated := base_state.duplicate(true)
+	var spellbook = updated.get("spellbook", {})
+	if not (spellbook is Dictionary):
+		spellbook = {}
+	var runtime_known = runtime_spellbook.get("known_spell_ids", [])
+	if runtime_known is Array:
+		spellbook["known_spell_ids"] = _merge_unique_strings(
+			spellbook.get("known_spell_ids", []),
+			runtime_known
+		)
+	var runtime_mana = runtime_spellbook.get("mana", {})
+	if runtime_mana is Dictionary and not runtime_mana.is_empty():
+		var existing_mana = spellbook.get("mana", {})
+		var max_mana := int(runtime_mana.get("max", 0))
+		if existing_mana is Dictionary:
+			max_mana = max(max_mana, int(existing_mana.get("max", max_mana)))
+		spellbook["mana"] = {
+			"current": clampi(int(runtime_mana.get("current", max_mana)), 0, max_mana),
+			"max": max_mana,
+		}
+	updated["spellbook"] = spellbook
+	return updated
+
 static func advance_commander_record(commander_state: Dictionary, outcome_id: String) -> Dictionary:
 	if commander_state.is_empty():
 		return {}
@@ -4936,12 +4998,13 @@ static func sync_commander_state_to_roster(
 				entry["recovery_day"] = recovery_day
 			if last_outcome != "":
 				entry["last_outcome"] = last_outcome
-			entry["commander_state"] = build_roster_commander_state(
+			var synced_commander_state := build_roster_commander_state(
 				roster_hero_id,
 				faction_id,
 				commander_state,
 				entry
 			)
+			entry["commander_state"] = _with_runtime_spellbook_state(synced_commander_state, commander_state)
 			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
 			entry["commander_role_state"] = commander_live_role_state(entry.get("commander_state", {}))
 			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
