@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue with the next production-impacting strategic AI behavior gap.
+- Latest completed slice: `strategic-ai-multihero-spawn-occupancy-10184`.
 - Latest completed slice: `strategic-ai-defensive-threat-known-hero-gating-10184`.
 - Latest completed slice: `strategic-ai-convoy-interception-known-world-gating-10184`.
 - Latest completed slice: `strategic-ai-hero-front-support-sighting-gate-10184`.

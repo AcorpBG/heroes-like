@@ -3722,13 +3722,13 @@ static func _open_spawn_points(session: SessionStateStoreScript.SessionData, con
 		return points
 
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
-	var hero_position = session.overworld.get("hero_position", {"x": -1, "y": -1})
+	var player_hero_occupied_tiles := _player_hero_occupied_tile_lookup(session)
 	for point in spawn_points:
 		if not (point is Dictionary):
 			continue
 		var x = int(point.get("x", -1))
 		var y = int(point.get("y", -1))
-		if x == int(hero_position.get("x", -99)) and y == int(hero_position.get("y", -99)):
+		if player_hero_occupied_tiles.has(_tile_key_xy(x, y)):
 			continue
 
 		var occupied = false
@@ -3745,6 +3745,40 @@ static func _open_spawn_points(session: SessionStateStoreScript.SessionData, con
 		if not occupied:
 			points.append({"x": x, "y": y})
 	return points
+
+static func _player_hero_occupied_tile_lookup(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var occupied := {}
+	if session == null:
+		return occupied
+	_record_position_tile(occupied, session.overworld.get("hero_position", {}))
+	var hero = session.overworld.get("hero", {})
+	if hero is Dictionary:
+		_record_position_tile(occupied, hero.get("position", {}))
+	var player_heroes = session.overworld.get("player_heroes", [])
+	if player_heroes is Array:
+		for hero_value in player_heroes:
+			if hero_value is Dictionary:
+				_record_position_tile(occupied, hero_value.get("position", {}))
+	var heroes = session.overworld.get("heroes", [])
+	if heroes is Array:
+		for hero_value in heroes:
+			if not (hero_value is Dictionary):
+				continue
+			if String(hero_value.get("owner", "player")) != "player":
+				continue
+			_record_position_tile(occupied, hero_value.get("position", {}))
+	return occupied
+
+static func _record_position_tile(occupied: Dictionary, position_value: Variant) -> void:
+	if not (position_value is Dictionary):
+		return
+	var position: Dictionary = position_value
+	if position.is_empty():
+		return
+	occupied[_tile_key_xy(int(position.get("x", -9999)), int(position.get("y", -9999)))] = true
+
+static func _tile_key_xy(x: int, y: int) -> String:
+	return "%d,%d" % [x, y]
 
 static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null:
