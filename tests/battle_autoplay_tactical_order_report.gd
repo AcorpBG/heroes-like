@@ -165,6 +165,29 @@ func _validate_tactical_order_argument_commander_payload() -> Dictionary:
 	if minimal_existing_payload_state.get("enemy_hero_payload", {}).has("battle_traits"):
 		_fail("Existing minimal payload template fallback mutated source battle state: %s" % JSON.stringify(minimal_existing_payload_state))
 		return {}
+	var rich_battle_payload_state := session.battle.duplicate(true)
+	rich_battle_payload_state["enemy_hero_payload"] = {
+		"hero_id": "argument_battle_merge_commander",
+		"battle_traits": ["vanguard"],
+		"command": {"attack": 3, "defense": 0, "power": 0, "knowledge": 0},
+	}
+	var minimal_argument := {"hero_id": "argument_battle_merge_commander"}
+	var argument_battle_merge := BattleAiRules.choose_stack_tactical_order(
+		rich_battle_payload_state,
+		active_stack,
+		"player",
+		minimal_argument
+	)
+	var argument_battle_scores: Dictionary = argument_battle_merge.get("candidate_scores", {}) if argument_battle_merge.get("candidate_scores", {}) is Dictionary else {}
+	if String(argument_battle_merge.get("commander_payload_source", "")) != "battle":
+		_fail("Argument plus battle payload merge should report battle payload source when battle metadata participates: %s" % JSON.stringify(argument_battle_merge))
+		return {}
+	if not argument_battle_scores.has("strike") or float(argument_battle_scores.get("strike", 0.0)) <= float(baseline_scores.get("strike", 0.0)):
+		_fail("Minimal argument commander should inherit compatible rich battle payload vanguard scoring: baseline=%s merge=%s" % [JSON.stringify(baseline), JSON.stringify(argument_battle_merge)])
+		return {}
+	if rich_battle_payload_state.get("enemy_hero_payload", {}).get("command", {}).has("initiative"):
+		_fail("Argument plus battle payload merge mutated source battle payload: %s" % JSON.stringify(rich_battle_payload_state))
+		return {}
 	if session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"):
 		_fail("Argument commander payload bridge mutated source battle state: %s" % JSON.stringify(session.battle))
 		return {}
@@ -182,6 +205,8 @@ func _validate_tactical_order_argument_commander_payload() -> Dictionary:
 		"template_fallback_source": String(template_fallback.get("commander_payload_source", "")),
 		"template_fallback_strike_score": float(template_scores.get("strike", 0.0)),
 		"existing_payload_template_fallback_strike_score": float(existing_payload_scores.get("strike", 0.0)),
+		"argument_battle_merge_source": String(argument_battle_merge.get("commander_payload_source", "")),
+		"argument_battle_merge_strike_score": float(argument_battle_scores.get("strike", 0.0)),
 		"source_battle_mutated": session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"),
 		"enemy_battle_state_mutated": enemy_battle_state.has("enemy_hero_payload"),
 		"player_battle_state_mutated": player_battle_state.has("player_hero"),
