@@ -3600,6 +3600,7 @@ static func _enemy_activity_event_is_player_facing(event: Dictionary) -> bool:
 	if event_type not in [
 		"ai_target_assigned",
 		"ai_pressure_summary",
+		"ai_commander_task_planned",
 		"ai_site_seized",
 		"ai_site_contested",
 		"ai_town_built",
@@ -3631,6 +3632,8 @@ static func _enemy_activity_line(event: Dictionary) -> String:
 			return "%s targets %s%s." % [actor, target, suffix]
 		"ai_pressure_summary":
 			return "%s pressure centers on %s%s." % [String(event.get("faction_label", actor)), target, suffix]
+		"ai_commander_task_planned":
+			return "%s plans pressure on %s%s." % [actor, target, suffix]
 		"ai_site_seized":
 			return "%s seizes %s%s." % [actor, target, suffix]
 		"ai_site_contested":

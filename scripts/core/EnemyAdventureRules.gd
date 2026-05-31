@@ -142,6 +142,7 @@ const AI_PUBLIC_EVENT_LOG_KEYS := [
 const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_target_assigned",
 	"ai_pressure_summary",
+	"ai_commander_task_planned",
 	"ai_site_seized",
 	"ai_site_contested",
 	"ai_site_defended",
@@ -1298,6 +1299,8 @@ static func advance_raids(
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+		var movement_start: Vector2i = current
+		var goal_distance_before_movement: int = goal_distance
 		var movement_steps := RAID_BASE_MOVEMENT_STEPS
 		if goal_distance > RAID_BASE_MOVEMENT_STEPS and goal_distance < 9999:
 			var spell_result := _maybe_cast_raid_adventure_movement_spell(
@@ -1360,6 +1363,17 @@ static func advance_raids(
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
 		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
 		encounter["arrived"] = int(encounter.get("goal_distance", 9999)) == 0
+		var movement_event := ai_raid_movement_event(
+			session,
+			config,
+			encounter,
+			movement_start,
+			current,
+			goal_distance_before_movement,
+			int(encounter.get("goal_distance", goal_distance))
+		)
+		if not movement_event.is_empty():
+			event_records.append(movement_event)
 		encounters[index] = encounter
 		session.overworld["encounters"] = encounters
 		if String(encounter.get("target_kind", "")) != "hero":
@@ -9411,6 +9425,50 @@ static func ai_pressure_summary_event(
 				String(summary_target.get("target_label", summary_target.get("target_placement_id", "the frontier"))),
 			],
 			"debug_reason": String(summary_target.get("target_debug_reason", "")),
+		}
+	)
+
+static func ai_raid_movement_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	actor: Dictionary,
+	previous_position: Vector2i,
+	current_position: Vector2i,
+	goal_distance_before: int,
+	goal_distance_after: int
+) -> Dictionary:
+	if previous_position == current_position:
+		return {}
+	var target_kind := String(actor.get("target_kind", ""))
+	var target_id := String(actor.get("target_placement_id", ""))
+	if target_kind == "" or target_id == "":
+		return {}
+	var target_label := String(actor.get("target_label", target_id)).strip_edges()
+	if target_label == "":
+		target_label = target_id
+	var actor_label := _raid_name(actor)
+	var target := {
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+		"target_label": target_label,
+		"target_x": int(actor.get("target_x", actor.get("goal_x", 0))),
+		"target_y": int(actor.get("target_y", actor.get("goal_y", 0))),
+		"target_public_reason": String(actor.get("target_public_reason", "advancing active front")),
+		"target_reason_codes": actor.get("target_reason_codes", []),
+		"target_public_importance": String(actor.get("target_public_importance", "medium")),
+		"target_debug_reason": "raid movement changed tile and goal distance from %d to %d" % [goal_distance_before, goal_distance_after],
+	}
+	return build_ai_event_record(
+		session,
+		config,
+		"ai_raid_moved",
+		actor,
+		target,
+		{
+			"public_importance": "medium",
+			"state_policy": "derived",
+			"summary": "%s advances toward %s." % [actor_label, target_label],
+			"debug_reason": String(target.get("target_debug_reason", "")),
 		}
 	)
 

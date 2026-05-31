@@ -12,6 +12,8 @@ This slice adds an executable Native RMG generated-map strategic AI seed-matrix 
 - Battle interrupts are auto-resolved through the existing scored battle autoplay path so queued strategic fights do not stop the long-run turn simulation.
 - Native/generated enemy faction configs now receive runtime strategic AI defaults when package configs are skeletal: pressure cadence, raid thresholds, raid encounter pools, pillage policy, and spawn points from owned enemy towns.
 - The runner supports deterministic shard offsets through `HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET`, and reports `seed_shard` metadata with `seed_offset`, `start_ordinal`, `end_ordinal`, and per-row `seed_ordinal`.
+- The runner can require a specific compact public AI event type with `HEROES_STRATEGIC_AI_LONG_RUN_REQUIRE_EVENT_TYPE`; this is used to keep active task-planning surfaces from regressing into silent long-run turns.
+- Live strategic AI turns now expose `ai_commander_task_planned` in the compact public event log, and `advance_raids(...)` emits `ai_raid_moved` when an active raid host actually changes tile toward a valid target.
 
 ## Focused Evidence
 
@@ -22,6 +24,10 @@ Focused smoke command:
 Focused shard smoke command:
 
 `HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn`
+
+Focused active-front event smoke command:
+
+`HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_REQUIRE_EVENT_TYPE=ai_commander_task_planned HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn`
 
 Current focused Native RMG smoke surface:
 
