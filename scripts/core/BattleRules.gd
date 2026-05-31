@@ -2643,7 +2643,10 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 		}
 
 	var surface := get_action_surface(session)
-	var tactical_order := BattleAiRulesScript.choose_stack_tactical_order(battle, active_stack, "enemy")
+	var tactical_commander_payload: Dictionary = battle.get("player_hero", {}) if battle.get("player_hero", {}) is Dictionary else {}
+	if tactical_commander_payload.is_empty() and battle.get("player_commander_state", {}) is Dictionary:
+		tactical_commander_payload = battle.get("player_commander_state", {})
+	var tactical_order := BattleAiRulesScript.choose_stack_tactical_order(battle, active_stack, "enemy", tactical_commander_payload)
 	var action_id := _intent_forecast_action_id(surface, tactical_order, active_stack)
 	if action_id == "":
 		return {

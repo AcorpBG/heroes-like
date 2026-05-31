@@ -455,14 +455,38 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	return report
 
 static func _battle_with_enemy_hero_payload(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
-	if battle.is_empty() or enemy_hero.is_empty():
+	return _battle_with_side_hero_payload(battle, "enemy", enemy_hero)
+
+static func _battle_with_side_hero_payload(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
+	if battle.is_empty() or commander_payload.is_empty():
 		return battle
-	var existing_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
+	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
+	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
 	if not existing_payload.is_empty():
 		return battle
+	var normalized_payload := _commander_payload_for_tactical_scoring(commander_payload)
+	if normalized_payload.is_empty():
+		return battle
 	var scored := battle.duplicate(true)
-	scored["enemy_hero_payload"] = enemy_hero.duplicate(true)
+	scored[payload_key] = normalized_payload
 	return scored
+
+static func _commander_payload_for_tactical_scoring(commander_payload: Dictionary) -> Dictionary:
+	if commander_payload.is_empty():
+		return {}
+	var payload := commander_payload.duplicate(true)
+	var command: Dictionary = payload.get("command", {}) if payload.get("command", {}) is Dictionary else {}
+	if not command.is_empty():
+		for key in ["attack", "defense", "initiative"]:
+			if not payload.has(key):
+				payload[key] = int(command.get(key, 0))
+	if not payload.has("battle_traits"):
+		payload["battle_traits"] = []
+	else:
+		payload["battle_traits"] = _normalize_string_array(payload.get("battle_traits", []))
+	if not payload.has("damage_multiplier"):
+		payload["damage_multiplier"] = 1.0
+	return payload
 
 static func _enemy_commander_payload_source(battle: Dictionary, enemy_hero: Dictionary) -> String:
 	var existing_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
@@ -507,25 +531,26 @@ static func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictio
 			return stack
 	return {}
 
-static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "") -> Dictionary:
+static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "", commander_payload: Dictionary = {}) -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return {}
 	var acting_side := String(active_stack.get("side", ""))
 	var resolved_target_side := target_side if target_side != "" else _opposing_side(acting_side)
 	if acting_side == "" or resolved_target_side == "" or acting_side == resolved_target_side:
 		return {}
-	var targets := _alive_stacks_for_side(battle, resolved_target_side)
+	var scoring_battle := _battle_with_side_hero_payload(battle, acting_side, commander_payload)
+	var targets := _alive_stacks_for_side(scoring_battle, resolved_target_side)
 	if targets.is_empty():
 		return {}
 
-	var best_attack := _best_attack_action(battle, active_stack, targets)
-	var defend_score := _defend_score(battle, active_stack, targets)
-	var advance_score := _advance_score(battle, active_stack, targets)
-	var force_engaged_attack := _must_force_engaged_attack(active_stack, battle, targets, best_attack)
+	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
+	var defend_score := _defend_score(scoring_battle, active_stack, targets)
+	var advance_score := _advance_score(scoring_battle, active_stack, targets)
+	var force_engaged_attack := _must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
 	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if int(battle.get("distance", 1)) > 0 or best_attack.is_empty():
+	if int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty():
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -545,8 +570,18 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	report["target_side"] = resolved_target_side
 	report["target_count"] = targets.size()
 	report["scoring_policy"] = "battle_ai_nonspell_tactical_order_v1"
+	report["commander_payload_source"] = _side_commander_payload_source(battle, acting_side, commander_payload)
 	report["candidate_scores"] = candidate_scores
 	return report
+
+static func _side_commander_payload_source(battle: Dictionary, side: String, commander_payload: Dictionary) -> String:
+	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
+	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
+	if not existing_payload.is_empty():
+		return "battle"
+	if not commander_payload.is_empty():
+		return "argument"
+	return "none"
 
 static func _must_force_engaged_attack(
 	active_stack: Dictionary,
