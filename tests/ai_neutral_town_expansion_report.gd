@@ -20,6 +20,9 @@ func _run() -> void:
 	var post_capture_support_case := _duplicate_assault_reinforces_newly_captured_town()
 	if post_capture_support_case.is_empty():
 		return
+	var defender_rotation_case := _stronger_support_rotates_town_defender_without_duplication()
+	if defender_rotation_case.is_empty():
+		return
 	var defended_plan_case := _defended_neutral_town_is_planned_assault_target()
 	if defended_plan_case.is_empty():
 		return
@@ -37,6 +40,7 @@ func _run() -> void:
 		"plan_case": plan_case,
 		"capture_case": capture_case,
 		"post_capture_support_case": post_capture_support_case,
+		"defender_rotation_case": defender_rotation_case,
 		"defended_plan_case": defended_plan_case,
 		"defended_risk_case": defended_risk_case,
 		"defended_capture_case": defended_capture_case,
@@ -192,8 +196,8 @@ func _duplicate_assault_reinforces_newly_captured_town() -> Dictionary:
 	if not _resolved_has(session, "neutral_town_sable_support"):
 		_fail("Post-capture support field raid did not resolve into town defense.")
 		return {}
-	if String(defended_town.get("ai_defender_roster_hero_id", "")) != "hero_sable":
-		_fail("Post-capture support commander did not become the current town defender: %s" % JSON.stringify(defended_town))
+	if String(defended_town.get("ai_defender_roster_hero_id", "")) != "hero_vaska":
+		_fail("Weaker post-capture support stole the existing town defender slot: %s" % JSON.stringify(defended_town))
 		return {}
 	var after_support := _encounter(session, "neutral_town_sable_support")
 	var support_army_strength_after := _army_strength(after_support.get("enemy_army", {}).get("stacks", []))
@@ -212,9 +216,16 @@ func _duplicate_assault_reinforces_newly_captured_town() -> Dictionary:
 	if "pillages" in message or " press " in message:
 		_fail("Post-capture stationed support still produced field pressure text: %s" % message)
 		return {}
-	var roster_entry := _commander_roster_entry(session, "hero_sable")
-	if String(roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE or String(roster_entry.get("active_placement_id", "")) != "town_defense:%s" % NEUTRAL_TOWN_ID:
-		_fail("Post-capture support commander was not stationed on the captured town: %s" % JSON.stringify(roster_entry))
+	var defender_roster_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(defender_roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE or String(defender_roster_entry.get("active_placement_id", "")) != "town_defense:%s" % NEUTRAL_TOWN_ID:
+		_fail("Original town defender was not kept stationed after weaker support arrived: %s" % JSON.stringify(defender_roster_entry))
+		return {}
+	var support_roster_entry := _commander_roster_entry(session, "hero_sable")
+	if String(support_roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE:
+		_fail("Post-capture support commander was not released after folding into the town defense: %s" % JSON.stringify(support_roster_entry))
+		return {}
+	if _commander_entry_army_strength(support_roster_entry) > 0:
+		_fail("Released post-capture support commander kept duplicated army continuity: %s" % JSON.stringify(support_roster_entry))
 		return {}
 	return {
 		"case_id": "duplicate_assault_reinforces_newly_captured_town",
@@ -225,9 +236,99 @@ func _duplicate_assault_reinforces_newly_captured_town() -> Dictionary:
 		"support_resolved": _resolved_has(session, "neutral_town_sable_support"),
 		"support_field_strength_after": support_army_strength_after,
 		"stationed_commander_id": String(defended_town.get("ai_defender_roster_hero_id", "")),
+		"support_commander_status_after": String(support_roster_entry.get("status", "")),
+		"support_commander_army_after": _commander_entry_army_strength(support_roster_entry),
 		"event_types": event_types,
 		"defense_reason_codes": reason_codes,
 		"message": message,
+	}
+
+func _stronger_support_rotates_town_defender_without_duplication() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_prepare_neutral_town_only_front(session)
+	_seed_task_board(session, [
+		_town_expansion_task("hero_vaska", NEUTRAL_TOWN_ID, "active", "valid"),
+		_town_expansion_task("hero_sable", NEUTRAL_TOWN_ID, "active", "valid"),
+	])
+	var capture_raid := _neutral_town_raid(session)
+	var support_raid := _neutral_town_support_raid(session)
+	support_raid["placement_id"] = "neutral_town_sable_strong_support"
+	support_raid["enemy_army"] = {
+		"id": "neutral_town_sable_strong_support_army",
+		"name": "Strong Neutral Town Support Army",
+		"stacks": [
+			{"unit_id": "unit_blackbranch_cutthroat", "count": 16},
+			{"unit_id": "unit_mire_slinger", "count": 8},
+		],
+	}
+	support_raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		support_raid,
+		"hero_sable",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	support_raid = EnemyAdventureRules.ensure_raid_army(support_raid, session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(capture_raid)
+	encounters.append(support_raid)
+	session.overworld["encounters"] = encounters
+
+	var capture_result := EnemyAdventureRules.advance_raids(
+		session,
+		config,
+		MIRECLAW,
+		state,
+		{"only_placement_ids": ["neutral_town_vaska"]}
+	)
+	state = capture_result.get("state", state)
+	var captured_town := _town(session, NEUTRAL_TOWN_ID)
+	if String(captured_town.get("ai_defender_roster_hero_id", "")) != "hero_vaska":
+		_fail("Stronger-support fixture did not start with Vaska stationed: %s" % JSON.stringify(captured_town))
+		return {}
+	var garrison_before := _army_strength(captured_town.get("garrison", []))
+
+	var support_result := EnemyAdventureRules.advance_raids(
+		session,
+		config,
+		MIRECLAW,
+		state,
+		{"only_placement_ids": ["neutral_town_sable_strong_support"]}
+	)
+	var defended_town := _town(session, NEUTRAL_TOWN_ID)
+	var garrison_after := _army_strength(defended_town.get("garrison", []))
+	if garrison_after <= garrison_before:
+		_fail("Stronger support did not reinforce captured town: before=%d after=%d" % [garrison_before, garrison_after])
+		return {}
+	if String(defended_town.get("ai_defender_roster_hero_id", "")) != "hero_sable":
+		_fail("Stronger support did not rotate into the town defender slot: %s" % JSON.stringify(defended_town))
+		return {}
+	var old_defender_entry := _commander_roster_entry(session, "hero_vaska")
+	if String(old_defender_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE:
+		_fail("Replaced town defender did not return to available roster status: %s" % JSON.stringify(old_defender_entry))
+		return {}
+	if _commander_entry_army_strength(old_defender_entry) > 0:
+		_fail("Replaced town defender kept duplicated garrison army continuity: %s" % JSON.stringify(old_defender_entry))
+		return {}
+	var new_defender_entry := _commander_roster_entry(session, "hero_sable")
+	if String(new_defender_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE or String(new_defender_entry.get("active_placement_id", "")) != "town_defense:%s" % NEUTRAL_TOWN_ID:
+		_fail("Stronger support commander was not stationed after rotation: %s" % JSON.stringify(new_defender_entry))
+		return {}
+	if not _resolved_has(session, "neutral_town_sable_strong_support"):
+		_fail("Stronger support field raid did not resolve into town defense.")
+		return {}
+	return {
+		"case_id": "stronger_support_rotates_town_defender_without_duplication",
+		"garrison_before_support": garrison_before,
+		"garrison_after_support": garrison_after,
+		"stationed_commander_id": String(defended_town.get("ai_defender_roster_hero_id", "")),
+		"released_commander_id": "hero_vaska",
+		"released_commander_status": String(old_defender_entry.get("status", "")),
+		"released_commander_army_after": _commander_entry_army_strength(old_defender_entry),
+		"event_types": _event_types(support_result.get("events", [])),
 	}
 
 func _defended_neutral_town_is_planned_assault_target() -> Dictionary:
@@ -590,6 +691,10 @@ func _commander_roster_entry(session, actor_id: String) -> Dictionary:
 		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == actor_id:
 			return entry
 	return {}
+
+func _commander_entry_army_strength(entry: Dictionary) -> int:
+	var continuity: Dictionary = entry.get("army_continuity", {}) if entry.get("army_continuity", {}) is Dictionary else {}
+	return _army_strength(continuity.get("stacks", []))
 
 func _army_strength(stacks_value: Variant) -> int:
 	var total := 0
