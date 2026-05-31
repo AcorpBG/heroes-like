@@ -1352,7 +1352,13 @@ static func group_nearby_raids_for_town_assault(
 	var leader_id := String(leader.get("placement_id", ""))
 	if town_id == "" or leader_id == "":
 		return {"encounter": leader, "grouped": false, "events": []}
-	var target_view := _raid_grouping_target_view(session, target_kind, town_id, faction_id)
+	var target_view := _raid_grouping_target_view(
+		session,
+		target_kind,
+		town_id,
+		faction_id,
+		_normalize_string_array(leader.get("target_reason_codes", []))
+	)
 	if target_view.is_empty():
 		return {"encounter": leader, "grouped": false, "events": []}
 	var donor_index := _best_nearby_assault_support_raid_index(
@@ -1448,7 +1454,8 @@ static func _raid_grouping_target_view(
 	session: SessionStateStoreScript.SessionData,
 	target_kind: String,
 	target_id: String,
-	faction_id: String = ""
+	faction_id: String = "",
+	reason_codes: Array = []
 ) -> Dictionary:
 	match target_kind:
 		"town":
@@ -1456,7 +1463,7 @@ static func _raid_grouping_target_view(
 			if int(town_result.get("index", -1)) < 0:
 				return {}
 			var town: Dictionary = town_result.get("town", {})
-			if String(town.get("owner", "neutral")) != "player":
+			if not _town_is_valid_grouping_target(town, faction_id, reason_codes):
 				return {}
 			return {
 				"target_label": _town_name(town),
@@ -1515,6 +1522,30 @@ static func _raid_grouping_target_view(
 			}
 	return {}
 
+static func _town_is_valid_grouping_target(town: Dictionary, faction_id: String, reason_codes: Array) -> bool:
+	if town.is_empty():
+		return false
+	var owner := String(town.get("owner", "neutral"))
+	if owner == "player":
+		return true
+	var normalized_codes := _normalize_string_array(reason_codes)
+	if owner == "neutral":
+		for code in ["town_expansion", "neutral_town_claim", "neutral_town_siege"]:
+			if code in normalized_codes:
+				return true
+		return false
+	if owner == "enemy":
+		var town_faction_id := _town_faction_id(town)
+		if town_faction_id == faction_id:
+			for code in ["town_defense", "front_stabilization", "defend_front"]:
+				if code in normalized_codes:
+					return true
+			return false
+		for code in ["town_siege", "town_expansion"]:
+			if code in normalized_codes:
+				return true
+	return false
+
 static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes: Array) -> Array:
 	var output := ["army_consolidation"]
 	if target_kind == "town":
@@ -1539,6 +1570,12 @@ static func _raid_grouping_reason_codes(target_kind: String, leader_reason_codes
 		"guarded_artifact_claim",
 		"guard_cleared",
 		"artifact_pressure",
+		"town_expansion",
+		"neutral_town_claim",
+		"neutral_town_siege",
+		"town_defense",
+		"front_stabilization",
+		"defend_front",
 	]:
 		if code in leader_reason_codes and code not in output:
 			output.append(code)
@@ -16060,7 +16097,7 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 					and _town_faction_id(town) == String(raid.get("spawned_by_faction_id", ""))
 				) or (
 					String(town.get("owner", "neutral")) == "neutral"
-					and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes)
+					and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes or "neutral_town_siege" in reason_codes)
 				)
 		"regroup":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
