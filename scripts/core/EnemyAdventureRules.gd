@@ -44,6 +44,9 @@ const COMMANDER_EXPERIENCE_TOWN_DEFENDED := 65
 const RAID_RISK_SUPPORT_STALL_DAYS := 3
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const RAID_BASE_MOVEMENT_STEPS := 1
+const RAID_TACTICAL_PRESSURE_MOVEMENT_STEPS := 3
+const RAID_TACTICAL_PRESSURE_SUPPORT_GROUP_RADIUS := 3
+const RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS := 6
 const RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE := 4
 const RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS := 3
 const RAID_NEARBY_PLAYER_THREAT_STRENGTH_RATIO := 1.15
@@ -1498,6 +1501,7 @@ static func advance_raids(
 		var movement_start: Vector2i = current
 		var goal_distance_before_movement: int = goal_distance
 		var movement_steps := RAID_BASE_MOVEMENT_STEPS
+		movement_steps = max(movement_steps, _tactical_pressure_movement_steps(encounter, goal_distance))
 		if goal_distance > RAID_BASE_MOVEMENT_STEPS and goal_distance < 9999:
 			var spell_result := _maybe_cast_raid_adventure_movement_spell(
 				session,
@@ -1667,6 +1671,63 @@ static func advance_raids(
 		"events": event_records,
 	}
 
+static func _tactical_pressure_movement_steps(raid: Dictionary, goal_distance: int) -> int:
+	if goal_distance <= RAID_BASE_MOVEMENT_STEPS or goal_distance >= 9999:
+		return RAID_BASE_MOVEMENT_STEPS
+	if not _raid_is_tactical_pressure_target(raid):
+		return RAID_BASE_MOVEMENT_STEPS
+	return RAID_TACTICAL_PRESSURE_MOVEMENT_STEPS
+
+static func _raid_is_tactical_pressure_target(raid: Dictionary) -> bool:
+	if raid.is_empty():
+		return false
+	var target_kind := String(raid.get("target_kind", ""))
+	if target_kind == "hero":
+		return true
+	if target_kind != "town":
+		return false
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	for code in [
+		"town_siege",
+		"neutral_town_siege",
+		"retake_front",
+		"objective_front",
+		"active_front_support",
+	]:
+		if code in reason_codes:
+			return true
+	return false
+
+static func _same_target_pressure_support_strength(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	max_distance: int = -1
+) -> int:
+	if session == null or faction_id == "" or raid.is_empty() or not _raid_is_tactical_pressure_target(raid):
+		return 0
+	var target_kind := String(raid.get("target_kind", ""))
+	var target_id := String(raid.get("target_placement_id", ""))
+	var placement_id := String(raid.get("placement_id", ""))
+	if target_id == "" or placement_id == "":
+		return 0
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var support_strength := 0
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) == placement_id:
+			continue
+		if String(encounter.get("target_kind", "")) != target_kind:
+			continue
+		if String(encounter.get("target_placement_id", "")) != target_id:
+			continue
+		if max_distance >= 0 and _raid_tile_distance(raid, encounter) > max_distance:
+			continue
+		support_strength += raid_strength(encounter)
+	return support_strength
+
 static func group_nearby_raids_for_town_assault(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -1681,7 +1742,8 @@ static func group_nearby_raids_for_town_assault(
 	var target_kind := String(leader.get("target_kind", ""))
 	if target_kind not in ["town", "encounter", "hero", "resource", "artifact"]:
 		return {"encounter": leader, "grouped": false, "events": []}
-	if raid_regroup_needed(leader, config, faction_id):
+	var tactical_pressure_grouping := _raid_is_tactical_pressure_target(leader)
+	if raid_regroup_needed(leader, config, faction_id) and not tactical_pressure_grouping:
 		return {"encounter": leader, "grouped": false, "events": []}
 	var town_id := String(leader.get("target_placement_id", ""))
 	var leader_id := String(leader.get("placement_id", ""))
@@ -1929,6 +1991,7 @@ static func _best_nearby_assault_support_raid_index(
 	var best_label := ""
 	var leader_strength := raid_strength(leader)
 	var leader_has_commander := _raid_has_commander(leader)
+	var max_group_distance := RAID_TACTICAL_PRESSURE_SUPPORT_GROUP_RADIUS if _raid_is_tactical_pressure_target(leader) else 1
 	for index in range(encounters.size()):
 		if index == leader_index:
 			continue
@@ -1942,7 +2005,7 @@ static func _best_nearby_assault_support_raid_index(
 			continue
 		if String(donor.get("target_placement_id", "")) != town_id:
 			continue
-		if _raid_tile_distance(leader, donor) > 1:
+		if _raid_tile_distance(leader, donor) > max_group_distance:
 			continue
 		var donor_strength := raid_strength(donor)
 		if _raid_has_commander(donor):
@@ -2899,6 +2962,18 @@ static func _redirect_understrength_raid_to_regroup(
 		return raid
 	if not raid_regroup_needed(raid, config, faction_id):
 		return raid
+	if _same_target_pressure_support_strength(session, faction_id, raid, RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS) > 0:
+		var waiting := raid.duplicate(true)
+		var reason_codes := _normalize_string_array(waiting.get("target_reason_codes", []))
+		for code in ["awaiting_support", "army_consolidation"]:
+			if code not in reason_codes:
+				reason_codes.append(code)
+		waiting["target_reason_codes"] = reason_codes
+		waiting["target_public_reason"] = "pressing with nearby support"
+		waiting["target_public_importance"] = "high"
+		waiting["target_debug_reason"] = "battle-pressure host below regroup floor but nearby same-target support is committed"
+		waiting["arrived"] = false
+		return _refresh_target(session, waiting, faction_id)
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	if regroup_town.is_empty():
 		return raid
@@ -2974,6 +3049,56 @@ static func _redirect_unreachable_raid_target(
 	var distance := _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id)
 	if distance < 9999 or current in goal_tiles:
 		return raid
+	if (
+		_raid_is_tactical_pressure_target(raid)
+		and not _risk_support_wait_exceeded(session, _risk_started_day(raid, "route_unreachable_started_day", int(session.day)))
+		and _same_target_pressure_support_strength(session, faction_id, raid, RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS) > 0
+	):
+		var waiting := raid.duplicate(true)
+		waiting["route_unreachable_started_day"] = _risk_started_day(raid, "route_unreachable_started_day", int(session.day))
+		waiting["route_unreachable_day"] = int(session.day)
+		waiting["goal_distance"] = 9999
+		var waiting_codes := _normalize_string_array(waiting.get("target_reason_codes", []))
+		for code in ["route_unreachable", "awaiting_route", "awaiting_support", "army_consolidation"]:
+			if code not in waiting_codes:
+				waiting_codes.append(code)
+		waiting["target_reason_codes"] = waiting_codes
+		waiting["target_public_reason"] = "holding battle pressure"
+		waiting["target_public_importance"] = "high"
+		waiting["target_debug_reason"] = "temporary same-target traffic blocks route while support consolidates"
+		return waiting
+	var route_guard := _route_blocking_guard_target_for_tactical_pressure(session, raid, faction_id)
+	if not route_guard.is_empty():
+		var previous_target := _current_target_snapshot(raid)
+		var redirected := raid.duplicate(true)
+		redirected["previous_target_kind"] = String(previous_target.get("target_kind", ""))
+		redirected["previous_target_placement_id"] = String(previous_target.get("target_placement_id", ""))
+		redirected["previous_target_label"] = String(previous_target.get("target_label", ""))
+		redirected["blocked_route_target_kind"] = String(previous_target.get("target_kind", ""))
+		redirected["blocked_route_target_placement_id"] = String(previous_target.get("target_placement_id", ""))
+		redirected["blocked_route_target_label"] = String(previous_target.get("target_label", ""))
+		redirected["target_kind"] = "encounter"
+		redirected["target_placement_id"] = String(route_guard.get("placement_id", ""))
+		redirected["target_label"] = _encounter_target_label(session, route_guard, String(route_guard.get("placement_id", "the guard")))
+		redirected["target_x"] = int(route_guard.get("x", 0))
+		redirected["target_y"] = int(route_guard.get("y", 0))
+		redirected["goal_x"] = int(route_guard.get("x", 0))
+		redirected["goal_y"] = int(route_guard.get("y", 0))
+		redirected["arrived"] = false
+		redirected["route_unreachable_started_day"] = int(session.day)
+		redirected["target_reason_codes"] = ["guard_clearance", "town_siege", "route_unreachable", "objective_front"]
+		redirected["target_public_reason"] = "clearing blocked route"
+		redirected["target_public_importance"] = "high"
+		redirected["target_debug_reason"] = "town assault route is blocked; clearing nearby reachable guard"
+		redirected = _refresh_target(session, redirected, faction_id)
+		_ai_hero_task_record_live_assignment(
+			session,
+			config,
+			redirected,
+			_current_target_snapshot(redirected),
+			{}
+		)
+		return redirected
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	if regroup_town.is_empty():
 		var waiting := raid.duplicate(true)
@@ -3015,6 +3140,91 @@ static func _redirect_unreachable_raid_target(
 		{}
 	)
 	return redirected
+
+static func _route_blocking_guard_target_for_tactical_pressure(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "" or not _raid_is_tactical_pressure_target(raid):
+		return {}
+	if String(raid.get("target_kind", "")) != "town":
+		return {}
+	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+	if int(town_result.get("index", -1)) < 0:
+		return {}
+	var town: Dictionary = town_result.get("town", {})
+	var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+	var staging_tiles := _town_staging_tiles(session, town)
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var best := {}
+	var best_route_distance := 9999
+	var best_target_distance := 9999
+	var best_strength := 999999
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		var placement_id := String(encounter.get("placement_id", ""))
+		if placement_id == "" or placement_id == String(raid.get("placement_id", "")):
+			continue
+		if resolved_encounters is Array and placement_id in resolved_encounters:
+			continue
+		if not _encounter_is_route_guard(encounter):
+			continue
+		var encounter_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+		var target_distance: int = abs(encounter_tile.x - town_tile.x) + abs(encounter_tile.y - town_tile.y)
+		for staging_tile in staging_tiles:
+			if staging_tile is Vector2i:
+				target_distance = min(target_distance, abs(encounter_tile.x - staging_tile.x) + abs(encounter_tile.y - staging_tile.y))
+		if target_distance > 8:
+			continue
+		var route_distance := _path_distance(
+			session,
+			current,
+			_encounter_staging_tiles(session, encounter),
+			String(raid.get("placement_id", "")),
+			faction_id
+		)
+		if route_distance >= 9999:
+			continue
+		var guard_strength: int = max(0, _encounter_guard_strength(encounter))
+		if (
+			best.is_empty()
+			or route_distance < best_route_distance
+			or (
+				route_distance == best_route_distance
+				and (
+					target_distance < best_target_distance
+					or (target_distance == best_target_distance and guard_strength < best_strength)
+					or (
+						target_distance == best_target_distance
+						and guard_strength == best_strength
+						and placement_id < String(best.get("placement_id", ""))
+					)
+				)
+			)
+		):
+			best = encounter
+			best_route_distance = route_distance
+			best_target_distance = target_distance
+			best_strength = guard_strength
+	return best
+
+static func _encounter_is_route_guard(encounter: Dictionary) -> bool:
+	if encounter.is_empty():
+		return false
+	var kind := String(encounter.get("kind", encounter.get("package_kind", encounter.get("native_record_kind", ""))))
+	if kind == "guard":
+		return true
+	if String(encounter.get("package_kind", "")) == "guard" or String(encounter.get("native_record_kind", "")) == "guard":
+		return true
+	if String(encounter.get("guard_kind", "")).strip_edges() != "":
+		return true
+	if encounter.get("package_guard_engagement_tiles", null) is Array or encounter.get("package_guard_control_zone_tiles", null) is Array:
+		return true
+	return _encounter_guard_strength(encounter) > 0
 
 static func _redirect_fragile_raid_for_known_target_risk(
 	session: SessionStateStoreScript.SessionData,
@@ -3749,10 +3959,12 @@ static func redirect_town_assault_for_risk(
 	var debug_reason := "town assault risk gate: strength %d below %d" % [strength, required]
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	var started_day := _risk_started_day(raid, "assault_risk_started_day", int(session.day))
+	var same_target_support_strength := _same_target_pressure_support_strength(session, faction_id, raid, RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS)
 	if (
 		regroup_town.is_empty()
 		and _risk_support_wait_exceeded(session, started_day)
 		and _risk_committed_support_strength(session, faction_id, raid) <= 0
+		and same_target_support_strength <= 0
 	):
 		return _retire_risk_stalled_raid_to_rebuild(
 			session,
@@ -3776,7 +3988,7 @@ static func redirect_town_assault_for_risk(
 	for code in ["town_expansion", "neutral_town_claim", "neutral_town_siege"]:
 		if code in _normalize_string_array(raid.get("target_reason_codes", [])) and code not in preserved_town_codes:
 			preserved_town_codes.append(code)
-	if not regroup_town.is_empty():
+	if not regroup_town.is_empty() and same_target_support_strength <= 0:
 		raid["target_kind"] = "regroup"
 		raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
 		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
@@ -3810,10 +4022,12 @@ static func redirect_hero_intercept_for_risk(
 	var debug_reason := "hero intercept risk gate: strength %d below %d" % [strength, required]
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	var started_day := _risk_started_day(raid, "hero_intercept_risk_started_day", int(session.day))
+	var same_target_support_strength := _same_target_pressure_support_strength(session, faction_id, raid, RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS)
 	if (
 		regroup_town.is_empty()
 		and _risk_support_wait_exceeded(session, started_day)
 		and _risk_committed_support_strength(session, faction_id, raid) <= 0
+		and same_target_support_strength <= 0
 	):
 		return _retire_risk_stalled_raid_to_rebuild(
 			session,
@@ -3833,7 +4047,7 @@ static func redirect_hero_intercept_for_risk(
 	raid["hero_intercept_risk_started_day"] = started_day
 	raid["hero_intercept_delay_until_day"] = int(session.day) + 1
 	raid["arrived"] = false
-	if not regroup_town.is_empty():
+	if not regroup_town.is_empty() and same_target_support_strength <= 0:
 		raid["target_kind"] = "regroup"
 		raid["target_placement_id"] = String(regroup_town.get("placement_id", ""))
 		raid["target_label"] = "%s regroup" % _town_name(regroup_town)
@@ -16633,7 +16847,38 @@ static func _next_step_toward(
 	while parents.has(cursor_index) and int(parents[cursor_index]) != start_index:
 		cursor_index = int(parents[cursor_index])
 	var cursor := _vector_from_index(cursor_index, map_size)
+	if cursor != start and _path_distance(session, cursor, goal_tiles, ignore_placement_id, observer_faction_id) >= 9999:
+		return _verified_next_step_toward(session, start, goal_tiles, ignore_placement_id, observer_faction_id, path_context, goal_lookup)
 	return cursor if cursor != start else start
+
+static func _verified_next_step_toward(
+	session: SessionStateStoreScript.SessionData,
+	start: Vector2i,
+	goal_tiles: Array,
+	ignore_placement_id: String,
+	observer_faction_id: String,
+	path_context: Dictionary,
+	goal_lookup: Dictionary
+) -> Vector2i:
+	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
+	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
+	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
+	var hero_blocked: Dictionary = path_context.get("hero_blocked_indices", {})
+	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
+	var best_step := start
+	var best_distance := 9999
+	for delta in PATH_CARDINAL_DELTAS:
+		var candidate: Vector2i = start + delta
+		var candidate_index := _tile_index(candidate, map_size)
+		if _position_blocked_index(candidate_index, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+			continue
+		var candidate_distance := _path_distance(session, candidate, goal_tiles, ignore_placement_id, observer_faction_id)
+		if candidate_distance >= 9999:
+			continue
+		if candidate_distance < best_distance:
+			best_step = candidate
+			best_distance = candidate_distance
+	return best_step
 
 static func _path_distance(
 	session: SessionStateStoreScript.SessionData,
@@ -16684,7 +16929,7 @@ static func _path_distance_surface_context(
 	if cache_key != "" and _path_distance_surface_cache.has(cache_key):
 		return _path_distance_surface_cache[cache_key]
 	var encounter_blocked := _occupied_tiles(session, ignore_placement_id)
-	var resource_blocked := _resource_body_blocked_tiles(session, ignore_placement_id)
+	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id)
 	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id)
 	var terrain_blocked := _impassable_terrain_tiles(session)
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
@@ -16904,22 +17149,31 @@ static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore
 		occupied[_pos_key(Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))))] = true
 	return occupied
 
-static func _resource_body_blocked_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
-	var blocked = {}
-	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
-			continue
-		var node: Dictionary = node_value
-		var placement_id := String(node.get("placement_id", ""))
-		if placement_id == "" or placement_id == ignore_placement_id:
-			continue
-		var surface: Dictionary = OverworldRulesScript.overworld_object_placement_pathing_surface(session, placement_id)
-		if surface.is_empty() or not bool(surface.get("blocks_body_tiles", false)):
-			continue
-		for tile_value in surface.get("body_tiles", []):
-			if tile_value is Dictionary:
-				blocked[_pos_key(Vector2i(int(tile_value.get("x", 0)), int(tile_value.get("y", 0))))] = true
+static func _overworld_body_blocked_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
+	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session)
+	for tile in _placement_body_tiles_for_ignore(session, ignore_placement_id):
+		if tile is Vector2i:
+			blocked.erase(_pos_key(tile))
 	return blocked
+
+static func _placement_body_tiles_for_ignore(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Array:
+	var tiles := []
+	if session == null or ignore_placement_id == "":
+		return tiles
+	for collection_name in ["towns", "encounters", "map_objects", "resource_nodes", "artifact_nodes"]:
+		for placement_value in session.overworld.get(collection_name, []):
+			if not (placement_value is Dictionary):
+				continue
+			var placement: Dictionary = placement_value
+			if String(placement.get("placement_id", placement.get("id", ""))) != ignore_placement_id:
+				continue
+			tiles.append_array(OverworldRulesScript._world_tiles_from_payload_array(placement.get("package_block_tiles", [])))
+			if tiles.is_empty():
+				tiles.append_array(OverworldRulesScript._world_tiles_from_payload_array(placement.get("body_tiles", [])))
+			if tiles.is_empty():
+				tiles.append(Vector2i(int(placement.get("x", -1)), int(placement.get("y", -1))))
+			return tiles
+	return tiles
 
 static func _player_hero_blocked_tiles(
 	session: SessionStateStoreScript.SessionData,

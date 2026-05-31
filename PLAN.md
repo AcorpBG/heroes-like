@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after the latest natural generated-map battle-handoff evidence slice; next tactical/strategic AI production-readiness work should address the measured natural-arrival/runtime gap before any production-ready claim.
+- Current implementation slice: none selected after `strategic-ai-tactical-pressure-march-10184`; next tactical/strategic AI production-readiness work should broaden generated-map natural battle-arrival evidence beyond the focused smoke seed before any production-ready claim.
+- Latest completed slice: `strategic-ai-tactical-pressure-march-10184`.
 - Latest completed slice: `strategic-ai-natural-battle-handoff-matrix-10184`.
 - Latest completed slice: `strategic-ai-generated-town-battle-handoff-proof-10184`.
 - Latest completed slice: `strategic-ai-generated-battle-handoff-behavior-10184`.
