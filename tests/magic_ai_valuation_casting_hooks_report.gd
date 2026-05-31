@@ -26,6 +26,10 @@ func _run() -> void:
 	if not bool(buff_target_case.get("ok", false)):
 		_fail(String(buff_target_case.get("error", "Battle AI buff target case failed.")))
 		return
+	var spell_report_payload_case := _run_battle_ai_spell_report_payload_bridge_case()
+	if not bool(spell_report_payload_case.get("ok", false)):
+		_fail(String(spell_report_payload_case.get("error", "Battle AI spell report payload bridge case failed.")))
+		return
 	var lethal_priority_case := _run_battle_ai_lethal_attack_priority_case()
 	if not bool(lethal_priority_case.get("ok", false)):
 		_fail(String(lethal_priority_case.get("error", "Battle AI lethal priority case failed.")))
@@ -52,12 +56,13 @@ func _run() -> void:
 		"battle_damage_status_targeting": damage_status_case,
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
+		"battle_spell_report_payload_bridge": spell_report_payload_case,
 		"battle_lethal_attack_priority": lethal_priority_case,
 		"battle_lethal_spell_priority": lethal_spell_case,
 		"adventure": adventure_case,
 		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -337,6 +342,63 @@ func _run_battle_ai_buff_best_ally_case() -> Dictionary:
 		"active_stack_id": "enemy_low_active",
 		"target_was_active_stack": false,
 		"live_action": String(live_action.get("action", "")),
+	}
+
+func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
+	var linekeeper_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Linekeeper Caster",
+			"command_path": "might",
+			"battle_traits": ["linekeeper"],
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_lantern_phalanx"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_linekeeper_active", "enemy", "Enemy Linekeeper Active", 6, 10, 60, [], {
+				"tier": 3,
+				"min_damage": 8,
+				"max_damage": 8,
+			}),
+			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_linekeeper_active")
+	var unbridged_report := BattleAiRules.battle_spell_choice_report(battle, active, SpellRules.ensure_hero_spellbook({
+		"name": "Enemy Untraited Caster",
+		"command": {"power": 2, "knowledge": 8},
+		"spellbook": {
+			"known_spell_ids": ["spell_lantern_phalanx"],
+			"mana": {"current": 24, "max": 24},
+		},
+	}))
+	var bridged_report := BattleAiRules.battle_spell_choice_report(battle, active, linekeeper_hero)
+	if not bool(bridged_report.get("ok", false)):
+		return {"ok": false, "error": "Spell report payload bridge report failed: %s" % bridged_report}
+	var unbridged_selected: Dictionary = unbridged_report.get("selected", {}) if unbridged_report.get("selected", {}) is Dictionary else {}
+	var bridged_selected: Dictionary = bridged_report.get("selected", {}) if bridged_report.get("selected", {}) is Dictionary else {}
+	if String(unbridged_report.get("commander_payload_source", "")) != "argument" or String(bridged_report.get("commander_payload_source", "")) != "argument":
+		return {"ok": false, "error": "Spell report payload bridge did not record argument payload source: unbridged=%s bridged=%s" % [unbridged_report, bridged_report]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, linekeeper_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_lantern_phalanx":
+		return {"ok": false, "error": "Spell report payload bridge live choice should stay aligned with report, got %s report=%s" % [live_action, bridged_report]}
+	if battle.has("enemy_hero_payload"):
+		return {"ok": false, "error": "Spell report payload bridge mutated the source battle: %s" % battle}
+	return {
+		"ok": true,
+		"selected_spell_id": String(bridged_selected.get("spell_id", "")),
+		"commander_payload_source": String(bridged_report.get("commander_payload_source", "")),
+		"selected_value_band": String(bridged_selected.get("value_band", "")),
+		"live_action": String(live_action.get("action", "")),
+		"source_battle_mutated": battle.has("enemy_hero_payload"),
 	}
 
 func _run_battle_ai_lethal_attack_priority_case() -> Dictionary:
