@@ -2527,6 +2527,8 @@ static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionDa
 		var hero = _find_player_hero(session, String(encounter.get("target_placement_id", "")))
 		if hero.is_empty() or _hero_is_sheltered_in_player_town(session, hero):
 			continue
+		if not _hero_current_tile_interceptable(encounter, hero):
+			continue
 		var goal_distance = int(encounter.get("goal_distance", 9999))
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
 			continue
@@ -2568,6 +2570,16 @@ static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionDa
 				"selection_score": score,
 			}
 	return best
+
+static func _hero_current_tile_interceptable(encounter: Dictionary, hero: Dictionary) -> bool:
+	if encounter.is_empty() or hero.is_empty():
+		return false
+	var hero_position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+	if hero_position.is_empty():
+		return false
+	var raid_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+	var hero_tile := Vector2i(int(hero_position.get("x", 0)), int(hero_position.get("y", 0)))
+	return abs(raid_tile.x - hero_tile.x) + abs(raid_tile.y - hero_tile.y) <= 1
 
 static func _town_assault_candidate_score(
 	session: SessionStateStoreScript.SessionData,

@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: ordinary AI sight-source target memory for strategic scouting.",
+  "currentSliceNotes": "Latest completed slice: stale hero-hunt position revalidation and lost-trail retargeting.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T05:45:00Z",
+  "updatedAt": "2026-05-31T06:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,87 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-stale-hero-hunt-revalidation-10184",
+      "title": "Strategic AI Stale Hero Hunt Revalidation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Stop hero-hunt raids from starting battles from stale remembered hero coordinates by revalidating actual current hero position and clearing lost-trail sightings before retargeting.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd"
+      ],
+      "baselineChecks": [
+        "Hero targets require AI sighting memory, but remembered hero target coordinates can remain valid after the player hero has moved.",
+        "Battle queue selection finds the target hero by id and can start a hero intercept without proving the raid is still at the hero current tile."
+      ],
+      "completionCriteria": [
+        "Hero intercept battle queuing requires the raid to be adjacent to or on the player hero current tile, not merely arrived at a remembered target coordinate.",
+        "Arrived hero-hunt raids that reach a stale remembered coordinate where the hero is no longer present clear that hero sighting, finish/invalidate the stale task, and retarget instead of idling or starting a ghost battle.",
+        "If the hero is currently visible at a moved tile, the hunt updates to the current tile rather than using stale coordinates.",
+        "Focused coverage proves a stale hero-hunt arrival does not start battle, clears the stale sighting, and retargets away from the stale hero coordinate."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not introduce omniscient hero tracking.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T06:05:00Z",
+      "updatedAt": "2026-05-31T06:35:00Z",
+      "completedAt": "2026-05-31T06:35:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
+          "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
+          "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
+          "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
+          "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
+        ],
+        "focused_case": {
+          "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
+          "battle_started": false,
+          "remembered_tile": {
+            "x": 8,
+            "y": 4
+          },
+          "actual_tile": {
+            "x": 0,
+            "y": 4
+          },
+          "stale_sighting_cleared": true,
+          "stale_task_validation": "invalid_stale_hero_sighting",
+          "retargeted_kind": "resource",
+          "retargeted_id": "river_free_company",
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-ordinary-scouting-memory-10184",
       "title": "Strategic AI Ordinary Scouting Memory",
@@ -31922,6 +32003,69 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-stale-hero-hunt-revalidation-10184",
+      "title": "Strategic AI Stale Hero Hunt Revalidation",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T06:35:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-31T06:35:00Z",
+        "sliceId": "strategic-ai-stale-hero-hunt-revalidation-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
+            "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
+            "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
+            "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
+            "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
+          ],
+          "focused_case": {
+            "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
+            "battle_started": false,
+            "remembered_tile": {
+              "x": 8,
+              "y": 4
+            },
+            "actual_tile": {
+              "x": 0,
+              "y": 4
+            },
+            "stale_sighting_cleared": true,
+            "stale_task_validation": "invalid_stale_hero_sighting",
+            "retargeted_kind": "resource",
+            "retargeted_id": "river_free_company",
+            "save_version": 9
+          },
+          "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+          "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+        }
+      },
+      "summary": "Completed. Hero hunts no longer fight ghosts from stale remembered coordinates: path refresh/task reuse respect AI-known positions, battle queueing requires current adjacency, and lost trails clear stale sightings before retargeting."
+    },
+    {
       "id": "strategic-ai-ordinary-scouting-memory-10184",
       "title": "Strategic AI Ordinary Scouting Memory",
       "status": "completed",
@@ -42551,40 +42695,45 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T05:45:00Z",
-    "sliceId": "strategic-ai-ordinary-scouting-memory-10184",
+    "updatedAt": "2026-05-31T06:35:00Z",
+    "sliceId": "strategic-ai-stale-hero-hunt-revalidation-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
-        "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
-        "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
-        "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
-        "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
+        "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
+        "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
+        "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
+        "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
+        "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
       ],
       "focused_case": {
-        "case_id": "ordinary_scouting_records_nonhero_memory",
-        "target_kind": "resource",
-        "target_id": "river_free_company",
-        "source_kind": "commander",
-        "source_id": "known_world_exploration_probe",
-        "scouted_target_count": 1,
-        "remembered_resource_candidate_after_source_removed": true,
+        "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
+        "battle_started": false,
+        "remembered_tile": {
+          "x": 8,
+          "y": 4
+        },
+        "actual_tile": {
+          "x": 0,
+          "y": 4
+        },
+        "stale_sighting_cleared": true,
+        "stale_task_validation": "invalid_stale_hero_sighting",
+        "retargeted_kind": "resource",
+        "retargeted_id": "river_free_company",
         "save_version": 9
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
@@ -45754,45 +45903,97 @@
         "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-31T06:35:00Z",
+      "sliceId": "strategic-ai-stale-hero-hunt-revalidation-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
+          "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
+          "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
+          "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
+          "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
+        ],
+        "focused_case": {
+          "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
+          "battle_started": false,
+          "remembered_tile": {
+            "x": 8,
+            "y": 4
+          },
+          "actual_tile": {
+            "x": 0,
+            "y": 4
+          },
+          "stale_sighting_cleared": true,
+          "stale_task_validation": "invalid_stale_hero_sighting",
+          "retargeted_kind": "resource",
+          "retargeted_id": "river_free_company",
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T05:45:00Z",
-    "sliceId": "strategic-ai-ordinary-scouting-memory-10184",
+    "updatedAt": "2026-05-31T06:35:00Z",
+    "sliceId": "strategic-ai-stale-hero-hunt-revalidation-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
-        "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
-        "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
-        "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
-        "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
+        "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
+        "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
+        "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
+        "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
+        "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
       ],
       "focused_case": {
-        "case_id": "ordinary_scouting_records_nonhero_memory",
-        "target_kind": "resource",
-        "target_id": "river_free_company",
-        "source_kind": "commander",
-        "source_id": "known_world_exploration_probe",
-        "scouted_target_count": 1,
-        "remembered_resource_candidate_after_source_removed": true,
+        "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
+        "battle_started": false,
+        "remembered_tile": {
+          "x": 8,
+          "y": 4
+        },
+        "actual_tile": {
+          "x": 0,
+          "y": 4
+        },
+        "stale_sighting_cleared": true,
+        "stale_task_validation": "invalid_stale_hero_sighting",
+        "retargeted_kind": "resource",
+        "retargeted_id": "river_free_company",
         "save_version": 9
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",

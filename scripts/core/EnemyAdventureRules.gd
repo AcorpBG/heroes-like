@@ -1788,6 +1788,39 @@ static func refresh_enemy_known_world_memory(
 	_sync_enemy_state_known_world_memory(session, faction_id, updated_state.get("known_world_memory", {}))
 	return {"state": updated_state, "sighting_count": records.size(), "scouted_target_count": target_records.size()}
 
+static func _remove_enemy_player_hero_sighting(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	hero_id: String
+) -> void:
+	if session == null or faction_id == "" or hero_id == "":
+		return
+	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for index in range(states.size()):
+		if not (states[index] is Dictionary) or String(states[index].get("faction_id", "")) != faction_id:
+			continue
+		var state: Dictionary = states[index]
+		var memory := normalize_enemy_known_world_memory(state.get("known_world_memory", {}), int(session.day))
+		if memory.is_empty() or not memory.has("player_hero_sightings"):
+			return
+		var kept := []
+		for record_value in memory.get("player_hero_sightings", []):
+			if record_value is Dictionary and String(record_value.get("hero_id", "")) == hero_id:
+				continue
+			kept.append(record_value)
+		if kept.is_empty():
+			memory.erase("player_hero_sightings")
+		else:
+			memory["player_hero_sightings"] = kept
+			memory["last_hero_sighting_day"] = int(kept[0].get("seen_day", session.day))
+		if not memory.has("player_hero_sightings") and not memory.has("scouted_targets"):
+			state.erase("known_world_memory")
+		else:
+			state["known_world_memory"] = normalize_enemy_known_world_memory(memory, int(session.day))
+		states[index] = state
+		session.overworld["enemy_states"] = states
+		return
+
 static func _normalize_enemy_scouted_target_records(value: Variant, current_day: int = 0) -> Array:
 	var normalized := []
 	if not (value is Array):
@@ -6308,7 +6341,7 @@ static func _ai_hero_task_planner_task_for_actor(
 		var reservation_key := String(reservation.get("reservation_key", ""))
 		if reservation_key != "" and target_claims.has(reservation_key):
 			continue
-		if _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id).is_empty():
+		if _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id).is_empty():
 			continue
 		var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
 		if reason_codes.is_empty():
@@ -6719,10 +6752,10 @@ static func _ai_hero_task_planner_event(
 		return {}
 	var target_kind := String(task.get("target_kind", ""))
 	var target_id := String(task.get("target_id", ""))
-	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id)
+	var faction_id := String(task.get("owner_faction_id", config.get("faction_id", "")))
+	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
 	if target.is_empty():
 		return {}
-	var faction_id := String(task.get("owner_faction_id", config.get("faction_id", "")))
 	var actor_id := String(task.get("actor_id", ""))
 	var actor_label := actor_id
 	var entry := _commander_roster_entry(commander_roster_for_faction(session, faction_id), actor_id)
@@ -10664,7 +10697,7 @@ static func _ai_hero_task_plan_from_saved_task(
 		return {}
 	if _ai_hero_task_live_target_reserved(session, faction_id, target_kind, target_id, current_placement_id, String(task.get("actor_id", ""))):
 		return {}
-	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id)
+	var target := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
 	if target.is_empty():
 		return {}
 	var goal_tiles: Array = target.get("goal_tiles", []) if target.get("goal_tiles", []) is Array else []
@@ -10717,7 +10750,8 @@ static func _ai_hero_task_plan_from_saved_task(
 static func _ai_hero_task_target_snapshot_for_plan(
 	session: SessionStateStoreScript.SessionData,
 	target_kind: String,
-	target_id: String
+	target_id: String,
+	faction_id: String = ""
 ) -> Dictionary:
 	match target_kind:
 		"explore":
@@ -10801,6 +10835,10 @@ static func _ai_hero_task_target_snapshot_for_plan(
 			var hero := _player_hero_snapshot_for_task(session, target_id)
 			if hero.is_empty():
 				return {}
+			if faction_id != "":
+				hero = _known_player_hero_snapshot_for_ai(session, faction_id, hero)
+				if hero.is_empty():
+					return {}
 			var tile := _player_hero_goal_tile(hero)
 			return {
 				"target_label": String(hero.get("name", target_id)),
@@ -13102,14 +13140,101 @@ static func _resolve_arrived_target(
 					"ai_event": retask_event,
 					"risk_gated": true,
 					"risk_report": ready_report,
-				}
+					}
 			return _contest_encounter_target(session, raid, state, faction_id, config)
+		"hero":
+			return _resolve_hero_intercept_target(session, config, raid, state, faction_id)
 		"explore":
 			return _resolve_exploration_target(session, config, raid, state, faction_id)
 		"regroup":
 			return _regroup_raid_at_town(session, raid, state, faction_id, config)
 		_:
 			return {"encounter": raid, "state": state, "event_message": ""}
+
+static func _resolve_hero_intercept_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var hero_id := String(raid.get("target_placement_id", ""))
+	var hero := _find_player_hero(session, hero_id)
+	if hero.is_empty():
+		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "invalid", "invalid_target_missing")
+		var missing_target := _retarget_after_lost_hero_sighting(session, config, raid, faction_id, hero_id)
+		return {
+			"encounter": missing_target.get("encounter", raid),
+			"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+			"event_message": "",
+			"ai_event": missing_target.get("ai_event", {}),
+		}
+	var raid_tile := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var actual_tile := _player_hero_goal_tile(hero)
+	if abs(raid_tile.x - actual_tile.x) + abs(raid_tile.y - actual_tile.y) <= 1:
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var known_hero := _known_player_hero_snapshot_for_ai(session, faction_id, hero)
+	if not known_hero.is_empty() and String(known_hero.get("ai_sighting_confidence", "")) == "current":
+		var current_tile := _player_hero_goal_tile(known_hero)
+		var retargeted := raid.duplicate(true)
+		var previous_target := _current_target_snapshot(retargeted)
+		retargeted["target_x"] = current_tile.x
+		retargeted["target_y"] = current_tile.y
+		retargeted["goal_x"] = current_tile.x
+		retargeted["goal_y"] = current_tile.y
+		retargeted["goal_distance"] = _hero_target_goal_distance(session, raid_tile, current_tile)
+		retargeted["arrived"] = int(retargeted.get("goal_distance", 9999)) == 0
+		var reason_codes := _normalize_string_array(retargeted.get("target_reason_codes", []))
+		for code in ["hero_reacquired", "current_sighting"]:
+			if code not in reason_codes:
+				reason_codes.append(code)
+		retargeted["target_reason_codes"] = reason_codes
+		retargeted["target_public_reason"] = "reacquired hero trail"
+		retargeted["target_debug_reason"] = "hero target moved but is currently visible to AI sight sources"
+		_ai_hero_task_record_live_assignment(session, config, retargeted, _current_target_snapshot(retargeted), {})
+		var event := ai_target_assignment_event(session, config, retargeted, previous_target)
+		if event.is_empty():
+			event = ai_target_assignment_event(session, config, retargeted, {})
+		return {
+			"encounter": retargeted,
+			"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+			"event_message": "",
+			"ai_event": event,
+		}
+	_remove_enemy_player_hero_sighting(session, faction_id, hero_id)
+	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "invalid", "invalid_stale_hero_sighting")
+	var lost_target := _retarget_after_lost_hero_sighting(session, config, raid, faction_id, hero_id)
+	return {
+		"encounter": lost_target.get("encounter", raid),
+		"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+		"event_message": "",
+		"ai_event": lost_target.get("ai_event", {}),
+	}
+
+static func _retarget_after_lost_hero_sighting(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	hero_id: String
+) -> Dictionary:
+	var previous_target := _current_target_snapshot(raid)
+	var continued := _clear_regroup_target(raid.duplicate(true))
+	continued["lost_hero_sighting_id"] = hero_id
+	continued["lost_hero_sighting_day"] = int(session.day)
+	continued["target_reason_codes"] = ["hero_lost_trail", "stale_sighting_cleared"]
+	continued["target_public_reason"] = "lost hero trail"
+	continued["target_debug_reason"] = "arrived at remembered hero location but target was no longer present"
+	continued = assign_target(session, config, continued)
+	var next_target := _current_target_snapshot(continued)
+	var event := {}
+	if _target_signature(next_target) != "" and _target_signature(next_target) != _target_signature(previous_target):
+		event = ai_target_assignment_event(session, config, continued, previous_target)
+		if event.is_empty():
+			event = ai_target_assignment_event(session, config, continued, {})
+	return {"encounter": continued, "ai_event": event}
 
 static func _resolve_exploration_target(
 	session: SessionStateStoreScript.SessionData,
@@ -14327,8 +14452,10 @@ static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, 
 			if int(encounter_result.get("index", -1)) >= 0:
 				return _encounter_staging_tiles(session, encounter_result.get("encounter", {}))
 		"hero":
-			var hero_position := _hero_position_for_target(session, String(raid.get("target_placement_id", "")))
-			return [hero_position]
+			return [Vector2i(
+				int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
+				int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
+			)]
 	return [Vector2i(int(raid.get("goal_x", int(raid.get("x", 0)))), int(raid.get("goal_y", int(raid.get("y", 0)))))]
 
 static func _next_step_toward(session: SessionStateStoreScript.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> Vector2i:
@@ -14555,7 +14682,15 @@ static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: 
 				raid["goal_distance"] = _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")))
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
-			var hero_position := _hero_position_for_target(session, hero_target_id)
+			var hero_position := Vector2i(
+				int(raid.get("target_x", raid.get("goal_x", raid.get("x", 0)))),
+				int(raid.get("target_y", raid.get("goal_y", raid.get("y", 0))))
+			)
+			var hero := _find_player_hero(session, hero_target_id)
+			if not hero.is_empty():
+				var known_hero := _known_player_hero_snapshot_for_ai(session, String(raid.get("spawned_by_faction_id", "")), hero)
+				if not known_hero.is_empty():
+					hero_position = _player_hero_goal_tile(known_hero)
 			raid["target_label"] = _hero_label_for_target(session, hero_target_id)
 			raid["target_x"] = hero_position.x
 			raid["target_y"] = hero_position.y
