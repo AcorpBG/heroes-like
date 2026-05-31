@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T06:20:50Z",
+  "updatedAt": "2026-05-31T06:26:53Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,83 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-opportunistic-spell-site-learning-10184",
+      "title": "Strategic AI Opportunistic Spell-Site Learning",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make AI commanders that seize spell-teaching resource sites opportunistically while marching learn the site spell and sync it to the commander roster, matching assigned site-capture behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_site_control_proof_report.gd"
+      ],
+      "baselineChecks": [
+        "Assigned AI resource-site captures call the live spell reward hook and sync learned spells to the active raid commander plus roster.",
+        "Opportunistic route resource captures claim resources/control but currently skip the spell-site learning hook.",
+        "Strategic AI should play the same map-object rules whether a commander explicitly targeted the site or claimed it while marching."
+      ],
+      "completionCriteria": [
+        "Opportunistic route resource capture applies resource-site spell rewards to the active AI commander.",
+        "Learned opportunistic spell rewards sync to the enemy commander roster through the existing spell reward path.",
+        "The public AI site-seized event/message exposes the learned spell id/name consistently with assigned captures.",
+        "Focused validation proves a marching AI commander opportunistically claims a spell site and learns the spell in both raid and roster state.",
+        "Existing strategic AI site-control and planned-task validations remain green."
+      ],
+      "nonGoals": [
+        "Do not rebalance spell valuation or spell catalog content in this slice.",
+        "Do not add a new broad report gate.",
+        "Do not claim strategic AI release readiness from this single parity fix."
+      ],
+      "startedAt": "2026-05-31T06:23:12Z",
+      "updatedAt": "2026-05-31T06:26:53Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_site_control_proof_report.tscn",
+          "status": "pass",
+          "notes": "Proves assigned spell-site capture still teaches Waystride and new opportunistic route spell-site capture teaches Waystride to the active AI commander plus roster, with compact public event evidence."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "notes": "Live enemy turn resource-task execution and route pickup continuity remain green."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "status": "pass",
+          "notes": "Planning, recruitment preparation, town spell study, ready launch, and same-turn movement remain green."
+        },
+        {
+          "command": "godot --headless --path . tests/magic_ai_valuation_casting_hooks_report.tscn",
+          "status": "pass",
+          "notes": "Strategic adventure spell valuation/execution and battle spell valuation hooks remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check",
+          "status": "pass",
+          "notes": "Progress JSON and whitespace checks passed before completion update."
+        }
+      ],
+      "evidence": [
+        "EnemyAdventureRules._secure_opportunistic_route_resource now applies the same resource-site spell reward hook used by assigned resource capture.",
+        "Opportunistic spell-site learning mutates the active raid commander state and syncs learned spells to the enemy commander roster through the existing spell reward path.",
+        "Opportunistic ai_site_seized events now include learned_spell_id/learned_spell_name and the public message names the learned spell.",
+        "ai_site_control_proof_report now stages a marching commander that claims Roadside Sanctum while targeting a different resource, proving Waystride is learned from the route pickup."
+      ],
+      "completedAt": "2026-05-31T06:26:53Z"
+    },
     {
       "id": "strategic-ai-active-town-runway-source-support-10184",
       "title": "Strategic AI Active Town Runway Source Support",
@@ -45018,9 +45095,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T06:20:50Z"
+    "updatedAt": "2026-05-31T06:26:53Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T06:20:50Z",
+  "currentSliceUpdatedAt": "2026-05-31T06:26:53Z",
   "validationHistory": [
     {
       "status": "pass",

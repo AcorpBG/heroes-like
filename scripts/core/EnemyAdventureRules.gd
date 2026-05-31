@@ -13725,6 +13725,13 @@ static func _secure_opportunistic_route_resource(
 		raid,
 		COMMANDER_OUTCOME_RESOURCE_SECURED
 	)
+	var spell_reward := _apply_resource_site_spell_reward_to_commander(
+		session,
+		faction_id,
+		updated_raid,
+		site
+	)
+	updated_raid = spell_reward.get("raid", updated_raid)
 	updated_raid["last_opportunistic_pickup_kind"] = "resource"
 	updated_raid["last_opportunistic_pickup_placement_id"] = String(route_node.get("placement_id", ""))
 	updated_raid["last_opportunistic_pickup_day"] = int(session.day)
@@ -13746,6 +13753,12 @@ static func _secure_opportunistic_route_resource(
 		message = "%s claims %s while marching and denies its logistics route." % [
 			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
+		]
+	if bool(spell_reward.get("learned", false)):
+		message = "%s %s learns %s." % [
+			message,
+			raid_commander_display_name(updated_raid),
+			String(spell_reward.get("spell_name", spell_reward.get("spell_id", "the site spell"))),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -13790,6 +13803,8 @@ static func _secure_opportunistic_route_resource(
 			"state_policy": "durable_state_reference",
 			"target_controller_before": previous_controller,
 			"target_controller_after": faction_id,
+			"learned_spell_id": String(spell_reward.get("spell_id", "")),
+			"learned_spell_name": String(spell_reward.get("spell_name", "")),
 		}
 	)
 	return {"resolved": true, "encounter": updated_raid, "state": state, "event_message": message, "ai_events": [event]}
