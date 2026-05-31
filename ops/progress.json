@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T10:02:00Z",
+  "updatedAt": "2026-05-31T10:38:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,76 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-post-capture-town-support-continuation-10184",
+      "title": "Strategic AI Post-Capture Town Support Continuation",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T10:20:00Z",
+      "updatedAt": "2026-05-31T10:38:00Z",
+      "completedAt": "2026-05-31T10:38:00Z",
+      "source": "active strategic AI production-readiness goal; real live behavior change, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-post-capture-town-support-continuation-10184",
+      "sourceDocs": [],
+      "purpose": "Make duplicate or supporting AI raids continue useful work when another host captures their neutral-town target first, reinforcing the new front instead of treating the target as stale and wandering off.",
+      "implementationTargets": [
+        "When a raid's town target is invalid only because the town is now owned by the same AI faction, convert suitable neutral-town/town-siege pressure into a town-defense target if the captured town is stabilizing or recently defended.",
+        "The converted support host should arrive through the existing _defend_town_target path, transfer its army into the town garrison, update commander continuity, and resolve the field raid.",
+        "The behavior must preserve normal retargeting for unrelated stale targets and avoid reinforcing own towns unless the previous objective was that town."
+      ],
+      "completionCriteria": "A live fixture proves a duplicate neutral-town assault host reinforces the newly captured town after ownership changes, increasing garrison strength and resolving as ai_town_defended; adjacent strategic AI tests remain green.",
+      "nonGoals": [
+        "No broad report-only AI audit.",
+        "No generic patrol/guard AI rewrite.",
+        "No final strategic AI release-readiness claim."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+          "result": "pass",
+          "summary": "Neutral town coverage now proves duplicate_assault_reinforces_newly_captured_town: support host reinforces the newly captured town from 170 to 339 garrison strength, resolves the field raid, stations hero_sable, emits ai_town_defended with post_capture_support, and produces no field pressure/pillage text."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, active support consolidation, neutral-town assault grouping, route recovery, town resupply, and risk/personality behavior remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution and durable task continuation remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment, ready launch, spell study, market-backed recruitment, and surplus garrison mobilization remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+          "result": "pass",
+          "summary": "Threatened town/resource defense retasking, emergency launch, stationing, release, and overcommit controls remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passes."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON remains valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors in the tracked diff."
+        }
+      ],
+      "summary": "Duplicate or supporting AI raids whose exact town objective becomes an owned stabilizing front now continue as town-defense reinforcements, transfer their army into the captured town, resolve the field raid, and stop contributing field pressure/pillage after stationing.",
+      "notes": "Completed as a live strategic AI behavior slice. The implementation adds a post-capture support target plan, preserves post-capture reason codes through defense events, and prevents resolved/stationed raids from being counted as active pressure after arrival."
+    },
     {
       "id": "strategic-ai-neutral-town-assault-grouping-10184",
       "title": "Strategic AI Neutral Town Assault Grouping",
@@ -48692,42 +48762,47 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T10:02:00Z",
-    "sliceId": "strategic-ai-neutral-town-assault-grouping-10184",
+    "updatedAt": "2026-05-31T10:38:00Z",
+    "sliceId": "strategic-ai-post-capture-town-support-continuation-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Town-assault grouping target validation now accepts neutral town expansion/siege targets and own-faction town defense/front-stabilization targets while still rejecting own towns without a defense intent.",
-        "Neutral-town siege reason codes are now valid town targets and are preserved during grouping.",
-        "Same-target neutral-town support raids can merge into the lead assault host through group_nearby_raids_for_town_assault.",
-        "Grouped neutral-town support hosts resolve through the existing grouped-support lifecycle and emit ai_raid_grouped.",
-        "Existing player-town, resource-front, artifact-front, recruitment, and neutral-town capture behavior remains green."
+        "Invalid same-town assault targets now get a post-capture support continuation plan when the town is owned by the same AI faction and is stabilizing or recently defended.",
+        "Threatened town-defense redirects preserve post-capture support, town expansion, neutral claim, neutral siege, and objective-front reason codes when the raid was already targeting that town.",
+        "Town-defense arrival events preserve post_capture_support metadata for player-readable continuity.",
+        "Resolved/stationed raids are skipped from same-turn marching/pressure/pillage accounting after arrival resolution.",
+        "Duplicate neutral-town assault hosts can now reinforce the captured town garrison and station their commander instead of wandering off after the target becomes stale."
       ],
       "focused_case": {
-        "case_id": "neutral_town_assault_support_consolidates",
-        "target_town_id": "neutral_reed_crossing",
-        "leader_strength_before": 378,
-        "leader_strength_after": 546,
-        "donor_strength": 168,
-        "donor_resolved": true,
+        "case_id": "duplicate_assault_reinforces_newly_captured_town",
+        "owner_after_capture": "enemy",
+        "garrison_before_support": 170,
+        "garrison_after_support": 339,
+        "support_strength": 169,
+        "support_resolved": true,
+        "support_field_strength_after": 0,
+        "stationed_commander_id": "hero_sable",
         "event_types": [
-          "ai_raid_grouped"
+          "ai_town_defended"
         ],
         "reason_codes": [
+          "town_defense",
+          "front_stabilization",
+          "garrison_reinforced",
           "town_expansion",
-          "neutral_town_siege",
-          "army_consolidation",
-          "town_siege"
-        ]
+          "neutral_town_claim",
+          "post_capture_support"
+        ],
+        "message": "Mireclaw Raid reaches Duskfen Bastion and folds 13 units into the defense."
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."

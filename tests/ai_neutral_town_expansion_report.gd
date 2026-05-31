@@ -17,6 +17,9 @@ func _run() -> void:
 	var capture_case := _arrived_raid_captures_empty_neutral_town()
 	if capture_case.is_empty():
 		return
+	var post_capture_support_case := _duplicate_assault_reinforces_newly_captured_town()
+	if post_capture_support_case.is_empty():
+		return
 	var defended_plan_case := _defended_neutral_town_is_planned_assault_target()
 	if defended_plan_case.is_empty():
 		return
@@ -30,9 +33,10 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_neutral_town_expansion_and_assault_no_save_migration",
-		"behavior_policy": "ai_commanders_plan_capture_and_assault_neutral_towns",
+		"behavior_policy": "ai_commanders_plan_capture_assault_and_post_capture_support_neutral_towns",
 		"plan_case": plan_case,
 		"capture_case": capture_case,
+		"post_capture_support_case": post_capture_support_case,
 		"defended_plan_case": defended_plan_case,
 		"defended_risk_case": defended_risk_case,
 		"defended_capture_case": defended_capture_case,
@@ -136,6 +140,94 @@ func _arrived_raid_captures_empty_neutral_town() -> Dictionary:
 		"garrison_strength_after": _army_strength(town.get("garrison", [])),
 		"field_raid_resolved": _resolved_has(session, "neutral_town_vaska"),
 		"stationed_commander_status": String(roster_entry.get("status", "")),
+	}
+
+func _duplicate_assault_reinforces_newly_captured_town() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_prepare_neutral_town_only_front(session)
+	_seed_task_board(session, [
+		_town_expansion_task("hero_vaska", NEUTRAL_TOWN_ID, "active", "valid"),
+		_town_expansion_task("hero_sable", NEUTRAL_TOWN_ID, "active", "valid"),
+	])
+	var capture_raid := _neutral_town_raid(session)
+	var support_raid := _neutral_town_support_raid(session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(capture_raid)
+	encounters.append(support_raid)
+	session.overworld["encounters"] = encounters
+
+	var capture_result := EnemyAdventureRules.advance_raids(
+		session,
+		config,
+		MIRECLAW,
+		state,
+		{"only_placement_ids": ["neutral_town_vaska"]}
+	)
+	state = capture_result.get("state", state)
+	var captured_town := _town(session, NEUTRAL_TOWN_ID)
+	if String(captured_town.get("owner", "neutral")) != "enemy":
+		_fail("Post-capture support fixture failed to capture neutral town first: %s" % JSON.stringify(captured_town))
+		return {}
+	var garrison_before := _army_strength(captured_town.get("garrison", []))
+	var support_before := _encounter(session, "neutral_town_sable_support")
+	if support_before.is_empty():
+		_fail("Post-capture support raid disappeared before continuation.")
+		return {}
+	var support_strength := EnemyAdventureRules.raid_strength(support_before)
+
+	var support_result := EnemyAdventureRules.advance_raids(
+		session,
+		config,
+		MIRECLAW,
+		state,
+		{"only_placement_ids": ["neutral_town_sable_support"]}
+	)
+	var defended_town := _town(session, NEUTRAL_TOWN_ID)
+	var garrison_after := _army_strength(defended_town.get("garrison", []))
+	if garrison_after <= garrison_before:
+		_fail("Post-capture support did not reinforce captured town: before=%d after=%d result=%s" % [garrison_before, garrison_after, JSON.stringify(support_result)])
+		return {}
+	if not _resolved_has(session, "neutral_town_sable_support"):
+		_fail("Post-capture support field raid did not resolve into town defense.")
+		return {}
+	if String(defended_town.get("ai_defender_roster_hero_id", "")) != "hero_sable":
+		_fail("Post-capture support commander did not become the current town defender: %s" % JSON.stringify(defended_town))
+		return {}
+	var after_support := _encounter(session, "neutral_town_sable_support")
+	var support_army_strength_after := _army_strength(after_support.get("enemy_army", {}).get("stacks", []))
+	if support_army_strength_after > 0:
+		_fail("Post-capture support kept a field army after reinforcing town: %s" % JSON.stringify(after_support))
+		return {}
+	var event_types := _event_types(support_result.get("events", []))
+	if "ai_town_defended" not in event_types:
+		_fail("Post-capture support did not emit a town defense event: %s" % JSON.stringify(support_result))
+		return {}
+	var reason_codes := _event_reason_codes(support_result.get("events", []), "ai_town_defended")
+	if "post_capture_support" not in reason_codes or "town_defense" not in reason_codes:
+		_fail("Post-capture support defense missed reason codes: %s" % JSON.stringify(support_result))
+		return {}
+	var message := String(support_result.get("message", ""))
+	if "pillages" in message or " press " in message:
+		_fail("Post-capture stationed support still produced field pressure text: %s" % message)
+		return {}
+	var roster_entry := _commander_roster_entry(session, "hero_sable")
+	if String(roster_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_ACTIVE or String(roster_entry.get("active_placement_id", "")) != "town_defense:%s" % NEUTRAL_TOWN_ID:
+		_fail("Post-capture support commander was not stationed on the captured town: %s" % JSON.stringify(roster_entry))
+		return {}
+	return {
+		"case_id": "duplicate_assault_reinforces_newly_captured_town",
+		"owner_after_capture": String(captured_town.get("owner", "")),
+		"garrison_before_support": garrison_before,
+		"garrison_after_support": garrison_after,
+		"support_strength": support_strength,
+		"support_resolved": _resolved_has(session, "neutral_town_sable_support"),
+		"support_field_strength_after": support_army_strength_after,
+		"stationed_commander_id": String(defended_town.get("ai_defender_roster_hero_id", "")),
+		"event_types": event_types,
+		"defense_reason_codes": reason_codes,
+		"message": message,
 	}
 
 func _defended_neutral_town_is_planned_assault_target() -> Dictionary:
@@ -328,6 +420,32 @@ func _neutral_town_raid(session) -> Dictionary:
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
+func _neutral_town_support_raid(session) -> Dictionary:
+	var raid := _neutral_town_raid(session)
+	raid["placement_id"] = "neutral_town_sable_support"
+	raid["combat_seed"] = hash("%s:neutral_town_sable_support" % String(session.scenario_id))
+	raid["x"] = 8
+	raid["y"] = 3
+	raid["goal_distance"] = 1
+	raid["enemy_army"] = {
+		"id": "neutral_town_sable_support_army",
+		"name": "Neutral Town Support Army",
+		"stacks": [
+			{"unit_id": "unit_blackbranch_cutthroat", "count": 9},
+			{"unit_id": "unit_mire_slinger", "count": 4},
+		],
+	}
+	raid.erase("enemy_commander_state")
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		"hero_sable",
+		MIRECLAW,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
 func _defended_neutral_town_raid(session, placement_id: String, mire_count: int) -> Dictionary:
 	var raid := _neutral_town_raid(session)
 	raid["placement_id"] = placement_id
@@ -491,6 +609,20 @@ func _event_types(events: Variant) -> Array:
 		if event is Dictionary:
 			output.append(String(event.get("event_type", "")))
 	return output
+
+func _event_reason_codes(events: Variant, event_type: String) -> Array:
+	if not (events is Array):
+		return []
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		if String(event.get("event_type", "")) != event_type:
+			continue
+		var codes := _string_array(event.get("target_reason_codes", []))
+		if codes.is_empty():
+			codes = _string_array(event.get("reason_codes", []))
+		return codes
+	return []
 
 func _defeat_battle_side(session, side: String) -> void:
 	var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
