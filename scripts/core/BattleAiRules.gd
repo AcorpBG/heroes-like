@@ -973,10 +973,11 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var attack_distance := _attack_distance_for_action(attacker, target, battle, is_ranged)
 	var damage := _estimate_damage(attacker, target, battle, is_ranged, false, attack_distance)
 	var target_health: int = max(1, int(target.get("total_health", 0)))
+	var applied_damage: int = min(damage, target_health)
 	var side := String(attacker.get("side", ""))
 	var round_number := int(battle.get("round", 1))
-	var score := float(damage) / float(max(1, int(target.get("unit_hp", 1))))
-	score += min(1.0, float(damage) / float(target_health)) * 8.0
+	var score := float(applied_damage) / float(max(1, int(target.get("unit_hp", 1))))
+	score += min(1.0, float(applied_damage) / float(target_health)) * 8.0
 	if damage >= target_health:
 		score += 6.0
 	if bool(target.get("ranged", false)):
