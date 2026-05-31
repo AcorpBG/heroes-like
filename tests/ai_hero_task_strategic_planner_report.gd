@@ -25,17 +25,21 @@ func _run() -> void:
 	var role_adoption_case := _planner_adopts_live_commander_role_state()
 	if role_adoption_case.is_empty():
 		return
+	var duplicate_recovery_case := _planner_recovers_duplicate_reservation_with_alternate_task()
+	if duplicate_recovery_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "coordinated_task_planner_live_behavior",
-		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_scores_targets_by_commander_identity_adaptive_outcome_memory_and_live_role_continuity",
+		"behavior_policy": "enemy_turn_planner_seeds_distinct_commander_tasks_scores_targets_by_commander_identity_adaptive_outcome_memory_live_role_continuity_and_duplicate_reservation_recovery",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": planner_case,
 		"multi_origin_case": multi_origin_case,
 		"personality_case": personality_case,
 		"adaptive_case": adaptive_case,
 		"role_adoption_case": role_adoption_case,
+		"duplicate_recovery_case": duplicate_recovery_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -386,6 +390,56 @@ func _planner_adopts_live_commander_role_state() -> Dictionary:
 		"rival_fit": rival_fit,
 	}
 
+func _planner_recovers_duplicate_reservation_with_alternate_task() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state["pressure"] = 0
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_resource_controller(session, "river_signal_post", "player")
+	state["hero_task_state"] = {
+		"schema_version": 1,
+		"planner_epoch": 4,
+		"tasks": [
+			_saved_resource_task("hero_sable", "river_free_company", 1),
+			_saved_resource_task("hero_vaska", "river_free_company", 2),
+		],
+	}
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	var planned_state: Dictionary = plan_result.get("state", {})
+	var task_state: Dictionary = planned_state.get("hero_task_state", {}) if planned_state.get("hero_task_state", {}) is Dictionary else {}
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	var primary := _task_for_target_status(tasks, "river_free_company", "planned")
+	if primary.is_empty():
+		_fail("Duplicate recovery should preserve one primary Free Company task: %s" % JSON.stringify(tasks))
+		return {}
+	var invalid_duplicate := _invalid_reserved_task(tasks)
+	if invalid_duplicate.is_empty():
+		_fail("Duplicate recovery should preserve invalidated duplicate history: %s" % JSON.stringify(tasks))
+		return {}
+	var displaced_actor := String(invalid_duplicate.get("actor_id", ""))
+	var alternate := _planned_task_for_actor(tasks, displaced_actor, "river_free_company")
+	if alternate.is_empty():
+		_fail("Duplicate recovery did not assign alternate planned task for displaced actor %s: %s" % [displaced_actor, JSON.stringify(tasks)])
+		return {}
+	var reservation_check := EnemyAdventureRules.ai_hero_task_target_reservation_check(tasks)
+	if not bool(reservation_check.get("ok", false)):
+		_fail("Duplicate recovery left invalid reservation state: %s" % JSON.stringify(reservation_check))
+		return {}
+	return {
+		"case_id": "planner_recovers_duplicate_reservation_with_alternate_task",
+		"primary_actor": String(primary.get("actor_id", "")),
+		"displaced_actor": displaced_actor,
+		"invalidated_by_task_id": String(invalid_duplicate.get("invalidated_by_task_id", "")),
+		"alternate_target_key": "%s:%s" % [String(alternate.get("target_kind", "")), String(alternate.get("target_id", ""))],
+		"planned_count": int(plan_result.get("planned_count", 0)),
+		"task_count": tasks.size(),
+		"reservation_primary_count": int(reservation_check.get("primary_reservation_count", 0)),
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
@@ -501,6 +555,68 @@ func _planned_task_for_target(state: Dictionary, target_kind: String, target_id:
 		if String(task.get("target_kind", "")) == target_kind and String(task.get("target_id", "")) == target_id:
 			return task
 	return {}
+
+func _planned_task_for_actor(tasks: Array, actor_id: String, excluded_target_id: String) -> Dictionary:
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("actor_id", "")) != actor_id:
+			continue
+		if String(task.get("task_status", "")) != "planned":
+			continue
+		if String(task.get("target_id", "")) == excluded_target_id:
+			continue
+		return task
+	return {}
+
+func _task_for_target_status(tasks: Array, target_id: String, status: String) -> Dictionary:
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("target_id", "")) == target_id and String(task.get("task_status", "")) == status:
+			return task
+	return {}
+
+func _invalid_reserved_task(tasks: Array) -> Dictionary:
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("task_status", "")) == "invalid" and String(task.get("last_validation", "")) == "invalid_target_reserved":
+			return task
+	return {}
+
+func _saved_resource_task(actor_id: String, target_id: String, sequence: int) -> Dictionary:
+	return {
+		"task_id": "task:%s:%s:%s:contest_site:resource:%s:day_1:seq_%d" % [RIVER_PASS, MIRECLAW, actor_id, target_id, sequence],
+		"owner_faction_id": MIRECLAW,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"source_kind": "saved_task_state",
+		"source_id": "duplicate_reservation_fixture",
+		"task_class": "contest_site",
+		"task_status": "planned",
+		"target_kind": "resource",
+		"target_id": target_id,
+		"front_id": EnemyAdventureRules.commander_role_front_id(RIVER_PASS, "resource", target_id),
+		"origin_kind": "town",
+		"origin_id": "duskfen_bastion",
+		"origin_x": 7,
+		"origin_y": 2,
+		"priority_reason_codes": ["persistent_income_denial", "strategic_task_planner", "duplicate_reservation_fixture"],
+		"assigned_day": 1,
+		"expires_day": 11,
+		"continuity_policy": "persist_until_invalid",
+		"route_policy": "derive_route_on_turn",
+		"last_validation": "valid",
+		"reservation": {
+			"reservation_status": "primary",
+			"reservation_scope": "exclusive_target",
+			"reservation_key": "resource:%s" % target_id,
+		},
+	}
 
 func _first_planned_task_for_kind(state: Dictionary, target_kind: String) -> Dictionary:
 	for task_value in _planned_tasks(state):
