@@ -18,6 +18,10 @@ func _run() -> void:
 	if not bool(damage_status_case.get("ok", false)):
 		_fail(String(damage_status_case.get("error", "Battle AI damage status targeting case failed.")))
 		return
+	var cleanse_ward_case := _run_battle_ai_cleanse_active_ward_case()
+	if not bool(cleanse_ward_case.get("ok", false)):
+		_fail(String(cleanse_ward_case.get("error", "Battle AI cleanse active ward case failed.")))
+		return
 
 	var adventure_case := _run_adventure_ai_spell_case()
 	if not bool(adventure_case.get("ok", false)):
@@ -30,9 +34,10 @@ func _run() -> void:
 		"battle": battle_case,
 		"battle_resistance_targeting": resistance_case,
 		"battle_damage_status_targeting": damage_status_case,
+		"battle_cleanse_active_ward": cleanse_ward_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -205,6 +210,65 @@ func _run_battle_ai_damage_status_targeting_case() -> Dictionary:
 		"selected_target_id": String(selected.get("target_battle_id", "")),
 		"avoided_target_id": "player_already_controlled",
 		"avoided_target_already_controlled": true,
+		"live_action": String(live_action.get("action", "")),
+	}
+
+func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Cleanse Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_prism_bastion"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var active_ward := SpellRules.build_battle_effect(
+		"status_existing_prism_ward",
+		"Existing Prism Ward",
+		{"defense": 2, "cohesion": 1},
+		2,
+		{"round": 2},
+		"test",
+		"seed_existing_ward"
+	)
+	var staggered_effect := SpellRules.build_battle_effect(
+		"status_staggered",
+		"Staggered",
+		{"attack": -1, "cohesion": -1},
+		2,
+		{"round": 2},
+		"test",
+		"seed_staggered"
+	)
+	var battle := {
+		"round": 2,
+		"distance": 1,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_cleanse_caster", "enemy", "Enemy Cleanse Caster", 7, 10, 70, []),
+			_stack("enemy_warded_staggered", "enemy", "Enemy Warded Staggered", 8, 10, 80, [active_ward, staggered_effect]),
+			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_cleanse_caster")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Cleanse active-ward report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("target_battle_id", "")) != "enemy_warded_staggered":
+		return {"ok": false, "error": "Cleanse active-ward report should target debuffed warded ally, got %s candidates=%s" % [selected, report.get("candidates", [])]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("target_battle_id", "")) != "enemy_warded_staggered":
+		return {"ok": false, "error": "Cleanse active-ward live choice should cleanse debuffed warded ally, got %s" % live_action}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"selected_target_id": String(selected.get("target_battle_id", "")),
+		"target_had_active_ward_modifiers": true,
+		"target_had_cleanseable_status": true,
 		"live_action": String(live_action.get("action", "")),
 	}
 

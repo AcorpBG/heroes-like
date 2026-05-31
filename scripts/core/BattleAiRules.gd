@@ -588,7 +588,7 @@ static func _battle_spell_candidates(
 				for ally in allies:
 					if not (ally is Dictionary):
 						continue
-					if _spell_buff_already_active(ally, battle, spell):
+					if _allied_spell_candidate_suppressed_by_active_buff(String(behavior.get("effect_type", "")), ally, battle, spell):
 						continue
 					var validation := SpellRulesScript.validate_battle_spell(
 						enemy_hero,
@@ -631,6 +631,27 @@ static func _battle_spell_candidates(
 					}
 					candidates.append(initiative_candidate)
 	return candidates
+
+static func _allied_spell_candidate_suppressed_by_active_buff(
+	effect_type: String,
+	ally: Dictionary,
+	battle: Dictionary,
+	spell: Dictionary
+) -> bool:
+	if not _spell_buff_already_active(ally, battle, spell):
+		return false
+	match effect_type:
+		"cleanse_ally":
+			var effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
+			return not SpellRulesScript.has_any_effect_ids(
+				ally,
+				battle,
+				_normalize_string_array(effect.get("cleanse_effect_ids", []))
+			)
+		"recover_ally":
+			return _stack_missing_health(ally) <= 0
+		_:
+			return true
 
 static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
 	var best := {}
