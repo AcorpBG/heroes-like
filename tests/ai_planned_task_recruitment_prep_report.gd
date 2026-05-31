@@ -33,6 +33,9 @@ func _run() -> void:
 	var task_fit_spell_study_case := _live_enemy_turn_studies_task_fit_overworld_spell()
 	if task_fit_spell_study_case.is_empty():
 		return
+	var template_role_fallback_case := _spell_study_uses_template_role_fallback()
+	if template_role_fallback_case.is_empty():
+		return
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
@@ -64,9 +67,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_building_task_fit_spell_study_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
+		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -255,6 +258,54 @@ func _live_enemy_turn_studies_task_fit_overworld_spell() -> Dictionary:
 		"accessible_overworld_spell_count": accessible_overworld.size(),
 		"accessible_battle_spell_count": accessible_battle.size(),
 		"event_types": _event_types(events),
+	}
+
+func _spell_study_uses_template_role_fallback() -> Dictionary:
+	var session = _base_session()
+	_prepare_spell_study_town(session)
+	var town := _town_by_id(session, DUSKFEN)
+	var spell := ContentService.get_spell("spell_briar_bind")
+	if spell.is_empty():
+		_fail("Template-role fallback fixture is missing spell_briar_bind.")
+		return {}
+	var minimal_commander := {
+		"roster_hero_id": "hero_sable",
+		"command": {"power": 2, "knowledge": 8},
+		"spellbook": {"known_spell_ids": [], "mana": {"current": 24, "max": 24}},
+	}
+	var baseline_commander := minimal_commander.duplicate(true)
+	baseline_commander["command_path"] = "magic"
+	baseline_commander["archetype"] = "generic"
+	var task := {"target_kind": "hero", "target_id": "hero_lyra"}
+	var config := _enemy_config()
+	var template_score := EnemyTurnRules._enemy_spell_study_score(
+		spell,
+		minimal_commander,
+		{"roster_hero_id": "hero_sable"},
+		task,
+		config,
+		town
+	)
+	var baseline_score := EnemyTurnRules._enemy_spell_study_score(
+		spell,
+		baseline_commander,
+		{"roster_hero_id": "hero_sable"},
+		task,
+		config,
+		town
+	)
+	if template_score <= baseline_score:
+		_fail("Template-role fallback should raise hexcaller control-spell study score: template=%0.2f baseline=%0.2f" % [template_score, baseline_score])
+		return {}
+	return {
+		"case_id": "spell_study_uses_template_role_fallback",
+		"actor_id": "hero_sable",
+		"template_archetype": String(ContentService.get_hero("hero_sable").get("archetype", "")),
+		"spell_id": "spell_briar_bind",
+		"spell_role": String(spell.get("primary_role", "")),
+		"baseline_score": baseline_score,
+		"template_fallback_score": template_score,
+		"score_delta": template_score - baseline_score,
 	}
 
 func _planned_task_recruitment_prepares_commander() -> Dictionary:
