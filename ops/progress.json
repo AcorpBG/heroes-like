@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: persistent scout-frontier task-board implementation for no-known-target strategic AI exploration.",
+  "currentSliceNotes": "Latest completed slice: ordinary AI sight-source target memory for strategic scouting.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T05:05:00Z",
+  "updatedAt": "2026-05-31T05:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,81 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-ordinary-scouting-memory-10184",
+      "title": "Strategic AI Ordinary Scouting Memory",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make ordinary AI sight from commanders, towns, and controlled vision sites record durable non-hero target memory so scout movement and map control produce later strategic decisions without omniscient target reads.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "Scouting spells can write scouted non-hero targets, but ordinary commander/town/site vision only contributes current visibility and can be lost once a scout moves away.",
+        "Known-world gating for neutral towns/resources/artifacts/encounters needs durable ordinary scouting evidence, not only spell-created target memory."
+      ],
+      "completionCriteria": [
+        "refresh_enemy_known_world_memory records currently visible resource, town, artifact, and encounter targets from fair AI sight sources into known_world_memory.scouted_targets.",
+        "Visible non-hero target memory records carry source kind/id and expire through the existing known-world memory policy without a save-version bump.",
+        "Once a commander scouts a target and moves away, normal target selection can still use the remembered target while hidden unscouted targets remain unavailable.",
+        "Focused coverage proves ordinary scout sight records a hidden resource and the remembered target remains targetable after the scout source is removed."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not introduce omniscient target reads.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T05:25:00Z",
+      "updatedAt": "2026-05-31T05:45:00Z",
+      "completedAt": "2026-05-31T05:45:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
+          "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
+          "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
+          "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
+          "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
+        ],
+        "focused_case": {
+          "case_id": "ordinary_scouting_records_nonhero_memory",
+          "target_kind": "resource",
+          "target_id": "river_free_company",
+          "source_kind": "commander",
+          "source_id": "known_world_exploration_probe",
+          "scouted_target_count": 1,
+          "remembered_resource_candidate_after_source_removed": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-persistent-exploration-task-board-10184",
       "title": "Strategic AI Persistent Exploration Task Board",
@@ -31847,6 +31922,63 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-ordinary-scouting-memory-10184",
+      "title": "Strategic AI Ordinary Scouting Memory",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T05:45:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-31T05:45:00Z",
+        "sliceId": "strategic-ai-ordinary-scouting-memory-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
+            "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
+            "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
+            "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
+            "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
+          ],
+          "focused_case": {
+            "case_id": "ordinary_scouting_records_nonhero_memory",
+            "target_kind": "resource",
+            "target_id": "river_free_company",
+            "source_kind": "commander",
+            "source_id": "known_world_exploration_probe",
+            "scouted_target_count": 1,
+            "remembered_resource_candidate_after_source_removed": true,
+            "save_version": 9
+          },
+          "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+          "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+        }
+      },
+      "summary": "Completed. Ordinary AI sight from commanders, towns, and controlled vision sites now writes durable non-hero target memory, so scout movement and map control feed later strategic target selection without omniscient reads."
+    },
+    {
       "id": "strategic-ai-persistent-exploration-task-board-10184",
       "title": "Strategic AI Persistent Exploration Task Board",
       "status": "completed",
@@ -42419,8 +42551,8 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T05:05:00Z",
-    "sliceId": "strategic-ai-persistent-exploration-task-board-10184",
+    "updatedAt": "2026-05-31T05:45:00Z",
+    "sliceId": "strategic-ai-ordinary-scouting-memory-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -42439,22 +42571,20 @@
     ],
     "evidence": {
       "implemented": [
-        "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
-        "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
-        "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
-        "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
-        "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
-        "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
-        "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
+        "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
+        "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
+        "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
+        "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
+        "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
       ],
       "focused_case": {
-        "case_id": "persistent_exploration_tasks_launch_and_complete",
-        "task_class": "scout_frontier",
-        "target_kind": "explore",
-        "spawn_coordinates_preserved": true,
-        "arrival_completes_saved_task": true,
-        "reservation_released_on_completion": true,
-        "commander_continues_to_new_frontier_target": true,
+        "case_id": "ordinary_scouting_records_nonhero_memory",
+        "target_kind": "resource",
+        "target_id": "river_free_company",
+        "source_kind": "commander",
+        "source_id": "known_world_exploration_probe",
+        "scouted_target_count": 1,
+        "remembered_resource_candidate_after_source_removed": true,
         "save_version": 9
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
@@ -45582,13 +45712,55 @@
         "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-31T05:45:00Z",
+      "sliceId": "strategic-ai-ordinary-scouting-memory-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
+          "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
+          "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
+          "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
+          "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
+        ],
+        "focused_case": {
+          "case_id": "ordinary_scouting_records_nonhero_memory",
+          "target_kind": "resource",
+          "target_id": "river_free_company",
+          "source_kind": "commander",
+          "source_id": "known_world_exploration_probe",
+          "scouted_target_count": 1,
+          "remembered_resource_candidate_after_source_removed": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T05:05:00Z",
-    "sliceId": "strategic-ai-persistent-exploration-task-board-10184",
+    "updatedAt": "2026-05-31T05:45:00Z",
+    "sliceId": "strategic-ai-ordinary-scouting-memory-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
@@ -45607,22 +45779,20 @@
     ],
     "evidence": {
       "implemented": [
-        "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
-        "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
-        "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
-        "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
-        "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
-        "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
-        "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
+        "refresh_enemy_known_world_memory now records currently visible resource, town, artifact, and encounter targets from ordinary AI sight sources, not only from adventure scouting spells.",
+        "Ordinary sight records use the same known_world_memory.scouted_targets expiration and normalization policy as spell scouting, preserving source_kind/source_id/source_raid_id metadata without a save-version bump.",
+        "Commander, owned-town, and controlled vision-site sight sources can now create durable non-hero target memory for later target selection.",
+        "Normal target selection can use an ordinary-scouted target after the scout source is gone, while hidden unscouted targets remain unavailable.",
+        "Focused coverage proves a commander scouting Riverwatch Free Company Yard records source_kind commander/source_id known_world_exploration_probe, does not masquerade as spell scouting, and keeps the resource targetable after the scout is removed."
       ],
       "focused_case": {
-        "case_id": "persistent_exploration_tasks_launch_and_complete",
-        "task_class": "scout_frontier",
-        "target_kind": "explore",
-        "spawn_coordinates_preserved": true,
-        "arrival_completes_saved_task": true,
-        "reservation_released_on_completion": true,
-        "commander_continues_to_new_frontier_target": true,
+        "case_id": "ordinary_scouting_records_nonhero_memory",
+        "target_kind": "resource",
+        "target_id": "river_free_company",
+        "source_kind": "commander",
+        "source_id": "known_world_exploration_probe",
+        "scouted_target_count": 1,
+        "remembered_resource_candidate_after_source_removed": true,
         "save_version": 9
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",

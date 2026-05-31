@@ -22,6 +22,9 @@ func _run() -> void:
 	var nonhero_case := _nonhero_targets_require_visibility_or_memory()
 	if nonhero_case.is_empty():
 		return
+	var ordinary_scouting_case := _ordinary_scouting_records_nonhero_memory()
+	if ordinary_scouting_case.is_empty():
+		return
 	var neutral_town_case := _neutral_towns_require_visibility_or_memory()
 	if neutral_town_case.is_empty():
 		return
@@ -37,7 +40,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, neutral_town_case, persistent_exploration_case, exploration_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -208,6 +211,44 @@ func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
 		"scoutable_unknown_resource": true,
 		"known_resource_candidate": true,
 		"known_world_target_id": "river_free_company",
+	}
+
+func _ordinary_scouting_records_nonhero_memory() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 4)
+	_make_hidden_resource_target_session(session)
+	var origin := Vector2i(7, 2)
+	var hidden_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if _candidate_has_target(hidden_candidates, "resource", "river_free_company"):
+		_fail("Hidden resource should not be targetable before ordinary scout sight: %s" % JSON.stringify(hidden_candidates))
+		return {}
+	_add_exploration_raid(session, 0, 4)
+	var memory_result := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
+	_update_enemy_state(session, memory_result.get("state", _enemy_state(session)))
+	var record := _memory_target_record(session, "resource", "river_free_company")
+	if record.is_empty():
+		_fail("Ordinary commander sight did not record visible resource target memory: %s" % JSON.stringify(_enemy_memory(session)))
+		return {}
+	if String(record.get("source_kind", "")) != "commander":
+		_fail("Ordinary scout record should preserve commander source kind: %s" % JSON.stringify(record))
+		return {}
+	if String(record.get("source_spell_id", "")) != "":
+		_fail("Ordinary scout record should not masquerade as spell scouting: %s" % JSON.stringify(record))
+		return {}
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	var remembered_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
+	if not _candidate_has_target(remembered_candidates, "resource", "river_free_company"):
+		_fail("Ordinary scout memory did not keep the resource targetable after the scout moved away: %s" % JSON.stringify(remembered_candidates))
+		return {}
+	return {
+		"case_id": "ordinary_scouting_records_nonhero_memory",
+		"hidden_candidate_count": hidden_candidates.size(),
+		"scouted_target_count": int(memory_result.get("scouted_target_count", 0)),
+		"source_kind": String(record.get("source_kind", "")),
+		"source_id": String(record.get("source_id", "")),
+		"remembered_resource_candidate": true,
 	}
 
 func _neutral_towns_require_visibility_or_memory() -> Dictionary:
@@ -531,6 +572,15 @@ func _task_by_id(session, task_id: String) -> Dictionary:
 func _task_state(session) -> Dictionary:
 	var state := _enemy_state(session)
 	return state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+
+func _memory_target_record(session, target_kind: String, target_id: String) -> Dictionary:
+	var memory := _enemy_memory(session)
+	for record_value in memory.get("scouted_targets", []):
+		if record_value is Dictionary \
+				and String(record_value.get("target_kind", "")) == target_kind \
+				and String(record_value.get("target_id", "")) == target_id:
+			return record_value
+	return {}
 
 func _explore_target_tile(target_id: String) -> Dictionary:
 	var parts := target_id.split(":")
