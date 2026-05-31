@@ -9,7 +9,7 @@ const REPORT_ID := "BATTLE_AI_WITHDRAWAL_DECISION_REPORT"
 var _report := {
 	"ok": true,
 	"report_id": REPORT_ID,
-	"slice": "battle-ai-withdrawal-decision-20260523-10184",
+	"slice": "battle-ai-commander-withdrawal-personality-10184",
 	"policy": "battle_ai_enemy_withdrawal_decision_v1",
 	"cases": {},
 }
@@ -21,6 +21,7 @@ func _run() -> void:
 	_validate_retreat_decision()
 	_validate_surrender_decision()
 	_validate_locked_withdrawal()
+	_validate_commander_personality_withdrawal()
 	_validate_runtime_enemy_retreat()
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0)
@@ -53,6 +54,31 @@ func _validate_locked_withdrawal() -> void:
 		return
 	_report["cases"]["locked withdrawal"] = decision
 
+func _validate_commander_personality_withdrawal() -> void:
+	var aggressive_session := _withdrawal_session(38, 100, true, false, 76, 240, _aggressive_commander_payload())
+	var cautious_session := _withdrawal_session(38, 100, true, false, 76, 240, _cautious_commander_payload())
+	var aggressive_stack := BattleRulesScript.get_active_stack(aggressive_session.battle)
+	var cautious_stack := BattleRulesScript.get_active_stack(cautious_session.battle)
+	var aggressive_decision := BattleAiRulesScript.choose_enemy_action(aggressive_session.battle, aggressive_stack, {})
+	var cautious_decision := BattleAiRulesScript.choose_enemy_action(cautious_session.battle, cautious_stack, {})
+	var aggressive_scale := BattleAiRulesScript._enemy_withdrawal_urgency_scale(aggressive_session.battle)
+	var cautious_scale := BattleAiRulesScript._enemy_withdrawal_urgency_scale(cautious_session.battle)
+	if aggressive_scale >= cautious_scale:
+		_fail("commander withdrawal fixture did not separate urgency scales: aggressive=%s cautious=%s" % [aggressive_scale, cautious_scale])
+		return
+	if String(aggressive_decision.get("action", "")) in ["retreat", "surrender"]:
+		_fail("aggressive commander should hold in the split pressure band: %s" % JSON.stringify(aggressive_decision))
+		return
+	_expect_equal("cautious commander split pressure action", String(cautious_decision.get("action", "")), "retreat")
+	_expect_candidate_score("cautious commander split pressure candidate score", cautious_decision, "retreat")
+	_report["cases"]["commander_personality_withdrawal"] = {
+		"aggressive_action": String(aggressive_decision.get("action", "")),
+		"aggressive_scale": aggressive_scale,
+		"cautious_action": String(cautious_decision.get("action", "")),
+		"cautious_scale": cautious_scale,
+		"cautious_candidate_scores": cautious_decision.get("candidate_scores", {}),
+	}
+
 func _validate_runtime_enemy_retreat() -> void:
 	var session := _withdrawal_session(26, 100, true, false)
 	var result := BattleRulesScript.resolve_if_battle_ready(session)
@@ -79,7 +105,10 @@ func _withdrawal_session(
 	enemy_health: int,
 	enemy_base_health: int,
 	retreat_allowed: bool,
-	surrender_allowed: bool
+	surrender_allowed: bool,
+	player_health: int = 240,
+	player_base_health: int = 240,
+	enemy_commander: Dictionary = {}
 ) -> SessionStateStoreScript.SessionData:
 	var session := SessionStateStoreScript.SessionData.new(
 		"battle-ai-withdrawal-decision-report",
@@ -115,7 +144,7 @@ func _withdrawal_session(
 		"context": {"type": "encounter"},
 		"stacks": [
 			_stack("enemy_shattered", "enemy", false, int(enemy_base_health / 10), 10, enemy_health, 1, 2, 1, 5, 0, 0),
-			_stack("player_line", "player", false, 24, 10, 240, 6, 9, 7, 5, 1, 0),
+			_stack("player_line", "player", false, int(player_base_health / 10), 10, player_health, 6, 9, 7, 5, 1, 0),
 		],
 		"turn_order": ["enemy_shattered"],
 		"turn_index": 0,
@@ -127,9 +156,30 @@ func _withdrawal_session(
 		"player_commander_state": {},
 		"player_commander_source": {"type": "active_hero", "hero_id": "hero_report"},
 		"enemy_hero": {},
+		"enemy_hero_payload": enemy_commander,
 		"field_objectives": [],
 	}
 	return session
+
+func _aggressive_commander_payload() -> Dictionary:
+	return {
+		"name": "Aggressive Fixture",
+		"archetype": "raider",
+		"command_path": "might",
+		"battle_traits": ["vanguard", "ambusher"],
+		"command": {"attack": 3, "defense": 0, "power": 0, "knowledge": 0},
+		"last_outcome": "field_victory",
+	}
+
+func _cautious_commander_payload() -> Dictionary:
+	return {
+		"name": "Cautious Fixture",
+		"archetype": "castellan",
+		"command_path": "magic",
+		"battle_traits": ["linekeeper", "support"],
+		"command": {"attack": 0, "defense": 3, "power": 1, "knowledge": 2},
+		"last_outcome": "defeated",
+	}
 
 func _stack(
 	battle_id: String,

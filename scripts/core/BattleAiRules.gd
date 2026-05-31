@@ -1303,9 +1303,17 @@ static func _enemy_withdrawal_action(
 	var player_ratio := _side_health_ratio(battle, "player")
 	var active_ratio := _health_ratio(active_stack)
 	var pressure_ratio := float(player_health) / float(max(1, enemy_health))
-	if enemy_ratio > 0.34 and active_ratio > 0.35 and pressure_ratio < 2.2:
+	var urgency_scale := _enemy_withdrawal_urgency_scale(battle)
+	var cautious_pressure := maxf(0.0, urgency_scale - 1.0)
+	var aggressive_resolve := maxf(0.0, 1.0 - urgency_scale)
+	var safe_enemy_ratio_gate := 0.34 + cautious_pressure * 0.35 - aggressive_resolve * 0.20
+	var safe_active_ratio_gate := 0.35 + cautious_pressure * 0.35 - aggressive_resolve * 0.20
+	var safe_pressure_gate := 2.2 - cautious_pressure * 1.4 + aggressive_resolve * 0.8
+	if enemy_ratio > safe_enemy_ratio_gate and active_ratio > safe_active_ratio_gate and pressure_ratio < safe_pressure_gate:
 		return {}
-	if pressure_ratio < 1.55 and enemy_ratio > 0.22:
+	var minimum_pressure_gate := 1.55 - cautious_pressure * 0.65 + aggressive_resolve * 0.45
+	var minimum_enemy_ratio_gate := 0.22 + cautious_pressure * 0.18 - aggressive_resolve * 0.12
+	if pressure_ratio < minimum_pressure_gate and enemy_ratio > minimum_enemy_ratio_gate:
 		return {}
 	var best_score := float(current_best.get("score", 0.0)) if not current_best.is_empty() else 0.0
 	var score := 5.0
@@ -1316,6 +1324,7 @@ static func _enemy_withdrawal_action(
 	score += maxf(0.0, float(_alive_stacks_for_side(battle, "player").size() - _alive_stacks_for_side(battle, "enemy").size())) * 0.75
 	if int(battle.get("round", 1)) >= 4:
 		score += 1.5
+	score *= urgency_scale
 	if best_score >= 9.0:
 		score -= (best_score - 8.5) * 0.8
 	if score < best_score + 0.35:
@@ -1338,9 +1347,82 @@ static func _enemy_withdrawal_action(
 		"player_health_ratio": player_ratio,
 		"active_health_ratio": active_ratio,
 		"pressure_ratio": pressure_ratio,
+		"commander_withdrawal_urgency_scale": urgency_scale,
 		"current_best_action": String(current_best.get("action", "")),
 		"current_best_score": best_score,
 	}
+
+static func _enemy_withdrawal_urgency_scale(battle: Dictionary) -> float:
+	var commander := _hero_payload_for_side(battle, "enemy")
+	if commander.is_empty():
+		return 1.0
+	var scale := 1.0
+	var archetype := String(commander.get("archetype", "")).to_lower()
+	var command_path := String(commander.get("command_path", "")).to_lower()
+	var battle_traits := _normalize_string_array(commander.get("battle_traits", []))
+	var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
+	var attack := int(command.get("attack", 0))
+	var defense := int(command.get("defense", 0))
+	var power := int(command.get("power", 0))
+	var knowledge := int(command.get("knowledge", 0))
+	var aggressive_tokens := [
+		"raider",
+		"marshal",
+		"vanguard",
+		"outrider",
+		"warrenhunter",
+		"packlord",
+		"chainbreaker",
+		"batterycaptain",
+		"duelline",
+		"siegecaptain",
+		"pitmarshal",
+		"admiral",
+		"harpoon",
+		"backline",
+	]
+	var cautious_tokens := [
+		"warden",
+		"castellan",
+		"governor",
+		"scribe",
+		"scholar",
+		"physician",
+		"keeper",
+		"defender",
+		"recovery",
+		"oracle",
+		"doctor",
+		"memory",
+		"diviner",
+	]
+	for token in aggressive_tokens:
+		if archetype.contains(String(token)):
+			scale -= 0.07
+			break
+	for token in cautious_tokens:
+		if archetype.contains(String(token)):
+			scale += 0.07
+			break
+	if command_path == "might":
+		scale -= 0.02
+	elif command_path == "magic":
+		scale += 0.02
+	scale -= clamp(float(attack - defense) * 0.02, -0.06, 0.06)
+	if power + knowledge > attack + defense + 1:
+		scale += 0.03
+	for trait_value in battle_traits:
+		var trait_id := String(trait_value).to_lower()
+		if trait_id in ["vanguard", "ambusher", "artillerist", "pursuit", "linebreaker"]:
+			scale -= 0.025
+		elif trait_id in ["linekeeper", "bogwise", "ward", "support", "defensive"]:
+			scale += 0.025
+	var last_outcome := String(commander.get("last_outcome", "")).to_lower()
+	if last_outcome in ["defeated", "routed", "assault_failed", "pursuit_failed"]:
+		scale += 0.05
+	elif last_outcome in ["field_victory", "assault_victory", "pursuit_victory", "rout_victory", "town_captured", "resource_secured", "artifact_secured"]:
+		scale -= 0.03
+	return clamp(scale, 0.86, 1.18)
 
 static func _should_close_distance(active_stack: Dictionary) -> bool:
 	if not bool(active_stack.get("ranged", false)):
