@@ -39,6 +39,9 @@ func _run() -> void:
 	var battle_rules_payload_fallback_case := _validate_battle_rules_commander_payload_fallback()
 	if not bool(battle_rules_payload_fallback_case.get("ok", false)):
 		return
+	var battle_ai_payload_fallback_case := _validate_battle_ai_commander_payload_fallback()
+	if not bool(battle_ai_payload_fallback_case.get("ok", false)):
+		return
 
 	var payload := {
 		"ok": true,
@@ -49,6 +52,7 @@ func _run() -> void:
 		"enemy_engaged_melee": enemy_engaged_case,
 		"argument_commander_payload": commander_payload_case,
 		"battle_rules_commander_payload_fallback": battle_rules_payload_fallback_case,
+		"battle_ai_commander_payload_fallback": battle_ai_payload_fallback_case,
 		"selected_target_id": String(session.battle.get("selected_target_id", "")),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
@@ -262,6 +266,44 @@ func _validate_battle_rules_commander_payload_fallback() -> Dictionary:
 		"player_fallback_min_damage": int(player_fallback_preview.get("min_damage", 0)),
 		"enemy_base_min_damage": int(enemy_base_preview.get("min_damage", 0)),
 		"enemy_fallback_min_damage": int(enemy_fallback_preview.get("min_damage", 0)),
+	}
+
+func _validate_battle_ai_commander_payload_fallback() -> Dictionary:
+	var player_session := _adjacent_ranged_session()
+	var player_attacker := BattleRulesScript.get_active_stack(player_session.battle)
+	var player_target := BattleRulesScript._get_stack_by_id(player_session.battle, "enemy_front")
+	var player_base_estimate := BattleAiRules._estimate_damage(player_attacker, player_target, player_session.battle, true)
+	var player_fallback_battle := player_session.battle.duplicate(true)
+	player_fallback_battle.erase("player_hero")
+	player_fallback_battle["player_commander_state"] = {
+		"hero_id": "player_ai_estimate_commander",
+		"command": {"attack": 6, "defense": 0, "power": 0, "knowledge": 0},
+	}
+	var player_fallback_estimate := BattleAiRules._estimate_damage(player_attacker, player_target, player_fallback_battle, true)
+	if player_fallback_estimate <= player_base_estimate:
+		_fail("Battle AI player estimate did not use player_commander_state fallback: base=%d fallback=%d" % [player_base_estimate, player_fallback_estimate])
+		return {}
+
+	var enemy_session := _engaged_enemy_melee_session()
+	var enemy_attacker := BattleRulesScript.get_active_stack(enemy_session.battle)
+	var enemy_target := BattleRulesScript._get_stack_by_id(enemy_session.battle, "player_wall")
+	var enemy_base_estimate := BattleAiRules._estimate_damage(enemy_attacker, enemy_target, enemy_session.battle, false)
+	var enemy_fallback_battle := enemy_session.battle.duplicate(true)
+	enemy_fallback_battle.erase("enemy_hero_payload")
+	enemy_fallback_battle["enemy_hero"] = {
+		"hero_id": "enemy_ai_estimate_commander",
+		"command": {"attack": 6, "defense": 0, "power": 0, "knowledge": 0},
+	}
+	var enemy_fallback_estimate := BattleAiRules._estimate_damage(enemy_attacker, enemy_target, enemy_fallback_battle, false)
+	if enemy_fallback_estimate <= enemy_base_estimate:
+		_fail("Battle AI enemy estimate did not use enemy_hero fallback: base=%d fallback=%d" % [enemy_base_estimate, enemy_fallback_estimate])
+		return {}
+	return {
+		"ok": true,
+		"player_base_estimate": player_base_estimate,
+		"player_fallback_estimate": player_fallback_estimate,
+		"enemy_base_estimate": enemy_base_estimate,
+		"enemy_fallback_estimate": enemy_fallback_estimate,
 	}
 
 func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
