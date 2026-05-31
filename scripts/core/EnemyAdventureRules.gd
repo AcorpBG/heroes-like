@@ -8957,6 +8957,9 @@ static func build_ai_event_record(
 		event["target_controller_before"] = String(options.get("target_controller_before", ""))
 	if options.has("target_controller_after"):
 		event["target_controller_after"] = String(options.get("target_controller_after", ""))
+	if options.has("learned_spell_id") and String(options.get("learned_spell_id", "")) != "":
+		event["learned_spell_id"] = String(options.get("learned_spell_id", ""))
+		event["learned_spell_name"] = String(options.get("learned_spell_name", options.get("learned_spell_id", "")))
 	return event
 
 static func resource_target_score_breakdown(
@@ -14016,6 +14019,13 @@ static func _secure_resource_target(
 		raid,
 		COMMANDER_OUTCOME_RESOURCE_SECURED
 	)
+	var spell_reward := _apply_resource_site_spell_reward_to_commander(
+		session,
+		faction_id,
+		updated_raid,
+		site
+	)
+	updated_raid = spell_reward.get("raid", updated_raid)
 	var message = "%s seizes %s." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
 	if not spoils.is_empty():
 		message = "%s seizes %s and strips %s." % [
@@ -14034,6 +14044,12 @@ static func _secure_resource_target(
 		message = "%s seizes %s and denies its logistics route." % [
 			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
+		]
+	if bool(spell_reward.get("learned", false)):
+		message = "%s %s learns %s." % [
+			message,
+			raid_commander_display_name(updated_raid),
+			String(spell_reward.get("spell_name", spell_reward.get("spell_id", "the site spell"))),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -14077,6 +14093,8 @@ static func _secure_resource_target(
 			"state_policy": "durable_state_reference",
 			"target_controller_before": previous_controller,
 			"target_controller_after": faction_id,
+			"learned_spell_id": String(spell_reward.get("spell_id", "")),
+			"learned_spell_name": String(spell_reward.get("spell_name", "")),
 		}
 	)
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
@@ -14087,10 +14105,77 @@ static func _secure_resource_target(
 		state,
 		faction_id
 	)
+	var final_raid: Dictionary = continuation.get("encounter", updated_raid)
+	if bool(spell_reward.get("learned", false)):
+		var final_commander = final_raid.get("enemy_commander_state", {})
+		if final_commander is Dictionary and not final_commander.is_empty():
+			sync_commander_state_to_roster(
+				session,
+				faction_id,
+				final_commander,
+				COMMANDER_STATUS_ACTIVE,
+				String(final_raid.get("placement_id", "")),
+				-1,
+				String(final_commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
+			)
 	var events := [event]
 	if not continuation.get("ai_event", {}).is_empty():
 		events.append(continuation.get("ai_event", {}))
-	return {"encounter": continuation.get("encounter", updated_raid), "state": state, "event_message": message, "ai_events": events}
+	return {"encounter": final_raid, "state": state, "event_message": message, "ai_events": events}
+
+static func _apply_resource_site_spell_reward_to_commander(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var spell_id := String(site.get("learn_spell_id", ""))
+	if session == null or faction_id == "" or raid.is_empty() or spell_id == "":
+		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": ""}
+	var spell := ContentService.get_spell(spell_id)
+	if spell.is_empty():
+		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": ""}
+	var commander_state = raid.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": String(spell.get("name", spell_id))}
+	var normalized_commander := SpellRulesScript.ensure_hero_spellbook(commander_state.duplicate(true))
+	if SpellRulesScript.knows_spell(normalized_commander, spell_id):
+		var already_known_raid := raid.duplicate(true)
+		already_known_raid["enemy_commander_state"] = normalized_commander
+		return {
+			"raid": already_known_raid,
+			"learned": false,
+			"spell_id": spell_id,
+			"spell_name": String(spell.get("name", spell_id)),
+		}
+	var learn_result := SpellRulesScript.learn_spell(normalized_commander, spell_id)
+	if not bool(learn_result.get("ok", false)):
+		var failed_raid := raid.duplicate(true)
+		failed_raid["enemy_commander_state"] = normalized_commander
+		return {
+			"raid": failed_raid,
+			"learned": false,
+			"spell_id": spell_id,
+			"spell_name": String(spell.get("name", spell_id)),
+		}
+	var updated_raid := raid.duplicate(true)
+	var updated_commander: Dictionary = learn_result.get("hero", normalized_commander)
+	updated_raid["enemy_commander_state"] = updated_commander
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		updated_commander,
+		COMMANDER_STATUS_ACTIVE,
+		String(updated_raid.get("placement_id", "")),
+		-1,
+		String(updated_commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
+	)
+	return {
+		"raid": updated_raid,
+		"learned": true,
+		"spell_id": spell_id,
+		"spell_name": String(spell.get("name", spell_id)),
+	}
 
 static func _defend_resource_target(
 	session: SessionStateStoreScript.SessionData,
