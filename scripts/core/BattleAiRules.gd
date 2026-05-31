@@ -412,15 +412,17 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 
 	var best_spell := _best_spell_action(battle, active_stack, enemy_hero, targets)
 	var best_attack := _best_attack_action(battle, active_stack, targets)
+	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, battle, active_stack)
+	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, battle, enemy_hero)
 	var defend_score := _defend_score(battle, active_stack, targets)
 	var advance_score := _advance_score(battle, active_stack, targets)
 	var distance := int(battle.get("distance", 1))
 	var best := {"action": "defend", "score": defend_score}
 	if not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if not best_spell.is_empty() and _candidate_beats(best_spell, best):
+	if not best_spell.is_empty() and (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
 		best = best_spell
-	if distance > 0 or best_attack.is_empty():
+	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available:
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -446,6 +448,41 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if String(report.get("action", "")) in ["retreat", "surrender"]:
 		report["scoring_policy"] = ENEMY_WITHDRAWAL_SCORING_POLICY
 	return report
+
+static func _candidate_is_lethal_attack(candidate: Dictionary, battle: Dictionary, active_stack: Dictionary) -> bool:
+	if candidate.is_empty():
+		return false
+	var action := String(candidate.get("action", ""))
+	if action not in ["shoot", "strike"]:
+		return false
+	var target := _stack_by_battle_id(battle, String(candidate.get("target_battle_id", "")))
+	if target.is_empty() or _alive_count(target) <= 0:
+		return false
+	var is_ranged := action == "shoot"
+	var attack_distance := _attack_distance_for_action(active_stack, target, battle, is_ranged)
+	var projected_damage := _estimate_damage(active_stack, target, battle, is_ranged, false, attack_distance)
+	return projected_damage >= int(target.get("total_health", 0))
+
+static func _candidate_is_lethal_damage_spell(candidate: Dictionary, battle: Dictionary, enemy_hero: Dictionary) -> bool:
+	if candidate.is_empty() or String(candidate.get("action", "")) != "cast_spell":
+		return false
+	var spell := ContentService.get_spell(String(candidate.get("spell_id", "")))
+	var behavior := SpellRulesScript.battle_spell_behavior(spell)
+	if String(behavior.get("effect_type", "")) != "damage_enemy":
+		return false
+	var target := _stack_by_battle_id(battle, String(candidate.get("target_battle_id", "")))
+	if target.is_empty() or _alive_count(target) <= 0:
+		return false
+	var projection := SpellRulesScript.battle_spell_damage_projection(enemy_hero, battle, target, spell)
+	return int(projection.get("final_damage", 0)) >= int(target.get("total_health", 0))
+
+static func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
+	if battle_id == "":
+		return {}
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
+			return stack
+	return {}
 
 static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "") -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
