@@ -517,7 +517,10 @@ static func player_autoplay_decision_report(session: SessionStateStoreScript.Ses
 	var active_stack: Dictionary = BattleRules.get_active_stack(session.battle)
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return {"action": "defend", "reason": "no_active_player_stack", "scoring_policy": "battle_ai_nonspell_tactical_order_v1"}
-	var decision := BattleAiRulesScript.choose_stack_tactical_order(session.battle, active_stack, "enemy")
+	var commander_payload: Dictionary = session.battle.get("player_hero", {}) if session.battle.get("player_hero", {}) is Dictionary else {}
+	if commander_payload.is_empty() and session.battle.get("player_commander_state", {}) is Dictionary:
+		commander_payload = session.battle.get("player_commander_state", {})
+	var decision := BattleAiRulesScript.choose_stack_tactical_order(session.battle, active_stack, "enemy", commander_payload)
 	if decision.is_empty():
 		_select_focus_enemy(session)
 		return _fallback_player_autoplay_decision(session, "no_scored_tactical_order", apply_selection)

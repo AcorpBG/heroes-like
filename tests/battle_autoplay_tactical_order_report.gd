@@ -33,6 +33,9 @@ func _run() -> void:
 	var enemy_engaged_case := _validate_enemy_engaged_melee_attack()
 	if not bool(enemy_engaged_case.get("ok", false)):
 		return
+	var commander_payload_case := _validate_tactical_order_argument_commander_payload()
+	if not bool(commander_payload_case.get("ok", false)):
+		return
 
 	var payload := {
 		"ok": true,
@@ -41,6 +44,7 @@ func _run() -> void:
 		"initial_availability": initial_availability,
 		"decision": decision,
 		"enemy_engaged_melee": enemy_engaged_case,
+		"argument_commander_payload": commander_payload_case,
 		"selected_target_id": String(session.battle.get("selected_target_id", "")),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
@@ -71,6 +75,41 @@ func _validate_enemy_engaged_melee_attack() -> Dictionary:
 		"defend_score": float(candidate_scores.get("defend", 0.0)),
 		"strike_score": float(candidate_scores.get("strike", 0.0)),
 		"tactical_order_action": String(tactical_order.get("action", "")),
+	}
+
+func _validate_tactical_order_argument_commander_payload() -> Dictionary:
+	var session := _engaged_enemy_melee_session()
+	var active_stack := BattleRulesScript.get_active_stack(session.battle)
+	var baseline := BattleAiRules.choose_stack_tactical_order(session.battle, active_stack, "player")
+	var commander := {
+		"hero_id": "test_vanguard_commander",
+		"archetype": "marshal",
+		"command_path": "might",
+		"battle_traits": ["vanguard"],
+		"command": {"attack": 0, "defense": 0, "power": 0, "knowledge": 0},
+	}
+	var bridged := BattleAiRules.choose_stack_tactical_order(session.battle, active_stack, "player", commander)
+	var baseline_scores: Dictionary = baseline.get("candidate_scores", {}) if baseline.get("candidate_scores", {}) is Dictionary else {}
+	var bridged_scores: Dictionary = bridged.get("candidate_scores", {}) if bridged.get("candidate_scores", {}) is Dictionary else {}
+	if String(bridged.get("commander_payload_source", "")) != "argument":
+		_fail("Tactical order did not report argument commander payload source: %s" % JSON.stringify(bridged))
+		return {}
+	if not baseline_scores.has("strike") or not bridged_scores.has("strike"):
+		_fail("Tactical order payload bridge case is missing strike score evidence: baseline=%s bridged=%s" % [JSON.stringify(baseline), JSON.stringify(bridged)])
+		return {}
+	if float(bridged_scores.get("strike", 0.0)) <= float(baseline_scores.get("strike", 0.0)):
+		_fail("Vanguard argument commander payload did not improve non-spell strike scoring: baseline=%s bridged=%s" % [JSON.stringify(baseline), JSON.stringify(bridged)])
+		return {}
+	if session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"):
+		_fail("Argument commander payload bridge mutated source battle state: %s" % JSON.stringify(session.battle))
+		return {}
+	return {
+		"ok": true,
+		"baseline_source": String(baseline.get("commander_payload_source", "")),
+		"bridged_source": String(bridged.get("commander_payload_source", "")),
+		"baseline_strike_score": float(baseline_scores.get("strike", 0.0)),
+		"bridged_strike_score": float(bridged_scores.get("strike", 0.0)),
+		"source_battle_mutated": session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"),
 	}
 
 func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
