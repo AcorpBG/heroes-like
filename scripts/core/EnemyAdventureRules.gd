@@ -6947,6 +6947,12 @@ static func _ai_commander_task_fit_bonus(
 	var target_kind := String(candidate.get("target_kind", ""))
 	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
 	var site_family := String(candidate.get("site_family", target_site_family(session, target_kind, String(candidate.get("target_placement_id", "")))))
+	var defensive_assignment := (
+		"town_defense" in reason_codes
+		or "site_defense" in reason_codes
+		or "defend_front" in reason_codes
+		or "front_stabilization" in reason_codes
+	)
 	var bonus := _commander_adaptive_task_fit_bonus(memory, target_kind)
 	bonus += _commander_role_continuity_fit_bonus(
 		String(session.scenario_id) if session != null else "",
@@ -6956,14 +6962,20 @@ static func _ai_commander_task_fit_bonus(
 
 	match target_kind:
 		"town":
-			bonus += attack * 12
-			bonus += defense * 4
-			if archetype in ["raider", "marshal"]:
-				bonus += 28
-			if archetype in ["castellan", "warden"]:
-				bonus += 10
-			if command_path == "might":
-				bonus += 8
+			if defensive_assignment:
+				bonus += attack * 4
+				bonus += defense * 6
+				if archetype == "marshal":
+					bonus += 12
+			else:
+				bonus += attack * 12
+				bonus += defense * 4
+				if archetype in ["raider", "marshal"]:
+					bonus += 28
+				if archetype in ["castellan", "warden"]:
+					bonus += 10
+				if command_path == "might":
+					bonus += 8
 		"hero":
 			bonus += attack * 16
 			bonus += max(0, int(template.get("base_movement", 10)) - 10) * 6
