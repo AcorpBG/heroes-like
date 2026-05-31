@@ -28,6 +28,9 @@ func _run() -> void:
 	var garrison_routing_case := _regroup_prefers_useful_garrison_town()
 	if garrison_routing_case.is_empty():
 		return
+	var route_occupancy_regroup_case := _regroup_route_occupancy_avoids_visible_player_hero_choke()
+	if route_occupancy_regroup_case.is_empty():
+		return
 	var failed_regroup_case := _empty_garrison_regroup_releases_to_rebuild()
 	if failed_regroup_case.is_empty():
 		return
@@ -38,13 +41,14 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_failed_regroups_rebuild_and_commander_risk_tolerance_shapes_live_gates",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_failed_regroups_rebuild_route_occupancy_and_commander_risk_tolerance_shapes_live_gates",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
 		"resource_consolidation_case": resource_consolidation_case,
 		"unreachable_route_case": unreachable_route_case,
 		"garrison_routing_case": garrison_routing_case,
+		"route_occupancy_regroup_case": route_occupancy_regroup_case,
 		"failed_regroup_case": failed_regroup_case,
 		"commander_risk_case": commander_risk_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
@@ -537,6 +541,61 @@ func _regroup_prefers_useful_garrison_town() -> Dictionary:
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
+func _regroup_route_occupancy_avoids_visible_player_hero_choke() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	_make_regroup_route_occupancy_corridor(session)
+	var raid := _understrength_raid(session, config)
+	raid["x"] = 8
+	raid["y"] = 4
+	raid["placement_id"] = "regroup_route_occupancy_probe"
+	if not EnemyAdventureRules.raid_regroup_needed(raid):
+		_fail("Route-occupancy regroup fixture should require regroup: %s" % JSON.stringify(raid))
+		return {}
+	var selected := EnemyAdventureRules._nearest_regroup_town(session, raid, MIRECLAW)
+	if String(selected.get("placement_id", "")) != "reachable_reed_redoubt":
+		_fail("Regroup selected a blocked or missing town instead of the reachable reserve: %s" % JSON.stringify(selected))
+		return {}
+	var generic_blocked_distance := EnemyAdventureRules._path_distance(
+		session,
+		Vector2i(8, 4),
+		[Vector2i(6, 4)],
+		String(raid.get("placement_id", ""))
+	)
+	var faction_blocked_distance := EnemyAdventureRules._path_distance(
+		session,
+		Vector2i(8, 4),
+		[Vector2i(6, 4)],
+		String(raid.get("placement_id", "")),
+		MIRECLAW
+	)
+	var reachable_distance := EnemyAdventureRules._path_distance(
+		session,
+		Vector2i(8, 4),
+		[Vector2i(12, 2)],
+		String(raid.get("placement_id", "")),
+		MIRECLAW
+	)
+	if generic_blocked_distance >= reachable_distance:
+		_fail("Route-occupancy fixture should make the blocked town generically closer than the reachable reserve.")
+		return {}
+	if faction_blocked_distance < 9999:
+		_fail("Faction-scoped routing should treat the visible player hero choke as blocking: distance=%d" % faction_blocked_distance)
+		return {}
+	if reachable_distance >= 9999:
+		_fail("Reachable reserve should remain routeable under faction-scoped occupancy.")
+		return {}
+	return {
+		"case_id": "regroup_route_occupancy_avoids_visible_player_hero_choke",
+		"selected_town_id": String(selected.get("placement_id", "")),
+		"blocked_town_id": "blocked_fen_hold",
+		"hero_tile": {"x": 7, "y": 4},
+		"generic_blocked_distance": generic_blocked_distance,
+		"faction_blocked_distance": faction_blocked_distance,
+		"reachable_distance": reachable_distance,
+	}
+
 func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 	var session = _base_session()
 	session.day = 2
@@ -928,6 +987,58 @@ func _base_session():
 	EnemyTurnRules.normalize_enemy_states(session)
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
 	return session
+
+func _make_regroup_route_occupancy_corridor(session) -> void:
+	var map := []
+	for y in range(9):
+		var row := []
+		for x in range(13):
+			var passable := y == 4 or (x == 12 and y >= 2 and y <= 4)
+			row.append("grass" if passable else "rock")
+		map.append(row)
+	session.overworld["map"] = map
+	session.overworld["map_size"] = {"width": 13, "height": 9}
+	_set_primary_hero_position(session, 7, 4)
+	session.overworld["towns"] = [
+		{
+			"placement_id": "blocked_fen_hold",
+			"town_id": "town_duskfen",
+			"name": "Blocked Fen Hold",
+			"x": 6,
+			"y": 4,
+			"owner": "enemy",
+			"controlling_faction_id": MIRECLAW,
+			"garrison": [{"unit_id": "unit_bog_brute", "count": 14}],
+			"available_recruits": {},
+			"buildings": [],
+		},
+		{
+			"placement_id": "reachable_reed_redoubt",
+			"town_id": "town_duskfen",
+			"name": "Reachable Reed Redoubt",
+			"x": 12,
+			"y": 2,
+			"owner": "enemy",
+			"controlling_faction_id": MIRECLAW,
+			"garrison": [{"unit_id": "unit_bog_brute", "count": 14}],
+			"available_recruits": {},
+			"buildings": [],
+		},
+	]
+	session.overworld["resource_nodes"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+
+func _set_primary_hero_position(session, x: int, y: int) -> void:
+	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true)
+	hero["id"] = String(session.overworld.get("active_hero_id", "hero_lyra"))
+	hero["name"] = String(hero.get("name", "Lyra"))
+	hero["position"] = {"x": x, "y": y}
+	session.overworld["hero"] = hero
+	session.overworld["hero_position"] = {"x": x, "y": y}
+	session.overworld["active_hero_id"] = String(hero.get("id", "hero_lyra"))
+	session.overworld["player_heroes"] = [hero]
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(RIVER_PASS)
