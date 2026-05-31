@@ -845,8 +845,6 @@ static func _spell_candidate_score(
 			score = _cleanse_spell_score_for_target(battle, active_stack, target, spell)
 		"defense_buff", "initiative_buff", "attack_buff":
 			score = _buff_spell_score(battle, active_stack, target, _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))), spell)
-			if String(target.get("battle_id", "")) != String(active_stack.get("battle_id", "")):
-				score -= 4.5
 		_:
 			score = -9999.0
 	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior)
@@ -1045,6 +1043,7 @@ static func _buff_spell_score(
 	var attack_bonus := int(modifiers.get("attack", 0))
 	if attack_bonus > 0:
 		score += float(attack_bonus) * 1.35
+		score += _buff_spell_offense_payoff(target_stack)
 		if bool(target_stack.get("ranged", false)) and int(target_stack.get("shots_remaining", 0)) > 0:
 			score += 1.0
 		if _can_make_melee_attack(target_stack, battle):
@@ -1086,6 +1085,7 @@ static func _buff_spell_score(
 	var momentum_bonus := int(modifiers.get("momentum", 0))
 	if momentum_bonus > 0:
 		score += float(momentum_bonus) * 1.4
+		score += _buff_spell_offense_payoff(target_stack) * 0.8
 		if _can_make_melee_attack(target_stack, battle) or (bool(target_stack.get("ranged", false)) and int(target_stack.get("shots_remaining", 0)) > 0):
 			score += 1.5
 		if _hero_has_trait(battle, String(active_stack.get("side", "")), "vanguard") or _hero_has_trait(battle, String(active_stack.get("side", "")), "packhunter"):
@@ -1101,6 +1101,14 @@ static func _buff_spell_score(
 	score += _stack_spell_target_value(target_stack)
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target_stack)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
+	return score
+
+static func _buff_spell_offense_payoff(stack: Dictionary) -> float:
+	var average_damage := (float(int(stack.get("min_damage", 1))) + float(int(stack.get("max_damage", 1)))) / 2.0
+	var output := float(_alive_count(stack)) * average_damage
+	var score = min(3.0, output / 80.0)
+	if bool(stack.get("ranged", false)) and int(stack.get("shots_remaining", 0)) > 0:
+		score += 0.45
 	return score
 
 static func _stack_spell_target_value(stack: Dictionary) -> float:

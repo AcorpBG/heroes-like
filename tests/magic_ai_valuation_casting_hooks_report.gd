@@ -22,6 +22,10 @@ func _run() -> void:
 	if not bool(cleanse_ward_case.get("ok", false)):
 		_fail(String(cleanse_ward_case.get("error", "Battle AI cleanse active ward case failed.")))
 		return
+	var buff_target_case := _run_battle_ai_buff_best_ally_case()
+	if not bool(buff_target_case.get("ok", false)):
+		_fail(String(buff_target_case.get("error", "Battle AI buff target case failed.")))
+		return
 
 	var adventure_case := _run_adventure_ai_spell_case()
 	if not bool(adventure_case.get("ok", false)):
@@ -35,9 +39,10 @@ func _run() -> void:
 		"battle_resistance_targeting": resistance_case,
 		"battle_damage_status_targeting": damage_status_case,
 		"battle_cleanse_active_ward": cleanse_ward_case,
+		"battle_buff_best_ally": buff_target_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -269,6 +274,53 @@ func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
 		"selected_target_id": String(selected.get("target_battle_id", "")),
 		"target_had_active_ward_modifiers": true,
 		"target_had_cleanseable_status": true,
+		"live_action": String(live_action.get("action", "")),
+	}
+
+func _run_battle_ai_buff_best_ally_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Buff Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_lantern_phalanx"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": ["elevated_fire", "battery_nest"],
+		"stacks": [
+			_stack("enemy_low_active", "enemy", "Enemy Low Active", 4, 10, 40, [], {"tier": 1, "min_damage": 1, "max_damage": 2}),
+			_stack("enemy_high_value_ranged", "enemy", "Enemy High Value Ranged", 12, 10, 120, [], {
+				"tier": 5,
+				"min_damage": 8,
+				"max_damage": 12,
+				"ranged": true,
+				"shots_remaining": 8,
+			}),
+			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_low_active")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Buff best-ally report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("target_battle_id", "")) != "enemy_high_value_ranged":
+		return {"ok": false, "error": "Buff best-ally report should target high-value ranged ally, got %s candidates=%s" % [selected, report.get("candidates", [])]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("target_battle_id", "")) != "enemy_high_value_ranged":
+		return {"ok": false, "error": "Buff best-ally live choice should buff high-value ranged ally, got %s" % live_action}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"selected_target_id": String(selected.get("target_battle_id", "")),
+		"active_stack_id": "enemy_low_active",
+		"target_was_active_stack": false,
 		"live_action": String(live_action.get("action", "")),
 	}
 
