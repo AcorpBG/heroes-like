@@ -470,13 +470,14 @@ static func _enemy_hero_state_for_ai(battle: Dictionary, enemy_hero: Dictionary)
 	return {}
 
 static func _battle_with_side_hero_payload(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
-	if battle.is_empty() or commander_payload.is_empty():
+	if battle.is_empty():
 		return battle
 	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
 	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
-	if not existing_payload.is_empty():
+	var source_payload := existing_payload if not existing_payload.is_empty() else commander_payload
+	if source_payload.is_empty():
 		return battle
-	var normalized_payload := _commander_payload_for_tactical_scoring(commander_payload)
+	var normalized_payload := _commander_payload_for_tactical_scoring(source_payload)
 	if normalized_payload.is_empty():
 		return battle
 	var scored := battle.duplicate(true)
@@ -487,18 +488,43 @@ static func _commander_payload_for_tactical_scoring(commander_payload: Dictionar
 	if commander_payload.is_empty():
 		return {}
 	var payload := commander_payload.duplicate(true)
+	var hero_template := _commander_template_for_ai_payload(payload)
+	for key in ["name", "faction_id", "archetype", "command_path"]:
+		if String(payload.get(key, "")).strip_edges() == "" and String(hero_template.get(key, "")).strip_edges() != "":
+			payload[key] = String(hero_template.get(key, ""))
+	var template_traits := _normalize_string_array(hero_template.get("battle_traits", []))
+	var payload_traits := _normalize_string_array(payload.get("battle_traits", []))
+	if not payload.has("battle_traits") and not template_traits.is_empty():
+		payload["battle_traits"] = template_traits
+	else:
+		payload["battle_traits"] = payload_traits
 	var command: Dictionary = payload.get("command", {}) if payload.get("command", {}) is Dictionary else {}
+	var template_command: Dictionary = hero_template.get("command", {}) if hero_template.get("command", {}) is Dictionary else {}
+	if command.is_empty() and not template_command.is_empty():
+		command = template_command.duplicate(true)
+	elif not template_command.is_empty():
+		for key in ["attack", "defense", "power", "knowledge", "initiative"]:
+			if not command.has(key):
+				command[key] = int(template_command.get(key, 0))
+	if not command.is_empty():
+		payload["command"] = command
 	if not command.is_empty():
 		for key in ["attack", "defense", "initiative"]:
 			if not payload.has(key):
 				payload[key] = int(command.get(key, 0))
-	if not payload.has("battle_traits"):
-		payload["battle_traits"] = []
-	else:
-		payload["battle_traits"] = _normalize_string_array(payload.get("battle_traits", []))
 	if not payload.has("damage_multiplier"):
 		payload["damage_multiplier"] = 1.0
 	return payload
+
+static func _commander_template_for_ai_payload(commander_payload: Dictionary) -> Dictionary:
+	for key in ["roster_hero_id", "hero_id", "id"]:
+		var hero_id := String(commander_payload.get(key, "")).strip_edges()
+		if hero_id == "":
+			continue
+		var hero_template := ContentService.get_hero(hero_id)
+		if not hero_template.is_empty():
+			return hero_template
+	return {}
 
 static func _enemy_commander_payload_source(battle: Dictionary, enemy_hero: Dictionary) -> String:
 	var existing_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
@@ -1039,14 +1065,7 @@ static func _commander_spell_role_modifier(enemy_hero: Dictionary, behavior: Dic
 	return modifier
 
 static func _commander_template_for_spell_role(enemy_hero: Dictionary) -> Dictionary:
-	for key in ["roster_hero_id", "hero_id", "id"]:
-		var hero_id := String(enemy_hero.get(key, "")).strip_edges()
-		if hero_id == "":
-			continue
-		var hero_template := ContentService.get_hero(hero_id)
-		if not hero_template.is_empty():
-			return hero_template
-	return {}
+	return _commander_template_for_ai_payload(enemy_hero)
 
 static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
 	var status_effect := _status_effect_from_spell(spell)
