@@ -1445,6 +1445,7 @@ static func _reinforce_enemy_forces(
 	var rebuild_batches = 0
 	var planned_batches = 0
 	var emergency_batches = 0
+	var mobilized_batches = 0
 	var events = []
 	for index in range(towns.size()):
 		var town = towns[index]
@@ -1462,8 +1463,9 @@ static func _reinforce_enemy_forces(
 		rebuild_batches += int(recruit_result.get("rebuild_batches", 0))
 		planned_batches += int(recruit_result.get("planned_batches", 0))
 		emergency_batches += int(recruit_result.get("emergency_batches", 0))
+		mobilized_batches += int(recruit_result.get("mobilized_batches", 0))
 	if garrisoned_towns.is_empty() and raid_reinforcements <= 0:
-		if rebuild_batches <= 0 and planned_batches <= 0 and emergency_batches <= 0:
+		if rebuild_batches <= 0 and planned_batches <= 0 and emergency_batches <= 0 and mobilized_batches <= 0:
 			return {"message": "", "events": events}
 
 	var parts = []
@@ -1477,6 +1479,8 @@ static func _reinforce_enemy_forces(
 		parts.append("prepares %d planned command host%s" % [planned_batches, "" if planned_batches == 1 else "s"])
 	if emergency_batches > 0:
 		parts.append("prepares %d emergency defender%s" % [emergency_batches, "" if emergency_batches == 1 else "s"])
+	if mobilized_batches > 0:
+		parts.append("mobilizes %d reserve column%s" % [mobilized_batches, "" if mobilized_batches == 1 else "s"])
 	return {
 		"message": "%s %s." % [String(config.get("label", faction_id)), " and ".join(parts)],
 		"events": events,
@@ -1494,6 +1498,8 @@ static func _recruit_town_forces(
 	var rebuild_batches = 0
 	var planned_batches = 0
 	var emergency_batches = 0
+	var mobilized_batches = 0
+	var recruited_any = false
 	var events = []
 	var recruit_ids = []
 	var initial_destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
@@ -1549,6 +1555,7 @@ static func _recruit_town_forces(
 			garrisoned = true
 		if applied_count <= 0:
 			continue
+		recruited_any = true
 		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, applied_count)
 		var final_cost := _scale_resource_pool(cost, applied_count)
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, final_cost, int(session.day))
@@ -1565,6 +1572,11 @@ static func _recruit_town_forces(
 		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_recruitment)
 		if not destination_event.is_empty():
 			events.append(destination_event)
+	if not recruited_any:
+		var mobilize_result := _mobilize_surplus_garrison_for_field_need(session, config, town, faction_id)
+		town = mobilize_result.get("town", town)
+		mobilized_batches += int(mobilize_result.get("mobilized_batches", 0))
+		_append_event_records(events, mobilize_result.get("events", []))
 	return {
 		"town": town,
 		"garrisoned": garrisoned,
@@ -1572,8 +1584,104 @@ static func _recruit_town_forces(
 		"rebuild_batches": rebuild_batches,
 		"planned_batches": planned_batches,
 		"emergency_batches": emergency_batches,
+		"mobilized_batches": mobilized_batches,
 		"events": events,
 	}
+
+static func _mobilize_surplus_garrison_for_field_need(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or town.is_empty() or faction_id == "":
+		return {"town": town, "mobilized_batches": 0, "events": []}
+	var destination_breakdown := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+	var destination_type := String(destination_breakdown.get("type", "garrison"))
+	if destination_type not in ["raid", "planned", "emergency", "rebuild"]:
+		return {"town": town, "mobilized_batches": 0, "events": []}
+	var defense_target: int = _desired_town_strength(session, town, config)
+	var current_defense: int = _army_strength(town.get("garrison", []))
+	var surplus_strength: int = current_defense - defense_target
+	if surplus_strength <= 0:
+		return {"town": town, "mobilized_batches": 0, "events": []}
+	var destination := _recruit_destination_from_breakdown(destination_breakdown)
+	var stacks: Array = town.get("garrison", []) if town.get("garrison", []) is Array else []
+	var candidates := []
+	for stack_value in stacks:
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		var unit_id := String(stack.get("unit_id", ""))
+		var count: int = max(0, int(stack.get("count", 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		candidates.append({"unit_id": unit_id, "count": count})
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_priority := _recruit_priority_for_destination(String(a.get("unit_id", "")), config, faction_id, destination_breakdown)
+		var b_priority := _recruit_priority_for_destination(String(b.get("unit_id", "")), config, faction_id, destination_breakdown)
+		if is_equal_approx(a_priority, b_priority):
+			return String(a.get("unit_id", "")) < String(b.get("unit_id", ""))
+		return a_priority > b_priority
+	)
+	var mobilized_batches := 0
+	var events := []
+	for candidate in candidates:
+		if surplus_strength <= 0:
+			break
+		var unit_id := String(candidate.get("unit_id", ""))
+		var available_count: int = max(0, int(candidate.get("count", 0)))
+		var unit_strength: int = max(1, _unit_strength_for_reinforcement(unit_id))
+		var strength_limited_count: int = min(available_count, int(floor(float(surplus_strength) / float(unit_strength))))
+		if strength_limited_count <= 0:
+			continue
+		var accepted := 0
+		match String(destination.get("type", "")):
+			"raid":
+				accepted = _apply_reinforcement_to_raid(
+					session,
+					int(destination.get("index", -1)),
+					unit_id,
+					strength_limited_count
+				)
+			"planned", "emergency":
+				accepted = EnemyAdventureRulesScript.reinforce_commander_roster_army(
+					session,
+					faction_id,
+					String(destination.get("roster_hero_id", "")),
+					unit_id,
+					strength_limited_count,
+					String(destination.get("base_encounter_id", "")),
+					int(destination.get("target_strength", 0))
+				)
+			"rebuild":
+				accepted = EnemyAdventureRulesScript.reinforce_commander_roster_army(
+					session,
+					faction_id,
+					String(destination.get("roster_hero_id", "")),
+					unit_id,
+					strength_limited_count
+				)
+		if accepted <= 0:
+			continue
+		town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
+		surplus_strength -= accepted * unit_strength
+		mobilized_batches += 1
+		var event_destination := destination_breakdown.duplicate(true)
+		var reason_codes := _normalize_string_array(event_destination.get("reason_codes", []))
+		if "surplus_garrison_mobilization" not in reason_codes:
+			reason_codes.append("surplus_garrison_mobilization")
+		event_destination["reason_codes"] = reason_codes
+		var selected_reserve := {
+			"unit_id": unit_id,
+			"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+			"recruit_count": accepted,
+			"destination": event_destination,
+		}
+		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_reserve)
+		if not destination_event.is_empty():
+			events.append(destination_event)
+	return {"town": town, "mobilized_batches": mobilized_batches, "events": events}
 
 static func _choose_recruit_destination(
 	session: SessionStateStoreScript.SessionData,
@@ -4694,6 +4802,11 @@ static func _army_strength(stacks: Variant) -> int:
 		total += per_unit_strength * count
 	return total
 
+static func _unit_strength_for_reinforcement(unit_id: String) -> int:
+	if unit_id == "":
+		return 0
+	return _army_strength([{"unit_id": unit_id, "count": 1}])
+
 static func _add_stack(stacks: Variant, unit_id: String, amount: int) -> Array:
 	var normalized = []
 	var added = false
@@ -4712,6 +4825,25 @@ static func _add_stack(stacks: Variant, unit_id: String, amount: int) -> Array:
 				normalized.append(stack)
 	if not added and unit_id != "" and amount > 0:
 		normalized.append({"unit_id": unit_id, "count": amount})
+	return normalized
+
+static func _remove_stack_units(stacks: Variant, unit_id: String, amount: int) -> Array:
+	var normalized := []
+	var remaining_to_remove: int = max(0, amount)
+	if stacks is Array:
+		for stack_value in stacks:
+			if not (stack_value is Dictionary):
+				continue
+			var stack_unit_id := String(stack_value.get("unit_id", ""))
+			var count: int = max(0, int(stack_value.get("count", 0)))
+			if stack_unit_id == "" or count <= 0:
+				continue
+			if stack_unit_id == unit_id and remaining_to_remove > 0:
+				var removed: int = min(count, remaining_to_remove)
+				count -= removed
+				remaining_to_remove -= removed
+			if count > 0:
+				normalized.append({"unit_id": stack_unit_id, "count": count})
 	return normalized
 
 static func _can_afford_from_pool(pool: Dictionary, cost: Variant) -> bool:

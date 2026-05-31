@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T07:48:00Z",
+  "updatedAt": "2026-05-31T09:30:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,76 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-surplus-garrison-mobilization-10184",
+      "title": "Strategic AI Surplus Garrison Mobilization",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T09:03:00Z",
+      "updatedAt": "2026-05-31T09:30:00Z",
+      "completedAt": "2026-05-31T09:30:00Z",
+      "source": "active strategic AI production-readiness goal; real live behavior change, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-surplus-garrison-mobilization-10184",
+      "sourceDocs": [],
+      "purpose": "Make safe enemy towns use surplus garrison troops as strategic reserves for field commanders and active fronts instead of only using newly recruited units or opportunistic pass-by resupply.",
+      "implementationTargets": [
+        "After normal recruitment, enemy towns evaluate the current reinforcement destination and can transfer only surplus garrison strength above the local defense target.",
+        "Surplus mobilization supports active raid reinforcement, planned task preparation, emergency defender preparation, and commander rebuilds through the existing army/commander continuity helpers.",
+        "Transfers preserve town safety, consume actual garrison stacks, emit compact public AI events, and do not bypass critical-garrison protection."
+      ],
+      "completionCriteria": "A live reinforcement fixture proves a safe town with no recruitable units can prepare a planned commander from surplus garrison while preserving a defense reserve, existing planned-task launch/recruitment behavior remains green, and standard repo validation passes without a save-version bump.",
+      "nonGoals": [
+        "No new broad strategic AI audit gate.",
+        "No final release-readiness claim for strategic AI.",
+        "No unsafe stripping of critical town garrisons."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned-task recruitment coverage now proves a safe town with no available recruits mobilizes surplus garrison into a planned commander, lowers garrison strength, preserves the local defense target, emits ai_commander_prepared, and records surplus_garrison_mobilization."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn",
+          "result": "pass",
+          "summary": "Town governor pressure and build/recruitment behavior remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution and durable task continuity remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Raid regroup, retreat, support, route recovery, commander risk, and town resupply behavior remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn",
+          "result": "pass",
+          "summary": "Artifact objective support, guarded-claim redirect, and objective continuity remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passes."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON remains valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors in the tracked diff."
+        }
+      ],
+      "summary": "Safe enemy towns now use actual surplus garrison troops as strategic reserves for active raids, planned commander hosts, emergency defenders, or rebuilding commanders when no normal recruit batch was applied and the town remains above its local defense target.",
+      "notes": "Completed as a live strategic AI behavior slice, not a broad report-only gate. Mobilization intentionally only fires when normal recruitment did not apply a batch during that town pass, avoiding double-preparation while still unstranding reserve garrison strength."
+    },
     {
       "id": "strategic-ai-artifact-front-support-10184",
       "title": "Strategic AI Artifact Front Support",
@@ -48552,12 +48622,12 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T07:48:00Z",
-    "sliceId": "strategic-ai-site-claim-recruits-10184",
+    "updatedAt": "2026-05-31T09:30:00Z",
+    "sliceId": "strategic-ai-surplus-garrison-mobilization-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_site_control_proof_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_governor_pressure_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
@@ -48566,25 +48636,27 @@
     ],
     "evidence": {
       "implemented": [
-        "Assigned AI resource-site capture now applies claim_recruits to the active raid army.",
-        "Opportunistic route resource-site capture now applies claim_recruits to the active raid army.",
-        "Claim recruits update raid army, last_site_claim_recruits metadata, commander army continuity, and roster state.",
-        "Site-seized messages now expose public-safe auxiliary join wording.",
-        "Artifact secure returns both ai_event and ai_events so direct callers and event-list callers see the secured artifact event."
+        "Enemy town reinforcement tracks whether normal recruitment actually applied a batch.",
+        "When no recruit batch was applied, safe towns evaluate active raid, planned task, emergency defender, and commander rebuild needs as surplus-garrison mobilization destinations.",
+        "Mobilization transfers only unit counts whose strength stays above the town defense target, removes them from actual garrison stacks, and applies them through existing raid/commander continuity helpers.",
+        "Mobilized reserve transfers emit existing public destination events with surplus_garrison_mobilization reason metadata.",
+        "Reinforcement summaries now account for reserve columns so mobilization is visible without adding a report-only surface."
       ],
       "focused_case": {
-        "case_id": "assigned_and_opportunistic_recruit_site_claims_join_active_host",
-        "assigned_before_strength": 149,
-        "assigned_after_strength": 269,
-        "opportunistic_before_strength": 149,
-        "opportunistic_after_strength": 269,
-        "claim_recruits": {
-          "unit_ember_archer": 3,
-          "unit_river_guard": 5
-        },
-        "target_kind_after": "resource",
-        "target_id_after": "river_free_company",
-        "event_type": "ai_site_seized"
+        "case_id": "surplus_garrison_prepares_planned_commander_without_recruits",
+        "actor_id": "hero_sable",
+        "destination_type": "planned",
+        "before_strength": 0,
+        "after_strength": 212,
+        "before_garrison_strength": 3060,
+        "after_garrison_strength": 2997,
+        "defense_target": 406,
+        "mobilized_batches": 1,
+        "event_type": "ai_commander_prepared",
+        "reason_codes": [
+          "planned_task",
+          "surplus_garrison_mobilization"
+        ]
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
