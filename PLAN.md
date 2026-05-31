@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue with the next production-impacting strategic AI behavior gap.
+- Latest completed slice: `strategic-ai-post-recruit-surplus-mobilization-10184`.
 - Latest completed slice: `strategic-ai-town-defense-commander-continuity-10184`.
 - Latest completed slice: `strategic-ai-post-capture-town-support-continuation-10184`.
 - Latest completed slice: `strategic-ai-neutral-town-assault-grouping-10184`.
