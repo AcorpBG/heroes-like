@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T13:47:43Z",
+  "updatedAt": "2026-05-31T13:55:49Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-immediate-threat-targeting-10184",
+      "title": "Battle AI Immediate Threat Targeting",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T13:52:11Z",
+      "updatedAt": "2026-05-31T13:55:49Z",
+      "completedAt": "2026-05-31T13:55:49Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / battle-ai-immediate-threat-targeting-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Improve tactical AI target selection so attacks and hostile spells prioritize enemies that can immediately threaten the acting stack, instead of over-focusing static wounded or role targets.",
+      "implementationTargets": [
+        "Add a bounded immediate-threat target pressure term to tactical attack scoring.",
+        "Apply the same threat pressure to hostile control spell scoring so disabling an imminent killer is valued.",
+        "Add focused tactical-order report coverage proving a dangerous live shooter is targeted over a weaker wounded decoy.",
+        "Preserve all unit, spell, growth, economy, faction, and town-cost balance content."
+      ],
+      "completionCriteria": "Focused tactical-order and magic AI reports prove immediate-threat targeting while adjacent tactical/strategic AI reports and repository validation remain green; no balance/content files are changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No spell catalog changes.",
+        "No broad battle balance retuning."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 160 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content/"
+      ],
+      "completionEvidence": [
+        "Tactical-order report proves enemy_immediate_threat_targeting chooses player_immediate_killer over player_wounded_decoy.",
+        "Immediate-threat fixture reports killer_threat_score 8.0 and wounded_threat_score 0.0.",
+        "Withdrawal report proves cautious commanders still retreat while aggressive commanders hold after the threat scoring change.",
+        "Magic AI valuation and strategic AI baseline KPI reports remained green.",
+        "Repository validation, JSON validation, whitespace diff check, and empty content diff guardrail passed."
+      ]
+    },
     {
       "id": "strategic-ai-adventure-spell-roster-sync-10184",
       "title": "Strategic AI Adventure Spell Roster Sync",
