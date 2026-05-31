@@ -1224,11 +1224,20 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 	var active_raid_count := 0
 	var active_town_target_count := 0
 	var active_hero_target_count := 0
+	var active_tactical_town_target_count := 0
+	var active_tactical_hero_target_count := 0
 	var near_battle_target_count := 0
+	var near_battle_town_or_hero_target_count := 0
+	var near_tactical_town_target_count := 0
+	var near_tactical_hero_target_count := 0
 	var unreachable_active_target_count := 0
 	var min_goal_distance := 9999
+	var min_tactical_town_goal_distance := 9999
+	var min_tactical_hero_goal_distance := 9999
+	var min_tactical_battle_goal_distance := 9999
 	var max_goal_distance := 0
 	var nearest := {}
+	var nearest_tactical_battle_target := {}
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
 			continue
@@ -1245,6 +1254,21 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 			active_town_target_count += 1
 		elif target_kind == "hero":
 			active_hero_target_count += 1
+		var battle_relevant_town := false
+		var battle_relevant_hero := false
+		if target_kind == "town":
+			var town_result: Dictionary = EnemyAdventureRules._find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
+			var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
+			var town_owner := String(town.get("owner", "neutral"))
+			var neutral_defended := town_owner == "neutral" and EnemyAdventureRules._town_garrison_strength(town) > 0
+			battle_relevant_town = not town.is_empty() and (town_owner == "player" or neutral_defended)
+		elif target_kind == "hero":
+			var hero: Dictionary = EnemyAdventureRules._find_player_hero(session, String(encounter.get("target_placement_id", "")))
+			battle_relevant_hero = not hero.is_empty()
+		if battle_relevant_town:
+			active_tactical_town_target_count += 1
+		elif battle_relevant_hero:
+			active_tactical_hero_target_count += 1
 		var goal_distance := int(encounter.get("goal_distance", 9999))
 		if goal_distance >= 9999:
 			unreachable_active_target_count += 1
@@ -1253,6 +1277,29 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 			max_goal_distance = maxi(max_goal_distance, goal_distance)
 			if goal_distance <= 1 and target_kind in ["town", "hero", "encounter"]:
 				near_battle_target_count += 1
+			if battle_relevant_town:
+				min_tactical_town_goal_distance = mini(min_tactical_town_goal_distance, goal_distance)
+			elif battle_relevant_hero:
+				min_tactical_hero_goal_distance = mini(min_tactical_hero_goal_distance, goal_distance)
+			if battle_relevant_town or battle_relevant_hero:
+				min_tactical_battle_goal_distance = mini(min_tactical_battle_goal_distance, goal_distance)
+				if goal_distance <= 1:
+					near_battle_town_or_hero_target_count += 1
+					if battle_relevant_town:
+						near_tactical_town_target_count += 1
+					else:
+						near_tactical_hero_target_count += 1
+				if nearest_tactical_battle_target.is_empty() or goal_distance < int(nearest_tactical_battle_target.get("goal_distance", 9999)):
+					nearest_tactical_battle_target = {
+						"placement_id": String(encounter.get("placement_id", "")),
+						"label": EnemyAdventureRules.raid_display_name(encounter),
+						"target_kind": target_kind,
+						"target_id": String(encounter.get("target_placement_id", "")),
+						"target_label": String(encounter.get("target_label", "")),
+						"goal_distance": goal_distance,
+						"x": int(encounter.get("x", 0)),
+						"y": int(encounter.get("y", 0)),
+					}
 			if nearest.is_empty() or goal_distance < int(nearest.get("goal_distance", 9999)):
 				nearest = {
 					"placement_id": String(encounter.get("placement_id", "")),
@@ -1283,11 +1330,20 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 		"target_kind_counts": target_kind_counts,
 		"active_town_target_count": active_town_target_count,
 		"active_hero_target_count": active_hero_target_count,
+		"active_tactical_town_target_count": active_tactical_town_target_count,
+		"active_tactical_hero_target_count": active_tactical_hero_target_count,
 		"near_battle_target_count": near_battle_target_count,
+		"near_battle_town_or_hero_target_count": near_battle_town_or_hero_target_count,
+		"near_tactical_town_target_count": near_tactical_town_target_count,
+		"near_tactical_hero_target_count": near_tactical_hero_target_count,
 		"unreachable_active_target_count": unreachable_active_target_count,
 		"min_goal_distance": min_goal_distance if min_goal_distance < 9999 else 9999,
+		"min_tactical_town_goal_distance": min_tactical_town_goal_distance if min_tactical_town_goal_distance < 9999 else 9999,
+		"min_tactical_hero_goal_distance": min_tactical_hero_goal_distance if min_tactical_hero_goal_distance < 9999 else 9999,
+		"min_tactical_battle_goal_distance": min_tactical_battle_goal_distance if min_tactical_battle_goal_distance < 9999 else 9999,
 		"max_goal_distance": max_goal_distance,
 		"nearest_active_target": nearest,
+		"nearest_tactical_battle_target": nearest_tactical_battle_target,
 		"movement_event_count": movement_event_count,
 		"movement_distance_delta_total": movement_distance_delta_total,
 		"battle_queue_event_count": battle_queue_event_count,
@@ -1302,7 +1358,9 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var total_target_integrity_violations := 0
 	var battle_handoff_candidate_turn_count := 0
 	var near_battle_target_turn_count := 0
+	var near_battle_town_or_hero_turn_count := 0
 	var best_min_goal_distance := 9999
+	var best_min_tactical_battle_goal_distance := 9999
 	var total_movement_distance_delta := 0
 	var battle_interrupt_count := 0
 	var auto_resolved_battle_count := 0
@@ -1339,11 +1397,14 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 			if turn_value is Dictionary:
 				max_turn_runtime_msec = maxi(max_turn_runtime_msec, int(turn_value.get("turn_runtime_msec", 0)))
 				var handoff: Dictionary = turn_value.get("battle_handoff_summary", {}) if turn_value.get("battle_handoff_summary", {}) is Dictionary else {}
-				if int(handoff.get("active_town_target_count", 0)) > 0 or int(handoff.get("active_hero_target_count", 0)) > 0 or int(handoff.get("battle_queue_event_count", 0)) > 0:
+				if int(handoff.get("active_tactical_town_target_count", 0)) > 0 or int(handoff.get("active_tactical_hero_target_count", 0)) > 0 or int(handoff.get("battle_queue_event_count", 0)) > 0:
 					battle_handoff_candidate_turn_count += 1
 				if int(handoff.get("near_battle_target_count", 0)) > 0:
 					near_battle_target_turn_count += 1
+				if int(handoff.get("near_battle_town_or_hero_target_count", 0)) > 0:
+					near_battle_town_or_hero_turn_count += 1
 				best_min_goal_distance = mini(best_min_goal_distance, int(handoff.get("min_goal_distance", 9999)))
+				best_min_tactical_battle_goal_distance = mini(best_min_tactical_battle_goal_distance, int(handoff.get("min_tactical_battle_goal_distance", 9999)))
 				total_movement_distance_delta += int(handoff.get("movement_distance_delta_total", 0))
 		var row_event_counts: Dictionary = row.get("event_counts", {}) if row.get("event_counts", {}) is Dictionary else {}
 		for key in row_event_counts.keys():
@@ -1368,7 +1429,9 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"target_integrity_violation_count": total_target_integrity_violations,
 		"battle_handoff_candidate_turn_count": battle_handoff_candidate_turn_count,
 		"near_battle_target_turn_count": near_battle_target_turn_count,
+		"near_battle_town_or_hero_turn_count": near_battle_town_or_hero_turn_count,
 		"best_min_active_raid_goal_distance": best_min_goal_distance,
+		"best_min_tactical_battle_goal_distance": best_min_tactical_battle_goal_distance,
 		"movement_distance_delta_total": total_movement_distance_delta,
 		"battle_interrupt_count": battle_interrupt_count,
 		"auto_resolved_battle_count": auto_resolved_battle_count,
@@ -1402,6 +1465,7 @@ static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_
 		rows.append({"blocker_id": "strategic_ai_long_run_no_enemy_activity", "severity": "production_gap", "summary": "Generated-map AI turns completed without observable enemy activity."})
 	if requested_turn_count >= 14 \
 			and int(summary.get("battle_handoff_candidate_turn_count", 0)) > 0 \
+			and int(summary.get("near_battle_town_or_hero_turn_count", 0)) > 0 \
 			and int(summary.get("battle_interrupt_count", 0)) <= 0 \
 			and int(summary.get("town_battle_queued_count", 0)) <= 0:
 		rows.append({
