@@ -758,6 +758,22 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		if plan.is_empty():
 			plan = ai_active_front_support_target_selection_plan(session, config, raid)
 		if plan.is_empty():
+			var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid)
+			if not live_plan.is_empty() and _live_task_plan_can_preempt_explicit_objective(config, live_plan):
+				plan = live_plan
+		if plan.is_empty():
+			plan = _current_tile_resource_target_selection_plan(session, config, raid, faction_id)
+		if plan.is_empty():
+			if _config_has_explicit_objective_targets(config):
+				plan = choose_target(
+					session,
+					config,
+					{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
+					raid.get("enemy_commander_state", {})
+				)
+				if plan.is_empty():
+					plan = _explicit_objective_fallback_target_selection_plan(session, config, raid, faction_id)
+		if plan.is_empty():
 			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
 		if plan.is_empty():
 			plan = choose_target(
@@ -792,6 +808,127 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		_ai_hero_task_record_live_assignment(session, config, raid, current_target, task_record_for_assignment)
 	return raid
 
+static func _live_task_plan_can_preempt_explicit_objective(config: Dictionary, plan: Dictionary) -> bool:
+	if plan.is_empty():
+		return false
+	if not _config_has_explicit_objective_targets(config):
+		return true
+	var target_id := String(plan.get("target_placement_id", ""))
+	if target_id != "" and _current_tile_resource_claim_allowed(config, target_id):
+		return true
+	if _resource_target_is_development_source_support(target_id):
+		return false
+	var task: Dictionary = plan.get("hero_task_record", {}) if plan.get("hero_task_record", {}) is Dictionary else {}
+	var task_class := String(task.get("task_class", ""))
+	return task_class in ["retake_site", "contest_site"]
+
+static func _resource_target_is_development_source_support(target_id: String) -> bool:
+	if target_id == "":
+		return false
+	return target_id.ends_with("_development_source_support") or target_id.begins_with("h3maped_small_town_source_support_")
+
+static func _config_has_explicit_objective_targets(config: Dictionary) -> bool:
+	var priority_ids := _normalize_string_array(config.get("priority_target_placement_ids", []))
+	return not priority_ids.is_empty() or String(config.get("siege_target_placement_id", "")) != ""
+
+static func _explicit_objective_fallback_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {}
+	var target_ids := _normalize_string_array(config.get("priority_target_placement_ids", []))
+	var siege_target_id := String(config.get("siege_target_placement_id", ""))
+	if siege_target_id != "" and siege_target_id not in target_ids:
+		target_ids.push_front(siege_target_id)
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	var best_distance := 9999
+	var best_index := 9999
+	for index in range(target_ids.size()):
+		var target_id := String(target_ids[index])
+		var view := _explicit_objective_target_view(session, target_id, faction_id)
+		if view.is_empty():
+			continue
+		var target_kind := String(view.get("target_kind", ""))
+		var target_tile := Vector2i(int(view.get("target_x", 0)), int(view.get("target_y", 0)))
+		var goal_tiles: Array = view.get("goal_tiles", [target_tile]) if view.get("goal_tiles", [target_tile]) is Array else [target_tile]
+		var distance := _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), faction_id)
+		var candidate := {
+			"target_kind": target_kind,
+			"target_placement_id": target_id,
+			"target_label": String(view.get("target_label", target_id)),
+			"target_x": target_tile.x,
+			"target_y": target_tile.y,
+			"goal_x": target_tile.x,
+			"goal_y": target_tile.y,
+			"goal_distance": distance,
+			"priority": 240 - index,
+			"target_reason_codes": ["objective_front", "explicit_priority"],
+			"target_public_reason": "priority objective",
+			"target_public_importance": "critical" if target_kind == "town" else "high",
+			"target_debug_reason": "explicit objective fallback after ordinary target selection found no route",
+		}
+		if distance >= 9999:
+			candidate["target_reason_codes"].append("route_unreachable")
+			candidate["target_public_reason"] = "seeking route to priority objective"
+		if best.is_empty() or distance < best_distance or (distance == best_distance and index < best_index):
+			best = candidate
+			best_distance = distance
+			best_index = index
+	return best
+
+static func _explicit_objective_target_view(
+	session: SessionStateStoreScript.SessionData,
+	target_id: String,
+	faction_id: String
+) -> Dictionary:
+	var town_result := _find_town_by_placement(session, target_id)
+	if int(town_result.get("index", -1)) >= 0:
+		var town: Dictionary = town_result.get("town", {})
+		return {
+			"target_kind": "town",
+			"target_label": _town_name(town),
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"goal_tiles": _town_staging_tiles(session, town),
+		}
+	var resource_result := _find_resource_by_placement(session, target_id)
+	if int(resource_result.get("index", -1)) >= 0:
+		var node: Dictionary = resource_result.get("node", {})
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		return {
+			"target_kind": "resource",
+			"target_label": String(site.get("name", target_id)),
+			"target_x": int(node.get("x", 0)),
+			"target_y": int(node.get("y", 0)),
+			"goal_tiles": [Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))],
+		}
+	var artifact_result := _find_artifact_by_placement(session, target_id)
+	if int(artifact_result.get("index", -1)) >= 0:
+		var artifact_node: Dictionary = artifact_result.get("node", {})
+		return {
+			"target_kind": "artifact",
+			"target_label": ArtifactRulesScript.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			"target_x": int(artifact_node.get("x", 0)),
+			"target_y": int(artifact_node.get("y", 0)),
+			"goal_tiles": [Vector2i(int(artifact_node.get("x", 0)), int(artifact_node.get("y", 0)))],
+		}
+	var encounter_result := _find_encounter_by_placement(session, target_id)
+	if int(encounter_result.get("index", -1)) >= 0:
+		var encounter: Dictionary = encounter_result.get("encounter", {})
+		var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+		return {
+			"target_kind": "encounter",
+			"target_label": String(encounter_template.get("name", target_id)),
+			"target_x": int(encounter.get("x", 0)),
+			"target_y": int(encounter.get("y", 0)),
+			"goal_tiles": _encounter_staging_tiles(session, encounter),
+		}
+	return {}
+
 static func ai_active_front_support_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -820,6 +957,67 @@ static func ai_active_front_support_target_selection_plan(
 		if best.is_empty() or _active_front_support_candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _current_tile_resource_target_selection_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {}
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id):
+			continue
+		if not _resource_guard_encounter_for_node(session, node, site).is_empty():
+			continue
+		var target_id := String(node.get("placement_id", ""))
+		if target_id == "":
+			continue
+		if not _current_tile_resource_claim_allowed(config, target_id):
+			continue
+		var reason_codes := _resource_target_reason_codes(
+			site,
+			String(node.get("collected_by_faction_id", "")) == "player",
+			_resource_site_is_persistent(site),
+			_target_resource_value(site.get("control_income", {})),
+			_recruit_payload_value(site.get("claim_recruits", {})) + _recruit_payload_value(site.get("weekly_recruits", {})),
+			_resource_route_pressure_value(site),
+			_linked_player_town_bonus(session, node)
+		)
+		if "current_tile_claim" not in reason_codes:
+			reason_codes.append("current_tile_claim")
+		return {
+			"target_kind": "resource",
+			"target_placement_id": target_id,
+			"target_label": String(site.get("name", target_id)),
+			"target_x": int(node.get("x", 0)),
+			"target_y": int(node.get("y", 0)),
+			"goal_x": int(node.get("x", 0)),
+			"goal_y": int(node.get("y", 0)),
+			"goal_distance": 0,
+			"priority": 999,
+			"target_reason_codes": reason_codes,
+			"target_public_reason": _public_reason_from_codes(reason_codes),
+			"target_public_importance": "high" if String(node.get("collected_by_faction_id", "")) == "player" or _resource_site_is_persistent(site) else "medium",
+			"target_debug_reason": "standing on contestable unguarded resource",
+		}
+	return {}
+
+static func _current_tile_resource_claim_allowed(config: Dictionary, target_id: String) -> bool:
+	if target_id == "":
+		return false
+	var priority_ids := _normalize_string_array(config.get("priority_target_placement_ids", []))
+	if priority_ids.is_empty():
+		return true
+	return target_id in priority_ids
 
 static func _active_front_needs_support(front: Dictionary, config: Dictionary = {}, faction_id: String = "") -> bool:
 	if front.is_empty():
@@ -2700,6 +2898,8 @@ static func _redirect_understrength_raid_to_regroup(
 		return _refresh_target(session, raid, faction_id)
 	if String(raid.get("target_kind", "")) == "explore":
 		return raid
+	if _raid_should_claim_current_resource_before_regroup(session, config, raid, faction_id):
+		return raid
 	if not raid_regroup_needed(raid, config, faction_id):
 		return raid
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
@@ -2722,6 +2922,40 @@ static func _redirect_understrength_raid_to_regroup(
 	raid["arrived"] = false
 	raid["regroup_started_day"] = int(session.day)
 	return _refresh_target(session, raid, faction_id)
+
+static func _raid_should_claim_current_resource_before_regroup(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> bool:
+	var claim_id := _current_tile_contestable_resource_id(session, raid, faction_id)
+	if claim_id == "":
+		return false
+	var current_kind := String(raid.get("target_kind", ""))
+	var current_target_id := String(raid.get("target_placement_id", ""))
+	if current_kind == "":
+		return true
+	return current_kind == "resource" and current_target_id == claim_id and _current_tile_resource_claim_allowed(config, claim_id)
+
+static func _current_tile_contestable_resource_id(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> String:
+	if session == null or raid.is_empty() or faction_id == "":
+		return ""
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not site.is_empty() and _resource_node_contestable_by_faction(node, site, faction_id):
+			return String(node.get("placement_id", ""))
+	return ""
 
 static func _redirect_unreachable_raid_target(
 	session: SessionStateStoreScript.SessionData,
@@ -2797,6 +3031,8 @@ static func _redirect_fragile_raid_for_known_target_risk(
 		return raid
 	if bool(raid.get("arrived", false)):
 		return raid
+	if _raid_current_target_is_current_resource_claim(session, raid, faction_id):
+		return raid
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
 		return raid
@@ -2857,6 +3093,8 @@ static func _redirect_raid_to_nearby_exposed_hero(
 		return raid
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if _opportunistic_hero_intercept_protected_reason(reason_codes):
+		return raid
+	if "strategic_task_planner" in reason_codes:
 		return raid
 	if _opportunistic_current_target_requires_guard_clearance(session, raid):
 		return raid
@@ -2975,6 +3213,18 @@ static func _redirect_raid_to_nearby_exposed_hero(
 	_ai_hero_task_record_live_assignment(session, config, raid, current_target, {})
 	return raid
 
+static func _raid_current_target_is_current_resource_claim(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> bool:
+	if String(raid.get("target_kind", "")) != "resource":
+		return false
+	var target_id := String(raid.get("target_placement_id", ""))
+	if target_id == "":
+		return false
+	return _current_tile_contestable_resource_id(session, raid, faction_id) == target_id
+
 static func _opportunistic_hero_intercept_protected_reason(reason_codes: Array) -> bool:
 	for code in [
 		"town_defense",
@@ -3027,6 +3277,8 @@ static func _redirect_raid_away_from_nearby_player_threat(
 		return raid
 	var current_kind := String(raid.get("target_kind", ""))
 	if current_kind == "" or current_kind == "hero" or current_kind == "regroup" or current_kind == "explore":
+		return raid
+	if _raid_current_target_is_current_resource_claim(session, raid, faction_id):
 		return raid
 	if int(raid.get("player_threat_avoidance_delay_until_day", 0)) > int(session.day):
 		return raid
@@ -3923,8 +4175,6 @@ static func _best_threatened_defense_town(
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
 		var distance := _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id)
-		if distance >= 9999:
-			continue
 		var defense_need := _town_defense_commitment_need(town, front_state)
 		var current_defense := _town_garrison_strength(town)
 		var committed_defense := _committed_town_defense_strength(

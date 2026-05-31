@@ -3945,6 +3945,41 @@ static func _fresh_spawn_target_candidate_for_point(
 		Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
 	)
 	if target_candidates.is_empty():
+		var fallback_probe := {
+			"placement_id": "__explicit_objective_spawn_probe:%s:%d" % [faction_id, spawn_order],
+			"encounter_id": _primary_raid_encounter_id(config),
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"difficulty": "pressure",
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+		}
+		var fallback_plan := EnemyAdventureRulesScript._explicit_objective_fallback_target_selection_plan(
+			session,
+			config,
+			fallback_probe,
+			faction_id
+		)
+		if not fallback_plan.is_empty():
+			var fallback_commander_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
+				session,
+				faction_id,
+				point,
+				int(state.get("commander_counter", 0)),
+				occupied_commander_ids,
+				state.get("commander_roster", [])
+			)
+			if fallback_commander_id != "":
+				var fallback_candidate := _spawn_point_candidate_from_plan(
+					point,
+					fallback_plan,
+					fallback_commander_id,
+					"explicit_objective_fallback",
+					spawn_order
+				)
+				return _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate)
 		return _exploration_spawn_candidate_for_point(
 			session,
 			config,
