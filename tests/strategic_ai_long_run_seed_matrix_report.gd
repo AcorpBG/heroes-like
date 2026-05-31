@@ -105,7 +105,9 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 	for required_summary_key in [
 		"battle_handoff_candidate_turn_count",
 		"near_battle_target_turn_count",
+		"near_battle_town_or_hero_turn_count",
 		"best_min_active_raid_goal_distance",
+		"best_min_tactical_battle_goal_distance",
 		"movement_distance_delta_total",
 		"battle_interrupt_count",
 		"auto_resolved_battle_count",
@@ -156,7 +158,12 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 			if handoff_summary.is_empty():
 				_fail("Long-run matrix turn result missing battle-handoff summary: %s" % JSON.stringify(turn_result))
 				return false
-			if not handoff_summary.has("active_raid_count") or not handoff_summary.has("min_goal_distance") or not handoff_summary.has("nearest_active_target"):
+			if not handoff_summary.has("active_raid_count") \
+					or not handoff_summary.has("min_goal_distance") \
+					or not handoff_summary.has("min_tactical_battle_goal_distance") \
+					or not handoff_summary.has("near_battle_town_or_hero_target_count") \
+					or not handoff_summary.has("nearest_active_target") \
+					or not handoff_summary.has("nearest_tactical_battle_target"):
 				_fail("Long-run matrix battle-handoff summary missing active raid distance evidence: %s" % JSON.stringify(handoff_summary))
 				return false
 			if int(turn_result.get("turn_runtime_msec", -1)) < 0:
