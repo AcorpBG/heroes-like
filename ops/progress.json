@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T07:18:00Z",
+  "updatedAt": "2026-05-31T07:48:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,94 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-site-claim-recruits-10184",
+      "title": "Strategic AI Site Claim Recruits",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make AI recruit-site captures produce real immediate army growth by adding claim recruits to the capturing commander host, matching the player field-army rule and the AI target valuation for neutral dwellings/outposts.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_site_control_proof_report.gd"
+      ],
+      "baselineChecks": [
+        "Player resource-site claims add claim_recruits to the field army.",
+        "Enemy resource-site target scoring values claim_recruits and weekly_recruits.",
+        "Enemy weekly controlled-site musters already feed towns, but immediate AI claim_recruits are not added to the capturing host."
+      ],
+      "completionCriteria": [
+        "Assigned AI resource-site capture applies claim_recruits to the active raid army.",
+        "Opportunistic route resource-site capture applies claim_recruits to the active raid army.",
+        "Commander army continuity and roster state sync after claim recruits join.",
+        "AI site-seized messages expose the auxiliary join in public-safe wording.",
+        "Focused strategic AI validations and repository gates pass."
+      ],
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "new report-only gates",
+        "changing weekly controlled-site muster behavior",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-31T07:32:00Z",
+      "updatedAt": "2026-05-31T07:48:00Z",
+      "completedAt": "2026-05-31T07:48:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_site_control_proof_report.tscn",
+          "result": "pass",
+          "summary": "Site-control proof now validates assigned and opportunistic AI recruit-site captures adding claim recruits to the active host, increasing host strength, syncing commander continuity, and preserving public-safe site-seized events."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution and resource task completion remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned-task recruitment, launch, and same-turn movement remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Raid regroup, route pickup, and town resupply behavior remains green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn",
+          "result": "pass",
+          "summary": "Artifact objective coverage is green after restoring the ai_event compatibility alias alongside ai_events."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "summary": "Completed. AI commanders now gain immediate recruit-site auxiliaries in their active raid army on both assigned and opportunistic resource-site captures, with commander continuity and roster state synced. Artifact secure also restores a single ai_event alias for direct callers while retaining ai_events.",
+      "notes": [
+        "This is a live strategic-AI behavior change, not a reporting/audit slice.",
+        "Weekly controlled-site musters were already implemented and were not changed in this slice.",
+        "Full strategic AI production readiness remains open for broader generated-map long-run behavior, deeper economy/army timing, retreat/rebuild tuning, and live-client pacing."
+      ]
+    },
     {
       "id": "strategic-ai-opportunistic-town-resupply-10184",
       "title": "Strategic AI Opportunistic Town Resupply",
@@ -45178,9 +45266,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T07:18:00Z"
+    "updatedAt": "2026-05-31T07:48:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T07:18:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T07:48:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -48394,35 +48482,39 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T07:18:00Z",
-    "sliceId": "strategic-ai-opportunistic-town-resupply-10184",
+    "updatedAt": "2026-05-31T07:48:00Z",
+    "sliceId": "strategic-ai-site-claim-recruits-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_site_control_proof_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Active enemy raids now check for same-faction towns on their current tile or cardinal-adjacent tiles before moving and after each route step.",
-        "A raid below desired strength transfers bounded spare garrison from a nearby town while preserving its current target and reason codes.",
-        "Town resupply leaves a defense reserve based on base reserve, active town front need, ai_defense_rating, and capital/stronghold role.",
-        "The transfer updates town garrison, raid army, commander continuity, same-day resupply memory, and public ai_raid_reinforced events."
+        "Assigned AI resource-site capture now applies claim_recruits to the active raid army.",
+        "Opportunistic route resource-site capture now applies claim_recruits to the active raid army.",
+        "Claim recruits update raid army, last_site_claim_recruits metadata, commander army continuity, and roster state.",
+        "Site-seized messages now expose public-safe auxiliary join wording.",
+        "Artifact secure returns both ai_event and ai_events so direct callers and event-list callers see the secured artifact event."
       ],
       "focused_case": {
-        "case_id": "active_raid_resupplies_while_passing_friendly_town",
-        "before_strength": 126,
-        "after_strength": 168,
-        "desired_before": 171,
-        "garrison_before": 10,
-        "garrison_after": 8,
-        "resupply_town_id": "duskfen_bastion",
+        "case_id": "assigned_and_opportunistic_recruit_site_claims_join_active_host",
+        "assigned_before_strength": 149,
+        "assigned_after_strength": 269,
+        "opportunistic_before_strength": 149,
+        "opportunistic_after_strength": 269,
+        "claim_recruits": {
+          "unit_ember_archer": 3,
+          "unit_river_guard": 5
+        },
         "target_kind_after": "resource",
         "target_id_after": "river_free_company",
-        "event_type": "ai_raid_reinforced"
+        "event_type": "ai_site_seized"
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."

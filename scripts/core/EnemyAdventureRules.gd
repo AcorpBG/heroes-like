@@ -13749,6 +13749,13 @@ static func _secure_opportunistic_route_resource(
 		raid,
 		COMMANDER_OUTCOME_RESOURCE_SECURED
 	)
+	var recruit_reward := _apply_resource_site_claim_recruits_to_raid(
+		session,
+		faction_id,
+		updated_raid,
+		site
+	)
+	updated_raid = recruit_reward.get("raid", updated_raid)
 	var spell_reward := _apply_resource_site_spell_reward_to_commander(
 		session,
 		faction_id,
@@ -13783,6 +13790,12 @@ static func _secure_opportunistic_route_resource(
 			message,
 			raid_commander_display_name(updated_raid),
 			String(spell_reward.get("spell_name", spell_reward.get("spell_id", "the site spell"))),
+		]
+	if bool(recruit_reward.get("applied", false)):
+		message = "%s Auxiliaries join %s (%s)." % [
+			message,
+			raid_commander_display_name(updated_raid),
+			_describe_recruit_set(recruit_reward.get("recruits", {})),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -14191,6 +14204,13 @@ static func _secure_resource_target(
 		raid,
 		COMMANDER_OUTCOME_RESOURCE_SECURED
 	)
+	var recruit_reward := _apply_resource_site_claim_recruits_to_raid(
+		session,
+		faction_id,
+		updated_raid,
+		site
+	)
+	updated_raid = recruit_reward.get("raid", updated_raid)
 	var spell_reward := _apply_resource_site_spell_reward_to_commander(
 		session,
 		faction_id,
@@ -14222,6 +14242,12 @@ static func _secure_resource_target(
 			message,
 			raid_commander_display_name(updated_raid),
 			String(spell_reward.get("spell_name", spell_reward.get("spell_id", "the site spell"))),
+		]
+	if bool(recruit_reward.get("applied", false)):
+		message = "%s Auxiliaries join %s (%s)." % [
+			message,
+			raid_commander_display_name(updated_raid),
+			_describe_recruit_set(recruit_reward.get("recruits", {})),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -14294,6 +14320,70 @@ static func _secure_resource_target(
 	if not continuation.get("ai_event", {}).is_empty():
 		events.append(continuation.get("ai_event", {}))
 	return {"encounter": final_raid, "state": state, "event_message": message, "ai_events": events}
+
+static func _apply_resource_site_claim_recruits_to_raid(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var recruits := _resource_site_claim_recruits(site)
+	if session == null or faction_id == "" or raid.is_empty() or recruits.is_empty():
+		return {"raid": raid, "applied": false, "recruits": {}}
+	var updated_raid := raid.duplicate(true)
+	var army: Dictionary = _normalize_army_payload(updated_raid.get("enemy_army", {}))
+	if army.is_empty():
+		army = _base_enemy_army(String(updated_raid.get("encounter_id", updated_raid.get("id", ""))))
+	if army.is_empty():
+		army = {
+			"id": String(updated_raid.get("encounter_id", updated_raid.get("id", "raid"))),
+			"name": "Raid Host",
+			"stacks": [],
+		}
+	var applied := {}
+	var unit_ids := recruits.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var count: int = max(0, int(recruits.get(unit_id_value, 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, count)
+		applied[unit_id] = count
+	if applied.is_empty():
+		return {"raid": raid, "applied": false, "recruits": {}}
+	updated_raid["enemy_army"] = army
+	updated_raid["last_site_claim_recruits"] = applied
+	updated_raid["last_site_claim_recruits_day"] = int(session.day)
+	var commander_state = updated_raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var synced_commander := sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(updated_raid.get("encounter_id", updated_raid.get("id", "")))
+		)
+		updated_raid["enemy_commander_state"] = synced_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			synced_commander,
+			COMMANDER_STATUS_ACTIVE,
+			String(updated_raid.get("placement_id", "")),
+			-1,
+			String(synced_commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
+		)
+	return {"raid": updated_raid, "applied": true, "recruits": applied}
+
+static func _resource_site_claim_recruits(site: Dictionary) -> Dictionary:
+	var recruits = site.get("claim_recruits", {})
+	if recruits is Dictionary and not recruits.is_empty():
+		return _normalize_recruit_payload(recruits)
+	var roster = site.get("neutral_roster", {})
+	if roster is Dictionary:
+		var roster_recruits = roster.get("claim_recruits", {})
+		if roster_recruits is Dictionary:
+			return _normalize_recruit_payload(roster_recruits)
+	return {}
 
 static func _apply_resource_site_spell_reward_to_commander(
 	session: SessionStateStoreScript.SessionData,
@@ -14816,6 +14906,7 @@ static func _secure_artifact_target(
 		"encounter": continuation.get("encounter", updated_raid),
 		"state": state,
 		"event_message": secured_message,
+		"ai_event": event,
 		"ai_events": events,
 		"artifact_claim": claim_result,
 		"artifact_bonus_report": artifact_bonus_report,
@@ -16180,6 +16271,18 @@ static func _recruit_payload_value(recruits: Variant) -> int:
 			value += count * 30
 	return value
 
+static func _normalize_recruit_payload(recruits: Variant) -> Dictionary:
+	var normalized := {}
+	if not (recruits is Dictionary):
+		return normalized
+	for unit_id_value in recruits.keys():
+		var unit_id := String(unit_id_value)
+		var count: int = max(0, int(recruits.get(unit_id_value, 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		normalized[unit_id] = int(normalized.get(unit_id, 0)) + count
+	return normalized
+
 static func _default_enemy_strategy() -> Dictionary:
 	return {
 		"build_category_weights": {
@@ -16317,6 +16420,19 @@ static func _describe_resource_set(resources: Dictionary) -> String:
 	keys.sort()
 	for key in keys:
 		parts.append("%d %s" % [int(resources[key]), String(key)])
+	return ", ".join(parts)
+
+static func _describe_recruit_set(recruits: Variant) -> String:
+	var normalized := _normalize_recruit_payload(recruits)
+	if normalized.is_empty():
+		return ""
+	var parts := []
+	var unit_ids := normalized.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var unit := ContentService.get_unit(unit_id)
+		parts.append("%d %s" % [int(normalized.get(unit_id, 0)), String(unit.get("name", unit_id))])
 	return ", ".join(parts)
 
 static func _base_enemy_army(encounter_id: String) -> Dictionary:
