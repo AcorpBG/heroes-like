@@ -14852,6 +14852,67 @@ static func _secure_neutral_town_target(
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_event": event}
 
+static func _town_defender_commander_strength(commander_state: Dictionary, town: Dictionary) -> int:
+	if commander_state.is_empty():
+		return 0
+	var continuity := commander_army_continuity(commander_state)
+	var strength := _army_strength(continuity.get("stacks", []) if continuity.get("stacks", []) is Array else [])
+	if strength <= 0:
+		strength = int(town.get("ai_defense_rating", 0))
+	return max(0, strength)
+
+static func _station_town_defender_commander(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_state: Dictionary,
+	town: Dictionary,
+	garrison: Array,
+	last_outcome: String = ""
+) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var placement_id := "town_defense:%s" % String(town.get("placement_id", ""))
+	var stationed_commander := sync_commander_army_continuity(
+		commander_state,
+		{"stacks": garrison},
+		placement_id
+	)
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		stationed_commander,
+		COMMANDER_STATUS_ACTIVE,
+		placement_id,
+		-1,
+		last_outcome
+	)
+	return stationed_commander
+
+static func _release_commander_without_field_army(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_state: Dictionary,
+	continuity_id: String,
+	last_outcome: String = ""
+) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var released_commander := sync_commander_army_continuity(
+		commander_state,
+		{"stacks": []},
+		continuity_id
+	)
+	sync_commander_state_to_roster(
+		session,
+		faction_id,
+		released_commander,
+		COMMANDER_STATUS_AVAILABLE,
+		"",
+		0,
+		last_outcome
+	)
+	return released_commander
+
 static func _defend_town_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
@@ -14897,26 +14958,58 @@ static func _defend_town_target(
 	town["ai_defense_reinforced_strength"] = max(0, int(town.get("ai_defense_reinforced_strength", 0))) + transferred_strength
 
 	var updated_raid := raid.duplicate(true)
-	var commander_state = updated_raid.get("enemy_commander_state", {})
-	if commander_state is Dictionary and not commander_state.is_empty():
-		commander_state = advance_commander_record(commander_state, COMMANDER_OUTCOME_TOWN_DEFENDED)
-		var stationed_commander := sync_commander_army_continuity(
-			commander_state,
-			{"stacks": garrison},
-			"town_defense:%s" % String(town.get("placement_id", ""))
+	var commander_state: Dictionary = updated_raid.get("enemy_commander_state", {}) if updated_raid.get("enemy_commander_state", {}) is Dictionary else {}
+	if not commander_state.is_empty():
+		var existing_defender: Dictionary = town.get("ai_defender_commander_state", {}) if town.get("ai_defender_commander_state", {}) is Dictionary else {}
+		var existing_defender_id := String(existing_defender.get("roster_hero_id", town.get("ai_defender_roster_hero_id", "")))
+		var incoming_defender_id := String(commander_state.get("roster_hero_id", ""))
+		var existing_strength := _town_defender_commander_strength(existing_defender, town)
+		var incoming_strength: int = max(0, transferred_strength)
+		var should_rotate_defender: bool = (
+			existing_defender.is_empty()
+			or existing_defender_id == ""
+			or existing_defender_id == incoming_defender_id
+			or incoming_strength > existing_strength
 		)
-		town["ai_defender_commander_state"] = stationed_commander
-		town["ai_defender_roster_hero_id"] = String(stationed_commander.get("roster_hero_id", ""))
-		updated_raid["enemy_commander_state"] = stationed_commander
-		sync_commander_state_to_roster(
-			session,
-			faction_id,
-			stationed_commander,
-			COMMANDER_STATUS_ACTIVE,
-			"town_defense:%s" % String(town.get("placement_id", "")),
-			-1,
-			COMMANDER_OUTCOME_TOWN_DEFENDED
-		)
+		if should_rotate_defender:
+			commander_state = advance_commander_record(commander_state, COMMANDER_OUTCOME_TOWN_DEFENDED)
+			var stationed_commander := _station_town_defender_commander(
+				session,
+				faction_id,
+				commander_state,
+				town,
+				garrison,
+				COMMANDER_OUTCOME_TOWN_DEFENDED
+			)
+			town["ai_defender_commander_state"] = stationed_commander
+			town["ai_defender_roster_hero_id"] = String(stationed_commander.get("roster_hero_id", ""))
+			updated_raid["enemy_commander_state"] = stationed_commander
+			if not existing_defender.is_empty() and existing_defender_id != "" and existing_defender_id != incoming_defender_id:
+				_release_commander_without_field_army(
+					session,
+					faction_id,
+					existing_defender,
+					"town_defense:%s" % String(town.get("placement_id", ""))
+				)
+		else:
+			var retained_commander := _station_town_defender_commander(
+				session,
+				faction_id,
+				existing_defender,
+				town,
+				garrison,
+				String(existing_defender.get("last_outcome", ""))
+			)
+			town["ai_defender_commander_state"] = retained_commander
+			town["ai_defender_roster_hero_id"] = String(retained_commander.get("roster_hero_id", ""))
+			var released_commander := _release_commander_without_field_army(
+				session,
+				faction_id,
+				advance_commander_record(commander_state, COMMANDER_OUTCOME_TOWN_DEFENDED),
+				String(updated_raid.get("encounter_id", updated_raid.get("placement_id", ""))),
+				COMMANDER_OUTCOME_TOWN_DEFENDED
+			)
+			updated_raid["enemy_commander_state"] = released_commander
 
 	var towns = session.overworld.get("towns", [])
 	towns[town_index] = town

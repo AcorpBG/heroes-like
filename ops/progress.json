@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T10:38:00Z",
+  "updatedAt": "2026-05-31T10:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,64 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-town-defense-commander-continuity-10184",
+      "title": "Strategic AI Town Defense Commander Continuity",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T10:50:00Z",
+      "updatedAt": "2026-05-31T10:55:00Z",
+      "completedAt": "2026-05-31T10:55:00Z",
+      "source": "active strategic AI production-readiness goal; real live behavior change, not report-only work",
+      "planRef": "PLAN.md Current strategic AI target / strategic-ai-town-defense-commander-continuity-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Keep town-defense commander ownership coherent when reinforcement/support columns arrive at a town that already has a stationed AI defender.",
+      "implementationTargets": [
+        "A weaker or equal support column should fold its army into the town garrison without replacing the existing stationed defender.",
+        "A stronger arriving commander may rotate into the defender slot, but the previous defender must be released from active duty with empty army continuity to avoid duplicated garrison armies.",
+        "The arriving support commander must resolve its field raid and return to a coherent roster state when it does not take the town-defense command slot."
+      ],
+      "completionCriteria": "A live neutral-town reinforcement fixture proves support increases garrison strength, keeps the stronger/equal existing town defender stationed, releases the incoming support commander without a field army, and keeps adjacent strategic AI reports green.",
+      "nonGoals": [
+        "No broad report-only strategic AI audit.",
+        "No generic patrol/guard AI rewrite.",
+        "No final strategic AI release-readiness claim."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+          "result": "pass",
+          "summary": "Neutral-town expansion now proves weaker post-capture support keeps hero_vaska stationed, releases hero_sable available with zero army continuity, and stronger support rotates hero_sable into the defender slot while releasing hero_vaska with zero army continuity."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+          "result": "pass",
+          "summary": "Town/resource defense retasking, emergency launch, stationing, release, and overcommit controls remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Regroup, active support consolidation, neutral-town assault grouping, route recovery, town resupply, and risk/personality behavior remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution, task continuation, route pickups, and public event boundaries remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned task recruitment, ready launch, spell study, market-backed recruitment, and surplus garrison mobilization remain green."
+        }
+      ],
+      "summary": "Completed. Town-defense reinforcements now keep defender command slots coherent: weaker/equal support folds into the garrison and returns available with empty army continuity, while stronger support may rotate into command and releases the previous defender without duplicating committed garrison armies.",
+      "notes": "Live strategic AI behavior slice, not a report-only gate. This prevents support arrivals at newly captured or stabilizing towns from stealing defender ownership or leaving old/new commanders with duplicated garrison armies."
+    },
     {
       "id": "strategic-ai-post-capture-town-support-continuation-10184",
       "title": "Strategic AI Post-Capture Town Support Continuation",
@@ -48762,25 +48820,24 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T10:38:00Z",
-    "sliceId": "strategic-ai-post-capture-town-support-continuation-10184",
+    "updatedAt": "2026-05-31T10:55:00Z",
+    "sliceId": "strategic-ai-town-defense-commander-continuity-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Invalid same-town assault targets now get a post-capture support continuation plan when the town is owned by the same AI faction and is stabilizing or recently defended.",
-        "Threatened town-defense redirects preserve post-capture support, town expansion, neutral claim, neutral siege, and objective-front reason codes when the raid was already targeting that town.",
-        "Town-defense arrival events preserve post_capture_support metadata for player-readable continuity.",
-        "Resolved/stationed raids are skipped from same-turn marching/pressure/pillage accounting after arrival resolution.",
-        "Duplicate neutral-town assault hosts can now reinforce the captured town garrison and station their commander instead of wandering off after the target becomes stale."
+        "Town-defense reinforcement now compares the existing stationed defender's committed strength with the incoming support column before changing the defender slot.",
+        "Weaker or equal support columns fold their armies into the town garrison, resolve the field raid, and return the incoming commander to available status with empty army continuity.",
+        "Stronger support columns may rotate into the town defender slot, and the replaced defender is released with empty army continuity so committed garrison forces are not duplicated.",
+        "Town-defense helper paths centralize stationing and empty-army release roster sync for reinforcement handoffs."
       ],
       "focused_case": {
         "case_id": "duplicate_assault_reinforces_newly_captured_town",
@@ -48790,7 +48847,9 @@
         "support_strength": 169,
         "support_resolved": true,
         "support_field_strength_after": 0,
-        "stationed_commander_id": "hero_sable",
+        "stationed_commander_id": "hero_vaska",
+        "support_commander_status_after": "available",
+        "support_commander_army_after": 0,
         "event_types": [
           "ai_town_defended"
         ],
@@ -48803,6 +48862,18 @@
           "post_capture_support"
         ],
         "message": "Mireclaw Raid reaches Duskfen Bastion and folds 13 units into the defense."
+      },
+      "rotation_case": {
+        "case_id": "stronger_support_rotates_town_defender_without_duplication",
+        "garrison_before_support": 170,
+        "garrison_after_support": 482,
+        "stationed_commander_id": "hero_sable",
+        "released_commander_id": "hero_vaska",
+        "released_commander_status": "available",
+        "released_commander_army_after": 0,
+        "event_types": [
+          "ai_town_defended"
+        ]
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
