@@ -45,6 +45,10 @@ func _run() -> void:
 	if rebuild_safety_case.is_empty():
 		return
 	cases.append(rebuild_safety_case)
+	var empire_build_case := _run_empire_build_arbitration_case()
+	if empire_build_case.is_empty():
+		return
+	cases.append(empire_build_case)
 
 	var all_events := []
 	for case_report in cases:
@@ -69,6 +73,62 @@ func _run() -> void:
 	}
 	print("AI_TOWN_GOVERNOR_PRESSURE_REPORT %s" % JSON.stringify(payload))
 	get_tree().quit(0)
+
+func _run_empire_build_arbitration_case() -> Dictionary:
+	var session = _base_session()
+	var towns := [
+		_empire_build_town_fixture("array_order_low_town", 8, 2, true),
+		_empire_build_town_fixture("strategic_high_town", 9, 2, false),
+	]
+	session.overworld["towns"] = towns
+	var town_entries := [
+		{"index": 0, "town": towns[0]},
+		{"index": 1, "town": towns[1]},
+	]
+	var treasury := {
+		"gold": 1000,
+		"wood": 0,
+		"ore": 0,
+		"aetherglass": 0,
+		"embergrain": 0,
+		"peatwax": 0,
+		"verdant_grafts": 0,
+		"brass_scrip": 0,
+		"memory_salt": 0,
+	}
+	var config := _enemy_config()
+	var low_best: Dictionary = EnemyTurnRules._best_build_candidate(session, towns[0], treasury.duplicate(true), config, FACTION_ID)
+	var high_best: Dictionary = EnemyTurnRules._best_build_candidate(session, towns[1], treasury.duplicate(true), config, FACTION_ID)
+	if low_best.is_empty() or high_best.is_empty():
+		_fail("Empire build arbitration fixture missing build candidates: low=%s high=%s" % [JSON.stringify(low_best), JSON.stringify(high_best)])
+		return {}
+	if float(high_best.get("final_score", 0.0)) <= float(low_best.get("final_score", 0.0)):
+		_fail("Empire build arbitration fixture must make second town strategically higher priority: low=%s high=%s" % [JSON.stringify(low_best), JSON.stringify(high_best)])
+		return {}
+	var result := EnemyTurnRules._build_in_enemy_towns(session, town_entries, towns, treasury, FACTION_ID, config)
+	var low_after: Dictionary = towns[0]
+	var high_after: Dictionary = towns[1]
+	var high_building_id := String(high_best.get("building_id", ""))
+	var low_building_id := String(low_best.get("building_id", ""))
+	if high_building_id not in _string_array(high_after.get("built_buildings", [])):
+		_fail("Empire build arbitration did not fund the high-priority second town: high_build=%s towns=%s result=%s" % [high_building_id, JSON.stringify(towns), JSON.stringify(result)])
+		return {}
+	if low_building_id in _string_array(low_after.get("built_buildings", [])):
+		_fail("Empire build arbitration still spent scarce treasury on the lower-priority first town: low_build=%s towns=%s" % [low_building_id, JSON.stringify(towns)])
+		return {}
+	var build_event := _event_by_type(result.get("events", []), "ai_town_built")
+	if build_event.is_empty() or String(build_event.get("actor_id", "")) != "strategic_high_town":
+		_fail("Empire build arbitration event should identify the high-priority town build: %s" % JSON.stringify(result.get("events", [])))
+		return {}
+	return {
+		"case_id": "empire_build_arbitrates_shared_treasury_by_score",
+		"low_town_best": _build_snapshot(low_best),
+		"high_town_best": _build_snapshot(high_best),
+		"built_town_id": String(build_event.get("actor_id", "")),
+		"built_building_id": high_building_id,
+		"remaining_treasury": treasury,
+		"events": result.get("events", []),
+	}
 
 func _run_case(case_id: String, expected_destination: String) -> Dictionary:
 	var session = _base_session()
@@ -281,6 +341,38 @@ func _set_shattered_commander_roster(session) -> void:
 		return
 	_fail("Could not set shattered commander roster")
 
+func _empire_build_town_fixture(placement_id: String, x: int, y: int, strong_garrison: bool) -> Dictionary:
+	var town := {
+		"placement_id": placement_id,
+		"town_id": "town_duskfen",
+		"x": x,
+		"y": y,
+		"owner": "enemy",
+		"controlling_faction_id": FACTION_ID,
+		"built_buildings": ["building_town_hall"],
+		"available_recruits": {},
+		"last_build_day": 0,
+		"garrison": [],
+	}
+	if strong_garrison:
+		town["garrison"] = [
+			{"unit_id": "unit_blackbranch_cutthroat", "count": 80},
+			{"unit_id": "unit_mire_slinger", "count": 60},
+			{"unit_id": "unit_bog_brute", "count": 20},
+		]
+	return town
+
+func _build_snapshot(build: Dictionary) -> Dictionary:
+	return {
+		"town_placement_id": String(build.get("town_placement_id", "")),
+		"building_id": String(build.get("building_id", "")),
+		"building_label": String(build.get("building_label", "")),
+		"category": String(build.get("category", "")),
+		"final_score": float(build.get("final_score", 0.0)),
+		"cost": build.get("cost", {}),
+		"reason_codes": build.get("reason_codes", []),
+	}
+
 func _town_report_by_id(towns: Array, placement_id: String) -> Dictionary:
 	for town in towns:
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
@@ -302,6 +394,16 @@ func _event_types(events: Array) -> Array:
 		if event_type != "" and event_type not in types:
 			types.append(event_type)
 	return types
+
+func _string_array(value: Variant) -> Array:
+	var result := []
+	if not (value is Array):
+		return result
+	for item in value:
+		var text := String(item)
+		if text != "":
+			result.append(text)
+	return result
 
 func _assert_no_event_leak(label: String, event: Dictionary) -> void:
 	var event_text := JSON.stringify(event)
