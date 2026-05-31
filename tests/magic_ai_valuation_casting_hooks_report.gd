@@ -30,6 +30,10 @@ func _run() -> void:
 	if not bool(lethal_priority_case.get("ok", false)):
 		_fail(String(lethal_priority_case.get("error", "Battle AI lethal priority case failed.")))
 		return
+	var lethal_spell_case := _run_battle_ai_lethal_spell_priority_case()
+	if not bool(lethal_spell_case.get("ok", false)):
+		_fail(String(lethal_spell_case.get("error", "Battle AI lethal spell priority case failed.")))
+		return
 
 	var adventure_case := _run_adventure_ai_spell_case()
 	if not bool(adventure_case.get("ok", false)):
@@ -45,9 +49,10 @@ func _run() -> void:
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
 		"battle_lethal_attack_priority": lethal_priority_case,
+		"battle_lethal_spell_priority": lethal_spell_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, lethal attack priority over non-lethal setup spells, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -388,6 +393,61 @@ func _run_battle_ai_lethal_attack_priority_case() -> Dictionary:
 		"live_action": String(live_action.get("action", "")),
 		"live_target_id": String(live_action.get("target_battle_id", "")),
 		"setup_spell_candidate_present": true,
+	}
+
+func _run_battle_ai_lethal_spell_priority_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Lethal Spell Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_cinder_burst", "spell_lantern_phalanx"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": ["elevated_fire", "battery_nest"],
+		"stacks": [
+			_stack("enemy_spell_caster", "enemy", "Enemy Spell Caster", 2, 10, 20, [], {
+				"tier": 1,
+				"min_damage": 1,
+				"max_damage": 1,
+				"hex": {"q": 2, "r": 3},
+			}),
+			_stack("enemy_high_value_ranged", "enemy", "Enemy High Value Ranged", 14, 10, 140, [], {
+				"tier": 5,
+				"min_damage": 8,
+				"max_damage": 12,
+				"ranged": true,
+				"shots_remaining": 8,
+				"hex": {"q": 1, "r": 1},
+			}),
+			_stack("player_spell_fragile", "player", "Player Spell Fragile", 2, 10, 18, [], {
+				"tier": 1,
+				"hex": {"q": 8, "r": 3},
+			}),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_spell_caster")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Lethal spell priority report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("spell_id", "")) != "spell_cinder_burst" or String(selected.get("target_battle_id", "")) != "player_spell_fragile":
+		return {"ok": false, "error": "Lethal spell priority should select lethal Cinder Burst over setup buff, got %s candidates=%s" % [selected, report.get("candidates", [])]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_cinder_burst":
+		return {"ok": false, "error": "Live enemy choice should cast lethal Cinder Burst, got %s" % live_action}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"selected_target_id": String(selected.get("target_battle_id", "")),
+		"setup_spell_available": true,
+		"live_action": String(live_action.get("action", "")),
 	}
 
 func _run_adventure_ai_spell_case() -> Dictionary:

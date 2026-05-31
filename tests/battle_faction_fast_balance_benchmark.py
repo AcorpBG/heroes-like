@@ -881,13 +881,21 @@ class FastBattleBenchmark:
                     candidates.append({"spell_id": spell_id, "target_battle_id": target["battle_id"], "score": score})
         if not candidates:
             return None
-        best = sorted(candidates, key=lambda item: (-float(item.get("score", 0.0)), str(item.get("spell_id", ""))))[0]
+        best = sorted(candidates, key=lambda item: self._spell_candidate_sort_key(item, battle, active))[0]
         best_attack = self._choose_stack_action(battle, active)
-        if self._candidate_is_lethal_attack(best_attack, battle, active) and not self._candidate_is_lethal_damage_spell(best, battle, active):
+        best_spell_lethal = self._candidate_is_lethal_damage_spell(best, battle, active)
+        best_attack_lethal = self._candidate_is_lethal_attack(best_attack, battle, active)
+        if best_attack_lethal and not best_spell_lethal:
             return None
-        if float(best["score"]) < max(4.5, float(best_attack.get("score", 0.0)) + 0.8):
+        if best_spell_lethal and best_attack_lethal and float(best["score"]) < float(best_attack.get("score", 0.0)):
+            return None
+        if not best_spell_lethal and float(best["score"]) < max(4.5, float(best_attack.get("score", 0.0)) + 0.8):
             return None
         return best
+
+    def _spell_candidate_sort_key(self, candidate: dict[str, Any], battle: dict[str, Any], active: dict[str, Any]) -> tuple[int, float, str]:
+        lethal_priority = 0 if self._candidate_is_lethal_damage_spell(candidate, battle, active) else 1
+        return (lethal_priority, -float(candidate.get("score", 0.0)), str(candidate.get("spell_id", "")))
 
     def _spell_score(
         self,
