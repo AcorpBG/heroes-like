@@ -426,7 +426,11 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 		var decision := player_autoplay_decision_report(session, true)
 		var action := String(decision.get("action", "defend"))
 		var before_health := _side_health_totals(session.battle)
-		var result: Dictionary = BattleRules.perform_player_action(session, action)
+		var result: Dictionary = {}
+		if action == "cast_spell":
+			result = BattleRules.cast_player_spell(session, String(decision.get("spell_id", "")))
+		else:
+			result = BattleRules.perform_player_action(session, action)
 		if String(result.get("state", "")) == "invalid" and action != "defend":
 			invalid_order_count += 1
 			decision["fallback_from_action"] = action
@@ -525,14 +529,35 @@ static func player_autoplay_decision_report(session: SessionStateStoreScript.Ses
 		_select_focus_enemy(session)
 		return _fallback_player_autoplay_decision(session, "no_scored_tactical_order", apply_selection)
 	var target_id := String(decision.get("target_battle_id", ""))
-	if target_id != "" and String(decision.get("action", "")) in ["shoot", "strike"]:
-		if apply_selection:
+	var action := String(decision.get("action", "defend"))
+	if target_id != "":
+		if apply_selection and action in ["shoot", "strike"]:
 			var selection_result := BattleRules.select_target(session, target_id)
 			decision["target_selection_ok"] = bool(selection_result.get("ok", false))
 			decision["target_selection_message"] = String(selection_result.get("message", ""))
+		elif apply_selection and action == "cast_spell":
+			BattleRules._set_selected_target(session.battle, target_id, true)
+			var selected_spell_target: Dictionary = BattleRules._get_stack_by_id(session.battle, target_id)
+			decision["target_selection_ok"] = not selected_spell_target.is_empty()
+			decision["target_selection_message"] = "Spell target selected for autoplay." if not selected_spell_target.is_empty() else "Spell target missing for autoplay."
 		else:
 			decision["target_selection_ok"] = true
-	var action := String(decision.get("action", "defend"))
+	if action == "cast_spell":
+		var spell_id := String(decision.get("spell_id", ""))
+		var spell_target_stack: Dictionary = BattleRules._get_stack_by_id(session.battle, target_id)
+		var validation := SpellRulesScript.validate_battle_spell(
+			commander_payload,
+			session.battle,
+			active_stack,
+			spell_target_stack,
+			spell_id,
+			"player"
+		)
+		if bool(validation.get("ok", false)):
+			decision["reason"] = "scored_tactical_spell_order"
+			return decision
+		decision["spell_validation_message"] = String(validation.get("message", "Spell order unavailable."))
+		return _fallback_player_autoplay_decision(session, "scored_spell_order_unavailable", apply_selection, decision)
 	var availability: Dictionary = BattleRules.action_availability(session.battle)
 	if bool(availability.get(action, false)):
 		decision["reason"] = "scored_tactical_order"

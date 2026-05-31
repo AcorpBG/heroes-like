@@ -31737,6 +31737,92 @@
       "completedAt": "2026-05-30T11:32:23Z"
     },
     {
+      "id": "battle-ai-shared-spell-tactical-order-10184",
+      "title": "Battle AI Shared Spell Tactical Order",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Owner direction to work only on Tactical and Strategic AIs without touching game balance",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Shared tactical/autoplay AI considers and executes battle spells through the existing spell valuation layer instead of limiting shared tactical orders to non-spell attacks, advance, and defend.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "tests/battle_autoplay_tactical_order_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "A player-side shared tactical order with a legal, high-value battle spell selects cast_spell with spell score evidence, player autoplay can execute that spell through BattleRules.cast_player_spell, existing enemy spell valuation remains green, and no balance/content files change.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "growth, economy, faction, or town-cost balance changes",
+        "new report-only gate creation",
+        "claiming full tactical AI production readiness"
+      ],
+      "startedAt": "2026-05-31T00:00:00Z",
+      "updatedAt": "2026-05-31T14:54:44Z",
+      "completedAt": "2026-05-31T14:54:44Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "result": "pass",
+          "summary": "Shared tactical order now selects spell_cinder_burst for a player-side spell fixture, exposes cast_spell score evidence, autoplay selects the spell target, and live cast execution damages the target."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+          "result": "pass",
+          "summary": "Existing enemy spell valuation, live battle casts, resistance-aware targeting, status-rider targeting, role preference, recovery, cleanse, and adventure spell hooks remain green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+          "result": "pass",
+          "summary": "Enemy withdrawal decisions remain green with spell candidates present in template commander fallback evidence."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "result": "pass_with_expected_scope_blocker",
+          "summary": "Focused native RMG smoke completed 1/1 turn with behavior_bug_count 0 and stalled_turn_count 0; report status remains needs_attention only because the full 100-seed matrix was intentionally not run."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        },
+        {
+          "command": "git diff -- content/",
+          "result": "pass",
+          "summary": "No content balance files changed."
+        }
+      ],
+      "summary": "Completed. Shared tactical order now evaluates legal battle spells for the acting side, player autoplay can select spell targets and execute cast_player_spell, and the focused tactical report proves the live spell path without touching balance content.",
+      "notes": [
+        "The owner explicitly prohibited balance changes; this slice left content balance data untouched."
+      ]
+    },
+    {
       "id": "rmg-small-generalization-hardening-10184",
       "title": "RMG Small Generalization Hardening",
       "status": "pending",
@@ -50779,38 +50865,37 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T15:35:00Z",
-    "sliceId": "strategic-ai-path-surface-fingerprint-cache-10184",
+    "updatedAt": "2026-05-31T14:54:44Z",
+    "sliceId": "battle-ai-shared-spell-tactical-order-10184",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same seed one-turn smoke improved from 9081ms after the previous indexed path-search slice to 8818ms enemy-turn runtime)",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16590)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (completed focused generated-map smoke; behavior_bug_count 0, stalled_turn_count 0; report keeps expected full-matrix scope blocker)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "git diff --check (passed)",
+      "git diff -- content/ (no content balance changes)"
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules path-surface cache keys now replace sorted encounter/resource/hero signature arrays with compact deterministic fingerprints.",
-        "The fingerprints preserve the same invalidation inputs for encounter placement/position/resolved state, resource placement/position/collected state, and player hero id/position/sheltered state.",
-        "The same strict Small Native RMG one-turn smoke preserved the event mix and row behavior while reducing enemy-turn runtime from 9081ms after the previous slice to 8818ms."
+        "BattleAiRules shared tactical order now evaluates battle spell candidates for the acting side, not only enemy-side spell decisions.",
+        "Player autoplay can preserve a scored cast_spell decision, set the selected spell target, and execute it through BattleRules.cast_player_spell.",
+        "The focused tactical smoke proves a player-side spell order selects spell_cinder_burst with cast_spell score evidence and damages the target through the live battle rules."
       ],
       "focused_case": {
-        "case_id": "strategic_ai_path_surface_fingerprint_cache",
-        "previous_indexed_path_turn_runtime_msec": 9081,
-        "fingerprint_cache_key_turn_runtime_msec": 8818,
-        "two_seed_two_turn_max_turn_runtime_msec": 16590,
-        "two_seed_two_turn_behavior_bug_count": 0,
-        "two_seed_two_turn_stalled_turn_count": 0,
-        "two_seed_two_turn_enemy_activity_event_count": 14
+        "case_id": "player_spell_tactical_order",
+        "selected_spell_id": "spell_cinder_burst",
+        "selected_action": "cast_spell",
+        "target_battle_id": "enemy_spell_target",
+        "target_health_before": 64,
+        "target_health_after": 13,
+        "cast_spell_score": 27.83125,
+        "advance_score": 10.25
       },
       "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need further enemy-turn bottleneck reduction, full generated-map long-run matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
-      "policy": "Strategic AI pathing efficiency only; no content balance changes and no production-ready AI claim."
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need broader generated-map long-run matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "Tactical AI spell-order execution only; no content balance changes and no production-ready AI claim."
     }
   }
 }

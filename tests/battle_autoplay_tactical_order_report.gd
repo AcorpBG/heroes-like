@@ -48,11 +48,14 @@ func _run() -> void:
 	var battle_ai_payload_fallback_case := _validate_battle_ai_commander_payload_fallback()
 	if not bool(battle_ai_payload_fallback_case.get("ok", false)):
 		return
+	var spell_tactical_order_case := _validate_player_spell_tactical_order()
+	if not bool(spell_tactical_order_case.get("ok", false)):
+		return
 
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"policy": "shared_battle_ai_nonspell_tactical_scoring_for_balance_autoplay",
+		"policy": "shared_battle_ai_tactical_scoring_for_balance_autoplay",
 		"initial_availability": initial_availability,
 		"decision": decision,
 		"enemy_engaged_melee": enemy_engaged_case,
@@ -61,6 +64,7 @@ func _run() -> void:
 		"argument_commander_payload": commander_payload_case,
 		"battle_rules_commander_payload_fallback": battle_rules_payload_fallback_case,
 		"battle_ai_commander_payload_fallback": battle_ai_payload_fallback_case,
+		"player_spell_tactical_order": spell_tactical_order_case,
 		"selected_target_id": String(session.battle.get("selected_target_id", "")),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
@@ -369,6 +373,50 @@ func _validate_battle_ai_commander_payload_fallback() -> Dictionary:
 		"enemy_fallback_estimate": enemy_fallback_estimate,
 	}
 
+func _validate_player_spell_tactical_order() -> Dictionary:
+	var session := _player_spell_tactical_order_session()
+	var active_stack := BattleRulesScript.get_active_stack(session.battle)
+	var commander: Dictionary = session.battle.get("player_commander_state", {})
+	var tactical_order := BattleAiRules.choose_stack_tactical_order(session.battle, active_stack, "enemy", commander)
+	if String(tactical_order.get("action", "")) != "cast_spell" or String(tactical_order.get("spell_id", "")) != "spell_cinder_burst":
+		_fail("Shared tactical order should choose the legal high-value player spell: %s" % JSON.stringify(tactical_order))
+		return {}
+	if String(tactical_order.get("scoring_policy", "")) != "battle_ai_spell_tactical_order_v1":
+		_fail("Spell tactical order did not report the spell-aware scoring policy: %s" % JSON.stringify(tactical_order))
+		return {}
+	var candidate_scores: Dictionary = tactical_order.get("candidate_scores", {}) if tactical_order.get("candidate_scores", {}) is Dictionary else {}
+	if not candidate_scores.has("cast_spell") or float(candidate_scores.get("cast_spell", 0.0)) <= float(candidate_scores.get("advance", 0.0)):
+		_fail("Spell tactical order lacks decisive spell score evidence: %s" % JSON.stringify(tactical_order))
+		return {}
+	var decision := BattleAutoplayBalanceHarnessRulesScript.player_autoplay_decision_report(session, true)
+	if String(decision.get("action", "")) != "cast_spell" or String(decision.get("spell_id", "")) != "spell_cinder_burst":
+		_fail("Player autoplay should preserve the scored spell order: %s" % JSON.stringify(decision))
+		return {}
+	if String(session.battle.get("selected_target_id", "")) != "enemy_spell_target":
+		_fail("Player autoplay did not select the spell target before execution: %s" % JSON.stringify(session.battle))
+		return {}
+	var before_target := BattleRulesScript._get_stack_by_id(session.battle, "enemy_spell_target")
+	var before_health := int(before_target.get("total_health", 0))
+	var result := BattleRulesScript.cast_player_spell(session, String(decision.get("spell_id", "")))
+	if not bool(result.get("ok", false)):
+		_fail("Player autoplay spell order failed live cast execution: result=%s decision=%s" % [JSON.stringify(result), JSON.stringify(decision)])
+		return {}
+	var after_target := BattleRulesScript._get_stack_by_id(session.battle, "enemy_spell_target")
+	if int(after_target.get("total_health", 0)) >= before_health:
+		_fail("Player autoplay spell execution did not damage the target: before=%d after=%s" % [before_health, JSON.stringify(after_target)])
+		return {}
+	return {
+		"ok": true,
+		"action": String(decision.get("action", "")),
+		"spell_id": String(decision.get("spell_id", "")),
+		"target_battle_id": String(decision.get("target_battle_id", "")),
+		"scoring_policy": String(tactical_order.get("scoring_policy", "")),
+		"cast_spell_score": float(candidate_scores.get("cast_spell", 0.0)),
+		"advance_score": float(candidate_scores.get("advance", 0.0)),
+		"target_health_before": before_health,
+		"target_health_after": int(after_target.get("total_health", 0)),
+	}
+
 func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
 	var session := SessionStateStoreScript.SessionData.new(
 		"battle-autoplay-tactical-order-report",
@@ -398,6 +446,51 @@ func _adjacent_ranged_session() -> SessionStateStoreScript.SessionData:
 		"retreat_allowed": true,
 		"surrender_allowed": true,
 		"player_commander_state": {},
+		"enemy_hero": {},
+		"field_objectives": [],
+	}
+	return session
+
+func _player_spell_tactical_order_session() -> SessionStateStoreScript.SessionData:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-shared-spell-tactical-order-report",
+		"battle-ai-shared-spell-tactical-order-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = {
+		"round": 2,
+		"max_rounds": 99,
+		"distance": 2,
+		"terrain": "plains",
+		"battlefield_tags": [],
+		"combat_seed": 112233,
+		"resistance_seed": "shared_spell_tactical_order",
+		"stacks": [
+			_stack("player_apprentice", "player", "player_apprentice", false, 4, 8, 32, 1, 1, 1, 1, 4, 3, 3),
+			_stack("enemy_spell_target", "enemy", "enemy_spell_target", true, 8, 8, 64, 4, 5, 4, 2, 5, 8, 3),
+		],
+		"turn_order": ["player_apprentice"],
+		"turn_index": 0,
+		"active_stack_id": "player_apprentice",
+		"selected_target_id": "enemy_spell_target",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"player_commander_state": {
+			"hero_id": "player_spell_tactical_order_commander",
+			"name": "Player Spell Tactical Order Commander",
+			"archetype": "artillerist",
+			"command_path": "magic",
+			"command": {"attack": 0, "defense": 0, "power": 3, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_cinder_burst"],
+				"mana": {"current": 20, "max": 20}
+			}
+		},
 		"enemy_hero": {},
 		"field_objectives": [],
 	}
