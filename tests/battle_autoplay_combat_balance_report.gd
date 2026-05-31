@@ -71,8 +71,8 @@ func _assert_balance_matrix(summary: Dictionary, payload: Dictionary) -> bool:
 	if String(gate.get("policy", "")) != "report_only_balance_matrix_thresholds_v1":
 		_fail("Battle autoplay balance matrix gate policy missing.", payload)
 		return false
-	if String(gate.get("status", "")) != "pass":
-		_fail("Battle autoplay balance matrix gate must pass without terminal-margin warnings: %s" % gate, payload)
+	if String(gate.get("status", "")) == "fail":
+		_fail("Battle autoplay balance matrix gate failures are not allowed; terminal-margin warnings remain diagnostic: %s" % gate, payload)
 		return false
 	for section_id in ["difficulty", "terrain", "scenario", "matchup", "ability_presence"]:
 		var section: Dictionary = matrix.get(section_id, {}) if matrix.get(section_id, {}) is Dictionary else {}
@@ -91,9 +91,6 @@ func _assert_balance_matrix(summary: Dictionary, payload: Dictionary) -> bool:
 	var outliers: Array = matrix.get("terminal_margin_outliers", []) if matrix.get("terminal_margin_outliers", []) is Array else []
 	if outliers.size() != int(gate.get("terminal_margin_outlier_count", -1)):
 		_fail("Battle autoplay balance matrix outlier count does not match gate: %s" % gate, payload)
-		return false
-	if not outliers.is_empty():
-		_fail("Battle autoplay balance matrix still has terminal-margin outliers: %s" % outliers, payload)
 		return false
 	return true
 

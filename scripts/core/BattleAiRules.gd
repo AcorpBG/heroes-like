@@ -702,11 +702,17 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 		var best_attack_score := float(best_attack.get("score", -9999.0))
 		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
 			best = best_attack
-	if not best_spell.is_empty():
-		if lethal_spell_available and not lethal_attack_available:
-			best = best_spell
-		elif (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
-			best = best_spell
+	if _shared_tactical_spell_candidate_beats(
+		best_spell,
+		best,
+		scoring_battle,
+		active_stack,
+		targets,
+		resolved_commander_payload,
+		lethal_spell_available,
+		lethal_attack_available
+	):
+		best = best_spell
 
 	var candidate_scores := {
 		"defend": defend_score,
@@ -724,6 +730,79 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	report["commander_payload_source"] = _side_commander_payload_source(battle, acting_side, commander_payload)
 	report["candidate_scores"] = candidate_scores
 	return report
+
+static func _shared_tactical_spell_candidate_beats(
+	best_spell: Dictionary,
+	current_best: Dictionary,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	hostile_targets: Array,
+	commander_payload: Dictionary,
+	lethal_spell_available: bool,
+	lethal_attack_available: bool
+) -> bool:
+	if best_spell.is_empty():
+		return false
+	if lethal_spell_available != lethal_attack_available:
+		return lethal_spell_available
+	if lethal_spell_available:
+		return _candidate_beats(best_spell, current_best)
+	var spell := ContentService.get_spell(String(best_spell.get("spell_id", "")))
+	var behavior := SpellRulesScript.battle_spell_behavior(spell)
+	if behavior.is_empty():
+		return false
+	var spell_score := float(best_spell.get("score", -9999.0))
+	var best_score := float(current_best.get("score", -9999.0))
+	var required_delta := _shared_tactical_spell_conservation_delta(
+		battle,
+		active_stack,
+		_stack_by_battle_id(battle, String(best_spell.get("target_battle_id", ""))),
+		hostile_targets,
+		commander_payload,
+		behavior
+	)
+	return spell_score >= best_score + required_delta
+
+static func _shared_tactical_spell_conservation_delta(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	hostile_targets: Array,
+	commander_payload: Dictionary,
+	behavior: Dictionary
+) -> float:
+	var effect_type := String(behavior.get("effect_type", ""))
+	var delta := 1.75
+	match effect_type:
+		"damage_enemy":
+			delta = 2.0
+		"control_enemy":
+			delta = 2.25
+		"recover_ally", "cleanse_ally":
+			delta = 1.0
+		"defense_buff", "initiative_buff", "attack_buff":
+			delta = 1.75 if _support_spell_has_active_pressure(battle, active_stack, target_stack, hostile_targets) else 100.0
+	var command_path := String(commander_payload.get("command_path", "")).to_lower()
+	var archetype := String(commander_payload.get("archetype", "")).to_lower()
+	if command_path == "magic" or archetype in ["hexcaller", "starseer", "rootoracle", "denaugur", "drumoracle", "fogprophet", "funeralhexer", "artillerist", "sharpshooter", "beaconscribe", "pressuremath", "slagalchemist", "heatrice"]:
+		delta -= 0.75
+	return max(0.75, delta)
+
+static func _support_spell_has_active_pressure(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	hostile_targets: Array
+) -> bool:
+	var support_target := target_stack if not target_stack.is_empty() else active_stack
+	if support_target.is_empty():
+		return false
+	if _health_ratio(support_target) <= 0.75:
+		return true
+	for hostile in hostile_targets:
+		if hostile is Dictionary and _target_immediate_threat_score(support_target, hostile, battle) >= 3.0:
+			return true
+	return false
 
 static func _side_commander_state_for_ai(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
 	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"

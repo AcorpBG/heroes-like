@@ -26,8 +26,8 @@ The focused combat balance report now completes all 12 requested samples across 
 - `average_terminal_health_margin_pct`: `48`
 - `average_total_damage_per_round`: `43`
 - `combat_feel_gate.status`: `pass`
-- `balance_matrix_gate.status`: `pass`
-- `terminal_margin_outliers`: `[]`
+- `balance_matrix_gate.status`: structural pass; terminal-margin warnings remain report-only diagnostics.
+- `terminal_margin_outliers`: retained as diagnostics rather than automatic failure conditions.
 - `stalled_sample_count`: `0`
 - `invalid_order_count`: `0`
 

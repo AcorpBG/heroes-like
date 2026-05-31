@@ -35,6 +35,7 @@ const RUNTIME_CONSEQUENCE_MATRIX_SCHEMA := "battle_autoplay_runtime_consequence_
 const RUNTIME_CONSEQUENCE_GATE_POLICY := "report_only_runtime_consequence_thresholds_v1"
 const RUNTIME_CONSEQUENCE_MATRIX_GATE_POLICY := "report_only_runtime_consequence_matrix_thresholds_v1"
 const BATTLE_ANIMATION_EVENT_QUEUE_KEY := "battle_animation_events"
+const SHARED_TACTICAL_SPELL_SCORING_POLICY := "battle_ai_spell_tactical_order_v1"
 const DEFAULT_SCENARIO_IDS := [
 	"river-pass",
 	"causeway-stand",
