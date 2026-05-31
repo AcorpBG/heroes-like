@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected; next tactical/strategic AI work should continue from generated-map long-run breadth, Medium/generalized behavior, tactical spell/counterplay breadth, and live-client pacing evidence rather than balance-content edits.
+- Current implementation slice: none selected; next tactical/strategic AI work should fix the generated-map battle-handoff production gap now exposed by long-run Native RMG evidence, then continue from Medium/generalized behavior, tactical spell/counterplay breadth, and live-client pacing evidence without balance-content edits.
+- Latest completed slice: `strategic-ai-generated-battle-handoff-coverage-10184`.
 - Latest completed slice: `strategic-ai-generated-regroup-target-integrity-10184`.
 - Latest completed slice: `strategic-ai-headless-resource-task-persistence-10184`.
 - Latest completed slice: `battle-ai-spell-conservation-tactical-order-10184`.

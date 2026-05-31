@@ -9714,6 +9714,8 @@ static func ai_raid_movement_event(
 			"state_policy": "derived",
 			"summary": "%s advances toward %s." % [actor_label, target_label],
 			"debug_reason": String(target.get("target_debug_reason", "")),
+			"goal_distance_before": goal_distance_before,
+			"goal_distance_after": goal_distance_after,
 		}
 	)
 
@@ -9769,6 +9771,10 @@ static func build_ai_event_record(
 		"debug_reason": debug_reason,
 		"state_policy": String(options.get("state_policy", "ephemeral")),
 	}
+	if options.has("goal_distance_before"):
+		event["goal_distance_before"] = int(options.get("goal_distance_before", 9999))
+	if options.has("goal_distance_after"):
+		event["goal_distance_after"] = int(options.get("goal_distance_after", 9999))
 	if options.has("target_controller_before"):
 		event["target_controller_before"] = String(options.get("target_controller_before", ""))
 	if options.has("target_controller_after"):
