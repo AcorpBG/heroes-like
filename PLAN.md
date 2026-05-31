@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.
+- Latest completed slice: `strategic-ai-adventure-spell-tiebreak-10184`.
 - Latest completed slice: `strategic-ai-task-fit-spell-study-10184`.
 - Latest completed slice: `battle-ai-lethal-spell-priority-10184`.
 - Latest completed slice: `battle-ai-lethal-action-priority-10184`.

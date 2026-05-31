@@ -364,7 +364,7 @@ static func adventure_spell_valuation_report(
 			continue
 		if String(candidate.get("recommendation", "")) != "cast":
 			continue
-		if selected.is_empty() or _adventure_band_rank(String(candidate.get("value_band", ""))) > _adventure_band_rank(String(selected.get("value_band", ""))):
+		if _adventure_spell_candidate_beats(candidate, selected):
 			selected = candidate
 
 	return {
@@ -1901,9 +1901,41 @@ static func _selected_adventure_spell_candidate(report: Dictionary, effect_type:
 			continue
 		if String(candidate.get("recommendation", "")) != "cast":
 			continue
-		if selected.is_empty() or _adventure_band_rank(String(candidate.get("value_band", ""))) > _adventure_band_rank(String(selected.get("value_band", ""))):
+		if _adventure_spell_candidate_beats(candidate, selected):
 			selected = candidate
 	return selected
+
+static func _adventure_spell_candidate_beats(candidate: Dictionary, current_best: Dictionary) -> bool:
+	if candidate.is_empty():
+		return false
+	if current_best.is_empty():
+		return true
+	var candidate_rank := _adventure_band_rank(String(candidate.get("value_band", "")))
+	var best_rank := _adventure_band_rank(String(current_best.get("value_band", "")))
+	if candidate_rank != best_rank:
+		return candidate_rank > best_rank
+	var effect_type := String(candidate.get("effect_type", ""))
+	if effect_type == String(current_best.get("effect_type", "")):
+		match effect_type:
+			"restore_movement":
+				var candidate_movement := int(candidate.get("movement_after", 0))
+				var best_movement := int(current_best.get("movement_after", 0))
+				if candidate_movement != best_movement:
+					return candidate_movement > best_movement
+				var candidate_restored := int(candidate.get("movement_restored", 0))
+				var best_restored := int(current_best.get("movement_restored", 0))
+				if candidate_restored != best_restored:
+					return candidate_restored > best_restored
+			"reveal_radius":
+				var candidate_radius := int(candidate.get("reveal_radius", 0))
+				var best_radius := int(current_best.get("reveal_radius", 0))
+				if candidate_radius != best_radius:
+					return candidate_radius > best_radius
+	var candidate_tier := int(candidate.get("tier", 0))
+	var best_tier := int(current_best.get("tier", 0))
+	if candidate_tier != best_tier:
+		return candidate_tier > best_tier
+	return String(candidate.get("spell_id", "")) < String(current_best.get("spell_id", ""))
 
 static func _known_scouting_spell_max_radius(commander_state: Dictionary) -> int:
 	var hero := SpellRulesScript.ensure_hero_spellbook(commander_state.duplicate(true))
