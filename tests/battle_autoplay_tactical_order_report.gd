@@ -142,6 +142,29 @@ func _validate_tactical_order_argument_commander_payload() -> Dictionary:
 	if player_battle_state.has("player_hero"):
 		_fail("Player battle-state commander fallback mutated source battle state: %s" % JSON.stringify(player_battle_state))
 		return {}
+	var minimal_template_state := session.battle.duplicate(true)
+	minimal_template_state["enemy_hero"] = {"roster_hero_id": "hero_lyra"}
+	var template_fallback := BattleAiRules.choose_stack_tactical_order(minimal_template_state, active_stack, "player")
+	var template_scores: Dictionary = template_fallback.get("candidate_scores", {}) if template_fallback.get("candidate_scores", {}) is Dictionary else {}
+	if String(template_fallback.get("commander_payload_source", "")) != "battle":
+		_fail("Minimal template commander fallback did not report battle payload source: %s" % JSON.stringify(template_fallback))
+		return {}
+	if not template_scores.has("strike"):
+		_fail("Minimal template commander fallback is missing strike score evidence: %s" % JSON.stringify(template_fallback))
+		return {}
+	if float(template_scores.get("strike", 0.0)) <= float(baseline_scores.get("strike", 0.0)):
+		_fail("Minimal Lyra commander should inherit template vanguard scoring: baseline=%s template=%s" % [JSON.stringify(baseline), JSON.stringify(template_fallback)])
+		return {}
+	var minimal_existing_payload_state := session.battle.duplicate(true)
+	minimal_existing_payload_state["enemy_hero_payload"] = {"hero_id": "hero_lyra"}
+	var existing_payload_fallback := BattleAiRules.choose_stack_tactical_order(minimal_existing_payload_state, active_stack, "player")
+	var existing_payload_scores: Dictionary = existing_payload_fallback.get("candidate_scores", {}) if existing_payload_fallback.get("candidate_scores", {}) is Dictionary else {}
+	if float(existing_payload_scores.get("strike", 0.0)) <= float(baseline_scores.get("strike", 0.0)):
+		_fail("Existing minimal enemy_hero_payload should inherit template vanguard scoring: baseline=%s fallback=%s" % [JSON.stringify(baseline), JSON.stringify(existing_payload_fallback)])
+		return {}
+	if minimal_existing_payload_state.get("enemy_hero_payload", {}).has("battle_traits"):
+		_fail("Existing minimal payload template fallback mutated source battle state: %s" % JSON.stringify(minimal_existing_payload_state))
+		return {}
 	if session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"):
 		_fail("Argument commander payload bridge mutated source battle state: %s" % JSON.stringify(session.battle))
 		return {}
@@ -156,6 +179,9 @@ func _validate_tactical_order_argument_commander_payload() -> Dictionary:
 		"player_battle_state_source": String(player_state_fallback.get("commander_payload_source", "")),
 		"player_battle_state_action": player_action_key,
 		"player_battle_state_action_score": float(player_state_scores.get(player_action_key, 0.0)),
+		"template_fallback_source": String(template_fallback.get("commander_payload_source", "")),
+		"template_fallback_strike_score": float(template_scores.get("strike", 0.0)),
+		"existing_payload_template_fallback_strike_score": float(existing_payload_scores.get("strike", 0.0)),
 		"source_battle_mutated": session.battle.has("enemy_hero_payload") or session.battle.has("player_hero"),
 		"enemy_battle_state_mutated": enemy_battle_state.has("enemy_hero_payload"),
 		"player_battle_state_mutated": player_battle_state.has("player_hero"),

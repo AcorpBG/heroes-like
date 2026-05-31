@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.
+- Latest completed slice: `battle-ai-tactical-commander-template-fallback-10184`.
 - Latest completed slice: `battle-ai-spell-role-template-fallback-10184`.
 - Latest completed slice: `battle-ai-commander-spell-role-valuation-10184`.
 - Latest completed slice: `strategic-ai-spell-study-template-role-fallback-10184`.

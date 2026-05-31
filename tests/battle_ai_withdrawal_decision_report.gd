@@ -23,6 +23,7 @@ func _run() -> void:
 	_validate_locked_withdrawal()
 	_validate_commander_personality_withdrawal()
 	_validate_argument_commander_payload_bridge()
+	_validate_template_commander_payload_fallback()
 	_validate_runtime_enemy_retreat()
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0)
@@ -96,6 +97,39 @@ func _validate_argument_commander_payload_bridge() -> void:
 		"action": String(decision.get("action", "")),
 		"urgency_scale": float(decision.get("commander_withdrawal_urgency_scale", 1.0)),
 		"source_battle_mutated": bridge_session.battle.has("enemy_hero_payload"),
+	}
+
+func _validate_template_commander_payload_fallback() -> void:
+	var baseline_session := _withdrawal_session(38, 100, true, false, 80, 240)
+	var template_session := _withdrawal_session(38, 100, true, false, 80, 240)
+	template_session.battle["enemy_hero_payload"] = {"roster_hero_id": "hero_thalen"}
+	var baseline_stack := BattleRulesScript.get_active_stack(baseline_session.battle)
+	var template_stack := BattleRulesScript.get_active_stack(template_session.battle)
+	var baseline_decision := BattleAiRulesScript.choose_enemy_action(baseline_session.battle, baseline_stack, {})
+	var template_decision := BattleAiRulesScript.choose_enemy_action(template_session.battle, template_stack, {})
+	var baseline_scale := BattleAiRulesScript._enemy_withdrawal_urgency_scale(baseline_session.battle)
+	var template_scored_battle := BattleAiRulesScript._battle_with_enemy_hero_payload(
+		template_session.battle,
+		template_session.battle.get("enemy_hero_payload", {})
+	)
+	var template_scale := BattleAiRulesScript._enemy_withdrawal_urgency_scale(template_scored_battle)
+	if template_scale <= baseline_scale:
+		_fail("Minimal template commander did not raise withdrawal urgency: baseline=%s template=%s" % [baseline_scale, template_scale])
+		return
+	if String(template_decision.get("action", "")) != "retreat":
+		_fail("Minimal Thalen template commander should retreat in the split pressure band: baseline=%s template=%s" % [JSON.stringify(baseline_decision), JSON.stringify(template_decision)])
+		return
+	_expect_candidate_score("minimal template commander retreat candidate score", template_decision, "retreat")
+	if template_session.battle.get("enemy_hero_payload", {}).has("battle_traits"):
+		_fail("Minimal template commander fallback mutated source battle state: %s" % JSON.stringify(template_session.battle))
+		return
+	_report["cases"]["template_commander_payload_fallback"] = {
+		"baseline_action": String(baseline_decision.get("action", "")),
+		"baseline_scale": baseline_scale,
+		"template_action": String(template_decision.get("action", "")),
+		"template_scale": template_scale,
+		"template_candidate_scores": template_decision.get("candidate_scores", {}),
+		"source_battle_mutated": template_session.battle.get("enemy_hero_payload", {}).has("battle_traits"),
 	}
 
 func _validate_runtime_enemy_retreat() -> void:
