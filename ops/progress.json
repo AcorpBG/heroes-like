@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T22:20:00Z",
+  "updatedAt": "2026-05-31T23:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,47 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "battle-ai-force-sync-payload-continuity-10184",
+      "title": "Battle AI Force Sync Payload Continuity",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T22:45:00Z",
+      "updatedAt": "2026-05-31T23:05:00Z",
+      "completedAt": "2026-05-31T23:05:00Z",
+      "source": "owner-directed tactical/strategic AI work; no gameplay balance changes",
+      "planRef": "PLAN.md Current tactical state / battle-ai-force-sync-payload-continuity-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make enemy tactical battle payload continuity robust at the battle-to-overworld force sync boundary, so strategic AI state keeps learned spells and commander metadata even when sync is called directly.",
+      "implementationTargets": [
+        "Merge compatible enemy_hero_payload spellbooks and commander metadata into enemy_hero before syncing enemy survivors back to towns, resource defenders, or encounter placements.",
+        "Prove direct force sync preserves a payload-learned spell into overworld encounter enemy_commander_state.",
+        "Preserve all unit, spell, growth, economy, faction, and town-cost balance content."
+      ],
+      "completionCriteria": "Focused AI report proves force sync preserves rich enemy payload learned spells into strategic encounter state; adjacent tactical/strategic AI reports and repository validation remain green; no balance/content files are changed.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No new spells or spell balance tuning.",
+        "No production-ready AI claim from one state-continuity fix."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 160 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "summary": "Enemy battle-to-overworld force sync now merges compatible rich enemy_hero_payload spellbooks and commander metadata into session.battle.enemy_hero before syncing survivor state back to towns, resource defenders, or encounter placements. Focused withdrawal/continuity coverage proves a direct force sync preserves a payload-learned Loam Thorn spell into overworld encounter enemy_commander_state and the live battle enemy hero. Adjacent tactical/strategic AI reports and repository validation remain green. No unit, spell, growth, economy, faction, town-cost, or other balance content changed."
+    },
     {
       "id": "battle-ai-outcome-payload-continuity-10184",
       "title": "Battle AI Outcome Payload Continuity",
@@ -46963,30 +47004,31 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-path-surface-fingerprint-cache-10184",
+    "sliceId": "battle-ai-force-sync-payload-continuity-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T15:35:00Z",
+    "updatedAt": "2026-05-31T23:05:00Z",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; same seed one-turn smoke improved from 9081ms after the previous indexed path-search slice to 8818ms enemy-turn runtime)",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=2 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; 4/4 turns, row_ok_count 2, behavior_bug_count 0, stalled_turn_count 0, enemy_activity_event_count 14, max_turn_runtime_msec 16590)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 160 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "git diff --check (passed)",
+      "git diff -- content/ (empty)"
     ],
-    "summary": "Strategic AI path-surface cache-key construction now uses compact state fingerprints, reducing the same strict Small enemy turn to 8818ms without changing balance content."
+    "summary": "Enemy battle-to-overworld force sync now preserves compatible rich enemy_hero_payload spellbooks and commander metadata into strategic encounter/resource/town defender state without changing balance content."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T15:35:00Z"
+    "updatedAt": "2026-05-31T23:05:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T15:35:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T23:05:00Z",
   "validationHistory": [
     {
       "status": "pass",
