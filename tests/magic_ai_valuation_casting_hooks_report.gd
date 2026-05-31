@@ -44,6 +44,10 @@ func _run() -> void:
 	if not bool(buff_target_case.get("ok", false)):
 		_fail(String(buff_target_case.get("error", "Battle AI buff target case failed.")))
 		return
+	var recovery_filter_case := _run_battle_ai_full_health_recovery_filter_case()
+	if not bool(recovery_filter_case.get("ok", false)):
+		_fail(String(recovery_filter_case.get("error", "Battle AI recovery target filter case failed.")))
+		return
 	var spell_report_payload_case := _run_battle_ai_spell_report_payload_bridge_case()
 	if not bool(spell_report_payload_case.get("ok", false)):
 		_fail(String(spell_report_payload_case.get("error", "Battle AI spell report payload bridge case failed.")))
@@ -78,13 +82,14 @@ func _run() -> void:
 		"battle_normalized_rich_payload_spellbook": normalized_payload_cast_case,
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
+		"battle_full_health_recovery_filter": recovery_filter_case,
 		"battle_spell_report_payload_bridge": spell_report_payload_case,
 		"battle_lethal_attack_priority": lethal_priority_case,
 		"battle_lethal_spell_priority": lethal_spell_case,
 		"adventure": adventure_case,
 		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, richer enemy payload spellbook merging for live battle casts, normalized rich enemy payload preservation across battle state refresh, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, richer enemy payload spellbook merging for live battle casts, normalized rich enemy payload preservation across battle state refresh, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, full-health recovery target filtering, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -710,6 +715,50 @@ func _run_battle_ai_buff_best_ally_case() -> Dictionary:
 		"active_stack_id": "enemy_low_active",
 		"target_was_active_stack": false,
 		"live_action": String(live_action.get("action", "")),
+	}
+
+func _run_battle_ai_full_health_recovery_filter_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Recovery Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_graft_mend"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_recovery_archer", "enemy", "Enemy Recovery Archer", 7, 10, 70, [], {
+				"ranged": true,
+				"shots_remaining": 5,
+				"tier": 3,
+				"min_damage": 4,
+				"max_damage": 6,
+			}),
+			_stack("enemy_full_health_line", "enemy", "Enemy Full Health Line", 8, 10, 80, []),
+			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_recovery_archer")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Recovery filter report failed: %s" % report}
+	if int(report.get("candidate_count", 0)) != 0:
+		return {"ok": false, "error": "Recovery filter should expose no spell candidates for full-health allies, got %s" % report}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) == "cast_spell":
+		return {"ok": false, "error": "Recovery filter live choice should not cast recovery on full-health allies, got %s" % live_action}
+	return {
+		"ok": true,
+		"candidate_count": int(report.get("candidate_count", 0)),
+		"live_action": String(live_action.get("action", "")),
+		"full_health_target_filtered": true,
 	}
 
 func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
