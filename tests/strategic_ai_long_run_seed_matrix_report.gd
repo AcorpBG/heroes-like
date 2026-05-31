@@ -8,6 +8,7 @@ const DEFAULT_BATTLE_STEP_LIMIT := 96
 const DEFAULT_PRESSURE_FLOOR := 999
 const DEFAULT_SEED_OFFSET := 0
 const DEFAULT_SEED_PREFIX := "strategic-ai-long-run-smoke-native-small"
+const DEFAULT_REQUIRED_EVENT_TYPE := ""
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -15,7 +16,7 @@ func _ready() -> void:
 func _run() -> void:
 	var config := _config_from_environment()
 	var report: Dictionary = HeadlessSimulationHarnessRulesScript.build_strategic_ai_long_run_seed_matrix_report(config)
-	if not _assert_report(report, int(config.get("seed_count", DEFAULT_SEED_COUNT)), int(config.get("turn_count", DEFAULT_TURN_COUNT))):
+	if not _assert_report(report, int(config.get("seed_count", DEFAULT_SEED_COUNT)), int(config.get("turn_count", DEFAULT_TURN_COUNT)), String(config.get("required_event_type", ""))):
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
 	get_tree().quit(0)
@@ -28,6 +29,7 @@ func _config_from_environment() -> Dictionary:
 		"pressure_floor": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR", DEFAULT_PRESSURE_FLOOR, 0, 9999),
 		"seed_offset": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET", DEFAULT_SEED_OFFSET, 0, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET - 1),
 		"seed_prefix": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX", DEFAULT_SEED_PREFIX),
+		"required_event_type": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_REQUIRE_EVENT_TYPE", DEFAULT_REQUIRED_EVENT_TYPE),
 	}
 	if _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS", 0, 0, 1) > 0:
 		config["progress_callback"] = Callable(self, "_progress_callback")
@@ -51,7 +53,7 @@ func _env_string(name: String, fallback: String) -> String:
 		return fallback
 	return raw
 
-func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_count: int) -> bool:
+func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_count: int, required_event_type: String = "") -> bool:
 	if String(report.get("schema_id", "")) != HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID:
 		_fail("Long-run matrix schema mismatch: %s" % JSON.stringify(report))
 		return false
@@ -100,6 +102,11 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:
 		_fail("Long-run matrix observed no enemy activity: %s" % JSON.stringify(summary))
 		return false
+	if required_event_type.strip_edges() != "":
+		var event_counts: Dictionary = summary.get("event_counts", {}) if summary.get("event_counts", {}) is Dictionary else {}
+		if int(event_counts.get(required_event_type.strip_edges(), 0)) <= 0:
+			_fail("Long-run matrix did not observe required event type %s: %s" % [required_event_type.strip_edges(), JSON.stringify(summary)])
+			return false
 	var rows: Array = report.get("rows", []) if report.get("rows", []) is Array else []
 	if rows.size() != expected_seed_count:
 		_fail("Long-run matrix emitted %d rows, expected %d." % [rows.size(), expected_seed_count])
