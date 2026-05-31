@@ -10697,8 +10697,48 @@ static func _merge_spell_school_resistance(left: Variant, right: Variant) -> Dic
 
 static func _hero_payload_for_side(battle: Dictionary, side: String) -> Dictionary:
 	if side == "player":
-		return battle.get("player_hero", {})
-	return battle.get("enemy_hero_payload", {})
+		return _side_payload_with_commander_fallback(
+			battle.get("player_hero", {}),
+			battle.get("player_commander_state", {}),
+			"player"
+		)
+	return _side_payload_with_commander_fallback(
+		battle.get("enemy_hero_payload", {}),
+		battle.get("enemy_hero", {}),
+		"enemy"
+	)
+
+static func _side_payload_with_commander_fallback(
+	existing_payload_value: Variant,
+	commander_state_value: Variant,
+	side: String
+) -> Dictionary:
+	var existing_payload: Dictionary = existing_payload_value if existing_payload_value is Dictionary else {}
+	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
+	if commander_state.is_empty():
+		return existing_payload
+	var fallback_payload := (
+		_hero_payload_from_state(commander_state, {}, null, "player")
+		if side == "player"
+		else _enemy_hero_payload_from_state(commander_state, {}, null)
+	)
+	if existing_payload.is_empty():
+		return fallback_payload
+	var merged := BattleAiRulesScript._merged_commander_ai_payload(existing_payload, fallback_payload)
+	for key in [
+		"attack",
+		"defense",
+		"initiative",
+		"damage_multiplier",
+		"battle_spell_resistance_pct",
+		"battle_control_resistance_pct",
+		"battle_school_resistance_pct",
+		"mana_current",
+		"mana_max",
+	]:
+		if not merged.has(key) and fallback_payload.has(key):
+			merged[key] = fallback_payload.get(key)
+	return merged
 
 static func _encounter_enemy_commander_seed(encounter_placement: Dictionary) -> Dictionary:
 	var seeded = encounter_placement.get("enemy_commander_state", {})
