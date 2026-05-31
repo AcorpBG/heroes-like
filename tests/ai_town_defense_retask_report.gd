@@ -20,6 +20,9 @@ func _run() -> void:
 	var resource_overcommit_case := _covered_resource_defense_does_not_retask_second_commander()
 	if resource_overcommit_case.is_empty():
 		return
+	var derived_resource_sighting_case := _derived_resource_defense_requires_known_hero_pressure()
+	if derived_resource_sighting_case.is_empty():
+		return
 	var resource_stationing_case := _resource_defender_stations_and_releases()
 	if resource_stationing_case.is_empty():
 		return
@@ -51,6 +54,7 @@ func _run() -> void:
 		"case": case_report,
 		"overcommit_case": overcommit_case,
 		"resource_overcommit_case": resource_overcommit_case,
+		"derived_resource_sighting_case": derived_resource_sighting_case,
 		"resource_stationing_case": resource_stationing_case,
 		"resource_battle_case": resource_battle_case,
 		"release_case": release_case,
@@ -726,6 +730,79 @@ func _covered_resource_defense_does_not_retask_second_commander() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _derived_resource_defense_requires_known_hero_pressure() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	var hero_id := String(session.overworld.get("active_hero_id", "hero_lyra"))
+	_set_player_position(session, {"x": 0, "y": 4})
+	_set_resource_controller(session, "river_free_company", MIRECLAW)
+	_clear_resource_front(session, "river_free_company")
+	_set_resource_controller(session, "river_signal_post", "player")
+	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
+
+	var hidden_probe := _defense_retask_raid(session)
+	hidden_probe["placement_id"] = "hidden_resource_defense_probe_vaska"
+	hidden_probe["target_placement_id"] = "river_signal_post"
+	hidden_probe["target_label"] = "Signal Post"
+	hidden_probe["target_x"] = 2
+	hidden_probe["target_y"] = 3
+	hidden_probe["goal_x"] = 2
+	hidden_probe["goal_y"] = 3
+	hidden_probe["target_reason_codes"] = ["pressure_probe_fixture"]
+	var hidden_redirect := EnemyAdventureRules._redirect_raid_to_threatened_resource_defense(session, config, hidden_probe, MIRECLAW)
+	if String(hidden_redirect.get("target_placement_id", "")) != "river_signal_post":
+		_fail("Hidden nearby hero should not derive resource-defense retask: %s" % JSON.stringify(hidden_redirect))
+		return {}
+
+	_patch_enemy_memory(
+		session,
+		{
+			"schema_version": 1,
+			"player_hero_sightings": [
+				{
+					"hero_id": hero_id,
+					"hero_label": "Lyra",
+					"x": 0,
+					"y": 4,
+					"army_strength": 96,
+					"seen_day": int(session.day),
+					"expires_day": int(session.day) + 2,
+					"source_kind": "resource_site",
+					"source_id": "river_free_company",
+				}
+			],
+			"scouted_targets": [],
+		}
+	)
+	var known_probe := _defense_retask_raid(session)
+	known_probe["placement_id"] = "known_resource_defense_probe_vaska"
+	known_probe["target_placement_id"] = "river_signal_post"
+	known_probe["target_label"] = "Signal Post"
+	known_probe["target_x"] = 2
+	known_probe["target_y"] = 3
+	known_probe["goal_x"] = 2
+	known_probe["goal_y"] = 3
+	known_probe["target_reason_codes"] = ["pressure_probe_fixture"]
+	var known_redirect := EnemyAdventureRules._redirect_raid_to_threatened_resource_defense(session, config, known_probe, MIRECLAW)
+	if String(known_redirect.get("target_kind", "")) != "resource" or String(known_redirect.get("target_placement_id", "")) != "river_free_company":
+		_fail("Known nearby hero pressure should derive resource-defense retask: %s" % JSON.stringify(known_redirect))
+		return {}
+	var reason_codes := _string_array(known_redirect.get("target_reason_codes", []))
+	if "site_defense" not in reason_codes or "defend_front" not in reason_codes:
+		_fail("Derived known resource defense missed reason codes: %s" % JSON.stringify(known_redirect))
+		return {}
+	return {
+		"case_id": "derived_resource_defense_requires_known_hero_pressure",
+		"hidden_probe_target_id": String(hidden_redirect.get("target_placement_id", "")),
+		"known_probe_target_id": String(known_redirect.get("target_placement_id", "")),
+		"known_reason_codes": reason_codes,
+		"hero_id": hero_id,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _defense_retask_raid(session) -> Dictionary:
 	var raid := {
 		"placement_id": "defense_retask_vaska",
@@ -856,12 +933,29 @@ func _set_town_available_recruits(session, placement_id: String, recruits: Dicti
 
 func _set_player_position(session, position: Dictionary) -> void:
 	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
+	var active_hero_id := String(session.overworld.get("active_hero_id", "hero_lyra"))
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	hero = hero.duplicate(true)
+	hero["id"] = active_hero_id
+	hero["position"] = session.overworld["hero_position"].duplicate(true)
+	session.overworld["hero"] = hero
+	var player_heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	var updated_player_hero := false
+	for index in range(player_heroes.size()):
+		var player_hero = player_heroes[index]
+		if player_hero is Dictionary and String(player_hero.get("id", "")) == active_hero_id:
+			player_hero["position"] = session.overworld["hero_position"].duplicate(true)
+			player_heroes[index] = player_hero
+			updated_player_hero = true
+	if not updated_player_hero:
+		player_heroes.append(hero.duplicate(true))
+	session.overworld["player_heroes"] = player_heroes
 	var heroes: Array = session.overworld.get("heroes", [])
 	for index in range(heroes.size()):
-		var hero = heroes[index]
-		if hero is Dictionary and String(hero.get("owner", "player")) == "player":
-			hero["position"] = session.overworld["hero_position"].duplicate(true)
-			heroes[index] = hero
+		var hero_entry = heroes[index]
+		if hero_entry is Dictionary and String(hero_entry.get("owner", "player")) == "player":
+			hero_entry["position"] = session.overworld["hero_position"].duplicate(true)
+			heroes[index] = hero_entry
 			session.overworld["heroes"] = heroes
 			return
 
@@ -902,6 +996,25 @@ func _set_resource_defense_front(session, placement_id: String) -> void:
 		session.overworld["resource_nodes"] = nodes
 		return
 	_fail("Could not find resource placement %s for defense front fixture." % placement_id)
+
+func _clear_resource_front(session, placement_id: String) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if String(node.get("placement_id", "")) != placement_id:
+			continue
+		node["front"] = {}
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		return
+	_fail("Could not find resource placement %s for front-clear fixture." % placement_id)
+
+func _patch_enemy_memory(session, memory: Dictionary) -> void:
+	var state := _enemy_state(session)
+	state["known_world_memory"] = memory
+	_update_enemy_state(session, state)
 
 func _resource_controller(session, placement_id: String) -> String:
 	for node in session.overworld.get("resource_nodes", []):
