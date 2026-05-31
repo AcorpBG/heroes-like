@@ -684,14 +684,17 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	if targets.is_empty():
 		return {}
 
+	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_commander_payload, targets)
 	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
+	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
+	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, resolved_commander_payload)
 	var defend_score := _defend_score(scoring_battle, active_stack, targets)
 	var advance_score := _advance_score(scoring_battle, active_stack, targets)
 	var force_engaged_attack := _must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
 	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty():
+	if (int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty()) and not lethal_attack_available:
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -699,6 +702,11 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 		var best_attack_score := float(best_attack.get("score", -9999.0))
 		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
 			best = best_attack
+	if not best_spell.is_empty():
+		if lethal_spell_available and not lethal_attack_available:
+			best = best_spell
+		elif (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
+			best = best_spell
 
 	var candidate_scores := {
 		"defend": defend_score,
@@ -706,11 +714,13 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	}
 	if not best_attack.is_empty():
 		candidate_scores[String(best_attack.get("action", "attack"))] = float(best_attack.get("score", 0.0))
+	if not best_spell.is_empty():
+		candidate_scores["cast_spell"] = float(best_spell.get("score", 0.0))
 	var report := best.duplicate(true)
 	report["acting_side"] = acting_side
 	report["target_side"] = resolved_target_side
 	report["target_count"] = targets.size()
-	report["scoring_policy"] = "battle_ai_nonspell_tactical_order_v1"
+	report["scoring_policy"] = "battle_ai_spell_tactical_order_v1" if String(best.get("action", "")) == "cast_spell" else "battle_ai_nonspell_tactical_order_v1"
 	report["commander_payload_source"] = _side_commander_payload_source(battle, acting_side, commander_payload)
 	report["candidate_scores"] = candidate_scores
 	return report
@@ -838,6 +848,7 @@ static func _battle_spell_candidates(
 	targets: Array
 ) -> Array:
 	var candidates := []
+	var acting_side := String(active_stack.get("side", ""))
 	var allies := _alive_stacks_for_side(battle, String(active_stack.get("side", "")))
 	for spell in SpellRulesScript.known_spells(enemy_hero, SpellRulesScript.CONTEXT_BATTLE):
 		if not (spell is Dictionary):
@@ -856,7 +867,7 @@ static func _battle_spell_candidates(
 						active_stack,
 						target,
 						spell,
-						"enemy"
+						acting_side
 					)
 					if not bool(validation.get("ok", false)):
 						continue
@@ -881,7 +892,7 @@ static func _battle_spell_candidates(
 						active_stack,
 						ally,
 						spell,
-						"enemy"
+						acting_side
 					)
 					if not bool(validation.get("ok", false)):
 						continue
@@ -904,7 +915,7 @@ static func _battle_spell_candidates(
 						active_stack,
 						ally,
 						spell,
-						"enemy"
+						acting_side
 					)
 					if not bool(validation.get("ok", false)):
 						continue
