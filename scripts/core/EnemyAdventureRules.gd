@@ -7819,7 +7819,8 @@ static func _hero_target_goal_distance(
 		return direct_distance
 
 	var occupied := _occupied_tiles(session, "")
-	if not occupied.has(_pos_key(goal_tile)):
+	var hero_blocked := _player_hero_blocked_tiles(session)
+	if not occupied.has(_pos_key(goal_tile)) and not hero_blocked.has(_pos_key(goal_tile)):
 		return direct_distance
 
 	var approach_tiles: Array = []
@@ -7846,7 +7847,8 @@ static func _hero_target_goal_tiles(
 	ignore_placement_id: String = ""
 ) -> Array:
 	var occupied := _occupied_tiles(session, ignore_placement_id)
-	if not occupied.has(_pos_key(goal_tile)):
+	var hero_blocked := _player_hero_blocked_tiles(session)
+	if not occupied.has(_pos_key(goal_tile)) and not hero_blocked.has(_pos_key(goal_tile)):
 		return [goal_tile]
 	var approach_tiles: Array = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
@@ -14556,10 +14558,16 @@ static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, 
 			if int(encounter_result.get("index", -1)) >= 0:
 				return _encounter_staging_tiles(session, encounter_result.get("encounter", {}))
 		"hero":
-			return [Vector2i(
+			var hero_tile := Vector2i(
 				int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
 				int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
-			)]
+			)
+			return _hero_target_goal_tiles(
+				session,
+				Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))),
+				hero_tile,
+				String(raid.get("placement_id", ""))
+			)
 	return [Vector2i(int(raid.get("goal_x", int(raid.get("x", 0)))), int(raid.get("goal_y", int(raid.get("y", 0)))))]
 
 static func _next_step_toward(session: SessionStateStoreScript.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> Vector2i:
@@ -14568,6 +14576,7 @@ static func _next_step_toward(session: SessionStateStoreScript.SessionData, star
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var encounter_blocked = _occupied_tiles(session, ignore_placement_id)
 	var resource_blocked = _resource_body_blocked_tiles(session, ignore_placement_id)
+	var hero_blocked = _player_hero_blocked_tiles(session)
 	var terrain_blocked = _impassable_terrain_tiles(session)
 	var goal_lookup := _tile_lookup(goal_tiles)
 	var visited = {}
@@ -14587,7 +14596,7 @@ static func _next_step_toward(session: SessionStateStoreScript.SessionData, star
 			var key = _pos_key(next)
 			if visited.has(key):
 				continue
-			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, terrain_blocked, map_size):
+			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked, map_size):
 				continue
 			visited[key] = true
 			parents[key] = current
@@ -14609,6 +14618,7 @@ static func _path_distance(session: SessionStateStoreScript.SessionData, start: 
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var encounter_blocked = _occupied_tiles(session, ignore_placement_id)
 	var resource_blocked = _resource_body_blocked_tiles(session, ignore_placement_id)
+	var hero_blocked = _player_hero_blocked_tiles(session)
 	var terrain_blocked = _impassable_terrain_tiles(session)
 	var goal_lookup := _tile_lookup(goal_tiles)
 	var visited = {}
@@ -14624,7 +14634,7 @@ static func _path_distance(session: SessionStateStoreScript.SessionData, start: 
 			var key = _pos_key(next)
 			if visited.has(key):
 				continue
-			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, terrain_blocked, map_size):
+			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked, map_size):
 				continue
 			if next in goal_tiles:
 				return distance + 1
@@ -14681,6 +14691,49 @@ static func _resource_body_blocked_tiles(session: SessionStateStoreScript.Sessio
 				blocked[_pos_key(Vector2i(int(tile_value.get("x", 0)), int(tile_value.get("y", 0))))] = true
 	return blocked
 
+static func _player_hero_blocked_tiles(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var blocked := {}
+	if session == null:
+		return blocked
+	for hero_value in _player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		if _player_hero_sheltered_in_town(session, hero):
+			continue
+		if not _player_hero_currently_visible_to_any_enemy(session, hero):
+			continue
+		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+		if position.is_empty():
+			continue
+		blocked[_pos_key(Vector2i(int(position.get("x", -9999)), int(position.get("y", -9999))))] = true
+	return blocked
+
+static func _player_hero_currently_visible_to_any_enemy(
+	session: SessionStateStoreScript.SessionData,
+	hero: Dictionary
+) -> bool:
+	if session == null or hero.is_empty():
+		return false
+	var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+	if position.is_empty():
+		return false
+	var tile := Vector2i(int(position.get("x", 0)), int(position.get("y", 0)))
+	for state_value in session.overworld.get("enemy_states", []):
+		if not (state_value is Dictionary):
+			continue
+		var faction_id := String(state_value.get("faction_id", ""))
+		if faction_id == "":
+			continue
+		for source_value in _enemy_hero_sighting_sources(session, {}, faction_id):
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var distance: int = abs(tile.x - int(source.get("x", 0))) + abs(tile.y - int(source.get("y", 0)))
+			if distance <= int(source.get("radius", 0)):
+				return true
+	return false
+
 static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var blocked = {}
 	var map_data = session.overworld.get("map", [])
@@ -14702,6 +14755,7 @@ static func _position_blocked(
 	goal_lookup: Dictionary,
 	encounter_blocked: Dictionary,
 	resource_blocked: Dictionary,
+	hero_blocked: Dictionary,
 	terrain_blocked: Dictionary,
 	map_size: Vector2i
 ) -> bool:
@@ -14709,10 +14763,10 @@ static func _position_blocked(
 		return true
 	var key := _pos_key(pos)
 	if goal_lookup.has(key):
-		return encounter_blocked.has(key)
+		return encounter_blocked.has(key) or hero_blocked.has(key)
 	if terrain_blocked.has(key):
 		return true
-	return encounter_blocked.has(key) or resource_blocked.has(key)
+	return encounter_blocked.has(key) or resource_blocked.has(key) or hero_blocked.has(key)
 
 static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> Dictionary:
 	var origin = Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))

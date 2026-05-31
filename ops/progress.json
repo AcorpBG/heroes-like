@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T03:01:02Z",
+  "updatedAt": "2026-05-31T03:10:06Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,88 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-player-hero-route-occupancy-10184",
+      "title": "Strategic AI Player Hero Route Occupancy",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy commander pathing treat currently visible, unsheltered player heroes as occupied map tiles so non-hero objectives route around them instead of stacking through them.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "_path_distance and _next_step_toward block terrain, encounters, and resource body tiles but not player hero occupied tiles.",
+        "Non-hero AI movement can choose a next step occupied by a live player hero when the hero is not the target."
+      ],
+      "completionCriteria": [
+        "Enemy route search treats currently visible, unsheltered player hero positions as occupied tiles for ordinary movement.",
+        "Hero-hunt movement still resolves by reaching an adjacent intercept tile rather than needing to stack on the hero tile.",
+        "Focused coverage proves a non-hero objective route does not move onto a player hero occupying the direct next step."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not change combat balance, economy, RMG generation, or campaign scope.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T03:04:06Z",
+      "updatedAt": "2026-05-31T03:10:06Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
+          "status": "pass",
+          "evidence": "AI_KNOWN_WORLD_MEMORY_REPORT ok=true; nonhero_route_avoids_player_hero_occupied_tile moves from 6,4 to 6,3 instead of stepping onto the visible player hero at 5,4 while preserving the resource objective."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_HERO_HUNT_REPORT ok=true; hero-hunt intercept tasks still route and resolve through adjacent engagement behavior."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT ok=true."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+          "status": "pass",
+          "evidence": "AI_HERO_TASK_STRATEGIC_PLANNER_REPORT ok=true."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "evidence": "VALIDATION PASSED."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "pass",
+          "evidence": "ops/progress.json parses as JSON."
+        },
+        {
+          "command": "git diff --check",
+          "status": "pass",
+          "evidence": "No whitespace errors."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "implementation": [
+          "Enemy route search now adds currently visible, unsheltered player hero positions to the occupied-tile layer used by _next_step_toward and _path_distance.",
+          "Hero-hunt goals now use adjacent intercept tiles when the target hero tile is occupied, keeping engagement behavior separate from ordinary movement blocking.",
+          "Hidden player heroes do not become route blockers unless current enemy sight sources can see them, preserving known-world/fog behavior."
+        ],
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review. A separate core systems smoke obstruction-line failure remains outside this slice."
+      },
+      "completedAt": "2026-05-31T03:10:06Z"
+    },
     {
       "id": "strategic-ai-post-move-scouting-memory-10184",
       "title": "Strategic AI Post-Move Scouting Memory",
@@ -43288,7 +43370,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T03:01:02Z",
+  "currentSliceUpdatedAt": "2026-05-31T03:10:06Z",
   "validationHistory": [
     {
       "status": "pass",
