@@ -5791,18 +5791,7 @@ static func choose_target(
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos)
 	if candidates.is_empty():
-		var hero_position: Dictionary = session.overworld.get("hero_position", {"x": 0, "y": 0})
-		var active_hero_id := String(session.overworld.get("active_hero_id", ""))
-		return {
-			"target_kind": "hero",
-			"target_placement_id": active_hero_id,
-			"target_label": String(session.overworld.get("hero", {}).get("name", "the hero")),
-			"target_x": int(hero_position.get("x", 0)),
-			"target_y": int(hero_position.get("y", 0)),
-			"goal_x": int(hero_position.get("x", 0)),
-			"goal_y": int(hero_position.get("y", 0)),
-			"goal_distance": abs(origin_pos.x - int(hero_position.get("x", 0))) + abs(origin_pos.y - int(hero_position.get("y", 0))),
-		}
+		return _no_known_target_regroup_plan(session, config, origin_pos)
 
 	var repeated_rival_memory := _normalized_commander_memory(commander_source)
 	var repeated_rival_kind := String(repeated_rival_memory.get("rival_kind", ""))
@@ -5840,6 +5829,59 @@ static func choose_target(
 		if _candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _no_known_target_regroup_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin_pos: Vector2i
+) -> Dictionary:
+	if session == null:
+		return {}
+	var faction_id := String(config.get("faction_id", ""))
+	if faction_id == "":
+		return {}
+	var best_town := {}
+	var best_distance := 9999
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+			continue
+		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var distance := _path_distance(session, origin_pos, [town_tile], "")
+		if distance >= 9999:
+			continue
+		if (
+			best_town.is_empty()
+			or distance < best_distance
+			or (
+				distance == best_distance
+				and String(town.get("placement_id", "")) < String(best_town.get("placement_id", ""))
+			)
+		):
+			best_town = town
+			best_distance = distance
+	if best_town.is_empty():
+		return {}
+	var town_id := String(best_town.get("placement_id", ""))
+	var town_label := _town_name(best_town)
+	var town_tile := Vector2i(int(best_town.get("x", 0)), int(best_town.get("y", 0)))
+	return {
+		"target_kind": "regroup",
+		"target_placement_id": town_id,
+		"target_label": "%s regroup" % town_label,
+		"target_x": town_tile.x,
+		"target_y": town_tile.y,
+		"goal_x": town_tile.x,
+		"goal_y": town_tile.y,
+		"goal_distance": best_distance,
+		"priority": 0,
+		"target_reason_codes": ["no_known_targets", "army_consolidation", "town_defense"],
+		"target_public_reason": "holding known ground",
+		"target_public_importance": "low",
+		"target_debug_reason": "no reachable known target candidates; regrouping at owned town instead of using hidden player state",
+	}
 
 static func ai_hero_task_live_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
