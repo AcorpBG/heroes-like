@@ -113,7 +113,31 @@ func _run() -> void:
 	if _failed:
 		return
 
-	var public_leak_check := _public_leak_check([assignment_event, seizure_event, spell_event])
+	var opportunistic_spell_site_case := _run_opportunistic_spell_site_learning_case()
+	if not bool(opportunistic_spell_site_case.get("learned_spell_in_raid", false)):
+		_fail("Opportunistic spell site did not add %s to the active AI commander spellbook: %s" % [SPELL_SITE_REWARD, opportunistic_spell_site_case])
+		return
+	if not bool(opportunistic_spell_site_case.get("learned_spell_in_roster", false)):
+		_fail("Opportunistic spell site did not sync %s to the AI commander roster: %s" % [SPELL_SITE_REWARD, opportunistic_spell_site_case])
+		return
+	var opportunistic_spell_event: Dictionary = opportunistic_spell_site_case.get("event", {})
+	_assert_event(
+		opportunistic_spell_event,
+		"ai_site_seized",
+		SPELL_SITE,
+		"route pressure",
+		["site_seized", "route_pressure", "player_town_support"]
+	)
+	if String(opportunistic_spell_event.get("learned_spell_id", "")) != SPELL_SITE_REWARD:
+		_fail("Opportunistic spell-site event did not expose learned spell id %s: %s" % [SPELL_SITE_REWARD, opportunistic_spell_event])
+		return
+	if not String(opportunistic_spell_site_case.get("message", "")).contains("learns Waystride"):
+		_fail("Opportunistic spell-site message did not expose learned spell reward: %s" % String(opportunistic_spell_site_case.get("message", "")))
+		return
+	if _failed:
+		return
+
+	var public_leak_check := _public_leak_check([assignment_event, seizure_event, spell_event, opportunistic_spell_event])
 	if not bool(public_leak_check.get("ok", false)):
 		_fail(String(public_leak_check.get("error", "public leak check failed")))
 		return
@@ -132,6 +156,7 @@ func _run() -> void:
 			"assignment_event": true,
 			"countercapture_controller_flip": true,
 			"spell_site_learning": true,
+			"opportunistic_spell_site_learning": true,
 			"signal_post_denial_reason": true,
 			"public_surface_compactness": true,
 		},
@@ -148,6 +173,7 @@ func _run() -> void:
 		"site_controller_before": String(seizure_case.get("controller_before", "")),
 		"site_controller_after": String(seizure_case.get("controller_after", "")),
 		"spell_site_case": spell_site_case,
+		"opportunistic_spell_site_case": opportunistic_spell_site_case,
 		"enemy_state_delta": seizure_case.get("enemy_state_delta", {}),
 		"seizure_message": String(seizure_case.get("message", "")),
 		"signal_post_reason_check": {
@@ -197,6 +223,29 @@ func _run_spell_site_learning_case() -> Dictionary:
 		"controller_after": _resource_controller(session, SPELL_SITE),
 		"learned_spell_in_raid": learned_in_raid,
 		"learned_spell_in_roster": learned_in_roster,
+		"known_spells_after": after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("known_spell_ids", []),
+		"roster_known_spells_after": _roster_commander_spell_ids(session, FACTION_ID, SPELL_SITE_COMMANDER),
+		"event": _event_by_type_and_target(events, "ai_site_seized", SPELL_SITE),
+		"events": events,
+		"message": String(result.get("message", "")),
+	}
+
+func _run_opportunistic_spell_site_learning_case() -> Dictionary:
+	var session = _base_session()
+	_add_spell_site_node(session)
+	_add_opportunistic_spell_site_raid(session)
+	var before_state := _enemy_state_with_roster(session)
+	var result := EnemyAdventureRules.advance_raids(session, _enemy_config(), FACTION_ID, before_state.duplicate(true))
+	var after_raid := _encounter_by_placement(session, "site_control_report_opportunistic_spell_site_raid")
+	var learned_in_raid := _commander_knows_spell(after_raid.get("enemy_commander_state", {}), SPELL_SITE_REWARD)
+	var learned_in_roster := _roster_commander_knows_spell(session, FACTION_ID, SPELL_SITE_COMMANDER, SPELL_SITE_REWARD)
+	var events: Array = result.get("events", [])
+	return {
+		"controller_after": _resource_controller(session, SPELL_SITE),
+		"learned_spell_in_raid": learned_in_raid,
+		"learned_spell_in_roster": learned_in_roster,
+		"last_opportunistic_pickup_kind": String(after_raid.get("last_opportunistic_pickup_kind", "")),
+		"last_opportunistic_pickup_placement_id": String(after_raid.get("last_opportunistic_pickup_placement_id", "")),
 		"known_spells_after": after_raid.get("enemy_commander_state", {}).get("spellbook", {}).get("known_spell_ids", []),
 		"roster_known_spells_after": _roster_commander_spell_ids(session, FACTION_ID, SPELL_SITE_COMMANDER),
 		"event": _event_by_type_and_target(events, "ai_site_seized", SPELL_SITE),
@@ -316,12 +365,51 @@ func _add_spell_site_raid(session) -> void:
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 
+func _add_opportunistic_spell_site_raid(session) -> void:
+	var raid := {
+		"placement_id": "site_control_report_opportunistic_spell_site_raid",
+		"encounter_id": "encounter_mire_raid",
+		"x": 1,
+		"y": 4,
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%s" % [SCENARIO_ID, "site_control_report_opportunistic_spell_site_raid"]),
+		"spawned_by_faction_id": FACTION_ID,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 1,
+		"target_kind": "resource",
+		"target_placement_id": PRIMARY_SITE,
+		"target_label": "Riverwatch Free Company Yard",
+		"target_x": 0,
+		"target_y": 4,
+		"goal_x": 0,
+		"goal_y": 4,
+		"target_public_reason": "recruit and income denial",
+		"target_reason_codes": ["persistent_income_denial", "recruit_denial", "player_town_support"],
+		"target_public_importance": "high",
+		"target_debug_reason": "opportunistic spell-site learning fixture",
+	}
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		SPELL_SITE_COMMANDER,
+		FACTION_ID,
+		session,
+		{},
+		EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
+	)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
 func _assert_resource_order(target_ids: Array) -> void:
 	if target_ids.is_empty():
 		_fail("Resource pressure report returned no targets")
 		return
-	if target_ids.size() < 2 or String(target_ids[0]) != PRIMARY_SITE or String(target_ids[1]) != COMPANION_SITE:
-		_fail("Expected %s then %s at top of resource order, got %s" % [PRIMARY_SITE, COMPANION_SITE, target_ids])
+	if String(target_ids[0]) != PRIMARY_SITE:
+		_fail("Expected %s at top of resource order, got %s" % [PRIMARY_SITE, target_ids])
+		return
+	if COMPANION_SITE not in target_ids:
+		_fail("Missing owned signal-yard site %s in resource order %s" % [COMPANION_SITE, target_ids])
 		return
 	for owned_id in [PRIMARY_SITE, COMPANION_SITE]:
 		var owned_rank := target_ids.find(owned_id)
