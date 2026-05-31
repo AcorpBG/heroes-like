@@ -873,7 +873,7 @@ class FastBattleBenchmark:
                     candidates.append({"spell_id": spell_id, "target_battle_id": target["battle_id"], "score": score})
             elif effect_type in ["defense_buff", "initiative_buff", "attack_buff", "recover_ally", "cleanse_ally"] and allies:
                 for target in allies:
-                    if effect_type in ["defense_buff", "initiative_buff", "attack_buff"] and self._stack_has_positive_effect(target, battle):
+                    if effect_type in ["defense_buff", "initiative_buff", "attack_buff"] and self._spell_buff_already_active(target, battle, spell):
                         continue
                     if effect_type == "cleanse_ally" and not self._cleanse_spell_has_value(target, battle, spell):
                         continue
@@ -944,7 +944,7 @@ class FastBattleBenchmark:
                 score += 0.4
             return (score * max(0.15, control_success)) - (mana_cost * 0.28)
         if effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
-            if self._stack_has_positive_effect(target, battle):
+            if self._spell_buff_already_active(target, battle, spell):
                 return 0.0
             modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
             score = 3.2 + sum(max(0, int(value)) for value in modifiers.values()) * 0.9
@@ -954,6 +954,7 @@ class FastBattleBenchmark:
                 if not bool(target.get("ranged", False)):
                     score += 0.8
             if int(modifiers.get("attack", 0)) > 0:
+                score += self._buff_spell_offense_payoff(target)
                 if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
                     score += 1.0
                 if self._can_make_melee_attack(target, battle):
@@ -963,8 +964,6 @@ class FastBattleBenchmark:
                     score += 1.0
                 if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
                     score += 0.6
-            if str(target.get("battle_id", "")) != str(active.get("battle_id", "")):
-                score -= 4.5
             return score - (mana_cost * 0.2)
         if effect_type == "recover_ally":
             missing = max(0, int(target.get("base_count", 0)) * int(target.get("unit_hp", 1)) - int(target.get("total_health", 0)))
@@ -994,6 +993,14 @@ class FastBattleBenchmark:
         if self._has_ability(target, "formation_guard") or self._has_ability(target, "brace"):
             role_value += 0.2
         return tier_value + offense_value + role_value
+
+    def _buff_spell_offense_payoff(self, target: dict[str, Any]) -> float:
+        average_damage = (int(target.get("min_damage", 1)) + int(target.get("max_damage", 1))) / 2.0
+        output = self._alive_count(target) * average_damage
+        score = min(3.0, output / 80.0)
+        if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
+            score += 0.45
+        return score
 
     def _resolve_spell(
         self,
@@ -1763,6 +1770,16 @@ class FastBattleBenchmark:
             if isinstance(modifiers, dict) and any(int(value) > 0 for value in modifiers.values()):
                 return True
         return False
+
+    def _spell_buff_already_active(self, stack: dict[str, Any], battle: dict[str, Any], spell: dict[str, Any]) -> bool:
+        effect = spell.get("effect", {}) if isinstance(spell.get("effect", {}), dict) else {}
+        modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
+        if not modifiers:
+            return False
+        for key, value in modifiers.items():
+            if self._effect_bonus(stack, battle, str(key)) < int(value):
+                return False
+        return True
 
     def _ability_by_id(self, stack: dict[str, Any], ability_id: str) -> dict[str, Any]:
         for ability in stack.get("abilities", []):
