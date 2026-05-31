@@ -883,6 +883,8 @@ class FastBattleBenchmark:
             return None
         best = sorted(candidates, key=lambda item: (-float(item.get("score", 0.0)), str(item.get("spell_id", ""))))[0]
         best_attack = self._choose_stack_action(battle, active)
+        if self._candidate_is_lethal_attack(best_attack, battle, active) and not self._candidate_is_lethal_damage_spell(best, battle, active):
+            return None
         if float(best["score"]) < max(4.5, float(best_attack.get("score", 0.0)) + 0.8):
             return None
         return best
@@ -1001,6 +1003,29 @@ class FastBattleBenchmark:
         if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
             score += 0.45
         return score
+
+    def _candidate_is_lethal_attack(self, candidate: dict[str, Any], battle: dict[str, Any], active: dict[str, Any]) -> bool:
+        action = str(candidate.get("action", ""))
+        if action not in {"shoot", "strike"}:
+            return False
+        target = self._stack_by_id(battle, str(candidate.get("target_battle_id", "")))
+        if not target or self._alive_count(target) <= 0:
+            return False
+        is_ranged = action == "shoot"
+        attack_distance = int(battle.get("distance", 1)) if is_ranged else (1 if int(battle.get("distance", 1)) == 1 and self._has_ability(active, "reach") else 0)
+        return self._estimated_damage(active, target, battle, is_ranged, False, attack_distance) >= int(target.get("total_health", 0))
+
+    def _candidate_is_lethal_damage_spell(self, candidate: dict[str, Any], battle: dict[str, Any], active: dict[str, Any]) -> bool:
+        spell = self.spells.get(str(candidate.get("spell_id", "")), {})
+        effect = spell.get("effect", {}) if isinstance(spell.get("effect", {}), dict) else {}
+        if str(effect.get("type", "")) != "damage_enemy":
+            return False
+        target = self._stack_by_id(battle, str(candidate.get("target_battle_id", "")))
+        if not target or self._alive_count(target) <= 0:
+            return False
+        hero = self._hero_for_side(battle, str(active.get("side", "")))
+        projection = self._spell_damage_projection(hero, target, spell)
+        return int(projection.get("final_damage", 0)) >= int(target.get("total_health", 0))
 
     def _resolve_spell(
         self,
