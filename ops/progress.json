@@ -40,6 +40,79 @@
   },
   "plannedSlices": [
     {
+      "id": "strategic-ai-hero-front-support-sighting-gate-10184",
+      "title": "Strategic AI Hero Front Support Sighting Gate",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make active-front support and raid grouping for hero-hunt fronts depend on faction-known player-hero sightings instead of hidden live hero coordinates.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_hero_hunt_report.gd"
+      ],
+      "baselineChecks": [
+        "Active hero raid targets now require AI-known hero snapshots, but active-front support candidate selection still reads live player hero positions.",
+        "Nearby raid grouping target views for hero fronts still read live player hero positions and can consolidate around hidden stale hero hunts."
+      ],
+      "completionCriteria": [
+        "Hero-front support candidates are created only when the faction has a current or remembered legal hero sighting.",
+        "Hero-front raid grouping target views use the same faction-known hero snapshot and refuse hidden/lost hero fronts.",
+        "Current/recent legitimate hero sightings still allow support/grouping behavior to continue.",
+        "Focused coverage proves hidden/lost hero fronts do not receive support or grouping from live hidden coordinates."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not introduce omniscient hero tracking.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T02:23:17Z",
+      "updatedAt": "2026-05-31T02:29:32Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Active-front support candidates for hero-hunt fronts now require the enemy faction to have a current or remembered legal player-hero sighting.",
+          "Hero-front support coordinates now come from the faction-known hero snapshot rather than the hidden live hero position.",
+          "Nearby raid grouping for hero fronts now uses the same faction-known target view and refuses hidden/lost hero fronts.",
+          "Legitimate visible/recent hero fronts still support and group before intercept."
+        ],
+        "focused_case": {
+          "case_id": "hidden_hero_front_support_uses_sighting_gate",
+          "last_known_tile": {
+            "x": 8,
+            "y": 4
+          },
+          "hidden_tile": {
+            "x": 1,
+            "y": 4
+          },
+          "support_target_kind": "resource",
+          "support_target_id": "river_free_company",
+          "grouped_hidden_front": false,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; reports/tests were validation only."
+      },
+      "completedAt": "2026-05-31T02:29:32Z"
+    },
+    {
       "id": "strategic-ai-active-hero-target-known-gating-10184",
       "title": "Strategic AI Active Hero Target Known Gating",
       "status": "completed",
@@ -42918,7 +42991,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T02:20:01Z",
+  "currentSliceUpdatedAt": "2026-05-31T02:29:32Z",
   "validationHistory": [
     {
       "status": "pass",
