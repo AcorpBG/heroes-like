@@ -309,20 +309,33 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 	var turn_count: int = max(1, int(input_config.get("turn_count", STRATEGIC_AI_LONG_RUN_DEFAULT_TURN_COUNT)))
 	var battle_step_limit: int = max(1, int(input_config.get("battle_step_limit", STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT)))
 	var pressure_floor: int = max(0, int(input_config.get("pressure_floor", 0)))
+	var seed_offset: int = max(0, int(input_config.get("seed_offset", 0)))
 	var seed_prefix := String(input_config.get("seed_prefix", "strategic-ai-long-run-native-small"))
 	var template_cases: Array = input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) if input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) is Array else STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES
 	var progress_callback := _strategic_ai_long_run_progress_callback(input_config)
+	var seed_shard := {
+		"seed_offset": seed_offset,
+		"seed_count": seed_count,
+		"start_ordinal": seed_offset + 1,
+		"end_ordinal": seed_offset + seed_count,
+		"seed_prefix": seed_prefix,
+	}
 	_strategic_ai_long_run_progress(progress_callback, {
 		"event": "matrix_start",
 		"seed_count": seed_count,
+		"seed_offset": seed_offset,
+		"start_ordinal": int(seed_shard.get("start_ordinal", 1)),
+		"end_ordinal": int(seed_shard.get("end_ordinal", seed_count)),
 		"turn_count": turn_count,
 		"pressure_floor": pressure_floor,
 	})
 	var rows := []
 	for seed_index in range(seed_count):
-		var template_case: Dictionary = template_cases[seed_index % max(1, template_cases.size())] if template_cases[seed_index % max(1, template_cases.size())] is Dictionary else {}
-		var seed := "%s-%03d" % [seed_prefix, seed_index + 1]
-		rows.append(_strategic_ai_long_run_seed_row(template_case, seed, turn_count, battle_step_limit, pressure_floor, progress_callback, seed_index + 1, seed_count))
+		var seed_ordinal := seed_offset + seed_index + 1
+		var template_case_index: int = (seed_ordinal - 1) % maxi(1, template_cases.size())
+		var template_case: Dictionary = template_cases[template_case_index] if template_cases[template_case_index] is Dictionary else {}
+		var seed := "%s-%03d" % [seed_prefix, seed_ordinal]
+		rows.append(_strategic_ai_long_run_seed_row(template_case, seed, turn_count, battle_step_limit, pressure_floor, progress_callback, seed_index + 1, seed_count, seed_ordinal))
 	ContentService.clear_generated_scenario_drafts()
 	var summary := _strategic_ai_long_run_summary(rows, seed_count, turn_count)
 	var blocker_rows := _strategic_ai_long_run_blockers(summary, seed_count, turn_count)
@@ -331,6 +344,9 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 	_strategic_ai_long_run_progress(progress_callback, {
 		"event": "matrix_complete",
 		"seed_count": seed_count,
+		"seed_offset": seed_offset,
+		"start_ordinal": int(seed_shard.get("start_ordinal", 1)),
+		"end_ordinal": int(seed_shard.get("end_ordinal", seed_count)),
 		"turn_count": turn_count,
 		"runtime_msec": runtime_msec,
 		"row_ok_count": int(summary.get("row_ok_count", 0)),
@@ -344,6 +360,8 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 		"runtime_msec": runtime_msec,
 		"production_ready": false,
 		"seed_count": seed_count,
+		"seed_offset": seed_offset,
+		"seed_shard": seed_shard,
 		"turn_count": turn_count,
 		"full_matrix_target": {
 			"seed_count": STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET,
@@ -357,6 +375,8 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 		"signature": _signature_for({
 			"schema_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID,
 			"seed_count": seed_count,
+			"seed_offset": seed_offset,
+			"seed_shard": seed_shard,
 			"turn_count": turn_count,
 			"summary": summary,
 			"row_signatures": _strategic_ai_long_run_row_signatures(rows),
@@ -894,12 +914,14 @@ static func _strategic_ai_long_run_seed_row(
 	pressure_floor: int = 0,
 	progress_callback: Callable = Callable(),
 	seed_index: int = 1,
-	seed_count: int = 1
+	seed_count: int = 1,
+	seed_ordinal: int = 1
 ) -> Dictionary:
 	var row_started_msec := Time.get_ticks_msec()
 	_strategic_ai_long_run_progress(progress_callback, {
 		"event": "row_start",
 		"seed": seed,
+		"seed_ordinal": seed_ordinal,
 		"seed_index": seed_index,
 		"seed_count": seed_count,
 		"turn_count": turn_count,
@@ -923,6 +945,7 @@ static func _strategic_ai_long_run_seed_row(
 	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
 	var row := {
 		"seed": seed,
+		"seed_ordinal": seed_ordinal,
 		"template_id": String(player_config.get("profile", {}).get("template_id", "")),
 		"profile_id": String(player_config.get("profile", {}).get("id", "")),
 		"player_count": int(player_config.get("player_constraints", {}).get("player_count", 0)),
@@ -979,6 +1002,7 @@ static func _strategic_ai_long_run_seed_row(
 		_strategic_ai_long_run_progress(progress_callback, {
 			"event": "turn_start",
 			"seed": seed,
+			"seed_ordinal": seed_ordinal,
 			"seed_index": seed_index,
 			"seed_count": seed_count,
 			"turn_index": turn_index + 1,
@@ -1009,6 +1033,7 @@ static func _strategic_ai_long_run_seed_row(
 		_strategic_ai_long_run_progress(progress_callback, {
 			"event": "turn_complete",
 			"seed": seed,
+			"seed_ordinal": seed_ordinal,
 			"seed_index": seed_index,
 			"seed_count": seed_count,
 			"turn_index": turn_index + 1,
@@ -1067,6 +1092,7 @@ static func _strategic_ai_long_run_row_progress_payload(event_name: String, row:
 	return {
 		"event": event_name,
 		"seed": String(row.get("seed", "")),
+		"seed_ordinal": int(row.get("seed_ordinal", 0)),
 		"seed_index": seed_index,
 		"seed_count": seed_count,
 		"ok": bool(row.get("ok", false)),
