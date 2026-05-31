@@ -20,13 +20,19 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _config_from_environment() -> Dictionary:
-	return {
+	var config := {
 		"seed_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_SEEDS", DEFAULT_SEED_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET),
 		"turn_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_TURNS", DEFAULT_TURN_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET),
 		"battle_step_limit": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT", DEFAULT_BATTLE_STEP_LIMIT, 1, 2048),
 		"pressure_floor": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR", DEFAULT_PRESSURE_FLOOR, 0, 9999),
 		"seed_prefix": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX", DEFAULT_SEED_PREFIX),
 	}
+	if _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS", 0, 0, 1) > 0:
+		config["progress_callback"] = Callable(self, "_progress_callback")
+	return config
+
+func _progress_callback(payload: Dictionary) -> void:
+	print("%s_PROGRESS %s" % [REPORT_ID, JSON.stringify(payload)])
 
 func _env_int(name: String, fallback: int, min_value: int, max_value: int) -> int:
 	var raw: String = OS.get_environment(name).strip_edges()
@@ -61,6 +67,9 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		_fail("Long-run matrix must not use authored scenarios as the balance surface: %s" % JSON.stringify(policy))
 		return false
 	var summary: Dictionary = report.get("summary", {}) if report.get("summary", {}) is Dictionary else {}
+	if int(report.get("runtime_msec", 0)) <= 0:
+		_fail("Long-run matrix report is missing runtime telemetry: %s" % JSON.stringify(report))
+		return false
 	if int(report.get("seed_count", 0)) != expected_seed_count:
 		_fail("Long-run matrix requested seed count mismatch: %s" % JSON.stringify(report))
 		return false
@@ -96,6 +105,20 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		if String(row.get("signature", "")) == "":
 			_fail("Long-run matrix row missing signature: %s" % JSON.stringify(row))
 			return false
+		if int(row.get("setup_runtime_msec", -1)) < 0 or int(row.get("row_runtime_msec", 0)) <= 0:
+			_fail("Long-run matrix row missing setup/row runtime telemetry: %s" % JSON.stringify(row))
+			return false
+		var turn_results: Array = row.get("turn_results", []) if row.get("turn_results", []) is Array else []
+		for turn_result in turn_results:
+			if not (turn_result is Dictionary):
+				_fail("Long-run matrix turn result is not a dictionary: %s" % JSON.stringify(row))
+				return false
+			if int(turn_result.get("turn_runtime_msec", -1)) < 0:
+				_fail("Long-run matrix turn result missing runtime telemetry: %s" % JSON.stringify(turn_result))
+				return false
+	if int(summary.get("max_row_runtime_msec", 0)) <= 0 or int(summary.get("max_turn_runtime_msec", -1)) < 0:
+		_fail("Long-run matrix summary missing runtime telemetry: %s" % JSON.stringify(summary))
+		return false
 	var blockers: Array = report.get("blocker_rows", []) if report.get("blocker_rows", []) is Array else []
 	var full_matrix_blocker := _blocker_row(blockers, "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run")
 	var is_full_matrix := expected_seed_count >= HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET \

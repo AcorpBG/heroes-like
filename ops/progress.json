@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected. Continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T12:30:00Z",
+  "updatedAt": "2026-05-31T13:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,46 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-long-run-progress-telemetry-10184",
+      "title": "Strategic AI Long-Run Progress Telemetry",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T12:45:00Z",
+      "updatedAt": "2026-05-31T13:05:00Z",
+      "source": "active production-readiness goal to co-tune tactical battle AI and strategic AI without touching game balance",
+      "planRef": "PLAN.md Current tactical state / strategic-ai-long-run-progress-telemetry-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make the Native RMG strategic AI long-run matrix usable for production co-tuning by exposing setup, row, and per-turn timing plus optional progress output before broad behavior tuning.",
+      "implementationTargets": [
+        "Record setup, turn, row, and matrix runtime telemetry in the long-run report.",
+        "Add optional environment-gated progress lines for row and turn boundaries.",
+        "Keep the matrix generated-map-only and preserve the full 100-seed eight-week blocker for focused runs."
+      ],
+      "completionCriteria": "Focused long-run validation emits timing telemetry and optional progress without changing AI decisions or balance content; adjacent tactical/strategic AI and repository gates remain green.",
+      "nonGoals": [
+        "No unit stat, spell numeric, ability, growth, economy, faction, or town-cost changes.",
+        "No combat or economy balance tuning.",
+        "No production-ready AI claim from telemetry alone."
+      ],
+      "baselineChecks": [
+        "A 2-seed/7-turn Native RMG probe was manually interrupted after more than six minutes with no row output, showing the current long-run surface is too opaque for production-scale AI co-tuning."
+      ],
+      "validation": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; progress emitted matrix/row/turn boundaries, setup_runtime_msec 2372, turn_runtime_msec 55549, row_runtime_msec 58579)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. The Native RMG strategic AI long-run matrix now records matrix, setup, row, and per-turn runtime telemetry and supports optional progress callbacks. Focused validation proved the current strict Small bottleneck is inside enemy turn execution: setup was about 2.4s while the first generated-map turn was about 55.5s.",
+      "completedAt": "2026-05-31T13:05:00Z"
+    },
     {
       "id": "battle-ai-tactical-order-commander-payload-10184",
       "title": "Battle AI Tactical Order Commander Payload",
@@ -46274,28 +46314,26 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "battle-ai-tactical-order-commander-payload-10184",
+    "sliceId": "strategic-ai-long-run-progress-telemetry-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T12:30:00Z",
+    "updatedAt": "2026-05-31T13:05:00Z",
     "commands": [
+      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; progress emitted matrix/row/turn boundaries, setup_runtime_msec 2372, turn_runtime_msec 55549, row_runtime_msec 58579)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (focused Native RMG row passed; existing full-matrix blocker preserved)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Shared non-spell tactical order scoring now accepts argument-only commander payloads for either side without mutating source battle state, and player autoplay/intent forecast callers pass available commander payloads when needed."
+    "summary": "Strategic AI long-run generated-map reports now expose setup, row, matrix, and per-turn runtime telemetry plus optional progress output; focused evidence shows the current strict Small bottleneck is inside enemy turn execution, not Native RMG setup."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T12:30:00Z"
+    "updatedAt": "2026-05-31T13:05:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T12:30:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T13:05:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -49509,35 +49547,40 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T12:30:00Z",
-    "sliceId": "battle-ai-tactical-order-commander-payload-10184",
+    "updatedAt": "2026-05-31T13:05:00Z",
+    "sliceId": "strategic-ai-long-run-progress-telemetry-10184",
     "commands": [
+      "HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; progress emitted matrix/row/turn boundaries, setup_runtime_msec 2372, turn_runtime_msec 55549, row_runtime_msec 58579)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (focused Native RMG row passed; existing full-matrix blocker preserved)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-      "evidence": {
-        "implemented": [
-          "choose_stack_tactical_order now accepts an optional commander payload and hydrates a local scoring battle for either player or enemy side when the battle payload is absent.",
-          "The shared non-spell tactical scorer records whether commander payload came from battle, argument, or no source.",
-          "Player autoplay and intent forecast callers pass available player commander payloads when the battle payload is absent.",
-          "The source battle dictionary is not mutated by the tactical-order payload bridge."
-        ],
-        "focused_case": {
-          "case_id": "tactical_order_argument_commander_payload",
-          "commander_payload_source": "argument",
-          "baseline_strike_score": 0.75,
-          "bridged_strike_score": 2.35,
-          "source_battle_mutated": false
-        },
-        "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
-        "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need full generated-map long-run matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
-        "policy": "AI-only tactical non-spell order payload bridge; no content balance changes and no production-ready AI claim."
-      }
+    "evidence": {
+      "implemented": [
+        "The strategic AI long-run matrix records matrix runtime, setup runtime, row runtime, and per-turn runtime telemetry.",
+        "The focused report scene can emit environment-gated progress lines for matrix, row, and turn boundaries.",
+        "The focused smoke still uses Native RMG generated maps only and preserves the full 100-seed eight-week remaining-validation blocker.",
+        "The telemetry identified the current strict Small bottleneck as enemy turn execution rather than Native RMG setup."
+      ],
+      "focused_case": {
+        "case_id": "strategic_ai_long_run_progress_telemetry",
+        "setup_runtime_msec": 2372,
+        "turn_runtime_msec": 55549,
+        "row_runtime_msec": 58579,
+        "progress_events": [
+          "matrix_start",
+          "row_start",
+          "turn_start",
+          "turn_complete",
+          "row_complete",
+          "matrix_complete"
+        ]
+      },
+      "content_balance_policy": "No unit, spell, growth, economy, faction, town-cost, or balance content files were changed in this slice.",
+      "remaining_validation": "The broader active goal remains open: tactical and strategic AI still need enemy-turn bottleneck reduction, full generated-map long-run matrices, Medium/generalized behavior evidence, deeper army/economy timing, tactical spell/counterplay breadth, and live-client pacing review before production-readiness claims.",
+      "policy": "Strategic AI co-tuning telemetry only; no content balance changes and no production-ready AI claim."
+    }
   }
 }

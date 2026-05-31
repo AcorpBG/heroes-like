@@ -303,6 +303,7 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 	return report
 
 static func build_strategic_ai_long_run_seed_matrix_report(input_config: Dictionary = {}) -> Dictionary:
+	var matrix_started_msec := Time.get_ticks_msec()
 	ContentService.clear_generated_scenario_drafts()
 	var seed_count: int = max(1, int(input_config.get("seed_count", STRATEGIC_AI_LONG_RUN_DEFAULT_SEED_COUNT)))
 	var turn_count: int = max(1, int(input_config.get("turn_count", STRATEGIC_AI_LONG_RUN_DEFAULT_TURN_COUNT)))
@@ -310,20 +311,37 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 	var pressure_floor: int = max(0, int(input_config.get("pressure_floor", 0)))
 	var seed_prefix := String(input_config.get("seed_prefix", "strategic-ai-long-run-native-small"))
 	var template_cases: Array = input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) if input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) is Array else STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES
+	var progress_callback := _strategic_ai_long_run_progress_callback(input_config)
+	_strategic_ai_long_run_progress(progress_callback, {
+		"event": "matrix_start",
+		"seed_count": seed_count,
+		"turn_count": turn_count,
+		"pressure_floor": pressure_floor,
+	})
 	var rows := []
 	for seed_index in range(seed_count):
 		var template_case: Dictionary = template_cases[seed_index % max(1, template_cases.size())] if template_cases[seed_index % max(1, template_cases.size())] is Dictionary else {}
 		var seed := "%s-%03d" % [seed_prefix, seed_index + 1]
-		rows.append(_strategic_ai_long_run_seed_row(template_case, seed, turn_count, battle_step_limit, pressure_floor))
+		rows.append(_strategic_ai_long_run_seed_row(template_case, seed, turn_count, battle_step_limit, pressure_floor, progress_callback, seed_index + 1, seed_count))
 	ContentService.clear_generated_scenario_drafts()
 	var summary := _strategic_ai_long_run_summary(rows, seed_count, turn_count)
 	var blocker_rows := _strategic_ai_long_run_blockers(summary, seed_count, turn_count)
 	var ok := blocker_rows.is_empty()
+	var runtime_msec := maxi(0, Time.get_ticks_msec() - matrix_started_msec)
+	_strategic_ai_long_run_progress(progress_callback, {
+		"event": "matrix_complete",
+		"seed_count": seed_count,
+		"turn_count": turn_count,
+		"runtime_msec": runtime_msec,
+		"row_ok_count": int(summary.get("row_ok_count", 0)),
+		"turns_completed": int(summary.get("turns_completed", 0)),
+	})
 	return {
 		"ok": ok,
 		"report_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_ID,
 		"schema_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID,
 		"status": "pass" if ok else "needs_attention",
+		"runtime_msec": runtime_msec,
 		"production_ready": false,
 		"seed_count": seed_count,
 		"turn_count": turn_count,
@@ -352,6 +370,17 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 			"production_ready_claim": false,
 		},
 	}
+
+static func _strategic_ai_long_run_progress_callback(input_config: Dictionary) -> Callable:
+	if input_config.has("progress_callback"):
+		var callback = input_config.get("progress_callback")
+		if callback is Callable and callback.is_valid():
+			return callback
+	return Callable()
+
+static func _strategic_ai_long_run_progress(callback: Callable, payload: Dictionary) -> void:
+	if callback.is_valid():
+		callback.call(payload)
 
 static func strategic_ai_multi_scenario_recruitment_delivery_case(input_config: Dictionary = {}) -> Dictionary:
 	return _strategic_ai_multi_scenario_recruitment_delivery(input_config)
@@ -857,7 +886,25 @@ static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 	slices.append("strategic-ai-long-run-seed-matrix-10184")
 	return slices
 
-static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: String, turn_count: int, battle_step_limit: int, pressure_floor: int = 0) -> Dictionary:
+static func _strategic_ai_long_run_seed_row(
+	template_case: Dictionary,
+	seed: String,
+	turn_count: int,
+	battle_step_limit: int,
+	pressure_floor: int = 0,
+	progress_callback: Callable = Callable(),
+	seed_index: int = 1,
+	seed_count: int = 1
+) -> Dictionary:
+	var row_started_msec := Time.get_ticks_msec()
+	_strategic_ai_long_run_progress(progress_callback, {
+		"event": "row_start",
+		"seed": seed,
+		"seed_index": seed_index,
+		"seed_count": seed_count,
+		"turn_count": turn_count,
+	})
+	var setup_started_msec := Time.get_ticks_msec()
 	var player_config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		String(template_case.get("template_id", "")),
@@ -872,6 +919,7 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 		"normal",
 		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
 	)
+	var setup_runtime_msec := maxi(0, Time.get_ticks_msec() - setup_started_msec)
 	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
 	var row := {
 		"seed": seed,
@@ -887,6 +935,8 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 		"battle_results": [],
 		"event_counts": {},
 		"failures": [],
+		"setup_runtime_msec": setup_runtime_msec,
+		"row_runtime_msec": 0,
 	}
 	var failures: Array = row["failures"]
 	if not bool(setup.get("ok", false)):
@@ -894,14 +944,18 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 		row["ok"] = false
 		row["classification"] = "setup_failure"
 		row["setup_error_code"] = String(setup.get("error_code", ""))
+		row["row_runtime_msec"] = maxi(0, Time.get_ticks_msec() - row_started_msec)
 		row["signature"] = _signature_for(row)
+		_strategic_ai_long_run_progress(progress_callback, _strategic_ai_long_run_row_progress_payload("row_complete", row, seed_index, seed_count))
 		return row
 	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if session == null or session.scenario_id == "":
 		failures.append("native_rmg_session_start_failed")
 		row["ok"] = false
 		row["classification"] = "session_failure"
+		row["row_runtime_msec"] = maxi(0, Time.get_ticks_msec() - row_started_msec)
 		row["signature"] = _signature_for(row)
+		_strategic_ai_long_run_progress(progress_callback, _strategic_ai_long_run_row_progress_payload("row_complete", row, seed_index, seed_count))
 		return row
 	OverworldRules.normalize_overworld_state(session)
 	EnemyTurnRules.normalize_enemy_states(session)
@@ -922,7 +976,18 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 	for turn_index in range(turn_count):
 		if session.scenario_status != "in_progress":
 			break
+		_strategic_ai_long_run_progress(progress_callback, {
+			"event": "turn_start",
+			"seed": seed,
+			"seed_index": seed_index,
+			"seed_count": seed_count,
+			"turn_index": turn_index + 1,
+			"turn_count": turn_count,
+			"day": int(session.day),
+		})
+		var turn_started_msec := Time.get_ticks_msec()
 		var result: Dictionary = OverworldRules.end_turn(session)
+		var turn_runtime_msec := maxi(0, Time.get_ticks_msec() - turn_started_msec)
 		var events: Array = result.get("enemy_activity_events", []) if result.get("enemy_activity_events", []) is Array else []
 		enemy_activity_event_count += events.size()
 		_strategic_ai_count_event_types(row["event_counts"], events)
@@ -939,6 +1004,21 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 			"enemy_activity_summary": String(result.get("enemy_activity_summary", "")),
 			"game_state": String(session.game_state),
 			"scenario_status": String(session.scenario_status),
+			"turn_runtime_msec": turn_runtime_msec,
+		})
+		_strategic_ai_long_run_progress(progress_callback, {
+			"event": "turn_complete",
+			"seed": seed,
+			"seed_index": seed_index,
+			"seed_count": seed_count,
+			"turn_index": turn_index + 1,
+			"turn_count": turn_count,
+			"day": int(session.day),
+			"ok": turn_ok,
+			"enemy_activity_event_count": events.size(),
+			"game_state": String(session.game_state),
+			"scenario_status": String(session.scenario_status),
+			"turn_runtime_msec": turn_runtime_msec,
 		})
 		if not turn_ok:
 			failures.append("turn_%d_failed" % (turn_index + 1))
@@ -969,6 +1049,7 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 	row["active_raid_count"] = _strategic_ai_active_raid_count(session)
 	row["ok"] = all_turns_ok and failures.is_empty() and int(row.get("initial_enemy_state_count", 0)) > 0 and turns_completed > 0
 	row["classification"] = "native_rmg_long_run_ai_health" if bool(row.get("ok", false)) else "behavior_bug"
+	row["row_runtime_msec"] = maxi(0, Time.get_ticks_msec() - row_started_msec)
 	row["signature"] = _signature_for({
 		"seed": seed,
 		"turns_completed": turns_completed,
@@ -979,7 +1060,22 @@ static func _strategic_ai_long_run_seed_row(template_case: Dictionary, seed: Str
 		"final_task_summary": row.get("final_task_summary", {}),
 		"failures": failures,
 	})
+	_strategic_ai_long_run_progress(progress_callback, _strategic_ai_long_run_row_progress_payload("row_complete", row, seed_index, seed_count))
 	return row
+
+static func _strategic_ai_long_run_row_progress_payload(event_name: String, row: Dictionary, seed_index: int, seed_count: int) -> Dictionary:
+	return {
+		"event": event_name,
+		"seed": String(row.get("seed", "")),
+		"seed_index": seed_index,
+		"seed_count": seed_count,
+		"ok": bool(row.get("ok", false)),
+		"classification": String(row.get("classification", "")),
+		"turns_completed": int(row.get("turns_completed", 0)),
+		"enemy_activity_event_count": int(row.get("enemy_activity_event_count", 0)),
+		"setup_runtime_msec": int(row.get("setup_runtime_msec", 0)),
+		"row_runtime_msec": int(row.get("row_runtime_msec", 0)),
+	}
 
 static func _strategic_ai_auto_resolve_battle_interrupt(session: SessionStateStoreScript.SessionData, step_limit: int) -> Dictionary:
 	var steps := 0
@@ -1048,6 +1144,10 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var terminal_status_counts := {}
 	var task_board_open_count := 0
 	var task_board_active_count := 0
+	var total_runtime_msec := 0
+	var max_row_runtime_msec := 0
+	var max_turn_runtime_msec := 0
+	var setup_runtime_msec := 0
 	for row_value in rows:
 		if not (row_value is Dictionary):
 			continue
@@ -1063,6 +1163,13 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		battle_interrupt_count += int(row.get("battle_interrupt_count", 0))
 		auto_resolved_battle_count += int(row.get("auto_resolved_battle_count", 0))
 		total_stalled_turns += int(row.get("stalled_turn_count", 0))
+		total_runtime_msec += int(row.get("row_runtime_msec", 0))
+		max_row_runtime_msec = maxi(max_row_runtime_msec, int(row.get("row_runtime_msec", 0)))
+		setup_runtime_msec += int(row.get("setup_runtime_msec", 0))
+		var turn_results: Array = row.get("turn_results", []) if row.get("turn_results", []) is Array else []
+		for turn_value in turn_results:
+			if turn_value is Dictionary:
+				max_turn_runtime_msec = maxi(max_turn_runtime_msec, int(turn_value.get("turn_runtime_msec", 0)))
 		var row_event_counts: Dictionary = row.get("event_counts", {}) if row.get("event_counts", {}) is Dictionary else {}
 		for key in row_event_counts.keys():
 			event_counts[String(key)] = int(event_counts.get(String(key), 0)) + int(row_event_counts.get(key, 0))
@@ -1095,6 +1202,10 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"task_board_active_count": task_board_active_count,
 		"site_seized_count": int(event_counts.get("ai_site_seized", 0)),
 		"town_battle_queued_count": int(event_counts.get("ai_town_assault_battle_queued", 0)) + int(event_counts.get("ai_town_defense_battle_queued", 0)),
+		"total_row_runtime_msec": total_runtime_msec,
+		"setup_runtime_msec": setup_runtime_msec,
+		"max_row_runtime_msec": max_row_runtime_msec,
+		"max_turn_runtime_msec": max_turn_runtime_msec,
 	}
 
 static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_count: int, requested_turn_count: int) -> Array:
