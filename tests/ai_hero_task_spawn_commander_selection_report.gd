@@ -22,13 +22,16 @@ func _run() -> void:
 	var spell_tempo_case := _spell_tempo_commander_spawn_point_case()
 	if spell_tempo_case.is_empty():
 		return
+	var fresh_fit_case := _fresh_launch_commander_fit_beats_rotation_case()
+	if fresh_fit_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "spawn_prefers_deployable_saved_task_commander_and_spell_tempo",
-		"behavior_policy": "saved_tasks_influence_live_commander_deployment_spawn_point_selection_and_adventure_spell_route_tempo",
+		"schema_status": "saved_tasks_influence_live_commander_deployment_and_spawn_prefers_deployable_saved_task_commander_spell_tempo_and_fresh_fit",
+		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_and_adventure_spell_route_tempo",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, spell_tempo_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, spell_tempo_case, fresh_fit_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -266,6 +269,69 @@ func _spell_tempo_commander_spawn_point_case() -> Dictionary:
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _fresh_launch_commander_fit_beats_rotation_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["raid_counter"] = 0
+	state["commander_counter"] = 1
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	_set_town_owner(session, "riverwatch_hold", "enemy", MIRECLAW)
+	_set_resource_controller(session, "duskfen_bastion_peatwax_front", "")
+	_set_primary_hero_position(session, 6, 2)
+	var memory_result := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
+	_update_enemy_state(session, memory_result.get("state", _enemy_state(session)))
+	state = _enemy_state(session)
+
+	var rotation_pick := EnemyAdventureRules.select_raid_commander_roster_hero_id(
+		session,
+		MIRECLAW,
+		1,
+		{},
+		state.get("commander_roster", [])
+	)
+	if rotation_pick != "hero_sable":
+		_fail("Fixture expected fresh-launch rotation to start with hero_sable, got %s" % rotation_pick)
+		return {}
+	var best_open := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if String(best_open.get("spawn_plan_source", "")) != "fresh_target":
+		_fail("Fresh launch fit case expected fresh_target plan, got %s" % JSON.stringify(best_open))
+		return {}
+	if String(best_open.get("roster_hero_id", "")) == rotation_pick:
+		_fail("Fresh launch fit should beat plain rotation, got %s" % JSON.stringify(best_open))
+		return {}
+	if String(best_open.get("roster_hero_id", "")) != "hero_vaska":
+		_fail("Fresh launch fit should select Vaska for the highest-fit fresh pressure target, got %s" % JSON.stringify(best_open))
+		return {}
+	if int(best_open.get("spawn_plan_commander_fit_bonus", 0)) <= 0:
+		_fail("Fresh launch fit did not record a positive commander fit bonus: %s" % JSON.stringify(best_open))
+		return {}
+
+	var spawn_result := EnemyTurnRules._spawn_raid(session, config, state)
+	if not bool(spawn_result.get("ok", false)):
+		_fail("Fresh launch fit spawn failed: %s" % JSON.stringify(spawn_result))
+		return {}
+	var raid := _latest_raid(session)
+	if String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")) != "hero_vaska":
+		_fail("Fresh launch spawned raid did not deploy Vaska: %s" % JSON.stringify(raid))
+		return {}
+	if String(raid.get("target_kind", "")) != String(best_open.get("spawn_plan_target_kind", "")) \
+			or String(raid.get("target_placement_id", "")) != String(best_open.get("spawn_plan_target_id", "")):
+		_fail("Fresh launch spawned raid did not keep the fitted target: plan=%s raid=%s" % [JSON.stringify(best_open), JSON.stringify(raid)])
+		return {}
+	return {
+		"case_id": "fresh_launch_commander_fit_beats_rotation",
+		"rotation_pick": rotation_pick,
+		"selected_commander_id": String(best_open.get("roster_hero_id", "")),
+		"target_kind": String(best_open.get("spawn_plan_target_kind", "")),
+		"target_id": String(best_open.get("spawn_plan_target_id", "")),
+		"commander_fit_bonus": int(best_open.get("spawn_plan_commander_fit_bonus", 0)),
+		"commander_fit_profile": String(best_open.get("spawn_plan_commander_fit_profile", "")),
+		"spawned_commander_id": String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")),
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _seed_task_board(session, tasks: Array) -> void:
 	var state := _enemy_state(session)
 	state["hero_task_state"] = {
@@ -349,6 +415,30 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		session.overworld["resource_nodes"] = nodes
 		return
 	_fail("Could not find resource placement %s" % placement_id)
+
+func _set_town_owner(session, placement_id: String, owner: String, faction_id: String = "") -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		town["owner"] = owner
+		if owner == "enemy" and faction_id != "":
+			town["controlling_faction_id"] = faction_id
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	_fail("Could not find town placement %s" % placement_id)
+
+func _set_primary_hero_position(session, x: int, y: int) -> void:
+	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true)
+	hero["id"] = String(session.overworld.get("active_hero_id", "hero_lyra"))
+	hero["name"] = String(hero.get("name", "Lyra"))
+	hero["position"] = {"x": x, "y": y}
+	session.overworld["hero"] = hero
+	session.overworld["hero_position"] = {"x": x, "y": y}
+	session.overworld["active_hero_id"] = String(hero.get("id", "hero_lyra"))
+	session.overworld["player_heroes"] = [hero]
 
 func _set_commander_recovering(session, actor_id: String, recovery_day: int) -> void:
 	var state := _enemy_state(session)

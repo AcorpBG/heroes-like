@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-known-world-memory-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-fresh-launch-commander-fit-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T01:05:00Z",
+  "updatedAt": "2026-05-31T01:42:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,76 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-fresh-launch-commander-fit-10184",
+      "title": "Strategic AI Fresh Launch Commander Fit",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make ordinary pressure launches select the best available commander and target pair from live target scoring instead of selecting a commander by roster rotation before target choice.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd"
+      ],
+      "baselineChecks": [
+        "Ready saved-task launches evaluate candidate commanders, but fresh pressure launches select one roster hero first and only then score targets.",
+        "This can ignore commander personality, adaptive memory, spells, and role fit when pressure creates a new unsaved raid."
+      ],
+      "completionCriteria": [
+        "Fresh pressure spawn-point scoring evaluates all deployable commander candidates against their live choose_target plans.",
+        "The selected spawn plan records the chosen commander, target, source, score, and distance deterministically.",
+        "Saved-task and emergency defense launches keep their existing higher-priority behavior.",
+        "Focused validation proves fresh launch selection can choose a better-fit commander than the rotation pick without broad report-only gates."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not retune faction stats, battle balance, or RMG generation.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T01:14:00Z",
+      "updatedAt": "2026-05-31T01:42:00Z",
+      "completedAt": "2026-05-31T01:42:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "evidence": {
+        "implemented": [
+          "Fresh pressure spawn-point scoring now evaluates all deployable commander candidates against fitted live target plans instead of selecting one roster hero before target scoring.",
+          "Saved-task and emergency defense launch priorities remain ahead of fresh pressure launches.",
+          "Fresh spawn plans persist target kind, target id, labels, reason metadata, commander fit bonus, and fit profile through raid creation.",
+          "Adventure spell route projection still applies to saved and fresh spawn-plan candidates."
+        ],
+        "focused_case": {
+          "scenario_id": "river-pass",
+          "plain_rotation_pick": "hero_sable",
+          "selected_commander_id": "hero_vaska",
+          "selected_target_kind": "encounter",
+          "selected_target_id": "river_pass_hollow_mire",
+          "commander_fit_bonus": 78,
+          "commander_fit_profile": "raider/might"
+        },
+        "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, and live-client pacing/manual play remain open.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-known-world-memory-10184",
       "title": "Strategic AI Known-World Memory",
@@ -41786,22 +41856,26 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T00:33:09Z",
-    "sliceId": "strategic-ai-post-objective-raid-continuation-10184",
+    "updatedAt": "2026-05-31T01:42:00Z",
+    "sliceId": "strategic-ai-fresh-launch-commander-fit-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Post-objective mobile raid continuation and focused strategic-AI regressions passed; full strategic AI production readiness remains open."
+    "summary": "Fresh pressure launches now score commander-target fit before deployment; focused strategic-AI regressions passed and full production readiness remains open."
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T00:33:09Z",
+  "currentSliceUpdatedAt": "2026-05-31T01:42:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -44754,41 +44828,40 @@
       }
     }
   ],
-  "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
+  "currentSlice": "none selected; latest completed slice strategic-ai-fresh-launch-commander-fit-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T01:05:00Z",
-    "sliceId": "strategic-ai-known-world-memory-10184",
+    "updatedAt": "2026-05-31T01:42:00Z",
+    "sliceId": "strategic-ai-fresh-launch-commander-fit-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Enemy known_world_memory now survives EnemyTurnRules.normalize_enemy_states, including existing scouting target memory and new player-hero sighting records.",
-        "Enemy turns refresh current player-hero sightings from owned towns, active commanders, and controlled resource-site vision sources before planning and movement decisions.",
-        "Hero target candidates, opportunistic intercepts, and nearby-threat avoidance now require a current or recent AI sighting instead of reading live player hero positions unconditionally.",
-        "Recent hero sightings use remembered coordinates and known strength for strategic pressure rather than hidden current coordinates.",
-        "EnemyTurnRules now refreshes local enemy state after raid advancement and battle queueing so live task-board writes are not overwritten by stale turn-cycle state."
+        "Fresh pressure spawn-point scoring now evaluates all deployable commander candidates against fitted live target plans instead of selecting one roster hero before target scoring.",
+        "Saved-task and emergency defense launch priorities remain ahead of fresh pressure launches.",
+        "Fresh spawn plans persist target kind, target id, labels, reason metadata, commander fit bonus, and fit profile through raid creation.",
+        "Adventure spell route projection still applies to saved and fresh spawn-plan candidates."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "hidden_hero_candidate_count": 0,
-        "visible_hero_candidate_count": 1,
-        "remembered_hero_target_id": "hero_lyra",
-        "remembered_hero_target_x": 5,
-        "remembered_hero_target_y": 2,
-        "known_world_memory_preserved": true
+        "plain_rotation_pick": "hero_sable",
+        "selected_commander_id": "hero_vaska",
+        "selected_target_kind": "encounter",
+        "selected_target_id": "river_pass_hollow_mire",
+        "commander_fit_bonus": 78,
+        "commander_fit_profile": "raider/might"
       },
       "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, and live-client pacing/manual play remain open.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
