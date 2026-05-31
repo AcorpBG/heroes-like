@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "No active slice selected; continue with the next production-impacting strategic AI behavior gap.",
+  "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T05:30:27Z",
+  "updatedAt": "2026-05-31T06:20:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,99 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-active-town-runway-source-support-10184",
+      "title": "Strategic AI Active Town Runway Source Support",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Ensure active authored enemy towns have live, contestable source access for every non-gold resource required by their full town build curves, so strategic AI town development cannot stall on impossible rare-resource routes.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioFactory.gd",
+        "tests/active_scenario_ai_town_development_runway_report.gd"
+      ],
+      "baselineChecks": [
+        "The broad active-scenario AI town development runway currently fails because some enemy towns require rare resources that do not exist in the scenario resource source surface.",
+        "Enemy town construction and empire build arbitration can spend available resources correctly, but cannot complete buildings whose required rare sources are impossible to acquire.",
+        "The fix must improve live scenario state with contestable sources, not hide a free AI treasury injection or add a report-only waiver."
+      ],
+      "completionCriteria": [
+        "Session creation or normalization materializes missing enemy-town development resource support as map resource nodes when authored active scenarios lack required sources.",
+        "Support nodes are deterministic, bounded, placement-safe, and tied to the enemy town that needs the source access.",
+        "Enemy town development runway source schedules cover every required non-gold resource for the affected towns.",
+        "Focused River Pass validation completes the previously stalled enemy town development runway.",
+        "Broad active-scenario AI town development runway and repository validation are rerun, with any remaining failures recorded accurately."
+      ],
+      "nonGoals": [
+        "Do not rebalance town building costs in this slice.",
+        "Do not claim final campaign/source-route balance from this support hook.",
+        "Do not add a new broad gate or report surface unless required by a real bug."
+      ],
+      "startedAt": "2026-05-31T05:35:23Z",
+      "updatedAt": "2026-05-31T06:20:50Z",
+      "validation": [
+        {
+          "command": "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=river-pass GODOT_SILENCE_ROOT_WARNING=1 timeout 90 godot --headless --path . --quit-after 120 --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "status": "pass_filtered_with_expected_coverage_errors",
+          "notes": "Previously stalled River Pass enemy town case completed with case_ok true and no non-coverage errors; report-level ok remains false only under scenario filter coverage thresholds."
+        },
+        {
+          "command": "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY=ninefold-confluence GODOT_SILENCE_ROOT_WARNING=1 timeout 420 godot --headless --path . --quit-after 420 --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "status": "pass_filtered_with_expected_coverage_errors",
+          "notes": "All five Ninefold enemy town cases completed with delayed source replay and save/resume true; no non-coverage errors. Single filtered report still violates global scenario/faction coverage thresholds by design."
+        },
+        {
+          "command": "per-scenario isolated sweep of 16 active authored enemy-town scenarios",
+          "status": "pass_with_one_large_case_rerun",
+          "notes": "The first 15 active enemy-town scenarios completed case_ok true with zero non-coverage errors; Ninefold required the longer isolated rerun above and then completed all five rows."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "status": "timeout_existing_validation_throughput_gap",
+          "notes": "The monolithic all-scenario report did not emit a report before the 300-second guard because Ninefold is a multi-minute five-town replay. Correctness was validated through isolated scenario runs; broad one-shot report runtime remains a validation throughput follow-up."
+        },
+        {
+          "command": "godot --headless --path . tests/active_scenario_ai_town_start_economy_report.tscn",
+          "status": "pass",
+          "notes": "Natural first-week active enemy-town economy remained green across 20 enemy-town cases."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_town_governor_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Town build/recruitment governor and empire build arbitration evidence remains green."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "status": "pass",
+          "notes": "Same-turn task planning, build prep, spell study, recruitment prep, and launch behavior remain green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check",
+          "status": "pass",
+          "notes": "Progress JSON and whitespace checks passed."
+        }
+      ],
+      "evidence": [
+        "ScenarioFactory now augments authored non-generated sessions with deterministic enemy town development support resource nodes only when the local town-side source surface lacks non-gold resources required by that town build curve.",
+        "The support source is a live map resource node using the existing generated town required-source site, so the source is visible/contestable state instead of an invisible treasury grant.",
+        "Support placement avoids occupied scenario tiles, prefers orthogonal reachable tiles around the town, and records source_support_town_placement_id/faction/missing resources metadata.",
+        "Overworld resource-node normalization now preserves the support metadata across runtime normalization/save boundaries.",
+        "River Pass Duskfen and all five Ninefold enemy towns complete delayed AI development source replay with rare spend and seven-tier recruitment evidence after the fix."
+      ],
+      "completedAt": "2026-05-31T06:20:50Z"
+    },
     {
       "id": "strategic-ai-empire-build-arbitration-10184",
       "title": "Strategic AI Empire Build Arbitration",
@@ -44925,9 +45018,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T05:11:37Z"
+    "updatedAt": "2026-05-31T06:20:50Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T05:30:27Z",
+  "currentSliceUpdatedAt": "2026-05-31T06:20:50Z",
   "validationHistory": [
     {
       "status": "pass",
