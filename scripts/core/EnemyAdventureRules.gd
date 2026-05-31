@@ -3465,7 +3465,6 @@ static func _best_threatened_defense_town(
 	faction_id: String
 ) -> Dictionary:
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	var hero_position := _primary_player_position(session)
 	var best := {}
 	var best_score := -999999
 	var best_distance := 9999
@@ -3500,11 +3499,13 @@ static func _best_threatened_defense_town(
 		if open_defense_gap <= 0:
 			continue
 		var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var hero_distance: int = abs(hero_position.x - town_tile.x) + abs(hero_position.y - town_tile.y)
+		var known_threat := _known_player_threat_position_for_ai(session, faction_id, town_tile)
+		var hero_distance: int = int(known_threat.get("distance", 9999))
 		var score := int(front_state.get("priority_bonus", 0))
 		score += int(front_state.get("garrison_bonus", 0))
 		score += int(ceili(float(open_defense_gap) / 4.0))
-		score += max(0, 12 - hero_distance) * 18
+		if not known_threat.is_empty():
+			score += max(0, 12 - hero_distance) * 18
 		score += max(0, 14 - distance) * 8
 		if String(config.get("siege_target_placement_id", "")) == String(town.get("placement_id", "")):
 			score += 40
@@ -3563,7 +3564,6 @@ static func _best_threatened_resource_defense(
 	faction_id: String
 ) -> Dictionary:
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	var hero_position := _primary_player_position(session)
 	var best := {}
 	var best_score := -999999
 	var best_distance := 9999
@@ -3576,10 +3576,11 @@ static func _best_threatened_resource_defense(
 			continue
 		if String(node.get("collected_by_faction_id", "")) != faction_id:
 			continue
-		var front_state := _resource_defense_front_state(session, node, site, faction_id, hero_position)
+		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+		var known_threat := _known_player_threat_position_for_ai(session, faction_id, target_tile)
+		var front_state := _resource_defense_front_state(session, node, site, faction_id, known_threat)
 		if not bool(front_state.get("active", false)):
 			continue
-		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 		var distance := _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")))
 		if distance >= 9999:
 			continue
@@ -3593,11 +3594,12 @@ static func _best_threatened_resource_defense(
 		var open_defense_gap: int = max(0, defense_need - committed_defense)
 		if open_defense_gap <= 0:
 			continue
-		var hero_distance: int = abs(hero_position.x - target_tile.x) + abs(hero_position.y - target_tile.y)
+		var hero_distance: int = int(known_threat.get("distance", 9999))
 		var score := int(front_state.get("priority_bonus", 0))
 		score += int(min(80.0, float(_resource_site_strategic_value(site)) / 40.0))
 		score += int(ceili(float(open_defense_gap) / 4.0))
-		score += max(0, 12 - hero_distance) * 14
+		if not known_threat.is_empty():
+			score += max(0, 12 - hero_distance) * 14
 		score += max(0, 14 - distance) * 7
 		if String(config.get("priority_resource_placement_id", "")) == String(node.get("placement_id", "")):
 			score += 30
@@ -3612,7 +3614,7 @@ static func _resource_defense_front_state(
 	node: Dictionary,
 	site: Dictionary,
 	faction_id: String,
-	hero_position: Vector2i
+	known_threat: Dictionary
 ) -> Dictionary:
 	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
 	var explicit := false
@@ -3625,9 +3627,9 @@ static func _resource_defense_front_state(
 		priority_bonus = int(front.get("priority_bonus", 0))
 		mode = state
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var hero_distance: int = abs(hero_position.x - target_tile.x) + abs(hero_position.y - target_tile.y)
+	var hero_distance: int = int(known_threat.get("distance", 9999))
 	var threat_radius: int = max(4, min(8, 3 + max(0, int(site.get("pressure_guard", 0)))))
-	var derived_threat := hero_distance <= threat_radius
+	var derived_threat := not known_threat.is_empty() and hero_distance <= threat_radius
 	return {
 		"active": explicit or derived_threat,
 		"mode": mode if mode != "" else "nearby_player_threat",
@@ -3636,6 +3638,43 @@ static func _resource_defense_front_state(
 		"threat_radius": threat_radius,
 		"explicit": explicit,
 	}
+
+static func _known_player_threat_position_for_ai(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_tile: Vector2i
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	var best := {}
+	var best_distance := 9999
+	for hero_value in _player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = _known_player_hero_snapshot_for_ai(session, faction_id, hero_value)
+		if hero.is_empty():
+			continue
+		var hero_tile := _player_hero_goal_tile(hero)
+		var distance: int = abs(hero_tile.x - target_tile.x) + abs(hero_tile.y - target_tile.y)
+		if (
+			best.is_empty()
+			or distance < best_distance
+			or (
+				distance == best_distance
+				and String(hero.get("id", "")) < String(best.get("hero_id", ""))
+			)
+		):
+			best_distance = distance
+			best = {
+				"hero_id": String(hero.get("id", "")),
+				"hero_label": String(hero.get("name", hero.get("id", ""))),
+				"x": hero_tile.x,
+				"y": hero_tile.y,
+				"distance": distance,
+				"confidence": String(hero.get("ai_sighting_confidence", "")),
+				"seen_day": int(hero.get("ai_sighting_seen_day", 0)),
+			}
+	return best
 
 static func _town_defense_commitment_need(town: Dictionary, front_state: Dictionary) -> int:
 	return max(
@@ -3702,17 +3741,6 @@ static func _committed_resource_defense_strength(
 			continue
 		total += raid_strength(encounter)
 	return total
-
-static func _primary_player_position(session: SessionStateStoreScript.SessionData) -> Vector2i:
-	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
-	if hero_position is Dictionary:
-		return Vector2i(int(hero_position.get("x", 0)), int(hero_position.get("y", 0)))
-	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
-	if active_hero_id != "":
-		var hero := _find_player_hero(session, active_hero_id)
-		if not hero.is_empty():
-			return _hero_position_for_target(session, active_hero_id)
-	return Vector2i(0, 0)
 
 static func _nearest_regroup_town(
 	session: SessionStateStoreScript.SessionData,

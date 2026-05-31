@@ -40,6 +40,77 @@
   },
   "plannedSlices": [
     {
+      "id": "strategic-ai-defensive-threat-known-hero-gating-10184",
+      "title": "Strategic AI Defensive Threat Known Hero Gating",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make derived defensive retasking for owned towns/resources use faction-known player hero pressure instead of the hidden live primary hero position.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_town_defense_retask_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "baselineChecks": [
+        "_best_threatened_defense_town and _best_threatened_resource_defense score fronts from _primary_player_position, which reads live player hero state.",
+        "_resource_defense_front_state derives nearby player threat from the live hero position even when the enemy has no sighting or memory."
+      ],
+      "completionCriteria": [
+        "Derived resource defense fronts activate only when a player hero is currently/recently known to the faction near the defended resource.",
+        "Defense priority scoring uses nearest known player-hero pressure; hidden live player position gives no proximity bonus.",
+        "Explicit stabilizing/defend fronts still launch/retask as before.",
+        "Focused coverage proves hidden nearby hero does not trigger derived resource defense, and remembered nearby hero does."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not introduce omniscient player-position tracking.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T02:39:17Z",
+      "updatedAt": "2026-05-31T02:42:57Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Derived town/resource defense scoring now uses the nearest faction-known player hero pressure instead of the hidden live primary hero position.",
+          "Derived resource-defense fronts now activate from nearby player pressure only when that hero is current/recent in enemy sighting memory.",
+          "Explicit stabilizing/defend fronts continue to function without needing a nearby known hero.",
+          "The town-defense fixture movement helper now updates the live hero, player_heroes, and legacy heroes snapshots so hidden-vs-known tests exercise the real player-hero state.",
+          "Repository validation now checks the known-player-threat helper instead of the removed live-position helper for town-defense retask coverage."
+        ],
+        "focused_case": {
+          "case_id": "derived_resource_defense_requires_known_hero_pressure",
+          "hidden_probe_target_id": "river_signal_post",
+          "known_probe_target_id": "river_free_company",
+          "known_reason_codes": [
+            "site_defense",
+            "defend_front",
+            "front_stabilization"
+          ],
+          "hero_id": "hero_lyra",
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper generated-map army/economy timing, retreat/personality tuning, and live-client pacing review. A separate core systems smoke obstruction-line failure remains outside this slice.",
+        "policy": "Live strategic AI behavior slice; reports/tests were validation only."
+      },
+      "completedAt": "2026-05-31T02:42:57Z"
+    },
+    {
       "id": "strategic-ai-convoy-interception-known-world-gating-10184",
       "title": "Strategic AI Convoy Interception Known World Gating",
       "status": "completed",
@@ -43060,7 +43131,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T02:20:01Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T02:36:19Z",
+  "currentSliceUpdatedAt": "2026-05-31T02:42:57Z",
   "validationHistory": [
     {
       "status": "pass",

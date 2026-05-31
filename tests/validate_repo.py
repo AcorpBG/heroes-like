@@ -15988,7 +15988,7 @@ def validate_ai_town_defense_retask(errors: list[str]) -> None:
     for required_token in (
         "_redirect_raid_to_threatened_town_defense",
         "_best_threatened_defense_town",
-        "_primary_player_position",
+        "_known_player_threat_position_for_ai",
         '"town_defense"',
         '"front_stabilization"',
         '"defending threatened town"',
