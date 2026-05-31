@@ -1154,6 +1154,14 @@ static func advance_raids(
 			encounter["x"] = next_step.x
 			encounter["y"] = next_step.y
 			current = next_step
+			var post_step_previous_target := _current_target_snapshot(encounter)
+			encounter = _redirect_raid_to_nearby_exposed_hero(session, config, encounter, faction_id)
+			encounter = _redirect_raid_away_from_nearby_player_threat(session, config, encounter, faction_id)
+			var post_step_assignment_event := ai_target_assignment_event(session, config, encounter, post_step_previous_target)
+			if not post_step_assignment_event.is_empty():
+				event_records.append(post_step_assignment_event)
+				encounters[index] = encounter
+				session.overworld["encounters"] = encounters
 			var route_pickup := _resolve_opportunistic_route_objective(session, config, encounter, state, faction_id)
 			if bool(route_pickup.get("resolved", false)):
 				encounter = route_pickup.get("encounter", encounter)

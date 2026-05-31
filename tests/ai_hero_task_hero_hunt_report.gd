@@ -17,8 +17,14 @@ func _run() -> void:
 	var opportunity_case_report := _active_raid_opportunistically_intercepts_nearby_exposed_hero_case()
 	if opportunity_case_report.is_empty():
 		return
+	var midmove_opportunity_case_report := _active_raid_midmove_intercepts_newly_nearby_exposed_hero_case()
+	if midmove_opportunity_case_report.is_empty():
+		return
 	var threat_avoidance_case_report := _active_raid_avoids_superior_nearby_player_hero_case()
 	if threat_avoidance_case_report.is_empty():
+		return
+	var midmove_threat_avoidance_case_report := _active_raid_midmove_avoids_new_superior_player_hero_case()
+	if midmove_threat_avoidance_case_report.is_empty():
 		return
 	var risk_case_report := _weak_hero_hunt_regroups_before_intercept_case()
 	if risk_case_report.is_empty():
@@ -55,7 +61,9 @@ func _run() -> void:
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
 		"opportunity_case": opportunity_case_report,
+		"midmove_opportunity_case": midmove_opportunity_case_report,
 		"threat_avoidance_case": threat_avoidance_case_report,
+		"midmove_threat_avoidance_case": midmove_threat_avoidance_case_report,
 		"risk_case": risk_case_report,
 		"stale_position_case": stale_position_case_report,
 		"stale_task_case": stale_task_case_report,
@@ -218,6 +226,72 @@ func _active_raid_opportunistically_intercepts_nearby_exposed_hero_case() -> Dic
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
+func _active_raid_midmove_intercepts_newly_nearby_exposed_hero_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 3
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for mid-move opportunity intercept fixture.")
+		return {}
+	var hero_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var raid_tile := _nearby_open_non_town_tile_at_distance(session, hero_tile, 5, 5)
+	_move_player_hero(session, hero_id, hero_tile)
+	_clear_mireclaw_resource_claims(session)
+	_remove_mireclaw_active_raids(session)
+	var objective_id := "midmove_intercept_route_objective"
+	_append_route_objective_encounter(session, objective_id, hero_tile)
+	var raid := _raid_seed(session, "hero_vaska", "midmove_opportunity_intercept_vaska", raid_tile)
+	raid["target_kind"] = "encounter"
+	raid["target_placement_id"] = objective_id
+	raid["target_label"] = "Route Objective"
+	raid["target_x"] = hero_tile.x
+	raid["target_y"] = hero_tile.y
+	raid["goal_x"] = hero_tile.x
+	raid["goal_y"] = hero_tile.y
+	raid["goal_distance"] = 9999
+	raid["target_reason_codes"] = ["route_pressure", "pressure_probe"]
+	raid["target_public_reason"] = "route pressure"
+	raid["target_public_importance"] = "medium"
+	raid["target_debug_reason"] = "valid non-hero target outside intercept radius before movement"
+	raid = _set_raid_bog_brutes(raid, 40)
+	_append_encounter(session, raid)
+
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, {})
+	var after_raid := _encounter(session, "midmove_opportunity_intercept_vaska")
+	if after_raid.is_empty():
+		_fail("Mid-move opportunity intercept raid disappeared after advance.")
+		return {}
+	if String(after_raid.get("target_kind", "")) != "hero" or String(after_raid.get("target_placement_id", "")) != hero_id:
+		_fail("Mid-move raid did not retarget newly nearby exposed hero: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("previous_target_kind", "")) != "encounter" or String(after_raid.get("previous_target_placement_id", "")) != objective_id:
+		_fail("Mid-move intercept did not preserve previous encounter target metadata: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	for required_code in ["hero_hunt", "exposed_hero", "opportunity_intercept"]:
+		if required_code not in reason_codes:
+			_fail("Mid-move opportunity intercept missing %s: %s" % [required_code, JSON.stringify(after_raid)])
+			return {}
+	var event_types := _event_types(advance_result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Mid-move opportunity intercept did not emit ai_target_assigned: %s" % JSON.stringify(advance_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "hero", hero_id, "active", "valid")
+	if _failed:
+		return {}
+	return {
+		"case_id": "active_raid_midmove_intercepts_newly_nearby_exposed_hero",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"previous_target_kind": String(after_raid.get("previous_target_kind", "")),
+		"previous_target_id": String(after_raid.get("previous_target_placement_id", "")),
+		"distance_after_advance": int(after_raid.get("goal_distance", 9999)),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
 func _active_raid_avoids_superior_nearby_player_hero_case() -> Dictionary:
 	var session = _base_session()
 	session.day = 3
@@ -310,6 +384,80 @@ func _active_raid_avoids_superior_nearby_player_hero_case() -> Dictionary:
 		"reinforcement_need": int(recruitment_destination.get("raid_need", 0)),
 		"reinforcement_target_strength": int(recruitment_destination.get("target_strength", 0)),
 		"reinforcement_threat_recovery": bool(recruitment_destination.get("threat_recovery", false)),
+		"reason_codes": reason_codes,
+		"event_types": event_types,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _active_raid_midmove_avoids_new_superior_player_hero_case() -> Dictionary:
+	var session = _base_session()
+	session.day = 3
+	var config := _enemy_config()
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "":
+		_fail("River Pass has no active hero id for mid-move nearby threat avoidance fixture.")
+		return {}
+	var hero_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
+	var raid_tile := _nearby_open_non_town_tile_at_distance(session, hero_tile, 4, 4)
+	_move_player_hero(session, hero_id, hero_tile)
+	_set_player_hero_army(session, hero_id, [{"unit_id": "unit_ember_squire", "count": 90}])
+	_clear_mireclaw_resource_claims(session)
+	_remove_mireclaw_active_raids(session)
+	var objective_id := "midmove_threat_route_objective"
+	_append_route_objective_encounter(session, objective_id, hero_tile)
+	var raid := _raid_seed(session, "hero_vaska", "midmove_threat_avoidance_vaska", raid_tile)
+	raid["target_kind"] = "encounter"
+	raid["target_placement_id"] = objective_id
+	raid["target_label"] = "Route Objective"
+	raid["target_x"] = hero_tile.x
+	raid["target_y"] = hero_tile.y
+	raid["goal_x"] = hero_tile.x
+	raid["goal_y"] = hero_tile.y
+	raid["goal_distance"] = 9999
+	raid["target_reason_codes"] = ["route_pressure", "pressure_probe"]
+	raid["target_public_reason"] = "route pressure"
+	raid["target_public_importance"] = "medium"
+	raid["target_debug_reason"] = "valid non-hero target outside threat radius before movement"
+	raid = _set_raid_bog_brutes(raid, 10)
+	if EnemyAdventureRules.raid_regroup_needed(raid):
+		_fail("Mid-move threat avoidance fixture should not use the generic understrength regroup path: %s" % JSON.stringify(raid))
+		return {}
+	_append_encounter(session, raid)
+
+	var advance_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, {})
+	var after_raid := _encounter(session, "midmove_threat_avoidance_vaska")
+	if after_raid.is_empty():
+		_fail("Mid-move threat avoidance raid disappeared after advance.")
+		return {}
+	if String(after_raid.get("target_kind", "")) != "regroup":
+		_fail("Mid-move raid did not avoid newly nearby superior hero: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("previous_target_kind", "")) != "encounter" or String(after_raid.get("previous_target_placement_id", "")) != objective_id:
+		_fail("Mid-move threat avoidance did not preserve previous encounter target metadata: %s" % JSON.stringify(after_raid))
+		return {}
+	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
+	for required_code in ["player_threat_avoidance", "hero_threat", "army_consolidation"]:
+		if required_code not in reason_codes:
+			_fail("Mid-move threat avoidance missing %s: %s" % [required_code, JSON.stringify(after_raid)])
+			return {}
+	if String(after_raid.get("player_threat_hero_id", "")) != hero_id:
+		_fail("Mid-move threat avoidance did not record threatening hero id: %s" % JSON.stringify(after_raid))
+		return {}
+	var event_types := _event_types(advance_result.get("events", []))
+	if "ai_target_assigned" not in event_types:
+		_fail("Mid-move threat avoidance did not emit ai_target_assigned: %s" % JSON.stringify(advance_result))
+		return {}
+	_assert_task_status(session, "hero_vaska", "regroup", String(after_raid.get("target_placement_id", "")), "active", "valid")
+	if _failed:
+		return {}
+	return {
+		"case_id": "active_raid_midmove_avoids_new_superior_player_hero",
+		"target_kind": String(after_raid.get("target_kind", "")),
+		"target_id": String(after_raid.get("target_placement_id", "")),
+		"previous_target_kind": String(after_raid.get("previous_target_kind", "")),
+		"previous_target_id": String(after_raid.get("previous_target_placement_id", "")),
+		"threat_hero_id": String(after_raid.get("player_threat_hero_id", "")),
+		"threat_distance": int(after_raid.get("player_threat_distance", 9999)),
 		"reason_codes": reason_codes,
 		"event_types": event_types,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
@@ -1292,6 +1440,25 @@ func _append_encounter(session, encounter: Dictionary) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(encounter.duplicate(true))
 	session.overworld["encounters"] = encounters
+
+func _append_route_objective_encounter(session, placement_id: String, tile: Vector2i) -> void:
+	_append_encounter(
+		session,
+		{
+			"placement_id": placement_id,
+			"encounter_id": "encounter_ghoul_grove",
+			"x": tile.x,
+			"y": tile.y,
+			"difficulty": "low",
+			"combat_seed": hash("%s:%s" % [String(session.scenario_id), placement_id]),
+			"enemy_army": {
+				"id": "%s_army" % placement_id,
+				"name": "Route Objective Watch",
+				"stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 1}],
+			},
+			"target_reason_codes": ["route_pressure"],
+		}
+	)
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
