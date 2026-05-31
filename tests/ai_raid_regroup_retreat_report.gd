@@ -29,6 +29,9 @@ func _run() -> void:
 	var garrison_routing_case := _regroup_prefers_useful_garrison_town()
 	if garrison_routing_case.is_empty():
 		return
+	var town_resupply_case := _active_raid_resupplies_while_passing_friendly_town()
+	if town_resupply_case.is_empty():
+		return
 	var route_occupancy_regroup_case := _regroup_route_occupancy_avoids_visible_player_hero_choke()
 	if route_occupancy_regroup_case.is_empty():
 		return
@@ -45,13 +48,14 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_regroup_behavior_no_save_migration",
-		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_failed_regroups_rebuild_route_occupancy_commander_risk_tolerance_and_faction_personality_shape_live_gates",
+		"behavior_policy": "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover_resource_fronts_request_and_consolidate_support_active_raids_resupply_at_friendly_towns_failed_regroups_rebuild_route_occupancy_commander_risk_tolerance_and_faction_personality_shape_live_gates",
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
 		"resource_consolidation_case": resource_consolidation_case,
 		"unreachable_route_case": unreachable_route_case,
 		"garrison_routing_case": garrison_routing_case,
+		"town_resupply_case": town_resupply_case,
 		"route_occupancy_regroup_case": route_occupancy_regroup_case,
 		"failed_regroup_case": failed_regroup_case,
 		"commander_risk_case": commander_risk_case,
@@ -544,6 +548,78 @@ func _regroup_prefers_useful_garrison_town() -> Dictionary:
 		"reserve_after": reserve_after,
 		"event_types": event_types,
 		"task_status_counts": _task_status_counts(_task_state(session)),
+	}
+
+func _active_raid_resupplies_while_passing_friendly_town() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_town_garrison(session, "duskfen_bastion", [{"unit_id": "unit_bog_brute", "count": 10}])
+	var raid := _understrength_raid(session, config)
+	raid["placement_id"] = "town_resupply_vaska_probe"
+	raid["enemy_army"] = {
+		"id": "town_resupply_fixture_host",
+		"name": "Travel-Worn Raid Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": 6}],
+	}
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	if EnemyAdventureRules.raid_regroup_needed(raid, config, MIRECLAW):
+		_fail("Town-resupply fixture should be under desired strength but above regroup floor: %s" % JSON.stringify(EnemyAdventureRules.raid_regroup_threshold_report(raid, config, MIRECLAW)))
+		return {}
+	var before_strength := EnemyAdventureRules.raid_strength(raid)
+	var desired_before := EnemyAdventureRules.desired_raid_strength(raid)
+	if before_strength >= desired_before:
+		_fail("Town-resupply fixture should need reinforcement: before=%d desired=%d raid=%s" % [before_strength, desired_before, JSON.stringify(raid)])
+		return {}
+	var garrison_before := _town_garrison_count(session, "duskfen_bastion", "unit_bog_brute")
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state, {"only_placement_ids": ["town_resupply_vaska_probe"]})
+	var after_raid := _encounter(session, "town_resupply_vaska_probe")
+	if after_raid.is_empty():
+		_fail("Town-resupply raid disappeared after advance.")
+		return {}
+	var after_strength := EnemyAdventureRules.raid_strength(after_raid)
+	var garrison_after := _town_garrison_count(session, "duskfen_bastion", "unit_bog_brute")
+	var event_types := _event_types(result.get("events", []))
+	if "ai_raid_reinforced" not in event_types:
+		_fail("Town-resupply advance did not emit ai_raid_reinforced: %s" % JSON.stringify(result))
+		return {}
+	if after_strength <= before_strength:
+		_fail("Town-resupply did not increase raid strength: before=%d after=%d raid=%s" % [before_strength, after_strength, JSON.stringify(after_raid)])
+		return {}
+	if garrison_after >= garrison_before:
+		_fail("Town-resupply did not pull from town garrison: before=%d after=%d" % [garrison_before, garrison_after])
+		return {}
+	if garrison_before - garrison_after > 3:
+		_fail("Town-resupply drained more than the bounded need from one pass: before=%d after=%d" % [garrison_before, garrison_after])
+		return {}
+	if String(after_raid.get("last_town_resupply_town_id", "")) != "duskfen_bastion":
+		_fail("Town-resupply did not record duskfen_bastion as the source town: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_kind", "")) != "resource" or String(after_raid.get("target_placement_id", "")) != "river_free_company":
+		_fail("Town-resupply changed the raid objective instead of preserving route pressure: %s" % JSON.stringify(after_raid))
+		return {}
+	if String(after_raid.get("target_kind", "")) == "regroup":
+		_fail("Town-resupply converted a marching raid into a regroup task: %s" % JSON.stringify(after_raid))
+		return {}
+	return {
+		"case_id": "active_raid_resupplies_while_passing_friendly_town",
+		"before_strength": before_strength,
+		"after_strength": after_strength,
+		"desired_before": desired_before,
+		"garrison_before": garrison_before,
+		"garrison_after": garrison_after,
+		"resupply_town_id": String(after_raid.get("last_town_resupply_town_id", "")),
+		"resupply_day": int(after_raid.get("last_town_resupply_day", -1)),
+		"target_kind_after": String(after_raid.get("target_kind", "")),
+		"target_id_after": String(after_raid.get("target_placement_id", "")),
+		"event_types": event_types,
+		"message": String(result.get("message", "")),
 	}
 
 func _regroup_route_occupancy_avoids_visible_player_hero_choke() -> Dictionary:

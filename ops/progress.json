@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T06:26:53Z",
+  "updatedAt": "2026-05-31T07:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,89 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-opportunistic-town-resupply-10184",
+      "title": "Strategic AI Opportunistic Town Resupply",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make active enemy raid actors play like real strategic heroes by opportunistically transferring spare garrison from same-faction towns they pass through or stand beside while preserving their current objective.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd"
+      ],
+      "baselineChecks": [
+        "Enemy raids can regroup at a town only when routed to an explicit regroup objective.",
+        "Enemy towns can dispatch recruits through town-turn destination logic.",
+        "A moving raid that physically passes through a friendly town currently does not top up from the town before continuing its live objective."
+      ],
+      "completionCriteria": [
+        "An active non-retired same-faction raid on or adjacent to a friendly town transfers bounded spare garrison when below desired strength.",
+        "Town resupply preserves the raid current target instead of converting the action into a regroup objective.",
+        "The transfer updates raid army, town garrison, commander continuity, and a public ai_raid_reinforced event.",
+        "The same raid does not repeatedly drain the same town multiple times in one enemy day.",
+        "Focused strategic AI validations and repository gates pass."
+      ],
+      "nonGoals": [
+        "claiming full strategic AI production readiness",
+        "new report-only gates",
+        "free recruitment without town economy payment",
+        "campaign production"
+      ],
+      "startedAt": "2026-05-31T07:02:00Z",
+      "updatedAt": "2026-05-31T07:18:00Z",
+      "completedAt": "2026-05-31T07:18:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "pass",
+          "summary": "Focused regroup/retreat report now proves a marching raid resupplies from Duskfen Bastion, gains strength, preserves the resource objective, and emits ai_raid_reinforced."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "result": "pass",
+          "summary": "Live enemy turn execution remains green with ai_raid_reinforced present in the event stream."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn",
+          "result": "pass",
+          "summary": "Town-defense retask, stationing, release, and emergency launch behavior remains green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "pass",
+          "summary": "Planned-task recruitment, launch, and same-turn movement behavior remains green."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "pass",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass",
+          "summary": "No whitespace errors."
+        }
+      ],
+      "summary": "Completed. Active enemy raid actors now opportunistically transfer bounded spare garrison from same-faction towns they stand on or pass beside, preserving their current objective, syncing commander army continuity, and surfacing a public ai_raid_reinforced event.",
+      "notes": [
+        "This is a live strategic-AI behavior change, not a reporting/audit slice.",
+        "Town resupply uses existing garrison only; it does not create free recruited units.",
+        "Full strategic AI production readiness remains open for broader generated-map long-run behavior, deeper economy/army timing, retreat/rebuild tuning, and live-client pacing."
+      ]
+    },
     {
       "id": "strategic-ai-opportunistic-spell-site-learning-10184",
       "title": "Strategic AI Opportunistic Spell-Site Learning",
@@ -45095,9 +45178,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T06:26:53Z"
+    "updatedAt": "2026-05-31T07:18:00Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T06:26:53Z",
+  "currentSliceUpdatedAt": "2026-05-31T07:18:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -48311,46 +48394,35 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T06:35:00Z",
-    "sliceId": "strategic-ai-stale-hero-hunt-revalidation-10184",
+    "updatedAt": "2026-05-31T07:18:00Z",
+    "sliceId": "strategic-ai-opportunistic-town-resupply-10184",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Hero target refresh and pathing now use stored/AI-known hero coordinates instead of blindly refreshing to the live player hero position by id.",
-        "Saved hero task planning now requires a faction-known hero snapshot before rebuilding a hero-hunt plan, preventing hidden moved heroes from being followed through task reuse.",
-        "Hero-intercept battle queueing now requires the raid to be on or adjacent to the player hero current tile before starting a battle.",
-        "Arrived hero-hunt raids that reach a remembered coordinate where the hero is no longer present clear the stale hero sighting, invalidate the stale hero task, and retarget through normal strategic selection.",
-        "If a moved hero is currently visible to fair AI sight sources, the hero hunt reacquires the current tile and updates the assignment instead of using stale coordinates."
+        "Active enemy raids now check for same-faction towns on their current tile or cardinal-adjacent tiles before moving and after each route step.",
+        "A raid below desired strength transfers bounded spare garrison from a nearby town while preserving its current target and reason codes.",
+        "Town resupply leaves a defense reserve based on base reserve, active town front need, ai_defense_rating, and capital/stronghold role.",
+        "The transfer updates town garrison, raid army, commander continuity, same-day resupply memory, and public ai_raid_reinforced events."
       ],
       "focused_case": {
-        "case_id": "stale_hero_hunt_arrival_clears_lost_trail",
-        "battle_started": false,
-        "remembered_tile": {
-          "x": 8,
-          "y": 4
-        },
-        "actual_tile": {
-          "x": 0,
-          "y": 4
-        },
-        "stale_sighting_cleared": true,
-        "stale_task_validation": "invalid_stale_hero_sighting",
-        "retargeted_kind": "resource",
-        "retargeted_id": "river_free_company",
-        "save_version": 9
+        "case_id": "active_raid_resupplies_while_passing_friendly_town",
+        "before_strength": 126,
+        "after_strength": 168,
+        "desired_before": 171,
+        "garrison_before": 10,
+        "garrison_after": 8,
+        "resupply_town_id": "duskfen_bastion",
+        "target_kind_after": "resource",
+        "target_id_after": "river_free_company",
+        "event_type": "ai_raid_reinforced"
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
       "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."

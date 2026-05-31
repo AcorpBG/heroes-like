@@ -1152,6 +1152,18 @@ static func advance_raids(
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
 
+		var pre_move_resupply := _maybe_resupply_raid_from_nearby_town(session, config, encounter, faction_id)
+		if bool(pre_move_resupply.get("resupplied", false)):
+			encounter = pre_move_resupply.get("encounter", encounter)
+			var pre_move_resupply_message := String(pre_move_resupply.get("event_message", ""))
+			if pre_move_resupply_message != "":
+				event_messages.append(pre_move_resupply_message)
+			for pre_move_resupply_event_value in pre_move_resupply.get("ai_events", []):
+				if pre_move_resupply_event_value is Dictionary and not pre_move_resupply_event_value.is_empty():
+					event_records.append(pre_move_resupply_event_value)
+			encounters[index] = encounter
+			session.overworld["encounters"] = encounters
+
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
@@ -1198,6 +1210,18 @@ static func advance_raids(
 				for route_event_value in route_pickup.get("ai_events", []):
 					if route_event_value is Dictionary and not route_event_value.is_empty():
 						event_records.append(route_event_value)
+				encounters[index] = encounter
+				session.overworld["encounters"] = encounters
+
+			var route_resupply := _maybe_resupply_raid_from_nearby_town(session, config, encounter, faction_id)
+			if bool(route_resupply.get("resupplied", false)):
+				encounter = route_resupply.get("encounter", encounter)
+				var route_resupply_message := String(route_resupply.get("event_message", ""))
+				if route_resupply_message != "":
+					event_messages.append(route_resupply_message)
+				for route_resupply_event_value in route_resupply.get("ai_events", []):
+					if route_resupply_event_value is Dictionary and not route_resupply_event_value.is_empty():
+						event_records.append(route_resupply_event_value)
 				encounters[index] = encounter
 				session.overworld["encounters"] = encounters
 
@@ -15123,6 +15147,144 @@ static func _regroup_raid_at_town(
 		events.append(resumed_target_event)
 	return {"encounter": raid, "state": state, "event_message": message, "ai_events": events}
 
+static func _maybe_resupply_raid_from_nearby_town(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	if bool(raid.get("raid_retired_to_rebuild", false)):
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	if String(raid.get("target_kind", "")) == "regroup":
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	if int(raid.get("last_town_resupply_day", -9999)) == int(session.day):
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	var before_strength := raid_strength(raid)
+	var desired_strength := desired_raid_strength(raid)
+	var strength_needed: int = max(0, desired_strength - before_strength)
+	if before_strength <= 0 or strength_needed <= 0:
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	var candidate := _nearby_town_resupply_candidate(session, raid, faction_id)
+	if candidate.is_empty():
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	var town_index := int(candidate.get("index", -1))
+	var town: Dictionary = candidate.get("town", {})
+	var reserve_strength := _town_resupply_reserve_strength(session, town, config, faction_id)
+	var transfer_report := _transfer_town_garrison_to_raid(
+		session,
+		town_index,
+		raid,
+		strength_needed,
+		reserve_strength
+	)
+	raid = transfer_report.get("raid", raid)
+	var transferred_count := int(transfer_report.get("transferred_count", 0))
+	var transferred_strength := int(transfer_report.get("transferred_strength", 0))
+	if transferred_count <= 0 or transferred_strength <= 0:
+		return {"encounter": raid, "resupplied": false, "event_message": "", "ai_events": []}
+	var town_id := String(town.get("placement_id", ""))
+	raid["last_town_resupply_day"] = int(session.day)
+	raid["last_town_resupply_town_id"] = town_id
+	raid["last_town_resupply_strength_delta"] = transferred_strength
+	var message := "%s resupplies at %s and transfers %d unit%s into the host." % [
+		_raid_name(raid),
+		_town_name(town),
+		transferred_count,
+		"" if transferred_count == 1 else "s",
+	]
+	var event := build_ai_event_record(
+		session,
+		config,
+		"ai_raid_reinforced",
+		raid,
+		{
+			"target_kind": "town",
+			"target_placement_id": town_id,
+			"target_label": _town_name(town),
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": ["town_visit_resupply", "army_transfer", "objective_continuity"],
+			"target_public_reason": "resupplying host",
+			"target_public_importance": "medium",
+			"target_debug_reason": "active raid passed through friendly town and transferred spare garrison",
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {
+		"encounter": raid,
+		"resupplied": true,
+		"event_message": message,
+		"ai_events": [event],
+		"transferred_count": transferred_count,
+		"transferred_strength": transferred_strength,
+	}
+
+static func _nearby_town_resupply_candidate(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	var best_spare_strength := 0
+	var best_distance := 9999
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town_value = towns[index]
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+			continue
+		var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var distance: int = abs(tile.x - current.x) + abs(tile.y - current.y)
+		if distance > 1:
+			continue
+		var reserve_strength := _town_resupply_reserve_strength(session, town, {}, faction_id)
+		var spare_strength: int = max(0, _town_garrison_strength(town) - reserve_strength)
+		if spare_strength <= 0:
+			continue
+		var beats := best.is_empty()
+		if not beats and spare_strength != best_spare_strength:
+			beats = spare_strength > best_spare_strength
+		if not beats and distance != best_distance:
+			beats = distance < best_distance
+		if not beats:
+			beats = String(town.get("placement_id", "")) < String(best.get("town", {}).get("placement_id", ""))
+		if beats:
+			best = {"index": index, "town": town}
+			best_spare_strength = spare_strength
+			best_distance = distance
+	return best
+
+static func _town_resupply_reserve_strength(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	config: Dictionary = {},
+	faction_id: String = ""
+) -> int:
+	if town.is_empty():
+		return 0
+	var reserve := 45
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	if bool(front_state.get("active", false)):
+		var resolved_faction_id := faction_id
+		if resolved_faction_id == "":
+			resolved_faction_id = _town_faction_id(town)
+		if String(front_state.get("faction_id", resolved_faction_id)) == resolved_faction_id:
+			reserve = max(reserve, _town_defense_commitment_need(town, front_state))
+	reserve = max(reserve, int(town.get("ai_defense_rating", 0)))
+	if String(OverworldRulesScript.town_strategic_role(town)) == "capital":
+		reserve += 50
+	elif String(OverworldRulesScript.town_strategic_role(town)) == "stronghold":
+		reserve += 25
+	return reserve
+
 static func _resume_previous_target_after_regroup(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -15247,7 +15409,8 @@ static func _transfer_town_garrison_to_raid(
 	session: SessionStateStoreScript.SessionData,
 	town_index: int,
 	raid: Dictionary,
-	strength_needed: int
+	strength_needed: int,
+	reserve_strength: int = 0
 ) -> Dictionary:
 	if town_index < 0 or strength_needed <= 0:
 		return {"raid": raid, "transferred_count": 0, "transferred_strength": 0}
@@ -15265,7 +15428,10 @@ static func _transfer_town_garrison_to_raid(
 	if army.is_empty():
 		army = {"id": String(raid.get("encounter_id", "raid")), "name": "Raid Host", "stacks": []}
 
+	var garrison_strength := _army_strength(garrison)
 	var remaining_strength: int = max(0, strength_needed)
+	if reserve_strength > 0:
+		remaining_strength = min(remaining_strength, max(0, garrison_strength - reserve_strength))
 	var transferred_count := 0
 	var transferred_strength := 0
 	var new_garrison: Array = []
@@ -15279,7 +15445,10 @@ static func _transfer_town_garrison_to_raid(
 		var unit_strength: int = max(1, _unit_strength_value(unit_id))
 		var take := 0
 		if remaining_strength > 0:
-			take = mini(count, max(1, int(ceil(float(remaining_strength) / float(unit_strength)))))
+			if reserve_strength > 0:
+				take = mini(count, int(floor(float(remaining_strength) / float(unit_strength))))
+			else:
+				take = mini(count, max(1, int(ceil(float(remaining_strength) / float(unit_strength)))))
 		if take > 0:
 			army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, take)
 			transferred_count += take
