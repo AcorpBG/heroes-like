@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-post-objective-raid-continuation-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: strategic-ai-known-world-memory-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T00:33:09Z",
+  "updatedAt": "2026-05-31T01:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,58 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-known-world-memory-10184",
+      "title": "Strategic AI Known-World Memory",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Move strategic AI hero pressure away from omniscient live player-hero reads by preserving known-world memory across state normalization and requiring current/recent AI sightings for hero targeting, intercepts, and threat avoidance.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "EnemyAdventureRules writes known_world_memory for scouting reveals, but EnemyTurnRules.normalize_enemy_states does not preserve it across turn normalization.",
+        "Hero target selection, opportunistic intercepts, and nearby-threat avoidance can read live player hero positions directly instead of requiring AI knowledge."
+      ],
+      "completionCriteria": [
+        "Enemy known_world_memory is normalized and preserved through enemy-state normalization without a save-version bump.",
+        "AI turn/update logic records current player-hero sightings from owned towns, active commanders, and controlled scouting/resource-site vision sources.",
+        "Hero target candidates, opportunistic hero intercepts, and nearby-threat avoidance require current or recent AI hero sightings, while nearby visible threats still work.",
+        "Focused validation proves memory persistence, sighting-gated hero targeting, and non-regression of existing strategic AI turn reports."
+      ],
+      "nonGoals": [
+        "Do not add broad report-only gates.",
+        "Do not implement a complete separate AI fog renderer or full campaign objective AI.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T00:40:00Z",
+      "updatedAt": "2026-05-31T01:05:00Z",
+      "completedAt": "2026-05-31T01:05:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ]
+    },
     {
       "id": "strategic-ai-post-objective-raid-continuation-10184",
       "title": "Strategic AI Post-Objective Raid Continuation",
@@ -44705,36 +44757,41 @@
   "currentSlice": "none selected; continue with the next production-impacting strategic AI behavior gap",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T00:33:09Z",
-    "sliceId": "strategic-ai-post-objective-raid-continuation-10184",
+    "updatedAt": "2026-05-31T01:05:00Z",
+    "sliceId": "strategic-ai-known-world-memory-10184",
     "commands": [
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "Mobile AI commanders that complete resource, artifact, or non-stationary encounter objectives now immediately choose a fresh live target from their current tile.",
-        "Continuation uses the normal assign_target path, records a fresh live commander task assignment, and emits the usual ai_target_assigned public event.",
-        "Completed objective metadata is preserved on the raid while the current target switches away from the already-secured object.",
-        "Stationing lifecycles for town defense, resource defense, and captured neutral-town garrisons remain unchanged."
+        "Enemy known_world_memory now survives EnemyTurnRules.normalize_enemy_states, including existing scouting target memory and new player-hero sighting records.",
+        "Enemy turns refresh current player-hero sightings from owned towns, active commanders, and controlled resource-site vision sources before planning and movement decisions.",
+        "Hero target candidates, opportunistic intercepts, and nearby-threat avoidance now require a current or recent AI sighting instead of reading live player hero positions unconditionally.",
+        "Recent hero sightings use remembered coordinates and known strength for strategic pressure rather than hidden current coordinates.",
+        "EnemyTurnRules now refreshes local enemy state after raid advancement and battle queueing so live task-board writes are not overwritten by stale turn-cycle state."
       ],
       "focused_case": {
         "scenario_id": "river-pass",
-        "vaska_completed_target_id": "river_free_company",
-        "vaska_continuation_target_id": "north_wood",
-        "sable_completed_target_id": "river_signal_post",
-        "sable_continuation_target_id": "midway_shrine",
-        "continuation_arrived": false,
-        "post_objective_continuation": true
+        "hidden_hero_candidate_count": 0,
+        "visible_hero_candidate_count": 1,
+        "remembered_hero_target_id": "hero_lyra",
+        "remembered_hero_target_x": 5,
+        "remembered_hero_target_y": 2,
+        "known_world_memory_preserved": true
       },
-      "remaining_validation": "Full 100-seed generated-map strategic-AI matrix, Medium/generated-map generalization, deeper retreat/personality tuning, and live-client pacing/manual play remain open.",
-      "policy": "Live strategic AI behavior slice; no new broad report gate, campaign production, or production-ready claim."
+      "remaining_validation": "Full generated-map strategic-AI long-run matrices, Medium/generated-map generalization, deeper multi-front planning quality, and live-client pacing/manual play remain open.",
+      "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
     }
   }
 }
