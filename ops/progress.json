@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected; continue with the next production-impacting strategic AI behavior gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T04:22:38Z",
+  "updatedAt": "2026-05-31T04:26:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,104 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-personality-regroup-threshold-10184",
+      "title": "Strategic AI Personality Regroup Threshold",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make live AI regroup and retreat decisions use faction strategy personality so defensive empires withdraw earlier and raider empires accept more field risk.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-raid-regroup-retreat-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd"
+      ],
+      "baselineChecks": [
+        "EnemyAdventureRules.raid_regroup_needed currently uses a generic desired-strength percentage for every faction.",
+        "Faction enemy_strategy already distinguishes garrison_bias, raid_bias, and target weights, but regroup decisions do not consume that personality."
+      ],
+      "completionCriteria": [
+        "Regroup threshold calculation exposes current strength, desired strength, base floor, strategy-adjusted floor, and reason codes.",
+        "Live regroup redirects and regroup-complete resume checks use the strategy-adjusted floor when config/faction context is available.",
+        "Defensive/garrison-biased strategy requires a stronger host before staying committed than raider-biased strategy for the same raid state.",
+        "Existing regroup, route recovery, guarded claim, support consolidation, and commander risk behavior remains valid."
+      ],
+      "nonGoals": [
+        "Do not add a report-only audit gate.",
+        "Do not change faction content coefficients in this slice.",
+        "Do not claim full strategic AI production readiness."
+      ],
+      "startedAt": "2026-05-31T04:26:07Z",
+      "updatedAt": "2026-05-31T04:38:23Z",
+      "completedAt": "2026-05-31T04:38:23Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "result": "passed",
+          "summary": "Regroup and retreat coverage now proves identical raid state splits by faction strategy: defensive Embercourt regroups while raider Mireclaw stays committed under the adjusted floor."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_town_defense_retask_report.tscn",
+          "result": "passed",
+          "summary": "Town and resource defense retasking still passes, including owned-resource stationing via staging tiles and emergency town/resource launches."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn",
+          "result": "passed",
+          "summary": "Hero-hunt targeting, intercept, and avoidance behavior remains valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_town_retake_assault_report.tscn",
+          "result": "passed",
+          "summary": "Town retake assault behavior remains valid with personality-aware regroup checks."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn",
+          "result": "passed",
+          "summary": "Raid assault grouping remains valid with config/faction-aware regroup gating."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "result": "passed",
+          "summary": "Planned recruitment preparation remains valid after emergency-spawn chain control."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Public event log boundary remains compact and leak-free."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors in the pending diff."
+        }
+      ],
+      "evidence": {
+        "policy": "Live strategic AI behavior slice; tests are validation only.",
+        "implementedBehavior": "Regroup thresholds now expose a report with current strength, desired strength, base floor, strategy-adjusted floor, multiplier, reason, and reason codes; live regroup redirects, support checks, grouping gates, defense retasks, and regroup resume checks pass config/faction context when available.",
+        "personalityEffect": "Faction enemy_strategy now shapes retreat/regroup floors: defensive/garrison-biased empires require stronger hosts before staying committed, while raid-biased empires tolerate more field risk for the same raid state.",
+        "defenseRouteFix": "Owned resource defense orders use adjacent staging goal tiles so defenders can station near an occupied site instead of being treated as unreachable; unreachable retarget recovery no longer strips active defense orders.",
+        "emergencyLaunchControl": "Emergency town defense candidates win over resource emergency candidates, and one emergency launch ends the spawn loop to avoid chain-launching multiple same-turn defenders from an already handled emergency.",
+        "nonClaim": "This completes one strategic AI behavior slice only; it does not claim full production-ready strategic AI."
+      }
+    },
     {
       "id": "strategic-ai-same-turn-launch-movement-10184",
       "title": "Strategic AI Same-Turn Launch Movement",
@@ -33290,6 +33388,47 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-personality-regroup-threshold-10184",
+      "title": "Strategic AI Personality Regroup Threshold",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T04:38:23Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-31T04:38:23Z",
+        "sliceId": "strategic-ai-personality-regroup-threshold-10184",
+        "commands": [
+          "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "godot --headless --path . tests/ai_town_defense_retask_report.tscn (passed)",
+          "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "godot --headless --path . tests/ai_town_retake_assault_report.tscn (passed)",
+          "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn (passed)",
+          "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+          "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Regroup thresholds now expose a report with current strength, desired strength, base floor, strategy-adjusted floor, multiplier, reason, and reason codes; live regroup redirects, support checks, grouping gates, defense retasks, and regroup resume checks pass config/faction context when available.",
+            "Faction enemy_strategy now shapes retreat/regroup floors: defensive/garrison-biased empires require stronger hosts before staying committed, while raid-biased empires tolerate more field risk for the same raid state.",
+            "Owned resource defense orders use adjacent staging goal tiles so defenders can station near an occupied site instead of being treated as unreachable; unreachable retarget recovery no longer strips active defense orders.",
+            "Emergency town defense candidates win over resource emergency candidates, and one emergency launch ends the spawn loop to avoid chain-launching multiple same-turn defenders from an already handled emergency."
+          ],
+          "nonClaim": "This completes one strategic AI behavior slice only; it does not claim full production-ready strategic AI."
+        }
+      }
+    },
+    {
       "id": "strategic-ai-stale-hero-hunt-revalidation-10184",
       "title": "Strategic AI Stale Hero Hunt Revalidation",
       "status": "completed",
@@ -44186,31 +44325,30 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-same-turn-launch-movement-10184",
+    "sliceId": "strategic-ai-personality-regroup-threshold-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T04:22:38Z",
+    "updatedAt": "2026-05-31T04:38:23Z",
     "commands": [
-      "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "godot --headless --path . tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "godot --headless --path . tests/ai_raid_regroup_retreat_report.tscn (passed)",
+      "godot --headless --path . tests/ai_town_defense_retask_report.tscn (passed)",
+      "godot --headless --path . tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "godot --headless --path . tests/ai_town_retake_assault_report.tscn (passed)",
       "godot --headless --path . tests/ai_raid_assault_grouping_report.tscn (passed)",
+      "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
       "godot --headless --path . tests/ai_public_event_log_boundary_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Newly launched strategic AI commanders now advance in the same enemy turn without double-moving existing raids."
+    "summary": "Strategic AI regroup and defense decisions now use faction personality thresholds while preserving focused raid, defense, grouping, task, public-event, and repo validation gates."
   },
   "active_slice": {
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T04:22:38Z"
+    "updatedAt": "2026-05-31T04:38:23Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T04:22:38Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:26:07Z",
   "validationHistory": [
     {
       "status": "pass",
