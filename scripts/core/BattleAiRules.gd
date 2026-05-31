@@ -406,7 +406,7 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		return {}
 
-	var resolved_enemy_hero := _enemy_hero_state_for_ai(battle, enemy_hero)
+	var resolved_enemy_hero := _commander_payload_for_tactical_scoring(_enemy_hero_state_for_ai(battle, enemy_hero))
 	var scoring_battle := _battle_with_enemy_hero_payload(battle, resolved_enemy_hero)
 	var targets := _alive_stacks_for_side(scoring_battle, "player")
 	if targets.is_empty():
@@ -423,12 +423,7 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if not best_spell.is_empty():
-		if lethal_spell_available and not lethal_attack_available:
-			best = best_spell
-		elif (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
-			best = best_spell
-	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available and not lethal_spell_available:
+	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available:
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -436,6 +431,10 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		var best_attack_score := float(best_attack.get("score", -9999.0))
 		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
 			best = best_attack
+	var withdrawal_candidate := _enemy_withdrawal_action(scoring_battle, active_stack, targets, best)
+	if not withdrawal_candidate.is_empty() and _candidate_beats(withdrawal_candidate, best):
+		best = withdrawal_candidate
+	var preservation_exit_selected := String(best.get("action", "")) in ["retreat", "surrender"]
 	var candidate_scores := {
 		"defend": defend_score,
 		"advance": advance_score,
@@ -444,11 +443,13 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		candidate_scores[String(best_attack.get("action", "attack"))] = float(best_attack.get("score", 0.0))
 	if not best_spell.is_empty():
 		candidate_scores["cast_spell"] = float(best_spell.get("score", 0.0))
-	var withdrawal_candidate := _enemy_withdrawal_action(scoring_battle, active_stack, targets, best)
 	if not withdrawal_candidate.is_empty():
 		candidate_scores[String(withdrawal_candidate.get("action", "withdraw"))] = float(withdrawal_candidate.get("score", 0.0))
-		if _candidate_beats(withdrawal_candidate, best):
-			best = withdrawal_candidate
+	if not best_spell.is_empty() and (not preservation_exit_selected or lethal_spell_available):
+		if lethal_spell_available and not lethal_attack_available:
+			best = best_spell
+		elif (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
+			best = best_spell
 	var report := best.duplicate(true)
 	report["candidate_scores"] = candidate_scores
 	if String(report.get("action", "")) in ["retreat", "surrender"]:
@@ -514,7 +515,7 @@ static func _commander_payload_for_tactical_scoring(commander_payload: Dictionar
 				payload[key] = int(command.get(key, 0))
 	if not payload.has("damage_multiplier"):
 		payload["damage_multiplier"] = 1.0
-	return payload
+	return SpellRulesScript.ensure_hero_spellbook(payload, hero_template)
 
 static func _commander_template_for_ai_payload(commander_payload: Dictionary) -> Dictionary:
 	for key in ["roster_hero_id", "hero_id", "id"]:
@@ -660,7 +661,7 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 	var errors := []
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		errors.append("No active enemy stack is available for spell valuation.")
-	var resolved_enemy_hero := _enemy_hero_state_for_ai(battle, enemy_hero)
+	var resolved_enemy_hero := _commander_payload_for_tactical_scoring(_enemy_hero_state_for_ai(battle, enemy_hero))
 	var scoring_battle := _battle_with_enemy_hero_payload(battle, resolved_enemy_hero)
 	var targets := _alive_stacks_for_side(scoring_battle, "player")
 	if targets.is_empty():

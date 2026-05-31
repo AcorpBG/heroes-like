@@ -279,6 +279,9 @@ func _run_battle_ai_commander_role_spell_case() -> Dictionary:
 			},
 		}
 	)
+	var minimal_spellbook_template_hero := {
+		"roster_hero_id": "hero_thornwake_veyra_seedseer",
+	}
 	var battle := {
 		"round": 2,
 		"distance": 2,
@@ -303,27 +306,50 @@ func _run_battle_ai_commander_role_spell_case() -> Dictionary:
 	var minimal_template_report := BattleAiRules.battle_spell_choice_report(battle, active, minimal_template_hero)
 	if not bool(minimal_template_report.get("ok", false)):
 		return {"ok": false, "error": "Commander role template fallback spell report failed: %s" % minimal_template_report}
+	var minimal_spellbook_report := BattleAiRules.battle_spell_choice_report(battle, active, minimal_spellbook_template_hero)
+	if not bool(minimal_spellbook_report.get("ok", false)):
+		return {"ok": false, "error": "Commander spellbook template fallback report failed: %s" % minimal_spellbook_report}
 	var baseline_selected: Dictionary = baseline_report.get("selected", {}) if baseline_report.get("selected", {}) is Dictionary else {}
 	var hexcaller_selected: Dictionary = hexcaller_report.get("selected", {}) if hexcaller_report.get("selected", {}) is Dictionary else {}
 	var minimal_template_selected: Dictionary = minimal_template_report.get("selected", {}) if minimal_template_report.get("selected", {}) is Dictionary else {}
+	var minimal_spellbook_selected: Dictionary = minimal_spellbook_report.get("selected", {}) if minimal_spellbook_report.get("selected", {}) is Dictionary else {}
 	if String(hexcaller_selected.get("spell_id", "")) != "spell_briar_bind":
 		return {"ok": false, "error": "Hexcaller commander should prefer the control spell, baseline=%s hexcaller=%s" % [baseline_report, hexcaller_report]}
 	if String(minimal_template_selected.get("spell_id", "")) != "spell_briar_bind":
 		return {"ok": false, "error": "Minimal Sable commander should inherit template role and prefer control spell, report=%s" % minimal_template_report}
+	if String(minimal_spellbook_selected.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Minimal Veyra commander should inherit template spellbook and prefer control spell, report=%s" % minimal_spellbook_report}
 	var live_action := BattleAiRules.choose_enemy_action(battle, active, hexcaller_hero)
 	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_briar_bind":
 		return {"ok": false, "error": "Hexcaller live choice should cast Briar Bind, got %s report=%s" % [live_action, hexcaller_report]}
 	var minimal_live_action := BattleAiRules.choose_enemy_action(battle, active, minimal_template_hero)
 	if String(minimal_live_action.get("action", "")) != "cast_spell" or String(minimal_live_action.get("spell_id", "")) != "spell_briar_bind":
 		return {"ok": false, "error": "Minimal Sable live choice should cast Briar Bind through template role fallback, got %s report=%s" % [minimal_live_action, minimal_template_report]}
+	var minimal_spellbook_live_action := BattleAiRules.choose_enemy_action(battle, active, minimal_spellbook_template_hero)
+	if String(minimal_spellbook_live_action.get("action", "")) != "cast_spell" or String(minimal_spellbook_live_action.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Minimal Veyra live choice should cast Briar Bind through template spellbook fallback, got %s report=%s" % [minimal_spellbook_live_action, minimal_spellbook_report]}
+	var battle_state := battle.duplicate(true)
+	battle_state["enemy_hero"] = minimal_spellbook_template_hero.duplicate(true)
+	var battle_state_spellbook_report := BattleAiRules.battle_spell_choice_report(battle_state, active, {})
+	var battle_state_spellbook_selected: Dictionary = battle_state_spellbook_report.get("selected", {}) if battle_state_spellbook_report.get("selected", {}) is Dictionary else {}
+	if String(battle_state_spellbook_selected.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Battle-state minimal Veyra should inherit template spellbook, report=%s" % battle_state_spellbook_report}
+	var battle_state_spellbook_action := BattleAiRules.choose_enemy_action(battle_state, active, {})
+	if String(battle_state_spellbook_action.get("action", "")) != "cast_spell" or String(battle_state_spellbook_action.get("spell_id", "")) != "spell_briar_bind":
+		return {"ok": false, "error": "Battle-state minimal Veyra live choice should cast Briar Bind, got %s report=%s" % [battle_state_spellbook_action, battle_state_spellbook_report]}
+	if minimal_spellbook_template_hero.has("spellbook") or battle_state.get("enemy_hero", {}).has("spellbook"):
+		return {"ok": false, "error": "Minimal battle spellbook fallback mutated source commander state: argument=%s battle=%s" % [minimal_spellbook_template_hero, battle_state]}
 	return {
 		"ok": true,
 		"baseline_selected_spell_id": String(baseline_selected.get("spell_id", "")),
 		"hexcaller_selected_spell_id": String(hexcaller_selected.get("spell_id", "")),
 		"template_fallback_selected_spell_id": String(minimal_template_selected.get("spell_id", "")),
+		"template_spellbook_fallback_selected_spell_id": String(minimal_spellbook_selected.get("spell_id", "")),
 		"hexcaller_effect_type": String(hexcaller_selected.get("effect_type", "")),
 		"live_action": String(live_action.get("action", "")),
 		"template_fallback_live_action": String(minimal_live_action.get("action", "")),
+		"template_spellbook_fallback_live_action": String(minimal_spellbook_live_action.get("action", "")),
+		"battle_state_template_spellbook_action": String(battle_state_spellbook_action.get("action", "")),
 	}
 
 func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
