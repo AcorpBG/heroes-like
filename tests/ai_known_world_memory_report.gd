@@ -25,6 +25,9 @@ func _run() -> void:
 	var neutral_town_case := _neutral_towns_require_visibility_or_memory()
 	if neutral_town_case.is_empty():
 		return
+	var persistent_exploration_case := _persistent_exploration_tasks_launch_and_complete()
+	if persistent_exploration_case.is_empty():
+		return
 	var exploration_case := _exploration_arrival_reassigns_visible_resource()
 	if exploration_case.is_empty():
 		return
@@ -34,7 +37,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_and_known_world_memory_instead_of_omniscient_targets",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, neutral_town_case, exploration_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, neutral_town_case, persistent_exploration_case, exploration_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -127,7 +130,7 @@ func _hero_targets_require_ai_sighting() -> Dictionary:
 func _empty_target_fallback_does_not_hunt_hidden_hero() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
-	_set_primary_hero_position(session, 0, 4)
+	_set_primary_hero_position(session, 0, 12)
 	_make_no_known_targets_session(session)
 	var origin := {"x": 7, "y": 2}
 	var chosen := EnemyAdventureRules.choose_target(session, config, origin, {})
@@ -249,6 +252,73 @@ func _neutral_towns_require_visibility_or_memory() -> Dictionary:
 		"scoutable_unknown_neutral_town": true,
 		"known_neutral_town_candidate": true,
 		"known_world_target_id": "hidden_neutral_hold",
+	}
+
+func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_primary_hero_position(session, 0, 4)
+	_make_no_known_targets_session(session)
+	var state := _enemy_state(session)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	_update_enemy_state(session, plan_result.get("state", _enemy_state(session)))
+	var scout_task := _first_task_for_kind(session, "explore")
+	if scout_task.is_empty():
+		_fail("No-known-target strategic planner should create a persistent exploration task: %s" % JSON.stringify(plan_result))
+		return {}
+	if String(scout_task.get("task_class", "")) != "scout_frontier":
+		_fail("Exploration task should use scout_frontier class: %s" % JSON.stringify(scout_task))
+		return {}
+	var task_target_id := String(scout_task.get("target_id", ""))
+	state = _enemy_state(session)
+	state["pressure"] = 999
+	_update_enemy_state(session, state)
+	var turn_result := EnemyTurnRules.run_enemy_turn(session)
+	var exploration_raid := _first_enemy_raid_for_kind(session, "explore")
+	if exploration_raid.is_empty():
+		_fail("Saved exploration task did not launch an exploration raid: %s" % JSON.stringify(turn_result))
+		return {}
+	var launched_task := _first_task_for_target(session, "explore", String(exploration_raid.get("target_placement_id", "")))
+	if launched_task.is_empty() or String(launched_task.get("task_class", "")) != "scout_frontier":
+		_fail("Exploration raid did not launch from a saved scout task: planned=%s raid=%s" % [JSON.stringify(_task_state(session)), JSON.stringify(exploration_raid)])
+		return {}
+	task_target_id = String(exploration_raid.get("target_placement_id", ""))
+	var target_tile := _explore_target_tile(task_target_id)
+	if target_tile.is_empty():
+		_fail("Exploration task target id did not encode a tile: %s" % task_target_id)
+		return {}
+	if int(exploration_raid.get("target_x", -1)) != int(target_tile.get("x", -2)) or int(exploration_raid.get("target_y", -1)) != int(target_tile.get("y", -2)):
+		_fail("Exploration raid lost saved target coordinates during spawn: %s" % JSON.stringify(exploration_raid))
+		return {}
+	_move_raid_to_target(session, String(exploration_raid.get("placement_id", "")), int(target_tile.get("x", 0)), int(target_tile.get("y", 0)))
+	var arrival_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	_update_enemy_state(session, arrival_result.get("state", _enemy_state(session)))
+	var completed_task := _task_by_id(session, String(launched_task.get("task_id", "")))
+	if String(completed_task.get("task_status", "")) != "completed":
+		_fail("Exploration arrival did not complete the saved scout task: %s" % JSON.stringify(completed_task))
+		return {}
+	var reservation: Dictionary = completed_task.get("reservation", {}) if completed_task.get("reservation", {}) is Dictionary else {}
+	if String(reservation.get("reservation_status", "")) != "released":
+		_fail("Completed exploration task did not release its reservation: %s" % JSON.stringify(completed_task))
+		return {}
+	var continued_raid := _first_enemy_raid_for_kind(session, "explore")
+	if continued_raid.is_empty():
+		_fail("Exploration commander should continue to another frontier target after completing an empty scout tile: %s" % JSON.stringify(session.overworld.get("encounters", [])))
+		return {}
+	if String(continued_raid.get("target_placement_id", "")) == task_target_id:
+		_fail("Exploration commander stayed on the completed scout tile instead of continuing: %s" % JSON.stringify(continued_raid))
+		return {}
+	return {
+		"case_id": "persistent_exploration_tasks_launch_and_complete",
+		"planned_count": int(plan_result.get("planned_count", 0)),
+		"task_class": String(launched_task.get("task_class", "")),
+		"task_target_id": task_target_id,
+		"spawned_raid_id": String(exploration_raid.get("placement_id", "")),
+		"spawned_target_x": int(exploration_raid.get("target_x", -1)),
+		"spawned_target_y": int(exploration_raid.get("target_y", -1)),
+		"completed_task_status": String(completed_task.get("task_status", "")),
+		"continued_target_id": String(continued_raid.get("target_placement_id", "")),
+		"event_types": _event_types(arrival_result.get("events", [])),
 	}
 
 func _exploration_arrival_reassigns_visible_resource() -> Dictionary:
@@ -437,6 +507,54 @@ func _first_enemy_raid_for_kind(session, target_kind: String) -> Dictionary:
 		if String(encounter.get("spawned_by_faction_id", "")) == MIRECLAW and String(encounter.get("target_kind", "")) == target_kind:
 			return encounter
 	return {}
+
+func _first_task_for_kind(session, target_kind: String) -> Dictionary:
+	for task_value in _task_state(session).get("tasks", []):
+		if task_value is Dictionary and String(task_value.get("target_kind", "")) == target_kind:
+			return task_value
+	return {}
+
+func _first_task_for_target(session, target_kind: String, target_id: String) -> Dictionary:
+	for task_value in _task_state(session).get("tasks", []):
+		if task_value is Dictionary \
+				and String(task_value.get("target_kind", "")) == target_kind \
+				and String(task_value.get("target_id", "")) == target_id:
+			return task_value
+	return {}
+
+func _task_by_id(session, task_id: String) -> Dictionary:
+	for task_value in _task_state(session).get("tasks", []):
+		if task_value is Dictionary and String(task_value.get("task_id", "")) == task_id:
+			return task_value
+	return {}
+
+func _task_state(session) -> Dictionary:
+	var state := _enemy_state(session)
+	return state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+
+func _explore_target_tile(target_id: String) -> Dictionary:
+	var parts := target_id.split(":")
+	if parts.size() != 3 or String(parts[0]) != "explore":
+		return {}
+	return {"x": int(parts[1]), "y": int(parts[2])}
+
+func _move_raid_to_target(session, placement_id: String, x: int, y: int) -> void:
+	var encounters: Array = session.overworld.get("encounters", [])
+	for index in range(encounters.size()):
+		if not (encounters[index] is Dictionary):
+			continue
+		var encounter: Dictionary = encounters[index]
+		if String(encounter.get("placement_id", "")) != placement_id:
+			continue
+		encounter["x"] = x
+		encounter["y"] = y
+		encounter["goal_x"] = x
+		encounter["goal_y"] = y
+		encounter["goal_distance"] = 0
+		encounter["arrived"] = true
+		encounters[index] = encounter
+		session.overworld["encounters"] = encounters
+		return
 
 func _event_types(events: Variant) -> Array:
 	var output := []

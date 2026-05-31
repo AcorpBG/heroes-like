@@ -62,6 +62,7 @@ const COMMANDER_ROLE_RAIDER := "raider"
 const COMMANDER_ROLE_DEFENDER := "defender"
 const COMMANDER_ROLE_RETAKER := "retaker"
 const COMMANDER_ROLE_STABILIZER := "stabilizer"
+const COMMANDER_ROLE_SCOUT := "scout"
 const COMMANDER_ROLE_RECOVERING := "recovering"
 const COMMANDER_ROLE_RESERVE := "reserve"
 const COMMANDER_ROLE_PUBLIC_EVENT_KEYS := [
@@ -586,11 +587,12 @@ const AI_HERO_TASK_CLASSES := [
 	"contest_site",
 	"stabilize_front",
 	"defend_front",
+	"scout_frontier",
 	"recover_commander",
 	"rebuild_host",
 	"reserve",
 ]
-const AI_HERO_TASK_EXCLUSIVE_CLASSES := ["retake_site", "contest_site", "defend_front", "raid_town"]
+const AI_HERO_TASK_EXCLUSIVE_CLASSES := ["retake_site", "contest_site", "defend_front", "raid_town", "scout_frontier"]
 const AI_HERO_TASK_PUBLIC_EVENT_KEYS := [
 	"event_id",
 	"day",
@@ -2206,6 +2208,8 @@ static func _redirect_understrength_raid_to_regroup(
 		return raid
 	if String(raid.get("target_kind", "")) == "regroup":
 		return _refresh_target(session, raid)
+	if String(raid.get("target_kind", "")) == "explore":
+		return raid
 	if not raid_regroup_needed(raid):
 		return raid
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
@@ -2354,7 +2358,7 @@ static func _redirect_raid_to_nearby_exposed_hero(
 	if bool(raid.get("arrived", false)):
 		return raid
 	var current_kind := String(raid.get("target_kind", ""))
-	if current_kind == "" or current_kind == "hero" or current_kind == "regroup":
+	if current_kind == "" or current_kind == "hero" or current_kind == "regroup" or current_kind == "explore":
 		return raid
 	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
 		return raid
@@ -2529,7 +2533,7 @@ static func _redirect_raid_away_from_nearby_player_threat(
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
 	var current_kind := String(raid.get("target_kind", ""))
-	if current_kind == "" or current_kind == "hero" or current_kind == "regroup":
+	if current_kind == "" or current_kind == "hero" or current_kind == "regroup" or current_kind == "explore":
 		return raid
 	if int(raid.get("player_threat_avoidance_delay_until_day", 0)) > int(session.day):
 		return raid
@@ -5499,6 +5503,7 @@ static func _normalized_commander_role_state(source: Variant, fallback_source: V
 		COMMANDER_ROLE_DEFENDER,
 		COMMANDER_ROLE_RETAKER,
 		COMMANDER_ROLE_STABILIZER,
+		COMMANDER_ROLE_SCOUT,
 		COMMANDER_ROLE_RECOVERING,
 		COMMANDER_ROLE_RESERVE,
 	]:
@@ -6208,7 +6213,7 @@ static func _ai_hero_task_planner_task_for_actor(
 		var candidate_origin: Dictionary = candidate.get("planner_origin", origin) if candidate.get("planner_origin", {}) is Dictionary else origin
 		var target_kind := String(candidate.get("target_kind", ""))
 		var target_id := String(candidate.get("target_placement_id", ""))
-		if target_kind not in ["resource", "town", "artifact", "encounter", "hero"] or target_id == "":
+		if (target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"] and target_kind != "explore") or target_id == "":
 			continue
 		if int(candidate.get("priority", 0)) <= 0:
 			continue
@@ -6401,6 +6406,17 @@ static func _ai_commander_task_fit_bonus(
 				bonus += 12
 			if "spellwright" in focus_ids and ("magic_support" in reason_codes or site_family == "frontier_shrine"):
 				bonus += 18
+		"explore":
+			bonus += max(0, int(template.get("base_movement", 10)) - 10) * 8
+			bonus += knowledge * 5
+			if archetype in ["scout", "pathfinder"]:
+				bonus += 42
+			elif archetype == "raider":
+				bonus += 16
+			if "wayfinder" in focus_ids:
+				bonus += 32
+			if "ambusher" in battle_traits:
+				bonus += 10
 
 	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes or "front_stabilization" in reason_codes:
 		bonus += defense * 18
@@ -6432,6 +6448,8 @@ static func _ai_commander_task_fit_bonus(
 static func _ai_hero_task_planner_class_for_candidate(candidate: Dictionary) -> String:
 	var target_kind := String(candidate.get("target_kind", ""))
 	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+	if target_kind == "explore":
+		return "scout_frontier"
 	if target_kind == "town":
 		return "raid_town"
 	if "town_defense" in reason_codes or "site_defense" in reason_codes or "defend_front" in reason_codes:
@@ -6446,12 +6464,29 @@ static func _ai_hero_task_planner_candidates_from_origins(
 	origins: Array
 ) -> Array:
 	var best_by_target := {}
+	var exploration_by_target := {}
 	for origin_value in origins:
 		if not (origin_value is Dictionary):
 			continue
 		var origin: Dictionary = origin_value
 		var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-		for candidate_value in _target_candidates(session, config, origin_pos):
+		var origin_candidates := _target_candidates(session, config, origin_pos)
+		if origin_candidates.is_empty():
+			var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
+			if not exploration_plan.is_empty():
+				var exploration_key := "%s:%s" % [
+					String(exploration_plan.get("target_kind", "")),
+					String(exploration_plan.get("target_placement_id", "")),
+				]
+				var exploration_with_origin := exploration_plan.duplicate(true)
+				exploration_with_origin["planner_origin"] = origin.duplicate(true)
+				if (
+					not exploration_by_target.has(exploration_key)
+					or _candidate_beats(exploration_with_origin, exploration_by_target.get(exploration_key, {}))
+				):
+					exploration_by_target[exploration_key] = exploration_with_origin
+			continue
+		for candidate_value in origin_candidates:
 			if not (candidate_value is Dictionary):
 				continue
 			var candidate: Dictionary = candidate_value
@@ -6467,6 +6502,9 @@ static func _ai_hero_task_planner_candidates_from_origins(
 				or _candidate_beats(candidate_with_origin, best_by_target.get(key, {}))
 			):
 				best_by_target[key] = candidate_with_origin
+	if best_by_target.is_empty():
+		for key in exploration_by_target.keys():
+			best_by_target[key] = exploration_by_target[key]
 	var output := []
 	for candidate_value in best_by_target.values():
 		if candidate_value is Dictionary:
@@ -6607,6 +6645,9 @@ static func _ai_hero_task_planner_event(
 		if actor_label == "":
 			actor_label = actor_id
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
+	var summary: String = "%s plans pressure on %s." % [actor_label, String(target.get("target_label", target_id))]
+	if target_kind == "explore":
+		summary = "%s plans frontier scouting near %s." % [actor_label, String(target.get("target_label", target_id))]
 	return {
 		"event_id": "%d:%s:ai_commander_task_planned:%s:%s:%s" % [int(session.day), faction_id, actor_id, target_kind, target_id],
 		"day": int(session.day),
@@ -6623,7 +6664,7 @@ static func _ai_hero_task_planner_event(
 		"target_y": int(target.get("target_y", 0)),
 		"visibility": _event_visibility(session, int(target.get("target_x", 0)), int(target.get("target_y", 0)), _ai_hero_task_public_importance(task)),
 		"public_importance": _ai_hero_task_public_importance(task),
-		"summary": "%s plans pressure on %s." % [actor_label, String(target.get("target_label", target_id))],
+		"summary": summary,
 		"reason_codes": reason_codes,
 		"public_reason": _public_reason_from_codes(reason_codes),
 		"debug_reason": "coordinated strategic task planner",
@@ -8942,6 +8983,8 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 		return "defending held site"
 	if "front_stabilization" in codes:
 		return "front stabilization"
+	if "frontier_scouting" in codes or "search_contact" in codes or "no_known_targets" in codes:
+		return "scouting the frontier"
 	if "retake_front" in codes:
 		return "retaking captured town"
 	if "town_expansion" in codes or "neutral_town_claim" in codes:
@@ -9905,6 +9948,11 @@ static func ai_hero_task_target_ownership_check(
 		elif target_kind == "commander":
 			if String(task.get("target_id", "")) != String(task.get("actor_id", "")):
 				return {"ok": false, "error": "commander task target must be its actor"}
+		elif target_kind == "explore":
+			var tile := _exploration_target_tile_from_id(String(task.get("target_id", "")))
+			var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+			if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+				return {"ok": false, "error": "explore task target missing %s" % String(task.get("target_id", ""))}
 		else:
 			return {"ok": false, "error": "unsupported task target kind %s" % target_kind}
 		checked += 1
@@ -10552,6 +10600,8 @@ static func _ai_hero_task_plan_from_saved_task(
 			priority += 80
 		"contest_site":
 			priority += 55
+		"scout_frontier":
+			priority += 45
 		"defend_front":
 			priority += 50
 		"stabilize_front":
@@ -10584,6 +10634,19 @@ static func _ai_hero_task_target_snapshot_for_plan(
 	target_id: String
 ) -> Dictionary:
 	match target_kind:
+		"explore":
+			var tile := _exploration_target_tile_from_id(target_id)
+			if tile.x < 0 or tile.y < 0:
+				return {}
+			var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+			if tile.x >= map_size.x or tile.y >= map_size.y:
+				return {}
+			return {
+				"target_label": "Frontier scout %d,%d" % [tile.x, tile.y],
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_tiles": [tile],
+			}
 		"resource":
 			var node_result := _find_resource_by_placement(session, target_id)
 			if int(node_result.get("index", -1)) < 0:
@@ -10660,6 +10723,14 @@ static func _ai_hero_task_target_snapshot_for_plan(
 				"goal_tiles": [tile],
 			}
 	return {}
+
+static func _exploration_target_tile_from_id(target_id: String) -> Vector2i:
+	if not target_id.begins_with("explore:"):
+		return Vector2i(-1, -1)
+	var parts := target_id.split(":")
+	if parts.size() != 3:
+		return Vector2i(-1, -1)
+	return Vector2i(int(parts[1]), int(parts[2]))
 
 static func _saved_task_plan_beats(candidate: Dictionary, best: Dictionary) -> bool:
 	if int(candidate.get("priority", 0)) == int(best.get("priority", 0)):
@@ -10745,7 +10816,7 @@ static func _ai_hero_task_record_live_assignment(
 		return
 	var target_kind := String(current_target.get("target_kind", ""))
 	var target_id := String(current_target.get("target_placement_id", ""))
-	if target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"] or target_id == "":
+	if target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup", "explore"] or target_id == "":
 		return
 	var task: Dictionary = task_record.duplicate(true) if not task_record.is_empty() else {}
 	if task.is_empty() or String(task.get("actor_id", "")) != actor_id or String(task.get("target_id", "")) != target_id:
@@ -10919,7 +10990,9 @@ static func _ai_hero_task_record_from_assignment(
 	if reason_codes.is_empty():
 		reason_codes = ["strategic_pressure"]
 	var task_class := "contest_site"
-	if target_kind == "regroup":
+	if target_kind == "explore":
+		task_class = "scout_frontier"
+	elif target_kind == "regroup":
 		task_class = "rebuild_host"
 	elif "active_front_support" in reason_codes:
 		task_class = "stabilize_front"
@@ -11049,6 +11122,8 @@ static func _ai_hero_task_reconciled_live_task(
 			return _ai_hero_task_reconciled_hero_task(session, faction_id, task, target_id)
 		"regroup":
 			return _ai_hero_task_reconciled_regroup_task(session, faction_id, task, target_id)
+		"explore":
+			return _ai_hero_task_reconciled_explore_task(session, faction_id, task, target_id)
 	return task
 
 static func _ai_hero_task_reconcile_actor(
@@ -11213,10 +11288,31 @@ static func _ai_hero_task_reconciled_regroup_task(
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
 	return task
 
+static func _ai_hero_task_reconciled_explore_task(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	task: Dictionary,
+	target_id: String
+) -> Dictionary:
+	var tile := _exploration_target_tile_from_id(target_id)
+	if tile.x < 0 or tile.y < 0:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	if tile.x >= map_size.x or tile.y >= map_size.y:
+		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
+	if _enemy_target_currently_visible(session, {}, faction_id, tile.x, tile.y):
+		return _ai_hero_task_with_lifecycle(task, "completed", "valid")
+	return task
+
 static func _ai_hero_task_with_lifecycle(task: Dictionary, status: String, validation: String) -> Dictionary:
 	var next_task := task.duplicate(true)
 	next_task["task_status"] = status
 	next_task["last_validation"] = validation
+	if status == "completed" and next_task.get("reservation", {}) is Dictionary:
+		var reservation: Dictionary = next_task.get("reservation", {}).duplicate(true)
+		if String(reservation.get("reservation_scope", "")) == "exclusive_target":
+			reservation["reservation_status"] = "released"
+			next_task["reservation"] = reservation
 	return next_task
 
 static func _ai_hero_task_records_equal(left: Dictionary, right: Dictionary) -> bool:
@@ -11313,6 +11409,11 @@ static func _ai_hero_task_finish_live_assignment(
 				task = task.duplicate(true)
 				task["task_status"] = task_status
 				task["last_validation"] = validation
+				if task_status == "completed" and task.get("reservation", {}) is Dictionary:
+					var reservation: Dictionary = task.get("reservation", {}).duplicate(true)
+					if String(reservation.get("reservation_scope", "")) == "exclusive_target":
+						reservation["reservation_status"] = "released"
+						task["reservation"] = reservation
 				changed = true
 			next_tasks.append(task)
 		if not changed:
@@ -11364,6 +11465,8 @@ static func _ai_hero_task_class_for_role(role: String, target_kind: String, role
 		return "defend_front"
 	if role == COMMANDER_ROLE_STABILIZER:
 		return "stabilize_front"
+	if role == COMMANDER_ROLE_SCOUT:
+		return "scout_frontier"
 	if role == COMMANDER_ROLE_RECOVERING and role_status == "cooldown":
 		return "recover_commander"
 	if role == COMMANDER_ROLE_RECOVERING and role_status == "rebuilding":
@@ -11374,6 +11477,8 @@ static func _ai_hero_task_role_for_task_class(task_class: String, target_kind: S
 	match task_class:
 		"raid_town", "contest_site":
 			return COMMANDER_ROLE_RAIDER
+		"scout_frontier":
+			return COMMANDER_ROLE_SCOUT
 		"retake_site":
 			return COMMANDER_ROLE_RETAKER
 		"defend_front":
@@ -11451,9 +11556,10 @@ static func _ai_hero_task_reservation_sort_key(task: Dictionary) -> String:
 		"contest_site": 2,
 		"stabilize_front": 3,
 		"raid_town": 4,
-		"reserve": 5,
-		"recover_commander": 6,
-		"rebuild_host": 7,
+		"scout_frontier": 5,
+		"reserve": 6,
+		"recover_commander": 7,
+		"rebuild_host": 8,
 	}
 	var class_rank := int(class_rank_map.get(String(task.get("task_class", "")), 99))
 	return "%s:%02d:%s:%s" % [
@@ -11467,7 +11573,7 @@ static func _ai_hero_task_public_importance(task: Dictionary) -> String:
 	var task_class := String(task.get("task_class", ""))
 	if task_class in ["retake_site", "defend_front", "raid_town"]:
 		return "high"
-	if task_class in ["contest_site", "stabilize_front"]:
+	if task_class in ["contest_site", "stabilize_front", "scout_frontier"]:
 		return "medium"
 	return "low"
 
@@ -12244,6 +12350,8 @@ static func _commander_role_expected_transition(role: String) -> String:
 			return "hold_front_or_intercept"
 		COMMANDER_ROLE_STABILIZER:
 			return "support_front_stabilization"
+		COMMANDER_ROLE_SCOUT:
+			return "scout_frontier_then_reassign"
 		COMMANDER_ROLE_RECOVERING:
 			return "wait_until_recovery_day"
 		COMMANDER_ROLE_RESERVE:
@@ -12262,6 +12370,8 @@ static func _default_reason_codes_for_target(target_kind: String, target_id: Str
 			return ["route_pressure"]
 		"encounter":
 			return ["site_contested", "objective_front"]
+		"explore":
+			return ["frontier_scouting", "search_contact"]
 		_:
 			return []
 
@@ -12271,6 +12381,8 @@ static func _default_public_importance(target_kind: String, reason_codes: Array)
 	if "persistent_income_denial" in reason_codes or "recruit_denial" in reason_codes or "objective_front" in reason_codes:
 		return "high"
 	if "site_seized" in reason_codes or "site_contested" in reason_codes:
+		return "medium"
+	if target_kind == "explore" or "frontier_scouting" in reason_codes:
 		return "medium"
 	return "low"
 
@@ -12923,6 +13035,7 @@ static func _resolve_exploration_target(
 	if session == null or raid.is_empty() or faction_id == "":
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var previous_target := _current_target_snapshot(raid)
+	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 	var continued := _clear_regroup_target(raid.duplicate(true))
 	continued["last_explored_x"] = int(raid.get("x", 0))
 	continued["last_explored_y"] = int(raid.get("y", 0))
@@ -12930,14 +13043,14 @@ static func _resolve_exploration_target(
 	continued = assign_target(session, config, continued)
 	var next_target := _current_target_snapshot(continued)
 	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
-		return {"encounter": raid, "state": state, "event_message": ""}
+		return {"encounter": raid, "state": _ai_hero_task_enemy_state_for_faction(session, faction_id), "event_message": ""}
 	continued["arrived"] = false
 	var event := ai_target_assignment_event(session, config, continued, previous_target)
 	if event.is_empty():
 		event = ai_target_assignment_event(session, config, continued, {})
 	return {
 		"encounter": continued,
-		"state": state,
+		"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
 		"event_message": "",
 		"ai_event": event,
 	}
@@ -14117,12 +14230,10 @@ static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, 
 				var town: Dictionary = town_result.get("town", {})
 				return [Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))]
 		"explore":
-			return [
-				Vector2i(
-					int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
-					int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
-				)
-			]
+			var explore_tile := _exploration_target_tile_from_id(String(raid.get("target_placement_id", "")))
+			if explore_tile.x >= 0 and explore_tile.y >= 0:
+				return [explore_tile]
+			return [Vector2i(int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))), int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0)))))]
 		"resource", "artifact":
 			return [Vector2i(int(raid.get("target_x", int(raid.get("goal_x", 0)))), int(raid.get("target_y", int(raid.get("goal_y", 0)))))]
 		"encounter":
@@ -14313,10 +14424,12 @@ static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: 
 				raid["goal_y"] = goal_tile.y
 				raid["goal_distance"] = _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")))
 		"explore":
-			var goal_tile := Vector2i(
-				int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
-				int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
-			)
+			var goal_tile := _exploration_target_tile_from_id(String(raid.get("target_placement_id", "")))
+			if goal_tile.x < 0 or goal_tile.y < 0:
+				goal_tile = Vector2i(
+					int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
+					int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
+				)
 			raid["target_x"] = goal_tile.x
 			raid["target_y"] = goal_tile.y
 			raid["goal_x"] = goal_tile.x
@@ -14426,12 +14539,11 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 			valid = hero_target_id == "" or not _find_player_hero(session, hero_target_id).is_empty()
 		"explore":
 			var target_id := String(raid.get("target_placement_id", ""))
-			var goal_tile := Vector2i(
-				int(raid.get("goal_x", raid.get("target_x", raid.get("x", 0)))),
-				int(raid.get("goal_y", raid.get("target_y", raid.get("y", 0))))
-			)
+			var goal_tile := _exploration_target_tile_from_id(target_id)
 			valid = (
 				target_id.begins_with("explore:")
+				and goal_tile.x >= 0
+				and goal_tile.y >= 0
 				and _path_distance(
 					session,
 					Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))),

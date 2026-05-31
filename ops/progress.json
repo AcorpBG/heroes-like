@@ -6,9 +6,9 @@
   "currentSliceId": "",
   "currentSliceTitle": "",
   "currentSliceStatus": "none",
-  "currentSliceNotes": "Latest completed slice: strategic-ai-neutral-town-known-world-gating-10184. Strategic AI production readiness remains open; continue with real live AI behavior slices rather than report-only gates.",
+  "currentSliceNotes": "Latest completed slice: persistent scout-frontier task-board implementation for no-known-target strategic AI exploration.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T04:25:00Z",
+  "updatedAt": "2026-05-31T05:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,83 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-persistent-exploration-task-board-10184",
+      "title": "Strategic AI Persistent Exploration Task Board",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make no-known-target frontier exploration a durable strategic commander objective so AI empires deliberately allocate scouts through the task board rather than relying only on one-off spawn fallback behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_known_world_memory_report.gd"
+      ],
+      "baselineChecks": [
+        "No-known-target commanders can choose an explore target and fresh pressure can spawn an exploration raid, but the strategic task board does not persist exploration as assigned commander work.",
+        "Saved task spawning, commander role adoption, and task lifecycle already exist for resources/towns/artifacts/encounters/heroes but not for explore targets."
+      ],
+      "completionCriteria": [
+        "When an AI faction has deployable commanders and no legitimate known targets, the strategic planner creates durable scout-frontier tasks with target_kind explore.",
+        "Saved exploration tasks can launch a matching commander/raid through the existing saved-task spawn path before generic fallback selection.",
+        "Explorer commanders use scout/pathfinder/wayfinder fit and reserve distinct exploration tiles instead of duplicating the same scout target.",
+        "Exploration arrival finishes the scout task and either retargets to newly visible actionable work or continues to another frontier scout target without sitting forever on the explored tile."
+      ],
+      "nonGoals": [
+        "Do not add report-only gates.",
+        "Do not claim full strategic AI production readiness.",
+        "Do not change combat, economy, RMG generation, or campaign scope."
+      ],
+      "startedAt": "2026-05-31T04:40:00Z",
+      "updatedAt": "2026-05-31T05:05:00Z",
+      "completedAt": "2026-05-31T05:05:00Z",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
+          "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
+          "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
+          "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
+          "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
+          "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
+          "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
+        ],
+        "focused_case": {
+          "case_id": "persistent_exploration_tasks_launch_and_complete",
+          "task_class": "scout_frontier",
+          "target_kind": "explore",
+          "spawn_coordinates_preserved": true,
+          "arrival_completes_saved_task": true,
+          "reservation_released_on_completion": true,
+          "commander_continues_to_new_frontier_target": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
+    },
     {
       "id": "strategic-ai-neutral-town-known-world-gating-10184",
       "title": "Strategic AI Neutral Town Known-World Gating",
@@ -31770,6 +31847,66 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-persistent-exploration-task-board-10184",
+      "title": "Strategic AI Persistent Exploration Task Board",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T05:05:00Z",
+      "sourceRefs": [
+        "PLAN.md",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_known_world_memory_report.gd",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "validation": {
+        "status": "pass",
+        "updatedAt": "2026-05-31T05:05:00Z",
+        "sliceId": "strategic-ai-persistent-exploration-task-board-10184",
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "implemented": [
+            "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
+            "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
+            "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
+            "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
+            "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
+            "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
+            "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
+          ],
+          "focused_case": {
+            "case_id": "persistent_exploration_tasks_launch_and_complete",
+            "task_class": "scout_frontier",
+            "target_kind": "explore",
+            "spawn_coordinates_preserved": true,
+            "arrival_completes_saved_task": true,
+            "reservation_released_on_completion": true,
+            "commander_continues_to_new_frontier_target": true,
+            "save_version": 9
+          },
+          "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+          "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+        }
+      },
+      "summary": "Completed. No-known-target exploration is now durable strategic AI work: scouts get reserved frontier tasks, saved-task launches preserve target coordinates, arrivals complete and release tasks, and commanders continue scouting instead of idling on explored tiles."
+    },
+    {
       "id": "strategic-ai-artifact-task-board-10184",
       "title": "Strategic AI Artifact Task Board",
       "status": "completed",
@@ -42282,40 +42419,42 @@
   ],
   "lastValidation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T04:25:00Z",
-    "sliceId": "strategic-ai-neutral-town-known-world-gating-10184",
+    "updatedAt": "2026-05-31T05:05:00Z",
+    "sliceId": "strategic-ai-persistent-exploration-task-board-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
-        "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
-        "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
-        "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
-        "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
+        "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
+        "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
+        "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
+        "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
+        "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
+        "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
+        "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
       ],
       "focused_case": {
-        "scenario_id": "river-pass",
-        "target_kind": "town",
-        "target_id": "hidden_neutral_hold",
-        "hidden_candidate_count": 0,
-        "scoutable_unknown_neutral_town": true,
-        "known_neutral_town_candidate": true,
-        "visible_neutral_expansion_preserved": true,
+        "case_id": "persistent_exploration_tasks_launch_and_complete",
+        "task_class": "scout_frontier",
+        "target_kind": "explore",
+        "spawn_coordinates_preserved": true,
+        "arrival_completes_saved_task": true,
+        "reservation_released_on_completion": true,
+        "commander_continues_to_new_frontier_target": true,
         "save_version": 9
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
@@ -42323,7 +42462,7 @@
     }
   },
   "active_slice": "",
-  "currentSliceUpdatedAt": "2026-05-31T04:25:00Z",
+  "currentSliceUpdatedAt": "2026-05-31T04:40:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -45399,45 +45538,91 @@
         "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-05-31T05:05:00Z",
+      "sliceId": "strategic-ai-persistent-exploration-task-board-10184",
+      "commands": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
+          "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
+          "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
+          "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
+          "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
+          "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
+          "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
+        ],
+        "focused_case": {
+          "case_id": "persistent_exploration_tasks_launch_and_complete",
+          "task_class": "scout_frontier",
+          "target_kind": "explore",
+          "spawn_coordinates_preserved": true,
+          "arrival_completes_saved_task": true,
+          "reservation_released_on_completion": true,
+          "commander_continues_to_new_frontier_target": true,
+          "save_version": 9
+        },
+        "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
+        "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      }
     }
   ],
-  "currentSlice": "none selected; latest completed slice strategic-ai-neutral-town-known-world-gating-10184",
+  "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T04:25:00Z",
-    "sliceId": "strategic-ai-neutral-town-known-world-gating-10184",
+    "updatedAt": "2026-05-31T05:05:00Z",
+    "sliceId": "strategic-ai-persistent-exploration-task-board-10184",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_known_world_memory_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_target_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_retake_assault_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_hero_hunt_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "EnemyAdventureRules now passes include_unscouted through town candidate construction so normal targeting and scouting discovery use distinct knowledge policies for towns.",
-        "Ordinary neutral-town expansion now requires current AI visibility or known-world scouted target memory before a neutral town becomes a raid/task candidate.",
-        "Player towns, siege targets, objective anchors, and priority towns remain eligible through the existing explicit-pressure path.",
-        "Scouting discovery can still inspect unknown neutral towns and record them for later expansion, so the AI explores instead of reading the whole town list.",
-        "Focused known-world coverage proves a hidden neutral town is ignored by normal targeting, appears in scoutable targets, and becomes targetable after scouted memory."
+        "Strategic task planning now creates durable scout_frontier tasks with target_kind explore when a commander has no legitimate known resource, town, artifact, encounter, hero, or regroup target.",
+        "Explorer task fit now favors scout/pathfinder/wayfinder commanders and reserves exact frontier target ids so multiple commanders do not duplicate the same exploration tile.",
+        "Saved exploration tasks can launch through the normal saved-task spawn path, including preserved target and goal coordinates instead of collapsing the raid target to the spawn point.",
+        "Explore tasks now reconcile, complete when the target tile becomes visible, and release exclusive reservations on completion.",
+        "Exploration arrivals finish the live scout task, keep task-state updates from being overwritten by stale state, and continue the commander to a different frontier tile when no new actionable target is found.",
+        "Combat-pressure retargeting and understrength regroup hooks no longer abort pure exploration assignments before the scout reaches the frontier tile.",
+        "Focused live coverage proves planning, saved-task launch, coordinate preservation, completion, reservation release, and continued exploration after arrival."
       ],
       "focused_case": {
-        "scenario_id": "river-pass",
-        "target_kind": "town",
-        "target_id": "hidden_neutral_hold",
-        "hidden_candidate_count": 0,
-        "scoutable_unknown_neutral_town": true,
-        "known_neutral_town_candidate": true,
-        "visible_neutral_expansion_preserved": true,
+        "case_id": "persistent_exploration_tasks_launch_and_complete",
+        "task_class": "scout_frontier",
+        "target_kind": "explore",
+        "spawn_coordinates_preserved": true,
+        "arrival_completes_saved_task": true,
+        "reservation_released_on_completion": true,
+        "commander_continues_to_new_frontier_target": true,
         "save_version": 9
       },
       "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
