@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.
+- Latest completed slice: `battle-ai-recovery-target-filter-10184`.
 - Latest completed slice: `strategic-ai-path-distance-field-efficiency-10184`.
 - Latest completed slice: `battle-ai-side-payload-fallback-continuity-10184`.
 - Latest completed slice: `battle-rules-commander-payload-fallback-continuity-10184`.

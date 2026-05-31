@@ -871,6 +871,8 @@ static func _battle_spell_candidates(
 				for ally in allies:
 					if not (ally is Dictionary):
 						continue
+					if String(behavior.get("effect_type", "")) == "recover_ally" and _stack_missing_health(ally) <= 0:
+						continue
 					if _allied_spell_candidate_suppressed_by_active_buff(String(behavior.get("effect_type", "")), ally, battle, spell):
 						continue
 					var validation := SpellRulesScript.validate_battle_spell(
@@ -1207,6 +1209,8 @@ static func _recovery_spell_score_for_target(
 	spell: Dictionary
 ) -> float:
 	var missing_health := _stack_missing_health(target_stack)
+	if missing_health <= 0:
+		return -9999.0
 	var unit_hp: int = max(1, int(target_stack.get("unit_hp", 1)))
 	var restore_amount := _battle_recovery_amount(enemy_hero, spell)
 	var useful_restore: int = min(missing_health, restore_amount)
