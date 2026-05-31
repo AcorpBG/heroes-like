@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-headless-resource-task-persistence-10184`; fix strategic AI resource-front task persistence and town-governor build execution exposed by the full headless harness, with no unit, spell, growth, economy, faction, or town-cost balance content changes.
+- Current implementation slice: none selected; next tactical/strategic AI work should continue from generated-map long-run breadth, Medium/generalized behavior, tactical spell/counterplay breadth, and live-client pacing evidence rather than balance-content edits.
+- Latest completed slice: `strategic-ai-headless-resource-task-persistence-10184`.
 - Latest completed slice: `battle-ai-spell-conservation-tactical-order-10184`.
 - Latest completed slice: `battle-ai-shared-spell-tactical-order-10184`.
 - Latest completed slice: `strategic-ai-active-front-support-launch-10184`.

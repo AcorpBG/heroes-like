@@ -31919,7 +31919,7 @@
     {
       "id": "strategic-ai-headless-resource-task-persistence-10184",
       "title": "Strategic AI Headless Resource Task Persistence",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "Headless harness evidence from tactical/strategic AI continuation",
@@ -31953,14 +31953,25 @@
         "claiming full production readiness before full matrix evidence"
       ],
       "startedAt": "2026-05-31T16:48:00Z",
-      "updatedAt": "2026-05-31T16:48:00Z",
+      "updatedAt": "2026-05-31T18:16:09Z",
       "validation": [
-        "Baseline failure captured before this slice: tests/headless_simulation_harness_report.tscn reports strategic_ai_live_turn_execution, strategic_ai_live_route_progression, and strategic_ai_live_town_governor_build_execution failures. Resource-front raids retarget hero/town priorities and governor build projection is empty."
+        "Baseline failure captured before this slice: tests/headless_simulation_harness_report.tscn reported strategic_ai_live_turn_execution, strategic_ai_live_route_progression, and strategic_ai_live_town_governor_build_execution failures. Resource-front raids retargeted hero/town priorities and governor build projection was empty.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn | PASS; resource-front tasks complete, preserve previous_completed_target, and continue to fresh targets.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_hero_hunt_report.tscn | PASS; stale/lost hero hunts retarget to known resource work and preserve hero-hunt lifecycle behavior.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_town_governor_pressure_report.tscn | PASS; town governor builds, recruits, reinforces garrisons/raids, and mutates treasury through live enemy-turn rules.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=4 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=4 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn | focused Native RMG smoke completed 4/4 rows and 16/16 turns with 0 behavior bugs; report remains needs_attention because full 100-seed eight-week production matrix was not run.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/headless_simulation_harness_report.tscn | PASS/WARNING; 18 pass, 0 fail, 1 warning, 1 deferred, harness_signature=65fb34ba.",
+        "python3 tests/validate_repo.py | PASS.",
+        "jq empty ops/progress.json | PASS.",
+        "git diff --check | PASS.",
+        "git diff -- content/ | clean; no unit, spell, growth, economy, faction, town-cost, or balance content changes."
       ],
-      "summary": "In progress. Full headless harness exposed remaining strategic AI resource-task persistence and town-governor build execution failures after the tactical spell-conservation slice.",
+      "summary": "Completed. Strategic AI now preserves offensive/retake resource task persistence through live turns, lets stale hero hunts fall back to durable known resource work, keeps explicit scenario objectives from being hijacked by generated development source-support caches, and keeps town-governor build/recruit execution covered by realistic live enemy-turn evidence.",
       "notes": [
-        "Do not touch balance/content data; fix strategic AI behavior or improve the evidence surface only when it proves equivalent production behavior."
-      ]
+        "No balance/content data was changed.",
+        "This is not a full tactical/strategic AI production-readiness claim; remaining work includes full 100-seed eight-week generated-map matrices, Medium/generalized generated-map behavior, tactical spell/counterplay breadth, deeper army/economy timing, and live-client pacing review."
+      ],
+      "completedAt": "2026-05-31T18:16:09Z"
     },
     {
       "id": "ux-polish-player-comprehension-10184",
@@ -50964,7 +50975,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-headless-resource-task-persistence-10184",
+  "currentSlice": "",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-05-31T16:48:00Z",
