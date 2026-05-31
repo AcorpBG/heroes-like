@@ -13,6 +13,9 @@ func _run() -> void:
 	var case_report := _river_pass_live_targets_execute_on_enemy_turn()
 	if case_report.is_empty():
 		return
+	var route_case_report := _river_pass_route_pickup_preserves_live_target()
+	if route_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -20,6 +23,7 @@ func _run() -> void:
 		"behavior_policy": "run_enemy_turn_executes_and_completes_live_commander_resource_tasks",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"route_case": route_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -120,6 +124,72 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		"task_board": task_board,
 		"normalized_task_board": normalized_task_board,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _river_pass_route_pickup_preserves_live_target() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	_set_player_position(session, {"x": 12, "y": 12})
+	_set_resource_controller(session, "river_free_company", "player")
+	var raid := _strong_raid_seed(session, config, "hero_vaska", "route_pickup_vaska_ghoul_grove", {"x": 0, "y": 4})
+	raid["target_kind"] = "encounter"
+	raid["target_placement_id"] = "river_pass_ghoul_grove"
+	raid["target_label"] = "Ghoul Grove"
+	raid["target_x"] = 3
+	raid["target_y"] = 1
+	raid["goal_x"] = 3
+	raid["goal_y"] = 1
+	raid["target_public_reason"] = "objective front"
+	raid["target_reason_codes"] = ["site_contested", "objective_front"]
+	raid["target_public_importance"] = "high"
+	raid["target_debug_reason"] = "fixture route target should survive opportunistic pickup"
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	var progress_before := _commander_progress_snapshot(session, "hero_vaska")
+
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	var route_raid := _encounter(session, "route_pickup_vaska_ghoul_grove")
+	if String(_resource_controller(session, "river_free_company")) != MIRECLAW:
+		_fail("Route pickup did not claim river_free_company while marching: %s" % JSON.stringify(result))
+		return {}
+	if String(route_raid.get("target_kind", "")) != "encounter" or String(route_raid.get("target_placement_id", "")) != "river_pass_ghoul_grove":
+		_fail("Route pickup replaced the assigned encounter target: %s" % JSON.stringify(route_raid))
+		return {}
+	if String(route_raid.get("previous_completed_target_placement_id", "")) != "":
+		_fail("Route pickup should not finish the live encounter task: %s" % JSON.stringify(route_raid))
+		return {}
+	if String(route_raid.get("last_opportunistic_pickup_placement_id", "")) != "river_free_company":
+		_fail("Route pickup marker missing from raid state: %s" % JSON.stringify(route_raid))
+		return {}
+	_assert_event(result.get("events", []), "ai_site_seized", "river_free_company")
+	_assert_site_transition_event(result.get("events", []), "river_free_company", "player", MIRECLAW)
+	if _failed:
+		return {}
+	var progress_after := _commander_progress_snapshot(session, "hero_vaska")
+	_assert_progression(progress_before, progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "route pickup Vaska")
+	if _failed:
+		return {}
+	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
+	if not bool(public_log.get("ok", false)):
+		_fail("Route pickup public event boundary failed: %s" % JSON.stringify(public_log))
+		return {}
+	if _public_event_leaks(public_log.get("public_events", [])):
+		return {}
+	return {
+		"case_id": "river_pass_route_pickup_keeps_assigned_encounter_target",
+		"route_pickup_target_id": String(route_raid.get("last_opportunistic_pickup_placement_id", "")),
+		"active_target_kind": String(route_raid.get("target_kind", "")),
+		"active_target_id": String(route_raid.get("target_placement_id", "")),
+		"arrived": bool(route_raid.get("arrived", false)),
+		"resource_controller_after": _resource_controller(session, "river_free_company"),
+		"progress_before": progress_before,
+		"progress_after": progress_after,
+		"public_event_count": int(public_log.get("public_event_count", 0)),
 	}
 
 func _raid_seed(session, config: Dictionary, roster_hero_id: String, placement_id: String, origin: Dictionary) -> Dictionary:
