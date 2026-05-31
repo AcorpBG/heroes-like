@@ -16106,42 +16106,47 @@ static func _next_step_toward(
 		return start
 	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
 	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
-	var encounter_blocked: Dictionary = path_context.get("encounter_blocked", {})
-	var resource_blocked: Dictionary = path_context.get("resource_blocked", {})
-	var hero_blocked: Dictionary = path_context.get("hero_blocked", {})
-	var terrain_blocked: Dictionary = path_context.get("terrain_blocked", {})
-	var goal_lookup := _tile_lookup(goal_tiles)
+	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
+	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
+	var hero_blocked: Dictionary = path_context.get("hero_blocked_indices", {})
+	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
+	var start_index := _tile_index(start, map_size)
+	if start_index < 0:
+		return start
+	var goal_lookup := _tile_index_lookup(goal_tiles, map_size)
 	var visited = {}
-	var queue = [start]
+	var queue = [start_index]
 	var parents = {}
-	visited[_pos_key(start)] = true
-	var found_key = ""
+	visited[start_index] = true
+	var found_index := -1
 	var head := 0
 
 	while head < queue.size():
-		var current: Vector2i = queue[head]
+		var current_index: int = int(queue[head])
 		head += 1
-		if goal_lookup.has(_pos_key(current)):
-			found_key = _pos_key(current)
+		if goal_lookup.has(current_index):
+			found_index = current_index
 			break
+		var current := _vector_from_index(current_index, map_size)
 
 		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var next: Vector2i = current + delta
-			var key = _pos_key(next)
-			if visited.has(key):
+			var next_index := _tile_index(next, map_size)
+			if visited.has(next_index):
 				continue
-			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked, map_size):
+			if _position_blocked_index(next_index, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
 				continue
-			visited[key] = true
-			parents[key] = current
-			queue.append(next)
+			visited[next_index] = true
+			parents[next_index] = current_index
+			queue.append(next_index)
 
-	if found_key == "":
+	if found_index < 0:
 		return start
 
-	var cursor = _vector_from_key(found_key)
-	while parents.has(_pos_key(cursor)) and parents[_pos_key(cursor)] != start:
-		cursor = parents[_pos_key(cursor)]
+	var cursor_index := found_index
+	while parents.has(cursor_index) and int(parents[cursor_index]) != start_index:
+		cursor_index = int(parents[cursor_index])
+	var cursor := _vector_from_index(cursor_index, map_size)
 	return cursor if cursor != start else start
 
 static func _path_distance(
@@ -16157,34 +16162,32 @@ static func _path_distance(
 		return 0
 	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
 	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
-	var encounter_blocked: Dictionary = path_context.get("encounter_blocked", {})
-	var resource_blocked: Dictionary = path_context.get("resource_blocked", {})
-	var hero_blocked: Dictionary = path_context.get("hero_blocked", {})
-	var terrain_blocked: Dictionary = path_context.get("terrain_blocked", {})
-	var goal_lookup := _tile_lookup(goal_tiles)
-	var visited = {}
-	var queue := [start]
-	var distances := {_pos_key(start): 0}
-	visited[_pos_key(start)] = true
-	var head := 0
-
-	while head < queue.size():
-		var pos: Vector2i = queue[head]
-		head += 1
-		var distance := int(distances.get(_pos_key(pos), 0))
-		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var next: Vector2i = pos + delta
-			var key = _pos_key(next)
-			if visited.has(key):
-				continue
-			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked, map_size):
-				continue
-			if goal_lookup.has(key):
-				return distance + 1
-			visited[key] = true
-			distances[key] = distance + 1
-			queue.append(next)
-	return 9999
+	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
+	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
+	var hero_blocked: Dictionary = path_context.get("hero_blocked_indices", {})
+	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
+	var start_index := _tile_index(start, map_size)
+	if start_index < 0:
+		return 9999
+	var goal_lookup := _tile_index_lookup(goal_tiles, map_size)
+	if goal_lookup.has(start_index):
+		return 0
+	var distance_field := _path_distance_field_for_start(path_context, start_index)
+	var best_distance := 9999
+	for goal_index_value in goal_lookup.keys():
+		var goal_index := int(goal_index_value)
+		var goal_distance := _path_distance_to_goal_index(
+			goal_index,
+			distance_field,
+			map_size,
+			encounter_blocked,
+			resource_blocked,
+			hero_blocked,
+			terrain_blocked
+		)
+		if goal_distance >= 0:
+			best_distance = min(best_distance, goal_distance)
+	return best_distance
 
 static func _path_distance_surface_context(
 	session: SessionStateStoreScript.SessionData,
@@ -16194,12 +16197,22 @@ static func _path_distance_surface_context(
 	var cache_key := _path_distance_surface_cache_key(session, ignore_placement_id, observer_faction_id)
 	if cache_key != "" and _path_distance_surface_cache.has(cache_key):
 		return _path_distance_surface_cache[cache_key]
+	var encounter_blocked := _occupied_tiles(session, ignore_placement_id)
+	var resource_blocked := _resource_body_blocked_tiles(session, ignore_placement_id)
+	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id)
+	var terrain_blocked := _impassable_terrain_tiles(session)
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var context := {
-		"map_size": OverworldRulesScript.derive_map_size(session),
-		"encounter_blocked": _occupied_tiles(session, ignore_placement_id),
-		"resource_blocked": _resource_body_blocked_tiles(session, ignore_placement_id),
-		"hero_blocked": _player_hero_blocked_tiles(session, observer_faction_id),
-		"terrain_blocked": _impassable_terrain_tiles(session),
+		"map_size": map_size,
+		"encounter_blocked": encounter_blocked,
+		"resource_blocked": resource_blocked,
+		"hero_blocked": hero_blocked,
+		"terrain_blocked": terrain_blocked,
+		"encounter_blocked_indices": _blocked_tile_index_lookup(encounter_blocked, map_size),
+		"resource_blocked_indices": _blocked_tile_index_lookup(resource_blocked, map_size),
+		"hero_blocked_indices": _blocked_tile_index_lookup(hero_blocked, map_size),
+		"terrain_blocked_indices": _blocked_tile_index_lookup(terrain_blocked, map_size),
+		"distance_field_cache": {},
 	}
 	if cache_key != "":
 		if _path_distance_surface_cache.size() >= PATH_DISTANCE_SURFACE_CACHE_LIMIT:
@@ -16298,6 +16311,92 @@ static func _tile_lookup(tiles: Array) -> Dictionary:
 		if tile is Vector2i:
 			lookup[_pos_key(tile)] = true
 	return lookup
+
+static func _tile_index_lookup(tiles: Array, map_size: Vector2i) -> Dictionary:
+	var lookup = {}
+	for tile in tiles:
+		if not (tile is Vector2i):
+			continue
+		var index := _tile_index(tile, map_size)
+		if index >= 0:
+			lookup[index] = true
+	return lookup
+
+static func _blocked_tile_index_lookup(blocked_tiles: Dictionary, map_size: Vector2i) -> Dictionary:
+	var lookup = {}
+	for key_value in blocked_tiles.keys():
+		var tile := _vector_from_key(String(key_value))
+		var index := _tile_index(tile, map_size)
+		if index >= 0:
+			lookup[index] = true
+	return lookup
+
+static func _path_distance_field_for_start(path_context: Dictionary, start_index: int) -> Array:
+	var field_cache: Dictionary = path_context.get("distance_field_cache", {}) if path_context.get("distance_field_cache", {}) is Dictionary else {}
+	if field_cache.has(start_index):
+		return field_cache[start_index]
+	var map_size: Vector2i = path_context.get("map_size", Vector2i.ZERO)
+	var tile_count: int = max(0, map_size.x * map_size.y)
+	var distances := []
+	distances.resize(tile_count)
+	for index in range(tile_count):
+		distances[index] = -1
+	if start_index < 0 or start_index >= tile_count:
+		return distances
+	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
+	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
+	var hero_blocked: Dictionary = path_context.get("hero_blocked_indices", {})
+	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
+	var queue := [start_index]
+	distances[start_index] = 0
+	var head := 0
+	while head < queue.size():
+		var pos_index: int = int(queue[head])
+		head += 1
+		var pos := _vector_from_index(pos_index, map_size)
+		var next_distance := int(distances[pos_index]) + 1
+		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var next_index := _tile_index(pos + delta, map_size)
+			if next_index < 0 or int(distances[next_index]) >= 0:
+				continue
+			if _position_blocked_for_distance_field(next_index, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+				continue
+			distances[next_index] = next_distance
+			queue.append(next_index)
+	field_cache[start_index] = distances
+	path_context["distance_field_cache"] = field_cache
+	return distances
+
+static func _path_distance_to_goal_index(
+	goal_index: int,
+	distance_field: Array,
+	map_size: Vector2i,
+	encounter_blocked: Dictionary,
+	resource_blocked: Dictionary,
+	hero_blocked: Dictionary,
+	terrain_blocked: Dictionary
+) -> int:
+	if goal_index < 0 or goal_index >= distance_field.size():
+		return -1
+	if encounter_blocked.has(goal_index) or hero_blocked.has(goal_index):
+		return -1
+	var direct_distance := int(distance_field[goal_index])
+	if direct_distance >= 0 and not resource_blocked.has(goal_index) and not terrain_blocked.has(goal_index):
+		return direct_distance
+	var best_distance := -1
+	if resource_blocked.has(goal_index) or terrain_blocked.has(goal_index):
+		var goal := _vector_from_index(goal_index, map_size)
+		for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var neighbor_index := _tile_index(goal + delta, map_size)
+			if neighbor_index < 0 or neighbor_index >= distance_field.size():
+				continue
+			var neighbor_distance := int(distance_field[neighbor_index])
+			if neighbor_distance < 0:
+				continue
+			var candidate_distance := neighbor_distance + 1
+			if best_distance < 0 or candidate_distance < best_distance:
+				best_distance = candidate_distance
+	return best_distance
 
 static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
 	var occupied = {}
@@ -16423,6 +16522,36 @@ static func _position_blocked(
 	if terrain_blocked.has(key):
 		return true
 	return encounter_blocked.has(key) or resource_blocked.has(key) or hero_blocked.has(key)
+
+static func _position_blocked_index(
+	pos_index: int,
+	goal_lookup: Dictionary,
+	encounter_blocked: Dictionary,
+	resource_blocked: Dictionary,
+	hero_blocked: Dictionary,
+	terrain_blocked: Dictionary
+) -> bool:
+	if pos_index < 0:
+		return true
+	if goal_lookup.has(pos_index):
+		return encounter_blocked.has(pos_index) or hero_blocked.has(pos_index)
+	if terrain_blocked.has(pos_index):
+		return true
+	return encounter_blocked.has(pos_index) or resource_blocked.has(pos_index) or hero_blocked.has(pos_index)
+
+static func _position_blocked_for_distance_field(
+	pos_index: int,
+	encounter_blocked: Dictionary,
+	resource_blocked: Dictionary,
+	hero_blocked: Dictionary,
+	terrain_blocked: Dictionary
+) -> bool:
+	if pos_index < 0:
+		return true
+	return encounter_blocked.has(pos_index) \
+		or resource_blocked.has(pos_index) \
+		or hero_blocked.has(pos_index) \
+		or terrain_blocked.has(pos_index)
 
 static func _refresh_target(
 	session: SessionStateStoreScript.SessionData,
@@ -17066,6 +17195,16 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 
 static func _pos_key(pos: Vector2i) -> String:
 	return "%d,%d" % [pos.x, pos.y]
+
+static func _tile_index(pos: Vector2i, map_size: Vector2i) -> int:
+	if pos.x < 0 or pos.y < 0 or pos.x >= map_size.x or pos.y >= map_size.y:
+		return -1
+	return pos.y * map_size.x + pos.x
+
+static func _vector_from_index(index: int, map_size: Vector2i) -> Vector2i:
+	if index < 0 or map_size.x <= 0:
+		return Vector2i.ZERO
+	return Vector2i(index % map_size.x, int(floor(float(index) / float(map_size.x))))
 
 static func _vector_from_key(key: String) -> Vector2i:
 	var parts = key.split(",")
