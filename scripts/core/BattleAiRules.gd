@@ -406,15 +406,16 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		return {}
 
-	var scoring_battle := _battle_with_enemy_hero_payload(battle, enemy_hero)
+	var resolved_enemy_hero := _enemy_hero_state_for_ai(battle, enemy_hero)
+	var scoring_battle := _battle_with_enemy_hero_payload(battle, resolved_enemy_hero)
 	var targets := _alive_stacks_for_side(scoring_battle, "player")
 	if targets.is_empty():
 		return {}
 
-	var best_spell := _best_spell_action(scoring_battle, active_stack, enemy_hero, targets)
+	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_enemy_hero, targets)
 	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
 	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
-	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, enemy_hero)
+	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, resolved_enemy_hero)
 	var defend_score := _defend_score(scoring_battle, active_stack, targets)
 	var advance_score := _advance_score(scoring_battle, active_stack, targets)
 	var distance := int(scoring_battle.get("distance", 1))
@@ -457,6 +458,17 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 static func _battle_with_enemy_hero_payload(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
 	return _battle_with_side_hero_payload(battle, "enemy", enemy_hero)
 
+static func _enemy_hero_state_for_ai(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
+	if not enemy_hero.is_empty():
+		return enemy_hero
+	var battle_enemy_hero: Dictionary = battle.get("enemy_hero", {}) if battle.get("enemy_hero", {}) is Dictionary else {}
+	if not battle_enemy_hero.is_empty():
+		return battle_enemy_hero
+	var battle_enemy_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
+	if not battle_enemy_payload.is_empty():
+		return battle_enemy_payload
+	return {}
+
 static func _battle_with_side_hero_payload(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
 	if battle.is_empty() or commander_payload.is_empty():
 		return battle
@@ -491,6 +503,9 @@ static func _commander_payload_for_tactical_scoring(commander_payload: Dictionar
 static func _enemy_commander_payload_source(battle: Dictionary, enemy_hero: Dictionary) -> String:
 	var existing_payload: Dictionary = battle.get("enemy_hero_payload", {}) if battle.get("enemy_hero_payload", {}) is Dictionary else {}
 	if not existing_payload.is_empty():
+		return "battle"
+	var existing_enemy_hero: Dictionary = battle.get("enemy_hero", {}) if battle.get("enemy_hero", {}) is Dictionary else {}
+	if not existing_enemy_hero.is_empty():
 		return "battle"
 	if not enemy_hero.is_empty():
 		return "argument"
@@ -601,7 +616,8 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 	var errors := []
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		errors.append("No active enemy stack is available for spell valuation.")
-	var scoring_battle := _battle_with_enemy_hero_payload(battle, enemy_hero)
+	var resolved_enemy_hero := _enemy_hero_state_for_ai(battle, enemy_hero)
+	var scoring_battle := _battle_with_enemy_hero_payload(battle, resolved_enemy_hero)
 	var targets := _alive_stacks_for_side(scoring_battle, "player")
 	if targets.is_empty():
 		errors.append("No valid player targets are available for spell valuation.")
@@ -611,7 +627,7 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 	var family_counts := {}
 	var hook_counts := {}
 	if errors.is_empty():
-		for candidate in _battle_spell_candidates(scoring_battle, active_stack, enemy_hero, targets):
+		for candidate in _battle_spell_candidates(scoring_battle, active_stack, resolved_enemy_hero, targets):
 			if not (candidate is Dictionary):
 				continue
 			var spell := ContentService.get_spell(String(candidate.get("spell_id", "")))
@@ -621,7 +637,7 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 			_increment_count(family_counts, String(public_candidate.get("effect_type", "")))
 			for hook in public_candidate.get("runtime_hooks", []):
 				_increment_count(hook_counts, String(hook))
-			if selected.is_empty() or _spell_candidate_beats(candidate, selected, scoring_battle, enemy_hero):
+			if selected.is_empty() or _spell_candidate_beats(candidate, selected, scoring_battle, resolved_enemy_hero):
 				selected = candidate
 
 	var public_selected := {}
