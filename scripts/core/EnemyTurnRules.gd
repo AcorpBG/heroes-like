@@ -1065,20 +1065,32 @@ static func _build_in_enemy_towns(
 ) -> Dictionary:
 	var messages = []
 	var events = []
-	for entry in town_entries:
-		var town = towns[int(entry.get("index", -1))]
+	var built_town_ids := {}
+	var candidates := _enemy_empire_build_candidates(session, town_entries, towns, treasury, faction_id, config)
+	for candidate in candidates:
+		var town_index := int(candidate.get("town_index", -1))
+		if town_index < 0 or town_index >= towns.size():
+			continue
+		var town = towns[town_index]
+		if not (town is Dictionary):
+			continue
+		var town_id := String(town.get("placement_id", ""))
+		if town_id == "" or built_town_ids.has(town_id):
+			continue
 		if _town_controller_faction_id(town) != faction_id:
 			continue
 		if int(town.get("last_build_day", 0)) == int(session.day):
 			continue
-		var build_choice = _best_build_candidate(session, town, treasury, config, faction_id)
-		if build_choice.is_empty():
+		var building_id = String(candidate.get("building_id", ""))
+		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
+		if not bool(status.get("buildable", false)):
 			continue
-		var building_id = String(build_choice.get("building_id", ""))
 		if not _enemy_town_development_pacing_allows_build(session, town, building_id):
 			continue
-		var building = build_choice.get("building", {})
-		var cost = build_choice.get("cost", {})
+		var building: Dictionary = status.get("building", {})
+		var cost: Dictionary = building.get("cost", {})
+		if not OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
+			continue
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, cost, int(session.day))
 		_spend_from_pool(treasury, cost)
 		var built_buildings = town.get("built_buildings", [])
@@ -1091,7 +1103,8 @@ static func _build_in_enemy_towns(
 			town.get("available_recruits", {}),
 			_building_growth_payload(building_id)
 		)
-		towns[int(entry.get("index", -1))] = town
+		towns[town_index] = town
+		built_town_ids[town_id] = true
 		messages.append(
 			"%s fortifies %s with %s." % [
 				String(config.get("label", faction_id)),
@@ -1099,7 +1112,7 @@ static func _build_in_enemy_towns(
 				String(building.get("name", building_id)),
 			]
 		)
-		var build_event := ai_town_build_event(session, config, town, build_choice)
+		var build_event := ai_town_build_event(session, config, town, candidate)
 		if not build_event.is_empty():
 			events.append(build_event)
 	return {"messages": messages, "events": events}
@@ -2996,8 +3009,56 @@ static func _best_build_candidate(
 	config: Dictionary,
 	faction_id: String
 ) -> Dictionary:
-	var best = {}
-	var best_score = -1.0
+	var candidates := _enemy_town_build_candidates(session, town, -1, treasury, config, faction_id)
+	if candidates.is_empty():
+		return {}
+	return candidates[0]
+
+static func _enemy_empire_build_candidates(
+	session: SessionStateStoreScript.SessionData,
+	town_entries: Array,
+	towns: Array,
+	treasury: Dictionary,
+	faction_id: String,
+	config: Dictionary
+) -> Array:
+	var candidates := []
+	for entry in town_entries:
+		if not (entry is Dictionary):
+			continue
+		var town_index := int(entry.get("index", -1))
+		if town_index < 0 or town_index >= towns.size():
+			continue
+		var town = towns[town_index]
+		if not (town is Dictionary):
+			continue
+		if _town_controller_faction_id(town) != faction_id:
+			continue
+		if int(town.get("last_build_day", 0)) == int(session.day):
+			continue
+		candidates.append_array(_enemy_town_build_candidates(session, town, town_index, treasury, config, faction_id))
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_score := float(a.get("final_score", 0.0))
+		var b_score := float(b.get("final_score", 0.0))
+		if is_equal_approx(a_score, b_score):
+			var a_town := String(a.get("town_placement_id", ""))
+			var b_town := String(b.get("town_placement_id", ""))
+			if a_town == b_town:
+				return String(a.get("building_id", "")) < String(b.get("building_id", ""))
+			return a_town < b_town
+		return a_score > b_score
+	)
+	return candidates
+
+static func _enemy_town_build_candidates(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	town_index: int,
+	treasury: Dictionary,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	var candidates := []
 	for building_id in OverworldRulesScript.get_town_build_options(town, int(session.day) if session != null else -1):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
 		if not bool(status.get("buildable", false)):
@@ -3008,21 +3069,25 @@ static func _best_build_candidate(
 			continue
 		if not _enemy_town_development_pacing_allows_build(session, town, String(building_id)):
 			continue
-		var score = _score_build_candidate(session, town, building, cost, config, faction_id)
-		if score > best_score:
-			best_score = score
-			var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
-			best = {
-				"building_id": String(building_id),
-				"building": building,
-				"building_label": String(building.get("name", building_id)),
-				"category": String(building.get("category", "support")),
-				"cost": cost,
-				"reason_codes": breakdown.get("reason_codes", []),
-				"public_reason": String(breakdown.get("public_reason", "")),
-				"debug_reason": String(breakdown.get("debug_reason", "")),
-			}
-	return best
+		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
+		var candidate := breakdown.duplicate(true)
+		candidate["town_index"] = town_index
+		candidate["town_placement_id"] = String(town.get("placement_id", ""))
+		candidate["town_label"] = _town_name(town)
+		candidate["building_id"] = String(building_id)
+		candidate["building"] = building
+		candidate["building_label"] = String(building.get("name", building_id))
+		candidate["category"] = String(building.get("category", "support"))
+		candidate["cost"] = cost
+		candidates.append(candidate)
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_score := float(a.get("final_score", 0.0))
+		var b_score := float(b.get("final_score", 0.0))
+		if is_equal_approx(a_score, b_score):
+			return String(a.get("building_id", "")) < String(b.get("building_id", ""))
+		return a_score > b_score
+	)
+	return candidates
 
 static func _score_build_candidate(
 	session: SessionStateStoreScript.SessionData,

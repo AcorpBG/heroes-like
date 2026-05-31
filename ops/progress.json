@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected; continue with the next production-impacting strategic AI behavior gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T05:11:37Z",
+  "updatedAt": "2026-05-31T05:30:27Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,93 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-empire-build-arbitration-10184",
+      "title": "Strategic AI Empire Build Arbitration",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy town construction spend shared faction treasury by empire-wide build priority instead of arbitrary town array order, so generated multi-town AI empires fund the most strategically valuable build first.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_town_governor_pressure_report.gd"
+      ],
+      "baselineChecks": [
+        "Enemy town economy currently iterates owned towns and spends treasury immediately per town.",
+        "Multi-town/generated empires share one faction treasury, so town order can determine which build consumes scarce resources.",
+        "Town build scoring already computes strategic value, but live construction does not arbitrate across towns before spending."
+      ],
+      "completionCriteria": [
+        "Enemy town construction collects build candidates across all owned towns before spending shared treasury.",
+        "Construction applies affordable, pacing-eligible candidates in descending strategic build score, with one build per town per day preserved.",
+        "Candidates are revalidated against the current treasury before each spend so earlier high-priority builds cannot make later unaffordable builds mutate state.",
+        "Focused validation proves a lower-order town with a higher-value build receives the scarce shared build budget before an earlier lower-value town.",
+        "Existing town governor/recruitment evidence and repo validation remain green."
+      ],
+      "nonGoals": [
+        "Do not rebalance building costs or town development targets in this slice.",
+        "Do not add a broad new report gate.",
+        "Do not claim strategic AI release readiness from this single behavior."
+      ],
+      "startedAt": "2026-05-31T05:17:07Z",
+      "updatedAt": "2026-05-31T05:30:27Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_town_governor_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Focused empire-build arbitration case proves a higher-scoring second town receives scarce shared build budget before an earlier lower-scoring town."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "status": "pass",
+          "notes": "Same-turn planning, town build prep, spell study, recruitment destination fit, market-backed recruitment, and ready launch behavior remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_faction_personality_evidence_report.tscn",
+          "status": "pass",
+          "notes": "Faction personality target/build/recruit evidence remains valid with empire-wide build candidate selection."
+        },
+        {
+          "command": "godot --headless --path . tests/active_scenario_ai_town_start_economy_report.tscn",
+          "status": "pass",
+          "notes": "Active enemy-town first-week construction, treasury normalization, common-resource spend, and same-day guards remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+          "status": "pass",
+          "notes": "Multi-scenario recruitment delivery still reinforces active raid hosts across five faction cases."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "status": "fail_existing_broad_gate",
+          "notes": "Broad active-scenario AI development runway reported ok:false with 20 runway errors; not counted as completion evidence for this targeted arbitration slice and remains a broader economy/AI runway gap."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check",
+          "status": "pass",
+          "notes": "Progress JSON and whitespace checks passed before final completion update."
+        }
+      ],
+      "evidence": [
+        "EnemyTurnRules._build_in_enemy_towns now gathers candidate builds across all owned towns before spending shared faction treasury.",
+        "Empire build candidates are sorted by the same strategic final_score already used by town governor scoring, with deterministic town/building tie-breakers.",
+        "Each candidate is revalidated against current town state, pacing, and treasury immediately before spending so earlier priority builds cannot cause invalid later mutation.",
+        "The focused town-governor case proves scarce shared budget is assigned to the higher-value second town instead of the lower-value first town."
+      ],
+      "completedAt": "2026-05-31T05:30:27Z"
+    },
     {
       "id": "strategic-ai-rare-resource-targeting-10184",
       "title": "Strategic AI Rare Resource Targeting",
@@ -33667,6 +33754,61 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-empire-build-arbitration-10184",
+      "title": "Strategic AI Empire Build Arbitration",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T05:30:27Z",
+      "sourceRefs": [
+        "PLAN.md#current-tactical-state",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_town_governor_pressure_report.gd"
+      ],
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_town_governor_pressure_report.tscn",
+          "status": "pass",
+          "notes": "Focused empire-build arbitration case proves a higher-scoring second town receives scarce shared build budget before an earlier lower-scoring town."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "status": "pass",
+          "notes": "Same-turn planning, town build prep, spell study, recruitment destination fit, market-backed recruitment, and ready launch behavior remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_faction_personality_evidence_report.tscn",
+          "status": "pass",
+          "notes": "Faction personality target/build/recruit evidence remains valid with empire-wide build candidate selection."
+        },
+        {
+          "command": "godot --headless --path . tests/active_scenario_ai_town_start_economy_report.tscn",
+          "status": "pass",
+          "notes": "Active enemy-town first-week construction, treasury normalization, common-resource spend, and same-day guards remain valid."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+          "status": "pass",
+          "notes": "Multi-scenario recruitment delivery still reinforces active raid hosts across five faction cases."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/active_scenario_ai_town_development_runway_report.tscn",
+          "status": "fail_existing_broad_gate",
+          "notes": "Broad active-scenario AI development runway reported ok:false with 20 runway errors; not counted as completion evidence for this targeted arbitration slice and remains a broader economy/AI runway gap."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check",
+          "status": "pass",
+          "notes": "Progress JSON and whitespace checks passed before final completion update."
+        }
+      ],
+      "summary": "Enemy town construction now arbitrates shared faction treasury across all owned towns by strategic build score instead of spending in town array order, preserving one-build-per-town-per-day and revalidating affordability before each spend."
+    },
+    {
       "id": "strategic-ai-rare-resource-targeting-10184",
       "title": "Strategic AI Rare Resource Targeting",
       "status": "completed",
@@ -44785,7 +44927,7 @@
     "status": "none",
     "updatedAt": "2026-05-31T05:11:37Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T05:11:37Z",
+  "currentSliceUpdatedAt": "2026-05-31T05:30:27Z",
   "validationHistory": [
     {
       "status": "pass",
