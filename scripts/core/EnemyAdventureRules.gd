@@ -1753,6 +1753,7 @@ static func refresh_enemy_known_world_memory(
 	if faction_id == "":
 		return {"state": state, "sighting_count": 0}
 	var records := _current_enemy_player_hero_sighting_records(session, config, faction_id)
+	var target_records := _current_enemy_scouted_target_records(session, config, faction_id)
 	var updated_state := state.duplicate(true)
 	var memory := normalize_enemy_known_world_memory(updated_state.get("known_world_memory", {}), int(session.day))
 	if memory.is_empty():
@@ -1769,13 +1770,23 @@ static func refresh_enemy_known_world_memory(
 		memory.erase("player_hero_sightings")
 	if memory.has("scouted_targets"):
 		memory["scouted_targets"] = _normalize_enemy_scouted_target_records(memory.get("scouted_targets", []), int(session.day))
+	var merged_targets := _merge_enemy_scouted_target_record_arrays(
+		memory.get("scouted_targets", []),
+		target_records,
+		int(session.day)
+	)
+	if not merged_targets.is_empty():
+		memory["scouted_targets"] = merged_targets
+		memory["last_scouted_day"] = int(merged_targets[0].get("scouted_day", session.day))
+	elif memory.has("scouted_targets"):
+		memory.erase("scouted_targets")
 	if not memory.has("scouted_targets") and not memory.has("player_hero_sightings"):
 		updated_state.erase("known_world_memory")
 	else:
 		memory["schema_version"] = 1
 		updated_state["known_world_memory"] = memory
 	_sync_enemy_state_known_world_memory(session, faction_id, updated_state.get("known_world_memory", {}))
-	return {"state": updated_state, "sighting_count": records.size()}
+	return {"state": updated_state, "sighting_count": records.size(), "scouted_target_count": target_records.size()}
 
 static func _normalize_enemy_scouted_target_records(value: Variant, current_day: int = 0) -> Array:
 	var normalized := []
@@ -1804,6 +1815,8 @@ static func _normalize_enemy_scouted_target_records(value: Variant, current_day:
 				"expires_day": expires_day,
 				"source_spell_id": String(record.get("source_spell_id", "")),
 				"source_spell_name": String(record.get("source_spell_name", "")),
+				"source_kind": String(record.get("source_kind", "")),
+				"source_id": String(record.get("source_id", "")),
 				"source_raid_id": String(record.get("source_raid_id", "")),
 				"state_policy": "ai_known_world_memory",
 			}
@@ -1995,6 +2008,69 @@ static func _enemy_hero_sighting_sources(
 		})
 	return sources
 
+static func _current_enemy_scouted_target_records(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	var records := []
+	if session == null or faction_id == "":
+		return records
+	var best_by_key := {}
+	for source_value in _enemy_hero_sighting_sources(session, config, faction_id):
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		var radius: int = max(0, int(source.get("radius", 0)))
+		if radius <= 0:
+			continue
+		var origin := Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
+		for candidate_value in _target_candidates(session, config, origin, true):
+			if not (candidate_value is Dictionary):
+				continue
+			var candidate: Dictionary = candidate_value
+			var target_kind := String(candidate.get("target_kind", ""))
+			if target_kind not in ["resource", "town", "artifact", "encounter"]:
+				continue
+			var target_id := String(candidate.get("target_placement_id", ""))
+			if target_id == "":
+				continue
+			var target_tile := Vector2i(int(candidate.get("target_x", origin.x)), int(candidate.get("target_y", origin.y)))
+			var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
+			if distance > radius:
+				continue
+			var record := {
+				"target_kind": target_kind,
+				"target_id": target_id,
+				"target_label": String(candidate.get("target_label", target_id)),
+				"x": target_tile.x,
+				"y": target_tile.y,
+				"scouted_day": int(session.day),
+				"expires_day": int(session.day) + RAID_ADVENTURE_SCOUTING_MEMORY_DAYS,
+				"source_kind": String(source.get("kind", "")),
+				"source_id": String(source.get("id", "")),
+				"source_raid_id": String(source.get("id", "")) if String(source.get("kind", "")) == "commander" else "",
+				"state_policy": "ai_known_world_memory",
+				"_source_distance": distance,
+				"_source_priority": int(candidate.get("priority", 0)),
+			}
+			var key := _enemy_scouted_target_key(target_kind, target_id)
+			if (
+				not best_by_key.has(key)
+				or int(record.get("_source_distance", 9999)) < int(best_by_key[key].get("_source_distance", 9999))
+				or (
+					int(record.get("_source_distance", 9999)) == int(best_by_key[key].get("_source_distance", 9999))
+					and int(record.get("_source_priority", 0)) > int(best_by_key[key].get("_source_priority", 0))
+				)
+			):
+				best_by_key[key] = record
+	for key in best_by_key.keys():
+		var record: Dictionary = best_by_key[key]
+		record.erase("_source_distance")
+		record.erase("_source_priority")
+		records.append(record)
+	return _normalize_enemy_scouted_target_records(records, int(session.day))
+
 static func _known_player_hero_snapshot_for_ai(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
@@ -2065,18 +2141,34 @@ static func _merge_enemy_scouted_target_records(
 	var state: Dictionary = states[state_index] if states[state_index] is Dictionary else {"faction_id": faction_id}
 	var memory: Dictionary = state.get("known_world_memory", {}) if state.get("known_world_memory", {}) is Dictionary else {}
 	var existing: Array = memory.get("scouted_targets", []) if memory.get("scouted_targets", []) is Array else []
+	var merged := _merge_enemy_scouted_target_record_arrays(existing, records, int(session.day))
+	if merged.is_empty():
+		if memory.has("scouted_targets"):
+			memory.erase("scouted_targets")
+		if not memory.has("player_hero_sightings"):
+			state.erase("known_world_memory")
+		else:
+			state["known_world_memory"] = memory
+		states[state_index] = state
+		session.overworld["enemy_states"] = states
+		return []
+	memory["schema_version"] = 1
+	memory["last_scouted_day"] = int(session.day)
+	memory["scouted_targets"] = merged
+	state["known_world_memory"] = memory
+	states[state_index] = state
+	session.overworld["enemy_states"] = states
+	return _normalize_enemy_scouted_target_records(records, int(session.day))
+
+static func _merge_enemy_scouted_target_record_arrays(
+	existing_value: Variant,
+	records_value: Variant,
+	current_day: int
+) -> Array:
 	var by_key := {}
-	for existing_value in existing:
-		if not (existing_value is Dictionary):
-			continue
-		var existing_record: Dictionary = existing_value
-		if int(existing_record.get("expires_day", 0)) < int(session.day):
-			continue
+	for existing_record in _normalize_enemy_scouted_target_records(existing_value, current_day):
 		by_key[_enemy_scouted_target_key(String(existing_record.get("target_kind", "")), String(existing_record.get("target_id", "")))] = existing_record
-	for record_value in records:
-		if not (record_value is Dictionary):
-			continue
-		var record: Dictionary = record_value
+	for record in _normalize_enemy_scouted_target_records(records_value, current_day):
 		var key := _enemy_scouted_target_key(String(record.get("target_kind", "")), String(record.get("target_id", "")))
 		if key == ":":
 			continue
@@ -2091,13 +2183,7 @@ static func _merge_enemy_scouted_target_records(
 	)
 	while merged.size() > RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS:
 		merged.pop_back()
-	memory["schema_version"] = 1
-	memory["last_scouted_day"] = int(session.day)
-	memory["scouted_targets"] = merged
-	state["known_world_memory"] = memory
-	states[state_index] = state
-	session.overworld["enemy_states"] = states
-	return records
+	return _normalize_enemy_scouted_target_records(merged, current_day)
 
 static func _enemy_target_scouted(
 	session: SessionStateStoreScript.SessionData,
