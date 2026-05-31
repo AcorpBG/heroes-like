@@ -3,6 +3,7 @@ extends Node
 const REPORT_ID := "AI_KNOWN_WORLD_MEMORY_REPORT"
 const RIVER_PASS := "river-pass"
 const MIRECLAW := "faction_mireclaw"
+const EMBERCOURT := "faction_embercourt"
 
 var _failed := false
 
@@ -43,13 +44,16 @@ func _run() -> void:
 	var hero_route_occupancy_case := _nonhero_route_avoids_player_hero_occupied_tile()
 	if hero_route_occupancy_case.is_empty():
 		return
+	var faction_scoped_route_case := _hero_route_occupancy_uses_moving_faction_sight()
+	if faction_scoped_route_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
-		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_player_hero_route_occupancy",
+		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -549,6 +553,28 @@ func _nonhero_route_avoids_player_hero_occupied_tile() -> Dictionary:
 		"event_types": _event_types(result.get("events", [])),
 	}
 
+func _hero_route_occupancy_uses_moving_faction_sight() -> Dictionary:
+	var session = _base_session()
+	_make_faction_scoped_route_corridor(session)
+	var start := Vector2i(12, 4)
+	var goal := [Vector2i(0, 4)]
+	var mire_distance := EnemyAdventureRules._path_distance(session, start, goal, "", MIRECLAW)
+	var ember_distance := EnemyAdventureRules._path_distance(session, start, goal, "", EMBERCOURT)
+	if mire_distance >= 9999:
+		_fail("Mireclaw should not route around a player hero only visible to another faction. distances mire=%d ember=%d" % [mire_distance, ember_distance])
+		return {}
+	if ember_distance < 9999:
+		_fail("Same-faction sighted player hero should block the one-lane route for Embercourt. distances mire=%d ember=%d" % [mire_distance, ember_distance])
+		return {}
+	return {
+		"case_id": "hero_route_occupancy_uses_moving_faction_sight",
+		"hero_tile": {"x": 6, "y": 4},
+		"route_start": {"x": start.x, "y": start.y},
+		"route_goal": {"x": 0, "y": 4},
+		"mireclaw_distance": mire_distance,
+		"embercourt_distance": ember_distance,
+	}
+
 func _base_session():
 	var session = ScenarioFactory.create_session(
 		RIVER_PASS,
@@ -627,6 +653,47 @@ func _make_hidden_resource_target_session(session) -> void:
 	session.overworld["encounters"] = []
 	session.overworld["resolved_encounters"] = []
 	_patch_enemy_memory(session, {"schema_version": 1, "player_hero_sightings": [], "scouted_targets": []})
+
+func _make_faction_scoped_route_corridor(session) -> void:
+	var map := []
+	for y in range(9):
+		var row := []
+		for x in range(13):
+			row.append("grass" if y == 4 else "rock")
+		map.append(row)
+	session.overworld["map"] = map
+	session.overworld["map_size"] = {"width": 13, "height": 9}
+	_set_primary_hero_position(session, 6, 4)
+	session.overworld["resource_nodes"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	var towns := []
+	towns.append({
+		"placement_id": "mire_far_watch",
+		"town_id": "town_duskfen",
+		"name": "Mire Far Watch",
+		"x": 12,
+		"y": 8,
+		"owner": "enemy",
+		"controlling_faction_id": MIRECLAW,
+		"garrison": [],
+		"available_recruits": {},
+		"buildings": [],
+	})
+	towns.append({
+		"placement_id": "ember_near_watch",
+		"town_id": "town_embercourt",
+		"name": "Ember Near Watch",
+		"x": 6,
+		"y": 2,
+		"owner": "enemy",
+		"controlling_faction_id": EMBERCOURT,
+		"garrison": [],
+		"available_recruits": {},
+		"buildings": [],
+	})
+	session.overworld["towns"] = towns
 
 func _make_hidden_hero_delivery_session(session, hero_id: String) -> void:
 	_make_hidden_resource_target_session(session)
