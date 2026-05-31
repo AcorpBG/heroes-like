@@ -57,6 +57,9 @@ func _run() -> void:
 	var ready_launch_case := _prepared_saved_task_launches_below_pressure()
 	if ready_launch_case.is_empty():
 		return
+	var passive_budget_case := _passive_generated_encounters_do_not_block_ready_launch()
+	if passive_budget_case.is_empty():
+		return
 	var same_turn_launch_case := _prepared_saved_task_launch_moves_same_turn()
 	if same_turn_launch_case.is_empty():
 		return
@@ -69,7 +72,7 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -776,6 +779,63 @@ func _prepared_saved_task_launch_moves_same_turn() -> Dictionary:
 		"event_types": _event_types(events),
 	}
 
+func _passive_generated_encounters_do_not_block_ready_launch() -> Dictionary:
+	var session = _base_session()
+	var config := _high_threshold_config()
+	_set_enemy_treasury(session, TREASURY)
+	_prepare_ready_launch_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 1
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Passive-budget case expected planned tasks, got %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	var treasury := TREASURY.duplicate(true)
+	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
+	if int(recruit_result.get("planned_batches", 0)) < 1:
+		_fail("Passive-budget case did not prepare a planned commander: %s" % JSON.stringify(recruit_result))
+		return {}
+	state = _enemy_state(session)
+	state["pressure"] = 0
+	_update_enemy_state(session, state)
+	var ready_report := EnemyTurnRules._planned_task_launch_ready_report(session, config, state, FACTION_ID)
+	if ready_report.is_empty():
+		_fail("Passive-budget case ready task was not launch-ready: %s" % JSON.stringify(state.get("hero_task_state", {})))
+		return {}
+	var passive_count: int = max(1, int(config.get("max_active_raids", 3)))
+	_append_passive_generated_faction_encounters(session, passive_count)
+	var pressure_host_count_before := EnemyTurnRules.active_raid_count(session, FACTION_ID)
+	if pressure_host_count_before != 0:
+		_fail("Passive generated encounters consumed active pressure-host budget: count=%d encounters=%s" % [pressure_host_count_before, JSON.stringify(session.overworld.get("encounters", []))])
+		return {}
+	if not EnemyTurnRules._can_launch_raid(session, config, state, FACTION_ID):
+		_fail("Passive generated encounters blocked a ready saved-task launch: ready=%s" % JSON.stringify(ready_report))
+		return {}
+	var spawn_result := EnemyTurnRules._spawn_raid(session, config, state)
+	var pressure_host_count_after := EnemyTurnRules.active_raid_count(session, FACTION_ID)
+	if pressure_host_count_after <= pressure_host_count_before:
+		_fail("Ready saved-task launch did not create a pressure host with passive encounters present: %s" % JSON.stringify(spawn_result))
+		return {}
+	if _event_by_type(spawn_result.get("events", []), "ai_target_assigned").is_empty():
+		_fail("Passive-budget ready launch did not emit target assignment: %s" % JSON.stringify(spawn_result.get("events", [])))
+		return {}
+	return {
+		"case_id": "passive_generated_encounters_do_not_block_ready_saved_task_launch",
+		"passive_generated_encounter_count": passive_count,
+		"pressure_host_count_before": pressure_host_count_before,
+		"pressure_host_count_after": pressure_host_count_after,
+		"spawn_plan_source": String(spawn_result.get("spawn_plan_source", "")),
+		"ready_actor_id": String(ready_report.get("actor_id", "")),
+		"ready_target_id": String(ready_report.get("target_id", "")),
+	}
+
 func _unplanned_low_pressure_raid_stays_blocked() -> Dictionary:
 	var session = _base_session()
 	var config := _high_threshold_config()
@@ -981,6 +1041,21 @@ func _active_raid_count(session) -> int:
 		if encounter is Dictionary and String(encounter.get("spawned_by_faction_id", "")) == FACTION_ID:
 			count += 1
 	return count
+
+func _append_passive_generated_faction_encounters(session, count: int) -> void:
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	for index in range(max(0, count)):
+		encounters.append({
+			"placement_id": "passive_generated_faction_guard_%d" % index,
+			"encounter_id": "encounter_mireclaw_patrol",
+			"x": 2 + index,
+			"y": 2,
+			"spawned_by_faction_id": FACTION_ID,
+			"neutral_encounter": {
+				"category": "guard",
+			},
+		})
+	session.overworld["encounters"] = encounters
 
 func _first_active_raid_with_days(session, minimum_days: int) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

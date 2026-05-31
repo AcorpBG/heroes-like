@@ -24,6 +24,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: none selected; continue tactical/strategic AI work without touching unit, spell, growth, economy, faction, or town-cost balance content unless the owner explicitly selects a balance slice.
+- Latest completed slice: `strategic-ai-active-raid-launch-budget-10184`.
 - Latest completed slice: `strategic-ai-active-front-event-surface-10184`.
 - Latest completed slice: `strategic-ai-long-run-seed-sharding-10184`.
 - Latest completed slice: `battle-ai-immediate-threat-targeting-10184`.
