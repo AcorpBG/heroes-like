@@ -900,10 +900,18 @@ class FastBattleBenchmark:
         effect_type = str(effect.get("type", ""))
         mana_cost = int(spell.get("mana_cost", 0))
         if effect_type == "damage_enemy":
-            damage = int(self._spell_damage_projection(hero, target, spell).get("final_damage", 0))
+            projection = self._spell_damage_projection(hero, target, spell)
+            damage = int(projection.get("final_damage", 0))
+            raw_damage = max(1, int(projection.get("raw_damage", damage)))
+            resistance_pct = int(projection.get("resistance_pct", 0))
+            damage_efficiency = float(damage) / float(raw_damage)
             alive_before = self._alive_count(target)
             killed_units = min(alive_before, int(damage / max(1, int(target.get("unit_hp", 1)))))
-            score = (float(damage) / float(max(1, target.get("unit_hp", 1)))) + (1.0 - self._health_ratio(target)) * 3.0
+            score = (
+                (float(damage) / float(max(1, target.get("unit_hp", 1))))
+                + (1.0 - self._health_ratio(target)) * 3.0
+            ) * (0.35 + max(0.0, min(1.0, damage_efficiency)) * 0.65)
+            score -= float(resistance_pct) * 0.06
             if damage >= int(target.get("total_health", 0)):
                 score += 5.0
             elif killed_units > 0:
@@ -914,14 +922,18 @@ class FastBattleBenchmark:
             status_id = str(status_effect.get("effect_id", ""))
             target_already_controlled = self._stack_has_control_effect(target, battle)
             if status_id and self._target_immune_to_status(target, battle, status_id):
-                return 0.0
+                return -9999.0
             control_success = (100.0 - float(self._control_resistance_pct(target, spell))) / 100.0
             score = 1.7 + (self._attack_score(active, target, battle, True) * 0.22)
             if status_id and not self._has_effect_id(target, battle, status_id):
                 score += (1.8 + self._control_spell_pressure(status_effect)) * control_success
                 score += self._allied_status_synergy_score(battle, str(active.get("side", "")), status_id) * 0.65 * control_success
+            elif status_id:
+                score -= 4.0
             if target_already_controlled:
                 score -= 5.0
+            if control_success <= 0.25:
+                score -= 2.0
             if self._health_ratio(target) > 0.65:
                 score += 1.0
             else:

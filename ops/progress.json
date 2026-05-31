@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T11:15:00Z",
+  "updatedAt": "2026-05-31T11:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -40,6 +40,48 @@
   },
   "plannedSlices": [
     {
+      "id": "battle-strategic-ai-resistance-aware-spell-tuning-10184",
+      "title": "Battle/Strategic AI Resistance-Aware Spell Tuning",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "startedAt": "2026-05-31T11:20:00Z",
+      "updatedAt": "2026-05-31T11:25:00Z",
+      "source": "active production-readiness goal to co-tune tactical battle AI and strategic AI across spell/balance changes",
+      "planRef": "PLAN.md Current tactical state / battle-strategic-ai-resistance-aware-spell-tuning-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make tactical spell choices and the fast faction battle benchmark account for current spell resistance, control resistance, immunity, and duplicate control effects so strategic magic investment is judged against live battle consequences.",
+      "implementationTargets": [
+        "Adjust live battle AI spell scoring so resisted damage/control and already-controlled targets are devalued, while useful effects on vulnerable targets remain selectable.",
+        "Mirror the same scoring direction in the fast faction battle benchmark so balance matrices do not drift from live tactical AI.",
+        "Extend focused spell AI validation with a resistant-target case that proves the AI chooses the actionable target over a protected one."
+      ],
+      "completionCriteria": "Focused magic AI valuation proves resistant or already-controlled targets are no longer preferred over actionable spell targets; fast benchmark and adjacent magic/battle validation stay green.",
+      "nonGoals": [
+        "No broad faction stat rebalance in this slice.",
+        "No claim that tactical/strategic AI co-tuning is production-ready.",
+        "No new report-only gate without live scoring changes."
+      ],
+      "baselineChecks": [],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json --gate (passed; structural failures empty, balance status still needs_tuning)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 20 --weeks 1,2,3,4 --hero-policy all-live --json --gate > tmp/battle_ai_resistance_tuning_benchmark.json (passed; structural failures empty, 48 tuning outliers remain)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_resistance_countercontrol_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_battle_spell_behavior_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Live battle AI and the fast battle benchmark now devalue resisted, immune, duplicate-control, and already-controlled spell targets, with focused live-hook proof and broader benchmark smoke evidence.",
+      "completedAt": "2026-05-31T11:25:00Z"
+    },
+    {
       "id": "strategic-ai-global-commander-task-assignment-10184",
       "title": "Strategic AI Global Commander Task Assignment",
       "phase": "phase-5-playable-alpha-baseline",
@@ -68,13 +110,13 @@
       ],
       "baselineChecks": [],
       "validation": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
@@ -48902,64 +48944,75 @@
   "currentSlice": "",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-05-31T11:15:00Z",
-    "sliceId": "strategic-ai-global-commander-task-assignment-10184",
+    "updatedAt": "2026-05-31T11:25:00Z",
+    "sliceId": "battle-strategic-ai-resistance-aware-spell-tuning-10184",
     "commands": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_neutral_town_expansion_report.tscn (passed)",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_town_defense_retask_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json --gate (passed; structural failures empty, balance status still needs_tuning)",
+      "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 20 --weeks 1,2,3,4 --hero-policy all-live --json --gate > tmp/battle_ai_resistance_tuning_benchmark.json (passed; structural failures empty, 48 tuning outliers remain)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_resistance_countercontrol_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/magic_battle_spell_behavior_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
+      "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
     "evidence": {
       "implemented": [
-        "The strategic task planner now builds candidate task proposals for every deployable commander against the known target set using existing commander-fit, route, reservation, and target-snapshot rules.",
-        "Planned tasks are selected from a global proposal ranking instead of greedy roster order, with one task per actor and exclusive target reservations preserved.",
-        "Selected global assignments still adopt live commander role state, persist the normal task schema, and emit existing ai_commander_task_planned events.",
-        "The legacy per-actor task helper remains available for focused scoring and compatibility fixtures, but live planning uses global allocation."
+        "Live BattleAiRules damage spell scoring now scales target value by projected final damage versus raw damage and devalues high spell resistance.",
+        "Live control spell scoring now rejects immune targets, devalues duplicate control on the same status, devalues already-controlled targets, and penalizes low control success chance.",
+        "The fast faction battle benchmark mirrors the same resistance, immunity, duplicate-control, and already-controlled target valuation direction so balance matrices track live tactical AI more closely.",
+        "The focused magic AI valuation report now includes a resistance-aware targeting case that proves the live battle action chooses an actionable vulnerable target over a high-resistance already-controlled target."
       ],
       "focused_case": {
-        "case_id": "global_commander_task_assignment_preserves_specialist_target",
-        "greedy_first_actor": "hero_vaska",
-        "greedy_first_target_key": "artifact:trailsinger_cache",
-        "specialist_actor": "hero_sable",
-        "specialist_target_key": "artifact:trailsinger_cache",
-        "specialist_fit_bonus": 120,
-        "alternate_actor": "hero_vaska",
-        "alternate_target_key": "hero:hero_lyra",
-        "alternate_fit_bonus": 110
+        "case_id": "battle_ai_resistance_targeting_chooses_actionable_target",
+        "selected_spell_id": "spell_briar_bind",
+        "selected_target_id": "player_open",
+        "protected_target_resistance": 80,
+        "protected_target_already_controlled": true,
+        "live_action": "cast_spell"
       },
-      "live_planner_case": {
-        "case_id": "river_pass_predeployment_planner_seeds_and_activates_distinct_tasks",
-        "planned_count": 10,
-        "spawned_commander_id": "hero_vaska",
-        "spawned_target_key": "town:riverwatch_hold",
-        "save_version": 9
-      },
-      "recruitment_followup_case": {
-        "case_id": "recruitment_and_surplus_garrison_prepare_same_commander",
-        "actor_id": "hero_mireclaw_brakka_mudkeel",
-        "before_strength": 0,
-        "after_strength": 212,
-        "before_garrison_strength": 3060,
-        "after_garrison_strength": 3018,
-        "defense_target": 406,
-        "planned_batches": 1,
-        "mobilized_batches": 1,
-        "prepared_event_count": 2,
-        "surplus_reason_codes": [
-          "planned_task_preparation",
-          "strategic_task_planner",
-          "surplus_garrison_mobilization"
+      "benchmark_smoke": {
+        "case_id": "20_seed_all_live_four_week_fast_benchmark",
+        "structural_failures": [],
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 48,
+        "total_spell_casts": 8655,
+        "spell_resisted_count": 189,
+        "spell_immune_count": 0,
+        "top_outliers": [
+          {
+            "week": 1,
+            "pair": [
+              "faction_brasshollow",
+              "faction_thornwake"
+            ],
+            "dominant_faction_id": "faction_brasshollow",
+            "value": 70.0
+          },
+          {
+            "week": 1,
+            "pair": [
+              "faction_sunvault",
+              "faction_thornwake"
+            ],
+            "dominant_faction_id": "faction_thornwake",
+            "value": 70.0
+          },
+          {
+            "week": 1,
+            "pair": [
+              "faction_brasshollow",
+              "faction_sunvault"
+            ],
+            "dominant_faction_id": "faction_brasshollow",
+            "value": 65.0
+          }
         ]
       },
-      "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
-      "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
+      "remaining_validation": "The broader active goal is not complete: tactical/strategic AI still needs full-seed spell-enabled balance tuning, generated-map long-run evidence, strategic pacing review, and production-readiness verification.",
+      "policy": "Focused implementation slice; no broad faction rebalance, no new report-only gate, and no production-ready AI claim."
     }
   }
 }

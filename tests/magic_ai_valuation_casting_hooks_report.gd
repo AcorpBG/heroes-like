@@ -10,6 +10,10 @@ func _run() -> void:
 	if not bool(battle_case.get("ok", false)):
 		_fail(String(battle_case.get("error", "Battle AI spell valuation case failed.")))
 		return
+	var resistance_case := _run_battle_ai_resistance_targeting_case()
+	if not bool(resistance_case.get("ok", false)):
+		_fail(String(resistance_case.get("error", "Battle AI resistance targeting case failed.")))
+		return
 
 	var adventure_case := _run_adventure_ai_spell_case()
 	if not bool(adventure_case.get("ok", false)):
@@ -20,9 +24,10 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"battle": battle_case,
+		"battle_resistance_targeting": resistance_case,
 		"adventure": adventure_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, the existing battle casting decision hook, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -96,6 +101,56 @@ func _run_battle_ai_spell_case() -> Dictionary:
 		"selected_effect_type": String(selected.get("effect_type", "")),
 		"effect_type_counts": report.get("effect_type_counts", {}),
 		"runtime_hook_counts": report.get("runtime_hook_counts", {}),
+	}
+
+func _run_battle_ai_resistance_targeting_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Resistance-Aware Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_briar_bind"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var protected_effect := SpellRules.build_battle_effect(
+		"status_staggered",
+		"Staggered",
+		{"attack": -1, "cohesion": -1},
+		2,
+		{"round": 2},
+		"test",
+		"seed_staggered"
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_caster_line", "enemy", "Enemy Caster Line", 7, 10, 70, []),
+			_stack("player_protected", "player", "Player Protected", 10, 10, 100, [protected_effect], {"control_resistance_pct": 80, "ranged": true, "shots_remaining": 6}),
+			_stack("player_open", "player", "Player Open", 10, 10, 100, [], {"control_resistance_pct": 0, "ranged": true, "shots_remaining": 6}),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_caster_line")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Resistance targeting report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("target_battle_id", "")) != "player_open":
+		return {"ok": false, "error": "Resistance-aware report should cast on actionable target, got %s candidates=%s" % [selected, report.get("candidates", [])]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("target_battle_id", "")) != "player_open":
+		return {"ok": false, "error": "Resistance-aware live choice should cast on actionable target, got %s" % live_action}
+	return {
+		"ok": true,
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"selected_target_id": String(selected.get("target_battle_id", "")),
+		"protected_target_resistance": 80,
+		"protected_target_already_controlled": true,
+		"live_action": String(live_action.get("action", "")),
 	}
 
 func _run_adventure_ai_spell_case() -> Dictionary:
@@ -332,9 +387,10 @@ func _stack(
 	count: int,
 	unit_hp: int,
 	total_health: int,
-	effects: Array
+	effects: Array,
+	extra: Dictionary = {}
 ) -> Dictionary:
-	return {
+	var stack := {
 		"battle_id": battle_id,
 		"side": side,
 		"name": name,
@@ -350,6 +406,9 @@ func _stack(
 		"ranged": false,
 		"effects": effects,
 	}
+	for key in extra.keys():
+		stack[key] = extra[key]
+	return stack
 
 func _stack_by_id(battle: Dictionary, battle_id: String) -> Dictionary:
 	for stack in battle.get("stacks", []):
