@@ -8,7 +8,7 @@
   "currentSliceStatus": "none",
   "currentSliceNotes": "No active slice selected; continue with the next production-impacting strategic AI behavior gap.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-31T04:26:07Z",
+  "updatedAt": "2026-05-31T05:01:06Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,94 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-town-spell-study-10184",
+      "title": "Strategic AI Town Spell Study",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "owner_selected_strategic_ai_quality_followup",
+      "planRef": "PLAN.md#current-tactical-state",
+      "purpose": "Make enemy-owned towns teach accessible spell-library spells to available commanders during live enemy turns so AI magic infrastructure changes real strategic and battle capability.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/magic-school-availability-strategic-influence-report.md",
+        "docs/magic-ai-valuation-casting-hooks-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd"
+      ],
+      "baselineChecks": [
+        "Enemy towns can build magic infrastructure and expose town spell access through TownRules.",
+        "Player town study can learn accessible spells through SpellRules.",
+        "Enemy commanders can learn spell-site rewards, but enemy-owned town spell study is not wired into the live enemy turn."
+      ],
+      "completionCriteria": [
+        "Live enemy turns run a town spell-study step after construction and before reinforcement/launch decisions.",
+        "Available enemy commanders learn at most one valuable unknown spell from an owned town with accessible spell-library access.",
+        "Learned spells persist in enemy_states commander_roster and can influence later adventure/battle capability.",
+        "A focused strategic-AI validation proves roster spellbooks mutate from an enemy town study turn without adding a report-only gate."
+      ],
+      "nonGoals": [
+        "Do not implement final magic-school mastery progression in this slice.",
+        "Do not rebalance the spell catalog or faction battle matrix here.",
+        "Do not add a broad new audit gate unless a real implementation bug requires it."
+      ],
+      "startedAt": "2026-05-31T04:52:42Z",
+      "updatedAt": "2026-05-31T05:01:06Z",
+      "completedAt": "2026-05-31T05:01:06Z",
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "status": "pass",
+          "notes": "Proves live run_enemy_turn emits ai_commander_studied_spell, learned spell is town-accessible, and commander roster spellbook count increases/persists."
+        },
+        {
+          "command": "godot --headless --path . tests/magic_ai_valuation_casting_hooks_report.tscn",
+          "status": "pass",
+          "notes": "Spell valuation and adventure/battle casting hooks still pass."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "status": "pass",
+          "notes": "Commander selection, saved-task deployment, spawn occupancy, and route spell tempo still pass."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "notes": "Live commander task execution and completion still pass."
+        },
+        {
+          "command": "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "scoped_pass_with_existing_blocker",
+          "notes": "Focused Native RMG smoke row passed; report intentionally preserves remaining full 100-seed eight-week matrix blocker."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "pass",
+          "notes": "Progress JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "status": "pass",
+          "notes": "No whitespace errors."
+        }
+      ],
+      "evidence": [
+        "EnemyTurnRules now runs town spell study after enemy town construction and before recruitment/launch.",
+        "Owned enemy towns choose one best available commander/spell pairing from TownRules.accessible_spell_ids per town turn.",
+        "Learned spells are applied through SpellRules.learn_spell and persisted into enemy_states[].commander_roster.",
+        "Existing planned-task recruitment report now includes a live enemy turn case for town spell study."
+      ]
+    },
     {
       "id": "strategic-ai-spell-site-learning-10184",
       "title": "Strategic AI Spell Site Learning",
@@ -33481,6 +33569,61 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "strategic-ai-town-spell-study-10184",
+      "title": "Strategic AI Town Spell Study",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "completedAt": "2026-05-31T05:01:06Z",
+      "sourceRefs": [
+        "PLAN.md#current-tactical-state",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd"
+      ],
+      "validation": [
+        {
+          "command": "godot --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "status": "pass",
+          "notes": "Proves live run_enemy_turn emits ai_commander_studied_spell, learned spell is town-accessible, and commander roster spellbook count increases/persists."
+        },
+        {
+          "command": "godot --headless --path . tests/magic_ai_valuation_casting_hooks_report.tscn",
+          "status": "pass",
+          "notes": "Spell valuation and adventure/battle casting hooks still pass."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "status": "pass",
+          "notes": "Commander selection, saved-task deployment, spawn occupancy, and route spell tempo still pass."
+        },
+        {
+          "command": "godot --headless --path . tests/ai_hero_task_live_turn_execution_report.tscn",
+          "status": "pass",
+          "notes": "Live commander task execution and completion still pass."
+        },
+        {
+          "command": "godot --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "scoped_pass_with_existing_blocker",
+          "notes": "Focused Native RMG smoke row passed; report intentionally preserves remaining full 100-seed eight-week matrix blocker."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "pass",
+          "notes": "Progress JSON is valid."
+        },
+        {
+          "command": "git diff --check",
+          "status": "pass",
+          "notes": "No whitespace errors."
+        }
+      ],
+      "summary": "Enemy-owned towns now teach accessible spell-library spells to available commanders during live enemy turns, making AI magic infrastructure produce persistent commander capability."
+    },
+    {
       "id": "strategic-ai-spell-site-learning-10184",
       "title": "Strategic AI Spell Site Learning",
       "status": "completed",
@@ -44477,9 +44620,9 @@
     "id": "",
     "title": "",
     "status": "none",
-    "updatedAt": "2026-05-31T04:48:27Z"
+    "updatedAt": "2026-05-31T05:01:06Z"
   },
-  "currentSliceUpdatedAt": "2026-05-31T04:26:07Z",
+  "currentSliceUpdatedAt": "2026-05-31T05:01:06Z",
   "validationHistory": [
     {
       "status": "pass",

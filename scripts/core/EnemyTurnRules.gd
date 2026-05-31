@@ -5,6 +5,8 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+static var SpellRulesScript: Variant = load("res://scripts/core/SpellRules.gd")
+static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 
@@ -216,6 +218,12 @@ static func run_enemy_town_economy_turn(
 			messages.append_array(build_messages)
 		_append_event_records(events, build_result.get("events", []))
 		session.overworld["towns"] = towns
+		var study_result := _study_spells_in_enemy_towns(session, config, town_entries, towns, faction_id, state)
+		state = study_result.get("state", state)
+		var study_messages: Array = study_result.get("messages", [])
+		if not study_messages.is_empty():
+			messages.append_array(study_messages)
+		_append_event_records(events, study_result.get("events", []))
 		state["treasury"] = treasury
 		states[state_index] = state
 	session.overworld["enemy_states"] = states
@@ -847,6 +855,13 @@ static func _run_empire_cycle(
 	_append_event_records(events, build_result.get("events", []))
 	session.overworld["towns"] = towns
 
+	var study_result := _study_spells_in_enemy_towns(session, config, town_entries, towns, faction_id, state)
+	state = study_result.get("state", state)
+	var study_messages: Array = study_result.get("messages", [])
+	if not study_messages.is_empty():
+		messages.append_array(study_messages)
+	_append_event_records(events, study_result.get("events", []))
+
 	var reinforcement_result := _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
 	var reinforcement_message = String(reinforcement_result.get("message", ""))
 	if reinforcement_message != "":
@@ -1088,6 +1103,274 @@ static func _build_in_enemy_towns(
 		if not build_event.is_empty():
 			events.append(build_event)
 	return {"messages": messages, "events": events}
+
+static func _study_spells_in_enemy_towns(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town_entries: Array,
+	towns: Array,
+	faction_id: String,
+	state: Dictionary
+) -> Dictionary:
+	var messages := []
+	var events := []
+	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+		session,
+		faction_id,
+		state.get("commander_roster", [])
+	)
+	if roster.is_empty():
+		return {"state": state, "messages": messages, "events": events}
+
+	var studied_commander_ids := []
+	for entry_value in town_entries:
+		if not (entry_value is Dictionary):
+			continue
+		var town_index := int(entry_value.get("index", -1))
+		if town_index < 0 or town_index >= towns.size():
+			continue
+		var town_value = towns[town_index]
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if _town_controller_faction_id(town) != faction_id:
+			continue
+		var spell_ids := _enemy_town_accessible_spell_ids(town)
+		if spell_ids.is_empty():
+			continue
+		var study_choice := _best_enemy_town_spell_study_choice(
+			session,
+			config,
+			faction_id,
+			town,
+			state,
+			roster,
+			spell_ids,
+			studied_commander_ids
+		)
+		if study_choice.is_empty():
+			continue
+		var roster_index := int(study_choice.get("roster_index", -1))
+		if roster_index < 0 or roster_index >= roster.size():
+			continue
+		var roster_entry: Dictionary = roster[roster_index]
+		var commander_state: Dictionary = roster_entry.get("commander_state", {}) if roster_entry.get("commander_state", {}) is Dictionary else {}
+		var spell_id := String(study_choice.get("spell_id", ""))
+		var learn_result: Dictionary = SpellRulesScript.learn_spell(commander_state, spell_id)
+		if not bool(learn_result.get("ok", false)):
+			continue
+		var learned_commander: Dictionary = learn_result.get("hero", commander_state)
+		var roster_hero_id := String(roster_entry.get("roster_hero_id", learned_commander.get("roster_hero_id", "")))
+		roster_entry["commander_state"] = EnemyAdventureRulesScript.build_roster_commander_state(
+			roster_hero_id,
+			faction_id,
+			learned_commander,
+			roster_entry
+		)
+		roster_entry["target_memory"] = EnemyAdventureRulesScript.commander_target_memory(roster_entry.get("commander_state", {}))
+		roster_entry["commander_role_state"] = EnemyAdventureRulesScript.commander_live_role_state(roster_entry.get("commander_state", {}))
+		roster_entry["army_continuity"] = EnemyAdventureRulesScript.commander_army_continuity(roster_entry.get("commander_state", {}))
+		roster[roster_index] = roster_entry
+		if roster_hero_id != "":
+			studied_commander_ids.append(roster_hero_id)
+		var spell := ContentService.get_spell(spell_id)
+		var spell_name := String(spell.get("name", spell_id))
+		var commander_label := EnemyAdventureRulesScript.commander_display_name(roster_entry, false)
+		if commander_label == "":
+			commander_label = roster_hero_id
+		messages.append("%s studies %s at %s." % [commander_label, spell_name, _town_name(town)])
+		events.append(
+			_enemy_town_spell_study_event(
+				session,
+				config,
+				town,
+				roster_entry,
+				spell_id,
+				spell_name,
+				float(study_choice.get("score", 0.0))
+			)
+		)
+
+	if studied_commander_ids.is_empty():
+		return {"state": state, "messages": messages, "events": events}
+	state["commander_roster"] = roster
+	_write_enemy_state(session, faction_id, state)
+	return {"state": state, "messages": messages, "events": events}
+
+static func _best_enemy_town_spell_study_choice(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	town: Dictionary,
+	state: Dictionary,
+	roster: Array,
+	spell_ids: Array,
+	studied_commander_ids: Array
+) -> Dictionary:
+	var best := {}
+	for roster_index in range(roster.size()):
+		var roster_entry = roster[roster_index]
+		if not (roster_entry is Dictionary):
+			continue
+		var roster_hero_id := String(roster_entry.get("roster_hero_id", ""))
+		if roster_hero_id == "" or roster_hero_id in studied_commander_ids:
+			continue
+		if String(roster_entry.get("status", "available")) != "available":
+			continue
+		if not EnemyAdventureRulesScript.commander_can_deploy(roster_entry):
+			continue
+		var commander_state: Dictionary = roster_entry.get("commander_state", {}) if roster_entry.get("commander_state", {}) is Dictionary else {}
+		var task := _enemy_commander_open_task(state, roster_hero_id)
+		for spell_id_value in spell_ids:
+			var spell_id := String(spell_id_value)
+			if spell_id == "" or SpellRulesScript.knows_spell(commander_state, spell_id):
+				continue
+			var spell := ContentService.get_spell(spell_id)
+			if spell.is_empty():
+				continue
+			var score := _enemy_spell_study_score(spell, commander_state, roster_entry, task, config, town)
+			if best.is_empty() or score > float(best.get("score", 0.0)):
+				best = {
+					"roster_index": roster_index,
+					"roster_hero_id": roster_hero_id,
+					"spell_id": spell_id,
+					"score": score,
+				}
+	return best
+
+static func _enemy_spell_study_score(
+	spell: Dictionary,
+	commander_state: Dictionary,
+	roster_entry: Dictionary,
+	task: Dictionary,
+	config: Dictionary,
+	town: Dictionary
+) -> float:
+	var score := float(max(1, int(spell.get("tier", 1))) * 30)
+	score += float(max(0, int(spell.get("mana_cost", 0)))) * 1.5
+	var context := String(spell.get("context", ""))
+	var primary_role := String(spell.get("primary_role", ""))
+	var categories := _normalize_string_array(spell.get("role_categories", []))
+	var effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
+	var effect_type := String(effect.get("type", ""))
+	var command: Dictionary = commander_state.get("command", {}) if commander_state.get("command", {}) is Dictionary else {}
+	var hero_template := ContentService.get_hero(String(roster_entry.get("roster_hero_id", commander_state.get("roster_hero_id", ""))))
+	var command_path := String(commander_state.get("command_path", hero_template.get("command_path", "")))
+	var archetype := String(commander_state.get("archetype", ""))
+	var task_kind := String(task.get("target_kind", ""))
+	if command_path == "magic":
+		score += 28.0
+		score += float(max(0, int(command.get("power", 0)))) * 3.0
+		score += float(max(0, int(command.get("knowledge", 0)))) * 1.5
+	else:
+		score += 8.0
+	if context == "overworld":
+		if task_kind in ["resource", "artifact", "encounter", "town", "explore", "objective"]:
+			score += 24.0
+		if effect_type == "restore_movement" or primary_role.find("movement") >= 0:
+			score += 22.0
+		if effect_type.find("reveal") >= 0 or primary_role.find("scout") >= 0:
+			score += 18.0
+		if archetype in ["pathfinder", "outrider", "roadwarden", "warrenhunter", "relaysurveyor"]:
+			score += 14.0
+	else:
+		if task_kind in ["hero", "town", "encounter", "resource", "artifact"]:
+			score += 18.0
+		if "damage" in categories or effect_type == "damage_enemy":
+			score += 18.0
+			if archetype in ["raider", "marshal", "packlord", "batterycaptain", "siegelock", "briarmarshal"]:
+				score += 10.0
+		if "control" in categories or "debuff" in categories:
+			score += 12.0
+			if archetype in ["hexcaller", "starseer", "rootoracle", "denaugur", "drumoracle"]:
+				score += 10.0
+		if "buff" in categories or "recovery" in categories or "countermagic" in categories:
+			score += 12.0
+			if archetype in ["warden", "castellan", "solarphysician", "recoverywarden", "granary"]:
+				score += 10.0
+	if String(spell.get("school_id", "")) == String(ContentService.get_town(String(town.get("town_id", ""))).get("spell_signature_school_id", "")):
+		score += 6.0
+	return score
+
+static func _enemy_town_accessible_spell_ids(town: Dictionary) -> Array:
+	if TownRulesScript == null:
+		return []
+	return TownRulesScript.accessible_spell_ids(town)
+
+static func _enemy_commander_open_task(state: Dictionary, roster_hero_id: String) -> Dictionary:
+	if state.is_empty() or roster_hero_id == "":
+		return {}
+	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+	for task_value in task_state.get("tasks", []):
+		if task_value is Dictionary and String(task_value.get("actor_id", "")) == roster_hero_id:
+			return task_value
+	return {}
+
+static func _write_enemy_state(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary
+) -> void:
+	if session == null or faction_id == "":
+		return
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return
+	for state_index in range(states.size()):
+		var entry = states[state_index]
+		if entry is Dictionary and String(entry.get("faction_id", "")) == faction_id:
+			states[state_index] = state
+			session.overworld["enemy_states"] = states
+			return
+
+static func _enemy_town_spell_study_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	roster_entry: Dictionary,
+	spell_id: String,
+	spell_name: String,
+	score: float
+) -> Dictionary:
+	var roster_hero_id := String(roster_entry.get("roster_hero_id", ""))
+	var commander_label := EnemyAdventureRulesScript.commander_display_name(roster_entry, false)
+	if commander_label == "":
+		commander_label = roster_hero_id
+	return EnemyAdventureRulesScript.build_ai_event_record(
+		session,
+		config,
+		"ai_commander_studied_spell",
+		{
+			"id": roster_hero_id,
+			"name": commander_label,
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+		},
+		{
+			"target_kind": "spell",
+			"target_placement_id": spell_id,
+			"target_label": spell_name,
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+		},
+		{
+			"actor_id": roster_hero_id,
+			"actor_label": commander_label,
+			"target_kind": "spell",
+			"target_id": spell_id,
+			"target_label": spell_name,
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"reason_codes": ["town_spell_study", "magic_preparation"],
+			"public_reason": "spell study",
+			"public_importance": "medium",
+			"state_policy": "persisted_commander_spellbook",
+			"summary": "%s studies %s at %s." % [commander_label, spell_name, _town_name(town)],
+			"debug_reason": "town_spell_study_score_%0.1f" % score,
+			"learned_spell_id": spell_id,
+			"learned_spell_name": spell_name,
+		}
+	)
 
 static func _enemy_town_development_pacing_allows_build(
 	session: SessionStateStoreScript.SessionData,
