@@ -716,17 +716,20 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	return report
 
 static func _side_commander_state_for_ai(battle: Dictionary, side: String, commander_payload: Dictionary) -> Dictionary:
-	if not commander_payload.is_empty():
-		return commander_payload
 	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
 	var existing_payload: Dictionary = battle.get(payload_key, {}) if battle.get(payload_key, {}) is Dictionary else {}
-	if not existing_payload.is_empty():
-		return existing_payload
 	var state_key := "player_commander_state" if side == "player" else "enemy_hero"
 	var existing_state: Dictionary = battle.get(state_key, {}) if battle.get(state_key, {}) is Dictionary else {}
-	if not existing_state.is_empty():
-		return existing_state
-	return {}
+	var resolved := commander_payload.duplicate(true) if not commander_payload.is_empty() else {}
+	if resolved.is_empty() and not existing_payload.is_empty():
+		resolved = existing_payload.duplicate(true)
+	elif not existing_payload.is_empty():
+		resolved = _merged_commander_ai_payload(resolved, existing_payload)
+	if resolved.is_empty() and not existing_state.is_empty():
+		resolved = existing_state.duplicate(true)
+	elif not existing_state.is_empty():
+		resolved = _merged_commander_ai_payload(resolved, existing_state)
+	return resolved
 
 static func _side_commander_payload_source(battle: Dictionary, side: String, commander_payload: Dictionary) -> String:
 	var payload_key := "player_hero" if side == "player" else "enemy_hero_payload"
