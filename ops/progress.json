@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-rmg-medium-generalization-probe-10184",
-  "currentSliceTitle": "Strategic AI RMG Medium Generalization Probe",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed three short Medium land generated-map AI probes. Next AI work is the Medium long-run seed matrix; production-ready AI is not claimed.",
+  "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
+  "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Added a dedicated Medium land Native RMG long-run strategic-AI matrix mode, cut off repeated empty-garrison regroup loops, and surfaced the remaining no-active-pressure-after-rebuild blocker. Balance content remains out of scope and production-ready AI is not claimed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T22:55:00Z",
+  "updatedAt": "2026-06-01T16:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -33462,7 +33462,7 @@
     {
       "id": "rmg-small-generalization-hardening-10184",
       "title": "RMG Small Generalization Hardening",
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md Selectable Near-Term Work",
@@ -39238,9 +39238,44 @@
         "full production-ready AI claim from a narrow matrix"
       ],
       "createdAt": "2026-06-01T22:55:00Z",
-      "updatedAt": "2026-06-01T22:55:00Z",
+      "startedAt": "2026-06-01T15:46:12Z",
+      "updatedAt": "2026-06-01T16:28:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass",
+          "notes": "Default Small long-run smoke still compiles and runs after adding map_scope support; focused run keeps the expected full-matrix remaining-validation blocker."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=7 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_remaining_validation",
+          "notes": "Medium seed ordinal 1 ran 7/7 turns on translated_rmg_template_002_v1. Row ok, setup ok, target-integrity violations 0. Empty-garrison regroup loop was cut down from repeated regroup reassignment to command rebuild; active raids reduced to one continuing resource target."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=7 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_production_gap",
+          "notes": "Medium seed ordinal 2 ran 7/7 turns with setup ok and target-integrity violations 0, then exposed strategic_ai_long_run_no_active_pressure_after_rebuild after all active hosts retired and no replacement pressure launched."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "Strategic AI KPI still passes with 2 Small and 3 Medium short probes, behavior_bug_count=0, medium_ok_count=3, and production_ready=false behind the Medium long-run matrix blocker."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "Tactical battle AI smoke remains green after the strategic AI regroup/rebuild changes."
+        },
+        {
+          "command": "python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md",
+          "status": "pass",
+          "notes": "Repository validation, tracker JSON validation, whitespace diff check, and no-content/docs/project guard all passed."
+        }
+      ],
       "notes": [
-        "Short three-seed Medium probes are now green; this slice is for longer-duration Medium behavior evidence."
+        "Short three-seed Medium probes are now green; this slice is for longer-duration Medium behavior evidence.",
+        "Started by adding explicit medium_land scope support to the strategic AI long-run matrix harness.",
+        "The first two Medium 7-turn shards prove the new matrix mode and identify the next real AI behavior gap: relaunching pressure after command rebuild."
       ]
     }
   ],
@@ -50415,14 +50450,13 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "strategic-ai-rmg-medium-generalization-probe-10184",
-    "title": "Strategic AI RMG Medium Generalization Probe",
-    "status": "completed",
-    "updatedAt": "2026-06-01T22:55:00Z",
-    "completedAt": "2026-06-01T22:55:00Z",
-    "summary": "Three Medium land generated-map strategic-AI probes are green; longer Medium matrix coverage remains pending."
+    "id": "strategic-ai-medium-long-run-seed-matrix-10184",
+    "title": "Strategic AI Medium Long-Run Seed Matrix",
+    "status": "in_progress",
+    "updatedAt": "2026-06-01T16:28:00Z",
+    "summary": "Dedicated Medium land Native RMG long-run strategic-AI matrix coverage is in progress; repeated empty regroup loops are reduced, and no-active-pressure-after-rebuild is now the exposed production gap."
   },
-  "currentSliceUpdatedAt": "2026-06-01T22:55:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T16:28:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53633,7 +53667,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-rmg-medium-generalization-probe-10184",
+  "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",

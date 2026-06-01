@@ -8,6 +8,8 @@ const DEFAULT_BATTLE_STEP_LIMIT := 96
 const DEFAULT_PRESSURE_FLOOR := 999
 const DEFAULT_SEED_OFFSET := 0
 const DEFAULT_SEED_PREFIX := "strategic-ai-long-run-smoke-native-small"
+const DEFAULT_MEDIUM_SEED_PREFIX := "strategic-ai-long-run-smoke-native-medium"
+const DEFAULT_MAP_SCOPE := "small_land"
 const DEFAULT_REQUIRED_EVENT_TYPE := ""
 
 func _ready() -> void:
@@ -22,13 +24,16 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _config_from_environment() -> Dictionary:
+	var map_scope := _env_string("HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE", DEFAULT_MAP_SCOPE)
+	var default_seed_prefix := DEFAULT_MEDIUM_SEED_PREFIX if map_scope == "medium_land" else DEFAULT_SEED_PREFIX
 	var config := {
+		"map_scope": map_scope,
 		"seed_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_SEEDS", DEFAULT_SEED_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET),
 		"turn_count": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_TURNS", DEFAULT_TURN_COUNT, 1, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET),
 		"battle_step_limit": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT", DEFAULT_BATTLE_STEP_LIMIT, 1, 2048),
 		"pressure_floor": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR", DEFAULT_PRESSURE_FLOOR, 0, 9999),
 		"seed_offset": _env_int("HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET", DEFAULT_SEED_OFFSET, 0, HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET - 1),
-		"seed_prefix": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX", DEFAULT_SEED_PREFIX),
+		"seed_prefix": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_SEED_PREFIX", default_seed_prefix),
 		"required_event_type": _env_string("HEROES_STRATEGIC_AI_LONG_RUN_REQUIRE_EVENT_TYPE", DEFAULT_REQUIRED_EVENT_TYPE),
 	}
 	if _env_int("HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS", 0, 0, 1) > 0:
@@ -90,6 +95,8 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 	if int(report.get("turn_count", 0)) != expected_turn_count:
 		_fail("Long-run matrix requested turn count mismatch: %s" % JSON.stringify(report))
 		return false
+	var expected_map_scope := String(report.get("map_scope", "small_land"))
+	var expected_size_class_id := "homm3_medium" if expected_map_scope == "medium_land" else "homm3_small"
 	if int(summary.get("row_count", 0)) != expected_seed_count:
 		_fail("Long-run matrix row count mismatch: %s" % JSON.stringify(summary))
 		return false
@@ -154,8 +161,8 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		if int(row.get("seed_ordinal", 0)) < int(shard.get("start_ordinal", 1)) or int(row.get("seed_ordinal", 0)) > int(shard.get("end_ordinal", 1)):
 			_fail("Long-run matrix row seed ordinal is outside shard range: row=%s shard=%s" % [JSON.stringify(row), JSON.stringify(shard)])
 			return false
-		if String(row.get("size_class_id", "")) != "homm3_small":
-			_fail("Long-run matrix smoke must stay in strict Small scope: %s" % JSON.stringify(row))
+		if String(row.get("size_class_id", "")) != expected_size_class_id:
+			_fail("Long-run matrix row used unexpected map size for scope %s: %s" % [expected_map_scope, JSON.stringify(row)])
 			return false
 		if String(row.get("signature", "")) == "":
 			_fail("Long-run matrix row missing signature: %s" % JSON.stringify(row))

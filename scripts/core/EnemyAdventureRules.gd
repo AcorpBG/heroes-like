@@ -7341,6 +7341,9 @@ static func choose_target(
 		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
 		if not exploration_plan.is_empty():
 			return exploration_plan
+		var frontier_sweep_plan := _no_known_target_frontier_sweep_plan(session, config, origin_pos)
+		if not frontier_sweep_plan.is_empty():
+			return frontier_sweep_plan
 		return _no_known_target_regroup_plan(session, config, origin_pos)
 
 	var repeated_rival_memory := _normalized_commander_memory(commander_source)
@@ -7463,6 +7466,68 @@ static func _enemy_exploration_center_score(map_size: Vector2i, tile: Vector2i) 
 	var max_distance: int = max(1, center.x + center.y)
 	var distance: int = abs(tile.x - center.x) + abs(tile.y - center.y)
 	return max(0, 24 - int(round(float(distance) / float(max_distance) * 24.0)))
+
+static func _no_known_target_frontier_sweep_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin_pos: Vector2i
+) -> Dictionary:
+	if session == null:
+		return {}
+	var faction_id := String(config.get("faction_id", ""))
+	if faction_id == "":
+		return {}
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	if map_size.x <= 0 or map_size.y <= 0:
+		return {}
+	var best := {}
+	var best_score := -999999
+	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
+	for y in range(0, map_size.y, step):
+		for x in range(0, map_size.x, step):
+			var tile := Vector2i(x, y)
+			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
+			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
+				continue
+			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
+				continue
+			var route_distance := _path_distance(session, origin_pos, [tile], "", faction_id)
+			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
+				continue
+			var center_score := _enemy_exploration_center_score(map_size, tile)
+			var distance_band_score: int = 18 - abs(route_distance - 8)
+			var score: int = 220 + center_score + distance_band_score - direct_distance
+			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			if (
+				best.is_empty()
+				or score > best_score
+				or (
+					score == best_score
+					and route_distance < int(best.get("goal_distance", 9999))
+				)
+				or (
+					score == best_score
+					and route_distance == int(best.get("goal_distance", 9999))
+					and target_id < String(best.get("target_placement_id", ""))
+				)
+			):
+				best_score = score
+				best = {
+					"target_kind": "explore",
+					"target_placement_id": target_id,
+					"target_label": "Frontier sweep %d,%d" % [tile.x, tile.y],
+					"target_x": tile.x,
+					"target_y": tile.y,
+					"goal_x": tile.x,
+					"goal_y": tile.y,
+					"goal_distance": route_distance,
+					"priority": max(1, score),
+					"target_reason_codes": ["no_known_targets", "frontier_scouting", "search_contact"],
+					"target_public_reason": "scouting the frontier",
+					"target_public_importance": "medium",
+					"target_debug_reason": "no reachable known target candidates or sighting frontier; sweeping reachable fog before passive regroup",
+				}
+	return best
 
 static func _no_known_target_regroup_plan(
 	session: SessionStateStoreScript.SessionData,
@@ -16902,6 +16967,9 @@ static func _regroup_raid_at_town(
 		var resume_result := _resume_previous_target_after_regroup(session, config, raid, faction_id)
 		raid = resume_result.get("raid", raid)
 		resumed_target_event = resume_result.get("ai_event", {})
+		if transferred_count <= 0 and resumed_target_event.is_empty():
+			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
+			raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
 	elif transferred_count <= 0:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
 		raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)

@@ -23,7 +23,7 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing `strategic-ai-rmg-medium-generalization-probe-10184`. The next production-aligned AI prerequisite is `strategic-ai-medium-long-run-seed-matrix-10184`; do not touch balance-content files or claim production-ready AI from short Medium probes.
+- Current implementation slice: `strategic-ai-medium-long-run-seed-matrix-10184`. Add dedicated Medium land Native RMG long-run strategic-AI matrix coverage; do not touch balance-content files or claim production-ready AI from a narrow Medium matrix.
 - Latest completed slice: `strategic-ai-rmg-medium-generalization-probe-10184`.
 - Latest completed slice: `native-rmg-medium-runtime-generation-unblock-10184`.
 - Latest completed slice: `strategic-ai-medium-rmg-unblock-routing-10184`.
@@ -166,7 +166,6 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 - Latest completed slice: `strategic-ai-threat-recovery-reinforcement-10184`.
 - Latest completed slice: `strategic-ai-nearby-threat-avoidance-10184`.
 - Latest completed slice: `strategic-ai-commander-risk-tolerance-10184`.
-- Blocked slice: `strategic-ai-rmg-medium-generalization-probe-10184` is blocked on Medium Native RMG package generation (`archived_legacy_native_rmg_disabled`) before strategic-AI turn execution.
 - Latest completed slice: `strategic-ai-planned-launch-host-template-lock-10184`.
 - Latest completed slice: `strategic-ai-post-regroup-target-resumption-10184`.
 - Latest completed slice: `strategic-ai-commander-outcome-adaptation-10184`.
