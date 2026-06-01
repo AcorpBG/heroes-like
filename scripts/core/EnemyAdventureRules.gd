@@ -1177,6 +1177,31 @@ static func _explicit_objective_fallback_target_selection_plan(
 		var target_kind := String(view.get("target_kind", ""))
 		var target_tile := Vector2i(int(view.get("target_x", 0)), int(view.get("target_y", 0)))
 		var goal_tiles: Array = view.get("goal_tiles", [target_tile]) if view.get("goal_tiles", [target_tile]) is Array else [target_tile]
+		if target_kind == "resource":
+			var resource_result := _find_resource_by_placement(session, target_id)
+			var node: Dictionary = resource_result.get("node", {}) if resource_result.get("node", {}) is Dictionary else {}
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			var guard := _resource_guard_encounter_for_node(session, node, site)
+			if not guard.is_empty() and _path_distance(
+				session,
+				origin,
+				_encounter_staging_tiles(session, guard),
+				String(raid.get("placement_id", "")),
+				faction_id
+			) >= 9999:
+				continue
+		elif target_kind == "artifact":
+			var artifact_result := _find_artifact_by_placement(session, target_id)
+			var artifact_node: Dictionary = artifact_result.get("node", {}) if artifact_result.get("node", {}) is Dictionary else {}
+			var guard := _artifact_guard_encounter_for_node(session, artifact_node)
+			if not guard.is_empty() and _path_distance(
+				session,
+				origin,
+				_encounter_staging_tiles(session, guard),
+				String(raid.get("placement_id", "")),
+				faction_id
+			) >= 9999:
+				continue
 		var distance := _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), faction_id)
 		var candidate := {
 			"target_kind": target_kind,
@@ -4686,6 +4711,23 @@ static func _redirect_claim_to_guard_encounter(
 	redirected["arrived"] = false
 	redirected["guard_claim_redirect_day"] = int(session.day)
 	redirected = _refresh_target(session, redirected, faction_id)
+	if int(redirected.get("goal_distance", 9999)) >= 9999:
+		var retargeted := _clear_regroup_target(redirected)
+		retargeted["previous_unreachable_guard_target_kind"] = String(redirected.get("target_kind", ""))
+		retargeted["previous_unreachable_guard_target_id"] = guard_id
+		retargeted["previous_unreachable_guard_claim_kind"] = claim_kind
+		retargeted["target_debug_reason"] = "guarded %s claim guard was unreachable; selecting alternate pressure" % claim_kind
+		retargeted = assign_target(session, config, retargeted)
+		var unreachable_event := ai_target_assignment_event(session, config, retargeted, previous_target)
+		return {
+			"encounter": retargeted,
+			"state": state,
+			"event_message": "",
+			"ai_event": unreachable_event,
+			"guard_redirected": false,
+			"guard_placement_id": guard_id,
+			"guard_unreachable": true,
+		}
 	var retask_event := ai_target_assignment_event(session, config, redirected, previous_target)
 	if retask_event.is_empty():
 		retask_event = ai_target_assignment_event(session, config, redirected, {})
@@ -8933,6 +8975,17 @@ static func _append_resource_candidate(
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "", faction_id)
 	if goal_distance >= 9999:
 		return
+	var guard := _resource_guard_encounter_for_node(session, node, site)
+	if not guard.is_empty():
+		var guard_distance := _path_distance(
+			session,
+			origin_pos,
+			_encounter_staging_tiles(session, guard),
+			"",
+			faction_id
+		)
+		if guard_distance >= 9999:
+			return
 	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
 	var priority := int(breakdown.get("final_priority", 0)) + scouting_bonus
@@ -8993,6 +9046,17 @@ static func _append_artifact_candidate(
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "", faction_id)
 	if goal_distance >= 9999:
 		return
+	var guard := _artifact_guard_encounter_for_node(session, node)
+	if not guard.is_empty():
+		var guard_distance := _path_distance(
+			session,
+			origin_pos,
+			_encounter_staging_tiles(session, guard),
+			"",
+			faction_id
+		)
+		if guard_distance >= 9999:
+			return
 	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "artifact", placement_id)
 	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
