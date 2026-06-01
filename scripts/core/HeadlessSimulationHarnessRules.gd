@@ -1019,9 +1019,15 @@ static func _strategic_ai_long_run_seed_row(
 		enemy_activity_event_count += events.size()
 		_strategic_ai_count_event_types(row["event_counts"], events)
 		var turn_target_integrity_violations := _strategic_ai_target_integrity_violations(events, String(result.get("enemy_activity_summary", "")))
+		var handoff_summary := _strategic_ai_battle_handoff_summary(session, events)
+		var handoff_target_integrity_violations: Array = handoff_summary.get("self_target_reference_violations", []) if handoff_summary.get("self_target_reference_violations", []) is Array else []
+		for violation in handoff_target_integrity_violations:
+			turn_target_integrity_violations.append(String(violation))
+		var active_host_target_integrity_violations: Array = handoff_summary.get("active_host_target_reference_violations", []) if handoff_summary.get("active_host_target_reference_violations", []) is Array else []
+		for violation in active_host_target_integrity_violations:
+			turn_target_integrity_violations.append(String(violation))
 		for violation in turn_target_integrity_violations:
 			target_integrity_violations.append("turn_%d:%s" % [turn_index + 1, String(violation)])
-		var handoff_summary := _strategic_ai_battle_handoff_summary(session, events)
 		var turn_ok := bool(result.get("ok", false))
 		if not turn_target_integrity_violations.is_empty():
 			turn_ok = false
@@ -1055,6 +1061,7 @@ static func _strategic_ai_long_run_seed_row(
 			"game_state": String(session.game_state),
 			"scenario_status": String(session.scenario_status),
 			"turn_runtime_msec": turn_runtime_msec,
+			"target_integrity_violations": turn_target_integrity_violations,
 		})
 		if not turn_ok:
 			if turn_target_integrity_violations.is_empty():
@@ -1210,6 +1217,10 @@ static func _strategic_ai_target_integrity_violations(events: Array, enemy_activ
 			"ai_town_defense_battle_queued",
 		]:
 			continue
+		var actor_id := String(event.get("actor_id", "")).strip_edges()
+		var target_id := String(event.get("target_id", "")).strip_edges()
+		if actor_id != "" and target_id != "" and actor_id == target_id:
+			violations.append("%s_self_target_id:%s" % [event_type, target_id])
 		var actor_label := _strategic_ai_event_label_key(String(event.get("actor_label", "")))
 		var target_label := _strategic_ai_event_label_key(String(event.get("target_label", "")))
 		if actor_label == "" or target_label == "":
@@ -1259,6 +1270,21 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 	var max_goal_distance := 0
 	var nearest := {}
 	var nearest_tactical_battle_target := {}
+	var self_target_reference_count := 0
+	var active_host_target_reference_count := 0
+	var self_target_reference_violations := []
+	var active_host_target_reference_violations := []
+	var active_raid_placement_ids := {}
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter_for_id: Dictionary = encounter_value
+		var active_id := String(encounter_for_id.get("placement_id", ""))
+		if active_id == "" or String(encounter_for_id.get("spawned_by_faction_id", "")) == "":
+			continue
+		if active_id in resolved:
+			continue
+		active_raid_placement_ids[active_id] = true
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
 			continue
@@ -1268,6 +1294,14 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 		if String(encounter.get("placement_id", "")) in resolved:
 			continue
 		active_raid_count += 1
+		var placement_id := String(encounter.get("placement_id", ""))
+		var target_id := String(encounter.get("target_placement_id", ""))
+		if placement_id != "" and target_id != "" and placement_id == target_id:
+			self_target_reference_count += 1
+			self_target_reference_violations.append("%s_self_target_state:%s" % [String(encounter.get("target_kind", "")), placement_id])
+		if target_id != "" and String(encounter.get("target_kind", "")) == "encounter" and active_raid_placement_ids.has(target_id):
+			active_host_target_reference_count += 1
+			active_host_target_reference_violations.append("%s_active_host_target_state:%s->%s" % [String(encounter.get("target_kind", "")), placement_id, target_id])
 		var target_kind := String(encounter.get("target_kind", ""))
 		if target_kind != "":
 			target_kind_counts[target_kind] = int(target_kind_counts.get(target_kind, 0)) + 1
@@ -1368,6 +1402,10 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 		"movement_event_count": movement_event_count,
 		"movement_distance_delta_total": movement_distance_delta_total,
 		"battle_queue_event_count": battle_queue_event_count,
+		"self_target_reference_count": self_target_reference_count,
+		"self_target_reference_violations": self_target_reference_violations,
+		"active_host_target_reference_count": active_host_target_reference_count,
+		"active_host_target_reference_violations": active_host_target_reference_violations,
 	}
 
 static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: int, requested_turn_count: int) -> Dictionary:
@@ -1496,7 +1534,7 @@ static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_
 	if int(summary.get("behavior_bug_count", 0)) > 0:
 		rows.append({"blocker_id": "strategic_ai_long_run_behavior_bug", "severity": "bug", "summary": "At least one generated-map strategic AI long-run row failed during turns or battle resolution."})
 	if int(summary.get("target_integrity_violation_count", 0)) > 0:
-		rows.append({"blocker_id": "strategic_ai_long_run_target_integrity_violation", "severity": "bug", "summary": "At least one generated-map strategic AI event used the same public actor and target label."})
+		rows.append({"blocker_id": "strategic_ai_long_run_target_integrity_violation", "severity": "bug", "summary": "At least one generated-map strategic AI event or active raid state targeted its own actor."})
 	if int(summary.get("turns_completed", 0)) <= 0:
 		rows.append({"blocker_id": "strategic_ai_long_run_no_turns", "severity": "bug", "summary": "The long-run matrix completed no generated-map turns."})
 	if int(summary.get("enemy_activity_event_count", 0)) <= 0:

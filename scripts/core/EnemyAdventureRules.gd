@@ -796,6 +796,8 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 			plan.erase("hero_task_record")
 			plan.erase("hero_task_id")
 			raid.merge(plan, true)
+	if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, faction_id):
+		raid = _clear_regroup_target(raid)
 	raid.erase("hero_task_record")
 	raid.erase("hero_task_id")
 	var current_target := _current_target_snapshot(raid)
@@ -1073,7 +1075,9 @@ static func _battle_pressure_route_stepping_candidate(
 		if target_kind not in ["encounter", "resource", "artifact"]:
 			continue
 		var target_id := String(candidate.get("target_placement_id", ""))
-		if target_id == "" or target_id == String(raid.get("target_placement_id", "")):
+		if target_id == "" \
+				or target_id == String(raid.get("target_placement_id", "")) \
+				or target_id == String(raid.get("placement_id", "")):
 			continue
 		var target_tile := Vector2i(int(candidate.get("target_x", origin.x)), int(candidate.get("target_y", origin.y)))
 		var candidate_gap := _min_manhattan_distance_to_tiles(target_tile, town_staging_tiles)
@@ -1382,6 +1386,8 @@ static func _active_front_support_candidate(
 	if target_kind == "regroup" and String(front.get("previous_target_kind", "")) in ["town", "encounter", "hero", "resource", "artifact"]:
 		target_kind = String(front.get("previous_target_kind", ""))
 		target_id = String(front.get("previous_target_placement_id", ""))
+	if target_id != "" and target_id == current_placement_id:
+		return {}
 	if target_kind not in ["town", "encounter", "hero", "resource", "artifact"] or target_id == "":
 		return {}
 	var target_label := ""
@@ -1414,6 +1420,9 @@ static func _active_front_support_candidate(
 				return {}
 			var encounter: Dictionary = encounter_result.get("encounter", {})
 			if OverworldRulesScript.is_encounter_resolved(session, encounter):
+				return {}
+			var resolved_encounters = session.overworld.get("resolved_encounters", [])
+			if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
 				return {}
 			target_label = _encounter_target_label(session, encounter, target_id)
 			target_x = int(encounter.get("x", 0))
@@ -2207,6 +2216,9 @@ static func _raid_grouping_target_view(
 				return {}
 			var encounter: Dictionary = encounter_result.get("encounter", {})
 			if OverworldRulesScript.is_encounter_resolved(session, encounter):
+				return {}
+			var resolved_encounters = session.overworld.get("resolved_encounters", [])
+			if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
 				return {}
 			return {
 				"target_label": _encounter_target_label(session, encounter, target_id),
@@ -3504,6 +3516,8 @@ static func _route_blocking_guard_target_for_tactical_pressure(
 		if placement_id == "" or placement_id == String(raid.get("placement_id", "")):
 			continue
 		if resolved_encounters is Array and placement_id in resolved_encounters:
+			continue
+		if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
 			continue
 		if not _encounter_is_route_guard(encounter):
 			continue
@@ -8919,7 +8933,8 @@ static func _append_encounter_candidate(
 ) -> void:
 	if not (encounter is Dictionary):
 		return
-	if String(encounter.get("spawned_by_faction_id", "")) != "":
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
 		return
 	if OverworldRulesScript.is_encounter_resolved(session, encounter):
 		return
@@ -10545,21 +10560,71 @@ static func _town_strategic_priority_bonus(
 	return max(0, bonus)
 
 static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	var options = []
+	var options := []
+	var seen := {}
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	var town_x = int(town.get("x", 0))
-	var town_y = int(town.get("y", 0))
+	var town_x := int(town.get("x", 0))
+	var town_y := int(town.get("y", 0))
+	for tile_value in _town_payload_world_tiles(town, [
+		"package_visit_tiles",
+		"package_action_tiles",
+		"package_approach_tiles",
+		"visit_tiles",
+		"action_tiles",
+		"approach_tiles",
+	]):
+		if tile_value is Vector2i:
+			var direct_tile: Vector2i = tile_value
+			_append_passable_town_staging_tile(options, seen, session, map_size, direct_tile)
+	var visit_tile = town.get("visit_tile", {})
+	if visit_tile is Dictionary and not visit_tile.is_empty():
+		_append_passable_town_staging_tile(
+			options,
+			seen,
+			session,
+			map_size,
+			Vector2i(int(visit_tile.get("x", town_x)), int(visit_tile.get("y", town_y)))
+		)
+	var footprint_tiles := _town_payload_world_tiles(town, [
+		"package_body_tiles",
+		"package_block_tiles",
+		"body_tiles",
+	])
+	footprint_tiles.append(Vector2i(town_x, town_y))
+	for tile_value in footprint_tiles:
+		if not (tile_value is Vector2i):
+			continue
+		var tile: Vector2i = tile_value
+		for delta in PATH_CARDINAL_DELTAS:
+			_append_passable_town_staging_tile(options, seen, session, map_size, tile + delta)
 	for delta in PATH_CARDINAL_DELTAS:
-		var nx: int = town_x + delta.x
-		var ny: int = town_y + delta.y
-		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
-			continue
-		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
-			continue
-		options.append(Vector2i(nx, ny))
+		_append_passable_town_staging_tile(options, seen, session, map_size, Vector2i(town_x + delta.x, town_y + delta.y))
 	if options.is_empty():
 		options.append(Vector2i(town_x, town_y))
 	return options
+
+static func _town_payload_world_tiles(town: Dictionary, keys: Array) -> Array:
+	var tiles := []
+	for key_value in keys:
+		tiles.append_array(OverworldRulesScript._world_tiles_from_payload_array(town.get(String(key_value), [])))
+	return tiles
+
+static func _append_passable_town_staging_tile(
+	options: Array,
+	seen: Dictionary,
+	session: SessionStateStoreScript.SessionData,
+	map_size: Vector2i,
+	tile: Vector2i
+) -> void:
+	if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+		return
+	if OverworldRulesScript.tile_is_blocked(session, tile.x, tile.y):
+		return
+	var key := _pos_key(tile)
+	if seen.has(key):
+		return
+	seen[key] = true
+	options.append(tile)
 
 static func raid_reached_town_battle_contact(
 	session: SessionStateStoreScript.SessionData,
@@ -16588,7 +16653,11 @@ static func _continue_mobile_raid_after_field_objective(
 	continued["previous_completed_target_kind"] = String(previous_target.get("target_kind", ""))
 	continued["previous_completed_target_placement_id"] = String(previous_target.get("target_placement_id", ""))
 	continued["previous_completed_target_label"] = String(previous_target.get("target_label", ""))
-	continued = assign_target(session, config, continued)
+	var blocked_route_resume := _blocked_route_resume_target_after_clear(session, continued, faction_id)
+	if blocked_route_resume.is_empty():
+		continued = assign_target(session, config, continued)
+	else:
+		continued.merge(blocked_route_resume, true)
 	var next_target := _current_target_snapshot(continued)
 	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
 		return {"encounter": raid, "state": state, "ai_event": {}}
@@ -16600,6 +16669,52 @@ static func _continue_mobile_raid_after_field_objective(
 	if event.is_empty():
 		event = ai_target_assignment_event(session, config, continued, {})
 	return {"encounter": continued, "state": state, "ai_event": event}
+
+static func _blocked_route_resume_target_after_clear(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {}
+	if String(raid.get("blocked_route_target_kind", "")) != "town":
+		return {}
+	var town_id := String(raid.get("blocked_route_target_placement_id", ""))
+	if town_id == "":
+		return {}
+	var town_result := _find_town_by_placement(session, town_id)
+	if int(town_result.get("index", -1)) < 0:
+		return {}
+	var town: Dictionary = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "player":
+		return {}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var staging_tiles := _town_staging_tiles(session, town)
+	if staging_tiles.is_empty():
+		return {}
+	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id)
+	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	for code in ["town_siege", "objective_front", "battle_pressure_floor", "blocked_route_resumed"]:
+		if code not in reason_codes:
+			reason_codes.append(code)
+	if goal_distance >= 9999 and "route_unreachable" not in reason_codes:
+		reason_codes.append("route_unreachable")
+	return {
+		"target_kind": "town",
+		"target_placement_id": town_id,
+		"target_label": _town_name(town),
+		"target_x": int(town.get("x", 0)),
+		"target_y": int(town.get("y", 0)),
+		"goal_x": goal_tile.x,
+		"goal_y": goal_tile.y,
+		"goal_distance": goal_distance,
+		"arrived": false,
+		"target_reason_codes": reason_codes,
+		"target_public_reason": "pressing opened route to player town",
+		"target_public_importance": "high",
+		"target_debug_reason": "route guard/object cleared; resuming blocked player town pressure",
+	}
 
 static func _resume_guarded_claim_after_guard_clear(
 	session: SessionStateStoreScript.SessionData,
@@ -17704,6 +17819,8 @@ static func _refresh_target(
 	raid: Dictionary,
 	observer_faction_id: String = ""
 ) -> Dictionary:
+	if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, observer_faction_id):
+		return _clear_regroup_target(raid)
 	var origin = Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	match String(raid.get("target_kind", "")):
 		"town":
@@ -17811,6 +17928,8 @@ static func _refresh_target(
 	return raid
 
 static func _raid_target_valid(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> bool:
+	if _raid_target_points_to_self(raid):
+		return false
 	var target_kind = String(raid.get("target_kind", ""))
 	var valid := false
 	match target_kind:
@@ -17853,7 +17972,13 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 			valid = int(artifact_result.get("index", -1)) >= 0 and not bool(artifact_result.get("node", {}).get("collected", false))
 		"encounter":
 			var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
-			valid = int(encounter_result.get("index", -1)) >= 0 and not OverworldRulesScript.is_encounter_resolved(session, encounter_result.get("encounter", {}))
+			if int(encounter_result.get("index", -1)) < 0:
+				valid = false
+			else:
+				var encounter: Dictionary = encounter_result.get("encounter", {})
+				var resolved_encounters = session.overworld.get("resolved_encounters", [])
+				valid = not OverworldRulesScript.is_encounter_resolved(session, encounter) \
+					and not _encounter_is_pressure_host_candidate(encounter, String(raid.get("spawned_by_faction_id", "")), resolved_encounters)
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
 			if hero_target_id == "":
@@ -17888,6 +18013,29 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 		return bool(OverworldRulesScript.delivery_interception_context_for_encounter(session, raid).get("active", false))
 	return true
 
+static func _raid_target_points_to_self(raid: Dictionary) -> bool:
+	if raid.is_empty():
+		return false
+	var placement_id := String(raid.get("placement_id", ""))
+	var target_id := String(raid.get("target_placement_id", ""))
+	return placement_id != "" and target_id != "" and placement_id == target_id
+
+static func _raid_target_points_to_pressure_host(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String = ""
+) -> bool:
+	if session == null or raid.is_empty() or String(raid.get("target_kind", "")) != "encounter":
+		return false
+	var target_id := String(raid.get("target_placement_id", ""))
+	if target_id == "":
+		return false
+	var encounter_result := _find_encounter_by_placement(session, target_id)
+	if int(encounter_result.get("index", -1)) < 0:
+		return false
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	return _encounter_is_pressure_host_candidate(encounter_result.get("encounter", {}), faction_id, resolved_encounters)
+
 static func _is_active_raid(encounter: Variant, faction_id: String, resolved_encounters: Variant) -> bool:
 	if not (encounter is Dictionary):
 		return false
@@ -17916,6 +18064,30 @@ static func is_active_pressure_host(encounter: Variant, faction_id: String = "",
 	if commander_state is Dictionary and not commander_state.is_empty():
 		return true
 	return String(raid.get("delivery_intercept_node_placement_id", "")) != ""
+
+static func _encounter_is_pressure_host_candidate(encounter: Variant, faction_id: String = "", resolved_encounters: Variant = []) -> bool:
+	if not (encounter is Dictionary):
+		return false
+	var raid: Dictionary = encounter
+	var placement_id := String(raid.get("placement_id", ""))
+	if _is_active_raid(raid, faction_id, resolved_encounters):
+		return true
+	if resolved_encounters is Array and placement_id in resolved_encounters:
+		return false
+	if String(raid.get("spawned_by_faction_id", "")) != "":
+		return true
+	if String(raid.get("difficulty", "")) == "pressure":
+		return true
+	if raid.has("days_active"):
+		return true
+	if bool(raid.get("commanderless_support_column", false)):
+		return true
+	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
+		return true
+	var commander_state = raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		return true
+	return placement_id.begins_with("faction_") and placement_id.find("_raid_") >= 0
 
 static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("towns", []).size()):
@@ -17949,10 +18121,13 @@ static func _resource_guard_encounter_for_node(
 ) -> Dictionary:
 	if session == null or node.is_empty():
 		return {}
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary) or OverworldRulesScript.is_encounter_resolved(session, encounter_value):
 			continue
 		var encounter: Dictionary = encounter_value
+		if _encounter_is_pressure_host_candidate(encounter, "", resolved_encounters):
+			continue
 		var guard := _guard_link_for_encounter(encounter)
 		if not guard.is_empty() and _resource_guard_link_targets_node(guard, node, site):
 			return encounter
@@ -17979,10 +18154,13 @@ static func _resource_guard_link_targets_node(guard: Dictionary, node: Dictionar
 static func _artifact_guard_encounter_for_node(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
 	if session == null or node.is_empty():
 		return {}
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary) or OverworldRulesScript.is_encounter_resolved(session, encounter_value):
 			continue
 		var encounter: Dictionary = encounter_value
+		if _encounter_is_pressure_host_candidate(encounter, "", resolved_encounters):
+			continue
 		var guard := _guard_link_for_encounter(encounter)
 		if not guard.is_empty() and _artifact_guard_link_targets_node(guard, node):
 			return encounter
