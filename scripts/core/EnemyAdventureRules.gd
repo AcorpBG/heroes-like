@@ -1822,6 +1822,8 @@ static func advance_raids(
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+		if raid_reached_regroup_contact(session, encounter):
+			goal_distance = 0
 		var movement_start: Vector2i = current
 		var goal_distance_before_movement: int = goal_distance
 		var movement_steps := RAID_BASE_MOVEMENT_STEPS
@@ -1896,6 +1898,8 @@ static func advance_raids(
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
 		if raid_reached_town_battle_contact(session, encounter, faction_id):
 			goal_distance = 0
+		if raid_reached_regroup_contact(session, encounter):
+			goal_distance = 0
 		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
 		encounter["arrived"] = (
 			int(encounter.get("goal_distance", 9999)) <= 1
@@ -1956,6 +1960,11 @@ static func advance_raids(
 				resolved_encounters = updated_resolved_encounters
 				encounters[index] = encounter
 				continue
+			var repair_result := _repair_live_raid_target_after_resolution(session, config, encounter, faction_id)
+			encounter = repair_result.get("encounter", encounter)
+			for repair_event_value in repair_result.get("ai_events", []):
+				if repair_event_value is Dictionary and not repair_event_value.is_empty():
+					event_records.append(repair_event_value)
 		var final_commander_state = encounter.get("enemy_commander_state", {})
 		if final_commander_state is Dictionary and not final_commander_state.is_empty():
 			sync_commander_state_to_roster(
@@ -2009,6 +2018,38 @@ static func advance_raids(
 		"state": state,
 		"events": event_records,
 	}
+
+static func _repair_live_raid_target_after_resolution(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {"encounter": raid, "ai_events": []}
+	if bool(raid.get("raid_retired_to_rebuild", false)):
+		return {"encounter": raid, "ai_events": []}
+	var previous_target := _current_target_snapshot(raid)
+	var repaired := raid.duplicate(true)
+	if String(repaired.get("target_kind", "")) == "" or not _raid_target_valid(session, repaired):
+		repaired = assign_target(session, config, repaired)
+	else:
+		repaired = _refresh_target(session, repaired, faction_id)
+		repaired = _redirect_unreachable_raid_target(session, config, repaired, faction_id)
+	if String(repaired.get("target_kind", "")) == "" or not _raid_target_valid(session, repaired):
+		repaired = assign_target(session, config, repaired)
+	if _raid_target_valid(session, repaired):
+		repaired = _refresh_target(session, repaired, faction_id)
+		repaired = _redirect_unreachable_raid_target(session, config, repaired, faction_id)
+	var next_target := _current_target_snapshot(repaired)
+	var events := []
+	if _target_signature(next_target) != "" and _target_signature(next_target) != _target_signature(previous_target):
+		var event := ai_target_assignment_event(session, config, repaired, previous_target)
+		if event.is_empty():
+			event = ai_target_assignment_event(session, config, repaired, {})
+		if not event.is_empty():
+			events.append(event)
+	return {"encounter": repaired, "ai_events": events}
 
 static func _tactical_pressure_movement_steps(raid: Dictionary, goal_distance: int) -> int:
 	if goal_distance <= RAID_BASE_MOVEMENT_STEPS or goal_distance >= 9999:
@@ -10638,6 +10679,28 @@ static func raid_reached_town_battle_contact(
 	if int(town_result.get("index", -1)) < 0 or town.is_empty():
 		return false
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	for tile in _town_battle_contact_tiles(town):
+		if not (tile is Vector2i):
+			continue
+		var contact_tile: Vector2i = tile
+		if abs(current.x - contact_tile.x) + abs(current.y - contact_tile.y) <= 1:
+			return true
+	return false
+
+static func raid_reached_regroup_contact(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary
+) -> bool:
+	if session == null or raid.is_empty() or String(raid.get("target_kind", "")) != "regroup":
+		return false
+	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+	var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
+	if int(town_result.get("index", -1)) < 0 or town.is_empty():
+		return false
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	for tile in _town_staging_tiles(session, town):
+		if tile is Vector2i and current == tile:
+			return true
 	for tile in _town_battle_contact_tiles(town):
 		if not (tile is Vector2i):
 			continue
