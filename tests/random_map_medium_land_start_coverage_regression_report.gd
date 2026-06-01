@@ -28,40 +28,19 @@ func _run() -> void:
 	if not _assert_direct_validation(direct):
 		return
 
-	SessionState.reset_session()
-	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
-	add_child(shell)
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	if not _assert_hooks(shell):
+	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		direct_config,
+		"normal",
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	if not bool(setup.get("ok", false)):
+		_fail("Medium 4-player land/no-underground setup failed validation: %s" % JSON.stringify(setup))
 		return
-	shell.call("validation_open_skirmish_stage")
-	if not bool(shell.call("validation_set_generated_seed", TEST_SEED)):
-		_fail("Seed hook did not accept the medium land regression seed.")
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session == null or String(session.scenario_id) == "":
+		_fail("Medium 4-player land/no-underground session did not start from validated setup: %s" % JSON.stringify(_compact_launch_result(setup)))
 		return
-	if not bool(shell.call("validation_select_generated_size_class", SIZE_CLASS_ID)):
-		_fail("Size-class hook did not select Medium.")
-		return
-	if not bool(shell.call("validation_select_generated_player_count", 4)):
-		_fail("Player-count hook did not select four players.")
-		return
-	if not bool(shell.call("validation_select_generated_water_mode", "land")):
-		_fail("Water-mode hook did not select land.")
-		return
-	if not bool(shell.call("validation_set_generated_underground", false)):
-		_fail("Underground hook did not disable underground.")
-		return
-
-	var snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
-	if not _assert_medium_land_snapshot(snapshot):
-		return
-
-	var result: Dictionary = await shell.validation_start_generated_skirmish_staged()
-	if not bool(result.get("started", false)):
-		_fail("Medium 4-player land/no-underground launch failed validation: %s" % JSON.stringify(result))
-		return
-	if not _assert_launch_identity(result):
+	if not _assert_launch_identity(setup, session):
 		return
 
 	ContentService.clear_generated_scenario_drafts()
@@ -72,7 +51,8 @@ func _run() -> void:
 		"profile_id": PROFILE_ID,
 		"direct_validation_status": _validation_report(direct).get("validation_status", _validation_report(direct).get("status", "")),
 		"direct_failure_count": int(_validation_report(direct).get("failure_count", 0)),
-		"retry_attempts": _compact_retry_attempts(_launch_retry_attempts(result)),
+		"session_id": session.scenario_id,
+		"retry_attempts": _compact_retry_attempts(_launch_retry_attempts(setup)),
 	})])
 	get_tree().quit(0)
 
@@ -129,9 +109,9 @@ func _assert_medium_land_snapshot(snapshot: Dictionary) -> bool:
 		return false
 	return true
 
-func _assert_launch_identity(result: Dictionary) -> bool:
-	var active_provenance: Dictionary = result.get("active_provenance", {}) if result.get("active_provenance", {}) is Dictionary else {}
-	var generated_identity: Dictionary = active_provenance.get("generated_identity", {}) if active_provenance.get("generated_identity", {}) is Dictionary else {}
+func _assert_launch_identity(setup: Dictionary, session) -> bool:
+	var active_provenance: Dictionary = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	var generated_identity: Dictionary = active_provenance.get("generated_identity", setup.get("generated_identity", {})) if active_provenance.get("generated_identity", setup.get("generated_identity", {})) is Dictionary else {}
 	var input_config: Dictionary = active_provenance.get("input_config", {}) if active_provenance.get("input_config", {}) is Dictionary else {}
 	if String(generated_identity.get("template_id", "")) != TEMPLATE_ID or String(generated_identity.get("profile_id", "")) != PROFILE_ID:
 		_fail("Medium land launch used the wrong template/profile: %s" % JSON.stringify(generated_identity))
@@ -140,13 +120,16 @@ func _assert_launch_identity(result: Dictionary) -> bool:
 	if String(generated_identity.get("size_class_id", "")) != SIZE_CLASS_ID or int(size_config.get("level_count", 0)) != 1:
 		_fail("Medium land launch used the wrong size/underground config: %s" % JSON.stringify(active_provenance))
 		return false
-	var retry_attempts := _launch_retry_attempts(result)
+	var retry_attempts := _launch_retry_attempts(setup)
 	if retry_attempts.is_empty():
-		_fail("Medium land launch did not expose retry attempts: %s" % JSON.stringify(_compact_launch_result(result)))
+		_fail("Medium land launch did not expose retry attempts: %s" % JSON.stringify(_compact_launch_result(setup)))
 		return false
 	var first_attempt: Dictionary = retry_attempts[0] if retry_attempts[0] is Dictionary else {}
 	if int(first_attempt.get("failure_count", -1)) != 0:
 		_fail("Medium land launch still reported validation failures: %s" % JSON.stringify(first_attempt))
+		return false
+	if String(session.scenario_id).find("native_rmg_scenario_") != 0:
+		_fail("Medium land launch did not start from a native RMG package session: %s" % session.scenario_id)
 		return false
 	return true
 

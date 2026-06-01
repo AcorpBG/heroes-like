@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing Medium RMG unblock routing. The next production-aligned AI prerequisite is `native-rmg-medium-runtime-generation-unblock-10184`; after that, rerun the Medium strategic-AI turn probe. Do not touch balance-content files.
+- Current implementation slice: none selected after completing `native-rmg-medium-runtime-generation-unblock-10184`. The next production-aligned AI prerequisite is `strategic-ai-rmg-medium-generalization-probe-10184`, now unblocked from native runtime-generation setup; do not touch balance-content files or claim production-ready AI from one Medium probe.
+- Latest completed slice: `native-rmg-medium-runtime-generation-unblock-10184`.
 - Latest completed slice: `strategic-ai-medium-rmg-unblock-routing-10184`.
 - Latest completed slice: `strategic-ai-medium-rmg-blocker-classification-10184`.
 - Latest completed slice: `strategic-ai-baseline-staged-evidence-adoption-10184`.

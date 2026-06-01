@@ -944,17 +944,25 @@ static func _strategic_ai_baseline_blocker_rows(
 			"severity": "production_gap",
 			"summary": "Supported Small generated-map AI turn health is identified as required coverage but is not executed by the default fast audit.",
 		})
-	if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)):
+	const REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT := 3
+	if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)) \
+			or int(rmg_summary.get("medium_ok_count", 0)) < REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT:
+		var medium_error_codes: Array = rmg_summary.get("medium_setup_failure_error_codes", []) if rmg_summary.get("medium_setup_failure_error_codes", []) is Array else []
+		var runtime_generation_blocked := "archived_legacy_native_rmg_disabled" in medium_error_codes
+		var medium_blocked_by := "native_rmg_runtime_generation" if runtime_generation_blocked else (
+			"medium_ai_turn_health" if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)) else "medium_generated_map_breadth"
+		)
 		var medium_row := {
 			"blocker_id": "native_rmg_medium_ai_generalization",
 			"severity": "production_gap",
 			"summary": "Medium generated-map strategic AI turn health is not broadly proven.",
 			"medium_probe_count": int(rmg_summary.get("medium_probe_count", 0)),
 			"medium_ok_count": int(rmg_summary.get("medium_ok_count", 0)),
+			"required_medium_generalization_probe_count": REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT,
 			"medium_setup_failure_statuses": rmg_summary.get("medium_setup_failure_statuses", []),
 			"medium_setup_failure_error_codes": rmg_summary.get("medium_setup_failure_error_codes", []),
-			"blocked_by": "native_rmg_runtime_generation" if "archived_legacy_native_rmg_disabled" in (rmg_summary.get("medium_setup_failure_error_codes", []) if rmg_summary.get("medium_setup_failure_error_codes", []) is Array else []) else "medium_ai_turn_health",
-			"next_unblock_slice_id": "native-rmg-medium-runtime-generation-unblock-10184" if "archived_legacy_native_rmg_disabled" in (rmg_summary.get("medium_setup_failure_error_codes", []) if rmg_summary.get("medium_setup_failure_error_codes", []) is Array else []) else "strategic-ai-rmg-medium-generalization-probe-10184",
+			"blocked_by": medium_blocked_by,
+			"next_unblock_slice_id": "native-rmg-medium-runtime-generation-unblock-10184" if runtime_generation_blocked else "strategic-ai-rmg-medium-generalization-probe-10184",
 		}
 		rows.append(medium_row)
 	if not bool(long_run_summary.get("ok", false)):
