@@ -128,6 +128,28 @@ const STRATEGIC_AI_BASELINE_RMG_CASES := [
 		"size_class_id": "homm3_medium",
 		"expected_scope": "production_gap_probe",
 	},
+	{
+		"case_id": "native_rmg_medium_seed_271828_ai_turn_probe",
+		"seed": "strategic-ai-baseline-medium-271828",
+		"template_id": "translated_rmg_template_002_v1",
+		"profile_id": "translated_rmg_profile_002_v1",
+		"player_count": 4,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_medium",
+		"expected_scope": "production_gap_probe",
+	},
+	{
+		"case_id": "native_rmg_medium_seed_161803_ai_turn_probe",
+		"seed": "strategic-ai-baseline-medium-161803",
+		"template_id": "translated_rmg_template_002_v1",
+		"profile_id": "translated_rmg_profile_002_v1",
+		"player_count": 4,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_medium",
+		"expected_scope": "production_gap_probe",
+	},
 ]
 const STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES := [
 	{
@@ -971,11 +993,21 @@ static func _strategic_ai_baseline_blocker_rows(
 			"severity": "production_gap",
 			"summary": "Focused Native RMG long-run smoke exists, but the full 8-week 100-seed strategic AI simulation matrix has not been run yet.",
 		})
+	if int(rmg_summary.get("medium_ok_count", 0)) >= REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT:
+		rows.append({
+			"blocker_id": "native_rmg_medium_long_run_matrix",
+			"severity": "production_gap",
+			"summary": "Short Medium generated-map probes are green, but Medium generated-map strategic AI is not yet covered by a longer seed matrix.",
+			"medium_ok_count": int(rmg_summary.get("medium_ok_count", 0)),
+			"required_short_medium_probe_count": REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT,
+			"next_unblock_slice_id": "strategic-ai-medium-long-run-seed-matrix-10184",
+		})
 	return rows
 
 static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 	var has_small_bug := false
 	var has_medium_gap := false
+	var has_medium_long_run_gap := false
 	var has_long_run_gap := false
 	var has_medium_runtime_blocker := false
 	for row in blocker_rows:
@@ -983,6 +1015,7 @@ static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 			continue
 		has_small_bug = has_small_bug or String(row.get("blocker_id", "")) == "native_rmg_small_ai_turn_health"
 		has_medium_gap = has_medium_gap or String(row.get("blocker_id", "")) == "native_rmg_medium_ai_generalization"
+		has_medium_long_run_gap = has_medium_long_run_gap or String(row.get("blocker_id", "")) == "native_rmg_medium_long_run_matrix"
 		has_long_run_gap = has_long_run_gap or String(row.get("blocker_id", "")) == "no_long_run_seed_matrix"
 		has_medium_runtime_blocker = has_medium_runtime_blocker or String(row.get("next_unblock_slice_id", "")) == "native-rmg-medium-runtime-generation-unblock-10184"
 	var slices := []
@@ -992,6 +1025,8 @@ static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 		if has_medium_runtime_blocker:
 			slices.append("native-rmg-medium-runtime-generation-unblock-10184")
 		slices.append("strategic-ai-rmg-medium-generalization-probe-10184")
+	if has_medium_long_run_gap:
+		slices.append("strategic-ai-medium-long-run-seed-matrix-10184")
 	if has_long_run_gap:
 		slices.append("strategic-ai-long-run-seed-matrix-10184")
 	return slices
