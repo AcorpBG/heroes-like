@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-production-shard-offset13-10184",
-  "currentSliceTitle": "Strategic AI Production Shard Offset 13",
+  "currentSliceId": "strategic-ai-production-shard-offset18-10184",
+  "currentSliceTitle": "Strategic AI Production Shard Offset 18",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Native RMG strategic/tactical AI shard over seed ordinals 14-18. Guard engagement/control surfaces now contribute reachable staging tiles for route guards, so generated-map enemy towns trapped behind exact guard masks can launch guard-clearance raids instead of idling. Focused seed 18 no longer stalls, and the five-seed shard has zero behavior bugs and zero target-integrity violations. No unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content was changed.",
+  "currentSliceNotes": "Completed the next Native RMG generated-map strategic/tactical AI shard over seed ordinals 19-23 with no behavior bugs, no target-integrity violations, and no balance-content edits. The full 100-seed eight-week production matrix remains the required non-claim blocker.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T01:58:00Z",
+  "updatedAt": "2026-06-01T02:10:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,65 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-production-shard-offset18-10184",
+      "title": "Strategic AI Production Shard Offset 18",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active tactical/strategic AI production-readiness goal after offset-13 guard-staging shard completed",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Continue toward the full Native RMG 100-seed eight-week production target by running the next generated-map shard beyond seed ordinals 14-18 and implementing any real tactical/strategic AI behavior fix exposed.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=18 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1500 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff -- content docs project.md"
+      ],
+      "completionCriteria": "Fresh Native RMG shard over seed ordinals 19-23 completes without behavior bugs, target-integrity violations, or balance-content edits; any newly exposed tactical/strategic AI behavior gap is fixed with focused validation or recorded precisely as a remaining production blocker; tactical order and repository validation remain green.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming production readiness before full 100-seed eight-week evidence"
+      ],
+      "startedAt": "2026-06-01T02:00:00Z",
+      "completedAt": "2026-06-01T02:10:00Z",
+      "updatedAt": "2026-06-01T02:10:00Z",
+      "validation": [
+        "Started after strategic-ai-production-shard-offset13-10184 completed and pushed; this shard intentionally starts at seed offset 18 to cover fresh generated maps.",
+        "Offset-18 shard: HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=18 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1500 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> row_ok_count=5, setup_ok_count=5, behavior_bug_count=0, target_integrity_violation_count=0, enemy_activity_event_count=196, stalled_turn_count=1, target_assignment_count=53, natural_tactical_battle_pressure_turn_count=41, natural_tactical_battle_arrival_turn_count=3, battle_interrupt_count=3, auto_resolved_battle_count=3, turns_completed=61 across seed ordinals 19-23; only remaining blocker is strategic_ai_long_run_full_100_seed_8_week_matrix_not_run.",
+        "Shard row detail: seed 19 -> ok=true, turns_completed=18, enemy_activity_event_count=42; seed 20 -> ok=true, turns_completed=6, enemy_activity_event_count=29; seed 21 -> ok=true, turns_completed=10, enemy_activity_event_count=51; seed 22 -> ok=true, turns_completed=9, enemy_activity_event_count=39; seed 23 -> ok=true, turns_completed=18, enemy_activity_event_count=35.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn -> ok=true.",
+        "python3 tests/validate_repo.py -> VALIDATION PASSED.",
+        "jq empty ops/progress.json -> pass.",
+        "git diff --check -> pass.",
+        "git diff -- content docs project.md -> no diff."
+      ],
+      "summary": "Completed. Seed ordinals 19-23 passed as an AI-only Native RMG shard with sustained enemy activity, tactical pressure evidence, zero behavior bugs, zero target-integrity violations, and no balance/content edits. No code defect was exposed in this shard.",
+      "notes": [
+        "Do not touch unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content.",
+        "Focused shard reports may keep the full 100-seed eight-week remaining-validation blocker by design.",
+        "The full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim."
+      ]
+    },
     {
       "id": "strategic-ai-production-shard-offset13-10184",
       "title": "Strategic AI Production Shard Offset 13",
@@ -48418,12 +48477,12 @@
     "summary": "BattleAiRules side payload lookup now derives missing player/enemy AI payloads from commander state so internal damage estimates and trait/objective scoring stay aligned on resumed or synthetic battle states without changing balance content."
   },
   "active_slice": {
-    "id": "strategic-ai-production-shard-offset13-10184",
-    "title": "Strategic AI Production Shard Offset 13",
+    "id": "strategic-ai-production-shard-offset18-10184",
+    "title": "Strategic AI Production Shard Offset 18",
     "status": "completed",
-    "updatedAt": "2026-06-01T01:58:00Z"
+    "updatedAt": "2026-06-01T02:10:00Z"
   },
-  "currentSliceUpdatedAt": "2026-06-01T01:58:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T02:10:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -51634,15 +51693,14 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-production-shard-offset13-10184",
+  "currentSlice": "strategic-ai-production-shard-offset18-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-01T01:58:00Z",
-    "currentSliceId": "strategic-ai-production-shard-offset13-10184",
-    "summary": "Offset-13 Native RMG AI shard and focused seed-18 guard-staging regression passed; full 100-seed eight-week matrix remains unrun and is not claimed complete.",
+    "updatedAt": "2026-06-01T02:10:00Z",
+    "currentSliceId": "strategic-ai-production-shard-offset18-10184",
+    "summary": "Offset-18 Native RMG AI shard over seed ordinals 19-23 passed with zero behavior bugs and zero target-integrity violations; full 100-seed eight-week matrix remains unrun and is not claimed complete.",
     "commands": [
-      "Focused seed 18 after guard-staging fix: HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=17 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> row_ok_count=1, setup_ok_count=1, behavior_bug_count=0, target_integrity_violation_count=0, enemy_activity_event_count=78, stalled_turn_count=0, target_assignment_count=27, turns_completed=18.",
-      "Offset-13 shard after guard-staging fix: HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=13 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1500 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> row_ok_count=5, setup_ok_count=5, behavior_bug_count=0, target_integrity_violation_count=0, enemy_activity_event_count=259, stalled_turn_count=0, target_assignment_count=94, natural_tactical_battle_pressure_turn_count=35, battle_interrupt_count=2, auto_resolved_battle_count=2; only remaining blocker is strategic_ai_long_run_full_100_seed_8_week_matrix_not_run.",
+      "Offset-18 shard: HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=18 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=18 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1500 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> row_ok_count=5, setup_ok_count=5, behavior_bug_count=0, target_integrity_violation_count=0, enemy_activity_event_count=196, stalled_turn_count=1, target_assignment_count=53, natural_tactical_battle_pressure_turn_count=41, natural_tactical_battle_arrival_turn_count=3, battle_interrupt_count=3, auto_resolved_battle_count=3, turns_completed=61; only remaining blocker is strategic_ai_long_run_full_100_seed_8_week_matrix_not_run.",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn -> ok=true.",
       "python3 tests/validate_repo.py -> VALIDATION PASSED.",
       "jq empty ops/progress.json -> pass.",
