@@ -6,9 +6,9 @@
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Dedicated Medium land Native RMG long-run strategic-AI matrix coverage is in progress. Medium seed ordinals 1-3 now have 14-turn generated-map evidence with no active-pressure loss, no target-integrity violations, and no live unreachable active targets; full 100-seed eight-week validation remains open. Balance content remains out of scope and production-ready AI is not claimed.",
+  "currentSliceNotes": "Dedicated Medium land Native RMG long-run strategic-AI matrix coverage is in progress. Medium seed ordinals 1-4 now have 14-turn generated-map evidence with no active-pressure loss, no target-integrity violations, and no live unreachable active targets; full 100-seed eight-week validation remains open. Balance content remains out of scope and production-ready AI is not claimed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T22:19:24Z",
+  "updatedAt": "2026-06-01T23:10:27Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39310,6 +39310,11 @@
           "command": "python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md",
           "status": "pass",
           "notes": "Repository validation passed; tracker JSON, whitespace, and no-content/docs/project/PLAN drift guards passed after recording Medium seed ordinal 3 evidence."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_remaining_validation",
+          "notes": "Medium seed ordinal 4 completed 14/14 turns on translated_rmg_template_002_v1: row_ok=1/1, setup_ok=1, enemy_activity_event_count=108, target_assignment_count=54, active_raid_count=6, site_seized_count=2, no_active_pressure_row_count=0, stalled_turn_count=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, behavior_bug_count=0. Report remains needs_attention only because full 100-seed eight-week matrix was not run."
         }
       ],
       "notes": [
@@ -39319,7 +39324,8 @@
         "Post-fix focused Medium seed ordinal 2 now keeps rebuild pressure alive through frontier relaunch/patrol activity; full 100-seed eight-week production matrix remains the next validation gap.",
         "Extended Medium seed ordinal 2 to 14 turns after adding guarded-claim reachability filtering; active pressure stays alive and live unreachable active targets are reduced to zero. Full 100-seed eight-week production matrix remains open.",
         "Medium seed ordinal 1 also passes 14-turn generated-map coverage with high enemy activity and zero live unreachable active targets; the Medium surface now has 14-turn evidence for seed ordinals 1 and 2, but full 100-seed eight-week validation remains open.",
-        "Medium seed ordinal 3 passes 14-turn generated-map coverage with active pressure and zero live unreachable active targets; Medium seed ordinals 1-3 now have 14-turn evidence, but full 100-seed eight-week validation remains open."
+        "Medium seed ordinal 3 passes 14-turn generated-map coverage with active pressure and zero live unreachable active targets; Medium seed ordinals 1-3 now have 14-turn evidence, but full 100-seed eight-week validation remains open.",
+        "Medium seed ordinal 4 passes 14-turn generated-map coverage with active pressure and zero live unreachable active targets; Medium seed ordinals 1-4 now have 14-turn evidence, but full 100-seed eight-week validation remains open."
       ]
     }
   ],
@@ -50478,24 +50484,24 @@
   "lastValidation": {
     "sliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
     "status": "passed_with_remaining_validation",
-    "updatedAt": "2026-06-01T22:19:24Z",
+    "updatedAt": "2026-06-01T23:10:27Z",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=2 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium seed ordinal 3: row_ok=1/1, turns_completed=14/14, enemy_activity_event_count=66, target_assignment_count=36, no_active_pressure_row_count=0, unreachable_active_target_turn_count=0, target_integrity_violation_count=0)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium seed ordinal 4: row_ok=1/1, turns_completed=14/14, enemy_activity_event_count=108, target_assignment_count=54, active_raid_count=6, site_seized_count=2, no_active_pressure_row_count=0, unreachable_active_target_turn_count=0, target_integrity_violation_count=0, behavior_bug_count=0)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "git diff --exit-code -- content docs project.md PLAN.md (empty)"
     ],
-    "summary": "Medium Native RMG seed ordinal 3 adds 14-turn generalization evidence with active pressure and no live unreachable targets. The slice remains in_progress because the full 100-seed eight-week Native RMG production matrix has not been run."
+    "summary": "Medium Native RMG seed ordinal 4 adds 14-turn generalization evidence with active pressure and no live unreachable targets. The slice remains in_progress because the full 100-seed eight-week Native RMG production matrix has not been run."
   },
   "active_slice": {
     "id": "strategic-ai-medium-long-run-seed-matrix-10184",
     "title": "Strategic AI Medium Long-Run Seed Matrix",
     "status": "in_progress",
-    "updatedAt": "2026-06-01T22:19:24Z",
-    "summary": "Medium seed ordinals 1-3 now pass 14-turn Native RMG strategic-AI coverage with active pressure, zero target-integrity violations, and zero live unreachable active targets. Full 100-seed eight-week Native RMG production matrix remains open."
+    "updatedAt": "2026-06-01T23:10:27Z",
+    "summary": "Medium seed ordinals 1-4 now pass 14-turn Native RMG strategic-AI coverage with active pressure, zero target-integrity violations, and zero live unreachable active targets. Full 100-seed eight-week Native RMG production matrix remains open."
   },
-  "currentSliceUpdatedAt": "2026-06-01T22:19:24Z",
+  "currentSliceUpdatedAt": "2026-06-01T23:10:27Z",
   "validationHistory": [
     {
       "status": "pass",
