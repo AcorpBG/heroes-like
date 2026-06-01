@@ -10553,6 +10553,7 @@ static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, to
 static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
 	var options = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	var map_data = session.overworld.get("map", [])
 	var encounter_x = int(encounter.get("x", 0))
 	var encounter_y = int(encounter.get("y", 0))
 	for delta in PATH_CARDINAL_DELTAS:
@@ -10563,6 +10564,24 @@ static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionDat
 		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
 			continue
 		options.append(Vector2i(nx, ny))
+	if _encounter_is_route_guard(encounter):
+		for engagement_value in OverworldRulesScript._guard_engagement_world_tiles(encounter):
+			if not (engagement_value is Vector2i):
+				continue
+			var engagement_tile: Vector2i = engagement_value
+			for delta in PATH_CARDINAL_DELTAS:
+				var tile: Vector2i = engagement_tile + delta
+				if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+					continue
+				if not (map_data is Array) or tile.y >= map_data.size():
+					continue
+				var row = map_data[tile.y]
+				if not (row is Array) or tile.x >= row.size():
+					continue
+				if not OverworldRulesScript.terrain_id_is_passable(String(row[tile.x])):
+					continue
+				if tile not in options:
+					options.append(tile)
 	if options.is_empty():
 		options.append(Vector2i(encounter_x, encounter_y))
 	return options
