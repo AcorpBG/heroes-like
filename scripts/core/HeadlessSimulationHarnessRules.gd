@@ -259,7 +259,8 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 	var subsystem_summary := _strategic_ai_baseline_subsystem_summary(strategic_cases)
 	var capability_rows := _strategic_ai_baseline_capability_rows(strategic_cases)
 	var rmg_summary := _strategic_ai_baseline_rmg_summary(rmg_cases)
-	var blocker_rows := _strategic_ai_baseline_blocker_rows(subsystem_summary, capability_rows, rmg_summary)
+	var long_run_summary := _strategic_ai_staged_long_run_summary(input_config)
+	var blocker_rows := _strategic_ai_baseline_blocker_rows(subsystem_summary, capability_rows, rmg_summary, long_run_summary)
 	var recommended_next_slices := _strategic_ai_baseline_next_slices(blocker_rows)
 	var production_ready := blocker_rows.is_empty()
 	var ok := bool(harness.get("ok", false)) and int(rmg_summary.get("case_count", 0)) > 0
@@ -274,6 +275,7 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 		"subsystem_summary": subsystem_summary,
 		"capability_rows": capability_rows,
 		"rmg_summary": rmg_summary,
+		"long_run_summary": long_run_summary,
 		"rmg_cases": rmg_cases,
 		"blocker_rows": blocker_rows,
 		"recommended_next_slices": recommended_next_slices,
@@ -299,6 +301,7 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 		"subsystem_summary": subsystem_summary,
 		"capability_rows": capability_rows,
 		"rmg_summary": rmg_summary,
+		"long_run_summary": long_run_summary,
 		"blocker_rows": blocker_rows,
 		"recommended_next_slices": recommended_next_slices,
 	})
@@ -852,7 +855,12 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 		"target_assignment_event_count": target_assignment_count,
 	}
 
-static func _strategic_ai_baseline_blocker_rows(subsystem_summary: Dictionary, capability_rows: Array, rmg_summary: Dictionary) -> Array:
+static func _strategic_ai_baseline_blocker_rows(
+	subsystem_summary: Dictionary,
+	capability_rows: Array,
+	rmg_summary: Dictionary,
+	long_run_summary: Dictionary = {}
+) -> Array:
 	var rows := []
 	if int(subsystem_summary.get("fail_count", 0)) > 0 or int(subsystem_summary.get("missing_count", 0)) > 0:
 		rows.append({
@@ -885,28 +893,154 @@ static func _strategic_ai_baseline_blocker_rows(subsystem_summary: Dictionary, c
 			"severity": "production_gap",
 			"summary": "Medium generated-map strategic AI turn health is not broadly proven.",
 		})
-	rows.append({
-		"blocker_id": "no_long_run_seed_matrix",
-		"severity": "production_gap",
-		"summary": "Focused Native RMG long-run smoke exists, but the full 8-week 100-seed strategic AI simulation matrix has not been run yet.",
-	})
+	if not bool(long_run_summary.get("ok", false)):
+		rows.append({
+			"blocker_id": "no_long_run_seed_matrix",
+			"severity": "production_gap",
+			"summary": "Focused Native RMG long-run smoke exists, but the full 8-week 100-seed strategic AI simulation matrix has not been run yet.",
+		})
 	return rows
 
 static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 	var has_small_bug := false
 	var has_medium_gap := false
+	var has_long_run_gap := false
 	for row in blocker_rows:
 		if not (row is Dictionary):
 			continue
 		has_small_bug = has_small_bug or String(row.get("blocker_id", "")) == "native_rmg_small_ai_turn_health"
 		has_medium_gap = has_medium_gap or String(row.get("blocker_id", "")) == "native_rmg_medium_ai_generalization"
+		has_long_run_gap = has_long_run_gap or String(row.get("blocker_id", "")) == "no_long_run_seed_matrix"
 	var slices := []
 	if has_small_bug:
 		slices.append("strategic-ai-rmg-small-turn-health-fix-10184")
 	if has_medium_gap:
 		slices.append("strategic-ai-rmg-medium-generalization-probe-10184")
-	slices.append("strategic-ai-long-run-seed-matrix-10184")
+	if has_long_run_gap:
+		slices.append("strategic-ai-long-run-seed-matrix-10184")
 	return slices
+
+static func _strategic_ai_staged_long_run_summary(input_config: Dictionary) -> Dictionary:
+	var progress_path := String(input_config.get("progress_path", "res://ops/progress.json"))
+	var progress := _load_json_object_from_path(progress_path)
+	if progress.is_empty():
+		return {
+			"ok": false,
+			"reason": "progress_tracker_missing_or_invalid",
+			"strict_target_seed_count": STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET,
+			"strict_target_turn_count": STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET,
+		}
+	var slices: Array = progress.get("plannedSlices", []) if progress.get("plannedSlices", []) is Array else []
+	var covered := {}
+	var completed_strict_slice_count := 0
+	var residual_hardening_complete := false
+	var residual_retired_count := 0
+	for slice_value in slices:
+		if not (slice_value is Dictionary):
+			continue
+		var slice_row: Dictionary = slice_value
+		if String(slice_row.get("id", "")) == "strategic-ai-residual-diagnostic-hardening-10184" and String(slice_row.get("status", "")) == "completed":
+			var text := _slice_evidence_text(slice_row).to_lower()
+			residual_hardening_complete = (
+				text.find("seed ordinal 95") >= 0
+				and text.find("seed ordinal 53") >= 0
+				and text.find("seed ordinals 27-28") >= 0
+				and text.find("seed ordinals 94-98") >= 0
+				and text.find("stalled_turn_count=0") >= 0
+				and text.find("unreachable_active_target_turn_count=0") >= 0
+				and text.find("target_integrity_violation_count=0") >= 0
+				and text.find("behavior_bug_count=0") >= 0
+			)
+			if residual_hardening_complete:
+				residual_retired_count = 12
+		if String(slice_row.get("status", "")) != "completed":
+			continue
+		var ordinal_range := _strategic_ai_long_run_slice_ordinal_range(String(slice_row.get("id", "")))
+		if ordinal_range.is_empty():
+			continue
+		completed_strict_slice_count += 1
+		for ordinal in range(int(ordinal_range.get("start", 0)), int(ordinal_range.get("end", 0)) + 1):
+			if ordinal >= 1 and ordinal <= STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET:
+				covered[ordinal] = true
+	var missing := []
+	for ordinal in range(1, STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET + 1):
+		if not covered.has(ordinal):
+			missing.append(ordinal)
+	return {
+		"ok": missing.is_empty() and residual_hardening_complete,
+		"strict_target_seed_count": STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET,
+		"strict_target_turn_count": STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET,
+		"strict_covered_seed_count": covered.size(),
+		"strict_missing_seed_ordinals": missing,
+		"completed_strict_slice_count": completed_strict_slice_count,
+		"residual_diagnostics_retired": residual_hardening_complete,
+		"retired_residual_diagnostic_count": residual_retired_count,
+		"retired_by_slice_id": "strategic-ai-residual-diagnostic-hardening-10184" if residual_hardening_complete else "",
+	}
+
+static func _load_json_object_from_path(path: String) -> Dictionary:
+	if path == "":
+		return {}
+	var resolved_path := path
+	if not FileAccess.file_exists(resolved_path) and not path.begins_with("res://") and not path.begins_with("user://"):
+		resolved_path = ProjectSettings.globalize_path(path)
+	if not FileAccess.file_exists(resolved_path):
+		return {}
+	var text := FileAccess.get_file_as_string(resolved_path)
+	if text.strip_edges() == "":
+		return {}
+	var parsed = JSON.parse_string(text)
+	return parsed if parsed is Dictionary else {}
+
+static func _strategic_ai_long_run_slice_ordinal_range(slice_id: String) -> Dictionary:
+	var prefix := "strategic-ai-eight-week-shard-offset"
+	if slice_id.begins_with(prefix):
+		var rest := slice_id.substr(prefix.length())
+		var offset_parse := _parse_leading_int(rest)
+		if offset_parse.is_empty():
+			return {}
+		var offset := int(offset_parse.get("value", 0))
+		var count := 1
+		var count_marker := "-count"
+		var count_index := rest.find(count_marker)
+		if count_index >= 0:
+			var count_parse := _parse_leading_int(rest.substr(count_index + count_marker.length()))
+			if not count_parse.is_empty():
+				count = max(1, int(count_parse.get("value", 1)))
+		return {"start": offset + 1, "end": offset + count}
+	prefix = "strategic-ai-production-shard-offset"
+	if slice_id.begins_with(prefix):
+		var rest := slice_id.substr(prefix.length())
+		var offset_parse := _parse_leading_int(rest)
+		if offset_parse.is_empty():
+			return {}
+		var offset := int(offset_parse.get("value", 0))
+		return {"start": offset + 1, "end": offset + 5}
+	return {}
+
+static func _parse_leading_int(text: String) -> Dictionary:
+	var digits := ""
+	for index in range(text.length()):
+		var character := text.substr(index, 1)
+		if character < "0" or character > "9":
+			break
+		digits += character
+	if digits == "":
+		return {}
+	return {"value": int(digits), "length": digits.length()}
+
+static func _slice_evidence_text(slice_row: Dictionary) -> String:
+	var parts := []
+	for key in ["summary", "notes", "validation"]:
+		var value = slice_row.get(key)
+		if value is Array:
+			for item in value:
+				parts.append(JSON.stringify(item) if item is Dictionary else String(item))
+		elif value is Dictionary:
+			parts.append(JSON.stringify(value))
+		elif value != null:
+			parts.append(String(value))
+	return " ".join(parts)
 
 static func _strategic_ai_long_run_seed_row(
 	template_case: Dictionary,

@@ -65,6 +65,16 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(rmg_summary.get("medium_probe_count", 0)) < 1:
 		_fail("Strategic AI baseline did not record a Medium generated-map generalization probe: %s" % JSON.stringify(rmg_summary))
 		return false
+	var long_run_summary: Dictionary = report.get("long_run_summary", {}) if report.get("long_run_summary", {}) is Dictionary else {}
+	if not bool(long_run_summary.get("ok", false)):
+		_fail("Strategic AI baseline did not consume completed staged long-run evidence: %s" % JSON.stringify(long_run_summary))
+		return false
+	if int(long_run_summary.get("strict_covered_seed_count", 0)) < 100:
+		_fail("Strategic AI baseline long-run evidence is missing strict seed coverage: %s" % JSON.stringify(long_run_summary))
+		return false
+	if not bool(long_run_summary.get("residual_diagnostics_retired", false)):
+		_fail("Strategic AI baseline long-run evidence did not retire residual diagnostics: %s" % JSON.stringify(long_run_summary))
+		return false
 	var blocker_rows: Array = report.get("blocker_rows", []) if report.get("blocker_rows", []) is Array else []
 	if blocker_rows.is_empty():
 		_fail("Strategic AI baseline must identify production blockers.")
@@ -72,8 +82,11 @@ func _assert_report(report: Dictionary) -> bool:
 	if not _blocker_row(blocker_rows, "no_persistent_full_hero_task_board").is_empty():
 		_fail("Strategic AI baseline should not keep the persistent hero task-board blocker after coordinated task planning landed.")
 		return false
-	if _blocker_row(blocker_rows, "no_long_run_seed_matrix").is_empty():
-		_fail("Strategic AI baseline missed the long-run seed matrix production gap.")
+	if not _blocker_row(blocker_rows, "no_long_run_seed_matrix").is_empty():
+		_fail("Strategic AI baseline should retire the long-run seed matrix gap after staged evidence adoption: %s" % JSON.stringify(blocker_rows))
+		return false
+	if _blocker_row(blocker_rows, "native_rmg_medium_ai_generalization").is_empty():
+		_fail("Strategic AI baseline must preserve the Medium generated-map generalization production gap: %s" % JSON.stringify(blocker_rows))
 		return false
 	if not _blocker_row(blocker_rows, "native_rmg_small_ai_turn_probe_coverage").is_empty() or not _blocker_row(blocker_rows, "native_rmg_small_ai_turn_health").is_empty():
 		_fail("Supported Small generated-map AI turn health should be executed and green before this baseline passes: %s" % JSON.stringify(blocker_rows))
@@ -82,8 +95,11 @@ func _assert_report(report: Dictionary) -> bool:
 		_fail("Strategic AI baseline must preserve the Medium generated-map generalization blocker.")
 		return false
 	var recommendations: Array = report.get("recommended_next_slices", []) if report.get("recommended_next_slices", []) is Array else []
-	if "strategic-ai-long-run-seed-matrix-10184" not in recommendations:
-		_fail("Strategic AI baseline did not recommend the long-run seed-matrix slice: %s" % JSON.stringify(recommendations))
+	if "strategic-ai-long-run-seed-matrix-10184" in recommendations:
+		_fail("Strategic AI baseline should not recommend the completed long-run seed-matrix slice: %s" % JSON.stringify(recommendations))
+		return false
+	if "strategic-ai-rmg-medium-generalization-probe-10184" not in recommendations:
+		_fail("Strategic AI baseline did not recommend the remaining Medium generated-map AI generalization slice: %s" % JSON.stringify(recommendations))
 		return false
 	var audit_policy: Dictionary = report.get("audit_policy", {}) if report.get("audit_policy", {}) is Dictionary else {}
 	for forbidden_true in ["manual_play_replacement", "automatic_tuning", "runtime_balance_changes", "authored_content_writeback", "campaign_adoption", "production_ready_claim"]:
