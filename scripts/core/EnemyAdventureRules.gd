@@ -16944,6 +16944,20 @@ static func _regroup_raid_at_town(
 	var events := [event]
 	if not resumed_target_event.is_empty():
 		events.append(resumed_target_event)
+	elif not bool(raid.get("raid_retired_to_rebuild", false)):
+		var assignment_actor: Dictionary = raid.duplicate(true)
+		assignment_actor["target_kind"] = "regroup"
+		assignment_actor["target_placement_id"] = String(town.get("placement_id", ""))
+		assignment_actor["target_label"] = "%s regroup" % _town_name(town)
+		assignment_actor["target_x"] = int(town.get("x", 0))
+		assignment_actor["target_y"] = int(town.get("y", 0))
+		assignment_actor["target_reason_codes"] = ["regroup_understrength", "army_consolidation", "town_defense"]
+		assignment_actor["target_public_reason"] = "regrouping understrength host"
+		assignment_actor["target_public_importance"] = "high"
+		assignment_actor["target_debug_reason"] = "regroup remains active after town resupply"
+		var regroup_assignment_event := ai_target_assignment_event(session, config, assignment_actor, {})
+		if not regroup_assignment_event.is_empty():
+			events.append(regroup_assignment_event)
 	return {"encounter": raid, "state": state, "event_message": message, "ai_events": events}
 
 static func _maybe_resupply_raid_from_nearby_town(

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "native-rmg-medium-runtime-generation-unblock-10184",
-  "currentSliceTitle": "Native RMG Medium Runtime Generation Unblock",
+  "currentSliceId": "strategic-ai-rmg-medium-generalization-probe-10184",
+  "currentSliceTitle": "Strategic AI RMG Medium Generalization Probe",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the narrow Medium land translated-profile runtime generation unblock. Next AI work is the now-unblocked Medium strategic-AI generalization probe; production-ready AI is not claimed.",
+  "currentSliceNotes": "Completed three short Medium land generated-map AI probes. Next AI work is the Medium long-run seed matrix; production-ready AI is not claimed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T22:05:00Z",
+  "updatedAt": "2026-06-01T22:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -37809,7 +37809,7 @@
     {
       "id": "strategic-ai-rmg-medium-generalization-probe-10184",
       "title": "Strategic AI RMG Medium Generalization Probe",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "Strategic AI production-readiness KPI blocker",
@@ -37826,13 +37826,16 @@
         "ops/progress.json"
       ],
       "baselineChecks": [
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
-        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/strategic_ai_staged_evidence_report.py",
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
-        "git diff --check"
+        "git diff --check",
+        "git diff --exit-code -- content docs project.md"
       ],
-      "completionCriteria": "Baseline strategic-AI KPI executes enough Medium land generated-map turn probes to satisfy the breadth target, observes enemy activity and target assignment across those Medium probes, removes the Medium generalization blocker when green, and repo validation passes without balance-content edits.",
+      "completionCriteria": "Baseline strategic-AI KPI executes at least three Medium land generated-map turn probes, observes enemy activity and target assignment across those Medium probes, retires the short Medium generalization blocker, preserves production_ready=false behind longer Medium matrix coverage, and repo validation passes without balance-content edits.",
       "nonGoals": [
         "claiming full strategic AI production readiness",
         "campaign production",
@@ -37840,20 +37843,43 @@
         "full 100-seed eight-week matrix"
       ],
       "startedAt": "2026-05-30T22:35:12Z",
-      "updatedAt": "2026-06-01T22:05:00Z",
+      "updatedAt": "2026-06-01T22:55:00Z",
       "validation": [
         {
-          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
-          "result": "blocked",
-          "summary": "Medium land generation failed before AI turn coverage with archived_legacy_native_rmg_disabled."
+          "command": "HEROES_MEDIUM_DEBUG_SEED=161803 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tmp/strategic_ai_medium_probe_debug.tscn",
+          "status": "pass",
+          "notes": "Isolated the previously failing Medium seed and confirmed regroup continuation now emits ai_target_assigned; seed 161803 reports ok=true with ai_raid_regrouped and ai_target_assigned."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "Baseline now runs 5 generated-map probes: 2 Small and 3 Medium. medium_probe_count=3, medium_ok_count=3, behavior_bug_count=0, target_assignment_event_count=23, production_ready=false, next blocker native_rmg_medium_long_run_matrix."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+          "status": "pass",
+          "notes": "Medium land package/session startup remains green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "Tactical battle AI smoke remains green."
+        },
+        {
+          "command": "python3 tests/strategic_ai_staged_evidence_report.py",
+          "status": "pass",
+          "notes": "Existing strict Small 100-seed staged evidence remains green."
         }
       ],
       "unblockedBy": "native-rmg-medium-runtime-generation-unblock-10184",
       "unblockedAt": "2026-06-01T22:05:00Z",
       "notes": [
-        "Medium setup is no longer blocked by archived_legacy_native_rmg_disabled.",
-        "The baseline now proves one Medium generated-map AI probe; this slice remains pending for broader Medium AI generalization evidence."
-      ]
+        "Added two additional exact Medium land probe seeds for translated_rmg_template_002_v1.",
+        "Fixed a generated-map strategic AI readability gap where understrength regroup continuation could emit ai_raid_regrouped without a public ai_target_assigned event.",
+        "No unit, spell, economy, town-cost, authored scenario, content, docs, or project charter files were changed."
+      ],
+      "completedAt": "2026-06-01T22:55:00Z",
+      "summary": "Completed. The strategic AI baseline now executes three Medium land Native RMG probes successfully, retires the short Medium generalization blocker, and preserves production_ready=false behind longer Medium seed-matrix coverage."
     },
     {
       "id": "strategic-ai-commander-risk-tolerance-10184",
@@ -39173,6 +39199,49 @@
         }
       ],
       "summary": "Completed. The exact translated Medium 72x72 one-level land profile now uses a narrow native runtime generation path, validates package startup, and lets the strategic AI baseline execute real Medium turns while keeping broader Medium AI generalization open."
+    },
+    {
+      "id": "strategic-ai-medium-long-run-seed-matrix-10184",
+      "title": "Strategic AI Medium Long-Run Seed Matrix",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "strategic-ai-rmg-medium-generalization-probe-10184 remaining production blocker",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Run longer Medium land Native RMG strategic-AI seed-matrix coverage now that short Medium generated-map probes are green.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Medium Native RMG strategic-AI long-run matrix command with explicit Medium template cases, seed count, and turn count",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "A dedicated Medium land Native RMG long-run strategic-AI matrix completes with setup_ok and turn health green across the selected Medium seed breadth, records target assignments and enemy activity, updates the baseline blocker state from Medium long-run pending to the next true production gap, and validation passes without balance-content edits.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "campaign production",
+        "water or underground Medium parity",
+        "full production-ready AI claim from a narrow matrix"
+      ],
+      "createdAt": "2026-06-01T22:55:00Z",
+      "updatedAt": "2026-06-01T22:55:00Z",
+      "notes": [
+        "Short three-seed Medium probes are now green; this slice is for longer-duration Medium behavior evidence."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -50346,14 +50415,14 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "native-rmg-medium-runtime-generation-unblock-10184",
-    "title": "Native RMG Medium Runtime Generation Unblock",
+    "id": "strategic-ai-rmg-medium-generalization-probe-10184",
+    "title": "Strategic AI RMG Medium Generalization Probe",
     "status": "completed",
-    "updatedAt": "2026-06-01T22:05:00Z",
-    "completedAt": "2026-06-01T22:05:00Z",
-    "summary": "Exact Medium land translated-profile generation now validates and starts package-backed strategic AI probes; broader Medium AI generalization remains pending."
+    "updatedAt": "2026-06-01T22:55:00Z",
+    "completedAt": "2026-06-01T22:55:00Z",
+    "summary": "Three Medium land generated-map strategic-AI probes are green; longer Medium matrix coverage remains pending."
   },
-  "currentSliceUpdatedAt": "2026-06-01T22:05:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T22:55:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53564,7 +53633,7 @@
       }
     }
   ],
-  "currentSlice": "native-rmg-medium-runtime-generation-unblock-10184",
+  "currentSlice": "strategic-ai-rmg-medium-generalization-probe-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",
