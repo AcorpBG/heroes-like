@@ -22,6 +22,7 @@ const TRACKED_RESOURCES := [
 	"memory_salt",
 ]
 const ENEMY_TOWN_DEVELOPMENT_MIN_COMPLETION_DAY := 24
+const REBUILD_PRESSURE_LAUNCH_WINDOW_DAYS := 5
 
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
@@ -79,6 +80,12 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 					existing_state.get("commander_roster", [])
 				),
 			}
+			var rebuild_pressure_request := _normalize_rebuild_pressure_request(
+				existing_state.get("rebuild_pressure_request", {}),
+				int(session.day)
+			)
+			if not rebuild_pressure_request.is_empty():
+				normalized_state["rebuild_pressure_request"] = rebuild_pressure_request
 			var known_world_memory := EnemyAdventureRulesScript.normalize_enemy_known_world_memory(
 				existing_state.get("known_world_memory", {}),
 				int(session.day)
@@ -94,6 +101,57 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 	session.overworld["enemy_states"] = normalized_states
 	EnemyAdventureRulesScript.normalize_raid_armies(session)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
+
+static func _normalize_rebuild_pressure_request(value: Variant, current_day: int) -> Dictionary:
+	if not (value is Dictionary):
+		return {}
+	var source: Dictionary = value
+	var requested_day: int = max(0, int(source.get("requested_day", 0)))
+	if requested_day <= 0:
+		return {}
+	if current_day > 0 and current_day - requested_day > REBUILD_PRESSURE_LAUNCH_WINDOW_DAYS:
+		return {}
+	return {
+		"requested_day": requested_day,
+		"origin_town_id": String(source.get("origin_town_id", "")),
+		"commander_id": String(source.get("commander_id", "")),
+		"reason": String(source.get("reason", "command_rebuild")),
+	}
+
+static func _recent_rebuild_pressure_request(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	var request := _normalize_rebuild_pressure_request(
+		state.get("rebuild_pressure_request", {}),
+		int(session.day)
+	)
+	if not request.is_empty():
+		return request
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if not bool(encounter.get("raid_retired_to_rebuild", false)):
+			continue
+		var retired_day: int = max(0, int(encounter.get("retired_to_rebuild_day", 0)))
+		if retired_day <= 0:
+			continue
+		if int(session.day) - retired_day > REBUILD_PRESSURE_LAUNCH_WINDOW_DAYS:
+			continue
+		var commander_state = encounter.get("enemy_commander_state", {})
+		return {
+			"requested_day": retired_day,
+			"origin_town_id": String(encounter.get("retired_to_rebuild_town_id", "")),
+			"commander_id": String(commander_state.get("roster_hero_id", "")) if commander_state is Dictionary else "",
+			"reason": String(encounter.get("retired_to_rebuild_reason", "retired_pressure_host")),
+		}
+	return {}
 
 static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
 	if not (value is Dictionary):
@@ -928,6 +986,13 @@ static func _run_empire_cycle(
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages, "events": events}
 
+	var rebuild_reserve_result := _mobilize_rebuild_pressure_reserves(session, config, faction_id, state)
+	state = rebuild_reserve_result.get("state", state)
+	_append_event_records(events, rebuild_reserve_result.get("events", []))
+	var rebuild_reserve_message := String(rebuild_reserve_result.get("message", ""))
+	if rebuild_reserve_message != "":
+		messages.append(rebuild_reserve_message)
+
 	var launched_placement_ids := []
 	while _can_launch_raid(session, config, state, faction_id):
 		var spawn_result = _spawn_raid(session, config, state)
@@ -1682,24 +1747,146 @@ static func _mobilize_surplus_garrison_for_field_need(
 				)
 		if accepted <= 0:
 			continue
-		town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
-		surplus_strength -= accepted * unit_strength
-		mobilized_batches += 1
-		var event_destination := destination_breakdown.duplicate(true)
-		var reason_codes := _normalize_string_array(event_destination.get("reason_codes", []))
-		if "surplus_garrison_mobilization" not in reason_codes:
-			reason_codes.append("surplus_garrison_mobilization")
-		event_destination["reason_codes"] = reason_codes
-		var selected_reserve := {
-			"unit_id": unit_id,
-			"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
-			"recruit_count": accepted,
-			"destination": event_destination,
-		}
-		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_reserve)
-		if not destination_event.is_empty():
-			events.append(destination_event)
+			town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
+			surplus_strength -= accepted * unit_strength
+			mobilized_batches += 1
+			var event_destination := destination_breakdown.duplicate(true)
+			var reason_codes := _normalize_string_array(event_destination.get("reason_codes", []))
+			if "surplus_garrison_mobilization" not in reason_codes:
+				reason_codes.append("surplus_garrison_mobilization")
+			event_destination["reason_codes"] = reason_codes
+			var selected_reserve := {
+				"unit_id": unit_id,
+				"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+				"recruit_count": accepted,
+				"destination": event_destination,
+			}
+			var destination_event := ai_town_recruit_destination_event(session, config, town, selected_reserve)
+			if not destination_event.is_empty():
+				events.append(destination_event)
 	return {"town": town, "mobilized_batches": mobilized_batches, "events": events}
+
+static func _mobilize_rebuild_pressure_reserves(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	state: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or active_raid_count(session, faction_id) > 0:
+		return {"state": state, "message": "", "events": []}
+	var request := _recent_rebuild_pressure_request(session, faction_id, state)
+	if request.is_empty():
+		return {"state": state, "message": "", "events": []}
+	var rebuild_target := _best_commander_rebuild_target(session, config, faction_id)
+	if rebuild_target.is_empty():
+		return {"state": state, "message": "", "events": []}
+	var roster_hero_id := String(rebuild_target.get("roster_hero_id", request.get("commander_id", "")))
+	if roster_hero_id == "":
+		return {"state": state, "message": "", "events": []}
+	var need_remaining: int = max(0, int(rebuild_target.get("need", 0)))
+	if need_remaining <= 0:
+		return {"state": state, "message": "", "events": []}
+	var towns = session.overworld.get("towns", [])
+	if not (towns is Array):
+		return {"state": state, "message": "", "events": []}
+	var events := []
+	var mobilized_batches := 0
+	var mobilized_strength := 0
+	for index in range(towns.size()):
+		if need_remaining <= 0:
+			break
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
+			continue
+		var defense_target: int = _rebuild_pressure_town_reserve_floor(session, town, config, faction_id)
+		var current_defense: int = _army_strength(town.get("garrison", []))
+		var surplus_strength: int = current_defense - defense_target
+		if surplus_strength <= 0:
+			continue
+		var breakdown := {
+			"type": "rebuild",
+			"decision_rule": "rebuild_pressure_reserve_mobilization",
+			"reason_codes": ["commander_rebuild", "rebuild_pressure_reserve_mobilization"],
+		}
+		var stacks: Array = town.get("garrison", []) if town.get("garrison", []) is Array else []
+		var candidates := []
+		for stack_value in stacks:
+			if not (stack_value is Dictionary):
+				continue
+			var stack: Dictionary = stack_value
+			var unit_id := String(stack.get("unit_id", ""))
+			var count: int = max(0, int(stack.get("count", 0)))
+			if unit_id == "" or count <= 0:
+				continue
+			candidates.append({"unit_id": unit_id, "count": count})
+		candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			var a_priority := _recruit_priority_for_destination(String(a.get("unit_id", "")), config, faction_id, breakdown)
+			var b_priority := _recruit_priority_for_destination(String(b.get("unit_id", "")), config, faction_id, breakdown)
+			if is_equal_approx(a_priority, b_priority):
+				return String(a.get("unit_id", "")) < String(b.get("unit_id", ""))
+			return a_priority > b_priority
+		)
+		for candidate in candidates:
+			if need_remaining <= 0 or surplus_strength <= 0:
+				break
+			var unit_id := String(candidate.get("unit_id", ""))
+			var available_count: int = max(0, int(candidate.get("count", 0)))
+			var unit_strength: int = max(1, _unit_strength_for_reinforcement(unit_id))
+			var surplus_limited_count: int = min(available_count, int(floor(float(surplus_strength) / float(unit_strength))))
+			if surplus_limited_count <= 0:
+				continue
+			var need_limited_count: int = max(1, int(ceili(float(need_remaining) / float(unit_strength))))
+			var requested_count: int = min(surplus_limited_count, need_limited_count)
+			var accepted := EnemyAdventureRulesScript.reinforce_commander_roster_army(
+				session,
+				faction_id,
+				roster_hero_id,
+				unit_id,
+				requested_count,
+				String(rebuild_target.get("base_encounter_id", "")),
+				int(rebuild_target.get("target_strength", 0))
+			)
+			if accepted <= 0:
+				continue
+			town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
+			var strength_delta: int = accepted * unit_strength
+			surplus_strength -= strength_delta
+			need_remaining = max(0, need_remaining - strength_delta)
+			mobilized_strength += strength_delta
+			mobilized_batches += 1
+			var event_destination := breakdown.duplicate(true)
+			event_destination["roster_hero_id"] = roster_hero_id
+			event_destination["commander_label"] = String(ContentService.get_hero(roster_hero_id).get("name", roster_hero_id))
+			event_destination["rebuild_need"] = max(0, need_remaining)
+			var selected_reserve := {
+				"unit_id": unit_id,
+				"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+				"recruit_count": accepted,
+				"destination": event_destination,
+			}
+			var destination_event := ai_town_recruit_destination_event(session, config, town, selected_reserve)
+			if not destination_event.is_empty():
+				events.append(destination_event)
+		towns[index] = town
+	session.overworld["towns"] = towns
+	var latest_state := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	if latest_state.is_empty():
+		latest_state = state
+	if mobilized_batches <= 0:
+		return {"state": latest_state, "message": "", "events": events}
+	return {
+		"state": latest_state,
+		"message": "%s mobilizes %d reserve batch%s into command rebuild." % [
+			String(config.get("label", faction_id)),
+			mobilized_batches,
+			"" if mobilized_batches == 1 else "es",
+		],
+		"events": events,
+		"mobilized_batches": mobilized_batches,
+		"mobilized_strength": mobilized_strength,
+	}
 
 static func _choose_recruit_destination(
 	session: SessionStateStoreScript.SessionData,
@@ -1715,7 +1902,12 @@ static func _recruit_destination_from_breakdown(breakdown: Dictionary) -> Dictio
 		"raid":
 			return {"type": "raid", "index": int(breakdown.get("index", -1))}
 		"rebuild":
-			return {"type": "rebuild", "roster_hero_id": String(breakdown.get("roster_hero_id", ""))}
+			return {
+				"type": "rebuild",
+				"roster_hero_id": String(breakdown.get("roster_hero_id", "")),
+				"base_encounter_id": String(breakdown.get("base_encounter_id", "")),
+				"target_strength": int(breakdown.get("target_strength", 0)),
+			}
 		"planned":
 			return {
 				"type": "planned",
@@ -1757,6 +1949,29 @@ static func _choose_recruit_destination_breakdown(
 	rebuild_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.18
 	var planned_score = float(best_planned.get("score", 0.0))
 	var emergency_score = float(best_emergency.get("score", 0.0))
+	var rebuild_pressure_request_active := not _recent_rebuild_pressure_request(session, faction_id, _latest_enemy_state(session, faction_id, {})).is_empty()
+	if (
+		rebuild_pressure_request_active
+		and not best_rebuild.is_empty()
+		and current_defense >= _rebuild_pressure_town_reserve_floor(session, town, config, faction_id)
+	):
+		return _recruit_destination_report_payload(
+			"rebuild",
+			"rebuild_pressure_relaunch_preparation",
+			"rebuilds command",
+			["commander_rebuild", "rebuild_pressure_relaunch"],
+			"recent pressure host retired to rebuild and needs a launch-ready replacement",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front,
+			planned_score,
+			best_planned
+		)
 	if current_defense < int(round(float(defense_target) * 0.72)):
 		return _recruit_destination_report_payload(
 			"garrison",
@@ -1967,6 +2182,8 @@ static func _recruit_destination_report_payload(
 		payload["commander_label"] = String(ContentService.get_hero(String(best_rebuild.get("roster_hero_id", ""))).get("name", payload["roster_hero_id"]))
 		payload["rebuild_need"] = int(best_rebuild.get("need", 0))
 		payload["commander_status"] = String(best_rebuild.get("status", ""))
+		payload["base_encounter_id"] = String(best_rebuild.get("base_encounter_id", ""))
+		payload["target_strength"] = int(best_rebuild.get("target_strength", 0))
 	elif destination_type == "planned":
 		payload["roster_hero_id"] = String(best_planned.get("roster_hero_id", ""))
 		payload["commander_label"] = String(ContentService.get_hero(String(best_planned.get("roster_hero_id", ""))).get("name", payload["roster_hero_id"]))
@@ -2275,6 +2492,28 @@ static func _raid_reinforcement_target_strength(encounter: Dictionary, current_s
 		desired = max(desired, int(ceili(float(threat_strength) * 0.92)))
 	return desired
 
+static func _rebuild_pressure_town_reserve_floor(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	config: Dictionary,
+	faction_id: String
+) -> int:
+	var desired: int = max(0, _desired_town_strength(session, town, config))
+	var reserve: int = max(35, int(round(float(desired) * 0.55)))
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	if (
+		bool(front_state.get("active", false))
+		and String(front_state.get("faction_id", faction_id)) == faction_id
+		and String(front_state.get("mode", "")) in ["stabilizing", "defend", "retake"]
+	):
+		reserve = max(reserve, int(round(float(desired) * 0.75)))
+	match String(OverworldRulesScript.town_strategic_role(town)):
+		"capital":
+			reserve += 25
+		"stronghold":
+			reserve += 15
+	return min(desired, reserve)
+
 static func _raid_has_nearby_player_threat_recovery_need(encounter: Dictionary, current_strength: int) -> bool:
 	if encounter.is_empty():
 		return false
@@ -2307,7 +2546,16 @@ static func _best_commander_rebuild_target(
 		if commander_status == EnemyAdventureRulesScript.COMMANDER_STATUS_RECOVERING and int(entry_value.get("recovery_day", 0)) > int(session.day):
 			continue
 		var continuity := EnemyAdventureRulesScript.commander_army_continuity(entry_value)
-		var need: int = max(0, int(continuity.get("rebuild_need", 0)))
+		var base_strength: int = max(0, int(continuity.get("base_strength", 0)))
+		var current_strength: int = max(0, int(continuity.get("current_strength", 0)))
+		var pressure_ready_strength: int = max(
+			base_strength,
+			int(ceili(float(base_strength) * 1.15))
+		)
+		var need: int = max(
+			0,
+			max(int(continuity.get("rebuild_need", 0)), pressure_ready_strength - current_strength)
+		)
 		if need <= 0:
 			continue
 		var score := float(need)
@@ -2323,6 +2571,8 @@ static func _best_commander_rebuild_target(
 				"roster_hero_id": String(entry_value.get("roster_hero_id", "")),
 				"status": commander_status,
 				"need": need,
+				"base_encounter_id": String(continuity.get("encounter_id", "")),
+				"target_strength": pressure_ready_strength,
 				"score": score,
 			}
 	return best
@@ -2402,11 +2652,13 @@ static func _can_launch_raid(
 		return false
 	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(session, config, faction_id):
 		return false
-	if not EnemyAdventureRulesScript.has_available_raid_commander(
+	var rebuild_pressure_request := _recent_rebuild_pressure_request(session, faction_id, state)
+	var has_available_commander := EnemyAdventureRulesScript.has_available_raid_commander(
 		session,
 		faction_id,
 		state.get("commander_roster", [])
-	):
+	)
+	if not has_available_commander and rebuild_pressure_request.is_empty():
 		return false
 	var encounter_pool = config.get("raid_encounter_ids", [])
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
@@ -2414,15 +2666,58 @@ static func _can_launch_raid(
 	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
 	var emergency_defense_plan := _emergency_defense_launch_ready_report(session, config, state, faction_id)
 	var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
+	var rebuild_pressure_plan := _rebuild_pressure_launch_ready_report(session, config, state, faction_id)
 	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
 	if (
 		int(state.get("pressure", 0)) < raid_threshold
 		and launch_ready_plan.is_empty()
 		and emergency_defense_plan.is_empty()
 		and active_front_support_plan.is_empty()
+		and rebuild_pressure_plan.is_empty()
 	):
 		return false
-	return not _best_open_spawn_point(session, config, state, faction_id).is_empty()
+	var best_spawn := _best_open_spawn_point(session, config, state, faction_id)
+	return not best_spawn.is_empty()
+
+static func _rebuild_pressure_launch_ready_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or faction_id == "":
+		return {}
+	if active_raid_count(session, faction_id) > 0:
+		return {}
+	var request := _recent_rebuild_pressure_request(session, faction_id, state)
+	if request.is_empty():
+		return {}
+	var origin_town_id := String(request.get("origin_town_id", ""))
+	if origin_town_id != "" and not _faction_still_owns_town(session, faction_id, origin_town_id):
+		return {}
+	if not EnemyAdventureRulesScript.has_available_raid_commander(
+		session,
+		faction_id,
+		state.get("commander_roster", [])
+	) and not _has_rebuild_pressure_scout_commander(session, faction_id, state):
+		return {}
+	var encounter_pool = config.get("raid_encounter_ids", [])
+	if not (encounter_pool is Array) or encounter_pool.is_empty():
+		return {}
+	return request
+
+static func _has_rebuild_pressure_scout_commander(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary
+) -> bool:
+	return not _rebuild_pressure_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id),
+		state.get("commander_roster", [])
+	).is_empty()
 
 static func _emergency_defense_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
@@ -2711,6 +3006,8 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 	var target_suffix = ""
 	if String(raid.get("target_label", "")) != "":
 		target_suffix = " toward %s" % String(raid.get("target_label", ""))
+	if state.has("rebuild_pressure_request"):
+		state.erase("rebuild_pressure_request")
 	return {
 		"ok": true,
 		"placement_id": placement_id,
@@ -3818,6 +4115,7 @@ static func _spawn_point_candidate(
 ) -> Dictionary:
 	if faction_id == "" or point.is_empty():
 		return {}
+	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 	var emergency_defense_candidate := _emergency_defense_spawn_candidate_for_point(
 		session,
 		config,
@@ -3829,39 +4127,40 @@ static func _spawn_point_candidate(
 	)
 	if not emergency_defense_candidate.is_empty():
 		return emergency_defense_candidate
-	var ready_saved_candidate := _ready_saved_task_spawn_candidate_for_point(
-		session,
-		config,
-		state,
-		faction_id,
-		point,
-		occupied_commander_ids,
-		spawn_order
-	)
-	if not ready_saved_candidate.is_empty():
-		return ready_saved_candidate
-	var active_front_support_candidate := _active_front_support_spawn_candidate_for_point(
-		session,
-		config,
-		state,
-		faction_id,
-		point,
-		occupied_commander_ids,
-		spawn_order
-	)
-	if not active_front_support_candidate.is_empty():
-		return active_front_support_candidate
-	var saved_candidate := _saved_task_spawn_candidate_for_point(
-		session,
-		config,
-		state,
-		faction_id,
-		point,
-		occupied_commander_ids,
-		spawn_order
-	)
-	if not saved_candidate.is_empty():
-		return saved_candidate
+	if not rebuild_pressure_active:
+		var ready_saved_candidate := _ready_saved_task_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
+		if not ready_saved_candidate.is_empty():
+			return ready_saved_candidate
+		var active_front_support_candidate := _active_front_support_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
+		if not active_front_support_candidate.is_empty():
+			return active_front_support_candidate
+		var saved_candidate := _saved_task_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
+		if not saved_candidate.is_empty():
+			return saved_candidate
 	var fresh_candidate := _fresh_spawn_target_candidate_for_point(
 		session,
 		config,
@@ -4040,7 +4339,7 @@ static func _fresh_spawn_target_candidate_for_point(
 					spawn_order
 				)
 				return _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate)
-		return _exploration_spawn_candidate_for_point(
+		var exploration_candidate := _exploration_spawn_candidate_for_point(
 			session,
 			config,
 			state,
@@ -4049,7 +4348,25 @@ static func _fresh_spawn_target_candidate_for_point(
 			occupied_commander_ids,
 			spawn_order
 		)
-	var commander_candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		if not exploration_candidate.is_empty():
+			return exploration_candidate
+		return _fallback_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
+	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+	var commander_candidates := _rebuild_pressure_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	) if rebuild_pressure_active else EnemyAdventureRulesScript._raid_commander_spawn_candidates(
 		session,
 		faction_id,
 		int(state.get("commander_counter", 0)),
@@ -4078,11 +4395,347 @@ static func _fresh_spawn_target_candidate_for_point(
 			"fresh_target",
 			spawn_order + int(commander_value.get("rotation_order", 0))
 		)
+		if (
+			String(candidate.get("spawn_plan_target_kind", "")) == "regroup"
+			and not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+		):
+			var sweep_plan := _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+			if sweep_plan.is_empty():
+				continue
+			candidate = _spawn_point_candidate_from_plan(
+				point,
+				sweep_plan,
+				roster_hero_id,
+				"rebuild_pressure_recon",
+				spawn_order + int(commander_value.get("rotation_order", 0))
+			)
 		candidate["spawn_plan_commander_fit_bonus"] = int(fitted_targets[0].get("commander_fit_bonus", 0))
 		candidate["spawn_plan_commander_fit_profile"] = String(fitted_targets[0].get("commander_fit_profile", ""))
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		if (
+			not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+			and not _spawn_candidate_ready_without_immediate_regroup(
+				session,
+				config,
+				state,
+				faction_id,
+				candidate,
+				occupied_commander_ids
+			)
+		):
+			continue
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
+	if best.is_empty():
+		return _fallback_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
+	return best
+
+static func _fallback_spawn_candidate_for_point(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	spawn_order: int
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	if _recent_rebuild_pressure_request(session, faction_id, state).is_empty():
+		return {}
+	var commander_candidates := _rebuild_pressure_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
+	if commander_candidates.is_empty():
+		return {}
+	var best := {}
+	for commander_value in commander_candidates:
+		if not (commander_value is Dictionary):
+			continue
+		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		var plan := EnemyAdventureRulesScript.choose_target(
+			session,
+			config,
+			{"x": int(point.get("x", 0)), "y": int(point.get("y", 0))},
+			_commander_roster_entry_for_launch(session, faction_id, roster_hero_id, state)
+		)
+		if plan.is_empty() or String(plan.get("target_kind", "")) == "regroup":
+			plan = _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+		if plan.is_empty():
+			continue
+		var candidate := _spawn_point_candidate_from_plan(
+			point,
+			plan,
+			roster_hero_id,
+			"fallback_target",
+			spawn_order + int(commander_value.get("rotation_order", 0))
+		)
+		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 1500
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		if not _spawn_candidate_ready_without_immediate_regroup(
+			session,
+			config,
+			state,
+			faction_id,
+			candidate,
+			occupied_commander_ids
+		):
+			continue
+		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _rebuild_pressure_commander_spawn_candidates(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	preferred_index: int,
+	occupied_commander_ids: Dictionary,
+	commander_roster: Variant
+) -> Array:
+	var candidates := []
+	if session == null or faction_id == "":
+		return candidates
+	var hero_ids: Array = EnemyAdventureRulesScript._faction_commander_ids(faction_id)
+	if hero_ids.is_empty():
+		return candidates
+	var occupied: Dictionary = occupied_commander_ids
+	if occupied.is_empty():
+		occupied = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+		session,
+		faction_id,
+		commander_roster if commander_roster is Array else EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
+	)
+	var roster_by_id := {}
+	for entry_value in roster:
+		if entry_value is Dictionary:
+			roster_by_id[String(entry_value.get("roster_hero_id", ""))] = entry_value
+	var start_index: int = posmod(preferred_index, hero_ids.size())
+	for offset in range(hero_ids.size()):
+		var candidate_id := String(hero_ids[(start_index + offset) % hero_ids.size()])
+		if candidate_id == "" or occupied.has(candidate_id):
+			continue
+		var entry: Dictionary = roster_by_id.get(candidate_id, {})
+		var status := EnemyAdventureRulesScript._normalize_commander_status(
+			entry.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)
+		)
+		if status == EnemyAdventureRulesScript.COMMANDER_STATUS_ACTIVE:
+			continue
+		if status == EnemyAdventureRulesScript.COMMANDER_STATUS_RECOVERING and int(entry.get("recovery_day", 0)) > int(session.day):
+			continue
+		var continuity := EnemyAdventureRulesScript.commander_army_continuity(entry)
+		if not continuity.is_empty() and int(continuity.get("current_strength", 0)) <= 0:
+			continue
+		candidates.append({"roster_hero_id": candidate_id, "rotation_order": offset})
+	return candidates
+
+static func _rebuild_pressure_exploration_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	point: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	var origin := Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
+	var plan := EnemyAdventureRulesScript._no_known_target_frontier_sweep_plan(session, config, origin)
+	if plan.is_empty():
+		plan = EnemyAdventureRulesScript._no_known_target_exploration_plan(session, config, origin)
+	if plan.is_empty():
+		plan = _rebuild_pressure_frontier_sweep_plan(session, config, faction_id, point)
+	if plan.is_empty():
+		plan = _rebuild_pressure_local_patrol_plan(session, config, faction_id, point)
+	if plan.is_empty():
+		return {}
+	var updated := plan.duplicate(true)
+	var reason_codes := _normalize_string_array(updated.get("target_reason_codes", []))
+	for code in ["rebuild_pressure_relaunch", "frontier_scouting", "regroup_rejected"]:
+		if code not in reason_codes:
+			reason_codes.append(code)
+	updated["target_reason_codes"] = reason_codes
+	updated["target_public_reason"] = "reopening frontier pressure"
+	updated["target_public_importance"] = "medium"
+	updated["target_debug_reason"] = "rebuild pressure relaunch rejected passive regroup and selected reachable frontier scouting"
+	return updated
+
+static func _rebuild_pressure_local_patrol_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	point: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	var origin := Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	if map_size.x <= 0 or map_size.y <= 0:
+		return {}
+	var best := {}
+	var best_score := -999999
+	for radius in range(1, 9):
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if abs(dx) + abs(dy) != radius:
+					continue
+				var tile := Vector2i(origin.x + dx, origin.y + dy)
+				if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+					continue
+				var route_distance := EnemyAdventureRulesScript._path_distance(session, origin, [tile], "", faction_id)
+				if route_distance < 1 or route_distance >= 9999:
+					continue
+				var score: int = 90 - (route_distance * 6) - abs(dx)
+				var target_id := "explore:%d:%d" % [tile.x, tile.y]
+				if (
+					best.is_empty()
+					or score > best_score
+					or (
+						score == best_score
+						and target_id < String(best.get("target_placement_id", ""))
+					)
+				):
+					best_score = score
+					best = {
+						"target_kind": "explore",
+						"target_placement_id": target_id,
+						"target_label": "Frontier patrol %d,%d" % [tile.x, tile.y],
+						"target_x": tile.x,
+						"target_y": tile.y,
+						"goal_x": tile.x,
+						"goal_y": tile.y,
+						"goal_distance": route_distance,
+						"priority": max(1, score),
+						"target_reason_codes": ["rebuild_pressure_relaunch", "frontier_scouting", "local_patrol"],
+						"target_public_reason": "reopening frontier pressure",
+						"target_public_importance": "medium",
+						"target_debug_reason": "rebuild pressure had no known target and selected a reachable local patrol tile",
+					}
+		if not best.is_empty():
+			return best
+	return best
+
+static func _spawn_candidate_ready_without_immediate_regroup(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	candidate: Dictionary,
+	occupied_commander_ids: Dictionary
+) -> bool:
+	if session == null or faction_id == "" or candidate.is_empty():
+		return false
+	var target_kind := String(candidate.get("spawn_plan_target_kind", ""))
+	var target_id := String(candidate.get("spawn_plan_target_id", ""))
+	var roster_hero_id := String(candidate.get("roster_hero_id", ""))
+	if target_kind == "" or target_id == "" or roster_hero_id == "":
+		return false
+	var encounter_id := String(candidate.get("spawn_plan_encounter_id", _primary_raid_encounter_id(config)))
+	if encounter_id == "":
+		return false
+	var probe := {
+		"placement_id": "__rebuild_pressure_launch_probe:%s" % roster_hero_id,
+		"encounter_id": encounter_id,
+		"x": int(candidate.get("x", 0)),
+		"y": int(candidate.get("y", 0)),
+		"difficulty": "pressure",
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": int(candidate.get("spawn_plan_goal_distance", 9999)),
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+		"target_label": String(candidate.get("spawn_plan_target_label", target_id)),
+		"target_x": int(candidate.get("spawn_plan_target_x", candidate.get("x", 0))),
+		"target_y": int(candidate.get("spawn_plan_target_y", candidate.get("y", 0))),
+		"goal_x": int(candidate.get("spawn_plan_goal_x", candidate.get("spawn_plan_target_x", candidate.get("x", 0)))),
+		"goal_y": int(candidate.get("spawn_plan_goal_y", candidate.get("spawn_plan_target_y", candidate.get("y", 0)))),
+		"target_reason_codes": candidate.get("spawn_plan_reason_codes", []),
+	}
+	probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+		probe,
+		roster_hero_id,
+		faction_id,
+		session,
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
+	probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+	if not EnemyAdventureRulesScript._raid_target_valid(session, probe):
+		return false
+	if target_kind == "explore":
+		return true
+	return not EnemyAdventureRulesScript.raid_regroup_needed(probe, config, faction_id)
+
+static func _rebuild_pressure_frontier_sweep_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	point: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty():
+		return {}
+	var origin := Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	if map_size.x <= 0 or map_size.y <= 0:
+		return {}
+	var best := {}
+	var best_score := -999999
+	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
+	for y in range(0, map_size.y, step):
+		for x in range(0, map_size.x, step):
+			var tile := Vector2i(x, y)
+			var direct_distance: int = abs(tile.x - origin.x) + abs(tile.y - origin.y)
+			if direct_distance < 1 or direct_distance > 90:
+				continue
+			var route_distance := EnemyAdventureRulesScript._path_distance(session, origin, [tile], "", faction_id)
+			if route_distance < 1 or route_distance > 90 or route_distance >= 9999:
+				continue
+			var center_score: int = 18 - abs(int(map_size.x / 2) - tile.x) - abs(int(map_size.y / 2) - tile.y)
+			var distance_score: int = 28 - abs(route_distance - 8)
+			var score: int = 160 + center_score + distance_score - int(floor(float(direct_distance) / 2.0))
+			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			if (
+				best.is_empty()
+				or score > best_score
+				or (
+					score == best_score
+					and route_distance < int(best.get("goal_distance", 9999))
+				)
+				or (
+					score == best_score
+					and route_distance == int(best.get("goal_distance", 9999))
+					and target_id < String(best.get("target_placement_id", ""))
+				)
+			):
+				best_score = score
+				best = {
+					"target_kind": "explore",
+					"target_placement_id": target_id,
+					"target_label": "Frontier sweep %d,%d" % [tile.x, tile.y],
+					"target_x": tile.x,
+					"target_y": tile.y,
+					"goal_x": tile.x,
+					"goal_y": tile.y,
+					"goal_distance": route_distance,
+					"priority": max(1, score),
+					"target_reason_codes": ["rebuild_pressure_relaunch", "frontier_scouting", "search_contact"],
+					"target_public_reason": "reopening frontier pressure",
+					"target_public_importance": "medium",
+					"target_debug_reason": "rebuild pressure relaunch rejected passive regroup and selected reachable frontier sweep",
+				}
 	return best
 
 static func _exploration_spawn_candidate_for_point(
@@ -4101,6 +4754,14 @@ static func _exploration_spawn_candidate_for_point(
 		config,
 		Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
 	)
+	var source := "exploration"
+	if plan.is_empty():
+		plan = EnemyAdventureRulesScript._no_known_target_frontier_sweep_plan(
+			session,
+			config,
+			Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
+		)
+		source = "frontier_sweep"
 	if plan.is_empty():
 		return {}
 	var commander_candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
@@ -4123,7 +4784,7 @@ static func _exploration_spawn_candidate_for_point(
 			point,
 			plan,
 			roster_hero_id,
-			"exploration",
+			source,
 			spawn_order + int(commander_value.get("rotation_order", 0))
 		)
 		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + _exploration_commander_spawn_bonus(session, faction_id, roster_hero_id)
@@ -4709,6 +5370,19 @@ static func _default_spawn_points_for_faction(session: SessionStateStoreScript.S
 
 static func _owned_town_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	return _owned_town_entries(session, faction_id).size()
+
+static func _faction_still_owns_town(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	town_id: String
+) -> bool:
+	if session == null or faction_id == "" or town_id == "":
+		return false
+	var result := _find_town_by_placement(session, town_id)
+	var town: Dictionary = result.get("town", {})
+	if town.is_empty() or String(town.get("owner", "neutral")) != "enemy":
+		return false
+	return _town_controller_faction_id(town) == faction_id
 
 static func _owned_town_entries(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
 	var entries = []
