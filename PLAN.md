@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-eight-week-shard-offset33-count5-10184`; continue split 56-turn Native RMG strategic/tactical AI shards over seed ordinals 35-38 after seed 34 exposed and validated a headless battle-interrupt handoff fix.
+- Current implementation slice: none selected after completing the split 56-turn Native RMG strategic/tactical AI shard over seed ordinals 34-38; next AI work should continue generated-map eight-week production shards from seed ordinal 39 onward toward the full 100-seed matrix without balance-content edits.
+- Latest completed slice: `strategic-ai-eight-week-shard-offset33-count5-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset30-count3-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset29-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset28-10184`.

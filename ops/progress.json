@@ -5,10 +5,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSliceId": "strategic-ai-eight-week-shard-offset33-count5-10184",
   "currentSliceTitle": "Strategic AI Eight-Week Shard Offset 33 Count 5",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Continue split 56-turn Native RMG generated-map strategic/tactical AI shards over seed ordinals 35-38. Seed ordinal 34 exposed a headless battle-interrupt handoff gap where an auto-resolved victory left game_state=battle; the harness now applies the same overworld/outcome handoff expected from the UI router, and the report now fails ok rows that remain in battle. No balance content touched.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed split 56-turn Native RMG generated-map strategic/tactical AI shard over seed ordinals 34-38. Seed ordinal 34 exposed and validated a headless battle-interrupt handoff fix; seed ordinals 35-38 completed as row-ok terminal generated-map defeats. Aggregate shard evidence: 5/5 rows ok, setup ok 5/5, turns_completed=109, enemy_activity_event_count=500, target_assignment_count=235, site_seized_count=27, natural_tactical_battle_pressure_turn_count=73, natural_tactical_battle_arrival_turn_count=6, battle_interrupt_count=6, auto_resolved_battle_count=6, invalid tactical orders 0, behavior bugs 0, target-integrity violations 0. Tactical smoke and repo validation passed. Full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T08:05:00Z",
+  "updatedAt": "2026-06-01T09:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -42,7 +42,7 @@
     {
       "id": "strategic-ai-eight-week-shard-offset33-count5-10184",
       "title": "Strategic AI Eight-Week Shard Offset 33 Count 5",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "Active tactical/strategic AI production-readiness goal after seed-31..33 56-turn shard completed",
@@ -79,7 +79,8 @@
         "claiming production readiness before full 100-seed eight-week evidence"
       ],
       "startedAt": "2026-06-01T07:05:00Z",
-      "updatedAt": "2026-06-01T08:05:00Z",
+      "updatedAt": "2026-06-01T09:00:00Z",
+      "completedAt": "2026-06-01T09:00:00Z",
       "validation": [
         "Started after strategic-ai-eight-week-shard-offset30-count3-10184 completed and pushed; this shard broadens the next Native RMG 56-turn evidence run to seed ordinals 34-38.",
         "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=33 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 3600 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> stopped manually after about 20 minutes because row 34 alone took 897593 msec and the 5-seed shard would predictably exceed the configured 3600-second process limit; partial evidence row_complete_count=1, seed_ordinal=34 ok=true, turns_completed=56, enemy_activity_event_count=292; seed_ordinal=35 reached day 14 with turn ok=true before stop.",
@@ -87,13 +88,18 @@
         "Fixed HeadlessSimulationHarnessRules strategic battle-interrupt auto-resolve to apply an overworld/outcome handoff after terminal battle resolution, and added a long-run invariant that fails ok rows whose final_game_state remains battle.",
         "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=33 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> after fix, seed ordinal 34 completed 56 turns with row_ok_count=1, behavior_bug_count=0, target_integrity_violation_count=0, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0, final_game_state=overworld.",
         "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=33 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=43 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> current-code focused handoff invariant check passed: row_ok_count=1, turns_completed=43, behavior_bug_count=0, target_integrity_violation_count=0, battle_interrupt_count=1, auto_resolved_battle_count=1, final_game_state=overworld.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=34 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 35 row_ok_count=1, setup_ok_count=1, turns_completed=37, final_scenario_status=defeat, final_game_state=outcome, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, enemy_activity_event_count=160, target_assignment_count=38, site_seized_count=9, natural_tactical_battle_pressure_turn_count=36, natural_tactical_battle_arrival_turn_count=2, battle_interrupt_count=2, auto_resolved_battle_count=2, invalid_orders=0.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=35 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 36 row_ok_count=1, setup_ok_count=1, turns_completed=4, final_scenario_status=defeat, final_game_state=outcome, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, enemy_activity_event_count=13, target_assignment_count=5, site_seized_count=1, natural_tactical_battle_pressure_turn_count=4, natural_tactical_battle_arrival_turn_count=1, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=36 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 37 row_ok_count=1, setup_ok_count=1, turns_completed=7, final_scenario_status=defeat, final_game_state=outcome, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, enemy_activity_event_count=18, target_assignment_count=4, site_seized_count=0, natural_tactical_battle_pressure_turn_count=7, natural_tactical_battle_arrival_turn_count=1, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0.",
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=37 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 38 row_ok_count=1, setup_ok_count=1, turns_completed=5, final_scenario_status=defeat, final_game_state=outcome, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, enemy_activity_event_count=17, target_assignment_count=7, site_seized_count=2, natural_tactical_battle_pressure_turn_count=5, natural_tactical_battle_arrival_turn_count=1, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0.",
+        "Aggregate seed ordinals 34-38: 5/5 rows ok, setup ok 5/5, turns_completed=109, enemy_activity_event_count=500, target_assignment_count=235, site_seized_count=27, natural_tactical_battle_pressure_turn_count=73, natural_tactical_battle_arrival_turn_count=6, battle_interrupt_count=6, auto_resolved_battle_count=6, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0.",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn -> ok=true.",
         "python3 tests/validate_repo.py -> passed.",
         "jq empty ops/progress.json -> passed.",
         "git diff --check -> passed.",
         "git diff --exit-code -- content docs project.md -> passed; no balance content or docs changed."
       ],
-      "summary": "In progress. Seed ordinal 34 exposed and validated a headless battle-interrupt handoff fix. Continue split Native RMG 56-turn shards over seed ordinals 35-38 before completing the wider offset-33 shard.",
+      "summary": "Completed. Seed ordinal 34 exposed and validated a headless battle-interrupt handoff fix; seed ordinals 35-38 completed as row-ok generated-map terminal defeats. The full 100-seed eight-week Native RMG matrix remains the production-readiness validation blocker.",
       "notes": [
         "Do not touch unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content.",
         "Focused five-seed eight-week reports may keep the full 100-seed eight-week remaining-validation blocker by design.",
@@ -48995,31 +49001,30 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "battle-ai-side-payload-fallback-continuity-10184",
+    "sliceId": "strategic-ai-eight-week-shard-offset33-count5-10184",
     "status": "passed",
-    "updatedAt": "2026-05-31T23:59:30Z",
+    "updatedAt": "2026-06-01T09:00:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 160 --scene res://tests/magic_ai_valuation_casting_hooks_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_ai_withdrawal_decision_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/battle_intent_forecast_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_hero_task_strategic_planner_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=33 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed after handoff fix; seed ordinal 34, row ok, final_game_state=overworld)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=34 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed row ok; seed ordinal 35 terminal defeat)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=35 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed row ok; seed ordinal 36 terminal defeat)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=36 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed row ok; seed ordinal 37 terminal defeat)",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=37 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed row ok; seed ordinal 38 terminal defeat)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
-      "git diff -- content/ (empty)"
+      "git diff --exit-code -- content docs project.md (empty)"
     ],
-    "summary": "BattleAiRules side payload lookup now derives missing player/enemy AI payloads from commander state so internal damage estimates and trait/objective scoring stay aligned on resumed or synthetic battle states without changing balance content."
+    "summary": "Seed ordinals 34-38 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 6 battle interrupts / 6 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
     "id": "strategic-ai-eight-week-shard-offset33-count5-10184",
     "title": "Strategic AI Eight-Week Shard Offset 33 Count 5",
-    "status": "in_progress",
-    "updatedAt": "2026-06-01T08:05:00Z"
+    "status": "completed",
+    "updatedAt": "2026-06-01T09:00:00Z"
   },
-  "currentSliceUpdatedAt": "2026-06-01T08:05:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T09:00:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -52233,14 +52238,16 @@
   "currentSlice": "strategic-ai-eight-week-shard-offset33-count5-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-01T06:55:00Z",
-    "currentSliceId": "strategic-ai-eight-week-shard-offset30-count3-10184",
-    "summary": "Focused seed-31..33 Native RMG strategic/tactical AI shard reached 3 natural battle arrivals with invalid_orders=0; tactical smoke and repo validation passed.",
+    "updatedAt": "2026-06-01T09:00:00Z",
+    "currentSliceId": "strategic-ai-eight-week-shard-offset33-count5-10184",
+    "summary": "Focused seed-34..38 Native RMG strategic/tactical AI shard completed with 6 natural battle arrivals, 6 auto-resolved battle interrupts, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0; tactical smoke and repo validation passed.",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=30 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=3 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> needs_attention only because the full 100-seed eight-week matrix is not run; row_ok_count=3, setup_ok_count=3, turns_completed=26, behavior_bug_count=0, target_integrity_violation_count=0, enemy_activity_event_count=142, stalled_turn_count=0, target_assignment_count=60, site_seized_count=12, natural_tactical_battle_pressure_turn_count=11, natural_tactical_battle_arrival_turn_count=3, battle_interrupt_count=3, auto_resolved_battle_count=3, best_min_tactical_battle_goal_distance=0.",
-      "Seed 31 detail: row ok=true, turns_completed=17, final_day=18, context_type=hero_intercept, steps=6, player_orders=6, invalid_orders=0, final_scenario_status=defeat.",
-      "Seed 32 detail: row ok=true, turns_completed=4, final_day=5, context_type=town_defense, steps=1, player_orders=1, invalid_orders=0, final_scenario_status=defeat.",
-      "Seed 33 detail: row ok=true, turns_completed=5, final_day=6, context_type=town_defense, steps=2, player_orders=2, invalid_orders=0, final_scenario_status=defeat.",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=33 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> after headless handoff fix, seed ordinal 34 completed 56 turns with row_ok_count=1, behavior_bug_count=0, target_integrity_violation_count=0, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0, final_game_state=overworld.",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=34 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 35 row ok, turns_completed=37, final_scenario_status=defeat, final_game_state=outcome, battle_interrupt_count=2, auto_resolved_battle_count=2, invalid_orders=0.",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=35 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 36 row ok, turns_completed=4, final_scenario_status=defeat, final_game_state=outcome, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0.",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=36 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 37 row ok, turns_completed=7, final_scenario_status=defeat, final_game_state=outcome, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0.",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=37 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 38 row ok, turns_completed=5, final_scenario_status=defeat, final_game_state=outcome, battle_interrupt_count=1, auto_resolved_battle_count=1, invalid_orders=0.",
+      "Aggregate seed ordinals 34-38 -> 5/5 rows ok, setup ok 5/5, turns_completed=109, enemy_activity_event_count=500, target_assignment_count=235, site_seized_count=27, natural_tactical_battle_pressure_turn_count=73, natural_tactical_battle_arrival_turn_count=6, battle_interrupt_count=6, auto_resolved_battle_count=6, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, invalid_orders=0; needs_attention only because the full 100-seed eight-week matrix is not run.",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn -> ok=true.",
       "python3 tests/validate_repo.py -> VALIDATION PASSED.",
       "jq empty ops/progress.json -> pass.",
