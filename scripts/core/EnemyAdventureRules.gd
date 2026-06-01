@@ -1841,6 +1841,15 @@ static func advance_raids(
 			encounter["x"] = next_step.x
 			encounter["y"] = next_step.y
 			current = next_step
+			encounters[index] = encounter
+			session.overworld["encounters"] = encounters
+			_path_distance_surface_cache.clear()
+			if raid_reached_town_battle_contact(session, encounter, faction_id):
+				encounter["arrived"] = true
+				encounter["goal_distance"] = 0
+				encounters[index] = encounter
+				session.overworld["encounters"] = encounters
+				break
 			var post_step_previous_target := _current_target_snapshot(encounter)
 			encounter = _redirect_raid_to_nearby_exposed_hero(session, config, encounter, faction_id)
 			encounter = _redirect_raid_away_from_nearby_player_threat(session, config, encounter, faction_id)
@@ -1876,6 +1885,8 @@ static func advance_raids(
 
 		goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+		if raid_reached_town_battle_contact(session, encounter, faction_id):
+			goal_distance = 0
 		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
 		encounter["arrived"] = (
 			int(encounter.get("goal_distance", 9999)) <= 1
@@ -10549,6 +10560,53 @@ static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, to
 	if options.is_empty():
 		options.append(Vector2i(town_x, town_y))
 	return options
+
+static func raid_reached_town_battle_contact(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String = ""
+) -> bool:
+	if session == null or raid.is_empty() or String(raid.get("target_kind", "")) != "town":
+		return false
+	var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+	var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
+	if int(town_result.get("index", -1)) < 0 or town.is_empty():
+		return false
+	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	for tile in _town_battle_contact_tiles(town):
+		if not (tile is Vector2i):
+			continue
+		var contact_tile: Vector2i = tile
+		if abs(current.x - contact_tile.x) + abs(current.y - contact_tile.y) <= 1:
+			return true
+	return false
+
+static func _town_battle_contact_tiles(town: Dictionary) -> Array:
+	var tiles := []
+	for key in [
+		"package_block_tiles",
+		"package_body_tiles",
+		"body_tiles",
+		"action_tiles",
+		"approach_tiles",
+		"package_visit_tiles",
+	]:
+		tiles.append_array(OverworldRulesScript._world_tiles_from_payload_array(town.get(key, [])))
+	var visit_tile = town.get("visit_tile", {})
+	if visit_tile is Dictionary and not visit_tile.is_empty():
+		tiles.append(Vector2i(int(visit_tile.get("x", town.get("x", 0))), int(visit_tile.get("y", town.get("y", 0)))))
+	tiles.append(Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+	var unique_tiles := []
+	var seen := {}
+	for tile in tiles:
+		if not (tile is Vector2i):
+			continue
+		var key := _pos_key(tile)
+		if seen.has(key):
+			continue
+		seen[key] = true
+		unique_tiles.append(tile)
+	return unique_tiles
 
 static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
 	var options = []
