@@ -163,6 +163,9 @@ func _assert_report(report: Dictionary, expected_seed_count: int, expected_turn_
 		if int(row.get("setup_runtime_msec", -1)) < 0 or int(row.get("row_runtime_msec", 0)) <= 0:
 			_fail("Long-run matrix row missing setup/row runtime telemetry: %s" % JSON.stringify(row))
 			return false
+		if bool(row.get("ok", false)) and String(row.get("final_game_state", "")) == "battle":
+			_fail("Long-run matrix row remained in battle after terminal auto-resolve: %s" % JSON.stringify(row))
+			return false
 		var turn_results: Array = row.get("turn_results", []) if row.get("turn_results", []) is Array else []
 		for turn_result in turn_results:
 			if not (turn_result is Dictionary):
