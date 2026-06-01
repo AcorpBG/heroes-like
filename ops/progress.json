@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-baseline-staged-evidence-adoption-10184",
-  "currentSliceTitle": "Strategic AI Baseline Staged Evidence Adoption",
+  "currentSliceId": "strategic-ai-medium-rmg-blocker-classification-10184",
+  "currentSliceTitle": "Strategic AI Medium RMG Blocker Classification",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed baseline KPI adoption of completed staged 100-seed Native RMG long-run evidence. The baseline now retires no_long_run_seed_matrix when staged coverage and residual hardening are complete, and preserves Medium generated-map generalization as the remaining production gap. No balance-content edits.",
+  "currentSliceNotes": "Completed Medium generated-map AI generalization blocker classification. The strategic AI baseline now actively executes the Medium RMG setup path by default, records archived_legacy_native_rmg_disabled as the concrete runtime blocker, and keeps production_ready=false without balance-content edits.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T19:20:00Z",
+  "updatedAt": "2026-06-01T20:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -38910,6 +38910,81 @@
         "This slice intentionally does not claim final production readiness."
       ],
       "completedAt": "2026-06-01T19:20:00Z"
+    },
+    {
+      "id": "strategic-ai-medium-rmg-blocker-classification-10184",
+      "title": "Strategic AI Medium RMG Blocker Classification",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "strategic-ai-baseline-staged-evidence-adoption-10184 remaining Medium RMG production gap",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Actively probe the remaining Medium generated-map AI baseline gap and record the concrete RMG runtime blocker instead of leaving it as a vague non-executed measurement gap.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_baseline_kpi_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+        "python3 tests/strategic_ai_staged_evidence_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff --exit-code -- content docs project.md"
+      ],
+      "completionCriteria": "Strategic AI baseline KPI actively probes the Medium generated-map path by default, records the concrete RMG runtime blocker when Medium generation is unavailable, keeps the Medium AI generalization production gap visible, and validation remains green without balance-content edits.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming Medium AI generalization complete while Medium RMG generation is blocked"
+      ],
+      "startedAt": "2026-06-01T19:40:00Z",
+      "updatedAt": "2026-06-01T20:05:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "Baseline KPI now executes the Medium generated-map setup probe by default, reports classification scope_gap, reason generated_map_setup_failed, setup_failure.generation_status archived_legacy_native_rmg_disabled, and production_ready=false."
+        },
+        {
+          "command": "python3 tests/strategic_ai_staged_evidence_report.py",
+          "status": "pass",
+          "notes": "Staged evidence remains green with 100/100 strict Small Native RMG seeds covered for 56-turn target evidence and no residual diagnostics."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "Tactical-order smoke remains green with spell and non-spell tactical scoring paths intact."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed after the baseline KPI and tracker updates."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md",
+          "status": "pass",
+          "notes": "Progress JSON syntax, whitespace, and no content/docs/project drift checks passed."
+        }
+      ],
+      "summary": "Completed. Medium generated-map AI generalization is now an executed baseline setup probe with a concrete runtime RMG blocker instead of a skipped measurement gap.",
+      "notes": [
+        "Current Medium land setup fails with archived_legacy_native_rmg_disabled because the non-Small legacy native RMG path is disabled under the h3maped Small reset policy.",
+        "The baseline keeps native_rmg_medium_ai_generalization as the remaining production blocker and does not claim strategic AI production readiness.",
+        "No unit, spell, economy, town-cost, authored scenario, content, docs, or project charter files were changed."
+      ],
+      "completedAt": "2026-06-01T20:05:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -50083,14 +50158,14 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "strategic-ai-baseline-staged-evidence-adoption-10184",
-    "title": "Strategic AI Baseline Staged Evidence Adoption",
+    "id": "strategic-ai-medium-rmg-blocker-classification-10184",
+    "title": "Strategic AI Medium RMG Blocker Classification",
     "status": "completed",
-    "updatedAt": "2026-06-01T19:20:00Z",
-    "completedAt": "2026-06-01T19:20:00Z",
-    "summary": "Completed baseline KPI adoption of completed staged 100-seed Native RMG long-run evidence; the stale long-run blocker is retired and Medium generated-map generalization remains the active production gap."
+    "updatedAt": "2026-06-01T20:05:00Z",
+    "completedAt": "2026-06-01T20:05:00Z",
+    "summary": "Completed Medium generated-map AI blocker classification; the baseline actively probes Medium setup and reports archived_legacy_native_rmg_disabled as the runtime blocker."
   },
-  "currentSliceUpdatedAt": "2026-06-01T19:20:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T20:05:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53301,7 +53376,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-baseline-staged-evidence-adoption-10184",
+  "currentSlice": "strategic-ai-medium-rmg-blocker-classification-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",

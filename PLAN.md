@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing strategic AI baseline staged-evidence adoption. Next AI work should address the remaining Medium generated-map AI generalization gap without touching balance-content files.
+- Current implementation slice: none selected after completing Medium RMG blocker classification. Next AI production work must either unblock Medium Native RMG runtime generation or keep Medium strategic-AI generalization explicitly blocked; do not touch balance-content files.
+- Latest completed slice: `strategic-ai-medium-rmg-blocker-classification-10184`.
 - Latest completed slice: `strategic-ai-baseline-staged-evidence-adoption-10184`.
 - Latest completed slice: `strategic-ai-residual-diagnostic-hardening-10184`.
 - Latest completed slice: `strategic-ai-staged-100-evidence-aggregation-10184`.

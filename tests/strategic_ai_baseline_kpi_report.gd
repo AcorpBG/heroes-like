@@ -59,11 +59,24 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(rmg_summary.get("target_assignment_event_count", 0)) <= 0:
 		_fail("Supported generated-map AI turns did not expose target-assignment threat events: %s" % JSON.stringify(rmg_summary))
 		return false
-	if int(rmg_summary.get("measurement_gap_count", 0)) <= 0:
-		_fail("Strategic AI baseline must preserve non-Small generated-map generalization gaps in the fast audit: %s" % JSON.stringify(rmg_summary))
-		return false
 	if int(rmg_summary.get("medium_probe_count", 0)) < 1:
 		_fail("Strategic AI baseline did not record a Medium generated-map generalization probe: %s" % JSON.stringify(rmg_summary))
+		return false
+	if int(rmg_summary.get("scope_gap_count", 0)) <= 0:
+		_fail("Strategic AI baseline must classify unsupported non-Small generated-map startup as a concrete scope gap: %s" % JSON.stringify(rmg_summary))
+		return false
+	var rmg_cases: Array = report.get("rmg_cases", []) if report.get("rmg_cases", []) is Array else []
+	var medium_row := _rmg_case_row(rmg_cases, "native_rmg_medium_seed_314159_ai_turn_probe")
+	if medium_row.is_empty():
+		_fail("Strategic AI baseline did not emit the Medium generated-map probe row.")
+		return false
+	if String(medium_row.get("classification", "")) != "scope_gap" or String(medium_row.get("reason", "")) != "generated_map_setup_failed":
+		_fail("Medium generated-map probe must be an executed setup scope gap, not a skipped measurement gap: %s" % JSON.stringify(medium_row))
+		return false
+	var setup_failure: Dictionary = medium_row.get("setup_failure", {}) if medium_row.get("setup_failure", {}) is Dictionary else {}
+	var blocker_text := JSON.stringify(setup_failure)
+	if blocker_text.find("archived_legacy_native_rmg_disabled") < 0:
+		_fail("Medium generated-map probe did not preserve the concrete runtime RMG blocker: %s" % blocker_text)
 		return false
 	var long_run_summary: Dictionary = report.get("long_run_summary", {}) if report.get("long_run_summary", {}) is Dictionary else {}
 	if not bool(long_run_summary.get("ok", false)):
@@ -120,6 +133,12 @@ func _capability_row(rows: Array, capability_id: String) -> Dictionary:
 func _blocker_row(rows: Array, blocker_id: String) -> Dictionary:
 	for row in rows:
 		if row is Dictionary and String(row.get("blocker_id", "")) == blocker_id:
+			return row
+	return {}
+
+func _rmg_case_row(rows: Array, case_id: String) -> Dictionary:
+	for row in rows:
+		if row is Dictionary and String(row.get("case_id", "")) == case_id:
 			return row
 	return {}
 
