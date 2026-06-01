@@ -704,6 +704,9 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 	var execute_probe := bool(input_config.get("execute_rmg_turn_probes", false)) or (
 		expected_scope == "supported_small"
 		and bool(input_config.get("execute_supported_small_rmg_turn_probes", true))
+	) or (
+		expected_scope == "production_gap_probe"
+		and bool(input_config.get("execute_production_gap_rmg_turn_probes", true))
 	)
 	if not execute_probe:
 		return {
@@ -727,6 +730,8 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
 	)
 	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	var retry_status: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
+	var retry_attempts: Array = setup.get("retry_attempts", []) if setup.get("retry_attempts", []) is Array else []
 	var row := {
 		"case_id": String(case_config.get("case_id", seed)),
 		"seed": seed,
@@ -738,6 +743,8 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		"setup_ok": bool(setup.get("ok", false)),
 		"validation_status": String(validation.get("status", validation.get("validation_status", ""))),
 		"failure_handoff": String(setup.get("failure_handoff", "")),
+		"retry_status": retry_status,
+		"retry_attempt_count": retry_attempts.size(),
 		"turn_count_target": turn_count,
 		"turn_results": [],
 		"event_counts": {},
@@ -746,6 +753,7 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		row["ok"] = false
 		row["classification"] = "scope_gap" if expected_scope != "supported_small" else "behavior_bug"
 		row["reason"] = "generated_map_setup_failed"
+		row["setup_failure"] = _strategic_ai_rmg_setup_failure_detail(setup)
 		return row
 	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if session == null or session.scenario_id == "":
@@ -803,6 +811,43 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 		"enemy_event_count": enemy_event_count,
 	})
 	return row
+
+static func _strategic_ai_rmg_setup_failure_detail(setup: Dictionary) -> Dictionary:
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	var retry_status: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
+	var retry_attempts: Array = setup.get("retry_attempts", []) if setup.get("retry_attempts", []) is Array else []
+	var failures: Array = validation.get("failures", []) if validation.get("failures", []) is Array else []
+	var compact_attempts := []
+	for attempt_value in retry_attempts:
+		if not (attempt_value is Dictionary):
+			continue
+		var attempt: Dictionary = attempt_value
+		compact_attempts.append({
+			"attempt": int(attempt.get("attempt", 0)),
+			"max_attempts": int(attempt.get("max_attempts", 0)),
+			"ok": bool(attempt.get("ok", false)),
+			"seed": String(attempt.get("seed", "")),
+			"template_id": String(attempt.get("template_id", "")),
+			"profile_id": String(attempt.get("profile_id", "")),
+			"validation_status": String(attempt.get("validation_status", "")),
+			"failure_count": int(attempt.get("failure_count", 0)),
+			"warning_count": int(attempt.get("warning_count", 0)),
+			"retry_decision": attempt.get("retry_decision", {}) if attempt.get("retry_decision", {}) is Dictionary else {},
+		})
+	return {
+		"status": String(validation.get("status", validation.get("validation_status", ""))),
+		"source_status": String(validation.get("source_status", "")),
+		"generation_status": String(validation.get("generation_status", "")),
+		"full_generation_status": String(validation.get("full_generation_status", "")),
+		"error_code": String(validation.get("error_code", "")),
+		"message": String(validation.get("message", "")),
+		"failure_count": int(validation.get("failure_count", 0)),
+		"warning_count": int(validation.get("warning_count", 0)),
+		"failures": failures,
+		"retry_status": retry_status,
+		"retry_attempts": compact_attempts,
+		"failure_handoff": String(setup.get("failure_handoff", "")),
+	}
 
 static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 	var supported_small_count := 0
