@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing staged Native RMG tactical/strategic AI evidence aggregation. Next AI work should harden the residual stalled/unreachable/no-arrival diagnostics now that strict 56-turn shard coverage spans seed ordinals 1-100; do not touch balance-content files.
+- Current implementation slice: none selected after completing residual Native RMG tactical/strategic AI diagnostic hardening. Next AI work should continue broad production hardening without touching balance-content files.
+- Latest completed slice: `strategic-ai-residual-diagnostic-hardening-10184`.
 - Latest completed slice: `strategic-ai-staged-100-evidence-aggregation-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset0-count3-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset98-count2-10184`.

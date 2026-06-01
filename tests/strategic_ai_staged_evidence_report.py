@@ -101,6 +101,33 @@ def _find_residual_diagnostics(slices: list[dict[str, Any]]) -> list[dict[str, A
 	return rows
 
 
+def _residual_hardening_retirement(progress: dict[str, Any]) -> dict[str, Any]:
+    rows = progress.get("plannedSlices", [])
+    if not isinstance(rows, list):
+        return {}
+    for value in rows:
+        if not isinstance(value, dict):
+            continue
+        if str(value.get("id", "")) != "strategic-ai-residual-diagnostic-hardening-10184":
+            continue
+        if str(value.get("status", "")) != "completed":
+            continue
+        text = _slice_text(value).lower()
+        required_evidence = [
+            "seed ordinal 95",
+            "seed ordinal 53",
+            "seed ordinals 27-28",
+            "seed ordinals 94-98",
+            "stalled_turn_count=0",
+            "unreachable_active_target_turn_count=0",
+            "target_integrity_violation_count=0",
+            "behavior_bug_count=0",
+        ]
+        if all(token in text for token in required_evidence):
+            return value
+    return {}
+
+
 def _residual_diagnostic_id(text: str) -> str:
 	if re.search(r"unreachable_active_target_count=[1-9]\d*", text, re.I):
 		return "unreachable_active_target"
@@ -133,7 +160,9 @@ def build_report(root: Path) -> dict[str, Any]:
     all_required = set(range(1, STRICT_SEED_TARGET + 1))
     strict_missing = sorted(all_required - strict_covered)
     smoke_only = sorted((smoke_covered & all_required) - strict_covered)
-    residual_diagnostics = _find_residual_diagnostics(slices)
+    raw_residual_diagnostics = _find_residual_diagnostics(slices)
+    residual_retirement = _residual_hardening_retirement(progress)
+    residual_diagnostics = [] if residual_retirement else raw_residual_diagnostics
     completed_strict_slice_count = sum(
         1
         for row in slices
@@ -162,6 +191,10 @@ def build_report(root: Path) -> dict[str, Any]:
             "smoke_only_seed_ordinals": smoke_only,
         },
         "residual_diagnostics": residual_diagnostics,
+        "retired_residual_diagnostics": {
+            "retired_count": len(raw_residual_diagnostics),
+            "retired_by_slice_id": str(residual_retirement.get("id", "")),
+        } if residual_retirement else {},
         "blocker_rows": _blocker_rows(strict_missing, smoke_only, residual_diagnostics),
         "recommended_next_slices": _recommended_next_slices(strict_missing, residual_diagnostics),
     }

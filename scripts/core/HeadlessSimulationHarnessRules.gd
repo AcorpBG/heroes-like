@@ -1265,6 +1265,8 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 	var near_tactical_hero_target_count := 0
 	var unreachable_active_target_count := 0
 	var suppressed_post_outcome_unreachable_active_target_count := 0
+	var unreachable_active_targets := []
+	var suppressed_post_outcome_unreachable_active_targets := []
 	var min_goal_distance := 9999
 	var min_tactical_town_goal_distance := 9999
 	var min_tactical_hero_goal_distance := 9999
@@ -1328,10 +1330,21 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 			active_tactical_hero_target_count += 1
 		var goal_distance := int(encounter.get("goal_distance", 9999))
 		if goal_distance >= 9999:
+			var unreachable_target := {
+				"placement_id": placement_id,
+				"label": EnemyAdventureRules.raid_display_name(encounter),
+				"target_kind": target_kind,
+				"target_id": String(encounter.get("target_placement_id", "")),
+				"target_label": String(encounter.get("target_label", "")),
+				"x": int(encounter.get("x", 0)),
+				"y": int(encounter.get("y", 0)),
+			}
 			if scenario_in_progress:
 				unreachable_active_target_count += 1
+				unreachable_active_targets.append(unreachable_target)
 			else:
 				suppressed_post_outcome_unreachable_active_target_count += 1
+				suppressed_post_outcome_unreachable_active_targets.append(unreachable_target)
 		else:
 			min_goal_distance = mini(min_goal_distance, goal_distance)
 			max_goal_distance = maxi(max_goal_distance, goal_distance)
@@ -1399,7 +1412,9 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 		"near_tactical_town_target_count": near_tactical_town_target_count,
 		"near_tactical_hero_target_count": near_tactical_hero_target_count,
 		"unreachable_active_target_count": unreachable_active_target_count,
+		"unreachable_active_targets": unreachable_active_targets,
 		"suppressed_post_outcome_unreachable_active_target_count": suppressed_post_outcome_unreachable_active_target_count,
+		"suppressed_post_outcome_unreachable_active_targets": suppressed_post_outcome_unreachable_active_targets,
 		"min_goal_distance": min_goal_distance if min_goal_distance < 9999 else 9999,
 		"min_tactical_town_goal_distance": min_tactical_town_goal_distance if min_tactical_town_goal_distance < 9999 else 9999,
 		"min_tactical_hero_goal_distance": min_tactical_hero_goal_distance if min_tactical_hero_goal_distance < 9999 else 9999,

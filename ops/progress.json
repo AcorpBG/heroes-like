@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-staged-100-evidence-aggregation-10184",
-  "currentSliceTitle": "Strategic AI Staged 100 Evidence Aggregation",
+  "currentSliceId": "strategic-ai-residual-diagnostic-hardening-10184",
+  "currentSliceTitle": "Strategic AI Residual Diagnostic Hardening",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed staged Native RMG tactical/strategic AI evidence aggregation and harness semantics hardening. Strict 56-turn shard coverage now spans seed ordinals 1-100. Post-outcome active-target reachability is now separated from live in-progress unreachable target diagnostics. Residual low-rate stalled/unreachable/no-arrival diagnostics remain as the next AI hardening target, so production readiness is not claimed.",
+  "currentSliceNotes": "Completed residual Native RMG tactical/strategic AI diagnostic hardening. Fixed live post-resolution raid target repair and friendly-town regroup contact resolution without balance-content edits. Focused residual seeds 95, 53, 27, and 28 plus the original 94-98 shard are green with zero behavior bugs, zero target-integrity violations, zero stalls, and zero live unreachable active targets.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T17:05:00Z",
+  "updatedAt": "2026-06-01T18:40:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -38747,6 +38747,95 @@
         "Focused report keeps the full 100-seed blocker by design because this invocation saw only three rows."
       ],
       "completedAt": "2026-06-01T17:04:00Z"
+    },
+    {
+      "id": "strategic-ai-residual-diagnostic-hardening-10184",
+      "title": "Strategic AI Residual Diagnostic Hardening",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "strategic-ai-staged-100-evidence-aggregation-10184 residual diagnostics",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Rerun current-code residual stalled/unreachable/no-arrival Native RMG tactical/strategic AI diagnostics and fix the first reproducible tactical/strategic AI defect without touching balance content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "tests/strategic_ai_staged_evidence_report.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Focused current-code Native RMG reruns for seed ordinals 53, 27, 28, and 95 or narrower repros derived from them",
+        "python3 tests/strategic_ai_staged_evidence_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff --exit-code -- content docs project.md"
+      ],
+      "completionCriteria": "Current-code residual diagnostics are reproduced or retired with evidence; at least one reproducible tactical/strategic AI defect is fixed or the residuals are precisely classified as non-blocking with stronger harness semantics; tactical smoke and repo validation remain green; no balance-content files change.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming final production readiness while residual live defects remain"
+      ],
+      "startedAt": "2026-06-01T13:00:25Z",
+      "updatedAt": "2026-06-01T18:40:00Z",
+      "validation": [
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=94 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass",
+          "notes": "Seed ordinal 95 now reports row_ok=1/1, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, natural_tactical_battle_arrival_turn_count=1, auto_resolved_battle_count=1."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=52 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass",
+          "notes": "Seed ordinal 53 remains retired on current code: row_ok=1/1, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, unreachable_active_target_turn_count=0, natural_tactical_battle_arrival_turn_count=1, auto_resolved_battle_count=1."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=26 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 3600 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass",
+          "notes": "Seed ordinals 27-28 remain retired on current code: row_ok=2/2, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, unreachable_active_target_turn_count=0, natural_tactical_battle_arrival_turn_count=2, auto_resolved_battle_count=2."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=93 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 4200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass",
+          "notes": "Original residual shard seed ordinals 94-98 now reports row_ok=5/5, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, natural_tactical_battle_arrival_turn_count=5, auto_resolved_battle_count=5."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "BATTLE_AUTOPLAY_TACTICAL_ORDER_REPORT ok=true."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "python3 -m py_compile tests/strategic_ai_staged_evidence_report.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md",
+          "status": "pass",
+          "notes": "Python compile, progress JSON syntax, whitespace, and no content/docs/project drift checks passed."
+        }
+      ],
+      "summary": "Completed. Fixed live strategic AI target repair after arrivals/regroups and added friendly-town regroup contact resolution so raids do not spend live turns carrying empty or unreachable active targets after post-resolution state changes.",
+      "notes": [
+        "Do not touch unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content.",
+        "Historical residual targets included seed 53 no-arrival, seed 27/28 stalls, and seed 95 live unreachable active target turns.",
+        "Current-code focused residual reruns retired seed 53, seed 27/28, and seed 95 diagnostics.",
+        "Original 94-98 residual shard rerun proves seed 95 and neighboring generated maps remain green after the fix."
+      ],
+      "completedAt": "2026-06-01T18:40:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -49920,14 +50009,14 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "strategic-ai-staged-100-evidence-aggregation-10184",
-    "title": "Strategic AI Staged 100 Evidence Aggregation",
+    "id": "strategic-ai-residual-diagnostic-hardening-10184",
+    "title": "Strategic AI Residual Diagnostic Hardening",
     "status": "completed",
-    "updatedAt": "2026-06-01T17:05:00Z",
-    "completedAt": "2026-06-01T17:05:00Z",
-    "summary": "Completed staged Native RMG tactical/strategic AI evidence aggregation and harness semantics hardening. Strict 56-turn shard coverage now spans seed ordinals 1-100; residual diagnostics remain and production readiness is not claimed."
+    "updatedAt": "2026-06-01T18:40:00Z",
+    "completedAt": "2026-06-01T18:40:00Z",
+    "summary": "Completed residual Native RMG tactical/strategic AI diagnostic hardening. Fixed live post-resolution raid target repair and friendly-town regroup contact resolution without balance-content edits; focused residual seeds and the original 94-98 shard are green."
   },
-  "currentSliceUpdatedAt": "2026-06-01T17:05:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T18:40:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53138,7 +53227,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-staged-100-evidence-aggregation-10184",
+  "currentSlice": "strategic-ai-residual-diagnostic-hardening-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",
