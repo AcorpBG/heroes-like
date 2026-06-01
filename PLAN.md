@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected; next tactical/strategic AI work should continue Native RMG generated-map production shards toward the full 100-seed eight-week matrix without balance-content edits.
+- Current implementation slice: none selected; next tactical/strategic AI work should continue Native RMG generated-map eight-week production shards toward the full 100-seed matrix without balance-content edits.
+- Latest completed slice: `strategic-ai-eight-week-shard-offset23-10184`.
 - Latest completed slice: `strategic-ai-production-shard-offset18-10184`.
 - Latest completed slice: `strategic-ai-production-shard-offset13-10184`.
 - Latest completed slice: `strategic-ai-seed13-route-pressure-execution-10184`.
