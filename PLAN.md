@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after `strategic-ai-production-shard-offset8-10184`; next tactical/strategic AI work should fix the seed-13 route/pressure execution gap where active raids can have reachable non-battle targets but no reachable town/hero pressure candidate, without balance-content edits.
+- Current implementation slice: none selected; next strategic/tactical AI work should continue toward the full Native RMG 100-seed eight-week matrix without balance-content edits.
+- Latest completed slice: `strategic-ai-seed13-route-pressure-execution-10184`.
 - Latest completed slice: `strategic-ai-production-shard-offset8-10184`.
 - Latest completed slice: `strategic-ai-production-shard-offset3-10184`.
 - Latest completed slice: `strategic-ai-broader-handoff-generalization-10184`.

@@ -47,7 +47,7 @@ const RAID_BASE_MOVEMENT_STEPS := 1
 const RAID_TACTICAL_PRESSURE_MOVEMENT_STEPS := 3
 const RAID_TACTICAL_PRESSURE_SUPPORT_GROUP_RADIUS := 3
 const RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS := 6
-const RAID_BATTLE_PRESSURE_FLOOR_DAY := 10
+const RAID_BATTLE_PRESSURE_FLOOR_DAY := 8
 const RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS := 3
 const RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE := 48
 const RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS := 140
@@ -870,6 +870,11 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		if best.is_empty() or _candidate_beats(candidate, best):
 			best = candidate
 	if best.is_empty():
+		var route_clearance := _battle_pressure_floor_route_clearance_plan(session, config, raid, faction_id, active_count)
+		if not route_clearance.is_empty():
+			var route_updated := raid.duplicate(true)
+			route_updated.merge(route_clearance, true)
+			return route_updated
 		return raid
 	var updated := raid.duplicate(true)
 	updated.merge(best, true)
@@ -914,6 +919,212 @@ static func _candidate_targets_player_town(session: SessionStateStoreScript.Sess
 		return false
 	var town_result := _find_town_by_placement(session, String(candidate.get("target_placement_id", "")))
 	return int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player"
+
+static func _battle_pressure_floor_route_clearance_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	active_count: int
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "":
+		return {}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var best := {}
+	var best_score := -999999
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "player":
+			continue
+		var town_id := String(town.get("placement_id", ""))
+		if town_id == "":
+			continue
+		var staging_tiles := _town_staging_tiles(session, town)
+		if staging_tiles.is_empty():
+			continue
+		if _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id) < 9999:
+			continue
+		var probe := raid.duplicate(true)
+		probe["target_kind"] = "town"
+		probe["target_placement_id"] = town_id
+		probe["target_label"] = _town_name(town)
+		probe["target_x"] = int(town.get("x", 0))
+		probe["target_y"] = int(town.get("y", 0))
+		probe["target_reason_codes"] = ["town_siege", "objective_front", "battle_pressure_floor"]
+		var route_guard := _route_blocking_guard_target_for_tactical_pressure(session, probe, faction_id)
+		if not route_guard.is_empty():
+			var guard_candidate := _battle_pressure_route_guard_candidate(
+				session,
+				config,
+				raid,
+				faction_id,
+				town,
+				route_guard,
+				active_count
+			)
+			if not guard_candidate.is_empty():
+				var guard_score := int(guard_candidate.get("priority", 0))
+				if best.is_empty() or guard_score > best_score or (
+					guard_score == best_score
+					and int(guard_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+				):
+					best = guard_candidate
+					best_score = guard_score
+		var stepping_candidate := _battle_pressure_route_stepping_candidate(
+			session,
+			config,
+			raid,
+			faction_id,
+			town,
+			staging_tiles,
+			active_count
+		)
+		if not stepping_candidate.is_empty():
+			var stepping_score := int(stepping_candidate.get("priority", 0))
+			if best.is_empty() or stepping_score > best_score or (
+				stepping_score == best_score
+				and int(stepping_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+			):
+				best = stepping_candidate
+				best_score = stepping_score
+	return best
+
+static func _battle_pressure_route_guard_candidate(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	town: Dictionary,
+	route_guard: Dictionary,
+	active_count: int
+) -> Dictionary:
+	if session == null or raid.is_empty() or town.is_empty() or route_guard.is_empty():
+		return {}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var staging_tiles := _encounter_staging_tiles(session, route_guard)
+	if staging_tiles.is_empty():
+		return {}
+	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	if goal_distance >= 9999:
+		return {}
+	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id)
+	var guard_tile := Vector2i(int(route_guard.get("x", 0)), int(route_guard.get("y", 0)))
+	var town_staging := _town_staging_tiles(session, town)
+	var town_gap := _min_manhattan_distance_to_tiles(guard_tile, town_staging)
+	var guard_strength: int = max(0, _encounter_guard_strength(route_guard))
+	var reason_codes: Array = ["guard_clearance", "town_siege", "route_unreachable", "objective_front", "battle_pressure_floor", "pressure_route_clearance"]
+	var town_id := String(town.get("placement_id", ""))
+	var priority: int = max(
+		0,
+		RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS
+		+ 260
+		+ (active_count * 8)
+		+ max(0, 80 - town_gap * 6)
+		- min(90, goal_distance * 4)
+		- min(80, int(floor(float(guard_strength) / 12.0)))
+	)
+	return {
+		"previous_target_kind": String(raid.get("target_kind", "")),
+		"previous_target_placement_id": String(raid.get("target_placement_id", "")),
+		"previous_target_label": String(raid.get("target_label", "")),
+		"blocked_route_target_kind": "town",
+		"blocked_route_target_placement_id": town_id,
+		"blocked_route_target_label": _town_name(town),
+		"target_kind": "encounter",
+		"target_placement_id": String(route_guard.get("placement_id", "")),
+		"target_label": _encounter_target_label(session, route_guard, String(route_guard.get("placement_id", "the guard"))),
+		"target_x": int(route_guard.get("x", 0)),
+		"target_y": int(route_guard.get("y", 0)),
+		"goal_x": goal_tile.x,
+		"goal_y": goal_tile.y,
+		"goal_distance": goal_distance,
+		"priority": priority,
+		"route_unreachable_started_day": int(session.day),
+		"target_reason_codes": reason_codes,
+		"target_public_reason": "clearing route to player town",
+		"target_public_importance": "high",
+		"target_debug_reason": "battle pressure floor found unreachable player town and selected reachable route guard",
+	}
+
+static func _battle_pressure_route_stepping_candidate(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	town: Dictionary,
+	town_staging_tiles: Array,
+	active_count: int
+) -> Dictionary:
+	if session == null or raid.is_empty() or town.is_empty() or town_staging_tiles.is_empty():
+		return {}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var origin_gap := _min_manhattan_distance_to_tiles(origin, town_staging_tiles)
+	if origin_gap >= 9999:
+		return {}
+	var best := {}
+	var best_score := -999999
+	for candidate_value in _target_candidates(session, config, origin):
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value.duplicate(true)
+		var target_kind := String(candidate.get("target_kind", ""))
+		if target_kind not in ["encounter", "resource", "artifact"]:
+			continue
+		var target_id := String(candidate.get("target_placement_id", ""))
+		if target_id == "" or target_id == String(raid.get("target_placement_id", "")):
+			continue
+		var target_tile := Vector2i(int(candidate.get("target_x", origin.x)), int(candidate.get("target_y", origin.y)))
+		var candidate_gap := _min_manhattan_distance_to_tiles(target_tile, town_staging_tiles)
+		var gap_improvement := origin_gap - candidate_gap
+		if gap_improvement < 2:
+			continue
+		var goal_distance := int(candidate.get("goal_distance", 9999))
+		if goal_distance < 0 or goal_distance >= 9999 or goal_distance > RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE:
+			continue
+		var route_bonus := 0
+		var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+		if "route_pressure" in reason_codes:
+			route_bonus += 45
+		if target_kind == "encounter" or "guard_clearance" in reason_codes:
+			route_bonus += 35
+		var score: int = int(candidate.get("priority", 0)) \
+			+ RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS \
+			+ (gap_improvement * 14) \
+			+ route_bonus \
+			+ (active_count * 6) \
+			- min(100, goal_distance * 5)
+		for reason in ["battle_pressure_floor", "pressure_route_step"]:
+			if reason not in reason_codes:
+				reason_codes.append(reason)
+		candidate["previous_target_kind"] = String(raid.get("target_kind", ""))
+		candidate["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+		candidate["previous_target_label"] = String(raid.get("target_label", ""))
+		candidate["blocked_route_target_kind"] = "town"
+		candidate["blocked_route_target_placement_id"] = String(town.get("placement_id", ""))
+		candidate["blocked_route_target_label"] = _town_name(town)
+		candidate["target_reason_codes"] = reason_codes
+		candidate["target_public_reason"] = "opening route to player town"
+		candidate["target_public_importance"] = "high" if target_kind == "encounter" else "medium"
+		candidate["target_debug_reason"] = "battle pressure floor selected reachable stepping target closer to unreachable player town"
+		candidate["priority"] = max(0, score)
+		if best.is_empty() or score > best_score or (
+			score == best_score
+			and int(candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+		):
+			best = candidate
+			best_score = score
+	return best
+
+static func _min_manhattan_distance_to_tiles(origin: Vector2i, tiles: Array) -> int:
+	var best := 9999
+	for tile_value in tiles:
+		if not (tile_value is Vector2i):
+			continue
+		var tile: Vector2i = tile_value
+		best = min(best, abs(origin.x - tile.x) + abs(origin.y - tile.y))
+	return best
 
 static func _live_task_plan_can_preempt_explicit_objective(config: Dictionary, plan: Dictionary) -> bool:
 	if plan.is_empty():
@@ -1666,7 +1877,11 @@ static func advance_raids(
 		goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
 		encounter["goal_distance"] = 0 if goal_distance == 9999 and current in goal_tiles else goal_distance
-		encounter["arrived"] = int(encounter.get("goal_distance", 9999)) == 0
+		encounter["arrived"] = (
+			int(encounter.get("goal_distance", 9999)) <= 1
+			if String(encounter.get("target_kind", "")) == "hero"
+			else int(encounter.get("goal_distance", 9999)) == 0
+		)
 		var movement_event := ai_raid_movement_event(
 			session,
 			config,
@@ -1788,9 +2003,13 @@ static func _raid_is_tactical_pressure_target(raid: Dictionary) -> bool:
 	var target_kind := String(raid.get("target_kind", ""))
 	if target_kind == "hero":
 		return true
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if target_kind in ["encounter", "resource", "artifact"]:
+		for code in ["pressure_route_clearance", "pressure_route_step"]:
+			if code in reason_codes:
+				return true
 	if target_kind != "town":
 		return false
-	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in [
 		"town_siege",
 		"neutral_town_siege",
