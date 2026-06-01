@@ -3035,6 +3035,10 @@ static func _town_defense_candidate(session: SessionStateStoreScript.SessionData
 		if town.is_empty() or (town_owner != "player" and not neutral_expansion):
 			continue
 		var goal_distance = int(encounter.get("goal_distance", 9999))
+		if EnemyAdventureRulesScript.raid_reached_town_battle_contact(session, encounter, faction_id):
+			goal_distance = 0
+			encounter["goal_distance"] = 0
+			encounter["arrived"] = true
 		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
 			continue
 		var strength = EnemyAdventureRulesScript.raid_strength(encounter)
