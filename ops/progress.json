@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-medium-rmg-unblock-routing-10184",
-  "currentSliceTitle": "Strategic AI Medium RMG Unblock Routing",
+  "currentSliceId": "native-rmg-medium-runtime-generation-unblock-10184",
+  "currentSliceTitle": "Native RMG Medium Runtime Generation Unblock",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Medium RMG unblock routing. The strategic AI baseline now exposes Medium setup failure status/error-code details, identifies native RMG runtime generation as the prerequisite blocker, recommends native-rmg-medium-runtime-generation-unblock-10184 ahead of the Medium AI probe, and keeps production_ready=false without balance-content edits.",
+  "currentSliceNotes": "Completed the narrow Medium land translated-profile runtime generation unblock. Next AI work is the now-unblocked Medium strategic-AI generalization probe; production-ready AI is not claimed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T20:45:00Z",
+  "updatedAt": "2026-06-01T22:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -37809,7 +37809,7 @@
     {
       "id": "strategic-ai-rmg-medium-generalization-probe-10184",
       "title": "Strategic AI RMG Medium Generalization Probe",
-      "status": "blocked",
+      "status": "pending",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "Strategic AI production-readiness KPI blocker",
@@ -37832,7 +37832,7 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "completionCriteria": "Baseline strategic-AI KPI executes the Medium land generated-map turn probe by default, observes enemy activity and target assignment on Medium, removes the Medium generalization blocker when green, preserves the long-run 100-seed matrix blocker, and repo validation passes.",
+      "completionCriteria": "Baseline strategic-AI KPI executes enough Medium land generated-map turn probes to satisfy the breadth target, observes enemy activity and target assignment across those Medium probes, removes the Medium generalization blocker when green, and repo validation passes without balance-content edits.",
       "nonGoals": [
         "claiming full strategic AI production readiness",
         "campaign production",
@@ -37840,15 +37840,19 @@
         "full 100-seed eight-week matrix"
       ],
       "startedAt": "2026-05-30T22:35:12Z",
-      "updatedAt": "2026-05-30T22:46:54Z",
-      "blockedAt": "2026-05-30T22:46:54Z",
-      "blockedReason": "Medium land Native RMG package generation currently fails before strategic-AI turn execution with archived_legacy_native_rmg_disabled for translated_rmg_template_002_v1 / translated_rmg_profile_002_v1. The strategic-AI goal remains active; only this Medium generalization slice is blocked on RMG generator support.",
+      "updatedAt": "2026-06-01T22:05:00Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 90 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
           "result": "blocked",
           "summary": "Medium land generation failed before AI turn coverage with archived_legacy_native_rmg_disabled."
         }
+      ],
+      "unblockedBy": "native-rmg-medium-runtime-generation-unblock-10184",
+      "unblockedAt": "2026-06-01T22:05:00Z",
+      "notes": [
+        "Medium setup is no longer blocked by archived_legacy_native_rmg_disabled.",
+        "The baseline now proves one Medium generated-map AI probe; this slice remains pending for broader Medium AI generalization evidence."
       ]
     },
     {
@@ -39060,6 +39064,115 @@
         "No unit, spell, economy, town-cost, authored scenario, content, docs, or project charter files were changed."
       ],
       "completedAt": "2026-06-01T20:45:00Z"
+    },
+    {
+      "id": "native-rmg-medium-runtime-generation-unblock-10184",
+      "title": "Native RMG Medium Runtime Generation Unblock",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "strategic-ai-medium-rmg-unblock-routing-10184 concrete prerequisite",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Restore a narrow validator-gated Medium land runtime generation path for the translated Medium profile required before the strategic AI Medium generated-map probe can execute real turns.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/libaurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/libaurelion_map_persistence.windows.template_release.x86_64.dll",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff --exit-code -- content docs project.md"
+      ],
+      "completionCriteria": "The exact translated_rmg_template_002_v1 / translated_rmg_profile_002_v1 Medium 72x72 one-level land profile generates and passes package validation for the strategic-AI probe, strict Small h3maped generation remains unchanged, unsupported broader RMG scopes remain explicitly blocked, Linux and Windows native outputs are rebuilt, and validation is green without balance-content edits.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "full HoMM3 RMG parity claim",
+        "reenabling broad archived legacy native RMG fallback",
+        "claiming strategic AI production readiness from one Medium generation unblock"
+      ],
+      "startedAt": "2026-06-01T21:25:00Z",
+      "updatedAt": "2026-06-01T22:05:00Z",
+      "notes": [
+        "Strict Small h3maped generation remains the production-ready public scope.",
+        "Unsupported broader RMG profiles still return archived_legacy_native_rmg_disabled instead of falling back to broad legacy runtime generation.",
+        "The strategic AI baseline now recommends strategic-ai-rmg-medium-generalization-probe-10184 instead of the completed runtime-generation unblock.",
+        "No unit, spell, economy, town-cost, authored scenario, content, docs, or project charter files were changed."
+      ],
+      "completedAt": "2026-06-01T22:05:00Z",
+      "validation": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "status": "pass",
+          "notes": "Linux debug native extension rebuilt after restoring the narrow Medium runtime generation path."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+          "status": "pass",
+          "notes": "Linux release native extension rebuilt."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
+          "status": "pass",
+          "notes": "Windows debug native extension rebuilt through the MinGW cross build."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+          "status": "pass",
+          "notes": "Windows release native extension rebuilt through the MinGW cross build."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+          "status": "pass",
+          "notes": "Exact Medium 72x72 one-level land translated profile generated, validated, wrote package startup, and started a native_rmg_scenario session with zero validation failures."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "Strategic AI baseline now executes the Medium generated-map probe for 3 turns with setup_ok=true, ok=true, 14 enemy activity events, 7 target assignments, and production_ready=false because Medium breadth remains open."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "Tactical battle AI smoke remains green across spell and non-spell tactical scoring."
+        },
+        {
+          "command": "python3 tests/strategic_ai_staged_evidence_report.py",
+          "status": "pass",
+          "notes": "Existing 100-seed strict Small staged evidence remains green with residual diagnostics retired."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md",
+          "status": "pass",
+          "notes": "Progress JSON syntax, whitespace, and no content/docs/project drift checks passed."
+        }
+      ],
+      "summary": "Completed. The exact translated Medium 72x72 one-level land profile now uses a narrow native runtime generation path, validates package startup, and lets the strategic AI baseline execute real Medium turns while keeping broader Medium AI generalization open."
     }
   ],
   "completedImplementationEvidence": [
@@ -50233,14 +50346,14 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "strategic-ai-medium-rmg-unblock-routing-10184",
-    "title": "Strategic AI Medium RMG Unblock Routing",
+    "id": "native-rmg-medium-runtime-generation-unblock-10184",
+    "title": "Native RMG Medium Runtime Generation Unblock",
     "status": "completed",
-    "updatedAt": "2026-06-01T20:45:00Z",
-    "completedAt": "2026-06-01T20:45:00Z",
-    "summary": "Completed Medium RMG unblock routing; the baseline now recommends native-rmg-medium-runtime-generation-unblock-10184 before retrying Medium strategic-AI turn execution."
+    "updatedAt": "2026-06-01T22:05:00Z",
+    "completedAt": "2026-06-01T22:05:00Z",
+    "summary": "Exact Medium land translated-profile generation now validates and starts package-backed strategic AI probes; broader Medium AI generalization remains pending."
   },
-  "currentSliceUpdatedAt": "2026-06-01T20:45:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T22:05:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53451,7 +53564,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-medium-rmg-unblock-routing-10184",
+  "currentSlice": "native-rmg-medium-runtime-generation-unblock-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",

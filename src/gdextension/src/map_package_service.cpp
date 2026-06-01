@@ -6083,6 +6083,21 @@ bool native_rmg_owner_compared_translated_profile_supported(const Dictionary &no
 	return false;
 }
 
+bool native_rmg_medium_runtime_generation_unblock_scope(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 72
+			&& height == 72
+			&& level_count == 1
+			&& player_count == 4
+			&& String(normalized.get("size_class_id", "")) == "homm3_medium"
+			&& String(normalized.get("water_mode", "land")) == "land"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_002_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_002_v1";
+}
+
 bool native_rmg_owner_discovered_comparison_seed(const Dictionary &normalized) {
 	return String(normalized.get("normalized_seed", "")).begins_with("owner_discovered_");
 }
@@ -25545,11 +25560,12 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["map_package_extension"] = ".amap";
 	result["scenario_package_extension"] = ".ascenario";
 	result["capabilities"] = capabilities();
-	result["native_rmg_generation_authority"] = "h3maped_small_reset_only";
+	result["native_rmg_generation_authority"] = "h3maped_small_reset_with_medium_ai_probe_unblock";
 	result["native_rmg_runtime_generation_allowed"] = true;
-	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated_only";
+	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated_plus_medium_72x72_land_translated_002_ai_probe_only";
 	result["native_rmg_production_ready"] = true;
 	result["native_rmg_production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	result["native_rmg_medium_runtime_generation_unblock_scope"] = "translated_rmg_template_002_v1_medium_72x72_one_level_land_ai_probe_only";
 	result["native_rmg_unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	result["native_rmg_active_reset_slice_id"] = "native-rmg-small-h3maped-port-10184";
 	result["native_rmg_active_port_capability"] = "native_rmg_small_h3maped_port_boundary";
@@ -25900,6 +25916,7 @@ Dictionary MapPackageService::random_map_config_identity(Dictionary config) cons
 }
 
 Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary options) const {
+	(void)options;
 	const std::chrono::steady_clock::time_point profile_started_at = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point phase_started_at = profile_started_at;
 	Array extension_profile_phases;
@@ -25911,6 +25928,264 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
 		return h3maped_small_rmg::validator_gated_generation_result(normalized, extension_profile);
 	}
-	Dictionary reset_extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
-	return h3maped_small_rmg::archived_legacy_disabled_result(normalized, reset_extension_profile, native_rmg_runtime_policy_classification(normalized));
+	if (!native_rmg_medium_runtime_generation_unblock_scope(normalized)) {
+		Dictionary reset_extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
+		return h3maped_small_rmg::archived_legacy_disabled_result(normalized, reset_extension_profile, native_rmg_runtime_policy_classification(normalized));
+	}
+	const bool scoped_structural_profile_supported = native_rmg_scoped_structural_profile_supported(normalized);
+	const bool owner_compared_translated_profile_supported = native_rmg_owner_compared_translated_profile_supported(normalized);
+	const bool translated_catalog_structural_profile_supported = native_rmg_translated_catalog_structural_profile_supported(normalized);
+	const String generation_status = native_rmg_generation_status_for_config(normalized);
+	const String full_generation_status = native_rmg_full_generation_status_for_config(normalized);
+	Dictionary runtime_policy_classification = native_rmg_runtime_policy_classification(normalized);
+	Dictionary identity = random_map_config_identity(config);
+	append_extension_profile_phase(extension_profile_phases, "config_identity", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary player_assignment = player_assignment_for_config(normalized);
+	append_extension_profile_phase(extension_profile_phases, "player_assignment", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary zone_layout = generate_zone_layout(normalized, player_assignment);
+	append_extension_profile_phase(extension_profile_phases, "zone_layout", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
+	append_extension_profile_phase(extension_profile_phases, "player_starts", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary road_network = generate_road_network(normalized, zone_layout, player_starts);
+	append_extension_profile_phase(extension_profile_phases, "road_network", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
+	append_extension_profile_phase(extension_profile_phases, "object_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary owner_small_random_land_category_shape_adjustment = apply_owner_small_random_land_category_shape_adjustment(normalized, object_placement);
+	append_extension_profile_phase(extension_profile_phases, "owner_small_random_land_category_shape_adjustment", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+		Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
+		append_extension_profile_phase(extension_profile_phases, "town_guard_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+		Dictionary owner_small_underground_category_shape_adjustment = apply_owner_small_027_underground_category_shape_adjustment(normalized, object_placement);
+		append_extension_profile_phase(extension_profile_phases, "owner_small_027_underground_category_shape_adjustment", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+		Dictionary owner_medium_category_shape_adjustment = apply_owner_medium_001_category_shape_adjustment(normalized, object_placement);
+		append_extension_profile_phase(extension_profile_phases, "owner_medium_001_category_shape_adjustment", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+		road_network = attach_owner_medium_town_frontage_roads(normalized, zone_layout, road_network, town_guard_placement);
+	append_extension_profile_phase(extension_profile_phases, "owner_medium_town_frontage_roads", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary connection_payload_resolution = generate_connection_payload_resolution(normalized, zone_layout, road_network, town_guard_placement);
+	road_network = attach_connection_payload_resolution(road_network, connection_payload_resolution);
+	append_extension_profile_phase(extension_profile_phases, "connection_payload_resolution", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary river_network = generate_river_network(normalized, road_network);
+	append_extension_profile_phase(extension_profile_phases, "river_network", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary terrain_grid = generate_terrain_grid(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement);
+	append_extension_profile_phase(extension_profile_phases, "terrain_grid", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Array object_placements = object_placement.get("object_placements", Array());
+	Array map_objects;
+	Array tagged_objects = tagged_record_snapshots(object_placements, "object_placement");
+	for (int64_t index = 0; index < tagged_objects.size(); ++index) {
+		map_objects.append(tagged_objects[index]);
+	}
+	Array tagged_towns = tagged_record_snapshots(town_guard_placement.get("town_records", Array()), "town");
+	for (int64_t index = 0; index < tagged_towns.size(); ++index) {
+		map_objects.append(tagged_towns[index]);
+	}
+	Array tagged_guards = tagged_record_snapshots(town_guard_placement.get("guard_records", Array()), "guard");
+	for (int64_t index = 0; index < tagged_guards.size(); ++index) {
+		map_objects.append(tagged_guards[index]);
+	}
+	Array tagged_gates = tagged_record_snapshots(connection_payload_resolution.get("special_connection_gate_records", Array()), "connection_gate");
+	for (int64_t index = 0; index < tagged_gates.size(); ++index) {
+		map_objects.append(tagged_gates[index]);
+	}
+	append_extension_profile_phase(extension_profile_phases, "map_object_snapshot_merge", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+
+	Dictionary metadata;
+	metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
+	metadata["schema_version"] = 1;
+	metadata["generated"] = true;
+	metadata["generator_version"] = NATIVE_RMG_VERSION;
+	metadata["generation_status"] = generation_status;
+	metadata["full_generation_status"] = full_generation_status;
+	metadata["supported_parity_config"] = scoped_structural_profile_supported;
+	metadata["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
+	metadata["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
+	metadata["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
+	metadata["runtime_policy_classification"] = runtime_policy_classification;
+	metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "terrain_grid_generated");
+	metadata["zone_generation_status"] = zone_layout.get("generation_status", "zones_generated_foundation");
+	metadata["runtime_zone_graph_signature"] = Dictionary(zone_layout.get("runtime_zone_graph", Dictionary())).get("signature", "");
+	metadata["player_start_generation_status"] = "player_starts_generated_foundation";
+	metadata["road_generation_status"] = road_network.get("generation_status", "roads_generated_foundation");
+	metadata["river_generation_status"] = river_network.get("generation_status", "rivers_generated_foundation");
+	metadata["connection_payload_generation_status"] = connection_payload_resolution.get("generation_status", "");
+	metadata["object_generation_status"] = object_placement.get("generation_status", "objects_generated_foundation");
+	metadata["town_generation_status"] = town_guard_placement.get("town_generation_status", "towns_generated_foundation");
+	metadata["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "guards_generated_foundation");
+	metadata["normalized_config"] = normalized;
+	metadata["deterministic_identity"] = identity;
+	metadata["terrain_grid_signature"] = terrain_grid.get("signature", "");
+	metadata["zone_layout_signature"] = zone_layout.get("signature", "");
+	metadata["player_start_signature"] = player_starts.get("signature", "");
+	metadata["road_network_signature"] = road_network.get("signature", "");
+	metadata["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
+	metadata["river_network_signature"] = river_network.get("signature", "");
+	metadata["connection_payload_resolution_signature"] = connection_payload_resolution.get("signature", "");
+	metadata["object_placement_signature"] = object_placement.get("signature", "");
+	metadata["object_placement_pipeline_signature"] = deterministic_object_placement_pipeline_signature(object_placement);
+	metadata["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
+	metadata["reward_band_summary_signature"] = Dictionary(object_placement.get("reward_band_summary", Dictionary())).get("signature", "");
+	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
+	metadata["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	metadata["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+	metadata["guard_placement_signature"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
+	metadata["guard_reward_monster_summary_signature"] = Dictionary(town_guard_placement.get("guard_reward_monster_summary", Dictionary())).get("signature", "");
+	metadata["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
+	metadata["options_keys"] = options.keys();
+
+	Dictionary map_state;
+	map_state["map_id"] = identity.get("map_id", "");
+	map_state["map_hash"] = identity.get("config_hash", "");
+	map_state["source_kind"] = "generated";
+	map_state["width"] = int32_t(normalized.get("width", 36));
+	map_state["height"] = int32_t(normalized.get("height", 36));
+	map_state["level_count"] = int32_t(normalized.get("level_count", 1));
+	map_state["metadata"] = metadata;
+	map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid, road_network, river_network, normalized);
+	map_state["route_graph"] = road_network.get("route_graph", Dictionary());
+	map_state["objects"] = map_objects;
+
+	Ref<MapDocument> document;
+	document.instantiate();
+	document->configure(map_state);
+	append_extension_profile_phase(extension_profile_phases, "map_document_initial_configure", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+
+	Array warnings;
+	if (!scoped_structural_profile_supported && !owner_compared_translated_profile_supported && !translated_catalog_structural_profile_supported) {
+		Dictionary warning;
+		warning["code"] = "full_generation_not_implemented";
+		warning["severity"] = "warning";
+		warning["path"] = "generate_random_map";
+		warning["message"] = "Native RMG creates catalog-wired playable generated-map output for exposed templates; exact full parity remains limited to tracked supported profiles.";
+		warning["context"] = Dictionary();
+		warnings.append(warning);
+	}
+
+	Dictionary metrics;
+	metrics["width"] = int32_t(normalized.get("width", 36));
+	metrics["height"] = int32_t(normalized.get("height", 36));
+	metrics["level_count"] = int32_t(normalized.get("level_count", 1));
+	metrics["tile_count"] = terrain_grid.get("tile_count", document->get_tile_count());
+	metrics["terrain_grid_tile_count"] = terrain_grid.get("tile_count", 0);
+	metrics["terrain_palette_count"] = Array(terrain_grid.get("terrain_palette_ids", Array())).size();
+	metrics["zone_count"] = zone_layout.get("zone_count", 0);
+	metrics["player_start_count"] = player_starts.get("start_count", 0);
+	metrics["road_segment_count"] = road_network.get("road_segment_count", 0);
+	metrics["road_cell_count"] = road_network.get("road_cell_count", 0);
+	metrics["river_segment_count"] = river_network.get("river_segment_count", 0);
+	metrics["river_cell_count"] = river_network.get("river_cell_count", 0);
+	metrics["connection_gate_count"] = Array(connection_payload_resolution.get("special_connection_gate_records", Array())).size();
+	metrics["object_placement_count"] = object_placement.get("object_count", 0);
+	metrics["town_count"] = town_guard_placement.get("town_count", 0);
+	metrics["guard_count"] = town_guard_placement.get("guard_count", 0);
+	metrics["object_count"] = document->get_object_count();
+
+	Dictionary report = validate_native_random_map_output(normalized, identity, terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement, metrics, warnings);
+	Dictionary provenance = build_native_random_map_provenance(normalized, identity, report);
+	metadata["validation_status"] = report.get("validation_status", "");
+	metadata["validation_report_signature"] = report.get("report_signature", "");
+	metadata["provenance_signature"] = provenance.get("signature", "");
+	metadata["full_output_signature"] = report.get("full_output_signature", "");
+	metadata["phase_signature"] = report.get("phase_signature", "");
+	metadata["no_authored_writeback"] = true;
+	map_state["metadata"] = metadata;
+	document->configure(map_state);
+	append_extension_profile_phase(extension_profile_phases, "validation_provenance_configure", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+
+	Dictionary result;
+	result["ok"] = true;
+	result["status"] = generation_status;
+	result["generation_status"] = generation_status;
+	result["terrain_generation_status"] = terrain_grid.get("generation_status", "terrain_grid_generated");
+	result["terrain_grid_status"] = scoped_structural_profile_supported ? "generated_scoped_structural_profile" : "generated";
+	result["zone_generation_status"] = zone_layout.get("generation_status", "zones_generated_foundation");
+	result["runtime_zone_graph"] = zone_layout.get("runtime_zone_graph", Dictionary());
+	result["runtime_graph_validation"] = zone_layout.get("runtime_graph_validation", Dictionary());
+	result["player_start_generation_status"] = "player_starts_generated_foundation";
+	result["road_generation_status"] = road_network.get("generation_status", "roads_generated_foundation");
+	result["river_generation_status"] = river_network.get("generation_status", "rivers_generated_foundation");
+	result["object_generation_status"] = object_placement.get("generation_status", "objects_generated_foundation");
+	result["town_generation_status"] = town_guard_placement.get("town_generation_status", "towns_generated_foundation");
+	result["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "guards_generated_foundation");
+	result["full_generation_status"] = full_generation_status;
+	result["supported_parity_config"] = scoped_structural_profile_supported;
+	result["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
+	result["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
+	result["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
+	result["runtime_policy_classification"] = runtime_policy_classification;
+	result["validation_status"] = report.get("validation_status", "");
+	result["normalized_config"] = normalized;
+	result["deterministic_identity"] = identity;
+	result["terrain_grid"] = terrain_grid;
+	result["player_assignment"] = player_assignment;
+	result["zone_layout"] = zone_layout;
+	result["player_starts"] = player_starts;
+	result["route_graph"] = road_network.get("route_graph", Dictionary());
+	result["road_network"] = road_network;
+	result["connection_road_controls"] = road_network.get("connection_road_controls", Dictionary());
+	result["connection_payload_resolution"] = connection_payload_resolution;
+	result["connection_gate_records"] = connection_payload_resolution.get("special_connection_gate_records", Array());
+	result["river_network"] = river_network;
+	result["river_quality_summary"] = river_network.get("quality_summary", Dictionary());
+	result["object_placement"] = object_placement;
+	result["object_placements"] = object_placements;
+	result["object_placement_pipeline_summary"] = object_placement.get("object_placement_pipeline_summary", Dictionary());
+	result["owner_small_027_underground_category_shape_adjustment"] = owner_small_underground_category_shape_adjustment;
+	result["owner_medium_001_category_shape_adjustment"] = owner_medium_category_shape_adjustment;
+	result["owner_small_random_land_category_shape_adjustment"] = owner_small_random_land_category_shape_adjustment;
+	result["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
+	result["reward_band_summary"] = object_placement.get("reward_band_summary", Dictionary());
+	result["adjacent_resource_records"] = object_placement.get("adjacent_resource_records", Array());
+	result["decoration_route_shaping_summary"] = object_placement.get("decoration_route_shaping_summary", Dictionary());
+	result["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
+	result["object_category_counts"] = scoped_structural_profile_supported ? native_rmg_structural_parity_targets(normalized).get("object_category_counts", Dictionary()) : object_placement.get("category_counts", Dictionary());
+	result["object_occupancy_index"] = object_placement.get("occupancy_index", Dictionary());
+	result["object_placement_signature"] = object_placement.get("signature", "");
+	result["town_guard_placement"] = town_guard_placement;
+	result["materialized_object_guard_summary"] = town_guard_placement.get("materialized_object_guard_summary", Dictionary());
+	result["guard_reward_monster_summary"] = town_guard_placement.get("guard_reward_monster_summary", Dictionary());
+	result["town_placement"] = town_guard_placement.get("town_placement", Dictionary());
+	result["guard_placement"] = town_guard_placement.get("guard_placement", Dictionary());
+	result["town_records"] = town_guard_placement.get("town_records", Array());
+	result["guard_records"] = town_guard_placement.get("guard_records", Array());
+	if (scoped_structural_profile_supported) {
+		Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
+		Dictionary flat_town_guard_counts;
+		flat_town_guard_counts["mine"] = parity_targets.get("mine_count", 0);
+		flat_town_guard_counts["neutral_dwelling"] = parity_targets.get("dwelling_count", 0);
+		flat_town_guard_counts["town"] = parity_targets.get("town_count", 0);
+		flat_town_guard_counts["guard"] = parity_targets.get("guard_count", 0);
+		result["town_guard_category_counts"] = flat_town_guard_counts;
+	} else {
+		result["town_guard_category_counts"] = town_guard_placement.get("category_counts", Dictionary());
+	}
+	result["town_guard_occupancy_index"] = town_guard_placement.get("combined_occupancy_index", Dictionary());
+	result["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	result["route_reachability_proof"] = road_network.get("route_reachability_proof", Dictionary());
+	result["map_document"] = document;
+	result["map_metadata"] = metadata;
+	result["report"] = report;
+	result["validation_report"] = report;
+	result["provenance"] = provenance;
+	result["component_summaries"] = report.get("component_summaries", Dictionary());
+	result["component_signatures"] = report.get("component_signatures", Dictionary());
+	result["component_counts"] = report.get("component_counts", Dictionary());
+	result["phase_pipeline"] = report.get("phase_pipeline", Array());
+	result["full_output_signature"] = report.get("full_output_signature", "");
+	result["generated_output_identity"] = report.get("deterministic_output_identity", Dictionary());
+	result["no_authored_writeback"] = true;
+	result["native_runtime_authoritative"] = false;
+	result["full_parity_claim"] = false;
+	result["adoption_status"] = "not_authoritative_no_runtime_call_site_adoption";
+	append_extension_profile_phase(extension_profile_phases, "result_assembly", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	result["extension_profile"] = build_extension_profile(
+			extension_profile_phases,
+			profile_started_at,
+			int32_t(normalized.get("width", 36)),
+			int32_t(normalized.get("height", 36)),
+			int32_t(normalized.get("level_count", 1)),
+			int32_t(metrics.get("object_count", 0)),
+			int32_t(metrics.get("road_segment_count", 0)),
+			int32_t(metrics.get("town_count", 0)),
+			int32_t(metrics.get("guard_count", 0)),
+			top_profile_phase_id,
+			top_profile_phase_usec);
+	return result;
 }

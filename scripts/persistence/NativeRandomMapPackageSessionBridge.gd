@@ -312,13 +312,13 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 			"faction_id": town_faction_id,
 			"source_h3maped_faction_id": String(object.get("h3maped_faction_id", object.get("faction_id", ""))),
 			"source_package_town_id": String(object.get("town_id", "")),
-			"is_start_town": bool(object.get("is_start_town", object.get("start_anchor", false))),
-			"start_anchor": bool(object.get("start_anchor", object.get("is_start_town", false))),
+				"is_start_town": _bool_or_default(object.get("is_start_town", object.get("start_anchor", false)), false),
+				"start_anchor": _bool_or_default(object.get("start_anchor", object.get("is_start_town", false)), false),
 			"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
 			"package_block_tiles": object.get("package_block_tiles", []).duplicate(true) if object.get("package_block_tiles", []) is Array else [],
 			"visit_tile": object.get("visit_tile", {}).duplicate(true) if object.get("visit_tile", {}) is Dictionary else {},
 			"package_visit_tiles": object.get("package_visit_tiles", []).duplicate(true) if object.get("package_visit_tiles", []) is Array else [],
-			"blocking_body": bool(object.get("blocking_body", true)),
+				"blocking_body": _bool_or_default(object.get("blocking_body", true), true),
 			"built_buildings": town_template.get("starting_building_ids", []).duplicate(true) if town_template.get("starting_building_ids", []) is Array else [],
 			"available_recruits": {},
 			"garrison": town_template.get("garrison", []).duplicate(true) if town_template.get("garrison", []) is Array else [],
@@ -364,6 +364,20 @@ static func _int_or_default(value: Variant, default_value: int) -> int:
 	if value == null:
 		return default_value
 	return int(value)
+
+static func _bool_or_default(value: Variant, default_value: bool) -> bool:
+	if value == null:
+		return default_value
+	if value is bool:
+		return value
+	if value is int or value is float:
+		return int(value) != 0
+	var text := str(value).strip_edges().to_lower()
+	if text in ["true", "1", "yes", "on"]:
+		return true
+	if text in ["false", "0", "no", "off", ""]:
+		return false
+	return default_value
 
 static func _resource_nodes_from_document(map_document: Variant) -> Array:
 	var nodes := []
