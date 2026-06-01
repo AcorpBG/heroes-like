@@ -1089,6 +1089,9 @@ static func _strategic_ai_long_run_seed_row(
 	row["final_task_summary"] = _strategic_ai_task_summary(session)
 	row["active_raid_count"] = _strategic_ai_active_raid_count(session)
 	row["final_battle_handoff_summary"] = _strategic_ai_battle_handoff_summary(session, [])
+	if String(session.game_state) == "battle":
+		failures.append("final_game_state_still_battle")
+		all_turns_ok = false
 	row["ok"] = all_turns_ok and failures.is_empty() and int(row.get("initial_enemy_state_count", 0)) > 0 and turns_completed > 0
 	row["classification"] = "native_rmg_long_run_ai_health" if bool(row.get("ok", false)) else "behavior_bug"
 	row["row_runtime_msec"] = maxi(0, Time.get_ticks_msec() - row_started_msec)
@@ -1155,6 +1158,8 @@ static func _strategic_ai_auto_resolve_battle_interrupt(session: SessionStateSto
 			break
 	if not _strategic_ai_battle_terminal_state(final_state) and steps >= step_limit:
 		final_state = "stalled_step_limit"
+	if _strategic_ai_battle_terminal_state(final_state):
+		_strategic_ai_apply_battle_interrupt_handoff(session)
 	return {
 		"ok": _strategic_ai_battle_terminal_state(final_state) and final_state != "stalled_step_limit",
 		"state": final_state,
@@ -1166,6 +1171,16 @@ static func _strategic_ai_auto_resolve_battle_interrupt(session: SessionStateSto
 		"scenario_status": String(session.scenario_status),
 		"game_state": String(session.game_state),
 	}
+
+static func _strategic_ai_apply_battle_interrupt_handoff(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null or not session.battle.is_empty() or String(session.game_state) != "battle":
+		return
+	if String(session.scenario_status) == "in_progress":
+		session.game_state = "overworld"
+		OverworldRules.clear_active_town_visit(session)
+		OverworldRules.mark_runtime_normalized_transition_state(session)
+	else:
+		session.game_state = "outcome"
 
 static func _strategic_ai_battle_terminal_state(state: String) -> bool:
 	return state in ["victory", "defeat", "hero_defeat", "town_lost", "retreat", "surrender", "stalemate"]
