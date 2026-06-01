@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing residual Native RMG tactical/strategic AI diagnostic hardening. Next AI work should continue broad production hardening without touching balance-content files.
+- Current implementation slice: none selected after completing strategic AI baseline staged-evidence adoption. Next AI work should address the remaining Medium generated-map AI generalization gap without touching balance-content files.
+- Latest completed slice: `strategic-ai-baseline-staged-evidence-adoption-10184`.
 - Latest completed slice: `strategic-ai-residual-diagnostic-hardening-10184`.
 - Latest completed slice: `strategic-ai-staged-100-evidence-aggregation-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset0-count3-10184`.

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-residual-diagnostic-hardening-10184",
-  "currentSliceTitle": "Strategic AI Residual Diagnostic Hardening",
+  "currentSliceId": "strategic-ai-baseline-staged-evidence-adoption-10184",
+  "currentSliceTitle": "Strategic AI Baseline Staged Evidence Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed residual Native RMG tactical/strategic AI diagnostic hardening. Fixed live post-resolution raid target repair and friendly-town regroup contact resolution without balance-content edits. Focused residual seeds 95, 53, 27, and 28 plus the original 94-98 shard are green with zero behavior bugs, zero target-integrity violations, zero stalls, and zero live unreachable active targets.",
+  "currentSliceNotes": "Completed baseline KPI adoption of completed staged 100-seed Native RMG long-run evidence. The baseline now retires no_long_run_seed_matrix when staged coverage and residual hardening are complete, and preserves Medium generated-map generalization as the remaining production gap. No balance-content edits.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T18:40:00Z",
+  "updatedAt": "2026-06-01T19:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -38836,6 +38836,80 @@
         "Original 94-98 residual shard rerun proves seed 95 and neighboring generated maps remain green after the fix."
       ],
       "completedAt": "2026-06-01T18:40:00Z"
+    },
+    {
+      "id": "strategic-ai-baseline-staged-evidence-adoption-10184",
+      "title": "Strategic AI Baseline Staged Evidence Adoption",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "strategic-ai-residual-diagnostic-hardening-10184 follow-up",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Make the strategic AI baseline KPI consume completed staged 100-seed Native RMG long-run evidence so stale long-run blockers are retired while true production gaps remain visible.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_baseline_kpi_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "python3 tests/strategic_ai_staged_evidence_report.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff --exit-code -- content docs project.md"
+      ],
+      "completionCriteria": "Strategic AI baseline KPI reports staged 100-seed long-run evidence as present, no longer emits no_long_run_seed_matrix when staged evidence is complete and residuals are retired, still preserves Medium generated-map generalization as a production gap, and validation remains green without balance-content edits.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming final production readiness while Medium generated-map AI generalization remains unproven"
+      ],
+      "startedAt": "2026-06-01T19:05:00Z",
+      "updatedAt": "2026-06-01T19:20:00Z",
+      "validation": [
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "STRATEGIC_AI_BASELINE_KPI_REPORT ok=true. long_run_summary ok=true with strict_covered_seed_count=100 and residual_diagnostics_retired=true; blocker_rows now contains only native_rmg_medium_ai_generalization."
+        },
+        {
+          "command": "python3 tests/strategic_ai_staged_evidence_report.py",
+          "status": "pass",
+          "notes": "STRATEGIC_AI_STAGED_EVIDENCE_REPORT status=pass, blocker_rows=[], strict_covered_seed_count=100, residual_diagnostics=[]."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "BATTLE_AUTOPLAY_TACTICAL_ORDER_REPORT ok=true."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "pass",
+          "notes": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md",
+          "status": "pass",
+          "notes": "Progress JSON syntax, whitespace, and no content/docs/project drift checks passed."
+        }
+      ],
+      "summary": "Completed. Strategic AI baseline KPI now adopts completed staged 100-seed Native RMG long-run evidence and no longer emits the stale no_long_run_seed_matrix blocker after residual hardening is complete.",
+      "notes": [
+        "The baseline KPI currently still emits no_long_run_seed_matrix even though staged 100-seed evidence and residual hardening are complete.",
+        "Medium generated-map AI generalization remains a real production gap and is still reported by the baseline KPI.",
+        "This slice intentionally does not claim final production readiness."
+      ],
+      "completedAt": "2026-06-01T19:20:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -50009,14 +50083,14 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "strategic-ai-residual-diagnostic-hardening-10184",
-    "title": "Strategic AI Residual Diagnostic Hardening",
+    "id": "strategic-ai-baseline-staged-evidence-adoption-10184",
+    "title": "Strategic AI Baseline Staged Evidence Adoption",
     "status": "completed",
-    "updatedAt": "2026-06-01T18:40:00Z",
-    "completedAt": "2026-06-01T18:40:00Z",
-    "summary": "Completed residual Native RMG tactical/strategic AI diagnostic hardening. Fixed live post-resolution raid target repair and friendly-town regroup contact resolution without balance-content edits; focused residual seeds and the original 94-98 shard are green."
+    "updatedAt": "2026-06-01T19:20:00Z",
+    "completedAt": "2026-06-01T19:20:00Z",
+    "summary": "Completed baseline KPI adoption of completed staged 100-seed Native RMG long-run evidence; the stale long-run blocker is retired and Medium generated-map generalization remains the active production gap."
   },
-  "currentSliceUpdatedAt": "2026-06-01T18:40:00Z",
+  "currentSliceUpdatedAt": "2026-06-01T19:20:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53227,7 +53301,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-residual-diagnostic-hardening-10184",
+  "currentSlice": "strategic-ai-baseline-staged-evidence-adoption-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",
