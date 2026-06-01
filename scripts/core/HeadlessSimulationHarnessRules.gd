@@ -859,6 +859,8 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 	var measurement_gap_count := 0
 	var medium_probe_count := 0
 	var medium_ok_count := 0
+	var medium_setup_failure_statuses := []
+	var medium_setup_failure_error_codes := []
 	var enemy_event_count := 0
 	var target_assignment_count := 0
 	for row_value in rmg_cases:
@@ -883,6 +885,14 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 			medium_probe_count += 1
 			if bool(row.get("ok", false)):
 				medium_ok_count += 1
+			if not bool(row.get("setup_ok", false)):
+				var setup_failure: Dictionary = row.get("setup_failure", {}) if row.get("setup_failure", {}) is Dictionary else {}
+				var generation_status := String(setup_failure.get("generation_status", setup_failure.get("source_status", "")))
+				var error_code := String(setup_failure.get("error_code", ""))
+				if generation_status != "" and generation_status not in medium_setup_failure_statuses:
+					medium_setup_failure_statuses.append(generation_status)
+				if error_code != "" and error_code not in medium_setup_failure_error_codes:
+					medium_setup_failure_error_codes.append(error_code)
 		enemy_event_count += int(row.get("enemy_activity_event_count", 0))
 		target_assignment_count += int(row.get("target_assignment_event_count", 0))
 	return {
@@ -896,6 +906,8 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 		"scope_gap_count": scope_gap_count,
 		"behavior_bug_count": behavior_bug_count,
 		"measurement_gap_count": measurement_gap_count,
+		"medium_setup_failure_statuses": medium_setup_failure_statuses,
+		"medium_setup_failure_error_codes": medium_setup_failure_error_codes,
 		"enemy_activity_event_count": enemy_event_count,
 		"target_assignment_event_count": target_assignment_count,
 	}
@@ -933,11 +945,18 @@ static func _strategic_ai_baseline_blocker_rows(
 			"summary": "Supported Small generated-map AI turn health is identified as required coverage but is not executed by the default fast audit.",
 		})
 	if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)):
-		rows.append({
+		var medium_row := {
 			"blocker_id": "native_rmg_medium_ai_generalization",
 			"severity": "production_gap",
 			"summary": "Medium generated-map strategic AI turn health is not broadly proven.",
-		})
+			"medium_probe_count": int(rmg_summary.get("medium_probe_count", 0)),
+			"medium_ok_count": int(rmg_summary.get("medium_ok_count", 0)),
+			"medium_setup_failure_statuses": rmg_summary.get("medium_setup_failure_statuses", []),
+			"medium_setup_failure_error_codes": rmg_summary.get("medium_setup_failure_error_codes", []),
+			"blocked_by": "native_rmg_runtime_generation" if "archived_legacy_native_rmg_disabled" in (rmg_summary.get("medium_setup_failure_error_codes", []) if rmg_summary.get("medium_setup_failure_error_codes", []) is Array else []) else "medium_ai_turn_health",
+			"next_unblock_slice_id": "native-rmg-medium-runtime-generation-unblock-10184" if "archived_legacy_native_rmg_disabled" in (rmg_summary.get("medium_setup_failure_error_codes", []) if rmg_summary.get("medium_setup_failure_error_codes", []) is Array else []) else "strategic-ai-rmg-medium-generalization-probe-10184",
+		}
+		rows.append(medium_row)
 	if not bool(long_run_summary.get("ok", false)):
 		rows.append({
 			"blocker_id": "no_long_run_seed_matrix",
@@ -950,16 +969,20 @@ static func _strategic_ai_baseline_next_slices(blocker_rows: Array) -> Array:
 	var has_small_bug := false
 	var has_medium_gap := false
 	var has_long_run_gap := false
+	var has_medium_runtime_blocker := false
 	for row in blocker_rows:
 		if not (row is Dictionary):
 			continue
 		has_small_bug = has_small_bug or String(row.get("blocker_id", "")) == "native_rmg_small_ai_turn_health"
 		has_medium_gap = has_medium_gap or String(row.get("blocker_id", "")) == "native_rmg_medium_ai_generalization"
 		has_long_run_gap = has_long_run_gap or String(row.get("blocker_id", "")) == "no_long_run_seed_matrix"
+		has_medium_runtime_blocker = has_medium_runtime_blocker or String(row.get("next_unblock_slice_id", "")) == "native-rmg-medium-runtime-generation-unblock-10184"
 	var slices := []
 	if has_small_bug:
 		slices.append("strategic-ai-rmg-small-turn-health-fix-10184")
 	if has_medium_gap:
+		if has_medium_runtime_blocker:
+			slices.append("native-rmg-medium-runtime-generation-unblock-10184")
 		slices.append("strategic-ai-rmg-medium-generalization-probe-10184")
 	if has_long_run_gap:
 		slices.append("strategic-ai-long-run-seed-matrix-10184")

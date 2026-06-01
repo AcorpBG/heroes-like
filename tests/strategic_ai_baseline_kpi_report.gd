@@ -101,6 +101,13 @@ func _assert_report(report: Dictionary) -> bool:
 	if _blocker_row(blocker_rows, "native_rmg_medium_ai_generalization").is_empty():
 		_fail("Strategic AI baseline must preserve the Medium generated-map generalization production gap: %s" % JSON.stringify(blocker_rows))
 		return false
+	var medium_blocker := _blocker_row(blocker_rows, "native_rmg_medium_ai_generalization")
+	if String(medium_blocker.get("blocked_by", "")) != "native_rmg_runtime_generation":
+		_fail("Medium generated-map blocker should identify native RMG runtime generation as the prerequisite blocker: %s" % JSON.stringify(medium_blocker))
+		return false
+	if String(medium_blocker.get("next_unblock_slice_id", "")) != "native-rmg-medium-runtime-generation-unblock-10184":
+		_fail("Medium generated-map blocker should route to the concrete RMG unblock slice: %s" % JSON.stringify(medium_blocker))
+		return false
 	if not _blocker_row(blocker_rows, "native_rmg_small_ai_turn_probe_coverage").is_empty() or not _blocker_row(blocker_rows, "native_rmg_small_ai_turn_health").is_empty():
 		_fail("Supported Small generated-map AI turn health should be executed and green before this baseline passes: %s" % JSON.stringify(blocker_rows))
 		return false
@@ -110,6 +117,9 @@ func _assert_report(report: Dictionary) -> bool:
 	var recommendations: Array = report.get("recommended_next_slices", []) if report.get("recommended_next_slices", []) is Array else []
 	if "strategic-ai-long-run-seed-matrix-10184" in recommendations:
 		_fail("Strategic AI baseline should not recommend the completed long-run seed-matrix slice: %s" % JSON.stringify(recommendations))
+		return false
+	if "native-rmg-medium-runtime-generation-unblock-10184" not in recommendations:
+		_fail("Strategic AI baseline did not recommend the concrete Medium RMG runtime-generation unblock slice: %s" % JSON.stringify(recommendations))
 		return false
 	if "strategic-ai-rmg-medium-generalization-probe-10184" not in recommendations:
 		_fail("Strategic AI baseline did not recommend the remaining Medium generated-map AI generalization slice: %s" % JSON.stringify(recommendations))
