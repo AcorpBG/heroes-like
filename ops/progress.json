@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-eight-week-shard-offset53-count5-10184",
-  "currentSliceTitle": "Strategic AI Eight-Week Shard Offset 53 Count 5",
+  "currentSliceId": "strategic-ai-eight-week-shard-offset58-count5-10184",
+  "currentSliceTitle": "Strategic AI Eight-Week Shard Offset 58 Count 5",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed split 56-turn Native RMG generated-map strategic/tactical AI shard over seed ordinals 54-58 after fixing Strategic AI town staging for exact Native RMG/H3M town interaction masks and active pressure-host target integrity. Aggregate shard evidence: 5/5 rows ok, setup ok 5/5, turns_completed=50, enemy_activity_event_count=156, target_assignment_count=61, commander_task_planned_count=15, site_seized_count=16, natural_tactical_battle_pressure_turn_count=50, natural_tactical_battle_arrival_turn_count=5, battle_interrupt_count=5, auto_resolved_battle_count=5, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0. Focused seed 57 improved from unreachable player-town pressure to a natural Halo Spire contact at distance 0 and battle/outcome by day 16. Full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
+  "currentSliceNotes": "Completed split 56-turn Native RMG generated-map strategic/tactical AI shard over seed ordinals 59-63. Aggregate shard evidence: 5/5 rows ok, setup ok 5/5, turns_completed=83, enemy_activity_event_count=280, target_assignment_count=55, commander_task_planned_count=80, site_seized_count=13, natural_tactical_battle_pressure_turn_count=27, natural_tactical_battle_arrival_turn_count=4, battle_interrupt_count=4, auto_resolved_battle_count=4, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0. Seed 61 completed the full 56-turn target in progress with active enemy behavior and no target-integrity or behavior bug; it is recorded as a pacing watch, not a hard blocker. Full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-01T12:35:07Z",
+  "updatedAt": "2026-06-01T13:10:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,66 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "strategic-ai-eight-week-shard-offset58-count5-10184",
+      "title": "Strategic AI Eight-Week Shard Offset 58 Count 5",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "Active tactical/strategic AI production-readiness goal after seed-54..58 56-turn shard completed",
+      "planRef": "PLAN.md Current Tactical State",
+      "purpose": "Continue moving toward the full Native RMG 100-seed eight-week tactical/strategic AI production target by running the next five generated-map seed ordinals and fixing any real tactical/strategic AI behavior defect exposed.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_long_run_seed_matrix_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=58 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 7200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn or split into smaller seed-count shards if runtime remains too high",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "git diff --exit-code -- content docs project.md"
+      ],
+      "completionCriteria": "Focused Native RMG eight-week shard over seed ordinals 59-63 completes without behavior bugs, target-integrity violations, invalid tactical orders, or balance-content edits; any newly exposed tactical/strategic AI behavior gap is fixed with focused validation or recorded precisely as a remaining production blocker; tactical order and repository validation remain green.",
+      "nonGoals": [
+        "unit stat tuning",
+        "spell stat tuning",
+        "economy or town-cost balance changes",
+        "authored scenario balance changes",
+        "claiming production readiness before full 100-seed eight-week evidence"
+      ],
+      "startedAt": "2026-06-01T12:45:00Z",
+      "updatedAt": "2026-06-01T13:10:00Z",
+      "validation": [
+        "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=58 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 7200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinals 59-63 aggregate 5/5 rows ok, turns_completed=83, terminal_status defeat=4 and in_progress=1, battle_interrupt_count=4, auto_resolved_battle_count=4, natural_tactical_battle_arrival_turn_count=4, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, needs_attention only because full 100-seed eight-week matrix was not run.",
+        "Seed ordinal 61 -> row ok, turns_completed=56, final_scenario_status=in_progress, enemy_activity_event_count=196, target_assignment_count=21, commander_task_planned_count=73, battle_interrupt_count=0, auto_resolved_battle_count=0, behavior_bug_count=0, target_integrity_violation_count=0; pacing watch only.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn -> ok=true.",
+        "python3 tests/validate_repo.py -> VALIDATION PASSED.",
+        "jq empty ops/progress.json -> pass.",
+        "git diff --check -> pass.",
+        "git diff --exit-code -- content docs project.md -> pass; no unit, spell, economy, faction, authored scenario, or project/design-doc edits in this AI slice."
+      ],
+      "summary": "Completed split 56-turn Native RMG generated-map strategic/tactical AI shard over seed ordinals 59-63. Aggregate shard evidence: 5/5 rows ok, setup ok 5/5, turns_completed=83, enemy_activity_event_count=280, target_assignment_count=55, commander_task_planned_count=80, site_seized_count=13, natural_tactical_battle_pressure_turn_count=27, natural_tactical_battle_arrival_turn_count=4, battle_interrupt_count=4, auto_resolved_battle_count=4, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0. Seed 61 completed the full 56-turn target in progress with active enemy behavior and no target-integrity or behavior bug; it is recorded as a pacing watch, not a hard blocker. Full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
+      "notes": [
+        "Do not touch unit, spell, growth, economy, faction, town-cost, authored scenario, or balance content.",
+        "Focused five-seed eight-week reports may keep the full 100-seed eight-week remaining-validation blocker by design.",
+        "The full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
+        "Completed without balance-content edits; remaining production-readiness work is the next Native RMG seed shard and ultimately the full 100-seed eight-week matrix.",
+        "Seed ordinal 61 remained in progress through 56 turns with active enemy behavior; track as a pacing watch while continuing broader seed coverage."
+      ],
+      "completedAt": "2026-06-01T13:10:00Z"
+    },
     {
       "id": "strategic-ai-eight-week-shard-offset53-count5-10184",
       "title": "Strategic AI Eight-Week Shard Offset 53 Count 5",
@@ -49272,12 +49332,12 @@
     "summary": "Seed ordinals 49-53 completed as a split Native RMG 56-turn tactical/strategic AI shard: 5/5 rows ok, 4 battle interrupts / 4 auto-resolved, invalid_orders=0, behavior_bug_count=0, target_integrity_violation_count=0. Seed 53 remains a no-arrival pacing watch. Full 100-seed eight-week matrix remains open."
   },
   "active_slice": {
-    "id": "strategic-ai-eight-week-shard-offset53-count5-10184",
-    "title": "Strategic AI Eight-Week Shard Offset 53 Count 5",
+    "id": "strategic-ai-eight-week-shard-offset58-count5-10184",
+    "title": "Strategic AI Eight-Week Shard Offset 58 Count 5",
     "status": "completed",
-    "updatedAt": "2026-06-01T12:35:07Z"
+    "updatedAt": "2026-06-01T13:10:00Z"
   },
-  "currentSliceUpdatedAt": "2026-06-01T12:35:07Z",
+  "currentSliceUpdatedAt": "2026-06-01T13:10:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -52488,15 +52548,15 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-eight-week-shard-offset53-count5-10184",
+  "currentSlice": "strategic-ai-eight-week-shard-offset58-count5-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-01T12:35:07Z",
-    "currentSliceId": "strategic-ai-eight-week-shard-offset53-count5-10184",
-    "summary": "Completed split 56-turn Native RMG generated-map strategic/tactical AI shard over seed ordinals 54-58 after fixing Strategic AI town staging for exact Native RMG/H3M town interaction masks and active pressure-host target integrity. Aggregate shard evidence: 5/5 rows ok, setup ok 5/5, turns_completed=50, enemy_activity_event_count=156, target_assignment_count=61, commander_task_planned_count=15, site_seized_count=16, natural_tactical_battle_pressure_turn_count=50, natural_tactical_battle_arrival_turn_count=5, battle_interrupt_count=5, auto_resolved_battle_count=5, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0. Focused seed 57 improved from unreachable player-town pressure to a natural Halo Spire contact at distance 0 and battle/outcome by day 16. Full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
+    "updatedAt": "2026-06-01T13:10:00Z",
+    "currentSliceId": "strategic-ai-eight-week-shard-offset58-count5-10184",
+    "summary": "Completed split 56-turn Native RMG generated-map strategic/tactical AI shard over seed ordinals 59-63. Aggregate shard evidence: 5/5 rows ok, setup ok 5/5, turns_completed=83, enemy_activity_event_count=280, target_assignment_count=55, commander_task_planned_count=80, site_seized_count=13, natural_tactical_battle_pressure_turn_count=27, natural_tactical_battle_arrival_turn_count=4, battle_interrupt_count=4, auto_resolved_battle_count=4, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0. Seed 61 completed the full 56-turn target in progress with active enemy behavior and no target-integrity or behavior bug; it is recorded as a pacing watch, not a hard blocker. Full 100-seed eight-week Native RMG matrix remains required before any production-ready AI claim.",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=56 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=28 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinal 57 row ok, turns_completed=15, final_scenario_status=defeat, final_game_state=outcome, battle_interrupt_count=1, auto_resolved_battle_count=1, best_min_tactical_battle_goal_distance=0, target_integrity_violation_count=0.",
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=53 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 7200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinals 54-58 aggregate 5/5 rows ok, turns_completed=50, final terminal_status defeat=5, battle_interrupt_count=5, auto_resolved_battle_count=5, natural_tactical_battle_arrival_turn_count=5, behavior_bug_count=0, target_integrity_violation_count=0, needs_attention only because full 100-seed eight-week matrix was not run.",
+      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=58 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 7200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn -> seed ordinals 59-63 aggregate 5/5 rows ok, turns_completed=83, terminal_status defeat=4 and in_progress=1, battle_interrupt_count=4, auto_resolved_battle_count=4, natural_tactical_battle_arrival_turn_count=4, behavior_bug_count=0, target_integrity_violation_count=0, stalled_turn_count=0, needs_attention only because full 100-seed eight-week matrix was not run.",
+      "Seed ordinal 61 -> row ok, turns_completed=56, final_scenario_status=in_progress, enemy_activity_event_count=196, target_assignment_count=21, commander_task_planned_count=73, battle_interrupt_count=0, auto_resolved_battle_count=0, behavior_bug_count=0, target_integrity_violation_count=0; pacing watch only.",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn -> ok=true.",
       "python3 tests/validate_repo.py -> VALIDATION PASSED.",
       "jq empty ops/progress.json -> pass.",
