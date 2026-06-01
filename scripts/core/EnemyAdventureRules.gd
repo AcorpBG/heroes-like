@@ -15757,7 +15757,24 @@ static func _resolve_exploration_target(
 	continued["last_explored_x"] = int(raid.get("x", 0))
 	continued["last_explored_y"] = int(raid.get("y", 0))
 	continued["last_explored_day"] = int(session.day)
-	continued = assign_target(session, config, continued)
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "rebuild_pressure_relaunch" in reason_codes:
+		var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+		var scout_plan := _no_known_target_frontier_sweep_plan(session, config, origin)
+		if scout_plan.is_empty():
+			scout_plan = _no_known_target_exploration_plan(session, config, origin)
+		if not scout_plan.is_empty():
+			continued.merge(scout_plan, true)
+			var scout_reason_codes := _normalize_string_array(continued.get("target_reason_codes", []))
+			for code in ["rebuild_pressure_relaunch", "frontier_scouting"]:
+				if code not in scout_reason_codes:
+					scout_reason_codes.append(code)
+			continued["target_reason_codes"] = scout_reason_codes
+			continued["target_public_reason"] = "continuing frontier pressure"
+			continued["target_public_importance"] = "medium"
+			continued["target_debug_reason"] = "rebuild pressure scout continues exploration instead of falling back to passive regroup"
+	if String(continued.get("target_kind", "")) == "":
+		continued = assign_target(session, config, continued)
 	var next_target := _current_target_snapshot(continued)
 	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
 		return {"encounter": raid, "state": _ai_hero_task_enemy_state_for_faction(session, faction_id), "event_message": ""}
@@ -17259,6 +17276,7 @@ static func _retire_failed_regroup_to_rebuild(
 	retired["retired_to_rebuild_day"] = int(session.day)
 	retired["retired_to_rebuild_town_id"] = String(town.get("placement_id", ""))
 	var commander_state = retired.get("enemy_commander_state", {})
+	var roster_hero_id := ""
 	if commander_state is Dictionary and not commander_state.is_empty():
 		var updated_commander := sync_commander_army_continuity(
 			commander_state,
@@ -17266,6 +17284,7 @@ static func _retire_failed_regroup_to_rebuild(
 			String(retired.get("encounter_id", retired.get("id", "")))
 		)
 		retired["enemy_commander_state"] = updated_commander
+		roster_hero_id = String(updated_commander.get("roster_hero_id", ""))
 		sync_commander_state_to_roster(
 			session,
 			faction_id,
@@ -17275,6 +17294,13 @@ static func _retire_failed_regroup_to_rebuild(
 			0,
 			String(updated_commander.get("last_outcome", ""))
 		)
+	_mark_rebuild_pressure_request(
+		session,
+		faction_id,
+		String(town.get("placement_id", "")),
+		roster_hero_id,
+		"no_spare_garrison_after_regroup"
+	)
 	var resolved = session.overworld.get("resolved_encounters", [])
 	if not (resolved is Array):
 		resolved = []
@@ -17285,6 +17311,34 @@ static func _retire_failed_regroup_to_rebuild(
 	retired = _clear_regroup_target(retired)
 	retired["arrived"] = false
 	return retired
+
+static func _mark_rebuild_pressure_request(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	origin_town_id: String,
+	commander_id: String,
+	reason: String
+) -> void:
+	if session == null or faction_id == "":
+		return
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return
+	for index in range(states.size()):
+		if not (states[index] is Dictionary):
+			continue
+		var state: Dictionary = states[index]
+		if String(state.get("faction_id", "")) != faction_id:
+			continue
+		state["rebuild_pressure_request"] = {
+			"requested_day": int(session.day),
+			"origin_town_id": origin_town_id,
+			"commander_id": commander_id,
+			"reason": reason,
+		}
+		states[index] = state
+		session.overworld["enemy_states"] = states
+		return
 
 static func _transfer_town_garrison_to_raid(
 	session: SessionStateStoreScript.SessionData,
