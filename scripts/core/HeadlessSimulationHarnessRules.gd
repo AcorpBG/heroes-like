@@ -1252,6 +1252,7 @@ static func _strategic_ai_event_label_key(label: String) -> String:
 
 static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScript.SessionData, events: Array) -> Dictionary:
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	var scenario_in_progress := String(session.scenario_status) == "in_progress"
 	var target_kind_counts := {}
 	var active_raid_count := 0
 	var active_town_target_count := 0
@@ -1263,6 +1264,7 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 	var near_tactical_town_target_count := 0
 	var near_tactical_hero_target_count := 0
 	var unreachable_active_target_count := 0
+	var suppressed_post_outcome_unreachable_active_target_count := 0
 	var min_goal_distance := 9999
 	var min_tactical_town_goal_distance := 9999
 	var min_tactical_hero_goal_distance := 9999
@@ -1326,7 +1328,10 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 			active_tactical_hero_target_count += 1
 		var goal_distance := int(encounter.get("goal_distance", 9999))
 		if goal_distance >= 9999:
-			unreachable_active_target_count += 1
+			if scenario_in_progress:
+				unreachable_active_target_count += 1
+			else:
+				suppressed_post_outcome_unreachable_active_target_count += 1
 		else:
 			min_goal_distance = mini(min_goal_distance, goal_distance)
 			max_goal_distance = maxi(max_goal_distance, goal_distance)
@@ -1381,6 +1386,8 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 			"ai_town_assault_battle_queued", "ai_town_defense_battle_queued", "ai_hero_intercept_battle_queued":
 				battle_queue_event_count += 1
 	return {
+		"scenario_status": String(session.scenario_status),
+		"post_outcome_active_target_diagnostics_suppressed": not scenario_in_progress,
 		"active_raid_count": active_raid_count,
 		"target_kind_counts": target_kind_counts,
 		"active_town_target_count": active_town_target_count,
@@ -1392,6 +1399,7 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 		"near_tactical_town_target_count": near_tactical_town_target_count,
 		"near_tactical_hero_target_count": near_tactical_hero_target_count,
 		"unreachable_active_target_count": unreachable_active_target_count,
+		"suppressed_post_outcome_unreachable_active_target_count": suppressed_post_outcome_unreachable_active_target_count,
 		"min_goal_distance": min_goal_distance if min_goal_distance < 9999 else 9999,
 		"min_tactical_town_goal_distance": min_tactical_town_goal_distance if min_tactical_town_goal_distance < 9999 else 9999,
 		"min_tactical_hero_goal_distance": min_tactical_hero_goal_distance if min_tactical_hero_goal_distance < 9999 else 9999,
@@ -1425,6 +1433,9 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var auto_resolved_battle_count := 0
 	var tactical_battle_queued_count := 0
 	var total_stalled_turns := 0
+	var unreachable_active_target_turn_count := 0
+	var unreachable_active_target_total := 0
+	var suppressed_post_outcome_unreachable_active_target_total := 0
 	var event_counts := {}
 	var terminal_status_counts := {}
 	var task_board_open_count := 0
@@ -1464,6 +1475,10 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 					near_battle_target_turn_count += 1
 				if int(handoff.get("near_battle_town_or_hero_target_count", 0)) > 0:
 					near_battle_town_or_hero_turn_count += 1
+				if int(handoff.get("unreachable_active_target_count", 0)) > 0:
+					unreachable_active_target_turn_count += 1
+					unreachable_active_target_total += int(handoff.get("unreachable_active_target_count", 0))
+				suppressed_post_outcome_unreachable_active_target_total += int(handoff.get("suppressed_post_outcome_unreachable_active_target_count", 0))
 				best_min_goal_distance = mini(best_min_goal_distance, int(handoff.get("min_goal_distance", 9999)))
 				best_min_tactical_battle_goal_distance = mini(best_min_tactical_battle_goal_distance, int(handoff.get("min_tactical_battle_goal_distance", 9999)))
 				var nearest_turn_target: Dictionary = handoff.get("nearest_tactical_battle_target", {}) if handoff.get("nearest_tactical_battle_target", {}) is Dictionary else {}
@@ -1513,6 +1528,9 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"natural_tactical_battle_queue_event_count": tactical_battle_queued_count,
 		"stalled_turn_count": total_stalled_turns,
 		"stalled_turn_pct": int(round(float(total_stalled_turns) * 100.0 / float(max(1, total_turns_completed)))),
+		"unreachable_active_target_turn_count": unreachable_active_target_turn_count,
+		"unreachable_active_target_total": unreachable_active_target_total,
+		"suppressed_post_outcome_unreachable_active_target_total": suppressed_post_outcome_unreachable_active_target_total,
 		"event_counts": event_counts,
 		"terminal_status_counts": terminal_status_counts,
 		"target_assignment_count": int(event_counts.get("ai_target_assigned", 0)),
