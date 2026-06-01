@@ -1140,7 +1140,11 @@ static func _strategic_ai_auto_resolve_battle_interrupt(session: SessionStateSto
 			continue
 		var decision := BattleAutoplayBalanceHarnessRulesScript.player_autoplay_decision_report(session, true)
 		var action := String(decision.get("action", "defend"))
-		var result: Dictionary = BattleRules.perform_player_action(session, action)
+		var result: Dictionary = {}
+		if action == "cast_spell":
+			result = BattleRules.cast_player_spell(session, String(decision.get("spell_id", "")))
+		else:
+			result = BattleRules.perform_player_action(session, action)
 		if String(result.get("state", "")) == "invalid" and action != "defend":
 			invalid_orders += 1
 			action = "defend"
