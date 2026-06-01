@@ -177,6 +177,16 @@ const STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES := [
 		"size_class_id": "homm3_small",
 	},
 ]
+const STRATEGIC_AI_LONG_RUN_MEDIUM_TEMPLATE_CASES := [
+	{
+		"template_id": "translated_rmg_template_002_v1",
+		"profile_id": "translated_rmg_profile_002_v1",
+		"player_count": 4,
+		"water_mode": "land",
+		"underground": false,
+		"size_class_id": "homm3_medium",
+	},
+]
 
 static func build_report(input_config: Dictionary = {}) -> Dictionary:
 	ContentService.clear_generated_scenario_drafts()
@@ -337,8 +347,13 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 	var battle_step_limit: int = max(1, int(input_config.get("battle_step_limit", STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT)))
 	var pressure_floor: int = max(0, int(input_config.get("pressure_floor", 0)))
 	var seed_offset: int = max(0, int(input_config.get("seed_offset", 0)))
-	var seed_prefix := String(input_config.get("seed_prefix", "strategic-ai-long-run-native-small"))
-	var template_cases: Array = input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) if input_config.get("template_cases", STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES) is Array else STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES
+	var map_scope := String(input_config.get("map_scope", "small_land")).strip_edges()
+	if map_scope == "":
+		map_scope = "small_land"
+	var default_template_cases: Array = STRATEGIC_AI_LONG_RUN_MEDIUM_TEMPLATE_CASES if map_scope == "medium_land" else STRATEGIC_AI_LONG_RUN_TEMPLATE_CASES
+	var default_seed_prefix := "strategic-ai-long-run-native-medium" if map_scope == "medium_land" else "strategic-ai-long-run-native-small"
+	var seed_prefix := String(input_config.get("seed_prefix", default_seed_prefix))
+	var template_cases: Array = input_config.get("template_cases", default_template_cases) if input_config.get("template_cases", default_template_cases) is Array else default_template_cases
 	var progress_callback := _strategic_ai_long_run_progress_callback(input_config)
 	var seed_shard := {
 		"seed_offset": seed_offset,
@@ -346,9 +361,11 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 		"start_ordinal": seed_offset + 1,
 		"end_ordinal": seed_offset + seed_count,
 		"seed_prefix": seed_prefix,
+		"map_scope": map_scope,
 	}
 	_strategic_ai_long_run_progress(progress_callback, {
 		"event": "matrix_start",
+		"map_scope": map_scope,
 		"seed_count": seed_count,
 		"seed_offset": seed_offset,
 		"start_ordinal": int(seed_shard.get("start_ordinal", 1)),
@@ -370,6 +387,7 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 	var runtime_msec := maxi(0, Time.get_ticks_msec() - matrix_started_msec)
 	_strategic_ai_long_run_progress(progress_callback, {
 		"event": "matrix_complete",
+		"map_scope": map_scope,
 		"seed_count": seed_count,
 		"seed_offset": seed_offset,
 		"start_ordinal": int(seed_shard.get("start_ordinal", 1)),
@@ -386,6 +404,7 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 		"status": "pass" if ok else "needs_attention",
 		"runtime_msec": runtime_msec,
 		"production_ready": false,
+		"map_scope": map_scope,
 		"seed_count": seed_count,
 		"seed_offset": seed_offset,
 		"seed_shard": seed_shard,
@@ -395,12 +414,13 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 			"turn_count": STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET,
 			"week_count": STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET / 7,
 		},
-		"execution_scope": "full_target" if seed_count >= STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET and turn_count >= STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET else "focused_native_rmg_smoke_matrix",
+		"execution_scope": "full_target" if seed_count >= STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET and turn_count >= STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET else ("focused_medium_native_rmg_matrix" if map_scope == "medium_land" else "focused_native_rmg_smoke_matrix"),
 		"summary": summary,
 		"blocker_rows": blocker_rows,
 		"rows": rows,
 		"signature": _signature_for({
 			"schema_id": STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID,
+			"map_scope": map_scope,
 			"seed_count": seed_count,
 			"seed_offset": seed_offset,
 			"seed_shard": seed_shard,
@@ -1705,6 +1725,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 	var max_turn_runtime_msec := 0
 	var setup_runtime_msec := 0
 	var nearest_tactical_battle_target := {}
+	var no_active_pressure_row_count := 0
 	for row_value in rows:
 		if not (row_value is Dictionary):
 			continue
@@ -1715,6 +1736,10 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 			row_ok_count += 1
 		if String(row.get("classification", "")) == "behavior_bug":
 			behavior_bug_count += 1
+		if bool(row.get("ok", false)) \
+				and String(row.get("final_scenario_status", "")) == "in_progress" \
+				and int(row.get("active_raid_count", 0)) <= 0:
+			no_active_pressure_row_count += 1
 		total_turns_completed += int(row.get("turns_completed", 0))
 		total_enemy_events += int(row.get("enemy_activity_event_count", 0))
 		total_target_integrity_violations += int(row.get("target_integrity_violation_count", 0))
@@ -1788,6 +1813,7 @@ static func _strategic_ai_long_run_summary(rows: Array, requested_seed_count: in
 		"natural_tactical_battle_queue_event_count": tactical_battle_queued_count,
 		"stalled_turn_count": total_stalled_turns,
 		"stalled_turn_pct": int(round(float(total_stalled_turns) * 100.0 / float(max(1, total_turns_completed)))),
+		"no_active_pressure_row_count": no_active_pressure_row_count,
 		"unreachable_active_target_turn_count": unreachable_active_target_turn_count,
 		"unreachable_active_target_total": unreachable_active_target_total,
 		"suppressed_post_outcome_unreachable_active_target_total": suppressed_post_outcome_unreachable_active_target_total,
@@ -1845,6 +1871,13 @@ static func _strategic_ai_long_run_blockers(summary: Dictionary, requested_seed_
 		rows.append({"blocker_id": "strategic_ai_long_run_no_target_assignment", "severity": "production_gap", "summary": "Generated-map AI did not assign strategic targets during the matrix."})
 	if int(summary.get("stalled_turn_pct", 0)) > 75:
 		rows.append({"blocker_id": "strategic_ai_long_run_excess_idle_turns", "severity": "production_gap", "summary": "Most generated-map AI turns produced no observable activity."})
+	if requested_turn_count >= 7 and int(summary.get("no_active_pressure_row_count", 0)) > 0:
+		rows.append({
+			"blocker_id": "strategic_ai_long_run_no_active_pressure_after_rebuild",
+			"severity": "production_gap",
+			"summary": "At least one generated-map row stayed in progress with no active hostile pressure after early regroup/rebuild resolution.",
+			"row_count": int(summary.get("no_active_pressure_row_count", 0)),
+		})
 	if requested_seed_count < STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET or requested_turn_count < STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET:
 		rows.append({
 			"blocker_id": "strategic_ai_long_run_full_100_seed_8_week_matrix_not_run",
