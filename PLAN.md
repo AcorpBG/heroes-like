@@ -23,7 +23,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing the split 56-turn Native RMG strategic/tactical AI shard over seed ordinals 84-88; next AI work should continue generated-map eight-week production shards from seed ordinal 89 onward toward the full 100-seed matrix without balance-content edits.
+- Current implementation slice: none selected after completing the split 56-turn Native RMG strategic/tactical AI shard over seed ordinals 89-93; next AI work should continue generated-map eight-week production shards from seed ordinal 94 onward toward the full 100-seed matrix without balance-content edits.
+- Latest completed slice: `strategic-ai-eight-week-shard-offset88-count5-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset83-count5-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset78-count5-10184`.
 - Latest completed slice: `strategic-ai-eight-week-shard-offset73-count5-10184`.
