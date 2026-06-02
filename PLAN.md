@@ -23,9 +23,10 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `native-rmg-medium-h3maped-land-phase-port-10184`. Generalize the strict executable-derived phase chain to Medium `72x72x1` land; keep public Medium output blocked until validator-gated runtime package adoption passes.
+- Current implementation slice: `native-rmg-medium-h3maped-land-runtime-adoption-10184`. Enable validator-gated public Medium `72x72x1` land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch without authored writeback.
 - Paused/in-progress evidence slice: `strategic-ai-medium-long-run-seed-matrix-10184` remains in progress as strategic-AI evidence, but it is no longer the selected immediate work while the Medium H3MapEd RMG track is being planned and staged.
 - Latest completed planning slice: `native-rmg-medium-h3maped-land-goals-10184`.
+- Latest completed slice: `native-rmg-medium-h3maped-land-phase-port-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-template-authority-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-reference-corpus-10184`.
 - Latest completed slice: `strategic-ai-rmg-medium-generalization-probe-10184`.

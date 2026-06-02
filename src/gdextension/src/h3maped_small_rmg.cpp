@@ -12487,6 +12487,17 @@ String strict_scope_label(const Dictionary &normalized_config) {
 	return "unsupported_scope";
 }
 
+bool inspection_phase_limit_reached(const Dictionary &normalized_config, Dictionary &report, const String &phase_id) {
+	const String phase_limit = String(normalized_config.get("h3maped_inspection_phase_limit", ""));
+	if (phase_limit.is_empty() || phase_limit != phase_id) {
+		return false;
+	}
+	report["inspection_phase_limit"] = phase_limit;
+	report["inspection_phase_limit_reached"] = true;
+	report["status"] = "h3maped_inspection_phase_limit_reached";
+	return true;
+}
+
 int32_t template_preselection_rng_call_count(const Dictionary &normalized_config) {
 	if (!supports_medium_land_scope(normalized_config)) {
 		return 0;
@@ -12621,6 +12632,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	player_slots["binary_byte_prefix_0x4ac62a"] = "6a 09 8d be e0 0e 00 00 59 83 c8 ff f3 ab 33 d2";
 	player_slots["strict_port_scope"] = "generator+0xee0/+0xee4 assignment and mapping slots only";
 	report["player_slot_assignment"] = player_slots;
+	if (inspection_phase_limit_reached(normalized_config, report, "player_slot_assignment")) {
+		return report;
+	}
 	Dictionary runtime_zones = runtime_zone_records_phase(selection, player_slots);
 	runtime_zones["status"] = String(runtime_zones.get("status", "")) == "active_internal_state" ? String("active_strict_executable_port") : String(runtime_zones.get("status", ""));
 	runtime_zones["source_range"] = "0x4a218c/0x49b452";
@@ -12628,12 +12642,18 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	runtime_zones["binary_byte_prefix_0x49b452"] = "55 8b ec 53 56 8b f1 33 db 8a 4d 0b 57 8d 86 e4";
 	runtime_zones["strict_port_scope"] = "generator+0x10e0/+0x10e4/+0x10e8 runtime-zone vector records only";
 	report["runtime_zone_records"] = runtime_zones;
+	if (inspection_phase_limit_reached(normalized_config, report, "runtime_zone_records")) {
+		return report;
+	}
 	Dictionary link_seeds = link_seed_phase(normalized_config, selection, runtime_zones);
 	link_seeds["status"] = String(link_seeds.get("status", "")) == "active_internal_state" ? String("active_strict_executable_port") : String(link_seeds.get("status", ""));
 	link_seeds["source_range"] = "0x4a1f3b";
 	link_seeds["binary_byte_prefix_0x4a1f3b"] = "b8 54 a7 52 00 e8 8b 41 04 00 83 ec 2c 8a 45 0b";
 	link_seeds["strict_port_scope"] = "link endpoint seed records only; no coordinates, guards, roads, blockers, or public output";
 	report["link_seed_setup"] = link_seeds;
+	if (inspection_phase_limit_reached(normalized_config, report, "link_seed_setup")) {
+		return report;
+	}
 	const uint32_t replay_seed_state = uint32_t(int64_t(selection.get("rng_state_after_selection_uint32", 0)));
 	Dictionary coordinate_replay = coordinate_replay_phase(normalized_config, runtime_zones, link_seeds, replay_seed_state);
 	coordinate_replay["status"] = String(coordinate_replay.get("status", "")) == "active_internal_state" ? String("active_strict_executable_port") : String(coordinate_replay.get("status", ""));
@@ -12644,6 +12664,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	coordinate_replay["binary_byte_prefix_0x4a19ed"] = "55 8b ec 83 ec 14 8b 55 10 53 8b 5d 08 8b c1 8b";
 	coordinate_replay["strict_port_scope"] = "coordinate candidate replay, pruning, RNG choice, and bbox rescale only; no zone footprints, terrain, map cells, or public output";
 	report["coordinate_replay"] = coordinate_replay;
+	if (inspection_phase_limit_reached(normalized_config, report, "coordinate_replay")) {
+		return report;
+	}
 	Dictionary zone_source_nodes = zone_footprint_source_nodes_phase(normalized_config, runtime_zones, coordinate_replay);
 	zone_source_nodes["source_range"] = "0x4a3a03/0x4cc788/0x4cc955/0x4ccb64/0x4ccdfc";
 	zone_source_nodes["binary_byte_prefix_0x4a3a03"] = "b8 ea a7 52 00 e8 c3 26 04 00 81 ec 64 05 00 00";
@@ -12652,6 +12675,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	zone_source_nodes["binary_byte_prefix_0x4ccb64"] = "55 8b ec 83 ec 0c 53 56 57 8b 7d 08 ff 75 0c 8b";
 	zone_source_nodes["binary_byte_prefix_0x4ccdfc"] = "55 8b ec 83 ec 0c 83 65 fc 00 53 56 57 8b d9 8b";
 	report["zone_footprint_source_nodes"] = zone_source_nodes;
+	if (inspection_phase_limit_reached(normalized_config, report, "zone_footprint_source_nodes")) {
+		return report;
+	}
 	Dictionary zone_boundary_span = zone_boundary_and_span_fill_phase(normalized_config, runtime_zones, coordinate_replay, zone_source_nodes);
 	zone_boundary_span["source_range"] = "0x4a2777/0x4a2b33/0x4a261a/0x4a2413/0x4a325d";
 	zone_boundary_span["binary_byte_prefix_0x4a2777"] = "55 8b ec 81 ec 88 00 00 00 53 8b 5d 08 56 57 8b";
@@ -12660,6 +12686,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	zone_boundary_span["binary_byte_prefix_0x4a2413"] = "b8 68 a7 52 00 e8 b3 3c 04 00 83 ec 30 8a 45 1f";
 	zone_boundary_span["binary_byte_prefix_0x4a325d"] = "b8 a4 a7 52 00 e8 69 2e 04 00 83 ec 60 8b 45 08";
 	report["zone_boundary_and_span_fill"] = zone_boundary_span;
+	if (inspection_phase_limit_reached(normalized_config, report, "zone_boundary_and_span_fill")) {
+		return report;
+	}
 	Dictionary zone_finalizer = zone_footprint_finalizer_phase(normalized_config, runtime_zones, zone_source_nodes, zone_boundary_span);
 	zone_finalizer["source_range"] = "0x4a3710/0x4a3efc/0x4a3f05/0x4cca55/0x49b61b/0x4a3554";
 	zone_finalizer["binary_byte_prefix_0x4a3710"] = "55 8b ec 83 ec 70 53 8b d9 83 65 ac 00 83 65 b0";
@@ -12669,10 +12698,16 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	zone_finalizer["binary_byte_prefix_0x49b61b"] = "55 8b ec 51 83 65 fc 00 56 57 8b 7d 08 8b f1 8d";
 	zone_finalizer["binary_byte_prefix_0x4a3554"] = "b8 c0 a7 52 00 e8 72 2b 04 00 83 ec 40 8a 45 0b";
 	report["zone_footprint_finalizer"] = zone_finalizer;
+	if (inspection_phase_limit_reached(normalized_config, report, "zone_footprint_finalizer")) {
+		return report;
+	}
 	Dictionary runtime_terrain = runtime_terrain_selection_phase(normalized_config, runtime_zones, coordinate_replay, zone_finalizer);
 	runtime_terrain["source_range"] = "0x49b53d/0x49b54c/0x49b586/0x49b5b7/0x540908";
 	runtime_terrain["binary_byte_prefix_0x49b53d"] = "56 8b f1 57 8b 06 80 b8 84 00 00 00 00 74 11 8b";
 	report["runtime_terrain_selection"] = runtime_terrain;
+	if (inspection_phase_limit_reached(normalized_config, report, "runtime_terrain_selection")) {
+		return report;
+	}
 	Dictionary terrain_cell = terrain_cell_writeout_phase(normalized_config, runtime_zones, coordinate_replay, zone_source_nodes, runtime_terrain);
 	terrain_cell["source_range"] = "0x4a3f27/0x4a4025/0x4a4082/0x4a415a";
 	terrain_cell["binary_byte_prefix_0x4a3f27"] = "b8 1c a8 52 00 e8 9f 21 04 00 83 ec 5c 53 56 57";
@@ -12680,6 +12715,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	terrain_cell["binary_byte_prefix_0x4a4082"] = "8b 83 e4 10 00 00 85 c0 0f 84 15 01 00 00 8b 8b";
 	terrain_cell["binary_byte_prefix_0x4a415a"] = "56 56 57 8d 4d e0 ff 75 d4 e8 31 8f 01 00 ff 45";
 	report["terrain_cell_writeout"] = terrain_cell;
+	if (inspection_phase_limit_reached(normalized_config, report, "terrain_cell_writeout")) {
+		return report;
+	}
 	Dictionary terrainplacement_visual = terrainplacement_visual_tables_phase(terrain_cell);
 	terrainplacement_visual["source_range"] = "0x4bcff5/0x4bb5ce/0x4bd099/0x4bb74b/0x4bc5f0/0x4bcfc3/0x4bce6d/0x543108/0x543380/0x5434f0/0x5435b0/0x542f88";
 	terrainplacement_visual["binary_byte_prefix_0x4bcff5"] = "b8 8a ba 52 00 e8 d1 90 02 00 83 ec 28 56 8b f1";
@@ -12696,6 +12734,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	terrainplacement_visual["binary_byte_prefix_0x4bad0f"] = "53 8b 5c 24 08 56 8b 74 24 10 57 8b f9 56 53 8b";
 	terrainplacement_visual["binary_byte_prefix_0x49acf6"] = "8b 41 24 8b 54 24 04 66 25 00 c0 83 e2 3f 33 c2";
 	report["terrainplacement_visual_tables"] = terrainplacement_visual;
+	if (inspection_phase_limit_reached(normalized_config, report, "terrainplacement_visual_tables")) {
+		return report;
+	}
 	std::vector<uint32_t> zone_words;
 	std::vector<uint8_t> cell_flags;
 	std::vector<uint32_t> live_cell_word_0x20;
@@ -12714,11 +12755,17 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	terrainplacement_live_feedback["binary_byte_prefix_0x4bad0f"] = "53 8b 5c 24 08 56 8b 74 24 10 57 8b f9 56 53 8b";
 	terrainplacement_live_feedback["binary_byte_prefix_0x49acf6"] = "8b 41 24 8b 54 24 04 66 25 00 c0 83 e2 3f 33 c2";
 	report["terrainplacement_live_feedback"] = terrainplacement_live_feedback;
+	if (inspection_phase_limit_reached(normalized_config, report, "terrainplacement_live_feedback")) {
+		return report;
+	}
 	Dictionary terrain_tile_byte_writeback = terrain_tile_byte_writeback_phase(normalized_config, terrainplacement_live_feedback, live_cell_word_0x24, live_cell_word_0x28, live_terrain_code);
 	terrain_tile_byte_writeback["source_range"] = "0x49b2b6/0x49acf6";
 	terrain_tile_byte_writeback["binary_byte_prefix_0x49b2b6"] = "55 8b ec 51 53 56 57 8b 75 08 8b f9 6a 01 5b 8d";
 	terrain_tile_byte_writeback["binary_byte_prefix_0x49acf6"] = "8b 41 24 8b 54 24 04 66 25 00 c0 83 e2 3f 33 c2";
 	report["terrain_tile_byte_writeback"] = terrain_tile_byte_writeback;
+	if (inspection_phase_limit_reached(normalized_config, report, "terrain_tile_byte_writeback")) {
+		return report;
+	}
 	Dictionary town_castle = town_castle_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, terrain_tile_byte_writeback, zone_words, live_terrain_code);
 	town_castle["source_range"] = "0x4a8d2c/0x4a8db2/0x4a93a2/0x49aa93/0x49a09c/0x49b3c1/0x49ba89";
 	town_castle["binary_byte_prefix_0x4a8d2c"] = "55 8b ec 51 53 56 57 8b 7d 08 8b d9 8b 37 8b 47";
@@ -12729,6 +12776,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	town_castle["binary_byte_prefix_0x49b3c1"] = "56 57 33 ff 8b f1 33 c0 80 7c 06 41 00 74 01 47";
 	town_castle["binary_byte_prefix_0x49ba89"] = "8b 44 24 04 56 8b f1 c7 06 74 0a 54 00 89 46 04";
 	report["town_castle_phase"] = town_castle;
+	if (inspection_phase_limit_reached(normalized_config, report, "town_castle_phase")) {
+		return report;
+	}
 	Dictionary object_vector = object_vector_prerequisite_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, town_castle, zone_words, cell_flags, live_terrain_code);
 	object_vector["source_range"] = "0x4a9d6a/0x4a9911/0x4a9641/0x4a9c7c/0x4aab7e/0x4aa354/0x4a9f1c/0x4aa9b7/0x4aa603/0x4aa3e9/0x49f95a";
 	object_vector["binary_byte_prefix_0x4a9d6a"] = "55 8b ec 83 ec 14 83 65 ec 00 53 56 57 8b f9 8b";
@@ -12743,6 +12793,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	object_vector["binary_byte_prefix_0x4aa3e9"] = "55 8b ec 83 ec 3c 53 8b 5d 08 56 57 8d 7b 54 8d";
 	object_vector["binary_byte_prefix_0x49f95a"] = "55 8b ec 83 ec 3c 53 56 57 6a 14 5f 89 4d f0 57";
 	report["mines_rewards_and_object_vector"] = object_vector;
+	if (inspection_phase_limit_reached(normalized_config, report, "mines_rewards_and_object_vector")) {
+		return report;
+	}
 	Dictionary roads_rivers = roads_rivers_phase(normalized_config, town_castle, object_vector, zone_words, cell_flags, live_cell_word_0x28, live_terrain_code);
 	roads_rivers["source_range"] = "0x4ab52a/0x4aae2f/0x4aae7b/0x4ab37f/0x4b4243";
 	roads_rivers["binary_byte_prefix_0x4ab52a"] = "55 8b ec 83 ec 2c 53 56 57 8b d9 e8 3c bd 03";
@@ -12750,6 +12803,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	roads_rivers["binary_byte_prefix_0x4ab37f"] = "b8 6c ab 52 00 e8 47 ad 03 00 83 ec 64 80 65 f3";
 	roads_rivers["binary_byte_prefix_0x4b4243"] = "b8 24 b3 52 00 e8 83 1e 03 00 83 ec 0c 56 57 8b";
 	report["roads_and_rivers"] = roads_rivers;
+	if (inspection_phase_limit_reached(normalized_config, report, "roads_and_rivers")) {
+		return report;
+	}
 	Dictionary connections = connections_blockers_guards_phase(normalized_config, coordinate_replay, link_seeds, roads_rivers, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code);
 	connections["source_range"] = "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03";
 	connections["binary_byte_prefix_0x4a79a3"] = "b8 eb a9 52 00 e8 23 e7 03 00 83 ec 78 8a 45 f3";
@@ -12760,6 +12816,9 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	connections["binary_byte_prefix_0x4a65a5"] = "8b 44 24 08 56 8b 74 24 08 8b c8 c1 e1 02 57";
 	connections["strict_port_scope"] = "private same-level owner-transition endpoint, blocker cell, and normal guard record materialization only; public runtime/package adoption remains blocked";
 	report["connections_blockers_guards"] = connections;
+	if (inspection_phase_limit_reached(normalized_config, report, "connections_blockers_guards")) {
+		return report;
+	}
 	Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, roads_rivers, connections, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code, live_cell_word_0x28);
 	generated_cell_bit_state["source_range"] = "0x4a4c8e/0x49aa63/0x49a932/0x4a5a23/0x4a4fc5/0x49eb8d";
 	generated_cell_bit_state["binary_byte_prefix_0x49aa63"] = "generated_cell_decor_candidate_bit_26_helper_recovered_spec_boundary";
@@ -12768,17 +12827,32 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	generated_cell_bit_state["binary_byte_prefix_0x4a5a23"] = "border_guard_marker_generated_cell_bit_state_recovered_spec_boundary";
 	generated_cell_bit_state["binary_byte_prefix_0x4a4fc5"] = "water_edge_generated_cell_bit_26_writer_recovered_spec_boundary";
 	report["generated_cell_decoration_bit_state"] = generated_cell_bit_state;
+	if (inspection_phase_limit_reached(normalized_config, report, "generated_cell_decoration_bit_state")) {
+		return report;
+	}
 	Dictionary decorative_filler = decorative_obstacle_filler_phase(normalized_config, town_castle, object_vector, roads_rivers, connections, generated_cell_bit_state, zone_words, cell_flags, live_cell_word_0x28, live_terrain_code);
 	decorative_filler["source_range"] = "0x49dc9e/0x49eb8d/0x49e700/0x41e951/0x49e1bf/0x49ba89";
 	decorative_filler["binary_byte_prefix_0x49eb8d"] = "phase_12_dispatcher_recovered_spec_boundary";
 	decorative_filler["binary_byte_prefix_0x49e700"] = "rand_trn_weighted_decorative_obstacle_filler_recovered_spec_boundary";
 	report["decorative_obstacle_filler"] = decorative_filler;
+	if (inspection_phase_limit_reached(normalized_config, report, "decorative_obstacle_filler")) {
+		return report;
+	}
 	Dictionary package_adoption = h3maped_package_adoption_draft_phase(normalized_config, selection, live_terrain_code, town_castle, object_vector, roads_rivers, connections, decorative_filler);
 	report["public_package_adoption"] = package_adoption;
+	if (inspection_phase_limit_reached(normalized_config, report, "public_package_adoption")) {
+		return report;
+	}
 	Dictionary final_writeout = h3maped_final_writeout_draft_phase(normalized_config, terrain_tile_byte_writeback, roads_rivers, package_adoption);
 	report["final_h3m_writeout"] = final_writeout;
+	if (inspection_phase_limit_reached(normalized_config, report, "final_h3m_writeout")) {
+		return report;
+	}
 	Dictionary fast_validator = h3maped_fast_structural_validator_phase(normalized_config, package_adoption, final_writeout);
 	report["fast_structural_validator"] = fast_validator;
+	if (inspection_phase_limit_reached(normalized_config, report, "fast_structural_validator")) {
+		return report;
+	}
 	report["strict_restart_state"] = strict_restart_state(normalized_config, accepted);
 	report["fresh_phase_backlog"] = fresh_phase_backlog();
 	report["current_gap_summary"] = current_gap_summary();
@@ -12992,16 +13066,30 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	Dictionary report = inspect_port(normalized_config);
 	if (supports_medium_land_scope(normalized_config)) {
 		Dictionary selection = report.get("selection_identity", Dictionary());
+		Dictionary validator = report.get("fast_structural_validator", Dictionary());
+		Dictionary package_adoption = report.get("public_package_adoption", Dictionary());
+		Dictionary final_writeout = report.get("final_h3m_writeout", Dictionary());
+		const bool validator_passed = bool(validator.get("validator_authority", false))
+				&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready"
+				&& int32_t(validator.get("failure_count", -1)) == 0;
+		const bool package_ready = String(package_adoption.get("status", "")) == "strict_package_adoption_draft_materialized_runtime_blocked"
+				&& bool(package_adoption.get("map_document_payload_materialized", false));
+		const bool final_ready = String(final_writeout.get("status", "")) == "strict_final_0x49b2b6_writeout_draft_runtime_blocked"
+				&& bool(final_writeout.get("materializes_final_serializer_draft", false));
+		const bool phase_port_ready = validator_passed && package_ready && final_ready;
 		Dictionary result;
 		result["ok"] = false;
-		result["status"] = "h3maped_medium_phase_port_runtime_blocked";
-		result["generation_status"] = "h3maped_medium_phase_port_runtime_blocked";
-		result["full_generation_status"] = "h3maped_medium_waiting_for_executable_phase_port";
-		result["error_code"] = "h3maped_medium_phase_port_incomplete";
-		result["message"] = "Medium 72x72 one-level land now uses original H3MapEd source-template authority, but public runtime output stays blocked until the Medium executable phase port and package adoption gates pass.";
+		result["status"] = phase_port_ready ? String("h3maped_medium_phase_port_ready_runtime_adoption_blocked") : String("h3maped_medium_phase_port_runtime_blocked");
+		result["generation_status"] = result["status"];
+		result["full_generation_status"] = phase_port_ready ? String("h3maped_medium_runtime_adoption_pending_strict_medium_land") : String("h3maped_medium_waiting_for_executable_phase_port");
+		result["error_code"] = phase_port_ready ? String("h3maped_medium_runtime_adoption_pending") : String("h3maped_medium_phase_port_incomplete");
+		result["message"] = phase_port_ready
+				? String("Medium 72x72 one-level land phase port, package draft, final writeout, and fast structural validator are green; public runtime output remains blocked until package save/load and runtime adoption gates pass.")
+				: String("Medium 72x72 one-level land uses original H3MapEd source-template authority, but public runtime output stays blocked until the Medium executable phase port gates pass.");
 		result["runtime_generation_allowed"] = false;
 		result["public_runtime_authoritative"] = false;
 		result["partial_materialized_payload_public_api"] = false;
+		result["medium_phase_port_ready"] = phase_port_ready;
 		result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
 		result["source_template_authority"] = "h3maped_exe_rng";
 		result["source_template_id"] = selection.get("source_template_id", "");
@@ -13012,6 +13100,27 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 		result["normalized_config"] = normalized_config;
 		result["h3maped_small_port"] = report;
 		result["h3maped_template_selection"] = selection;
+		result["fast_structural_validator"] = validator;
+		result["validator_metrics"] = validator.get("metrics", Dictionary());
+		result["validator_status"] = validator.get("status", "");
+		result["validator_failures"] = validator.get("failures", Array());
+		Dictionary public_package_adoption_summary;
+		public_package_adoption_summary["status"] = package_adoption.get("status", "");
+		public_package_adoption_summary["package_object_count"] = package_adoption.get("package_object_count", 0);
+		public_package_adoption_summary["player_start_count"] = package_adoption.get("player_start_count", 0);
+		public_package_adoption_summary["road_package_segment_count"] = package_adoption.get("road_package_segment_count", 0);
+		public_package_adoption_summary["connection_guard_package_object_count"] = package_adoption.get("connection_guard_package_object_count", 0);
+		public_package_adoption_summary["connection_blocker_package_object_count"] = package_adoption.get("connection_blocker_package_object_count", 0);
+		public_package_adoption_summary["reward_guard_package_object_count"] = package_adoption.get("reward_guard_package_object_count", 0);
+		public_package_adoption_summary["decorative_obstacle_package_object_count"] = package_adoption.get("decorative_obstacle_package_object_count", 0);
+		result["public_package_adoption_summary"] = public_package_adoption_summary;
+		Dictionary final_writeout_summary;
+		final_writeout_summary["status"] = final_writeout.get("status", "");
+		final_writeout_summary["tile_byte_array_count"] = final_writeout.get("tile_byte_array_count", 0);
+		final_writeout_summary["tile_byte_array_size"] = final_writeout.get("tile_byte_array_size", 0);
+		final_writeout_summary["road_overlay_type_nonzero_count"] = final_writeout.get("road_overlay_type_nonzero_count", 0);
+		final_writeout_summary["package_object_count"] = final_writeout.get("package_object_count", 0);
+		result["final_writeout_summary"] = final_writeout_summary;
 		result["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
 		result["replacement_slice_id"] = "native-rmg-medium-h3maped-land-phase-port-10184";
 		result["extension_profile"] = extension_profile;
