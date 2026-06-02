@@ -9,6 +9,8 @@ static var SpellRulesScript: Variant = load("res://scripts/core/SpellRules.gd")
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
+static var _spawn_loop_profile_active := false
+static var _spawn_loop_profile: Dictionary = {}
 
 const TRACKED_RESOURCES := [
 	"gold",
@@ -276,6 +278,34 @@ static func _profile_add_ms(profile: Dictionary, key: String, started_usec: int)
 	var elapsed_ms := int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
 	phases[key] = int(phases.get(key, 0)) + elapsed_ms
 	profile["phases_ms"] = phases
+
+static func _spawn_profile_begin(enabled: bool) -> void:
+	_spawn_loop_profile_active = enabled
+	_spawn_loop_profile = {"schema_id": "strategic_ai_spawn_loop_profile_v1", "phases_ms": {}, "counts": {}} if enabled else {}
+
+static func _spawn_profile_finish() -> Dictionary:
+	var profile := _spawn_loop_profile.duplicate(true) if _spawn_loop_profile_active else {}
+	_spawn_loop_profile_active = false
+	_spawn_loop_profile = {}
+	return profile
+
+static func _spawn_profile_timer() -> int:
+	return Time.get_ticks_usec() if _spawn_loop_profile_active else 0
+
+static func _spawn_profile_add_ms(key: String, started_usec: int) -> void:
+	if not _spawn_loop_profile_active or key == "" or started_usec <= 0:
+		return
+	var phases: Dictionary = _spawn_loop_profile.get("phases_ms", {}) if _spawn_loop_profile.get("phases_ms", {}) is Dictionary else {}
+	var elapsed_ms := int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
+	phases[key] = int(phases.get(key, 0)) + elapsed_ms
+	_spawn_loop_profile["phases_ms"] = phases
+
+static func _spawn_profile_count(key: String, amount: int = 1) -> void:
+	if not _spawn_loop_profile_active or key == "":
+		return
+	var counts: Dictionary = _spawn_loop_profile.get("counts", {}) if _spawn_loop_profile.get("counts", {}) is Dictionary else {}
+	counts[key] = int(counts.get(key, 0)) + amount
+	_spawn_loop_profile["counts"] = counts
 
 static func _enemy_turn_result(ok: bool, message: String, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
 	var result := {"ok": ok, "message": message, "events": events}
@@ -1094,6 +1124,7 @@ static func _run_empire_cycle(
 	_profile_add_ms(profile, "rebuild_reserves_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
+	_spawn_profile_begin(profile_enabled)
 	var launched_placement_ids := []
 	var launch_candidate := _launchable_spawn_candidate(session, config, state, faction_id)
 	while not launch_candidate.is_empty():
@@ -1108,6 +1139,9 @@ static func _run_empire_cycle(
 		if String(spawn_result.get("spawn_plan_source", "")).begins_with("emergency_"):
 			break
 		launch_candidate = _launchable_spawn_candidate(session, config, state, faction_id)
+	var spawn_loop_profile := _spawn_profile_finish()
+	if profile_enabled and not spawn_loop_profile.is_empty():
+		profile["spawn_loop_profile"] = spawn_loop_profile
 	_profile_add_ms(profile, "spawn_loop_ms", phase_started)
 
 	if not launched_placement_ids.is_empty():
@@ -2784,25 +2818,42 @@ static func _launchable_spawn_candidate(
 	state: Dictionary,
 	faction_id: String
 ) -> Dictionary:
+	_spawn_profile_count("launchable_candidate_calls")
 	if _owned_town_count(session, faction_id) <= 0:
+		_spawn_profile_count("launchable_no_owned_town")
 		return {}
 	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(session, config, faction_id):
+		_spawn_profile_count("launchable_max_active_reached")
 		return {}
+	var started_usec := _spawn_profile_timer()
 	var rebuild_pressure_request := _recent_rebuild_pressure_request(session, faction_id, state)
+	_spawn_profile_add_ms("recent_rebuild_pressure_request_ms", started_usec)
+	started_usec = _spawn_profile_timer()
 	var has_available_commander := EnemyAdventureRulesScript.has_available_raid_commander(
 		session,
 		faction_id,
 		state.get("commander_roster", [])
 	)
+	_spawn_profile_add_ms("has_available_commander_ms", started_usec)
 	if not has_available_commander and rebuild_pressure_request.is_empty():
+		_spawn_profile_count("launchable_no_commander")
 		return {}
 	var encounter_pool = config.get("raid_encounter_ids", [])
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
+		_spawn_profile_count("launchable_no_encounter_pool")
 		return {}
+	started_usec = _spawn_profile_timer()
 	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
+	_spawn_profile_add_ms("planned_task_launch_ready_ms", started_usec)
+	started_usec = _spawn_profile_timer()
 	var emergency_defense_plan := _emergency_defense_launch_ready_report(session, config, state, faction_id)
+	_spawn_profile_add_ms("emergency_defense_launch_ready_ms", started_usec)
+	started_usec = _spawn_profile_timer()
 	var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
+	_spawn_profile_add_ms("active_front_support_launch_ready_ms", started_usec)
+	started_usec = _spawn_profile_timer()
 	var rebuild_pressure_plan := _rebuild_pressure_launch_ready_report(session, config, state, faction_id)
+	_spawn_profile_add_ms("rebuild_pressure_launch_ready_ms", started_usec)
 	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
 	if (
 		int(state.get("pressure", 0)) < raid_threshold
@@ -2811,8 +2862,16 @@ static func _launchable_spawn_candidate(
 		and active_front_support_plan.is_empty()
 		and rebuild_pressure_plan.is_empty()
 	):
+		_spawn_profile_count("launchable_below_threshold")
 		return {}
-	return _best_open_spawn_point(session, config, state, faction_id)
+	started_usec = _spawn_profile_timer()
+	var candidate := _best_open_spawn_point(session, config, state, faction_id)
+	_spawn_profile_add_ms("best_open_spawn_point_ms", started_usec)
+	if candidate.is_empty():
+		_spawn_profile_count("launchable_no_open_candidate")
+	else:
+		_spawn_profile_count("launchable_candidate_found")
+	return candidate
 
 static func _rebuild_pressure_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
@@ -4218,18 +4277,25 @@ static func _best_open_spawn_point(
 	state: Dictionary = {},
 	faction_id: String = ""
 ) -> Dictionary:
+	var started_usec := _spawn_profile_timer()
 	var points := _open_spawn_points(session, config)
+	_spawn_profile_add_ms("open_spawn_points_ms", started_usec)
+	_spawn_profile_count("open_spawn_point_count", points.size())
 	if points.is_empty():
 		return {}
 	var resolved_faction_id := faction_id
 	if resolved_faction_id == "":
 		resolved_faction_id = String(config.get("faction_id", state.get("faction_id", "")))
+	started_usec = _spawn_profile_timer()
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
+	_spawn_profile_add_ms("occupied_commander_lookup_ms", started_usec)
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
 		if not (point is Dictionary):
 			continue
+		_spawn_profile_count("spawn_point_candidate_count")
+		started_usec = _spawn_profile_timer()
 		var candidate := _spawn_point_candidate(
 			session,
 			config,
@@ -4239,7 +4305,9 @@ static func _best_open_spawn_point(
 			occupied_commander_ids,
 			index
 		)
+		_spawn_profile_add_ms("spawn_point_candidate_total_ms", started_usec)
 		if candidate.is_empty():
+			_spawn_profile_count("spawn_point_empty_candidate_count")
 			continue
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
@@ -4256,7 +4324,10 @@ static func _spawn_point_candidate(
 ) -> Dictionary:
 	if faction_id == "" or point.is_empty():
 		return {}
+	var started_usec := _spawn_profile_timer()
 	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+	_spawn_profile_add_ms("spawn_point_recent_rebuild_pressure_ms", started_usec)
+	started_usec = _spawn_profile_timer()
 	var emergency_defense_candidate := _emergency_defense_spawn_candidate_for_point(
 		session,
 		config,
@@ -4266,9 +4337,12 @@ static func _spawn_point_candidate(
 		occupied_commander_ids,
 		spawn_order
 	)
+	_spawn_profile_add_ms("emergency_defense_spawn_candidate_ms", started_usec)
 	if not emergency_defense_candidate.is_empty():
+		_spawn_profile_count("emergency_defense_spawn_candidate_selected")
 		return emergency_defense_candidate
 	if not rebuild_pressure_active:
+		started_usec = _spawn_profile_timer()
 		var ready_saved_candidate := _ready_saved_task_spawn_candidate_for_point(
 			session,
 			config,
@@ -4278,8 +4352,11 @@ static func _spawn_point_candidate(
 			occupied_commander_ids,
 			spawn_order
 		)
+		_spawn_profile_add_ms("ready_saved_task_spawn_candidate_ms", started_usec)
 		if not ready_saved_candidate.is_empty():
+			_spawn_profile_count("ready_saved_task_spawn_candidate_selected")
 			return ready_saved_candidate
+		started_usec = _spawn_profile_timer()
 		var active_front_support_candidate := _active_front_support_spawn_candidate_for_point(
 			session,
 			config,
@@ -4289,8 +4366,11 @@ static func _spawn_point_candidate(
 			occupied_commander_ids,
 			spawn_order
 		)
+		_spawn_profile_add_ms("active_front_support_spawn_candidate_ms", started_usec)
 		if not active_front_support_candidate.is_empty():
+			_spawn_profile_count("active_front_support_spawn_candidate_selected")
 			return active_front_support_candidate
+		started_usec = _spawn_profile_timer()
 		var saved_candidate := _saved_task_spawn_candidate_for_point(
 			session,
 			config,
@@ -4300,8 +4380,11 @@ static func _spawn_point_candidate(
 			occupied_commander_ids,
 			spawn_order
 		)
+		_spawn_profile_add_ms("saved_task_spawn_candidate_ms", started_usec)
 		if not saved_candidate.is_empty():
+			_spawn_profile_count("saved_task_spawn_candidate_selected")
 			return saved_candidate
+	started_usec = _spawn_profile_timer()
 	var fresh_candidate := _fresh_spawn_target_candidate_for_point(
 		session,
 		config,
@@ -4311,6 +4394,9 @@ static func _spawn_point_candidate(
 		occupied_commander_ids,
 		spawn_order
 	)
+	_spawn_profile_add_ms("fresh_spawn_target_candidate_ms", started_usec)
+	if not fresh_candidate.is_empty():
+		_spawn_profile_count("fresh_spawn_target_candidate_selected")
 	return fresh_candidate
 
 static func _saved_task_spawn_candidate_for_point(
@@ -4439,11 +4525,14 @@ static func _fresh_spawn_target_candidate_for_point(
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
+	var started_usec := _spawn_profile_timer()
 	var target_candidates: Array = EnemyAdventureRulesScript._target_candidates(
 		session,
 		config,
 		Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
 	)
+	_spawn_profile_add_ms("fresh_target_candidates_ms", started_usec)
+	_spawn_profile_count("fresh_target_candidate_count", target_candidates.size())
 	if target_candidates.is_empty():
 		var fallback_probe := {
 			"placement_id": "__explicit_objective_spawn_probe:%s:%d" % [faction_id, spawn_order],
@@ -4456,13 +4545,16 @@ static func _fresh_spawn_target_candidate_for_point(
 			"arrived": false,
 			"goal_distance": 9999,
 		}
+		started_usec = _spawn_profile_timer()
 		var fallback_plan := EnemyAdventureRulesScript._explicit_objective_fallback_target_selection_plan(
 			session,
 			config,
 			fallback_probe,
 			faction_id
 		)
+		_spawn_profile_add_ms("fresh_explicit_objective_fallback_plan_ms", started_usec)
 		if not fallback_plan.is_empty():
+			started_usec = _spawn_profile_timer()
 			var fallback_commander_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id_for_spawn(
 				session,
 				faction_id,
@@ -4471,6 +4563,7 @@ static func _fresh_spawn_target_candidate_for_point(
 				occupied_commander_ids,
 				state.get("commander_roster", [])
 			)
+			_spawn_profile_add_ms("fresh_fallback_commander_select_ms", started_usec)
 			if fallback_commander_id != "":
 				var fallback_candidate := _spawn_point_candidate_from_plan(
 					point,
@@ -4479,7 +4572,11 @@ static func _fresh_spawn_target_candidate_for_point(
 					"explicit_objective_fallback",
 					spawn_order
 				)
-				return _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate)
+				started_usec = _spawn_profile_timer()
+				var projected_fallback := _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate)
+				_spawn_profile_add_ms("fresh_spell_projection_ms", started_usec)
+				return projected_fallback
+		started_usec = _spawn_profile_timer()
 		var exploration_candidate := _exploration_spawn_candidate_for_point(
 			session,
 			config,
@@ -4489,18 +4586,27 @@ static func _fresh_spawn_target_candidate_for_point(
 			occupied_commander_ids,
 			spawn_order
 		)
+		_spawn_profile_add_ms("fresh_exploration_spawn_candidate_ms", started_usec)
 		if not exploration_candidate.is_empty():
 			return exploration_candidate
-		return _fallback_spawn_candidate_for_point(
+		started_usec = _spawn_profile_timer()
+		var preselected_fallback_plan := _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+		_spawn_profile_add_ms("fresh_preselected_fallback_plan_ms", started_usec)
+		started_usec = _spawn_profile_timer()
+		var fallback_candidate := _fallback_spawn_candidate_for_point(
 			session,
 			config,
 			state,
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			preselected_fallback_plan
 		)
+		_spawn_profile_add_ms("fresh_fallback_spawn_candidate_ms", started_usec)
+		return fallback_candidate
 	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+	started_usec = _spawn_profile_timer()
 	var commander_candidates := _rebuild_pressure_commander_spawn_candidates(
 		session,
 		faction_id,
@@ -4514,6 +4620,8 @@ static func _fresh_spawn_target_candidate_for_point(
 		occupied_commander_ids,
 		state.get("commander_roster", [])
 	)
+	_spawn_profile_add_ms("fresh_commander_candidates_ms", started_usec)
+	_spawn_profile_count("fresh_commander_candidate_count", commander_candidates.size())
 	var best := {}
 	for commander_value in commander_candidates:
 		if not (commander_value is Dictionary):
@@ -4521,12 +4629,14 @@ static func _fresh_spawn_target_candidate_for_point(
 		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
 		if roster_hero_id == "":
 			continue
+		started_usec = _spawn_profile_timer()
 		var fitted_target := EnemyAdventureRulesScript._ai_hero_task_planner_best_candidate_for_commander(
 			session,
 			faction_id,
 			roster_hero_id,
 			target_candidates
 		)
+		_spawn_profile_add_ms("fresh_commander_fit_target_ms", started_usec)
 		if fitted_target.is_empty():
 			continue
 		var candidate := _spawn_point_candidate_from_plan(
@@ -4540,7 +4650,9 @@ static func _fresh_spawn_target_candidate_for_point(
 			String(candidate.get("spawn_plan_target_kind", "")) == "regroup"
 			and not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 		):
+			started_usec = _spawn_profile_timer()
 			var sweep_plan := _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+			_spawn_profile_add_ms("fresh_rebuild_exploration_plan_ms", started_usec)
 			if sweep_plan.is_empty():
 				continue
 			candidate = _spawn_point_candidate_from_plan(
@@ -4552,7 +4664,10 @@ static func _fresh_spawn_target_candidate_for_point(
 			)
 		candidate["spawn_plan_commander_fit_bonus"] = int(fitted_target.get("commander_fit_bonus", 0))
 		candidate["spawn_plan_commander_fit_profile"] = String(fitted_target.get("commander_fit_profile", ""))
+		started_usec = _spawn_profile_timer()
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		_spawn_profile_add_ms("fresh_spell_projection_ms", started_usec)
+		started_usec = _spawn_profile_timer()
 		if (
 			not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 			and not _spawn_candidate_ready_without_immediate_regroup(
@@ -4564,19 +4679,29 @@ static func _fresh_spawn_target_candidate_for_point(
 				occupied_commander_ids
 			)
 		):
+			_spawn_profile_add_ms("fresh_ready_without_regroup_ms", started_usec)
+			_spawn_profile_count("fresh_rebuild_candidate_not_ready")
 			continue
+		_spawn_profile_add_ms("fresh_ready_without_regroup_ms", started_usec)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	if best.is_empty():
-		return _fallback_spawn_candidate_for_point(
+		started_usec = _spawn_profile_timer()
+		var preselected_best_empty_fallback_plan := _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+		_spawn_profile_add_ms("fresh_preselected_fallback_plan_ms", started_usec)
+		started_usec = _spawn_profile_timer()
+		var fallback := _fallback_spawn_candidate_for_point(
 			session,
 			config,
 			state,
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			preselected_best_empty_fallback_plan
 		)
+		_spawn_profile_add_ms("fresh_fallback_spawn_candidate_ms", started_usec)
+		return fallback
 	return best
 
 static func _fallback_spawn_candidate_for_point(
@@ -4586,7 +4711,8 @@ static func _fallback_spawn_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	preselected_plan: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -4602,20 +4728,30 @@ static func _fallback_spawn_candidate_for_point(
 	if commander_candidates.is_empty():
 		return {}
 	var best := {}
+	var shared_plan: Dictionary = preselected_plan.duplicate(true)
+	var shared_plan_checked := not shared_plan.is_empty()
 	for commander_value in commander_candidates:
 		if not (commander_value is Dictionary):
 			continue
 		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
 		if roster_hero_id == "":
 			continue
-		var plan := EnemyAdventureRulesScript.choose_target(
-			session,
-			config,
-			{"x": int(point.get("x", 0)), "y": int(point.get("y", 0))},
-			_commander_roster_entry_for_launch(session, faction_id, roster_hero_id, state)
-		)
-		if plan.is_empty() or String(plan.get("target_kind", "")) == "regroup":
-			plan = _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+		var plan: Dictionary = shared_plan.duplicate(true)
+		if plan.is_empty() and not shared_plan_checked:
+			var started_usec := _spawn_profile_timer()
+			plan = EnemyAdventureRulesScript.choose_target(
+				session,
+				config,
+				{"x": int(point.get("x", 0)), "y": int(point.get("y", 0))},
+				_commander_roster_entry_for_launch(session, faction_id, roster_hero_id, state)
+			)
+			_spawn_profile_add_ms("fallback_choose_target_ms", started_usec)
+			if plan.is_empty() or String(plan.get("target_kind", "")) == "regroup":
+				started_usec = _spawn_profile_timer()
+				plan = _rebuild_pressure_exploration_plan(session, config, faction_id, point)
+				_spawn_profile_add_ms("fallback_rebuild_exploration_plan_ms", started_usec)
+			shared_plan = plan.duplicate(true)
+			shared_plan_checked = true
 		if plan.is_empty():
 			continue
 		var candidate := _spawn_point_candidate_from_plan(
