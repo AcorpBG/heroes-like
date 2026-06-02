@@ -17225,9 +17225,16 @@ static func _regroup_raid_at_town(
 	var transferred_count := int(transfer_report.get("transferred_count", 0))
 	var transferred_strength := int(transfer_report.get("transferred_strength", 0))
 	var after_strength := raid_strength(raid)
+	var regroup_town_id: String = String(town.get("placement_id", ""))
+	var previous_regroup_town_id: String = String(raid.get("last_regroup_town_id", ""))
+	var previous_no_spare_count: int = max(0, int(raid.get("no_spare_regroup_count", 0)))
+	var no_spare_regroup_count: int = 0
+	if transferred_count <= 0 and previous_regroup_town_id == regroup_town_id:
+		no_spare_regroup_count = previous_no_spare_count + 1
 	raid["regrouped_day"] = int(session.day)
-	raid["last_regroup_town_id"] = String(town.get("placement_id", ""))
+	raid["last_regroup_town_id"] = regroup_town_id
 	raid["last_regroup_strength_delta"] = transferred_strength
+	raid["no_spare_regroup_count"] = no_spare_regroup_count
 
 	var resumed_target_event := {}
 	var ready_to_resume := not raid_regroup_needed(raid, config, faction_id)
@@ -17250,10 +17257,16 @@ static func _regroup_raid_at_town(
 				resumed_target_event = ai_target_assignment_event(session, config, raid, fallback_previous_target)
 				if resumed_target_event.is_empty():
 					resumed_target_event = ai_target_assignment_event(session, config, raid, {})
-		if transferred_count <= 0 and resumed_target_event.is_empty():
+		var still_regrouping_here := (
+			transferred_count <= 0
+			and String(raid.get("target_kind", "")) == "regroup"
+			and String(raid.get("target_placement_id", "")) == regroup_town_id
+		)
+		if transferred_count <= 0 and (resumed_target_event.is_empty() or still_regrouping_here or no_spare_regroup_count >= 2):
 			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
 			raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
-	elif transferred_count <= 0:
+			resumed_target_event = {}
+	elif transferred_count <= 0 and no_spare_regroup_count >= 2:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
 		raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
 
@@ -17541,6 +17554,7 @@ static func _retire_failed_regroup_to_rebuild(
 	retired["raid_retired_to_rebuild"] = true
 	retired["retired_to_rebuild_day"] = int(session.day)
 	retired["retired_to_rebuild_town_id"] = String(town.get("placement_id", ""))
+	retired["retired_to_rebuild_reason"] = "no_spare_garrison_after_repeated_regroup"
 	var commander_state = retired.get("enemy_commander_state", {})
 	var roster_hero_id := ""
 	if commander_state is Dictionary and not commander_state.is_empty():
