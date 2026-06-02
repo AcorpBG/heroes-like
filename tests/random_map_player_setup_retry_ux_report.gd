@@ -170,7 +170,7 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		_fail("Generated water option list exposed unsupported water modes: %s" % JSON.stringify(water_options))
 		return false
 	var size_options: Array = controls.get("size_options", []) if controls.get("size_options", []) is Array else []
-	if size_options != ["Small 36x36"]:
+	if size_options != ["Small 36x36", "Medium 72x72"]:
 		_fail("Generated size option list exposed unsupported sizes: %s" % JSON.stringify(size_options))
 		return false
 	var setup: Dictionary = snapshot.get("setup", {}) if snapshot.get("setup", {}) is Dictionary else {}

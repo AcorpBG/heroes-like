@@ -34,17 +34,19 @@ func _run() -> void:
 		_fail("Rules setup did not report full internal catalog counts.")
 		return
 	var auto_selection: Dictionary = setup_options.get("player_facing_auto_selection", {}) if setup_options.get("player_facing_auto_selection", {}) is Dictionary else {}
-	if String(setup_options.get("player_facing_template_policy", "")) != "h3maped_strict_small_land_public_generation_scope":
+	if String(setup_options.get("player_facing_template_policy", "")) != "h3maped_strict_small_medium_land_public_generation_scope":
 		_fail("Rules setup did not publish the strict H3MapEd public launch policy: %s" % JSON.stringify(setup_options))
 		return
 	if String(auto_selection.get("mode", "")) != ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO or bool(auto_selection.get("manual_template_picker_visible", true)) or bool(auto_selection.get("manual_profile_picker_visible", true)):
 		_fail("Rules setup did not keep template selection behind native auto provenance: %s" % JSON.stringify(auto_selection))
 		return
 	var public_scope: Dictionary = setup_options.get("public_generation_scope", {}) if setup_options.get("public_generation_scope", {}) is Dictionary else {}
-	if String(public_scope.get("size_class_id", "")) != "homm3_small" or String(public_scope.get("water_mode", "")) != "land" or int(public_scope.get("level_count", 0)) != 1:
-		_fail("Rules setup did not publish strict Small/Land/Surface public scope: %s" % JSON.stringify(public_scope))
+	var public_size_ids: Array = public_scope.get("size_class_ids", []) if public_scope.get("size_class_ids", []) is Array else []
+	public_size_ids.sort()
+	if public_size_ids != ["homm3_medium", "homm3_small"] or String(public_scope.get("water_mode", "")) != "land" or int(public_scope.get("level_count", 0)) != 1:
+		_fail("Rules setup did not publish strict Small+Medium/Land/Surface public scope: %s" % JSON.stringify(public_scope))
 		return
-	if _ids(setup_options.get("size_classes", []) if setup_options.get("size_classes", []) is Array else []) != ["homm3_small"]:
+	if _ids(setup_options.get("size_classes", []) if setup_options.get("size_classes", []) is Array else []) != ["homm3_medium", "homm3_small"]:
 		_fail("Rules setup exposed unsupported public sizes: %s" % JSON.stringify(setup_options.get("size_classes", [])))
 		return
 	if _ids(setup_options.get("water_modes", []) if setup_options.get("water_modes", []) is Array else []) != ["land"]:
@@ -133,19 +135,25 @@ func _run() -> void:
 		return
 
 	var size_default_failures := []
-	for hidden_size_class_id in ["homm3_medium", "homm3_large", "homm3_extra_large"]:
+	for hidden_size_class_id in ["homm3_large", "homm3_extra_large"]:
 		if bool(shell.call("validation_select_generated_size_class", hidden_size_class_id)):
 			_fail("Main menu exposed unsupported public generated size class %s." % hidden_size_class_id)
 			return
 	for size_class_id in ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]:
-		if size_class_id == "homm3_small" and not bool(shell.call("validation_select_generated_size_class", size_class_id)):
+		if size_class_id in ["homm3_small", "homm3_medium"] and not bool(shell.call("validation_select_generated_size_class", size_class_id)):
 			_fail("Main menu could not select generated public size class %s." % size_class_id)
 			return
 		var defaults := ScenarioSelectRulesScript.random_map_size_class_default(size_class_id)
-		if size_class_id == "homm3_small":
+		if size_class_id in ["homm3_small", "homm3_medium"]:
 			var size_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 			var size_controls: Dictionary = size_snapshot.get("controls", {}) if size_snapshot.get("controls", {}) is Dictionary else {}
 			var provenance: Dictionary = size_controls.get("internal_template_provenance", {}) if size_controls.get("internal_template_provenance", {}) is Dictionary else {}
+			if String(size_controls.get("size_class_id", "")) != size_class_id or String(size_controls.get("water_mode", "")) != "land" or int(size_controls.get("level_count", 0)) != 1 or bool(size_controls.get("underground", true)):
+				size_default_failures.append({
+					"size_class_id": size_class_id,
+					"controls": size_controls,
+					"expected_public_scope": "strict one-level land",
+				})
 			if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch":
 				size_default_failures.append({
 					"size_class_id": size_class_id,

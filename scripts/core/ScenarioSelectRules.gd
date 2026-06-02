@@ -205,11 +205,26 @@ const RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT := "size_default"
 const RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO := "native_catalog_auto"
 const RANDOM_MAP_DEFAULT_SEED := "aurelion-random-skirmish-10184"
 const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
+const RANDOM_MAP_PUBLIC_H3MAPED_SCOPES := [
+	{
+		"size_class_id": "homm3_small",
+		"water_mode": "land",
+		"level_count": 1,
+		"scope": "strict_small_36x36_one_level_land_only",
+	},
+	{
+		"size_class_id": "homm3_medium",
+		"water_mode": "land",
+		"level_count": 1,
+		"scope": "strict_medium_72x72_one_level_land_only",
+	},
+]
 const RANDOM_MAP_PUBLIC_H3MAPED_SCOPE := {
-	"size_class_id": "homm3_small",
+	"size_class_ids": ["homm3_small", "homm3_medium"],
 	"water_mode": "land",
 	"level_count": 1,
-	"scope": "strict_small_36x36_surface_land_only",
+	"scope": "strict_small_36x36_one_level_land_only; strict_medium_72x72_one_level_land_only",
+	"scopes": RANDOM_MAP_PUBLIC_H3MAPED_SCOPES,
 }
 const GENERATED_MAP_DEV_DIR := "res://maps"
 const GENERATED_MAP_RUNTIME_DIR := "user://maps"
@@ -468,14 +483,14 @@ static func random_map_player_setup_options() -> Dictionary:
 		"package_directory_policy": generated_map_package_directory_policy(),
 		"catalog_template_count": _random_map_template_options().size(),
 		"catalog_profile_count": _random_map_profile_options().size(),
-		"player_facing_template_policy": "h3maped_strict_small_land_public_generation_scope",
+		"player_facing_template_policy": "h3maped_strict_small_medium_land_public_generation_scope",
 		"player_facing_auto_selection": {
 			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
 			"manual_template_picker_visible": false,
 			"manual_profile_picker_visible": false,
 			"catalog_template_count": _random_map_template_options().size(),
 			"catalog_profile_count": _random_map_profile_options().size(),
-			"launch_filter": "public generated skirmish startup is validator-gated to H3MapEd strict Small 36x36 one-level land scope; broader sizes, water, and underground remain hidden until their native ports are production-ready",
+			"launch_filter": "public generated skirmish startup is validator-gated to H3MapEd strict Small 36x36 and Medium 72x72 one-level land scopes; water, underground, Large, and XL remain hidden until their native ports are production-ready",
 		},
 	}
 
@@ -488,10 +503,11 @@ static func _random_map_player_facing_water_options() -> Array:
 
 static func _random_map_public_size_options() -> Array:
 	var options := []
+	var public_size_ids := _random_map_public_h3maped_size_ids()
 	for option in RANDOM_MAP_SIZE_OPTIONS:
-		if option is Dictionary and String(option.get("id", "")) == String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("size_class_id", "homm3_small")):
+		if option is Dictionary and String(option.get("id", "")) in public_size_ids:
 			var item: Dictionary = option.duplicate(true)
-			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
+			item["public_generation_scope"] = _random_map_public_h3maped_scope_label_for_size(String(option.get("id", "")))
 			options.append(item)
 	return options
 
@@ -512,6 +528,34 @@ static func _random_map_public_level_options() -> Array:
 			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
 			options.append(item)
 	return options
+
+static func _random_map_public_h3maped_size_ids() -> Array:
+	var ids := []
+	for scope in RANDOM_MAP_PUBLIC_H3MAPED_SCOPES:
+		if scope is Dictionary:
+			var size_class_id := String(scope.get("size_class_id", ""))
+			if size_class_id != "" and not ids.has(size_class_id):
+				ids.append(size_class_id)
+	return ids
+
+static func _random_map_public_h3maped_scope_label_for_size(size_class_id: String) -> String:
+	for scope in RANDOM_MAP_PUBLIC_H3MAPED_SCOPES:
+		if scope is Dictionary and String(scope.get("size_class_id", "")) == size_class_id:
+			return String(scope.get("scope", ""))
+	return ""
+
+static func _random_map_public_h3maped_scope_for(size_class_id: String, water_mode: String, level_count: int) -> Dictionary:
+	for scope in RANDOM_MAP_PUBLIC_H3MAPED_SCOPES:
+		if not (scope is Dictionary):
+			continue
+		if String(scope.get("size_class_id", "")) != size_class_id:
+			continue
+		if String(scope.get("water_mode", "land")) != water_mode:
+			continue
+		if int(scope.get("level_count", 1)) != level_count:
+			continue
+		return scope.duplicate(true)
+	return {}
 
 static func generated_map_package_directory_policy() -> Dictionary:
 	return {
@@ -2260,11 +2304,7 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 	var size_class_id := String(size.get("size_class_id", input_config.get("size_class_id", "")))
 	var water_mode := String(size.get("water_mode", input_config.get("water_mode", "land")))
 	var level_count := int(size.get("level_count", input_config.get("level_count", 1)))
-	if size_class_id != String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("size_class_id", "homm3_small")):
-		return input_config.duplicate(true)
-	if water_mode != String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("water_mode", "land")):
-		return input_config.duplicate(true)
-	if level_count != int(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("level_count", 1)):
+	if _random_map_public_h3maped_scope_for(size_class_id, water_mode, level_count).is_empty():
 		return input_config.duplicate(true)
 	var seed_source := String(input_config.get("seed_source", "explicit"))
 	var seed_identity: Dictionary = input_config.get("seed_identity", {}) if input_config.get("seed_identity", {}) is Dictionary else {}

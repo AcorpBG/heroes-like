@@ -5,10 +5,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSliceId": "native-rmg-medium-h3maped-land-public-ui-10184",
   "currentSliceTitle": "Native RMG Medium H3MapEd Land Public UI",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Expose strict Medium 72x72x1 one-level land generation through public random-map options after runtime package adoption, while keeping Medium water/underground and Large/XL hidden or blocked.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Strict Medium H3MapEd land public scope exposure is complete: public generated-map options expose Small and Medium one-level land only, keep Medium water/islands/underground and Large/XL hidden or blocked, preserve strict scope metadata, and launch Medium through H3MapEd executable package startup.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T17:35:00Z",
+  "updatedAt": "2026-06-02T18:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39827,7 +39827,7 @@
     {
       "id": "native-rmg-medium-h3maped-land-public-ui-10184",
       "title": "Native RMG Medium H3MapEd Land Public UI",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "native-rmg-medium-h3maped-land-runtime-adoption-10184 follow-up",
@@ -39856,7 +39856,9 @@
         "changing generated-map art/UI layout beyond necessary option availability"
       ],
       "createdAt": "2026-06-02T14:38:00Z",
-      "updatedAt": "2026-06-02T17:35:00Z"
+      "updatedAt": "2026-06-02T18:25:00Z",
+      "completedAt": "2026-06-02T18:25:00Z",
+      "completionSummary": "Strict Medium H3MapEd land public scope exposure is complete: public generated-map options expose Small and Medium one-level land only, keep Medium water/islands/underground and Large/XL hidden or blocked, preserve strict scope metadata, and launch Medium through H3MapEd executable package startup."
     }
   ],
   "completedImplementationEvidence": [
@@ -48148,6 +48150,88 @@
           "summary": "No whitespace errors."
         }
       ]
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-public-ui-10184",
+      "completedAt": "2026-06-02T18:25:00Z",
+      "summary": "Strict Medium H3MapEd land public scope exposure is complete: public generated-map options expose Small and Medium one-level land only, keep Medium water/islands/underground and Large/XL hidden or blocked, preserve strict scope metadata, and launch Medium through H3MapEd executable package startup.",
+      "validation": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "result": "passed",
+          "summary": "Linux debug native build remained green."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+          "result": "passed",
+          "summary": "Linux release native build remained green."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
+          "result": "passed",
+          "summary": "Windows debug native cross-build remained green."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+          "result": "passed",
+          "summary": "Windows release native cross-build remained green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_all_template_menu_wiring_report.tscn",
+          "result": "passed",
+          "summary": "Public setup options expose Small and Medium sizes only, Land water only, surface-only level options, hidden manual template/profile pickers, and H3MapEd Small+Medium public policy text."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_player_setup_retry_ux_report.tscn",
+          "result": "passed",
+          "summary": "Small public generated-map launch remains available and unchanged except for the additional Medium size option; unsupported water/underground/XL remain blocked."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+          "result": "passed",
+          "summary": "Medium 4-player land is selectable from the public menu, keeps Islands/Large/underground blocked, resolves to H3MapEd executable authority, and starts h3maped_medium_scenario_2868781e."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
+          "result": "passed",
+          "summary": "Medium template selection remains original H3MapEd catalog/RNG authority; explicit translated requests are overridden; unsupported Medium water/islands/two-level stay blocked."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
+          "result": "passed",
+          "summary": "Controlled 2p/3p/4p Medium corpus remains validator-green with 5184-cell tile byte arrays and public Medium generation contract."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn",
+          "result": "passed",
+          "summary": "Medium runtime acceptance remains green: package adoption, save/load, disk startup, exact guard/blocker runtime pathing, and 4p launch succeed."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn",
+          "result": "passed",
+          "summary": "Package surface topology regression remains green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn",
+          "result": "passed",
+          "summary": "Small disk package startup regression remains green with zero runtime-unblocked guard/blocker mask tiles."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -51089,35 +51173,36 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+    "sliceId": "native-rmg-medium-h3maped-land-public-ui-10184",
     "status": "pass",
-    "updatedAt": "2026-06-02T17:35:00Z",
+    "updatedAt": "2026-06-02T18:25:00Z",
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
       "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_all_template_menu_wiring_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_player_setup_retry_ux_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn (passed)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_port_boundary_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn (passed)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Strict Medium H3MapEd runtime package adoption is green; public UI exposure remains the active pending Medium slice."
+    "summary": "Strict Medium H3MapEd one-level land public UI exposure completed and full Medium track gates passed."
   },
   "active_slice": {
     "id": "native-rmg-medium-h3maped-land-public-ui-10184",
     "title": "Native RMG Medium H3MapEd Land Public UI",
-    "status": "pending",
-    "updatedAt": "2026-06-02T17:35:00Z",
-    "summary": "Expose strict Medium 72x72x1 one-level land generation through public random-map options after runtime package adoption, while keeping Medium water/underground and Large/XL hidden or blocked."
+    "status": "completed",
+    "updatedAt": "2026-06-02T18:25:00Z",
+    "summary": "Strict Medium H3MapEd land public scope exposure is complete: public generated-map options expose Small and Medium one-level land only, keep Medium water/islands/underground and Large/XL hidden or blocked, preserve strict scope metadata, and launch Medium through H3MapEd executable package startup."
   },
-  "currentSliceUpdatedAt": "2026-06-02T17:35:00Z",
+  "currentSliceUpdatedAt": "2026-06-02T18:25:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -54370,30 +54455,93 @@
         "remaining_validation": "Full Medium land track still needs Goal 5 public UI exposure before the overall Medium RMG goal can be considered complete.",
         "policy": "Runtime adoption implementation slice only; no campaign, AI, economy, unit, or spell balance changes."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-06-02T18:25:00Z",
+      "sliceId": "native-rmg-medium-h3maped-land-public-ui-10184",
+      "commands": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_all_template_menu_wiring_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_player_setup_retry_ux_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "ScenarioSelectRules public H3MapEd scope now lists strict_small_36x36_one_level_land_only and strict_medium_72x72_one_level_land_only as the only public generated-map scopes.",
+          "Public setup options expose only homm3_small and homm3_medium size classes, only land water mode, and only the one-level surface option.",
+          "Public launch normalization runs both Small and Medium strict land requests through native catalog auto-selection, so translated template/profile requests do not become public authority.",
+          "Main-menu validation proves Medium is selectable, Medium Islands and underground remain unavailable, Large/XL remain unavailable, and Medium launch starts a H3MapEd Medium package scenario.",
+          "Small public generated-map launch remains green and still resolves through H3MapEd executable source-template authority.",
+          "Full Medium track validation remains green across native builds, template authority, corpus audit, runtime adoption, package topology, disk startup, repo validation, JSON parse, and whitespace."
+        ],
+        "public_scope": {
+          "size_class_ids": [
+            "homm3_small",
+            "homm3_medium"
+          ],
+          "water_mode": "land",
+          "level_count": 1,
+          "scopes": [
+            "strict_small_36x36_one_level_land_only",
+            "strict_medium_72x72_one_level_land_only"
+          ],
+          "hidden_or_blocked": [
+            "homm3_medium islands",
+            "homm3_medium normal_water",
+            "homm3_medium underground",
+            "homm3_large",
+            "homm3_extra_large"
+          ]
+        },
+        "focused_medium_public_case": {
+          "case_id": "medium_4_land_start_coverage_regression",
+          "size_class_id": "homm3_medium",
+          "player_count": 4,
+          "water_mode": "land",
+          "level_count": 1,
+          "session_id": "h3maped_medium_scenario_2868781e",
+          "source_template_authority": "h3maped_exe_rng_original_catalog"
+        },
+        "remaining_validation": "No remaining items in GOALS.md for the strict Medium one-level land RMG track. Future water, underground, Large, XL, campaign, AI, economy, unit, and spell work remain separately scoped.",
+        "policy": "Public UI exposure slice only; no campaign, AI, economy, unit, spell, or balance changes."
+      }
     }
   ],
   "currentSlice": "native-rmg-medium-h3maped-land-public-ui-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-02T17:35:00Z",
-    "currentSliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
-    "summary": "Strict Medium H3MapEd runtime package adoption completed; next active slice is public UI exposure.",
+    "updatedAt": "2026-06-02T18:25:00Z",
+    "currentSliceId": "native-rmg-medium-h3maped-land-public-ui-10184",
+    "summary": "Strict Medium H3MapEd land RMG track completed through public UI exposure.",
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_all_template_menu_wiring_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_player_setup_retry_ux_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_port_boundary_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn",
       "python3 tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "latestSummary": "Medium land now produces validator-gated public packages, saves and loads map/scenario documents, starts generated skirmishes through disk package adoption, and has runtime pathing enforce exact package guard/blocker masks. Public UI exposure remains pending."
+    "latestSummary": "Public generated-map options now expose Small and Medium one-level land only, preserve strict scope metadata, block unsupported water/underground/Large/XL, and launch Medium through H3MapEd executable package startup."
   }
 }
