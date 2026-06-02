@@ -758,38 +758,7 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		raid = _maybe_preempt_for_battle_pressure_floor(session, config, raid, faction_id)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
-		var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
-		if plan.is_empty():
-			plan = ai_post_capture_town_support_target_selection_plan(session, config, raid)
-		if plan.is_empty():
-			plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
-		if plan.is_empty():
-			plan = ai_active_front_support_target_selection_plan(session, config, raid)
-		if plan.is_empty():
-			var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid)
-			if not live_plan.is_empty() and _live_task_plan_can_preempt_explicit_objective(config, live_plan):
-				plan = live_plan
-		if plan.is_empty():
-			plan = _current_tile_resource_target_selection_plan(session, config, raid, faction_id)
-		if plan.is_empty():
-			if _config_has_explicit_objective_targets(config):
-				plan = choose_target(
-					session,
-					config,
-					{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-					raid.get("enemy_commander_state", {})
-				)
-				if plan.is_empty():
-					plan = _explicit_objective_fallback_target_selection_plan(session, config, raid, faction_id)
-		if plan.is_empty():
-			plan = ai_hero_task_live_target_selection_plan(session, config, raid)
-		if plan.is_empty():
-			plan = choose_target(
-				session,
-				config,
-				{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-				raid.get("enemy_commander_state", {})
-			)
+		var plan := _assignment_plan_for_raid_without_valid_target(session, config, raid, faction_id)
 		if not plan.is_empty():
 			if plan.get("hero_task_record", {}) is Dictionary:
 				task_record_for_assignment = plan.get("hero_task_record", {}).duplicate(true)
@@ -798,6 +767,23 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 			raid.merge(plan, true)
 	if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, faction_id):
 		raid = _clear_regroup_target(raid)
+		var repair_plan := _assignment_plan_for_raid_without_valid_target(session, config, raid, faction_id)
+		if not repair_plan.is_empty():
+			if repair_plan.get("hero_task_record", {}) is Dictionary:
+				task_record_for_assignment = repair_plan.get("hero_task_record", {}).duplicate(true)
+			repair_plan.erase("hero_task_record")
+			repair_plan.erase("hero_task_id")
+			raid.merge(repair_plan, true)
+			if _raid_target_valid(session, raid):
+				raid = _refresh_target(session, raid, faction_id)
+		if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, faction_id):
+			raid = _clear_regroup_target(raid)
+	if not bool(raid.get("raid_retired_to_rebuild", false)) and (String(raid.get("target_kind", "")) == "" or not _raid_target_valid(session, raid)):
+		var fallback_plan := _active_raid_no_known_target_fallback_plan(session, config, raid)
+		if not fallback_plan.is_empty():
+			raid.merge(fallback_plan, true)
+			if _raid_target_valid(session, raid):
+				raid = _refresh_target(session, raid, faction_id)
 	raid.erase("hero_task_record")
 	raid.erase("hero_task_id")
 	var current_target := _current_target_snapshot(raid)
@@ -817,6 +803,60 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 			)
 		_ai_hero_task_record_live_assignment(session, config, raid, current_target, task_record_for_assignment)
 	return raid
+
+static func _assignment_plan_for_raid_without_valid_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var plan = ai_live_town_retake_target_selection_plan(session, config, raid)
+	if plan.is_empty():
+		plan = ai_post_capture_town_support_target_selection_plan(session, config, raid)
+	if plan.is_empty():
+		plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
+	if plan.is_empty():
+		plan = ai_active_front_support_target_selection_plan(session, config, raid)
+	if plan.is_empty():
+		var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid)
+		if not live_plan.is_empty() and _live_task_plan_can_preempt_explicit_objective(config, live_plan):
+			plan = live_plan
+	if plan.is_empty():
+		plan = _current_tile_resource_target_selection_plan(session, config, raid, faction_id)
+	if plan.is_empty() and _config_has_explicit_objective_targets(config):
+		plan = choose_target(
+			session,
+			config,
+			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
+			raid.get("enemy_commander_state", {})
+		)
+		if plan.is_empty():
+			plan = _explicit_objective_fallback_target_selection_plan(session, config, raid, faction_id)
+	if plan.is_empty():
+		plan = ai_hero_task_live_target_selection_plan(session, config, raid)
+	if plan.is_empty():
+		plan = choose_target(
+			session,
+			config,
+			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
+			raid.get("enemy_commander_state", {})
+		)
+	return plan
+
+static func _active_raid_no_known_target_fallback_plan(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var plan := _no_known_target_frontier_sweep_plan(session, config, origin)
+	if plan.is_empty():
+		plan = _no_known_target_exploration_plan(session, config, origin)
+	if plan.is_empty():
+		plan = _no_known_target_regroup_plan(session, config, origin)
+	return plan
 
 static func _maybe_preempt_for_battle_pressure_floor(
 	session: SessionStateStoreScript.SessionData,
@@ -2075,6 +2115,84 @@ static func _repair_live_raid_target_after_resolution(
 		if not event.is_empty():
 			events.append(event)
 	return {"encounter": repaired, "ai_events": events}
+
+static func repair_active_raid_target_integrity(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary
+) -> Dictionary:
+	if session == null or config.is_empty():
+		return {"repaired_count": 0, "events": []}
+	var faction_id := String(config.get("faction_id", ""))
+	if faction_id == "":
+		return {"repaired_count": 0, "events": []}
+	var encounters = session.overworld.get("encounters", [])
+	if not (encounters is Array):
+		return {"repaired_count": 0, "events": []}
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var repaired_count := 0
+	var events := []
+	for index in range(encounters.size()):
+		var encounter_value = encounters[index]
+		if not is_active_pressure_host(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if _raid_target_valid(session, encounter) and int(encounter.get("goal_distance", 9999)) < 9999:
+			continue
+		var previous_target := _current_target_snapshot(encounter)
+		var repaired := assign_target(session, config, encounter)
+		if _raid_target_valid(session, repaired):
+			repaired = _refresh_target(session, repaired, faction_id)
+		if _raid_target_valid(session, repaired) and int(repaired.get("goal_distance", 9999)) < 9999:
+			encounters[index] = repaired
+			repaired_count += 1
+			var event := ai_target_assignment_event(session, config, repaired, previous_target)
+			if event.is_empty():
+				event = ai_target_assignment_event(session, config, repaired, {})
+			if not event.is_empty():
+				events.append(event)
+		else:
+			encounters[index] = _retire_targetless_raid_to_rebuild(session, encounter, faction_id)
+			repaired_count += 1
+	session.overworld["encounters"] = encounters
+	return {"repaired_count": repaired_count, "events": events}
+
+static func _retire_targetless_raid_to_rebuild(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var retired := raid.duplicate(true)
+	retired["raid_retired_to_rebuild"] = true
+	retired["retired_to_rebuild_day"] = int(session.day)
+	retired["retired_to_rebuild_reason"] = "target_integrity_repair_failed"
+	retired["target_integrity_repair_failed_day"] = int(session.day)
+	var commander_state = retired.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var updated_commander := sync_commander_army_continuity(
+			commander_state,
+			retired.get("enemy_army", {}),
+			String(retired.get("encounter_id", retired.get("id", "")))
+		)
+		retired["enemy_commander_state"] = updated_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			updated_commander,
+			COMMANDER_STATUS_AVAILABLE,
+			"",
+			0,
+			String(updated_commander.get("last_outcome", ""))
+		)
+	var resolved = session.overworld.get("resolved_encounters", [])
+	if not (resolved is Array):
+		resolved = []
+	var placement_id := String(retired.get("placement_id", ""))
+	if placement_id != "" and placement_id not in resolved:
+		resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
+	retired = _clear_regroup_target(retired)
+	retired["arrived"] = false
+	return retired
 
 static func _tactical_pressure_movement_steps(raid: Dictionary, goal_distance: int) -> int:
 	if goal_distance <= RAID_BASE_MOVEMENT_STEPS or goal_distance >= 9999:
@@ -10398,6 +10516,10 @@ static func ai_target_assignment_event(
 		return {}
 	if not previous_target.is_empty() and _target_signature(previous_target) == _target_signature(_current_target_snapshot(actor)):
 		return {}
+	var reason_codes: Array = _normalize_string_array(actor.get("target_reason_codes", []))
+	var public_importance := String(actor.get("target_public_importance", ""))
+	if public_importance == "":
+		public_importance = _default_public_importance(target_kind, reason_codes)
 	var target := {
 		"target_kind": target_kind,
 		"target_placement_id": target_id,
@@ -10405,20 +10527,30 @@ static func ai_target_assignment_event(
 		"target_x": int(actor.get("target_x", actor.get("goal_x", 0))),
 		"target_y": int(actor.get("target_y", actor.get("goal_y", 0))),
 		"target_public_reason": String(actor.get("target_public_reason", "")),
-		"target_reason_codes": actor.get("target_reason_codes", []),
-		"target_public_importance": String(actor.get("target_public_importance", "")),
+		"target_reason_codes": reason_codes,
+		"target_public_importance": public_importance,
 		"target_debug_reason": String(actor.get("target_debug_reason", "")),
 	}
+	var options := {
+		"state_policy": "derived",
+		"summary_prefix": "targets",
+	}
+	if String(actor.get("spawned_by_faction_id", "")) != "" and public_importance in ["medium", "high", "critical"]:
+		var visibility := _event_visibility(
+			session,
+			int(target.get("target_x", actor.get("goal_x", 0))),
+			int(target.get("target_y", actor.get("goal_y", 0))),
+			public_importance
+		)
+		if visibility == "hidden_debug":
+			options["visibility"] = "rumored"
 	return build_ai_event_record(
 		session,
 		config,
 		"ai_target_assigned",
 		actor,
 		target,
-		{
-			"state_policy": "derived",
-			"summary_prefix": "targets",
-		}
+		options
 	)
 
 static func ai_pressure_summary_event(
@@ -17104,6 +17236,20 @@ static func _regroup_raid_at_town(
 		var resume_result := _resume_previous_target_after_regroup(session, config, raid, faction_id)
 		raid = resume_result.get("raid", raid)
 		resumed_target_event = resume_result.get("ai_event", {})
+		if not bool(raid.get("raid_retired_to_rebuild", false)) and not _raid_target_valid(session, raid):
+			var fallback_previous_target := {
+				"target_kind": "regroup",
+				"target_placement_id": String(town.get("placement_id", "")),
+				"target_label": "%s regroup" % _town_name(town),
+				"target_x": int(town.get("x", 0)),
+				"target_y": int(town.get("y", 0)),
+			}
+			raid = assign_target(session, config, raid)
+			if _raid_target_valid(session, raid):
+				raid = _refresh_target(session, raid, faction_id)
+				resumed_target_event = ai_target_assignment_event(session, config, raid, fallback_previous_target)
+				if resumed_target_event.is_empty():
+					resumed_target_event = ai_target_assignment_event(session, config, raid, {})
 		if transferred_count <= 0 and resumed_target_event.is_empty():
 			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
 			raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
@@ -18358,6 +18504,8 @@ static func _raid_target_points_to_pressure_host(
 static func _is_active_raid(encounter: Variant, faction_id: String, resolved_encounters: Variant) -> bool:
 	if not (encounter is Dictionary):
 		return false
+	if bool(encounter.get("raid_retired_to_rebuild", false)):
+		return false
 	var raid_faction = String(encounter.get("spawned_by_faction_id", ""))
 	if faction_id == "":
 		if raid_faction == "":
@@ -18388,6 +18536,8 @@ static func _encounter_is_pressure_host_candidate(encounter: Variant, faction_id
 	if not (encounter is Dictionary):
 		return false
 	var raid: Dictionary = encounter
+	if bool(raid.get("raid_retired_to_rebuild", false)):
+		return false
 	var placement_id := String(raid.get("placement_id", ""))
 	if _is_active_raid(raid, faction_id, resolved_encounters):
 		return true

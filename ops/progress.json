@@ -39239,7 +39239,7 @@
       ],
       "createdAt": "2026-06-01T22:55:00Z",
       "startedAt": "2026-06-01T15:46:12Z",
-      "updatedAt": "2026-06-02T00:33:06Z",
+      "updatedAt": "2026-06-02T07:02:12Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -39355,6 +39355,36 @@
           "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=7 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "status": "pass_with_remaining_validation",
           "notes": "Medium seed ordinal 8 completed 14/14 turns on translated_rmg_template_002_v1: row_ok=1/1, setup_ok=1, enemy_activity_event_count=76, target_assignment_count=40, active_raid_count=5, site_seized_count=0, no_active_pressure_row_count=0, stalled_turn_count=0, stalled_turn_pct=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, behavior_bug_count=0, max_turn_runtime_msec=174669, row_runtime_msec=1978241. The only remaining blocker in the focused report is the full 100-seed eight-week matrix not being run."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=8 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "behavior_gap_found",
+          "notes": "Initial Medium seed ordinal 9 run completed 14/14 turns but exposed one active pressure host with an unreachable active target: unreachable_active_target_turn_count=1, unreachable_active_target_total=1. The failing host was faction_thornwake_raid_1 with an empty target handoff and goal_distance=9999 after regroup/target repair."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=8 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_remaining_validation",
+          "notes": "Post target-integrity repair/rebuild rerun completed Medium seed ordinal 9 for 14/14 turns: row_ok=1/1, setup_ok=1, enemy_activity_event_count=45, target_assignment_count=5, active_raid_count=0, no_active_pressure_row_count=0, stalled_turn_count=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0. The focused seed blocker is cleared, but the slice remains in progress pending broader Medium matrix validation."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "fail",
+          "notes": "Strategic AI baseline currently fails one Medium generated-map probe after the targeted ordinal-9 fix: rmg_summary behavior_bug_count=1, medium_ok_count=2/3, setup_ok_count=5/5, turn_ok_count=4/5, enemy_activity_event_count=43, target_assignment_event_count=15. This prevents any production-ready AI claim and keeps the current slice in progress."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "Post public-assignment visibility fix, the strategic AI baseline passes with behavior_bug_count=0, medium_ok_count=3/3, setup_ok_count=5/5, turn_ok_count=5/5, enemy_activity_event_count=51, and target_assignment_event_count=23. The exact previously failing Medium seed 161803 now emits 4 target assignments. production_ready remains false behind native_rmg_medium_long_run_matrix."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "status": "pass",
+          "notes": "Tactical battle AI smoke passed ok=true after the strategic AI target-integrity and public assignment event-surfacing fixes."
+        },
+        {
+          "command": "python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md",
+          "status": "pass",
+          "notes": "Repository validation, tracker JSON validation, whitespace check, and no-content/docs/project/PLAN drift guard passed. No unit, spell, economy, or authored balance content was changed."
         }
       ],
       "notes": [
@@ -39370,7 +39400,11 @@
         "Post-fix Medium seed ordinal 5 passes 14-turn generated-map coverage with active pressure, zero target-integrity violations, and zero live unreachable active targets; Medium seed ordinals 1-5 now have 14-turn evidence, but full 100-seed eight-week validation remains open.",
         "Medium seed ordinal 6 passes 14-turn generated-map coverage with active pressure, zero target-integrity violations, zero live unreachable active targets, and a 43% stalled-turn rate below the production-gap threshold; Medium seed ordinals 1-6 now have 14-turn evidence, but full 100-seed eight-week validation remains open.",
         "Medium seed ordinal 7 passes 14-turn generated-map coverage with active pressure, zero target-integrity violations, zero live unreachable active targets, and a 50% stalled-turn rate below the production-gap threshold; Medium seed ordinals 1-7 now have 14-turn evidence, but full 100-seed eight-week validation remains open.",
-        "Medium seed ordinal 8 passes 14-turn generated-map coverage with sustained active pressure, zero stalled turns, zero target-integrity violations, and zero live unreachable active targets; Medium seed ordinals 1-8 now have 14-turn evidence, but full 100-seed eight-week validation remains open."
+        "Medium seed ordinal 8 passes 14-turn generated-map coverage with sustained active pressure, zero stalled turns, zero target-integrity violations, and zero live unreachable active targets; Medium seed ordinals 1-8 now have 14-turn evidence, but full 100-seed eight-week validation remains open.",
+        "Medium seed ordinal 9 exposed a targetless/unreachable active pressure host; active raid target-integrity repair now reruns full target assignment, falls back to frontier/exploration/regroup, and retires unrecoverable shells to rebuild instead of leaving active goal_distance=9999 hosts.",
+        "The targeted Medium ordinal-9 blocker is fixed, but the broader strategic baseline currently fails one Medium generated-map row, so strategic AI is explicitly not production-ready yet.",
+        "The short Medium baseline failure was traced to active generated-map pressure assignments being hidden when off-screen; active pressure assignments with medium-or-higher public importance now surface as rumored public events, preserving fog detail while exposing strategic pressure.",
+        "The strategic AI baseline is green again for all three short Medium probes, but the slice remains in progress because the longer Medium generated-map matrix is still the next production blocker."
       ]
     }
   ],
