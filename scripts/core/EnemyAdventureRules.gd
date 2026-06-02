@@ -1920,7 +1920,6 @@ static func advance_raids(
 			current = next_step
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
-			_path_distance_surface_cache.clear()
 			if raid_reached_town_battle_contact(session, encounter, faction_id):
 				encounter["arrived"] = true
 				encounter["goal_distance"] = 0
@@ -8044,7 +8043,8 @@ static func _ai_hero_task_planner_global_task_assignments(
 			session,
 			faction_id,
 			actor_id,
-			candidates
+			candidates,
+			false
 		)
 		for candidate_value in fitted_candidates:
 			if not (candidate_value is Dictionary):
@@ -8216,7 +8216,8 @@ static func _ai_hero_task_planner_candidates_for_commander(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	actor_id: String,
-	candidates: Array
+	candidates: Array,
+	sort_output: bool = true
 ) -> Array:
 	var output := []
 	for candidate_value in candidates:
@@ -8228,10 +8229,30 @@ static func _ai_hero_task_planner_candidates_for_commander(
 		candidate["commander_fit_profile"] = _ai_commander_task_fit_profile(session, faction_id, actor_id)
 		candidate["priority"] = max(0, int(candidate.get("priority", 0)) + fit_bonus)
 		output.append(candidate)
-	output.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return _candidate_beats(a, b)
-	)
+	if sort_output:
+		output.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return _candidate_beats(a, b)
+		)
 	return output
+
+static func _ai_hero_task_planner_best_candidate_for_commander(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	candidates: Array
+) -> Dictionary:
+	var best := {}
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value.duplicate(true)
+		var fit_bonus := _ai_commander_task_fit_bonus(session, faction_id, actor_id, candidate)
+		candidate["commander_fit_bonus"] = fit_bonus
+		candidate["commander_fit_profile"] = _ai_commander_task_fit_profile(session, faction_id, actor_id)
+		candidate["priority"] = max(0, int(candidate.get("priority", 0)) + fit_bonus)
+		if best.is_empty() or _candidate_beats(candidate, best):
+			best = candidate
+	return best
 
 static func _ai_commander_task_fit_profile(
 	session: SessionStateStoreScript.SessionData,
@@ -17841,42 +17862,35 @@ static func _next_step_toward(
 	if start_index < 0:
 		return start
 	var goal_lookup := _tile_index_lookup(goal_tiles, map_size)
-	var visited = {}
-	var queue = [start_index]
-	var parents = {}
-	visited[start_index] = true
-	var found_index := -1
-	var head := 0
-
-	while head < queue.size():
-		var current_index: int = int(queue[head])
-		head += 1
-		if goal_lookup.has(current_index):
-			found_index = current_index
-			break
-		var current := _vector_from_index(current_index, map_size)
-
-		for delta in PATH_CARDINAL_DELTAS:
-			var next: Vector2i = current + delta
-			var next_index := _tile_index(next, map_size)
-			if visited.has(next_index):
-				continue
-			if _position_blocked_index(next_index, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
-				continue
-			visited[next_index] = true
-			parents[next_index] = current_index
-			queue.append(next_index)
-
-	if found_index < 0:
+	if goal_lookup.has(start_index):
 		return start
-
-	var cursor_index := found_index
-	while parents.has(cursor_index) and int(parents[cursor_index]) != start_index:
-		cursor_index = int(parents[cursor_index])
-	var cursor := _vector_from_index(cursor_index, map_size)
-	if cursor != start and _path_distance(session, cursor, goal_tiles, ignore_placement_id, observer_faction_id) >= 9999:
-		return _verified_next_step_toward(session, start, goal_tiles, ignore_placement_id, observer_faction_id, path_context, goal_lookup)
-	return cursor if cursor != start else start
+	var goal_fields := []
+	for goal_index_value in goal_lookup.keys():
+		var goal_index := int(goal_index_value)
+		if goal_index < 0:
+			continue
+		goal_fields.append(_path_distance_field_for_start(path_context, goal_index))
+	if goal_fields.is_empty():
+		return start
+	var best_step := start
+	var best_distance := 9999
+	for delta in PATH_CARDINAL_DELTAS:
+		var candidate: Vector2i = start + delta
+		var candidate_index := _tile_index(candidate, map_size)
+		if _position_blocked_index(candidate_index, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+			continue
+		var candidate_distance := 9999
+		for distance_field_value in goal_fields:
+			var distance_field: PackedInt32Array = distance_field_value
+			if candidate_index < 0 or candidate_index >= distance_field.size():
+				continue
+			var distance := int(distance_field[candidate_index])
+			if distance >= 0:
+				candidate_distance = min(candidate_distance, distance)
+		if candidate_distance < best_distance:
+			best_step = candidate
+			best_distance = candidate_distance
+	return best_step
 
 static func _verified_next_step_toward(
 	session: SessionStateStoreScript.SessionData,
@@ -17994,12 +18008,12 @@ static func _path_distance_surface_cache_key(
 		map_size.y,
 		ignore_placement_id,
 		observer_faction_id,
-		_path_distance_encounter_fingerprint(session),
+		_path_distance_encounter_fingerprint(session, ignore_placement_id),
 		_path_distance_resource_fingerprint(session),
 		_path_distance_hero_fingerprint(session),
 	]
 
-static func _path_distance_encounter_fingerprint(session: SessionStateStoreScript.SessionData) -> String:
+static func _path_distance_encounter_fingerprint(session: SessionStateStoreScript.SessionData, ignore_placement_id: String = "") -> String:
 	var resolved_lookup := {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	if resolved_encounters is Array:
@@ -18013,6 +18027,8 @@ static func _path_distance_encounter_fingerprint(session: SessionStateStoreScrip
 			continue
 		var encounter: Dictionary = encounter_value
 		var placement_id := String(encounter.get("placement_id", ""))
+		if placement_id == ignore_placement_id:
+			continue
 		var resolved_flag := 1 if resolved_lookup.has(placement_id) else 0
 		count += 1
 		if resolved_flag == 0:
