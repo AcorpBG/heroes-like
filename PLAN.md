@@ -23,7 +23,9 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `strategic-ai-medium-long-run-seed-matrix-10184`. Add dedicated Medium land Native RMG long-run strategic-AI matrix coverage; do not touch balance-content files or claim production-ready AI from a narrow Medium matrix.
+- Current implementation slice: `native-rmg-medium-h3maped-land-reference-corpus-10184`. Owner-selected next track is strict native H3MapEd Medium `72x72x1` land generation, documented in `GOALS.md`; do not use translated/proxy Medium output as completion evidence.
+- Paused/in-progress evidence slice: `strategic-ai-medium-long-run-seed-matrix-10184` remains in progress as strategic-AI evidence, but it is no longer the selected immediate work while the Medium H3MapEd RMG track is being planned and staged.
+- Latest completed planning slice: `native-rmg-medium-h3maped-land-goals-10184`.
 - Latest completed slice: `strategic-ai-rmg-medium-generalization-probe-10184`.
 - Latest completed slice: `native-rmg-medium-runtime-generation-unblock-10184`.
 - Latest completed slice: `strategic-ai-medium-rmg-unblock-routing-10184`.

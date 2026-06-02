@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Dedicated Medium land Native RMG long-run strategic-AI matrix coverage is in progress. Medium seed ordinals 1-11 have focused generated-map evidence, and ordinal 11 now has a 3-turn profiled runtime fix that cuts the worst spawn fallback recomputation spike while preserving clean target integrity. Full 100-seed eight-week validation remains open. Balance content remains out of scope and production-ready AI is not claimed.",
+  "currentSliceId": "native-rmg-medium-h3maped-land-reference-corpus-10184",
+  "currentSliceTitle": "Native RMG Medium H3MapEd Land Reference Corpus",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Owner-selected next work is strict native H3MapEd Medium 72x72x1 land generation. GOALS.md now defines the goals and metrics. The first implementation slice is controlled h3maped.exe Medium land reference/corpus evidence; translated/proxy Medium output is not completion evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T13:20:00Z",
+  "updatedAt": "2026-06-02T14:38:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39497,6 +39497,228 @@
         "Spawn-loop profiling exposed repeated fallback target recomputation as the turn-3 ordinal-11 spike. Fallback target selection now preselects and reuses the rebuild-pressure exploration plan for all commander candidates in that no-fresh-target path, dropping the worst fresh_fallback_spawn_candidate_ms buckets from tens of seconds to under one second while preserving clean Medium behavior."
       ],
       "summary": "Medium Native RMG strategic AI runtime is improved by batching post-move known-world refreshes, using direct visible-target scans for memory records, and reusing the fallback rebuild-pressure plan inside spawn target selection. Focused ordinal 11 now has clean 3-turn evidence with row runtime about 146.7s versus about 176.1s before the spawn fallback fix, but the slice remains in_progress because broader long-run Medium production coverage is still open."
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-goals-10184",
+      "title": "Native RMG Medium H3MapEd Land Goals",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "documentation_governance",
+      "source": "owner request to prepare clear goals and metrics for strict Medium H3MapEd native RMG",
+      "planRef": "GOALS.md",
+      "purpose": "Replace the cleared GOALS.md with decision-complete goals and metrics for extending strict native H3MapEd RMG from Small land to Medium 72x72 one-level land.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-small-h3maped-reset.md",
+        "ops/progress.json"
+      ],
+      "implementationTargets": [
+        "GOALS.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "jq empty ops/progress.json",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionCriteria": "GOALS.md clearly defines strict Medium 72x72x1 land H3MapEd RMG goals, metrics, validation, non-goals, and pending implementation slices without claiming runtime implementation complete.",
+      "nonGoals": [
+        "native code implementation",
+        "runtime Medium production-ready claim",
+        "translated/proxy Medium output acceptance",
+        "water, islands, underground, Large, or XL scope",
+        "balance or AI tuning"
+      ],
+      "createdAt": "2026-06-02T14:38:00Z",
+      "startedAt": "2026-06-02T14:38:00Z",
+      "updatedAt": "2026-06-02T14:38:00Z",
+      "completedAt": "2026-06-02T14:38:00Z",
+      "summary": "Completed. GOALS.md now defines the strict Medium H3MapEd land RMG target, metrics, validation commands, and non-goals. Implementation slices remain pending."
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-reference-corpus-10184",
+      "title": "Native RMG Medium H3MapEd Land Reference Corpus",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "native-rmg-medium-h3maped-land-goals-10184",
+      "planRef": "GOALS.md Goal 1",
+      "purpose": "Create controlled h3maped.exe Medium 72x72x1 land reference artifacts and phase-drift audit inputs for player counts 2, 3, and 4.",
+      "sourceDocs": [
+        "GOALS.md",
+        "docs/native-rmg-small-h3maped-reset.md",
+        "tools/rmg_h3maped_controlled_reference.py",
+        "tools/rmg_phase_drift_audit.py"
+      ],
+      "implementationTargets": [
+        "tools/rmg_h3maped_controlled_reference.py",
+        "tools/rmg_h3m_native_phase_snapshot_export.gd",
+        "tools/rmg_phase_drift_audit.py",
+        ".artifacts/rmg_h3maped_controlled_reference"
+      ],
+      "baselineChecks": [
+        "python3 tools/rmg_h3maped_controlled_reference.py --size medium --water land --level-count 1 --players 4 --human-players 1 --seed <seed> --case <case_id>",
+        "godot --headless --path . --script tools/rmg_h3m_native_phase_snapshot_export.gd -- --size-class-id homm3_medium --water land --level-count 1 --players 4 --seed <seed> --case-id <case_id>",
+        "python3 tools/rmg_phase_drift_audit.py --snapshot <snapshot> --h3m <controlled_reference_h3m>",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Controlled Medium land references and native phase snapshots exist under .artifacts for 2p/3p/4p numeric-seed cases, h3maped.exe SHA is verified, and reports capture source template, object, town, road, guard, reward, blocker, body/block/visit, and route/guard metrics without committing reference artifacts.",
+      "nonGoals": [
+        "native runtime implementation",
+        "public Medium generation",
+        "water or underground references",
+        "committing H3M or package artifacts"
+      ],
+      "createdAt": "2026-06-02T14:38:00Z",
+      "updatedAt": "2026-06-02T14:38:00Z"
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-template-authority-10184",
+      "title": "Native RMG Medium H3MapEd Land Template Authority",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "native-rmg-medium-h3maped-land-goals-10184",
+      "planRef": "GOALS.md Goal 2",
+      "purpose": "Extend strict H3MapEd source-template selection authority from Small land to Medium 72x72x1 land.",
+      "sourceDocs": [
+        "GOALS.md",
+        "src/gdextension/src/h3maped_small_rmg.cpp",
+        "docs/native-rmg-small-h3maped-reset.md"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/h3maped_small_rmg.cpp",
+        "tests/native_rmg_medium_h3maped_template_selection_report.gd",
+        "tests/native_rmg_medium_h3maped_template_selection_report.tscn"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Medium land configs expose deterministic accepted source-template vectors for 2p/3p/4p, selected templates come from original H3MapEd RNG/catalog authority, translated-template requests cannot bypass the selector, and unsupported Medium modes remain blocked with no fallback.",
+      "nonGoals": [
+        "public runtime package output",
+        "translated-template Medium authority",
+        "water, islands, underground, Large, or XL scope"
+      ],
+      "createdAt": "2026-06-02T14:38:00Z",
+      "updatedAt": "2026-06-02T14:38:00Z"
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-phase-port-10184",
+      "title": "Native RMG Medium H3MapEd Land Phase Port",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "native-rmg-medium-h3maped-land-goals-10184",
+      "planRef": "GOALS.md Goal 3",
+      "purpose": "Generalize the strict executable-derived phase chain to Medium 72x72x1 land through final tile-byte/writeout draft and structural validation.",
+      "sourceDocs": [
+        "GOALS.md",
+        "docs/native-rmg-small-h3maped-reset.md",
+        "src/gdextension/src/h3maped_small_rmg.cpp"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/h3maped_small_rmg.cpp",
+        "tests/native_rmg_medium_h3maped_corpus_audit_report.gd",
+        "tests/native_rmg_medium_h3maped_corpus_audit_report.tscn"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Medium land phase output has 5184-cell final tile-byte arrays, requested player starts/towns, materialized inactive/neutral scheduled towns, mines, rewards, blockers, guards, roads, decorative blockers, full package masks, and zero structural validator failures.",
+      "nonGoals": [
+        "public UI exposure",
+        "water or underground phase behavior",
+        "full HoMM3 byte/art parity claim"
+      ],
+      "createdAt": "2026-06-02T14:38:00Z",
+      "updatedAt": "2026-06-02T14:38:00Z"
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+      "title": "Native RMG Medium H3MapEd Land Runtime Adoption",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "native-rmg-medium-h3maped-land-goals-10184",
+      "planRef": "GOALS.md Goal 4",
+      "purpose": "Enable validator-gated public Medium land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch.",
+      "sourceDocs": [
+        "GOALS.md",
+        "docs/native-rmg-small-h3maped-reset.md"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/h3maped_small_rmg.cpp",
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/native_rmg_medium_h3maped_runtime_acceptance_report.gd",
+        "tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Medium land returns h3maped_medium_validated_package_ready with production_ready_scope strict_medium_72x72_one_level_land_only, package save/load and disk startup succeed, runtime pathing sees exact blockers/guards, and at least one public Medium 4p land map starts without authored writeback.",
+      "nonGoals": [
+        "water, islands, normal-water, underground, Large, or XL public generation",
+        "strategic AI tuning",
+        "balance content changes"
+      ],
+      "createdAt": "2026-06-02T14:38:00Z",
+      "updatedAt": "2026-06-02T14:38:00Z"
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-public-ui-10184",
+      "title": "Native RMG Medium H3MapEd Land Public UI",
+      "status": "pending",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "native-rmg-medium-h3maped-land-runtime-adoption-10184 follow-up",
+      "planRef": "GOALS.md Goal 5",
+      "purpose": "Expose strict Medium land as a public generated-map option only after validator-gated runtime adoption passes.",
+      "sourceDocs": [
+        "GOALS.md",
+        "scripts/core/ScenarioSelectRules.gd"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/random_map_medium_land_start_coverage_regression_report.gd",
+        "tests/random_map_all_template_menu_wiring_report.gd"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_medium_land_start_coverage_regression_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/random_map_all_template_menu_wiring_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": "Public random-map options include Medium land one-level generation, keep unsupported modes hidden/blocked, preserve strict scope text, and leave Small generation unchanged.",
+      "nonGoals": [
+        "public water or underground Medium exposure",
+        "Large or XL exposure",
+        "changing generated-map art/UI layout beyond necessary option availability"
+      ],
+      "createdAt": "2026-06-02T14:38:00Z",
+      "updatedAt": "2026-06-02T14:38:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -50652,26 +50874,25 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-    "status": "passed_with_remaining_production_gap",
-    "updatedAt": "2026-06-02T13:20:00Z",
+    "sliceId": "native-rmg-medium-h3maped-land-goals-10184",
+    "status": "pass",
+    "updatedAt": "2026-06-02T14:38:00Z",
     "commands": [
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed ok=true)",
-      "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium ordinal 11 behavior; row_runtime_msec=146720, max_turn_runtime_msec=55539; production_ready=false behind full-matrix gap)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed ok=true; production_ready=false behind native_rmg_medium_long_run_matrix)",
       "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md (passed)"
+      "jq empty ops/progress.json (passed)",
+      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed; currentSlice native-rmg-medium-h3maped-land-reference-corpus-10184 [pending])",
+      "git diff --check (passed)"
     ],
-    "summary": "Strategic AI spawn fallback now reuses the rebuild-pressure exploration plan instead of recomputing fallback target selection for each commander in the no-fresh-target path. Focused Medium ordinal 11 3-turn profile passed cleanly with row_runtime_msec=146720 and max_turn_runtime_msec=55539; production readiness remains unproven until the Medium long-run matrix completes."
+    "summary": "GOALS.md, PLAN.md, and ops/progress.json now align on the owner-selected strict native H3MapEd Medium 72x72x1 land RMG track. The first implementation slice is the reference corpus; translated/proxy Medium output is explicitly excluded as completion evidence. No native code or gameplay balance changed."
   },
   "active_slice": {
-    "id": "strategic-ai-medium-long-run-seed-matrix-10184",
-    "title": "Strategic AI Medium Long-Run Seed Matrix",
-    "status": "in_progress",
-    "updatedAt": "2026-06-02T13:20:00Z",
-    "summary": "Medium Native RMG strategic AI now has behavior-clean focused runtime evidence for ordinal 11 after memory-refresh and spawn fallback optimization. The latest 3-turn profile runs at row_runtime_msec=146720 with max_turn_runtime_msec=55539, but the full 100-seed eight-week Medium matrix remains open, so production readiness is not claimed."
+    "id": "native-rmg-medium-h3maped-land-reference-corpus-10184",
+    "title": "Native RMG Medium H3MapEd Land Reference Corpus",
+    "status": "pending",
+    "updatedAt": "2026-06-02T14:38:00Z",
+    "summary": "First implementation slice for the owner-selected strict Medium H3MapEd land track. Build controlled 72x72x1 land references and phase-drift evidence before enabling any Medium runtime output."
   },
-  "currentSliceUpdatedAt": "2026-06-02T13:20:00Z",
+  "currentSliceUpdatedAt": "2026-06-02T14:38:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -53882,7 +54103,7 @@
       }
     }
   ],
-  "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
+  "currentSlice": "native-rmg-medium-h3maped-land-reference-corpus-10184",
   "validation": {
     "status": "pass",
     "updatedAt": "2026-06-01T16:47:00Z",
