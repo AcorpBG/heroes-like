@@ -3456,13 +3456,15 @@ static func _redirect_unreachable_raid_target(
 	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if "town_defense" in active_reason_codes or "site_defense" in active_reason_codes or "defend_front" in active_reason_codes:
 		return raid
+	var target_kind := String(raid.get("target_kind", ""))
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var goal_tiles := _goal_tiles_from_raid(session, raid, faction_id)
 	var distance := _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id)
 	if distance < 9999 or current in goal_tiles:
 		return raid
 	if (
-		_raid_is_tactical_pressure_target(raid)
+		target_kind != "town"
+		and _raid_is_tactical_pressure_target(raid)
 		and not _risk_support_wait_exceeded(session, _risk_started_day(raid, "route_unreachable_started_day", int(session.day)))
 		and _same_target_pressure_support_strength(session, faction_id, raid, RAID_TACTICAL_PRESSURE_SUPPORT_WAIT_RADIUS) > 0
 	):
@@ -3511,8 +3513,61 @@ static func _redirect_unreachable_raid_target(
 			{}
 		)
 		return redirected
+	if target_kind == "town":
+		var town_result := _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
+		if int(town_result.get("index", -1)) >= 0:
+			var town: Dictionary = town_result.get("town", {})
+			var stepping_candidate := _battle_pressure_route_stepping_candidate(
+				session,
+				config,
+				raid,
+				faction_id,
+				town,
+				_town_staging_tiles(session, town),
+				_active_raid_count_for_faction(session, faction_id)
+			)
+			if not stepping_candidate.is_empty():
+				var redirected_step := raid.duplicate(true)
+				redirected_step.merge(stepping_candidate, true)
+				redirected_step["route_unreachable_started_day"] = int(session.day)
+				redirected_step["arrived"] = false
+				redirected_step = _refresh_target(session, redirected_step, faction_id)
+				_ai_hero_task_record_live_assignment(
+					session,
+					config,
+					redirected_step,
+					_current_target_snapshot(redirected_step),
+					{}
+				)
+				return redirected_step
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	if regroup_town.is_empty():
+		var exploration_plan := _no_known_target_frontier_sweep_plan(session, config, current)
+		if exploration_plan.is_empty():
+			exploration_plan = _no_known_target_exploration_plan(session, config, current)
+		if not exploration_plan.is_empty():
+			var redirected_explore := raid.duplicate(true)
+			redirected_explore.merge(exploration_plan, true)
+			redirected_explore["route_unreachable_started_day"] = _risk_started_day(raid, "route_unreachable_started_day", int(session.day))
+			redirected_explore["route_unreachable_day"] = int(session.day)
+			redirected_explore["arrived"] = false
+			var exploration_codes := _normalize_string_array(redirected_explore.get("target_reason_codes", []))
+			for code in ["route_unreachable", "route_recovery", "frontier_scouting"]:
+				if code not in exploration_codes:
+					exploration_codes.append(code)
+			redirected_explore["target_reason_codes"] = exploration_codes
+			redirected_explore["target_public_reason"] = "seeking reachable route"
+			redirected_explore["target_public_importance"] = "medium"
+			redirected_explore["target_debug_reason"] = "unreachable town pressure had no regroup route; selecting reachable frontier recovery"
+			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "invalid", "invalid_route_unreachable")
+			_ai_hero_task_record_live_assignment(
+				session,
+				config,
+				redirected_explore,
+				_current_target_snapshot(redirected_explore),
+				{}
+			)
+			return redirected_explore
 		var waiting := raid.duplicate(true)
 		waiting["route_unreachable_day"] = int(session.day)
 		waiting["goal_distance"] = 9999
@@ -16867,6 +16922,7 @@ static func _continue_mobile_raid_after_field_objective(
 		continued = assign_target(session, config, continued)
 	else:
 		continued.merge(blocked_route_resume, true)
+	continued = _redirect_unreachable_raid_target(session, config, continued, faction_id)
 	var next_target := _current_target_snapshot(continued)
 	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
 		return {"encounter": raid, "state": state, "ai_event": {}}
@@ -16903,12 +16959,12 @@ static func _blocked_route_resume_target_after_clear(
 		return {}
 	var goal_tile := _best_goal_tile(session, origin, staging_tiles, faction_id)
 	var goal_distance := _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+	if goal_distance >= 9999:
+		return {}
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	for code in ["town_siege", "objective_front", "battle_pressure_floor", "blocked_route_resumed"]:
 		if code not in reason_codes:
 			reason_codes.append(code)
-	if goal_distance >= 9999 and "route_unreachable" not in reason_codes:
-		reason_codes.append("route_unreachable")
 	return {
 		"target_kind": "town",
 		"target_placement_id": town_id,
