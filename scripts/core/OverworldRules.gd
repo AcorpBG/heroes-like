@@ -821,6 +821,8 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	var result := _finalize_action_result(session, true, " ".join(messages))
 	result["enemy_activity_summary"] = enemy_activity_summary
 	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 10)
+	if enemy_turn_result.get("profile", {}) is Dictionary and not enemy_turn_result.get("profile", {}).is_empty():
+		result["enemy_turn_profile"] = enemy_turn_result.get("profile", {})
 	result["resource_income_summary"] = _describe_resource_delta(total_income)
 	result["weekly_muster_summary"] = _end_turn_muster_summary(weekly_growth_messages, site_muster_messages)
 	result["movement_reset_summary"] = "Move %d/%d ready" % [

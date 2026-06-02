@@ -204,11 +204,24 @@ static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
 	}
 
 static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var profile_enabled := _enemy_turn_profile_enabled()
+	var profile := {
+		"schema_id": "strategic_ai_enemy_turn_profile_v1",
+		"day": int(session.day) if session != null else 0,
+		"phases_ms": {},
+		"factions": [],
+	} if profile_enabled else {}
+	var phase_started := _profile_timer(profile_enabled)
 	DifficultyRulesScript.normalize_session(session)
+	_profile_add_ms(profile, "difficulty_normalize_ms", phase_started)
+	phase_started = _profile_timer(profile_enabled)
 	normalize_enemy_states(session)
+	_profile_add_ms(profile, "enemy_state_normalize_ms", phase_started)
+	phase_started = _profile_timer(profile_enabled)
 	var configs = _enemy_faction_configs_for_session(session)
+	_profile_add_ms(profile, "config_lookup_ms", phase_started)
 	if not (configs is Array) or configs.is_empty():
-		return {"ok": true, "message": ""}
+		return _enemy_turn_result(true, "", [], profile_enabled, profile)
 
 	var states = session.overworld.get("enemy_states", [])
 	var messages = []
@@ -223,8 +236,10 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		if state_index < 0:
 			continue
 		var state = states[state_index]
-		var turn_result = _run_empire_cycle(session, config, state, should_apply_weekly_growth)
+		var turn_result = _run_empire_cycle(session, config, state, should_apply_weekly_growth, profile_enabled)
 		state = turn_result.get("state", state)
+		if profile_enabled and turn_result.get("profile", {}) is Dictionary:
+			profile["factions"].append(turn_result.get("profile", {}))
 		var turn_messages = turn_result.get("messages", [])
 		if turn_messages is Array:
 			for message in turn_messages:
@@ -233,14 +248,40 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		_append_event_records(events, turn_result.get("events", []))
 		states[state_index] = state
 
+	phase_started = _profile_timer(profile_enabled)
 	session.overworld["enemy_states"] = states
+	_profile_add_ms(profile, "state_writeback_ms", phase_started)
+	phase_started = _profile_timer(profile_enabled)
 	for config in configs:
 		if not (config is Dictionary):
 			continue
 		var repair_result := EnemyAdventureRulesScript.repair_active_raid_target_integrity(session, config)
 		_append_event_records(events, repair_result.get("events", []))
+	_profile_add_ms(profile, "post_cycle_target_integrity_repair_ms", phase_started)
+	phase_started = _profile_timer(profile_enabled)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
-	return {"ok": true, "message": " ".join(messages), "events": events}
+	_profile_add_ms(profile, "final_commander_roster_normalize_ms", phase_started)
+	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
+
+static func _enemy_turn_profile_enabled() -> bool:
+	return OS.get_environment("HEROES_STRATEGIC_AI_PROFILE").strip_edges().to_lower() in ["1", "true", "yes", "on"]
+
+static func _profile_timer(enabled: bool) -> int:
+	return Time.get_ticks_usec() if enabled else 0
+
+static func _profile_add_ms(profile: Dictionary, key: String, started_usec: int) -> void:
+	if profile.is_empty() or key == "" or started_usec <= 0:
+		return
+	var phases: Dictionary = profile.get("phases_ms", {}) if profile.get("phases_ms", {}) is Dictionary else {}
+	var elapsed_ms := int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
+	phases[key] = int(phases.get(key, 0)) + elapsed_ms
+	profile["phases_ms"] = phases
+
+static func _enemy_turn_result(ok: bool, message: String, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
+	var result := {"ok": ok, "message": message, "events": events}
+	if profile_enabled:
+		result["profile"] = profile
+	return result
 
 static func run_enemy_town_economy_turn(
 	session: SessionStateStoreScript.SessionData,
@@ -844,83 +885,112 @@ static func _run_empire_cycle(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
-	should_apply_weekly_growth: bool
+	should_apply_weekly_growth: bool,
+	profile_enabled: bool = false
 ) -> Dictionary:
+	var profile := {
+		"faction_id": String(config.get("faction_id", state.get("faction_id", ""))),
+		"phases_ms": {},
+		"event_count": 0,
+	} if profile_enabled else {}
+	var phase_started := _profile_timer(profile_enabled)
 	var faction_id = String(config.get("faction_id", ""))
 	var towns = session.overworld.get("towns", [])
 	var town_entries = _owned_town_entries(session, faction_id)
 	var front_state := _faction_front_state(session, faction_id)
+	_profile_add_ms(profile, "setup_ms", phase_started)
 	var messages = []
 	var events = []
 	state["captured_artifact_ids"] = _normalize_string_array(state.get("captured_artifact_ids", []))
 	if town_entries.is_empty():
 		if active_raid_count(session, faction_id) > 0:
+			phase_started = _profile_timer(profile_enabled)
 			var no_town_memory_result := EnemyAdventureRulesScript.refresh_enemy_known_world_memory(session, config, state)
 			state = no_town_memory_result.get("state", state)
+			_profile_add_ms(profile, "no_town_memory_ms", phase_started)
+			phase_started = _profile_timer(profile_enabled)
 			var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
 			state = raid_result.get("state", state)
 			state = _latest_enemy_state(session, faction_id, state)
 			_append_event_records(events, raid_result.get("events", []))
+			_profile_add_ms(profile, "no_town_advance_raids_ms", phase_started)
 			var raid_message = String(raid_result.get("message", ""))
 			if raid_message != "":
 				messages.append(raid_message)
+			phase_started = _profile_timer(profile_enabled)
 			var defense_result = _queue_town_defense_battle(session, config, faction_id)
 			_append_event_records(events, defense_result.get("events", []))
+			_profile_add_ms(profile, "no_town_defense_queue_ms", phase_started)
 			var defense_message = String(defense_result.get("message", ""))
 			if defense_message != "":
 				messages.append(defense_message)
 			if bool(defense_result.get("battle_started", false)):
 				state = _latest_enemy_state(session, faction_id, state)
 				state["posture"] = "raiding"
-				return {"state": state, "messages": messages, "events": events}
+				return _empire_cycle_result(state, messages, events, profile_enabled, profile)
+			phase_started = _profile_timer(profile_enabled)
 			var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
 			_append_event_records(events, intercept_result.get("events", []))
+			_profile_add_ms(profile, "no_town_intercept_queue_ms", phase_started)
 			var intercept_message = String(intercept_result.get("message", ""))
 			if intercept_message != "":
 				messages.append(intercept_message)
 			if bool(intercept_result.get("battle_started", false)):
 				state = _latest_enemy_state(session, faction_id, state)
 				state["posture"] = "raiding"
-				return {"state": state, "messages": messages, "events": events}
+				return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 			state["posture"] = "raiding"
-			return {"state": state, "messages": messages, "events": events}
+			return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 		if int(state.get("pressure", 0)) > 0 and active_raid_count(session, faction_id) == 0:
 			state["pressure"] = max(0, int(state.get("pressure", 0)) - 1)
 		state["posture"] = "collapsed"
-		return {"state": state, "messages": messages, "events": events}
+		return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 
+	phase_started = _profile_timer(profile_enabled)
 	var treasury = _normalize_resource_pool(state.get("treasury", {}))
 	var income_summary = _apply_empire_income(session, town_entries, treasury, state)
 	if not income_summary.is_empty():
 		state["treasury"] = treasury
+	_profile_add_ms(profile, "income_ms", phase_started)
 
 	if should_apply_weekly_growth:
+		phase_started = _profile_timer(profile_enabled)
 		var muster_message = _apply_weekly_musters(session, town_entries, towns, faction_id, config)
 		if muster_message != "":
 			messages.append(muster_message)
 		session.overworld["towns"] = towns
+		_profile_add_ms(profile, "weekly_muster_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var memory_result := EnemyAdventureRulesScript.refresh_enemy_known_world_memory(session, config, state)
 	state = memory_result.get("state", state)
+	_profile_add_ms(profile, "known_world_memory_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var pre_build_task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
 	state = pre_build_task_plan_result.get("state", state)
 	_append_event_records(events, pre_build_task_plan_result.get("events", []))
+	_profile_add_ms(profile, "pre_build_task_plan_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var build_result := _build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)
 	var build_messages: Array = build_result.get("messages", [])
 	if not build_messages.is_empty():
 		messages.append_array(build_messages)
 	_append_event_records(events, build_result.get("events", []))
 	session.overworld["towns"] = towns
+	_profile_add_ms(profile, "town_build_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var study_result := _study_spells_in_enemy_towns(session, config, town_entries, towns, faction_id, state)
 	state = study_result.get("state", state)
 	var study_messages: Array = study_result.get("messages", [])
 	if not study_messages.is_empty():
 		messages.append_array(study_messages)
 	_append_event_records(events, study_result.get("events", []))
+	_profile_add_ms(profile, "spell_study_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var reinforcement_result := _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
 	var reinforcement_message = String(reinforcement_result.get("message", ""))
 	if reinforcement_message != "":
@@ -930,7 +1000,9 @@ static func _run_empire_cycle(
 	var refreshed_state := _find_state(session.overworld.get("enemy_states", []), faction_id)
 	if not refreshed_state.is_empty():
 		state["commander_roster"] = refreshed_state.get("commander_roster", state.get("commander_roster", []))
+	_profile_add_ms(profile, "reinforcement_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var owned_towns = town_entries.size()
 	var capital_state = _faction_capital_state_from_towns(session, towns, faction_id)
 	var base_pressure_gain = max(
@@ -955,7 +1027,9 @@ static func _run_empire_cycle(
 			state
 		)
 		_append_event_records(events, [pressure_event])
+	_profile_add_ms(profile, "pressure_summary_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
 	state = raid_result.get("state", state)
 	state = _latest_enemy_state(session, faction_id, state)
@@ -964,13 +1038,18 @@ static func _run_empire_cycle(
 	var raid_message = String(raid_result.get("message", ""))
 	if raid_message != "":
 		messages.append(raid_message)
+	_profile_add_ms(profile, "advance_raids_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
 	state = task_plan_result.get("state", state)
 	_append_event_records(events, task_plan_result.get("events", []))
+	_profile_add_ms(profile, "post_raid_task_plan_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var defense_result = _queue_town_defense_battle(session, config, faction_id)
 	_append_event_records(events, defense_result.get("events", []))
+	_profile_add_ms(profile, "town_defense_queue_ms", phase_started)
 	var defense_message = String(defense_result.get("message", ""))
 	if defense_message != "":
 		messages.append(defense_message)
@@ -978,10 +1057,12 @@ static func _run_empire_cycle(
 		state = _latest_enemy_state(session, faction_id, state)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
-		return {"state": state, "messages": messages, "events": events}
+		return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 
+	phase_started = _profile_timer(profile_enabled)
 	var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
 	_append_event_records(events, intercept_result.get("events", []))
+	_profile_add_ms(profile, "hero_intercept_queue_ms", phase_started)
 	var intercept_message = String(intercept_result.get("message", ""))
 	if intercept_message != "":
 		messages.append(intercept_message)
@@ -989,18 +1070,22 @@ static func _run_empire_cycle(
 		state = _latest_enemy_state(session, faction_id, state)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
-		return {"state": state, "messages": messages, "events": events}
+		return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 
+	phase_started = _profile_timer(profile_enabled)
 	var rebuild_reserve_result := _mobilize_rebuild_pressure_reserves(session, config, faction_id, state)
 	state = rebuild_reserve_result.get("state", state)
 	_append_event_records(events, rebuild_reserve_result.get("events", []))
 	var rebuild_reserve_message := String(rebuild_reserve_result.get("message", ""))
 	if rebuild_reserve_message != "":
 		messages.append(rebuild_reserve_message)
+	_profile_add_ms(profile, "rebuild_reserves_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	var launched_placement_ids := []
-	while _can_launch_raid(session, config, state, faction_id):
-		var spawn_result = _spawn_raid(session, config, state)
+	var launch_candidate := _launchable_spawn_candidate(session, config, state, faction_id)
+	while not launch_candidate.is_empty():
+		var spawn_result = _spawn_raid(session, config, state, launch_candidate)
 		if spawn_result.is_empty():
 			break
 		messages.append(String(spawn_result.get("message", "")))
@@ -1010,8 +1095,11 @@ static func _run_empire_cycle(
 			launched_placement_ids.append(launched_id)
 		if String(spawn_result.get("spawn_plan_source", "")).begins_with("emergency_"):
 			break
+		launch_candidate = _launchable_spawn_candidate(session, config, state, faction_id)
+	_profile_add_ms(profile, "spawn_loop_ms", phase_started)
 
 	if not launched_placement_ids.is_empty():
+		phase_started = _profile_timer(profile_enabled)
 		var launch_advance_result = EnemyAdventureRulesScript.advance_raids(
 			session,
 			config,
@@ -1025,9 +1113,12 @@ static func _run_empire_cycle(
 		var launch_advance_message = String(launch_advance_result.get("message", ""))
 		if launch_advance_message != "":
 			messages.append(launch_advance_message)
+		_profile_add_ms(profile, "launch_advance_raids_ms", phase_started)
 
+		phase_started = _profile_timer(profile_enabled)
 		var launched_defense_result = _queue_town_defense_battle(session, config, faction_id)
 		_append_event_records(events, launched_defense_result.get("events", []))
+		_profile_add_ms(profile, "launched_defense_queue_ms", phase_started)
 		var launched_defense_message = String(launched_defense_result.get("message", ""))
 		if launched_defense_message != "":
 			messages.append(launched_defense_message)
@@ -1035,10 +1126,12 @@ static func _run_empire_cycle(
 			state = _latest_enemy_state(session, faction_id, state)
 			state["treasury"] = treasury
 			state["posture"] = "raiding"
-			return {"state": state, "messages": messages, "events": events}
+			return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 
+		phase_started = _profile_timer(profile_enabled)
 		var launched_intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
 		_append_event_records(events, launched_intercept_result.get("events", []))
+		_profile_add_ms(profile, "launched_intercept_queue_ms", phase_started)
 		var launched_intercept_message = String(launched_intercept_result.get("message", ""))
 		if launched_intercept_message != "":
 			messages.append(launched_intercept_message)
@@ -1046,15 +1139,26 @@ static func _run_empire_cycle(
 			state = _latest_enemy_state(session, faction_id, state)
 			state["treasury"] = treasury
 			state["posture"] = "raiding"
-			return {"state": state, "messages": messages, "events": events}
+			return _empire_cycle_result(state, messages, events, profile_enabled, profile)
 
+	phase_started = _profile_timer(profile_enabled)
 	var siege_message = _advance_siege(session, config, state, faction_id)
 	if siege_message != "":
 		messages.append(siege_message)
+	_profile_add_ms(profile, "siege_ms", phase_started)
 
+	phase_started = _profile_timer(profile_enabled)
 	state["treasury"] = treasury
 	state["posture"] = _determine_posture(session, config, state, faction_id, towns)
-	return {"state": state, "messages": messages, "events": events}
+	_profile_add_ms(profile, "posture_ms", phase_started)
+	return _empire_cycle_result(state, messages, events, profile_enabled, profile)
+
+static func _empire_cycle_result(state: Dictionary, messages: Array, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
+	var result := {"state": state, "messages": messages, "events": events}
+	if profile_enabled:
+		profile["event_count"] = events.size()
+		result["profile"] = profile
+	return result
 
 static func _latest_enemy_state(
 	session: SessionStateStoreScript.SessionData,
@@ -2653,10 +2757,18 @@ static func _can_launch_raid(
 	state: Dictionary,
 	faction_id: String
 ) -> bool:
+	return not _launchable_spawn_candidate(session, config, state, faction_id).is_empty()
+
+static func _launchable_spawn_candidate(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	faction_id: String
+) -> Dictionary:
 	if _owned_town_count(session, faction_id) <= 0:
-		return false
+		return {}
 	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(session, config, faction_id):
-		return false
+		return {}
 	var rebuild_pressure_request := _recent_rebuild_pressure_request(session, faction_id, state)
 	var has_available_commander := EnemyAdventureRulesScript.has_available_raid_commander(
 		session,
@@ -2664,10 +2776,10 @@ static func _can_launch_raid(
 		state.get("commander_roster", [])
 	)
 	if not has_available_commander and rebuild_pressure_request.is_empty():
-		return false
+		return {}
 	var encounter_pool = config.get("raid_encounter_ids", [])
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
-		return false
+		return {}
 	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
 	var emergency_defense_plan := _emergency_defense_launch_ready_report(session, config, state, faction_id)
 	var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
@@ -2680,9 +2792,8 @@ static func _can_launch_raid(
 		and active_front_support_plan.is_empty()
 		and rebuild_pressure_plan.is_empty()
 	):
-		return false
-	var best_spawn := _best_open_spawn_point(session, config, state, faction_id)
-	return not best_spawn.is_empty()
+		return {}
+	return _best_open_spawn_point(session, config, state, faction_id)
 
 static func _rebuild_pressure_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
@@ -2912,9 +3023,15 @@ static func _commander_roster_entry_for_launch(
 			return entry_value
 	return {}
 
-static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary) -> Dictionary:
+static func _spawn_raid(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	preselected_spawn_point: Dictionary = {}
+) -> Dictionary:
+	# Compatibility guard: the default live-turn path remains _spawn_raid(session, config, state).
 	var faction_id := String(config.get("faction_id", ""))
-	var spawn_point = _best_open_spawn_point(session, config, state, faction_id)
+	var spawn_point = preselected_spawn_point.duplicate(true) if not preselected_spawn_point.is_empty() else _best_open_spawn_point(session, config, state, faction_id)
 	if spawn_point.is_empty():
 		return {}
 
@@ -4385,17 +4502,17 @@ static func _fresh_spawn_target_candidate_for_point(
 		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
 		if roster_hero_id == "":
 			continue
-		var fitted_targets := EnemyAdventureRulesScript._ai_hero_task_planner_candidates_for_commander(
+		var fitted_target := EnemyAdventureRulesScript._ai_hero_task_planner_best_candidate_for_commander(
 			session,
 			faction_id,
 			roster_hero_id,
 			target_candidates
 		)
-		if fitted_targets.is_empty() or not (fitted_targets[0] is Dictionary):
+		if fitted_target.is_empty():
 			continue
 		var candidate := _spawn_point_candidate_from_plan(
 			point,
-			fitted_targets[0],
+			fitted_target,
 			roster_hero_id,
 			"fresh_target",
 			spawn_order + int(commander_value.get("rotation_order", 0))
@@ -4414,8 +4531,8 @@ static func _fresh_spawn_target_candidate_for_point(
 				"rebuild_pressure_recon",
 				spawn_order + int(commander_value.get("rotation_order", 0))
 			)
-		candidate["spawn_plan_commander_fit_bonus"] = int(fitted_targets[0].get("commander_fit_bonus", 0))
-		candidate["spawn_plan_commander_fit_profile"] = String(fitted_targets[0].get("commander_fit_profile", ""))
+		candidate["spawn_plan_commander_fit_bonus"] = int(fitted_target.get("commander_fit_bonus", 0))
+		candidate["spawn_plan_commander_fit_profile"] = String(fitted_target.get("commander_fit_profile", ""))
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
 		if (
 			not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()

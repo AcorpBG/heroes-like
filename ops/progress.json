@@ -39239,7 +39239,7 @@
       ],
       "createdAt": "2026-06-01T22:55:00Z",
       "startedAt": "2026-06-01T15:46:12Z",
-      "updatedAt": "2026-06-02T09:25:17Z",
+      "updatedAt": "2026-06-02T12:28:00Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -39425,6 +39425,21 @@
           "command": "python3 tests/validate_repo.py && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
           "status": "pass",
           "notes": "Repository validation passed; tactical battle AI smoke passed ok=true; strategic AI baseline passed with behavior_bug_count=0, medium_ok_count=3/3, setup_ok_count=5/5, turn_ok_count=5/5, enemy_activity_event_count=55, target_assignment_event_count=27. production_ready remains false behind native_rmg_medium_long_run_matrix."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_remaining_runtime_gap",
+          "notes": "Medium seed ordinal 11 one-turn profile stayed behavior-clean after opt-in enemy-turn profiling, path-cache reuse for ignored moving raids, cached goal-field next-step movement, and reusing the launchable spawn candidate. Row ok=1/1, turns_completed=1/1, enemy_activity_event_count=10, target_assignment_count=7, active_raid_count=5, stalled_turn_count=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0. Turn runtime improved from about 74.2s to 70.0s and row runtime from about 85.4s to 81.0s, with spawn_loop_ms reduced to roughly 4.0-4.4s per faction. Production readiness remains false because launch_advance_raids_ms is still about 12s for Mireclaw/Thornwake and the full 100-seed eight-week Medium matrix has not run."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass_with_existing_production_gap",
+          "notes": "Strategic AI baseline KPI passed ok=true after the profiling/runtime trims. It reports behavior_bug_count=0, medium_ok_count=3/3, all expected subsystems covered, and production_ready=false because the Medium long-run matrix remains the active production gap."
+        },
+        {
+          "command": "python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md",
+          "status": "pass",
+          "notes": "Repository validation passed; progress JSON, whitespace, and no content/docs/project/PLAN drift guards passed after the strategic AI profiling/runtime changes."
         }
       ],
       "notes": [
@@ -39449,7 +39464,8 @@
         "Post-fix Medium seed ordinal 10 now emits target-assignment and site-seizure activity with zero live unreachable active targets. The fix improves a real strategic behavior gap, but full production readiness remains unproven until broader Medium long-run matrix coverage and residual regroup/rebuild churn are resolved.",
         "Medium seed ordinal 11 passes behavior health over 14 turns with active pressure, target assignments, site seizures, zero stalls, zero target-integrity violations, and zero unreachable active targets. It also exposes a practical production blocker for broader validation: Medium turn runtime is too high for the full matrix path without further AI/pathing throughput work.",
         "First throughput slice removed duplicate resource/artifact path-distance scoring during target candidate valuation and skips expensive task-board target scans when no commander can accept a new task. The exact Medium ordinal-11 3-turn comparison improved only slightly, so this is useful cleanup but not the main Medium runtime fix."
-      ]
+      ],
+      "summary": "Medium Native RMG strategic AI has behavior-clean ordinal evidence and now includes opt-in phase profiling plus measured runtime trims for spawn planning/path movement, but the slice remains in_progress because Medium turn runtime is still too high and full 100-seed eight-week production coverage is not complete."
     }
   ],
   "completedImplementationEvidence": [
@@ -50606,25 +50622,25 @@
   ],
   "lastValidation": {
     "sliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-    "status": "passed_with_remaining_validation",
-    "updatedAt": "2026-06-02T02:00:30Z",
+    "status": "passed_with_remaining_runtime_gap",
+    "updatedAt": "2026-06-02T12:28:00Z",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=7 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium seed ordinal 8: row_ok=1/1, turns_completed=14/14, enemy_activity_event_count=76, target_assignment_count=40, active_raid_count=5, site_seized_count=0, no_active_pressure_row_count=0, stalled_turn_pct=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, target_integrity_violation_count=0, behavior_bug_count=0, max_turn_runtime_msec=174669)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed ok=true)",
+      "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium ordinal 11 behavior; turn_runtime_msec=69995, row_runtime_msec=80995; production_ready=false behind runtime/full-matrix gaps)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed ok=true; production_ready=false behind native_rmg_medium_long_run_matrix)",
       "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
-      "git diff --exit-code -- content docs project.md PLAN.md (empty)"
+      "jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md (passed)"
     ],
-    "summary": "Medium Native RMG seed ordinal 8 adds 14-turn generated-map evidence with sustained active pressure, zero stalled turns, zero target-integrity violations, and zero live unreachable targets. The slice remains in_progress because the full 100-seed eight-week Native RMG production matrix has not been run."
+    "summary": "Opt-in strategic AI profiling and runtime trims improved focused Medium ordinal 11 first-turn runtime to about 70.0s while preserving tactical smoke and strategic baseline KPI behavior. The active slice remains in_progress because Medium runtime remains too high and full 100-seed eight-week production coverage is still open."
   },
   "active_slice": {
     "id": "strategic-ai-medium-long-run-seed-matrix-10184",
     "title": "Strategic AI Medium Long-Run Seed Matrix",
     "status": "in_progress",
-    "updatedAt": "2026-06-02T02:00:30Z",
-    "summary": "Medium seed ordinals 1-8 now pass 14-turn Native RMG strategic-AI coverage with active pressure, zero target-integrity violations, and zero live unreachable active targets after unreachable player-town pressure retargeting hardening. Full 100-seed eight-week Native RMG production matrix remains open."
+    "updatedAt": "2026-06-02T12:28:00Z",
+    "summary": "Medium Native RMG strategic AI has behavior-clean ordinal evidence and opt-in phase profiling; focused ordinal 11 first-turn runtime improved to about 70.0s but remains too slow for production readiness, and the full 100-seed eight-week matrix remains open."
   },
-  "currentSliceUpdatedAt": "2026-06-02T02:00:30Z",
+  "currentSliceUpdatedAt": "2026-06-02T12:28:00Z",
   "validationHistory": [
     {
       "status": "pass",

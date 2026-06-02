@@ -1306,6 +1306,7 @@ static func _strategic_ai_long_run_seed_row(
 			"ok": turn_ok,
 			"enemy_activity_event_count": events.size(),
 			"enemy_activity_summary": String(result.get("enemy_activity_summary", "")),
+			"enemy_turn_profile": result.get("enemy_turn_profile", {}) if result.get("enemy_turn_profile", {}) is Dictionary else {},
 			"target_integrity_violations": turn_target_integrity_violations,
 			"battle_handoff_summary": handoff_summary,
 			"game_state": String(session.game_state),
