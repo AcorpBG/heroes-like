@@ -6,9 +6,9 @@
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Dedicated Medium land Native RMG long-run strategic-AI matrix coverage is in progress. Medium seed ordinals 1-8 now have 14-turn generated-map evidence with no active-pressure loss, no target-integrity violations, and no live unreachable active targets after hardening unreachable player-town pressure retargeting; full 100-seed eight-week validation remains open. Balance content remains out of scope and production-ready AI is not claimed.",
+  "currentSliceNotes": "Dedicated Medium land Native RMG long-run strategic-AI matrix coverage is in progress. Medium seed ordinals 1-11 have focused generated-map evidence, and ordinal 11 now has a 3-turn profiled runtime fix that cuts the worst spawn fallback recomputation spike while preserving clean target integrity. Full 100-seed eight-week validation remains open. Balance content remains out of scope and production-ready AI is not claimed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T02:00:30Z",
+  "updatedAt": "2026-06-02T13:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39239,7 +39239,7 @@
       ],
       "createdAt": "2026-06-01T22:55:00Z",
       "startedAt": "2026-06-01T15:46:12Z",
-      "updatedAt": "2026-06-02T13:18:00Z",
+      "updatedAt": "2026-06-02T13:20:00Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -39455,6 +39455,21 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md",
           "status": "pass",
           "notes": "Tactical smoke passed ok=true; repository validation passed; progress JSON, whitespace, and no content/docs/project/PLAN drift guards passed after the strategic AI memory/runtime changes."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_remaining_production_gap",
+          "notes": "Medium seed ordinal 11 completed 3/3 turns with setup_ok=1, row_ok=1, behavior_bug_count=0, stalled_turn_count=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, enemy_activity_event_count=23, target_assignment_count=15, row_runtime_msec=146720, and max_turn_runtime_msec=55539. The profiled spawn fallback fix reduces the prior turn-3 row from about 176118ms to 146720ms and the turn-3 runtime from about 87982ms to 55539ms; Mireclaw fresh_fallback_spawn_candidate_ms drops from about 20854ms to 889ms and Thornwake from about 14972ms to 538ms. Report remains needs_attention only because the full 100-seed eight-week Medium matrix was not run."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass_with_existing_production_gap",
+          "notes": "Strategic AI baseline KPI passed ok=true after the spawn fallback runtime fix. It reports behavior_bug_count=0, medium_ok_count=3/3, all expected strategic AI subsystems covered, and production_ready=false behind native_rmg_medium_long_run_matrix."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md",
+          "status": "pass",
+          "notes": "Tactical smoke passed ok=true; repository validation passed; progress JSON, whitespace, and no content/docs/project/PLAN drift guards passed after the spawn fallback runtime fix."
         }
       ],
       "notes": [
@@ -39478,9 +39493,10 @@
         "Medium seed ordinal 10 exposed a passive no-spare regroup loop: a raid repeatedly reached the same regroup town with no spare garrison and emitted only regroup events. Repeated no-spare regroup at the same town now retires the raid to command rebuild instead of renewing the same regroup target.",
         "Post-fix Medium seed ordinal 10 now emits target-assignment and site-seizure activity with zero live unreachable active targets. The fix improves a real strategic behavior gap, but full production readiness remains unproven until broader Medium long-run matrix coverage and residual regroup/rebuild churn are resolved.",
         "Medium seed ordinal 11 passes behavior health over 14 turns with active pressure, target assignments, site seizures, zero stalls, zero target-integrity violations, and zero unreachable active targets. It also exposes a practical production blocker for broader validation: Medium turn runtime is too high for the full matrix path without further AI/pathing throughput work.",
-        "First throughput slice removed duplicate resource/artifact path-distance scoring during target candidate valuation and skips expensive task-board target scans when no commander can accept a new task. The exact Medium ordinal-11 3-turn comparison improved only slightly, so this is useful cleanup but not the main Medium runtime fix."
+        "First throughput slice removed duplicate resource/artifact path-distance scoring during target candidate valuation and skips expensive task-board target scans when no commander can accept a new task. The exact Medium ordinal-11 3-turn comparison improved only slightly, so this is useful cleanup but not the main Medium runtime fix.",
+        "Spawn-loop profiling exposed repeated fallback target recomputation as the turn-3 ordinal-11 spike. Fallback target selection now preselects and reuses the rebuild-pressure exploration plan for all commander candidates in that no-fresh-target path, dropping the worst fresh_fallback_spawn_candidate_ms buckets from tens of seconds to under one second while preserving clean Medium behavior."
       ],
-      "summary": "Medium Native RMG strategic AI runtime is substantially improved by batching post-move known-world refreshes and using direct visible-target scans for memory records. Focused ordinal 11 first-turn runtime is now about 39.1s, but the slice remains in_progress because broader long-run Medium production coverage is still open."
+      "summary": "Medium Native RMG strategic AI runtime is improved by batching post-move known-world refreshes, using direct visible-target scans for memory records, and reusing the fallback rebuild-pressure plan inside spawn target selection. Focused ordinal 11 now has clean 3-turn evidence with row runtime about 146.7s versus about 176.1s before the spawn fallback fix, but the slice remains in_progress because broader long-run Medium production coverage is still open."
     }
   ],
   "completedImplementationEvidence": [
@@ -50638,24 +50654,24 @@
   "lastValidation": {
     "sliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
     "status": "passed_with_remaining_production_gap",
-    "updatedAt": "2026-06-02T13:18:00Z",
+    "updatedAt": "2026-06-02T13:20:00Z",
     "commands": [
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn (passed ok=true)",
-      "python3 tests/validate_repo.py (passed)",
-      "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium ordinal 11 behavior; turn_runtime_msec=39126, row_runtime_msec=50374; production_ready=false behind full-matrix gap)",
+      "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed focused Medium ordinal 11 behavior; row_runtime_msec=146720, max_turn_runtime_msec=55539; production_ready=false behind full-matrix gap)",
       "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn (passed ok=true; production_ready=false behind native_rmg_medium_long_run_matrix)",
+      "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md (passed)"
     ],
-    "summary": "Strategic AI known-world memory refresh no longer uses full target scoring/pathing for memory-only scout records and post-move refreshes are batched once per advance. Focused Medium ordinal 11 first-turn runtime improved to 39.1s with clean behavior; production readiness remains unproven until the Medium long-run matrix completes."
+    "summary": "Strategic AI spawn fallback now reuses the rebuild-pressure exploration plan instead of recomputing fallback target selection for each commander in the no-fresh-target path. Focused Medium ordinal 11 3-turn profile passed cleanly with row_runtime_msec=146720 and max_turn_runtime_msec=55539; production readiness remains unproven until the Medium long-run matrix completes."
   },
   "active_slice": {
     "id": "strategic-ai-medium-long-run-seed-matrix-10184",
     "title": "Strategic AI Medium Long-Run Seed Matrix",
     "status": "in_progress",
-    "updatedAt": "2026-06-02T13:18:00Z",
-    "summary": "Medium Native RMG strategic AI now has behavior-clean focused runtime evidence at about 39.1s for ordinal 11 first turn after memory-refresh optimization. The full 100-seed eight-week Medium matrix remains open, so production readiness is not claimed."
+    "updatedAt": "2026-06-02T13:20:00Z",
+    "summary": "Medium Native RMG strategic AI now has behavior-clean focused runtime evidence for ordinal 11 after memory-refresh and spawn fallback optimization. The latest 3-turn profile runs at row_runtime_msec=146720 with max_turn_runtime_msec=55539, but the full 100-seed eight-week Medium matrix remains open, so production readiness is not claimed."
   },
-  "currentSliceUpdatedAt": "2026-06-02T13:18:00Z",
+  "currentSliceUpdatedAt": "2026-06-02T13:20:00Z",
   "validationHistory": [
     {
       "status": "pass",
