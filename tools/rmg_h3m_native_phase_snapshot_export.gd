@@ -34,6 +34,7 @@ func _run() -> void:
 			computer_players = int(controlled_inputs.get("computer_only_players", max(0, player_count - human_players)))
 			water_mode = String(controlled_inputs.get("water", water_mode))
 			level_count = int(controlled_inputs.get("level_count", level_count))
+			size_class_id = _size_class_from_controlled_inputs(controlled_inputs, size_class_id)
 		elif not controlled_identity.is_empty():
 			seed = String(controlled_identity.get("requested_seed", controlled_identity.get("seed", seed)))
 			player_count = int(controlled_identity.get("players", player_count))
@@ -336,6 +337,24 @@ func _arg_value(name: String, fallback: String) -> String:
 	for index in range(args.size()):
 		if String(args[index]) == name and index + 1 < args.size():
 			return String(args[index + 1])
+	return fallback
+
+func _size_class_from_controlled_inputs(inputs: Dictionary, fallback: String) -> String:
+	var size_name := String(inputs.get("size", "")).strip_edges()
+	if size_name != "":
+		if size_name.begins_with("homm3_"):
+			return size_name
+		return "homm3_%s" % size_name
+	var width := int(inputs.get("width", 0))
+	var height := int(inputs.get("height", 0))
+	if width == 36 and height == 36:
+		return "homm3_small"
+	if width == 72 and height == 72:
+		return "homm3_medium"
+	if width == 108 and height == 108:
+		return "homm3_large"
+	if width == 144 and height == 144:
+		return "homm3_extra_large"
 	return fallback
 
 func _finish(manifest: Dictionary, exit_code: int) -> void:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "native-rmg-medium-h3maped-land-reference-corpus-10184",
-  "currentSliceTitle": "Native RMG Medium H3MapEd Land Reference Corpus",
+  "currentSliceId": "native-rmg-medium-h3maped-land-template-authority-10184",
+  "currentSliceTitle": "Native RMG Medium H3MapEd Land Template Authority",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Owner-selected next work is strict native H3MapEd Medium 72x72x1 land generation. GOALS.md now defines the goals and metrics. The first implementation slice is controlled h3maped.exe Medium land reference/corpus evidence; translated/proxy Medium output is not completion evidence.",
+  "currentSliceNotes": "Next strict Medium H3MapEd RMG slice. Extend source-template selection authority from Small land to Medium 72x72x1 land using the recovered original catalog/RNG path; translated/proxy Medium output remains excluded as completion evidence.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T14:38:00Z",
+  "updatedAt": "2026-06-02T15:06:55Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39540,7 +39540,7 @@
     {
       "id": "native-rmg-medium-h3maped-land-reference-corpus-10184",
       "title": "Native RMG Medium H3MapEd Land Reference Corpus",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "native-rmg-medium-h3maped-land-goals-10184",
@@ -39556,12 +39556,14 @@
         "tools/rmg_h3maped_controlled_reference.py",
         "tools/rmg_h3m_native_phase_snapshot_export.gd",
         "tools/rmg_phase_drift_audit.py",
+        "tools/rmg_h3maped_medium_reference_corpus_audit.py",
         ".artifacts/rmg_h3maped_controlled_reference"
       ],
       "baselineChecks": [
         "python3 tools/rmg_h3maped_controlled_reference.py --size medium --water land --level-count 1 --players 4 --human-players 1 --seed <seed> --case <case_id>",
-        "godot --headless --path . --script tools/rmg_h3m_native_phase_snapshot_export.gd -- --size-class-id homm3_medium --water land --level-count 1 --players 4 --seed <seed> --case-id <case_id>",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <manifest>",
         "python3 tools/rmg_phase_drift_audit.py --snapshot <snapshot> --h3m <controlled_reference_h3m>",
+        "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty",
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
@@ -39574,7 +39576,27 @@
         "committing H3M or package artifacts"
       ],
       "createdAt": "2026-06-02T14:38:00Z",
-      "updatedAt": "2026-06-02T14:38:00Z"
+      "startedAt": "2026-06-02T14:44:35Z",
+      "updatedAt": "2026-06-02T15:06:55Z",
+      "completedAt": "2026-06-02T15:06:55Z",
+      "evidence": {
+        "reference_root": ".artifacts/rmg_h3maped_controlled_reference_medium",
+        "corpus_audit": ".artifacts/rmg_h3maped_medium_reference_corpus_audit/medium_reference_corpus_audit.json",
+        "ready_case_count": 3,
+        "player_counts": [2, 3, 4],
+        "case_ids": [
+          "medium_2p_seed_28_controlled",
+          "medium_3p_seed_11_controlled",
+          "medium_4p_seed_10_controlled"
+        ],
+        "h3maped_sha256": "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37",
+        "native_snapshot_count": 3,
+        "phase_drift_ready_count": 1,
+        "phase_drift_blocked_count": 2,
+        "observed_native_blocker": "blocked_missing_original_h3maped_template_catalog",
+        "observed_4p_phase_drift": "template_selection_drift"
+      },
+      "summary": "Completed. Controlled h3maped.exe Medium 72x72x1 land references exist under .artifacts for 2p/3p/4p numeric-seed cases with pinned SHA, observed source-template ids/catalog indices, object/town/road/guard/reward/blocker/body/block/visit/route metrics, and native phase snapshot attempts. Current native Medium comparison remains blocked or drifting at source-template authority, which is the next slice."
     },
     {
       "id": "native-rmg-medium-h3maped-land-template-authority-10184",
@@ -50874,25 +50896,34 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "native-rmg-medium-h3maped-land-goals-10184",
+    "sliceId": "native-rmg-medium-h3maped-land-reference-corpus-10184",
     "status": "pass",
-    "updatedAt": "2026-06-02T14:38:00Z",
+    "updatedAt": "2026-06-02T15:06:55Z",
     "commands": [
+      "python3 tools/rmg_h3maped_controlled_reference.py --case medium_2p_seed_28_controlled --seed 28 --players 2 --human-players 1 --size medium --level-count 1 --water land --monster-strength normal --out-root .artifacts/rmg_h3maped_controlled_reference_medium --timeout-seconds 240 --generation-wait-seconds 24 --pretty (passed ready)",
+      "python3 tools/rmg_h3maped_controlled_reference.py --case medium_3p_seed_11_controlled --seed 11 --players 3 --human-players 1 --size medium --level-count 1 --water land --monster-strength normal --out-root .artifacts/rmg_h3maped_controlled_reference_medium --timeout-seconds 240 --generation-wait-seconds 24 --pretty (passed ready)",
+      "python3 tools/rmg_h3maped_controlled_reference.py --case medium_4p_seed_10_controlled --seed 10 --players 4 --human-players 1 --size medium --level-count 1 --water land --monster-strength normal --out-root .artifacts/rmg_h3maped_controlled_reference_medium --timeout-seconds 240 --generation-wait-seconds 24 --pretty (passed ready)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <medium_2p_manifest> (wrote inspection_failed snapshot; native Medium blocker recorded)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <medium_3p_manifest> (wrote inspection_failed snapshot; native Medium blocker recorded)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <medium_4p_manifest> (wrote inspection_failed snapshot and proxy AMAP)",
+      "python3 tools/rmg_phase_drift_audit.py --phase-snapshot .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/native_phase_snapshot/phase_snapshot.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --out-dir .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/phase_drift --pretty (ran; failed at template_selection_drift as expected)",
+      "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_controlled_reference.py tools/rmg_h3maped_medium_reference_corpus_audit.py tools/rmg_phase_drift_audit.py (passed)",
       "python3 tests/validate_repo.py (passed)",
+      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed; currentSlice native-rmg-medium-h3maped-land-template-authority-10184 [pending])",
       "jq empty ops/progress.json (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed; currentSlice native-rmg-medium-h3maped-land-reference-corpus-10184 [pending])",
       "git diff --check (passed)"
     ],
-    "summary": "GOALS.md, PLAN.md, and ops/progress.json now align on the owner-selected strict native H3MapEd Medium 72x72x1 land RMG track. The first implementation slice is the reference corpus; translated/proxy Medium output is explicitly excluded as completion evidence. No native code or gameplay balance changed."
+    "summary": "Strict Medium H3MapEd reference corpus is ready for 2p/3p/4p 72x72x1 land cases. Tooling now derives canonical Medium dimensions, records required body/block/visit/route metrics, recovers Wine Save As outputs from stale directories, and audits the corpus. Native Medium strict generation remains incomplete and is blocked at source-template authority."
   },
   "active_slice": {
-    "id": "native-rmg-medium-h3maped-land-reference-corpus-10184",
-    "title": "Native RMG Medium H3MapEd Land Reference Corpus",
+    "id": "native-rmg-medium-h3maped-land-template-authority-10184",
+    "title": "Native RMG Medium H3MapEd Land Template Authority",
     "status": "pending",
-    "updatedAt": "2026-06-02T14:38:00Z",
-    "summary": "First implementation slice for the owner-selected strict Medium H3MapEd land track. Build controlled 72x72x1 land references and phase-drift evidence before enabling any Medium runtime output."
+    "updatedAt": "2026-06-02T15:06:55Z",
+    "summary": "Next strict Medium H3MapEd RMG slice. Extend source-template selection authority from Small land to Medium 72x72x1 land; translated/proxy Medium output remains excluded as completion evidence."
   },
-  "currentSliceUpdatedAt": "2026-06-02T14:38:00Z",
+  "currentSliceUpdatedAt": "2026-06-02T15:06:55Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -54103,20 +54134,20 @@
       }
     }
   ],
-  "currentSlice": "native-rmg-medium-h3maped-land-reference-corpus-10184",
+  "currentSlice": "native-rmg-medium-h3maped-land-template-authority-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-01T16:47:00Z",
-    "currentSliceId": "strategic-ai-eight-week-shard-offset98-count2-10184",
-    "summary": "Focused seed-99..100 Native RMG strategic/tactical AI shard completed; staged seed ordinals 1-100 are now covered but still need aggregation and residual diagnostic classification.",
+    "updatedAt": "2026-06-02T15:06:55Z",
+    "currentSliceId": "native-rmg-medium-h3maped-land-reference-corpus-10184",
+    "summary": "Strict Medium H3MapEd reference corpus completed for 2p/3p/4p 72x72x1 land cases; next active slice is Medium source-template authority.",
     "commands": [
-      "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 7200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+      "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty",
+      "python3 -m py_compile tools/rmg_h3maped_controlled_reference.py tools/rmg_h3maped_medium_reference_corpus_audit.py tools/rmg_phase_drift_audit.py",
       "python3 tests/validate_repo.py",
+      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
       "jq empty ops/progress.json",
-      "git diff --check",
-      "git diff --exit-code -- content docs project.md"
+      "git diff --check"
     ],
-    "latestSummary": "Completed the final split 56-turn Native RMG generated-map tactical/strategic AI shard over seed ordinals 99-100. Both rows were ok with zero behavior bugs, zero target-integrity violations, zero final unreachable active target diagnostics, three natural tactical battle arrivals, and three auto-resolved battle handoffs; total turns_completed=42, enemy_activity_event_count=157, target_assignment_count=39, commander_task_planned_count=12, site_seized_count=9, battle_interrupt_count=3, auto_resolved_battle_count=3. Seed 99 provided a long 33-turn row with 118 enemy activity events and one recovered no-event/stalled-turn diagnostic; seed 100 completed after 9 turns with no stalls. No balance-content files changed. The staged seed ordinals 1-100 run is now covered, but production readiness is not claimed until the staged evidence is aggregated and residual stalled/unreachable diagnostics are classified."
+    "latestSummary": "Controlled h3maped.exe Medium references are ready for player counts 2, 3, and 4 with pinned SHA, observed template ids/catalog indices, and required object/town/road/guard/reward/body/block/visit/route metrics. Native snapshots exist for each case; current strict Medium native comparison remains blocked or drifting at source-template authority."
   }
 }

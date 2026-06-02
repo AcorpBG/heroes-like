@@ -47,6 +47,12 @@ SIZE_COORDS = {
     "large": (439, 413),
     "extra_large": (439, 432),
 }
+SIZE_DIMENSIONS = {
+    "small": 36,
+    "medium": 72,
+    "large": 108,
+    "extra_large": 144,
+}
 WATER_COORDS = {
     "random": (340, 647),
     "land": (449, 647),
@@ -112,10 +118,31 @@ def write_markdown(manifest: dict[str, Any], path: Path) -> None:
         ])
     metrics = manifest.get("metrics", {})
     compact = metrics.get("compact", {}) if isinstance(metrics, dict) else {}
+    required = metrics.get("required", {}) if isinstance(metrics, dict) else {}
     if compact:
         lines.extend(["## Compact Metrics", ""])
         for key in ["object_count", "counts_by_category", "road_cell_count_total", "nearest_town_manhattan_min"]:
             lines.append(f"- `{key}`: `{compact.get(key)}`")
+        lines.append("")
+    if required:
+        lines.extend(["## Required Corpus Metrics", ""])
+        for key in [
+            "object_count",
+            "town_count",
+            "road_cell_count",
+            "guard_count",
+            "reward_count",
+            "blocker_like_object_count",
+            "body_tile_count_total",
+            "block_tile_count_total",
+            "visit_tile_count_total",
+            "guard_control_tile_count_total",
+        ]:
+            lines.append(f"- `{key}`: `{required.get(key)}`")
+        route = required.get("route_topology", {}) if isinstance(required.get("route_topology"), dict) else {}
+        if route:
+            lines.append(f"- `route_topology`: `{route}`")
+        lines.append("")
     path.write_text("\n".join(lines) + "\n")
 
 
@@ -166,6 +193,7 @@ def build_base_manifest(args: argparse.Namespace, out_dir: Path, mode: str) -> d
             "seed": str(args.seed),
             "players": int(args.players),
             "human_players": int(args.human_players),
+            "computer_only_players": int(args.computer_only_players),
             "size": args.size,
             "width": int(args.width),
             "height": int(args.height),
@@ -331,7 +359,9 @@ def repeat_key(key: str, count: int) -> str:
 def automation_script(args: argparse.Namespace, out_dir: Path, runtime: dict[str, Any], save_name: str) -> str:
     runtime_dir = Path(runtime["runtime_dir"]).resolve()
     output_h3m = (out_dir / save_name).resolve()
-    reference_root = out_dir.parent.resolve()
+    artifact_root = Path(".artifacts").resolve()
+    wine_output_dir = args.wineprefix.resolve() / "drive_c" / "h3maped_refs"
+    wine_output_h3m = wine_output_dir / save_name
     screenshot_dir = (out_dir / "screenshots").resolve()
     screenshot_dir.mkdir(parents=True, exist_ok=True)
     size_x, size_y = SIZE_COORDS[args.size]
@@ -347,8 +377,9 @@ set -euo pipefail
 export WINEPREFIX={str(args.wineprefix.resolve())!r}
 export WINEARCH=win32
 cd {str(runtime_dir)!r}
-rm -f {save_name!r} /{save_name!r} {str(output_h3m)!r}
-find {str(reference_root)!r} -type f -name {save_name!r} -delete || true
+mkdir -p {str(wine_output_dir)!r}
+rm -f {save_name!r} /{save_name!r} {str(output_h3m)!r} {str(wine_output_h3m)!r}
+find {str(artifact_root)!r} {str(args.wineprefix.resolve())!r} -type f -name {save_name!r} -delete 2>/dev/null || true
 
 screen() {{
   scrot {str(screenshot_dir)!r}/"$1".png || true
@@ -448,12 +479,18 @@ xdotool mousemove 45 114 click 1
 sleep 0.6
 screen 05_save_as
 xdotool mousemove 469 466 click 1
+xdotool key ctrl+a
 xdotool key End
 {backspaces}
 xdotool type --clearmodifiers {save_name!r}
-xdotool key Return
+screen 05b_filename_entered
+xdotool mousemove 642 467 click 1
 for _ in $(seq 1 20); do
-  if [[ -f {save_name!r} || -f /{save_name!r} || -f {str(output_h3m)!r} ]]; then
+  if [[ -f {save_name!r} || -f /{save_name!r} || -f {str(output_h3m)!r} || -f {str(wine_output_h3m)!r} ]]; then
+    break
+  fi
+  candidate="$(find {str(artifact_root)!r} {str(args.wineprefix.resolve())!r} -type f -name {save_name!r} 2>/dev/null | head -n 1 || true)"
+  if [[ -n "$candidate" && -f "$candidate" ]]; then
     break
   fi
   active_window="$(xdotool getactivewindow 2>/dev/null || true)"
@@ -462,23 +499,25 @@ for _ in $(seq 1 20); do
     sleep 0.2
     xdotool windowactivate --sync "$active_window" key space || true
   fi
-  xdotool mousemove 607 545 click --delay 200 1 || true
+  xdotool mousemove 642 467 click --delay 200 1 || true
   xdotool key Alt+y || true
   sleep 0.5
 done
 screen 06_after_save
 
-if [[ ! -f {save_name!r} && ! -f /{save_name!r} && ! -f {str(output_h3m)!r} ]]; then
+if [[ ! -f {save_name!r} && ! -f /{save_name!r} && ! -f {str(output_h3m)!r} && ! -f {str(wine_output_h3m)!r} ]]; then
   xdotool mousemove 642 467 click 1
   sleep 0.4
-  xdotool mousemove 607 545 click --delay 200 1 || true
+  xdotool mousemove 642 467 click --delay 200 1 || true
   sleep 1
   screen 07_after_save_retry
 fi
 
-candidate="$(find {str(reference_root)!r} -type f -name {save_name!r} | head -n 1 || true)"
+candidate="$(find {str(artifact_root)!r} {str(args.wineprefix.resolve())!r} -type f -name {save_name!r} 2>/dev/null | head -n 1 || true)"
 if [[ -f {str(output_h3m)!r} ]]; then
   :
+elif [[ -f {str(wine_output_h3m)!r} ]]; then
+  cp {str(wine_output_h3m)!r} {str((out_dir / save_name).resolve())!r}
 elif [[ -f /{save_name!r} ]]; then
   mv /{save_name!r} {str((out_dir / save_name).resolve())!r}
 elif [[ -f {save_name!r} ]]; then
@@ -524,6 +563,137 @@ def extract_generation_summary(h3m_path: Path) -> dict[str, Any]:
             "monsters": int(match.group("monsters")),
         }
     return {"status": "found", "text": summary_text, "parsed": parsed}
+
+
+def h3m_records_for_metrics(h3m_path: Path) -> list[dict[str, Any]]:
+    data = fast_audit.load_bytes(h3m_path)
+    width = fast_audit.u32(data, 5)
+    level_count = 2 if len(data) > 9 and data[9] != 0 else 1
+    metadata = fast_audit.load_object_metadata()
+    for def_offset in fast_audit.find_object_definition_offsets(data):
+        tile_offset = def_offset - width * width * level_count * fast_audit.H3M_TILE_BYTES_PER_CELL
+        if tile_offset <= 0:
+            continue
+        templates = fast_audit.parse_h3m_object_templates(data, def_offset, metadata)
+        if templates.get("status") != "parsed":
+            continue
+        objects = fast_audit.parse_h3m_object_instances(
+            data,
+            int(templates.get("next_offset", 0)),
+            templates["templates"],
+            width,
+            level_count,
+        )
+        if objects.get("status") == "parsed":
+            return list(objects.get("records", []))
+    return []
+
+
+def h3m_required_corpus_metrics(h3m_path: Path, metrics: dict[str, Any]) -> dict[str, Any]:
+    width = int(metrics.get("width", 0))
+    height = int(metrics.get("height", width))
+    records = h3m_records_for_metrics(h3m_path)
+    semantic = metrics.get("semantic_layout", {}) if isinstance(metrics.get("semantic_layout"), dict) else {}
+    by_level = semantic.get("by_level", {}) if isinstance(semantic.get("by_level"), dict) else {}
+    category_counts = metrics.get("counts_by_category", {}) if isinstance(metrics.get("counts_by_category"), dict) else {}
+    body_tile_count_total = 0
+    visit_tile_count_total = 0
+    guard_control_tile_count_total = 0
+    blocker_like_object_count = 0
+    blocker_like_body_tile_count = 0
+    guard_records: list[dict[str, Any]] = []
+    reward_records: list[dict[str, Any]] = []
+    town_records: list[dict[str, Any]] = []
+    blocker_like_records: list[dict[str, Any]] = []
+    for record in records:
+        category = fast_audit.h3m_category(record)
+        body_points = fast_audit.mask_points(record, False, width, height)
+        visit_points = fast_audit.mask_points(record, True, width, height)
+        guard_control_points = fast_audit.guard_control_points(record, width, height) if category == "guard" else []
+        body_tile_count_total += len(body_points)
+        visit_tile_count_total += len(visit_points)
+        guard_control_tile_count_total += len(guard_control_points)
+        summary_record = {
+            "object_index": int(record.get("object_index", -1)),
+            "type_id": int(record.get("type_id", -1)),
+            "subtype": int(record.get("subtype", -1)),
+            "type_name": str(record.get("type_name", "")),
+            "def_name": str(record.get("def_name", "")),
+            "x": int(record.get("x", -1)),
+            "y": int(record.get("y", -1)),
+            "level": int(record.get("level", 0)),
+            "body_tile_count": len(body_points),
+            "visit_tile_count": len(visit_points),
+            "guard_control_tile_count": len(guard_control_points),
+        }
+        if category == "guard":
+            guard_records.append(summary_record)
+        elif category == "reward":
+            reward_records.append(summary_record)
+        elif category == "town":
+            town_records.append(summary_record)
+        elif body_points:
+            blocker_like_object_count += 1
+            blocker_like_body_tile_count += len(body_points)
+            blocker_like_records.append(summary_record)
+    object_blocked_tile_count_total = sum(
+        int(level.get("object_blocked_tile_count", 0))
+        for level in by_level.values()
+        if isinstance(level, dict)
+    )
+    movement_blocked_tile_count_total = sum(
+        int(level.get("movement_blocked_tile_count", 0))
+        for level in by_level.values()
+        if isinstance(level, dict)
+    )
+    guarded_blocked_tile_count_total = sum(
+        int(level.get("guarded_blocked_tile_count", 0))
+        for level in by_level.values()
+        if isinstance(level, dict)
+    )
+    guarded_movement_blocked_tile_count_total = sum(
+        int(level.get("guarded_movement_blocked_tile_count", 0))
+        for level in by_level.values()
+        if isinstance(level, dict)
+    )
+    guard_controlled_tile_count_total = int(semantic.get("guard_controlled_tile_count_total", guard_control_tile_count_total))
+    return {
+        "schema_id": "rmg_h3maped_controlled_reference_required_metrics_v1",
+        "status": "parsed" if records else "not_parsed",
+        "width": width,
+        "height": height,
+        "level_count": int(metrics.get("level_count", 1)),
+        "object_count": int(metrics.get("object_count", 0)),
+        "town_count": int(category_counts.get("town", 0)),
+        "road_cell_count": int(metrics.get("road_cell_count_total", 0)),
+        "guard_count": int(category_counts.get("guard", 0)),
+        "reward_count": int(category_counts.get("reward", 0)),
+        "decoration_count": int(category_counts.get("decoration", 0)),
+        "object_category_count": int(category_counts.get("object", 0)),
+        "blocker_like_object_count": blocker_like_object_count,
+        "blocker_like_body_tile_count": blocker_like_body_tile_count,
+        "body_tile_count_total": body_tile_count_total,
+        "block_tile_count_total": body_tile_count_total,
+        "block_tile_source": "h3m_non_passable_body_mask",
+        "visit_tile_count_total": visit_tile_count_total,
+        "guard_control_tile_count_total": guard_control_tile_count_total,
+        "object_blocked_tile_count_total": object_blocked_tile_count_total,
+        "movement_blocked_tile_count_total": movement_blocked_tile_count_total,
+        "guarded_blocked_tile_count_total": guarded_blocked_tile_count_total,
+        "guarded_movement_blocked_tile_count_total": guarded_movement_blocked_tile_count_total,
+        "guard_controlled_tile_count_total": guard_controlled_tile_count_total,
+        "route_topology": {
+            "object_route_reachable_pair_count_total": int(semantic.get("object_route_reachable_pair_count_total", 0)),
+            "guarded_route_reachable_pair_count_total": int(semantic.get("guarded_route_reachable_pair_count_total", 0)),
+            "movement_route_reachable_pair_count_total": int(semantic.get("movement_route_reachable_pair_count_total", 0)),
+            "guarded_movement_route_reachable_pair_count_total": int(semantic.get("guarded_movement_route_reachable_pair_count_total", 0)),
+            "nearest_town_manhattan_min": int(semantic.get("nearest_town_manhattan_min", 0)),
+        },
+        "sample_towns": town_records[:12],
+        "sample_guards": guard_records[:12],
+        "sample_rewards": reward_records[:12],
+        "sample_blocker_like_objects": blocker_like_records[:12],
+    }
 
 
 def run_automation(args: argparse.Namespace, out_dir: Path, runtime: dict[str, Any]) -> dict[str, Any]:
@@ -670,7 +840,10 @@ def run_generate(args: argparse.Namespace, out_dir: Path) -> dict[str, Any]:
         manifest["seed_control"]["reason"] = (
             "The public h3maped GUI has no seed entry; this manifest records the observed generated seed only."
         )
-    manifest["metrics"] = {"compact": compact}
+    manifest["metrics"] = {
+        "compact": compact,
+        "required": h3m_required_corpus_metrics(h3m_path, metrics),
+    }
     return manifest
 
 
@@ -680,9 +853,9 @@ def main() -> int:
     parser.add_argument("--seed", required=True)
     parser.add_argument("--players", type=int, required=True)
     parser.add_argument("--human-players", type=int, default=1)
-    parser.add_argument("--size", default="small")
-    parser.add_argument("--width", type=int, default=36)
-    parser.add_argument("--height", type=int, default=36)
+    parser.add_argument("--size", default="small", choices=sorted(SIZE_COORDS))
+    parser.add_argument("--width", type=int)
+    parser.add_argument("--height", type=int)
     parser.add_argument("--level-count", type=int, default=1)
     parser.add_argument("--water", default="land", choices=sorted(WATER_COORDS))
     parser.add_argument("--monster-strength", default="random", choices=sorted(MONSTER_COORDS))
@@ -700,6 +873,11 @@ def main() -> int:
     parser.add_argument("--allow-blocked", action="store_true", help="Return success while writing a blocked manifest")
     parser.add_argument("--pretty", action="store_true")
     args = parser.parse_args()
+    canonical_dimension = SIZE_DIMENSIONS[args.size]
+    if args.width is None:
+        args.width = canonical_dimension
+    if args.height is None:
+        args.height = canonical_dimension
 
     out_dir = args.out_root / args.case
     manifest = run_generate(args, out_dir)
