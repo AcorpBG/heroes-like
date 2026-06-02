@@ -4,6 +4,8 @@
 
 namespace godot::h3maped_small_rmg {
 
+bool supports_small_land_scope(const Dictionary &normalized_config);
+bool supports_medium_land_scope(const Dictionary &normalized_config);
 bool supports_scope(const Dictionary &normalized_config);
 Dictionary selection_identity(const Dictionary &normalized_config);
 Dictionary inspect_port(const Dictionary &normalized_config);

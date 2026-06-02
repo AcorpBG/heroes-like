@@ -12447,7 +12447,7 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 
 } // namespace
 
-bool supports_scope(const Dictionary &normalized_config) {
+bool supports_small_land_scope(const Dictionary &normalized_config) {
 	return width(normalized_config) == 36
 			&& height(normalized_config) == 36
 			&& level_count(normalized_config) == 1
@@ -12455,9 +12455,58 @@ bool supports_scope(const Dictionary &normalized_config) {
 			&& size_class_id(normalized_config) == "homm3_small";
 }
 
+bool supports_medium_land_scope(const Dictionary &normalized_config) {
+	return width(normalized_config) == 72
+			&& height(normalized_config) == 72
+			&& level_count(normalized_config) == 1
+			&& water_mode(normalized_config) == "land"
+			&& size_class_id(normalized_config) == "homm3_medium";
+}
+
+bool supports_scope(const Dictionary &normalized_config) {
+	return supports_small_land_scope(normalized_config) || supports_medium_land_scope(normalized_config);
+}
+
+String strict_scope_id(const Dictionary &normalized_config) {
+	if (supports_small_land_scope(normalized_config)) {
+		return "strict_small_36x36_one_level_land_only";
+	}
+	if (supports_medium_land_scope(normalized_config)) {
+		return "strict_medium_72x72_one_level_land_only";
+	}
+	return "unsupported_h3maped_scope";
+}
+
+String strict_scope_label(const Dictionary &normalized_config) {
+	if (supports_small_land_scope(normalized_config)) {
+		return "small_36x36_surface_land_only";
+	}
+	if (supports_medium_land_scope(normalized_config)) {
+		return "medium_72x72_surface_land_only";
+	}
+	return "unsupported_scope";
+}
+
+int32_t template_preselection_rng_call_count(const Dictionary &normalized_config) {
+	if (!supports_medium_land_scope(normalized_config)) {
+		return 0;
+	}
+	switch (player_count(normalized_config)) {
+		case 3:
+			return 5;
+		case 4:
+			return 6;
+		default:
+			return 0;
+	}
+}
+
 Dictionary selection_identity(const Dictionary &normalized_config) {
 	Dictionary result;
-	result["schema_id"] = "aurelion_native_rmg_small_h3maped_selection_identity_v2";
+	result["schema_id"] = "aurelion_native_rmg_h3maped_selection_identity_v3";
+	result["strict_scope"] = strict_scope_id(normalized_config);
+	result["scope"] = strict_scope_label(normalized_config);
+	result["size_class_id"] = size_class_id(normalized_config);
 	result["template_selection_mode"] = "h3maped_exe_rng";
 	result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
 	result["template_semantic_source"] = COMPILED_TEMPLATE_CATALOG_SOURCE;
@@ -12505,15 +12554,24 @@ Dictionary selection_identity(const Dictionary &normalized_config) {
 		return result;
 	}
 	const uint32_t next_state = seed_value * 0x343fdu + 0x269ec3u;
-	const int32_t first_value = int32_t((next_state >> 16U) & 0x7fffu);
-	const int32_t selected_index = first_value % int32_t(accepted.size());
+	H3MapedRng rng { seed_value };
+	const int32_t preselection_rng_call_count = template_preselection_rng_call_count(normalized_config);
+	PackedInt32Array preselection_rng_values;
+	for (int32_t call_index = 0; call_index < preselection_rng_call_count; ++call_index) {
+		preselection_rng_values.append(rng.next());
+	}
+	const int32_t selection_value = rng.next();
+	const int32_t selected_index = selection_value % int32_t(accepted.size());
 	Dictionary selected = accepted[selected_index];
 	result["ok"] = true;
 	result["status"] = "h3maped_rng_selected";
 	result["seed_text"] = seed_text;
 	result["seed_uint32"] = int64_t(seed_value);
-	result["rng_first_value"] = first_value;
-	result["rng_state_after_selection_uint32"] = int64_t(next_state);
+	result["rng_first_value"] = int32_t((next_state >> 16U) & 0x7fffu);
+	result["template_preselection_rng_call_count"] = preselection_rng_call_count;
+	result["template_preselection_rng_values"] = preselection_rng_values;
+	result["template_selection_rng_value"] = selection_value;
+	result["rng_state_after_selection_uint32"] = int64_t(rng.state);
 	result["selected_vector_index"] = selected_index;
 	result["source_template_id"] = selected.get("id", "");
 	result["source_catalog_index"] = selected.get("source_catalog_index", -1);
@@ -12527,11 +12585,14 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	const Array accepted = accepted_templates(normalized_config);
 	Dictionary report;
 	report["ok"] = supports_scope(normalized_config) && !accepted.is_empty();
-	report["schema_id"] = "aurelion_native_rmg_small_h3maped_fresh_start_boundary_v1";
+	report["schema_id"] = "aurelion_native_rmg_h3maped_fresh_start_boundary_v2";
 	report["schema_version"] = 1;
-	report["status"] = bool(report["ok"]) ? String("h3maped_small_fresh_start_boundary_ready") : String("unsupported_scope_or_no_template");
-	report["implementation_policy"] = "fresh_small_only_compiled_h3maped_boundary_no_catalog_auto_no_hash_selection_no_report_treadmill_no_runtime_fallback";
-	report["scope"] = "small_36x36_surface_land_only";
+	report["status"] = bool(report["ok"])
+			? (supports_medium_land_scope(normalized_config) ? String("h3maped_medium_source_template_authority_ready_runtime_blocked") : String("h3maped_small_fresh_start_boundary_ready"))
+			: String("unsupported_scope_or_no_template");
+	report["implementation_policy"] = "compiled_h3maped_original_catalog_rng_boundary_no_catalog_auto_no_hash_selection_no_report_treadmill_no_runtime_fallback";
+	report["scope"] = strict_scope_label(normalized_config);
+	report["strict_scope"] = strict_scope_id(normalized_config);
 	report["runtime_generation_allowed"] = false;
 	report["partial_materialized_payload_public_api"] = false;
 	report["active_module_role"] = "thin_boundary_and_generation_gate";
@@ -12929,6 +12990,33 @@ Dictionary negative_validator_cases(const Dictionary &normalized_config) {
 
 Dictionary validator_gated_generation_result(const Dictionary &normalized_config, const Dictionary &extension_profile) {
 	Dictionary report = inspect_port(normalized_config);
+	if (supports_medium_land_scope(normalized_config)) {
+		Dictionary selection = report.get("selection_identity", Dictionary());
+		Dictionary result;
+		result["ok"] = false;
+		result["status"] = "h3maped_medium_phase_port_runtime_blocked";
+		result["generation_status"] = "h3maped_medium_phase_port_runtime_blocked";
+		result["full_generation_status"] = "h3maped_medium_waiting_for_executable_phase_port";
+		result["error_code"] = "h3maped_medium_phase_port_incomplete";
+		result["message"] = "Medium 72x72 one-level land now uses original H3MapEd source-template authority, but public runtime output stays blocked until the Medium executable phase port and package adoption gates pass.";
+		result["runtime_generation_allowed"] = false;
+		result["public_runtime_authoritative"] = false;
+		result["partial_materialized_payload_public_api"] = false;
+		result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
+		result["source_template_authority"] = "h3maped_exe_rng";
+		result["source_template_id"] = selection.get("source_template_id", "");
+		result["source_catalog_index"] = selection.get("source_catalog_index", -1);
+		result["translated_template_authority_used"] = false;
+		result["archived_catalog_auto_used"] = false;
+		result["template_selection_fallback_used"] = false;
+		result["normalized_config"] = normalized_config;
+		result["h3maped_small_port"] = report;
+		result["h3maped_template_selection"] = selection;
+		result["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
+		result["replacement_slice_id"] = "native-rmg-medium-h3maped-land-phase-port-10184";
+		result["extension_profile"] = extension_profile;
+		return result;
+	}
 	Dictionary validator = report.get("fast_structural_validator", Dictionary());
 	Dictionary package_adoption = report.get("public_package_adoption", Dictionary());
 	Dictionary final_writeout = report.get("final_h3m_writeout", Dictionary());

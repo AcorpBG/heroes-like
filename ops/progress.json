@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "native-rmg-medium-h3maped-land-template-authority-10184",
-  "currentSliceTitle": "Native RMG Medium H3MapEd Land Template Authority",
+  "currentSliceId": "native-rmg-medium-h3maped-land-phase-port-10184",
+  "currentSliceTitle": "Native RMG Medium H3MapEd Land Phase Port",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next strict Medium H3MapEd RMG slice. Extend source-template selection authority from Small land to Medium 72x72x1 land using the recovered original catalog/RNG path; translated/proxy Medium output remains excluded as completion evidence.",
+  "currentSliceNotes": "Next strict Medium H3MapEd RMG slice. Generalize the executable-derived phase chain to Medium 72x72x1 land while keeping public Medium output blocked until validator-gated runtime package adoption passes.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T15:06:55Z",
+  "updatedAt": "2026-06-02T16:24:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39601,7 +39601,7 @@
     {
       "id": "native-rmg-medium-h3maped-land-template-authority-10184",
       "title": "Native RMG Medium H3MapEd Land Template Authority",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "native-rmg-medium-h3maped-land-goals-10184",
@@ -39631,7 +39631,35 @@
         "water, islands, underground, Large, or XL scope"
       ],
       "createdAt": "2026-06-02T14:38:00Z",
-      "updatedAt": "2026-06-02T14:38:00Z"
+      "updatedAt": "2026-06-02T16:24:00Z",
+      "completedAt": "2026-06-02T16:24:00Z",
+      "evidence": {
+        "medium_2p_seed_28_selected_source_catalog_index": 35,
+        "medium_3p_seed_11_selected_source_catalog_index": 37,
+        "medium_4p_seed_10_selected_source_catalog_index": 15,
+        "accepted_template_counts_by_player_count": {
+          "2": 35,
+          "3": 28,
+          "4": 24
+        },
+        "bounded_seed_matrix_limit": 4096,
+        "bounded_seed_matrix_missing_vector_slots": 0,
+        "explicit_translated_template_request_overridden": true,
+        "unsupported_medium_modes_block_without_fallback": true,
+        "public_medium_runtime_generation_allowed": false
+      },
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Medium 72x72x1 land now enters the H3MapEd original-catalog selector, exposes deterministic accepted source-template vectors for 2p/3p/4p, matches the controlled references for seeds 28/11/10, overrides explicit translated-template requests, and blocks unsupported Medium modes plus Medium public runtime output with no fallback."
     },
     {
       "id": "native-rmg-medium-h3maped-land-phase-port-10184",
@@ -50917,13 +50945,13 @@
     "summary": "Strict Medium H3MapEd reference corpus is ready for 2p/3p/4p 72x72x1 land cases. Tooling now derives canonical Medium dimensions, records required body/block/visit/route metrics, recovers Wine Save As outputs from stale directories, and audits the corpus. Native Medium strict generation remains incomplete and is blocked at source-template authority."
   },
   "active_slice": {
-    "id": "native-rmg-medium-h3maped-land-template-authority-10184",
-    "title": "Native RMG Medium H3MapEd Land Template Authority",
+    "id": "native-rmg-medium-h3maped-land-phase-port-10184",
+    "title": "Native RMG Medium H3MapEd Land Phase Port",
     "status": "pending",
-    "updatedAt": "2026-06-02T15:06:55Z",
-    "summary": "Next strict Medium H3MapEd RMG slice. Extend source-template selection authority from Small land to Medium 72x72x1 land; translated/proxy Medium output remains excluded as completion evidence."
+    "updatedAt": "2026-06-02T16:24:00Z",
+    "summary": "Next strict Medium H3MapEd RMG slice. Generalize executable-derived phases to 72x72x1 land through final tile-byte/writeout draft and structural validation; public Medium output remains blocked."
   },
-  "currentSliceUpdatedAt": "2026-06-02T15:06:55Z",
+  "currentSliceUpdatedAt": "2026-06-02T16:24:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -54134,20 +54162,23 @@
       }
     }
   ],
-  "currentSlice": "native-rmg-medium-h3maped-land-template-authority-10184",
+  "currentSlice": "native-rmg-medium-h3maped-land-phase-port-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-02T15:06:55Z",
-    "currentSliceId": "native-rmg-medium-h3maped-land-reference-corpus-10184",
-    "summary": "Strict Medium H3MapEd reference corpus completed for 2p/3p/4p 72x72x1 land cases; next active slice is Medium source-template authority.",
+    "updatedAt": "2026-06-02T16:24:00Z",
+    "currentSliceId": "native-rmg-medium-h3maped-land-template-authority-10184",
+    "summary": "Strict Medium H3MapEd source-template authority completed for 2p/3p/4p 72x72x1 land cases; next active slice is Medium executable phase port.",
     "commands": [
-      "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty",
-      "python3 -m py_compile tools/rmg_h3maped_controlled_reference.py tools/rmg_h3maped_medium_reference_corpus_audit.py tools/rmg_phase_drift_audit.py",
+      "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+      "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+      "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
+      "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
       "python3 tests/validate_repo.py",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "latestSummary": "Controlled h3maped.exe Medium references are ready for player counts 2, 3, and 4 with pinned SHA, observed template ids/catalog indices, and required object/town/road/guard/reward/body/block/visit/route metrics. Native snapshots exist for each case; current strict Medium native comparison remains blocked or drifting at source-template authority."
+    "latestSummary": "Strict Medium H3MapEd source-template authority now matches controlled 2p/3p/4p references, exposes deterministic accepted vectors and bounded seed coverage, overrides translated-template requests, and keeps Medium runtime generation blocked until phase-port/runtime-adoption slices pass."
   }
 }
