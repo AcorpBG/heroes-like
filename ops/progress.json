@@ -39239,7 +39239,7 @@
       ],
       "createdAt": "2026-06-01T22:55:00Z",
       "startedAt": "2026-06-01T15:46:12Z",
-      "updatedAt": "2026-06-02T07:59:54Z",
+      "updatedAt": "2026-06-02T08:48:39Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -39410,6 +39410,11 @@
           "command": "python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check && git diff --exit-code -- content docs project.md PLAN.md",
           "status": "pass",
           "notes": "Repository validation, tracker JSON validation, whitespace check, and no-content/docs/project/PLAN drift guard passed after recording Medium seed ordinal 10 evidence. No unit, spell, economy, town, authored scenario, docs, project, or PLAN content was changed."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_runtime_concern",
+          "notes": "Medium seed ordinal 11 completed 14/14 turns on translated_rmg_template_002_v1: row_ok=1/1, setup_ok=1, enemy_activity_event_count=91, target_assignment_count=50, site_seized_count=2, ai_artifact_secured=1, active_raid_count=7, no_active_pressure_row_count=0, stalled_turn_count=0, stalled_turn_pct=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, behavior_bug_count=0. Runtime is a serious validation-throughput concern: row_runtime_msec=2081724 and max_turn_runtime_msec=201416. The full 100-seed eight-week matrix remains unrun."
         }
       ],
       "notes": [
@@ -39431,7 +39436,8 @@
         "The short Medium baseline failure was traced to active generated-map pressure assignments being hidden when off-screen; active pressure assignments with medium-or-higher public importance now surface as rumored public events, preserving fog detail while exposing strategic pressure.",
         "The strategic AI baseline is green again for all three short Medium probes, but the slice remains in progress because the longer Medium generated-map matrix is still the next production blocker.",
         "Medium seed ordinal 10 exposed a passive no-spare regroup loop: a raid repeatedly reached the same regroup town with no spare garrison and emitted only regroup events. Repeated no-spare regroup at the same town now retires the raid to command rebuild instead of renewing the same regroup target.",
-        "Post-fix Medium seed ordinal 10 now emits target-assignment and site-seizure activity with zero live unreachable active targets. The fix improves a real strategic behavior gap, but full production readiness remains unproven until broader Medium long-run matrix coverage and residual regroup/rebuild churn are resolved."
+        "Post-fix Medium seed ordinal 10 now emits target-assignment and site-seizure activity with zero live unreachable active targets. The fix improves a real strategic behavior gap, but full production readiness remains unproven until broader Medium long-run matrix coverage and residual regroup/rebuild churn are resolved.",
+        "Medium seed ordinal 11 passes behavior health over 14 turns with active pressure, target assignments, site seizures, zero stalls, zero target-integrity violations, and zero unreachable active targets. It also exposes a practical production blocker for broader validation: Medium turn runtime is too high for the full matrix path without further AI/pathing throughput work."
       ]
     }
   ],
