@@ -23,9 +23,10 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `native-rmg-medium-h3maped-land-runtime-adoption-10184`. Enable validator-gated public Medium `72x72x1` land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch without authored writeback.
+- Current implementation slice: `native-rmg-medium-h3maped-land-public-ui-10184`. Expose strict Medium `72x72x1` one-level land generation through public random-map options after the runtime package adoption gate, while keeping unsupported Medium water/underground and larger sizes hidden or blocked.
 - Paused/in-progress evidence slice: `strategic-ai-medium-long-run-seed-matrix-10184` remains in progress as strategic-AI evidence, but it is no longer the selected immediate work while the Medium H3MapEd RMG track is being planned and staged.
 - Latest completed planning slice: `native-rmg-medium-h3maped-land-goals-10184`.
+- Latest completed slice: `native-rmg-medium-h3maped-land-runtime-adoption-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-phase-port-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-template-authority-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-reference-corpus-10184`.

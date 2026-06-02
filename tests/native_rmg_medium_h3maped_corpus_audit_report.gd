@@ -41,15 +41,15 @@ func _run() -> void:
 			_fail("%s failed: %s" % [String(case.get("case_id", "")), JSON.stringify(report)])
 			return
 		case_reports.append(report)
-	var runtime_block_report := _validate_runtime_generation_contract(service)
-	if not bool(runtime_block_report.get("ok", false)):
-		_fail("runtime contract failed: %s" % JSON.stringify(runtime_block_report))
+	var runtime_report := _validate_runtime_generation_contract(service)
+	if not bool(runtime_report.get("ok", false)):
+		_fail("runtime contract failed: %s" % JSON.stringify(runtime_report))
 		return
 	print("%s: %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"case_count": case_reports.size(),
 		"cases": case_reports,
-		"runtime_generation_contract": runtime_block_report,
+		"runtime_generation_contract": runtime_report,
 	})])
 	get_tree().quit(0)
 
@@ -130,13 +130,18 @@ func _validate_runtime_generation_contract(service: Variant) -> Dictionary:
 	var validator: Dictionary = generated.get("fast_structural_validator", {}) if generated.get("fast_structural_validator", {}) is Dictionary else {}
 	var final_summary: Dictionary = generated.get("final_writeout_summary", {}) if generated.get("final_writeout_summary", {}) is Dictionary else {}
 	var adoption_summary: Dictionary = generated.get("public_package_adoption_summary", {}) if generated.get("public_package_adoption_summary", {}) is Dictionary else {}
-	var ok := not bool(generated.get("ok", true)) \
-			and bool(generated.get("medium_phase_port_ready", false)) \
-			and String(generated.get("generation_status", "")) == "h3maped_medium_phase_port_ready_runtime_adoption_blocked" \
-			and String(generated.get("full_generation_status", "")) == "h3maped_medium_runtime_adoption_pending_strict_medium_land" \
-			and not bool(generated.get("runtime_generation_allowed", true)) \
-			and not bool(generated.get("public_runtime_authoritative", true)) \
-			and not generated.has("map_document_payload") \
+	var payload: Dictionary = generated.get("map_document_payload", {}) if generated.get("map_document_payload", {}) is Dictionary else {}
+	var ok := bool(generated.get("ok", false)) \
+			and String(generated.get("generation_status", "")) == "h3maped_medium_validated_package_ready" \
+			and String(generated.get("full_generation_status", "")) == "h3maped_medium_public_package_production_ready_strict_medium_land" \
+			and String(generated.get("production_ready_scope", "")) == "strict_medium_72x72_one_level_land_only" \
+			and bool(generated.get("runtime_generation_allowed", false)) \
+			and bool(generated.get("public_runtime_authoritative", false)) \
+			and not payload.is_empty() \
+			and String(payload.get("source_kind", "")) == "generated_h3maped_medium_validated" \
+			and int(payload.get("width", 0)) == 72 \
+			and int(payload.get("height", 0)) == 72 \
+			and int(payload.get("level_count", 0)) == 1 \
 			and String(validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready" \
 			and int(validator.get("failure_count", -1)) == 0 \
 			and int(final_summary.get("tile_byte_array_size", 0)) == 5184 \
@@ -145,8 +150,8 @@ func _validate_runtime_generation_contract(service: Variant) -> Dictionary:
 		"ok": ok,
 		"generation_status": generated.get("generation_status", ""),
 		"full_generation_status": generated.get("full_generation_status", ""),
-		"medium_phase_port_ready": generated.get("medium_phase_port_ready", false),
-		"runtime_generation_allowed": generated.get("runtime_generation_allowed", true),
+		"production_ready_scope": generated.get("production_ready_scope", ""),
+		"runtime_generation_allowed": generated.get("runtime_generation_allowed", false),
 		"has_map_document_payload": generated.has("map_document_payload"),
 		"validator_status": validator.get("status", ""),
 		"final_tile_byte_array_size": final_summary.get("tile_byte_array_size", 0),

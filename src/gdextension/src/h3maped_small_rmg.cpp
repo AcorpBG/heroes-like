@@ -12599,7 +12599,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	report["schema_id"] = "aurelion_native_rmg_h3maped_fresh_start_boundary_v2";
 	report["schema_version"] = 1;
 	report["status"] = bool(report["ok"])
-			? (supports_medium_land_scope(normalized_config) ? String("h3maped_medium_source_template_authority_ready_runtime_blocked") : String("h3maped_small_fresh_start_boundary_ready"))
+			? (supports_medium_land_scope(normalized_config) ? String("h3maped_medium_fresh_start_boundary_ready") : String("h3maped_small_fresh_start_boundary_ready"))
 			: String("unsupported_scope_or_no_template");
 	report["implementation_policy"] = "compiled_h3maped_original_catalog_rng_boundary_no_catalog_auto_no_hash_selection_no_report_treadmill_no_runtime_fallback";
 	report["scope"] = strict_scope_label(normalized_config);
@@ -13069,6 +13069,7 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 		Dictionary validator = report.get("fast_structural_validator", Dictionary());
 		Dictionary package_adoption = report.get("public_package_adoption", Dictionary());
 		Dictionary final_writeout = report.get("final_h3m_writeout", Dictionary());
+		Dictionary map_document = Dictionary(package_adoption.get("map_document_payload", Dictionary())).duplicate(true);
 		const bool validator_passed = bool(validator.get("validator_authority", false))
 				&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready"
 				&& int32_t(validator.get("failure_count", -1)) == 0;
@@ -13076,60 +13077,63 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 				&& bool(package_adoption.get("map_document_payload_materialized", false));
 		const bool final_ready = String(final_writeout.get("status", "")) == "strict_final_0x49b2b6_writeout_draft_runtime_blocked"
 				&& bool(final_writeout.get("materializes_final_serializer_draft", false));
-		const bool phase_port_ready = validator_passed && package_ready && final_ready;
-		Dictionary result;
-		result["ok"] = false;
-		result["status"] = phase_port_ready ? String("h3maped_medium_phase_port_ready_runtime_adoption_blocked") : String("h3maped_medium_phase_port_runtime_blocked");
-		result["generation_status"] = result["status"];
-		result["full_generation_status"] = phase_port_ready ? String("h3maped_medium_runtime_adoption_pending_strict_medium_land") : String("h3maped_medium_waiting_for_executable_phase_port");
-		result["error_code"] = phase_port_ready ? String("h3maped_medium_runtime_adoption_pending") : String("h3maped_medium_phase_port_incomplete");
-		result["message"] = phase_port_ready
-				? String("Medium 72x72 one-level land phase port, package draft, final writeout, and fast structural validator are green; public runtime output remains blocked until package save/load and runtime adoption gates pass.")
-				: String("Medium 72x72 one-level land uses original H3MapEd source-template authority, but public runtime output stays blocked until the Medium executable phase port gates pass.");
-		result["runtime_generation_allowed"] = false;
-		result["public_runtime_authoritative"] = false;
-		result["partial_materialized_payload_public_api"] = false;
-		result["medium_phase_port_ready"] = phase_port_ready;
-		result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
-		result["source_template_authority"] = "h3maped_exe_rng";
-		result["source_template_id"] = selection.get("source_template_id", "");
-		result["source_catalog_index"] = selection.get("source_catalog_index", -1);
-		result["translated_template_authority_used"] = false;
-		result["archived_catalog_auto_used"] = false;
-		result["template_selection_fallback_used"] = false;
-		result["normalized_config"] = normalized_config;
-		result["h3maped_small_port"] = report;
-		result["h3maped_template_selection"] = selection;
-		result["fast_structural_validator"] = validator;
-		result["validator_metrics"] = validator.get("metrics", Dictionary());
-		result["validator_status"] = validator.get("status", "");
-		result["validator_failures"] = validator.get("failures", Array());
-		Dictionary public_package_adoption_summary;
-		public_package_adoption_summary["status"] = package_adoption.get("status", "");
-		public_package_adoption_summary["package_object_count"] = package_adoption.get("package_object_count", 0);
-		public_package_adoption_summary["player_start_count"] = package_adoption.get("player_start_count", 0);
-		public_package_adoption_summary["road_package_segment_count"] = package_adoption.get("road_package_segment_count", 0);
-		public_package_adoption_summary["connection_guard_package_object_count"] = package_adoption.get("connection_guard_package_object_count", 0);
-		public_package_adoption_summary["connection_blocker_package_object_count"] = package_adoption.get("connection_blocker_package_object_count", 0);
-		public_package_adoption_summary["reward_guard_package_object_count"] = package_adoption.get("reward_guard_package_object_count", 0);
-		public_package_adoption_summary["decorative_obstacle_package_object_count"] = package_adoption.get("decorative_obstacle_package_object_count", 0);
-		result["public_package_adoption_summary"] = public_package_adoption_summary;
-		Dictionary final_writeout_summary;
-		final_writeout_summary["status"] = final_writeout.get("status", "");
-		final_writeout_summary["tile_byte_array_count"] = final_writeout.get("tile_byte_array_count", 0);
-		final_writeout_summary["tile_byte_array_size"] = final_writeout.get("tile_byte_array_size", 0);
-		final_writeout_summary["road_overlay_type_nonzero_count"] = final_writeout.get("road_overlay_type_nonzero_count", 0);
-		final_writeout_summary["package_object_count"] = final_writeout.get("package_object_count", 0);
-		result["final_writeout_summary"] = final_writeout_summary;
-		result["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
-		result["replacement_slice_id"] = "native-rmg-medium-h3maped-land-phase-port-10184";
-		result["extension_profile"] = extension_profile;
-		return result;
+		const bool phase_port_ready = validator_passed && package_ready && final_ready && !map_document.is_empty();
+		if (!phase_port_ready) {
+			Dictionary result;
+			result["ok"] = false;
+			result["status"] = String("h3maped_medium_phase_port_runtime_blocked");
+			result["generation_status"] = result["status"];
+			result["full_generation_status"] = String("h3maped_medium_waiting_for_executable_phase_port");
+			result["error_code"] = String("h3maped_medium_phase_port_incomplete");
+			result["message"] = "Medium 72x72 one-level land uses original H3MapEd source-template authority, but public runtime output stays blocked until the Medium executable phase port gates pass.";
+			result["runtime_generation_allowed"] = false;
+			result["public_runtime_authoritative"] = false;
+			result["partial_materialized_payload_public_api"] = false;
+			result["medium_phase_port_ready"] = false;
+			result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
+			result["source_template_authority"] = "h3maped_exe_rng";
+			result["source_template_id"] = selection.get("source_template_id", "");
+			result["source_catalog_index"] = selection.get("source_catalog_index", -1);
+			result["translated_template_authority_used"] = false;
+			result["archived_catalog_auto_used"] = false;
+			result["template_selection_fallback_used"] = false;
+			result["normalized_config"] = normalized_config;
+			result["h3maped_small_port"] = report;
+			result["h3maped_template_selection"] = selection;
+			result["fast_structural_validator"] = validator;
+			result["validator_metrics"] = validator.get("metrics", Dictionary());
+			result["validator_status"] = validator.get("status", "");
+			result["validator_failures"] = validator.get("failures", Array());
+			Dictionary public_package_adoption_summary;
+			public_package_adoption_summary["status"] = package_adoption.get("status", "");
+			public_package_adoption_summary["package_object_count"] = package_adoption.get("package_object_count", 0);
+			public_package_adoption_summary["player_start_count"] = package_adoption.get("player_start_count", 0);
+			public_package_adoption_summary["road_package_segment_count"] = package_adoption.get("road_package_segment_count", 0);
+			public_package_adoption_summary["connection_guard_package_object_count"] = package_adoption.get("connection_guard_package_object_count", 0);
+			public_package_adoption_summary["connection_blocker_package_object_count"] = package_adoption.get("connection_blocker_package_object_count", 0);
+			public_package_adoption_summary["reward_guard_package_object_count"] = package_adoption.get("reward_guard_package_object_count", 0);
+			public_package_adoption_summary["decorative_obstacle_package_object_count"] = package_adoption.get("decorative_obstacle_package_object_count", 0);
+			result["public_package_adoption_summary"] = public_package_adoption_summary;
+			Dictionary final_writeout_summary;
+			final_writeout_summary["status"] = final_writeout.get("status", "");
+			final_writeout_summary["tile_byte_array_count"] = final_writeout.get("tile_byte_array_count", 0);
+			final_writeout_summary["tile_byte_array_size"] = final_writeout.get("tile_byte_array_size", 0);
+			final_writeout_summary["road_overlay_type_nonzero_count"] = final_writeout.get("road_overlay_type_nonzero_count", 0);
+			final_writeout_summary["package_object_count"] = final_writeout.get("package_object_count", 0);
+			result["final_writeout_summary"] = final_writeout_summary;
+			result["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
+			result["replacement_slice_id"] = "native-rmg-medium-h3maped-land-phase-port-10184";
+			result["extension_profile"] = extension_profile;
+			return result;
+		}
 	}
 	Dictionary validator = report.get("fast_structural_validator", Dictionary());
 	Dictionary package_adoption = report.get("public_package_adoption", Dictionary());
 	Dictionary final_writeout = report.get("final_h3m_writeout", Dictionary());
 	Dictionary map_document = Dictionary(package_adoption.get("map_document_payload", Dictionary())).duplicate(true);
+	const bool medium_scope = supports_medium_land_scope(normalized_config);
+	const String scope_token = medium_scope ? String("medium") : String("small");
+	const String scope_id = strict_scope_id(normalized_config);
 
 	const bool validator_passed = bool(validator.get("validator_authority", false))
 			&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready"
@@ -13141,11 +13145,11 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	if (!validator_passed || !package_ready || !final_ready || map_document.is_empty()) {
 		Dictionary result;
 		result["ok"] = false;
-		result["status"] = "h3maped_small_validator_gated_generation_blocked";
-		result["generation_status"] = "h3maped_small_validator_gated_generation_blocked";
-		result["full_generation_status"] = "h3maped_small_public_generation_blocked_by_validator_or_package_draft";
-		result["error_code"] = "h3maped_small_validator_gate_failed";
-		result["message"] = "Supported Small h3maped generation is public only after package adoption, final 0x49b2b6 writeout, and the fast structural validator all pass.";
+		result["status"] = medium_scope ? String("h3maped_medium_validator_gated_generation_blocked") : String("h3maped_small_validator_gated_generation_blocked");
+		result["generation_status"] = result["status"];
+		result["full_generation_status"] = medium_scope ? String("h3maped_medium_public_generation_blocked_by_validator_or_package_draft") : String("h3maped_small_public_generation_blocked_by_validator_or_package_draft");
+		result["error_code"] = medium_scope ? String("h3maped_medium_validator_gate_failed") : String("h3maped_small_validator_gate_failed");
+		result["message"] = "Supported h3maped generation is public only after package adoption, final 0x49b2b6 writeout, and the fast structural validator all pass.";
 		result["runtime_generation_allowed"] = false;
 		result["public_runtime_authoritative"] = false;
 		result["partial_materialized_payload_public_api"] = false;
@@ -13163,22 +13167,22 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 		result["final_writeout_status"] = final_writeout.get("status", "");
 		result["h3maped_small_port"] = report;
 		result["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
-		result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
+		result["replacement_slice_id"] = medium_scope ? String("native-rmg-medium-h3maped-land-runtime-adoption-10184") : String("native-rmg-small-h3maped-port-10184");
 		result["extension_profile"] = extension_profile;
 		return result;
 	}
 
 	const String seed = String(normalized_config.get("seed", ""));
 	const String source_template_id = String(map_document.get("source_template_id", ""));
-	const String public_map_id = String("h3maped_small_seed_") + seed;
-	const String public_map_hash = String("validated:h3maped_small:") + seed + String(":") + source_template_id;
+	const String public_map_id = String("h3maped_") + scope_token + String("_seed_") + seed;
+	const String public_map_hash = String("validated:h3maped_") + scope_token + String(":") + seed + String(":") + source_template_id;
 	map_document["map_id"] = public_map_id;
 	map_document["map_hash"] = public_map_hash;
-	map_document["source_kind"] = "generated_h3maped_small_validated";
+	map_document["source_kind"] = String("generated_h3maped_") + scope_token + String("_validated");
 	map_document["public_runtime_authoritative"] = true;
 	map_document["runtime_generation_allowed"] = true;
 	map_document["production_ready"] = true;
-	map_document["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	map_document["production_ready_scope"] = scope_id;
 	map_document["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	map_document["editor_runtime_adoption_audited"] = true;
 	map_document["source_template_authority"] = "h3maped_exe_rng";
@@ -13187,7 +13191,7 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	map_document["archived_catalog_auto_used"] = false;
 	map_document["template_selection_fallback_used"] = false;
 	Dictionary metadata = Dictionary(map_document.get("metadata", Dictionary())).duplicate(true);
-	metadata["source"] = "h3maped_small_validator_gated_generation_result";
+	metadata["source"] = String("h3maped_") + scope_token + String("_validator_gated_generation_result");
 	metadata["h3maped_reference_sha256"] = Dictionary(report.get("h3maped_binary", Dictionary())).get("reference_sha256", "");
 	metadata["source_template_id"] = source_template_id;
 	metadata["source_catalog_index"] = map_document.get("source_catalog_index", -1);
@@ -13199,7 +13203,7 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	metadata["validator_status"] = validator.get("status", "");
 	metadata["validator_failure_count"] = validator.get("failure_count", 0);
 	metadata["production_ready"] = true;
-	metadata["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	metadata["production_ready_scope"] = scope_id;
 	metadata["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	metadata["editor_runtime_adoption_audited"] = true;
 	map_document["metadata"] = metadata;
@@ -13229,16 +13233,16 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	Dictionary tile_bytes = Dictionary(final_writeout.get("tile_bytes", Dictionary())).duplicate(true);
 	Dictionary result;
 	result["ok"] = true;
-	result["status"] = "h3maped_small_validated_package_ready";
-	result["generation_status"] = "h3maped_small_validated_package_ready";
-	result["full_generation_status"] = "h3maped_small_public_package_production_ready_strict_small_land";
-	result["schema_id"] = "aurelion_h3maped_small_validator_gated_generation_result_v1";
+	result["status"] = medium_scope ? String("h3maped_medium_validated_package_ready") : String("h3maped_small_validated_package_ready");
+	result["generation_status"] = result["status"];
+	result["full_generation_status"] = medium_scope ? String("h3maped_medium_public_package_production_ready_strict_medium_land") : String("h3maped_small_public_package_production_ready_strict_small_land");
+	result["schema_id"] = medium_scope ? String("aurelion_h3maped_medium_validator_gated_generation_result_v1") : String("aurelion_h3maped_small_validator_gated_generation_result_v1");
 	result["schema_version"] = 1;
 	result["runtime_generation_allowed"] = true;
 	result["public_runtime_authoritative"] = true;
 	result["native_runtime_authoritative"] = true;
 	result["production_ready"] = true;
-	result["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	result["production_ready_scope"] = scope_id;
 	result["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	result["editor_runtime_adoption_audited"] = true;
 	result["full_parity_claim"] = false;
@@ -13277,7 +13281,7 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	final_writeout_summary["road_overlay_type_nonzero_count"] = final_writeout.get("road_overlay_type_nonzero_count", 0);
 	final_writeout_summary["package_object_count"] = final_writeout.get("package_object_count", 0);
 	result["final_writeout_summary"] = final_writeout_summary;
-	result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
+	result["replacement_slice_id"] = medium_scope ? String("native-rmg-medium-h3maped-land-runtime-adoption-10184") : String("native-rmg-small-h3maped-port-10184");
 	result["extension_profile"] = extension_profile;
 	return result;
 }

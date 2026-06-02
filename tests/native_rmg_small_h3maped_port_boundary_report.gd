@@ -26,11 +26,11 @@ func _run() -> void:
 
 	var service: Variant = ClassDB.instantiate("MapPackageService")
 	var metadata: Dictionary = service.get_api_metadata()
-	if String(metadata.get("native_rmg_generation_authority", "")) != "h3maped_small_reset_only" \
+	if String(metadata.get("native_rmg_generation_authority", "")) != "h3maped_original_catalog_rng_strict_small_and_medium_land_ready" \
 			or not bool(metadata.get("native_rmg_runtime_generation_allowed", false)) \
-			or String(metadata.get("native_rmg_runtime_generation_policy", "")) != "small_36x36_land_validator_gated_only" \
+			or String(metadata.get("native_rmg_runtime_generation_policy", "")) != "small_36x36_land_validator_gated; medium_72x72_land_validator_gated" \
 			or not bool(metadata.get("native_rmg_production_ready", false)) \
-			or String(metadata.get("native_rmg_production_ready_scope", "")) != "strict_small_36x36_one_level_land_only":
+			or not String(metadata.get("native_rmg_production_ready_scope", "")).contains("strict_small_36x36_one_level_land_only"):
 		_fail("Native RMG usability gate is not active: %s" % JSON.stringify(metadata))
 		return
 
@@ -77,7 +77,7 @@ func _run() -> void:
 		return
 
 	var out_of_scope_config := supported_config.duplicate(true)
-	out_of_scope_config["size"] = {"width": 72, "height": 72, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_medium"}
+	out_of_scope_config["size"] = {"width": 108, "height": 108, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_large"}
 	var out_of_scope: Dictionary = service.generate_random_map(out_of_scope_config)
 	if bool(out_of_scope.get("ok", true)) \
 			or String(out_of_scope.get("generation_status", "")) != "archived_legacy_native_rmg_disabled":
@@ -95,7 +95,7 @@ func _run() -> void:
 
 func _assert_inspection_usability(report: Dictionary) -> bool:
 	if not bool(report.get("ok", false)) \
-			or String(report.get("schema_id", "")) != "aurelion_native_rmg_small_h3maped_fresh_start_boundary_v1" \
+			or String(report.get("schema_id", "")) != "aurelion_native_rmg_h3maped_fresh_start_boundary_v2" \
 			or String(report.get("scope", "")) != "small_36x36_surface_land_only":
 		_fail("Small h3maped inspection boundary rejected the supported scope: %s" % JSON.stringify(report))
 		return false
