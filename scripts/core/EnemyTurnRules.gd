@@ -1030,7 +1030,17 @@ static func _run_empire_cycle(
 	_profile_add_ms(profile, "pressure_summary_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
-	var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
+	var raid_result = EnemyAdventureRulesScript.advance_raids(
+		session,
+		config,
+		faction_id,
+		state,
+		{
+			"defer_post_move_memory_refresh": true,
+			"profile_enabled": profile_enabled,
+			"profile_label": "advance_raids",
+		}
+	)
 	state = raid_result.get("state", state)
 	state = _latest_enemy_state(session, faction_id, state)
 	_append_event_records(events, raid_result.get("events", []))
@@ -1038,6 +1048,8 @@ static func _run_empire_cycle(
 	var raid_message = String(raid_result.get("message", ""))
 	if raid_message != "":
 		messages.append(raid_message)
+	if profile_enabled and raid_result.get("profile", {}) is Dictionary:
+		profile["advance_raids_profile"] = raid_result.get("profile", {})
 	_profile_add_ms(profile, "advance_raids_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
@@ -1105,7 +1117,12 @@ static func _run_empire_cycle(
 			config,
 			faction_id,
 			state,
-			{"only_placement_ids": launched_placement_ids}
+			{
+				"only_placement_ids": launched_placement_ids,
+				"defer_post_move_memory_refresh": true,
+				"profile_enabled": profile_enabled,
+				"profile_label": "launch_advance_raids",
+			}
 		)
 		state = launch_advance_result.get("state", state)
 		state = _latest_enemy_state(session, faction_id, state)
@@ -1113,6 +1130,8 @@ static func _run_empire_cycle(
 		var launch_advance_message = String(launch_advance_result.get("message", ""))
 		if launch_advance_message != "":
 			messages.append(launch_advance_message)
+		if profile_enabled and launch_advance_result.get("profile", {}) is Dictionary:
+			profile["launch_advance_raids_profile"] = launch_advance_result.get("profile", {})
 		_profile_add_ms(profile, "launch_advance_raids_ms", phase_started)
 
 		phase_started = _profile_timer(profile_enabled)

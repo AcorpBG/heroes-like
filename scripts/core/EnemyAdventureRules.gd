@@ -1810,11 +1810,22 @@ static func advance_raids(
 	var encounters = session.overworld.get("encounters", [])
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	var only_placement_ids := _normalize_string_array(options.get("only_placement_ids", []))
+	var profile_enabled := bool(options.get("profile_enabled", false))
+	var defer_post_move_memory_refresh := bool(options.get("defer_post_move_memory_refresh", false))
+	var profile := {
+		"schema_id": "strategic_ai_advance_raids_profile_v1",
+		"label": String(options.get("profile_label", "advance_raids")),
+		"faction_id": faction_id,
+		"only_placement_count": only_placement_ids.size(),
+		"active_raid_count": 0,
+		"phases_ms": {},
+	} if profile_enabled else {}
 	var total_pillage = {}
 	var marching_counts = {}
 	var pressure_counts = {}
 	var event_messages = []
 	var event_records = []
+	var post_move_memory_refresh_needed := false
 
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
@@ -1823,6 +1834,9 @@ static func advance_raids(
 		if not only_placement_ids.is_empty() and String(encounter.get("placement_id", "")) not in only_placement_ids:
 			continue
 
+		if profile_enabled:
+			profile["active_raid_count"] = int(profile.get("active_raid_count", 0)) + 1
+		var phase_started := _advance_profile_timer(profile_enabled)
 		encounter = ensure_raid_army(encounter, session)
 		var previous_target := _current_target_snapshot(encounter)
 		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id)
@@ -1843,6 +1857,8 @@ static func advance_raids(
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
 			event_records.append(assignment_event)
+		_advance_profile_add_ms(profile, "target_assignment_ms", phase_started)
+		phase_started = _advance_profile_timer(profile_enabled)
 		var grouping_result := group_nearby_raids_for_town_assault(
 			session,
 			config,
@@ -1859,7 +1875,9 @@ static func advance_raids(
 				if event_value is Dictionary and not event_value.is_empty():
 					event_records.append(event_value)
 		encounter["days_active"] = max(0, int(encounter.get("days_active", 0))) + 1
+		_advance_profile_add_ms(profile, "pre_move_grouping_ms", phase_started)
 
+		phase_started = _advance_profile_timer(profile_enabled)
 		var pre_move_pickup := _resolve_opportunistic_route_objective(session, config, encounter, state, faction_id)
 		if bool(pre_move_pickup.get("resolved", false)):
 			encounter = pre_move_pickup.get("encounter", encounter)
@@ -1872,7 +1890,9 @@ static func advance_raids(
 					event_records.append(pre_move_event_value)
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
+		_advance_profile_add_ms(profile, "pre_move_route_pickup_ms", phase_started)
 
+		phase_started = _advance_profile_timer(profile_enabled)
 		var pre_move_resupply := _maybe_resupply_raid_from_nearby_town(session, config, encounter, faction_id)
 		if bool(pre_move_resupply.get("resupplied", false)):
 			encounter = pre_move_resupply.get("encounter", encounter)
@@ -1884,7 +1904,9 @@ static func advance_raids(
 					event_records.append(pre_move_resupply_event_value)
 			encounters[index] = encounter
 			session.overworld["encounters"] = encounters
+		_advance_profile_add_ms(profile, "pre_move_resupply_ms", phase_started)
 
+		phase_started = _advance_profile_timer(profile_enabled)
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
@@ -1892,9 +1914,11 @@ static func advance_raids(
 			goal_distance = 0
 		var movement_start: Vector2i = current
 		var goal_distance_before_movement: int = goal_distance
+		_advance_profile_add_ms(profile, "initial_path_distance_ms", phase_started)
 		var movement_steps := RAID_BASE_MOVEMENT_STEPS
 		movement_steps = max(movement_steps, _tactical_pressure_movement_steps(encounter, goal_distance))
 		if goal_distance > RAID_BASE_MOVEMENT_STEPS and goal_distance < 9999:
+			phase_started = _advance_profile_timer(profile_enabled)
 			var spell_result := _maybe_cast_raid_adventure_movement_spell(
 				session,
 				config,
@@ -1907,12 +1931,17 @@ static func advance_raids(
 			for spell_event_value in spell_result.get("events", []):
 				if spell_event_value is Dictionary and not spell_event_value.is_empty():
 					event_records.append(spell_event_value)
+			_advance_profile_add_ms(profile, "movement_spell_ms", phase_started)
 		for step_index in range(max(0, movement_steps)):
+			phase_started = _advance_profile_timer(profile_enabled)
 			goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 			goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+			_advance_profile_add_ms(profile, "step_path_distance_ms", phase_started)
 			if goal_distance <= 0 or goal_distance >= 9999:
 				break
+			phase_started = _advance_profile_timer(profile_enabled)
 			var next_step = _next_step_toward(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+			_advance_profile_add_ms(profile, "step_next_tile_ms", phase_started)
 			if next_step == current:
 				break
 			encounter["x"] = next_step.x
@@ -1927,6 +1956,7 @@ static func advance_raids(
 				session.overworld["encounters"] = encounters
 				break
 			var post_step_previous_target := _current_target_snapshot(encounter)
+			phase_started = _advance_profile_timer(profile_enabled)
 			encounter = _redirect_raid_to_nearby_exposed_hero(session, config, encounter, faction_id)
 			encounter = _redirect_raid_away_from_nearby_player_threat(session, config, encounter, faction_id)
 			var post_step_assignment_event := ai_target_assignment_event(session, config, encounter, post_step_previous_target)
@@ -1934,6 +1964,8 @@ static func advance_raids(
 				event_records.append(post_step_assignment_event)
 				encounters[index] = encounter
 				session.overworld["encounters"] = encounters
+			_advance_profile_add_ms(profile, "step_redirect_ms", phase_started)
+			phase_started = _advance_profile_timer(profile_enabled)
 			var route_pickup := _resolve_opportunistic_route_objective(session, config, encounter, state, faction_id)
 			if bool(route_pickup.get("resolved", false)):
 				encounter = route_pickup.get("encounter", encounter)
@@ -1946,7 +1978,9 @@ static func advance_raids(
 						event_records.append(route_event_value)
 				encounters[index] = encounter
 				session.overworld["encounters"] = encounters
+			_advance_profile_add_ms(profile, "step_route_pickup_ms", phase_started)
 
+			phase_started = _advance_profile_timer(profile_enabled)
 			var route_resupply := _maybe_resupply_raid_from_nearby_town(session, config, encounter, faction_id)
 			if bool(route_resupply.get("resupplied", false)):
 				encounter = route_resupply.get("encounter", encounter)
@@ -1958,7 +1992,9 @@ static func advance_raids(
 						event_records.append(route_resupply_event_value)
 				encounters[index] = encounter
 				session.overworld["encounters"] = encounters
+			_advance_profile_add_ms(profile, "step_resupply_ms", phase_started)
 
+		phase_started = _advance_profile_timer(profile_enabled)
 		goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
 		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
 		if raid_reached_town_battle_contact(session, encounter, faction_id):
@@ -1984,10 +2020,17 @@ static func advance_raids(
 			event_records.append(movement_event)
 		encounters[index] = encounter
 		session.overworld["encounters"] = encounters
+		_advance_profile_add_ms(profile, "post_move_distance_event_ms", phase_started)
+		phase_started = _advance_profile_timer(profile_enabled)
 		if String(encounter.get("target_kind", "")) != "hero":
-			var post_move_memory_result := refresh_enemy_known_world_memory(session, config, state)
-			state = post_move_memory_result.get("state", state)
+			if defer_post_move_memory_refresh:
+				post_move_memory_refresh_needed = true
+			else:
+				var post_move_memory_result := refresh_enemy_known_world_memory(session, config, state)
+				state = post_move_memory_result.get("state", state)
+		_advance_profile_add_ms(profile, "post_move_memory_ms", phase_started)
 
+		phase_started = _advance_profile_timer(profile_enabled)
 		var post_move_grouping_result := group_nearby_raids_for_town_assault(
 			session,
 			config,
@@ -2003,8 +2046,10 @@ static func advance_raids(
 			for event_value in post_move_grouping_result.get("events", []):
 				if event_value is Dictionary and not event_value.is_empty():
 					event_records.append(event_value)
+		_advance_profile_add_ms(profile, "post_move_grouping_ms", phase_started)
 
 		if bool(encounter.get("arrived", false)):
+			phase_started = _advance_profile_timer(profile_enabled)
 			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
 			encounter = arrival_result.get("encounter", encounter)
 			state = arrival_result.get("state", state)
@@ -2030,6 +2075,8 @@ static func advance_raids(
 			for repair_event_value in repair_result.get("ai_events", []):
 				if repair_event_value is Dictionary and not repair_event_value.is_empty():
 					event_records.append(repair_event_value)
+			_advance_profile_add_ms(profile, "arrival_resolution_ms", phase_started)
+		phase_started = _advance_profile_timer(profile_enabled)
 		var final_commander_state = encounter.get("enemy_commander_state", {})
 		if final_commander_state is Dictionary and not final_commander_state.is_empty():
 			sync_commander_state_to_roster(
@@ -2042,6 +2089,7 @@ static func advance_raids(
 				String(final_commander_state.get("last_outcome", ""))
 			)
 		encounters[index] = encounter
+		_advance_profile_add_ms(profile, "commander_sync_ms", phase_started)
 
 		var target_label = String(encounter.get("target_label", "the frontier")).strip_edges()
 		if target_label == "":
@@ -2055,6 +2103,12 @@ static func advance_raids(
 				)
 		else:
 			marching_counts[target_label] = int(marching_counts.get(target_label, 0)) + 1
+
+	if post_move_memory_refresh_needed:
+		var phase_started := _advance_profile_timer(profile_enabled)
+		var deferred_memory_result := refresh_enemy_known_world_memory(session, config, state)
+		state = deferred_memory_result.get("state", state)
+		_advance_profile_add_ms(profile, "deferred_post_move_memory_ms", phase_started)
 
 	session.overworld["encounters"] = encounters
 
@@ -2078,11 +2132,26 @@ static func advance_raids(
 	if not actual_losses.is_empty():
 		messages.append("%s pillages %s." % [String(config.get("label", faction_id)), _describe_resource_set(actual_losses)])
 
-	return {
+	var result := {
 		"message": " ".join(messages),
 		"state": state,
 		"events": event_records,
 	}
+	if profile_enabled:
+		profile["event_count"] = event_records.size()
+		result["profile"] = profile
+	return result
+
+static func _advance_profile_timer(enabled: bool) -> int:
+	return Time.get_ticks_usec() if enabled else 0
+
+static func _advance_profile_add_ms(profile: Dictionary, key: String, started_usec: int) -> void:
+	if profile.is_empty() or key == "" or started_usec <= 0:
+		return
+	var phases: Dictionary = profile.get("phases_ms", {}) if profile.get("phases_ms", {}) is Dictionary else {}
+	var elapsed_ms := int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
+	phases[key] = int(phases.get(key, 0)) + elapsed_ms
+	profile["phases_ms"] = phases
 
 static func _repair_live_raid_target_after_resolution(
 	session: SessionStateStoreScript.SessionData,
@@ -3213,39 +3282,12 @@ static func _current_enemy_scouted_target_records(
 		if not (source_value is Dictionary):
 			continue
 		var source: Dictionary = source_value
-		var radius: int = max(0, int(source.get("radius", 0)))
-		if radius <= 0:
-			continue
-		var origin := Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
-		for candidate_value in _target_candidates(session, config, origin, true):
-			if not (candidate_value is Dictionary):
+		for record_value in _current_enemy_visible_target_records_for_source(session, config, faction_id, source):
+			if not (record_value is Dictionary):
 				continue
-			var candidate: Dictionary = candidate_value
-			var target_kind := String(candidate.get("target_kind", ""))
-			if target_kind not in ["resource", "town", "artifact", "encounter"]:
-				continue
-			var target_id := String(candidate.get("target_placement_id", ""))
-			if target_id == "":
-				continue
-			var target_tile := Vector2i(int(candidate.get("target_x", origin.x)), int(candidate.get("target_y", origin.y)))
-			var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
-			if distance > radius:
-				continue
-			var record := {
-				"target_kind": target_kind,
-				"target_id": target_id,
-				"target_label": String(candidate.get("target_label", target_id)),
-				"x": target_tile.x,
-				"y": target_tile.y,
-				"scouted_day": int(session.day),
-				"expires_day": int(session.day) + RAID_ADVENTURE_SCOUTING_MEMORY_DAYS,
-				"source_kind": String(source.get("kind", "")),
-				"source_id": String(source.get("id", "")),
-				"source_raid_id": String(source.get("id", "")) if String(source.get("kind", "")) == "commander" else "",
-				"state_policy": "ai_known_world_memory",
-				"_source_distance": distance,
-				"_source_priority": int(candidate.get("priority", 0)),
-			}
+			var record: Dictionary = record_value
+			var target_kind := String(record.get("target_kind", ""))
+			var target_id := String(record.get("target_id", ""))
 			var key := _enemy_scouted_target_key(target_kind, target_id)
 			if (
 				not best_by_key.has(key)
@@ -3262,6 +3304,129 @@ static func _current_enemy_scouted_target_records(
 		record.erase("_source_priority")
 		records.append(record)
 	return _normalize_enemy_scouted_target_records(records, int(session.day))
+
+static func _current_enemy_visible_target_records_for_source(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	source: Dictionary
+) -> Array:
+	var records := []
+	var radius: int = max(0, int(source.get("radius", 0)))
+	if session == null or faction_id == "" or radius <= 0:
+		return records
+	var origin := Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var owner := String(town.get("owner", "neutral"))
+		if owner != "player" and owner != "neutral":
+			continue
+		_append_visible_scout_record(
+			records,
+			source,
+			"town",
+			String(town.get("placement_id", "")),
+			_town_name(town),
+			Vector2i(int(town.get("x", 0)), int(town.get("y", 0))),
+			180 if owner == "player" else 145,
+			origin,
+			radius,
+			int(session.day)
+		)
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not _resource_node_contestable_by_faction(node, site, faction_id):
+			continue
+		_append_visible_scout_record(
+			records,
+			source,
+			"resource",
+			String(node.get("placement_id", "")),
+			String(site.get("name", "Resource Site")),
+			Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			120 + _resource_route_pressure_value(site),
+			origin,
+			radius,
+			int(session.day)
+		)
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if bool(node.get("collected", false)):
+			continue
+		_append_visible_scout_record(
+			records,
+			source,
+			"artifact",
+			String(node.get("placement_id", "")),
+			ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
+			Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			_artifact_target_priority(session, node),
+			origin,
+			radius,
+			int(session.day)
+		)
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
+			continue
+		if OverworldRulesScript.is_encounter_resolved(session, encounter):
+			continue
+		_append_visible_scout_record(
+			records,
+			source,
+			"encounter",
+			String(encounter.get("placement_id", "")),
+			_encounter_target_label(session, encounter, "Frontier Camp"),
+			Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
+			_encounter_target_priority(session, encounter),
+			origin,
+			radius,
+			int(session.day)
+		)
+	return records
+
+static func _append_visible_scout_record(
+	records: Array,
+	source: Dictionary,
+	target_kind: String,
+	target_id: String,
+	target_label: String,
+	target_tile: Vector2i,
+	priority: int,
+	origin: Vector2i,
+	radius: int,
+	current_day: int
+) -> void:
+	if target_kind == "" or target_id == "":
+		return
+	var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
+	if distance > radius:
+		return
+	records.append({
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label,
+		"x": target_tile.x,
+		"y": target_tile.y,
+		"scouted_day": current_day,
+		"expires_day": current_day + RAID_ADVENTURE_SCOUTING_MEMORY_DAYS,
+		"source_kind": String(source.get("kind", "")),
+		"source_id": String(source.get("id", "")),
+		"source_raid_id": String(source.get("id", "")) if String(source.get("kind", "")) == "commander" else "",
+		"state_policy": "ai_known_world_memory",
+		"_source_distance": distance,
+		"_source_priority": priority,
+	})
 
 static func _known_player_hero_snapshot_for_ai(
 	session: SessionStateStoreScript.SessionData,
