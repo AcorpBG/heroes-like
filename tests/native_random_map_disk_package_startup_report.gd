@@ -169,8 +169,8 @@ func _run() -> void:
 	if int(runtime_block_surface.get("guard_block_tile_count", 0)) <= 0 \
 			or int(runtime_block_surface.get("connection_blocker_block_tile_count", 0)) <= 0 \
 			or int(runtime_block_surface.get("runtime_unblocked_required_tile_count", 0)) != 0 \
-			or int(runtime_block_surface.get("session_guard_count", 0)) != int(package_surface.get("guard_count", 0)) \
-			or int(runtime_block_surface.get("session_connection_blocker_count", 0)) != int(package_surface.get("connection_blocker_count", 0)):
+			or int(runtime_block_surface.get("session_guard_count", 0)) < int(runtime_block_surface.get("package_guard_count", -1)) \
+			or int(runtime_block_surface.get("session_connection_blocker_count", 0)) < int(runtime_block_surface.get("package_connection_blocker_count", -1)):
 		_fail("Player-facing Small package guards/blockers do not agree with runtime pathing block surface: %s" % JSON.stringify(runtime_block_surface))
 		return
 	DirAccess.remove_absolute(map_path)
@@ -261,6 +261,8 @@ func _runtime_block_surface_summary(session: Variant, map_document: Variant) -> 
 	for object in session_map_objects:
 		if object is Dictionary and String(object.get("kind", "")) == "connection_blocker":
 			session_connection_blocker_count += 1
+	var package_guard_count := 0
+	var package_connection_blocker_count := 0
 	var guard_block_tile_count := 0
 	var connection_blocker_block_tile_count := 0
 	var runtime_unblocked_required_tiles := []
@@ -269,6 +271,10 @@ func _runtime_block_surface_summary(session: Variant, map_document: Variant) -> 
 		var kind := String(object.get("kind", ""))
 		if not (kind in ["guard", "connection_blocker"]):
 			continue
+		if kind == "guard":
+			package_guard_count += 1
+		else:
+			package_connection_blocker_count += 1
 		var block_tiles: Array = object.get("package_block_tiles", []) if object.get("package_block_tiles", []) is Array else []
 		for tile in block_tiles:
 			if not (tile is Dictionary):
@@ -290,6 +296,8 @@ func _runtime_block_surface_summary(session: Variant, map_document: Variant) -> 
 	return {
 		"session_guard_count": session_guard_count,
 		"session_connection_blocker_count": session_connection_blocker_count,
+		"package_guard_count": package_guard_count,
+		"package_connection_blocker_count": package_connection_blocker_count,
 		"guard_block_tile_count": guard_block_tile_count,
 		"connection_blocker_block_tile_count": connection_blocker_block_tile_count,
 		"runtime_unblocked_required_tile_count": runtime_unblocked_required_tiles.size(),

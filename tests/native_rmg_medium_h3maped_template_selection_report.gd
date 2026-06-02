@@ -128,11 +128,12 @@ func _validate_explicit_translated_request(service: Variant) -> Dictionary:
 			and bool(normalized.get("explicit_template_request_overridden_by_h3maped_reset", false)) \
 			and not bool(normalized.get("translated_template_authority_used", true)) \
 			and not bool(normalized.get("archived_catalog_auto_used", true)) \
-			and not bool(generated.get("ok", true)) \
-			and not bool(generated.get("runtime_generation_allowed", true)) \
-			and not generated.has("map_document_payload") \
-			and String(generated.get("generation_status", "")) == "h3maped_medium_phase_port_ready_runtime_adoption_blocked" \
-			and String(generated.get("full_generation_status", "")) == "h3maped_medium_runtime_adoption_pending_strict_medium_land" \
+			and bool(generated.get("ok", false)) \
+			and bool(generated.get("runtime_generation_allowed", false)) \
+			and generated.has("map_document_payload") \
+			and String(generated.get("generation_status", "")) == "h3maped_medium_validated_package_ready" \
+			and String(generated.get("full_generation_status", "")) == "h3maped_medium_public_package_production_ready_strict_medium_land" \
+			and String(generated.get("production_ready_scope", "")) == "strict_medium_72x72_one_level_land_only" \
 			and String(generated.get("source_template_id", "")) == "h3maped_template_015" \
 			and not bool(generated.get("translated_template_authority_used", true)) \
 			and not bool(generated.get("archived_catalog_auto_used", true)) \

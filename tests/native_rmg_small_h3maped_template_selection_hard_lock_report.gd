@@ -57,7 +57,7 @@ func _run() -> void:
 		return
 
 	var unsupported_cases := [
-		{"case_id": "medium_land", "config": _config_with_size(supported_config, 72, 72, 1, "land", "homm3_medium")},
+		{"case_id": "large_land", "config": _config_with_size(supported_config, 108, 108, 1, "land", "homm3_large")},
 		{"case_id": "small_islands", "config": _config_with_size(supported_config, 36, 36, 1, "islands", "homm3_small")},
 		{"case_id": "small_two_level", "config": _config_with_size(supported_config, 36, 36, 2, "land", "homm3_small")},
 		{"case_id": "small_non_numeric_seed", "config": _small_land_config("jade", 3)},

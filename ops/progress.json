@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
-  "currentSliceTitle": "Native RMG Medium H3MapEd Land Runtime Adoption",
+  "currentSliceId": "native-rmg-medium-h3maped-land-public-ui-10184",
+  "currentSliceTitle": "Native RMG Medium H3MapEd Land Public UI",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next strict Medium H3MapEd RMG slice. Enable validator-gated public Medium 72x72x1 land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch after the executable phase-port validator is green.",
+  "currentSliceNotes": "Expose strict Medium 72x72x1 one-level land generation through public random-map options after runtime package adoption, while keeping Medium water/underground and Large/XL hidden or blocked.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T16:45:00Z",
+  "updatedAt": "2026-06-02T17:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39583,7 +39583,11 @@
         "reference_root": ".artifacts/rmg_h3maped_controlled_reference_medium",
         "corpus_audit": ".artifacts/rmg_h3maped_medium_reference_corpus_audit/medium_reference_corpus_audit.json",
         "ready_case_count": 3,
-        "player_counts": [2, 3, 4],
+        "player_counts": [
+          2,
+          3,
+          4
+        ],
         "case_ids": [
           "medium_2p_seed_28_controlled",
           "medium_3p_seed_11_controlled",
@@ -39781,7 +39785,7 @@
     {
       "id": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
       "title": "Native RMG Medium H3MapEd Land Runtime Adoption",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "native-rmg-medium-h3maped-land-goals-10184",
@@ -39816,7 +39820,9 @@
         "balance content changes"
       ],
       "createdAt": "2026-06-02T14:38:00Z",
-      "updatedAt": "2026-06-02T14:38:00Z"
+      "updatedAt": "2026-06-02T17:35:00Z",
+      "completedAt": "2026-06-02T17:35:00Z",
+      "completionSummary": "Medium 72x72x1 land now returns validator-gated public package generation status, saves/loads AMAP/ASCENARIO packages, starts through disk package adoption, and has runtime pathing block every package guard and connection-blocker mask tile."
     },
     {
       "id": "native-rmg-medium-h3maped-land-public-ui-10184",
@@ -39850,7 +39856,7 @@
         "changing generated-map art/UI layout beyond necessary option availability"
       ],
       "createdAt": "2026-06-02T14:38:00Z",
-      "updatedAt": "2026-06-02T14:38:00Z"
+      "updatedAt": "2026-06-02T17:35:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -48065,6 +48071,83 @@
           "summary": "No whitespace errors."
         }
       ]
+    },
+    {
+      "id": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+      "completedAt": "2026-06-02T17:35:00Z",
+      "summary": "Strict Medium H3MapEd land runtime adoption is implemented: public native generation now exposes validator-gated Medium package readiness, package save/load and disk startup work, and runtime pathing uses exact package guard/blocker masks.",
+      "validation": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "result": "passed",
+          "summary": "Linux debug native library rebuilt with Medium runtime-adoption changes."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+          "result": "passed",
+          "summary": "Linux release native library rebuilt."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
+          "result": "passed",
+          "summary": "Windows debug native library rebuilt through MinGW cross-build."
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+          "result": "passed",
+          "summary": "Windows release native library rebuilt through MinGW cross-build."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
+          "result": "passed",
+          "summary": "Medium source-template authority remains H3MapEd executable/RNG based and translated-template requests do not bypass it."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
+          "result": "passed",
+          "summary": "Controlled 2p/3p/4p Medium land corpus validator remains structurally green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn",
+          "result": "passed",
+          "summary": "Medium 4p seed 10 generated h3maped_medium_validated_package_ready, saved/loaded packages, launched from disk, and had zero runtime-unblocked package guard/blocker tiles."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
+          "result": "passed",
+          "summary": "Small strict template hard-lock regression remains green with unsupported Large land still blocked."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_port_boundary_report.tscn",
+          "result": "passed",
+          "summary": "Small strict boundary metadata remains green after Small+Medium runtime metadata update."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn",
+          "result": "passed",
+          "summary": "Package surface topology regression remains green."
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn",
+          "result": "passed",
+          "summary": "Small player-facing disk package startup remains green; package guard/blocker masks are all blocked at runtime."
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "passed",
+          "summary": "Repository validation passed after tracker update."
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "result": "passed",
+          "summary": "Progress tracker JSON parses."
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed",
+          "summary": "No whitespace errors."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -51006,34 +51089,35 @@
     }
   ],
   "lastValidation": {
-    "sliceId": "native-rmg-medium-h3maped-land-reference-corpus-10184",
+    "sliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
     "status": "pass",
-    "updatedAt": "2026-06-02T15:06:55Z",
+    "updatedAt": "2026-06-02T17:35:00Z",
     "commands": [
-      "python3 tools/rmg_h3maped_controlled_reference.py --case medium_2p_seed_28_controlled --seed 28 --players 2 --human-players 1 --size medium --level-count 1 --water land --monster-strength normal --out-root .artifacts/rmg_h3maped_controlled_reference_medium --timeout-seconds 240 --generation-wait-seconds 24 --pretty (passed ready)",
-      "python3 tools/rmg_h3maped_controlled_reference.py --case medium_3p_seed_11_controlled --seed 11 --players 3 --human-players 1 --size medium --level-count 1 --water land --monster-strength normal --out-root .artifacts/rmg_h3maped_controlled_reference_medium --timeout-seconds 240 --generation-wait-seconds 24 --pretty (passed ready)",
-      "python3 tools/rmg_h3maped_controlled_reference.py --case medium_4p_seed_10_controlled --seed 10 --players 4 --human-players 1 --size medium --level-count 1 --water land --monster-strength normal --out-root .artifacts/rmg_h3maped_controlled_reference_medium --timeout-seconds 240 --generation-wait-seconds 24 --pretty (passed ready)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <medium_2p_manifest> (wrote inspection_failed snapshot; native Medium blocker recorded)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <medium_3p_manifest> (wrote inspection_failed snapshot; native Medium blocker recorded)",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <medium_4p_manifest> (wrote inspection_failed snapshot and proxy AMAP)",
-      "python3 tools/rmg_phase_drift_audit.py --phase-snapshot .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/native_phase_snapshot/phase_snapshot.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --out-dir .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/phase_drift --pretty (ran; failed at template_selection_drift as expected)",
-      "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty (passed)",
-      "python3 -m py_compile tools/rmg_h3maped_controlled_reference.py tools/rmg_h3maped_medium_reference_corpus_audit.py tools/rmg_phase_drift_audit.py (passed)",
+      "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+      "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+      "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
+      "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_port_boundary_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn (passed)",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn (passed)",
       "python3 tests/validate_repo.py (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed; currentSlice native-rmg-medium-h3maped-land-template-authority-10184 [pending])",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "summary": "Strict Medium H3MapEd reference corpus is ready for 2p/3p/4p 72x72x1 land cases. Tooling now derives canonical Medium dimensions, records required body/block/visit/route metrics, recovers Wine Save As outputs from stale directories, and audits the corpus. Native Medium strict generation remains incomplete and is blocked at source-template authority."
+    "summary": "Strict Medium H3MapEd runtime package adoption is green; public UI exposure remains the active pending Medium slice."
   },
   "active_slice": {
-    "id": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
-    "title": "Native RMG Medium H3MapEd Land Runtime Adoption",
+    "id": "native-rmg-medium-h3maped-land-public-ui-10184",
+    "title": "Native RMG Medium H3MapEd Land Public UI",
     "status": "pending",
-    "updatedAt": "2026-06-02T16:45:00Z",
-    "summary": "Next strict Medium H3MapEd RMG slice. Enable validator-gated public Medium 72x72x1 land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch; water, underground, Large, XL, AI tuning, and balance are out of scope."
+    "updatedAt": "2026-06-02T17:35:00Z",
+    "summary": "Expose strict Medium 72x72x1 one-level land generation through public random-map options after runtime package adoption, while keeping Medium water/underground and Large/XL hidden or blocked."
   },
-  "currentSliceUpdatedAt": "2026-06-02T16:45:00Z",
+  "currentSliceUpdatedAt": "2026-06-02T17:35:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -54242,27 +54326,74 @@
         "remaining_validation": "Full strategic AI production readiness still needs broad generated-map long-run matrices, Medium/generated-map generalization, deeper army/economy timing, retreat/personality tuning, and live-client pacing review.",
         "policy": "Live strategic AI behavior slice; no broad report-only gate, campaign production, or production-ready claim."
       }
+    },
+    {
+      "status": "pass",
+      "updatedAt": "2026-06-02T17:35:00Z",
+      "sliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+      "commands": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_port_boundary_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "implemented": [
+          "Medium land generation now returns h3maped_medium_validated_package_ready, h3maped_medium_public_package_production_ready_strict_medium_land, strict_medium_72x72_one_level_land_only, runtime_generation_allowed true, and public_runtime_authoritative true after the phase-port validator is green.",
+          "MapPackageService adopts Medium validated payloads into Medium package/session records with h3maped_medium_package_session_production_ready_strict_medium_land and generated_h3maped_medium_validated source metadata.",
+          "Package save/load preserves 72x72x1 terrain, final tile bytes, roads, route graph, towns, player starts, guards, blockers, rewards, and H3MapEd source-template authority.",
+          "Generated Medium 4-player land setup starts through generated AMAP/ASCENARIO disk package startup without authored scenario writeback.",
+          "Runtime pathing blocks every package guard and connection-blocker mask tile; supplemental session guards may exist but do not replace package mask validation.",
+          "Unsupported Medium water/islands/underground and larger sizes remain outside this slice until public UI exposure and later scope work."
+        ],
+        "focused_case": {
+          "case_id": "medium_4p_seed_10_runtime_acceptance",
+          "size_class_id": "homm3_medium",
+          "dimensions": "72x72x1",
+          "tile_count": 5184,
+          "generation_status": "h3maped_medium_validated_package_ready",
+          "full_generation_status": "h3maped_medium_public_package_production_ready_strict_medium_land",
+          "runtime_unblocked_required_tile_count": 0,
+          "player_start_count": 4,
+          "player_start_town_count": 4
+        },
+        "remaining_validation": "Full Medium land track still needs Goal 5 public UI exposure before the overall Medium RMG goal can be considered complete.",
+        "policy": "Runtime adoption implementation slice only; no campaign, AI, economy, unit, or spell balance changes."
+      }
     }
   ],
-  "currentSlice": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+  "currentSlice": "native-rmg-medium-h3maped-land-public-ui-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-02T16:45:00Z",
-    "currentSliceId": "native-rmg-medium-h3maped-land-phase-port-10184",
-    "summary": "Strict Medium H3MapEd executable phase port completed for controlled 2p/3p/4p 72x72x1 land cases; next active slice is validator-gated public runtime adoption.",
+    "updatedAt": "2026-06-02T17:35:00Z",
+    "currentSliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+    "summary": "Strict Medium H3MapEd runtime package adoption completed; next active slice is public UI exposure.",
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
-      "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
       "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_runtime_acceptance_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_port_boundary_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_package_surface_topology_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/native_random_map_disk_package_startup_report.tscn",
       "python3 tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "latestSummary": "Medium executable-derived phase output now materializes 5184-cell final tile bytes, requested player starts and owned towns, neutral towns, mines, rewards, blockers, guards, roads, decorative blockers, full package masks, and zero structural validator failures for the controlled 2p/3p/4p references. Public runtime generation stays blocked with h3maped_medium_runtime_adoption_pending_strict_medium_land until the runtime-adoption slice."
+    "latestSummary": "Medium land now produces validator-gated public packages, saves and loads map/scenario documents, starts generated skirmishes through disk package adoption, and has runtime pathing enforce exact package guard/blocker masks. Public UI exposure remains pending."
   }
 }

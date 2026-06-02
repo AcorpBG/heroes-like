@@ -9976,7 +9976,7 @@ bool native_rmg_full_parity_supported(const Dictionary &normalized) {
 String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 	if (h3maped_small_rmg::supports_scope(normalized)) {
 		return h3maped_small_rmg::supports_medium_land_scope(normalized)
-				? String("h3maped_medium_phase_port_runtime_blocked")
+				? String("h3maped_medium_validated_package_ready")
 				: String("h3maped_small_validated_package_ready");
 	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
@@ -9994,7 +9994,7 @@ String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 String native_rmg_full_generation_status_for_config(const Dictionary &normalized) {
 	if (h3maped_small_rmg::supports_scope(normalized)) {
 		return h3maped_small_rmg::supports_medium_land_scope(normalized)
-				? String("h3maped_medium_waiting_for_executable_phase_port")
+				? String("h3maped_medium_public_package_production_ready_strict_medium_land")
 				: String("h3maped_small_public_package_production_ready_strict_small_land");
 	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
@@ -24590,14 +24590,25 @@ Dictionary native_conversion_fail(const String &code, const String &message) {
 Dictionary build_h3maped_small_package_session_adoption(const Dictionary &generated_map, const Dictionary &options) {
 	Dictionary map_state = Dictionary(generated_map.get("map_document_payload", Dictionary())).duplicate(true);
 	if (map_state.is_empty()) {
-		return native_conversion_fail("missing_h3maped_map_document_payload", "H3maped Small generation must include a map_document_payload for package/session adoption.");
+		return native_conversion_fail("missing_h3maped_map_document_payload", "H3MapEd generation must include a map_document_payload for package/session adoption.");
 	}
 	const int32_t width = int32_t(map_state.get("width", 0));
 	const int32_t height = int32_t(map_state.get("height", 0));
 	const int32_t level_count = int32_t(map_state.get("level_count", 1));
 	if (width <= 0 || height <= 0 || level_count <= 0) {
-		return native_conversion_fail("invalid_h3maped_map_document_dimensions", "H3maped Small map_document_payload dimensions are invalid.");
+		return native_conversion_fail("invalid_h3maped_map_document_dimensions", "H3MapEd map_document_payload dimensions are invalid.");
 	}
+	const bool medium_scope = String(generated_map.get("status", "")) == "h3maped_medium_validated_package_ready"
+			|| String(map_state.get("production_ready_scope", "")) == "strict_medium_72x72_one_level_land_only"
+			|| (width == 72 && height == 72 && level_count == 1);
+	const String scope_id = medium_scope ? String("strict_medium_72x72_one_level_land_only") : String("strict_small_36x36_one_level_land_only");
+	const String adoption_status = medium_scope ? String("h3maped_medium_package_session_production_ready_strict_medium_land") : String("h3maped_small_package_session_production_ready_strict_small_land");
+	const String conversion_kind = medium_scope ? String("h3maped_medium_validated_package_to_package_session_records") : String("h3maped_small_validated_package_to_package_session_records");
+	const String package_kind_prefix = medium_scope ? String("native_rmg_h3maped_medium") : String("native_rmg_h3maped_small");
+	const String scenario_prefix = medium_scope ? String("h3maped_medium_scenario_") : String("h3maped_small_scenario_");
+	const String session_prefix = medium_scope ? String("h3maped_medium_session_") : String("h3maped_small_session_");
+	const String feature_gate_default = medium_scope ? String("native_rmg_medium_h3maped_validator_gated_public_package") : String("native_rmg_small_h3maped_validator_gated_public_package");
+	const String start_contract_source = medium_scope ? String("h3maped_medium_validated_map_document_payload") : String("h3maped_small_validated_map_document_payload");
 
 	Dictionary metadata = Dictionary(map_state.get("metadata", Dictionary())).duplicate(true);
 	Dictionary normalized_config = Dictionary(generated_map.get("normalized_config", Dictionary())).duplicate(true);
@@ -24655,11 +24666,11 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	component_counts["zone_count"] = int32_t(generated_map.get("runtime_zone_count", Dictionary(generated_map.get("validator_metrics", Dictionary())).get("runtime_zone_count", 0)));
 	component_counts["route_link_count"] = int32_t(route_graph.get("link_count", 0));
 	component_counts["guarded_route_link_count"] = int32_t(route_graph.get("guarded_link_count", 0));
-	metadata["package_session_adoption_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
+	metadata["package_session_adoption_status"] = adoption_status;
 	metadata["native_runtime_authoritative"] = true;
 	metadata["runtime_generation_allowed"] = true;
 	metadata["production_ready"] = true;
-	metadata["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	metadata["production_ready_scope"] = scope_id;
 	metadata["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	metadata["full_parity_claim"] = false;
 	metadata["no_authored_writeback"] = true;
@@ -24691,15 +24702,15 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	const String map_id = map_document->get_map_id();
 	const String map_hash = map_document->get_map_hash();
 	const int32_t session_save_version = int32_t(options.get("session_save_version", 9));
-	const String scenario_id = String(options.get("scenario_id", String("h3maped_small_scenario_") + hash32_hex(map_id + String("|") + map_hash)));
-	const String feature_gate = String(options.get("feature_gate", "native_rmg_small_h3maped_validator_gated_public_package"));
+	const String scenario_id = String(options.get("scenario_id", scenario_prefix + hash32_hex(map_id + String("|") + map_hash)));
+	const String feature_gate = String(options.get("feature_gate", feature_gate_default));
 	const String session_key = scenario_id + String("|") + map_hash + String("|") + String::num_int64(session_save_version);
-	const String session_id = String("h3maped_small_session_") + hash32_hex(session_key);
+	const String session_id = session_prefix + hash32_hex(session_key);
 
 	Dictionary map_package_record;
 	map_package_record["schema_id"] = "aurelion_generated_map_package_record";
 	map_package_record["schema_version"] = 1;
-	map_package_record["package_kind"] = "native_rmg_h3maped_small_generated_map_record";
+	map_package_record["package_kind"] = package_kind_prefix + String("_generated_map_record");
 	map_package_record["package_id"] = map_id + String(".amap");
 	map_package_record["map_id"] = map_id;
 	map_package_record["map_hash"] = map_hash;
@@ -24774,7 +24785,7 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	start_contract["player_start_towns"] = player_start_towns;
 	start_contract["start_count"] = player_starts.size();
 	start_contract["start_town_count"] = player_start_towns.size();
-	start_contract["start_contract_source"] = "h3maped_small_validated_map_document_payload";
+	start_contract["start_contract_source"] = start_contract_source;
 	start_contract["primary_hero_id"] = String(options.get("hero_id", "hero_lyra"));
 
 	Dictionary availability;
@@ -24785,7 +24796,8 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	selection["generated"] = true;
 	selection["package_session_adoption_bridge"] = true;
 	selection["player_facing"] = false;
-	selection["h3maped_small_validator_gated"] = true;
+	selection["h3maped_small_validator_gated"] = !medium_scope;
+	selection["h3maped_medium_validator_gated"] = medium_scope;
 
 	Dictionary scenario_state;
 	scenario_state["scenario_id"] = scenario_id;
@@ -24806,7 +24818,7 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	Dictionary scenario_package_record;
 	scenario_package_record["schema_id"] = "aurelion_generated_scenario_package_record";
 	scenario_package_record["schema_version"] = 1;
-	scenario_package_record["package_kind"] = "native_rmg_h3maped_small_generated_scenario_record";
+	scenario_package_record["package_kind"] = package_kind_prefix + String("_generated_scenario_record");
 	scenario_package_record["package_id"] = scenario_id + String(".ascenario");
 	scenario_package_record["scenario_id"] = scenario_id;
 	scenario_package_record["scenario_hash"] = scenario_state.get("scenario_hash", "");
@@ -24871,18 +24883,18 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	report["warnings"] = Array();
 	report["metrics"] = metrics;
 	report["package_session_adoption_ready"] = true;
-	report["adoption_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
+	report["adoption_status"] = adoption_status;
 	report["native_runtime_authoritative"] = true;
 	report["runtime_call_site_adoption"] = true;
 	report["gdscript_source_of_truth"] = false;
 	report["gdscript_fallback_untouched"] = false;
 	report["full_parity_claim"] = false;
 	report["production_ready"] = true;
-	report["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	report["production_ready_scope"] = scope_id;
 	report["remaining_parity_slices"] = Array::make(
 			"water_islands_scope_blocked",
 			"underground_two_level_scope_blocked",
-			"medium_large_xl_scope_blocked",
+			medium_scope ? String("large_xl_scope_blocked") : String("medium_large_xl_scope_blocked"),
 			"broader_template_family_scope_blocked",
 			"full_homm3_style_parity_not_claimed");
 
@@ -24890,17 +24902,17 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	readiness["gdscript_source_of_truth"] = false;
 	readiness["native_runtime_authoritative"] = true;
 	readiness["package_session_adoption_ready"] = true;
-	readiness["adoption_gate_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
+	readiness["adoption_gate_status"] = adoption_status;
 	readiness["production_ready"] = true;
-	readiness["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	readiness["production_ready_scope"] = scope_id;
 	readiness["full_parity_claim"] = false;
 	readiness["next_required_slices"] = report.get("remaining_parity_slices", Array());
 
 	Dictionary result;
 	result["ok"] = true;
 	result["status"] = "pass";
-	result["conversion_kind"] = "h3maped_small_validated_package_to_package_session_records";
-	result["adoption_status"] = "h3maped_small_package_session_production_ready_strict_small_land";
+	result["conversion_kind"] = conversion_kind;
+	result["adoption_status"] = adoption_status;
 	result["feature_gate"] = feature_gate;
 	result["map_document"] = map_document;
 	result["scenario_document"] = scenario_document;
@@ -24919,7 +24931,7 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	result["native_runtime_authoritative"] = true;
 	result["full_parity_claim"] = false;
 	result["production_ready"] = true;
-	result["production_ready_scope"] = "strict_small_36x36_one_level_land_only";
+	result["production_ready_scope"] = scope_id;
 	return result;
 }
 
@@ -24928,7 +24940,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 		return native_conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.");
 	}
 	const String generated_status = String(generated_map.get("status", ""));
-	if (generated_status == "h3maped_small_validated_package_ready") {
+	if (generated_status == "h3maped_small_validated_package_ready" || generated_status == "h3maped_medium_validated_package_ready") {
 		return build_h3maped_small_package_session_adoption(generated_map, options);
 	}
 	if (generated_status != "partial_foundation" && generated_status != "scoped_structural_profile_supported" && generated_status != "owner_compared_translated_profile_supported" && generated_status != "translated_catalog_structural_profile_supported") {
@@ -25569,15 +25581,15 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["map_package_extension"] = ".amap";
 	result["scenario_package_extension"] = ".ascenario";
 	result["capabilities"] = capabilities();
-	result["native_rmg_generation_authority"] = "h3maped_original_catalog_rng_strict_small_ready_medium_template_authority_blocked";
+	result["native_rmg_generation_authority"] = "h3maped_original_catalog_rng_strict_small_and_medium_land_ready";
 	result["native_rmg_runtime_generation_allowed"] = true;
-	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated; medium_72x72_land_h3maped_source_template_authority_only_runtime_blocked";
+	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated; medium_72x72_land_validator_gated";
 	result["native_rmg_production_ready"] = true;
-	result["native_rmg_production_ready_scope"] = "strict_small_36x36_one_level_land_only";
-	result["native_rmg_medium_runtime_generation_unblock_scope"] = "none_until_native-rmg-medium-h3maped-land-runtime-adoption-10184";
+	result["native_rmg_production_ready_scope"] = "strict_small_36x36_one_level_land_only; strict_medium_72x72_one_level_land_only";
+	result["native_rmg_medium_runtime_generation_unblock_scope"] = "strict_medium_72x72_one_level_land_only";
 	result["native_rmg_unsupported_mode_policy"] = "explicit_blocked_no_fallback";
-	result["native_rmg_active_reset_slice_id"] = "native-rmg-medium-h3maped-land-template-authority-10184";
-	result["native_rmg_active_port_capability"] = "native_rmg_small_validated_runtime_plus_medium_h3maped_template_authority";
+	result["native_rmg_active_reset_slice_id"] = "native-rmg-medium-h3maped-land-runtime-adoption-10184";
+	result["native_rmg_active_port_capability"] = "native_rmg_small_and_medium_land_validated_runtime";
 	result["native_rmg_legacy_capability_policy"] = "inspection_debug_evidence_not_runtime_generation_authority";
 	result["status"] = "skeleton";
 	return result;
