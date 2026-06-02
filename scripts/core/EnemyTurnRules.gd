@@ -234,6 +234,11 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		states[state_index] = state
 
 	session.overworld["enemy_states"] = states
+	for config in configs:
+		if not (config is Dictionary):
+			continue
+		var repair_result := EnemyAdventureRulesScript.repair_active_raid_target_integrity(session, config)
+		_append_event_records(events, repair_result.get("events", []))
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 	return {"ok": true, "message": " ".join(messages), "events": events}
 

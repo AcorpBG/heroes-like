@@ -1544,12 +1544,23 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 	var self_target_reference_violations := []
 	var active_host_target_reference_violations := []
 	var active_raid_placement_ids := {}
+	var enemy_faction_ids := {}
+	var enemy_states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []
+	for state_value in enemy_states:
+		if not (state_value is Dictionary):
+			continue
+		var state_faction_id := String(state_value.get("faction_id", ""))
+		if state_faction_id != "":
+			enemy_faction_ids[state_faction_id] = true
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter_for_id: Dictionary = encounter_value
 		var active_id := String(encounter_for_id.get("placement_id", ""))
-		if active_id == "" or String(encounter_for_id.get("spawned_by_faction_id", "")) == "":
+		var active_faction_id := String(encounter_for_id.get("spawned_by_faction_id", ""))
+		if active_id == "" or active_faction_id == "" or not enemy_faction_ids.has(active_faction_id):
+			continue
+		if bool(encounter_for_id.get("raid_retired_to_rebuild", false)):
 			continue
 		if active_id in resolved:
 			continue
@@ -1558,7 +1569,10 @@ static func _strategic_ai_battle_handoff_summary(session: SessionStateStoreScrip
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
-		if String(encounter.get("spawned_by_faction_id", "")) == "":
+		var encounter_faction_id := String(encounter.get("spawned_by_faction_id", ""))
+		if encounter_faction_id == "" or not enemy_faction_ids.has(encounter_faction_id):
+			continue
+		if bool(encounter.get("raid_retired_to_rebuild", false)):
 			continue
 		if String(encounter.get("placement_id", "")) in resolved:
 			continue
