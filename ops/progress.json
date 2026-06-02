@@ -39239,7 +39239,7 @@
       ],
       "createdAt": "2026-06-01T22:55:00Z",
       "startedAt": "2026-06-01T15:46:12Z",
-      "updatedAt": "2026-06-02T08:48:39Z",
+      "updatedAt": "2026-06-02T09:25:17Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -39415,6 +39415,16 @@
           "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=14 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "status": "pass_with_runtime_concern",
           "notes": "Medium seed ordinal 11 completed 14/14 turns on translated_rmg_template_002_v1: row_ok=1/1, setup_ok=1, enemy_activity_event_count=91, target_assignment_count=50, site_seized_count=2, ai_artifact_secured=1, active_raid_count=7, no_active_pressure_row_count=0, stalled_turn_count=0, stalled_turn_pct=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, unreachable_active_target_total=0, behavior_bug_count=0. Runtime is a serious validation-throughput concern: row_runtime_msec=2081724 and max_turn_runtime_msec=201416. The full 100-seed eight-week matrix remains unrun."
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=10 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "status": "pass_with_runtime_concern",
+          "notes": "After removing duplicate resource/artifact candidate distance scoring and adding a no-assignable-commander early exit before task-board target scans, Medium seed ordinal 11 completed 3/3 turns with row_ok=1/1, setup_ok=1, behavior_bug_count=0, target_integrity_violation_count=0, unreachable_active_target_turn_count=0, enemy_activity_event_count=23, target_assignment_count=15, row_runtime_msec=334705, max_turn_runtime_msec=177337. This is only a small improvement versus the prior 3-turn comparison row_runtime_msec=337176 and max_turn_runtime_msec=177833, so Medium validation throughput remains a production blocker."
+        },
+        {
+          "command": "python3 tests/validate_repo.py && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+          "status": "pass",
+          "notes": "Repository validation passed; tactical battle AI smoke passed ok=true; strategic AI baseline passed with behavior_bug_count=0, medium_ok_count=3/3, setup_ok_count=5/5, turn_ok_count=5/5, enemy_activity_event_count=55, target_assignment_event_count=27. production_ready remains false behind native_rmg_medium_long_run_matrix."
         }
       ],
       "notes": [
@@ -39437,7 +39447,8 @@
         "The strategic AI baseline is green again for all three short Medium probes, but the slice remains in progress because the longer Medium generated-map matrix is still the next production blocker.",
         "Medium seed ordinal 10 exposed a passive no-spare regroup loop: a raid repeatedly reached the same regroup town with no spare garrison and emitted only regroup events. Repeated no-spare regroup at the same town now retires the raid to command rebuild instead of renewing the same regroup target.",
         "Post-fix Medium seed ordinal 10 now emits target-assignment and site-seizure activity with zero live unreachable active targets. The fix improves a real strategic behavior gap, but full production readiness remains unproven until broader Medium long-run matrix coverage and residual regroup/rebuild churn are resolved.",
-        "Medium seed ordinal 11 passes behavior health over 14 turns with active pressure, target assignments, site seizures, zero stalls, zero target-integrity violations, and zero unreachable active targets. It also exposes a practical production blocker for broader validation: Medium turn runtime is too high for the full matrix path without further AI/pathing throughput work."
+        "Medium seed ordinal 11 passes behavior health over 14 turns with active pressure, target assignments, site seizures, zero stalls, zero target-integrity violations, and zero unreachable active targets. It also exposes a practical production blocker for broader validation: Medium turn runtime is too high for the full matrix path without further AI/pathing throughput work.",
+        "First throughput slice removed duplicate resource/artifact path-distance scoring during target candidate valuation and skips expensive task-board target scans when no commander can accept a new task. The exact Medium ordinal-11 3-turn comparison improved only slightly, so this is useful cleanup but not the main Medium runtime fix."
       ]
     }
   ],

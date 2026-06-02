@@ -505,7 +505,8 @@ static func artifact_target_valuation_breakdown(
 	config: Dictionary,
 	node: Variant,
 	origin_pos: Vector2i,
-	faction_id: String = ""
+	faction_id: String = "",
+	known_goal_distance: int = -1
 ) -> Dictionary:
 	if not (node is Dictionary) or bool(node.get("collected", false)):
 		return {}
@@ -520,7 +521,7 @@ static func artifact_target_valuation_breakdown(
 	if resolved_faction_id == "":
 		resolved_faction_id = String(config.get("faction_id", ""))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var goal_distance := _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
+	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
 	if goal_distance >= 9999:
 		return {}
 	var roles := _normalize_string_array(artifact.get("roles", []))
@@ -7917,6 +7918,20 @@ static func plan_enemy_hero_task_board(
 	var reservation_recovery_changed := JSON.stringify(next_tasks) != JSON.stringify(reservation_recovered_tasks)
 	next_tasks = reservation_recovered_tasks
 
+	if not _ai_hero_task_planner_has_assignable_actor(roster, next_tasks):
+		working_state["hero_task_state"] = {
+			"schema_version": 1,
+			"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + (1 if reservation_recovery_changed else 0),
+			"tasks": _ai_hero_task_prune_live_tasks(next_tasks, int(session.day)),
+		}
+		_ai_hero_task_write_enemy_state_for_faction(session, faction_id, working_state)
+		return {
+			"state": working_state,
+			"planned_count": 0,
+			"task_count": working_state.get("hero_task_state", {}).get("tasks", []).size() if working_state.get("hero_task_state", {}) is Dictionary else next_tasks.size(),
+			"events": [],
+		}
+
 	var candidates := _ai_hero_task_planner_candidates_from_origins(session, config, origins)
 	var target_claims := _ai_hero_task_planner_target_claims(next_tasks)
 	var planned_count := 0
@@ -8084,6 +8099,23 @@ static func _ai_hero_task_planner_global_task_assignments(
 			selected_claims[reservation_key] = true
 		sequence += 1
 	return assigned
+
+static func _ai_hero_task_planner_has_assignable_actor(roster: Array, existing_tasks: Array) -> bool:
+	for commander_value in roster:
+		if not (commander_value is Dictionary):
+			continue
+		var commander: Dictionary = commander_value
+		var actor_id := String(commander.get("roster_hero_id", ""))
+		if actor_id == "":
+			continue
+		if _normalize_commander_status(commander.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE:
+			continue
+		if not commander_can_deploy(commander):
+			continue
+		if _ai_hero_task_planner_actor_has_open_task(existing_tasks, actor_id):
+			continue
+		return true
+	return false
 
 static func _ai_hero_task_planner_candidate_available_for_assignment(
 	session: SessionStateStoreScript.SessionData,
@@ -9159,7 +9191,7 @@ static func _append_resource_candidate(
 		)
 		if guard_distance >= 9999:
 			return
-	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
+	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, goal_distance)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
 	var priority := int(breakdown.get("final_priority", 0)) + scouting_bonus
 	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
@@ -9230,7 +9262,7 @@ static func _append_artifact_candidate(
 		)
 		if guard_distance >= 9999:
 			return
-	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id)
+	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id, goal_distance)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "artifact", placement_id)
 	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
 	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
@@ -10709,7 +10741,8 @@ static func resource_target_score_breakdown(
 	config: Dictionary,
 	node: Variant,
 	origin_pos: Vector2i,
-	faction_id: String = ""
+	faction_id: String = "",
+	known_goal_distance: int = -1
 ) -> Dictionary:
 	if not (node is Dictionary):
 		return {}
@@ -10722,7 +10755,7 @@ static func resource_target_score_breakdown(
 	var site_family := String(site.get("family", ""))
 	var label := String(site.get("name", "Resource Site"))
 	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var goal_distance := _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
+	var goal_distance := known_goal_distance if known_goal_distance >= 0 else _path_distance(session, origin_pos, [target_tile], "", resolved_faction_id)
 	var claim_value := _target_resource_value(_resource_site_claim_rewards(site))
 	var income_value := _target_resource_value(site.get("control_income", {}))
 	var strategy := enemy_strategy(config, resolved_faction_id)
