@@ -1,11 +1,10 @@
 extends Node
 
-const ScenarioSelectRules = preload("res://scripts/core/ScenarioSelectRules.gd")
-
 const DEFAULT_OUTPUT_DIR := ".artifacts/rmg_h3m_native_phase_drift_audit"
 const DEFAULT_CASE_ID := "s_randomnumberofplayers"
 const DEFAULT_OWNER_PATH := "res://maps/h3m-maps/S-RandomNumberofplayers.h3m"
 const DEFAULT_SEED := "11"
+const RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO := "native_catalog_auto"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -59,16 +58,7 @@ func _run() -> void:
 		return
 
 	var service: Variant = ClassDB.instantiate("MapPackageService")
-	var config := ScenarioSelectRules.build_random_map_player_config(
-		seed,
-		"",
-		"",
-		player_count,
-		water_mode,
-		level_count > 1,
-		size_class_id,
-		ScenarioSelectRules.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
-	)
+	var config := _build_native_random_map_config(seed, player_count, water_mode, level_count, size_class_id)
 	config["player_constraints"]["human_count"] = human_players
 	config["player_constraints"]["computer_count"] = computer_players
 	var inspection_started_msec := Time.get_ticks_msec()
@@ -149,9 +139,63 @@ func _selection_diagnostics(inspection: Dictionary) -> Dictionary:
 		"accepted_source_catalog_indices": catalog_indices,
 		"accepted_source_names": names,
 		"rng_first_value": int(selection.get("rng_first_value", -1)),
+		"template_preselection_rng_call_count": int(selection.get("template_preselection_rng_call_count", 0)),
+		"template_selection_rng_value": int(selection.get("template_selection_rng_value", selection.get("rng_first_value", -1))),
 		"selected_vector_index": int(selection.get("selected_vector_index", -1)),
 		"source_template_id": String(selection.get("source_template_id", "")),
 		"source_catalog_index": int(selection.get("source_catalog_index", -1)),
+	}
+
+func _build_native_random_map_config(seed: String, player_count: int, water_mode: String, level_count: int, size_class_id: String) -> Dictionary:
+	var width := 36
+	var height := 36
+	match size_class_id:
+		"homm3_medium":
+			width = 72
+			height = 72
+		"homm3_large":
+			width = 108
+			height = 108
+		"homm3_extra_large":
+			width = 144
+			height = 144
+		_:
+			width = 36
+			height = 36
+	var normalized_water := "normal_water" if water_mode == "normal_water" else ("islands" if water_mode == "islands" else "land")
+	return {
+		"generator_version": "native_rmg_h3maped_phase_snapshot_export",
+		"seed": seed,
+		"size": {
+			"preset": "native_phase_snapshot_export",
+			"size_class_id": size_class_id,
+			"source_width": width,
+			"source_height": height,
+			"requested_width": width,
+			"requested_height": height,
+			"width": width,
+			"height": height,
+			"water_mode": normalized_water,
+			"level_count": max(1, level_count),
+		},
+		"player_constraints": {
+			"human_count": 1,
+			"player_count": clampi(player_count, 2, 8),
+			"computer_count": max(1, player_count - 1),
+			"team_mode": "free_for_all",
+		},
+		"profile": {
+			"id": "",
+			"template_id": "",
+			"guard_strength_profile": "normal",
+			"faction_ids": [],
+		},
+		"template_selection": {
+			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+			"selection_deferred_to_native": true,
+			"fallback_template_id": "",
+			"fallback_profile_id": "",
+		},
 	}
 
 func _adoption_summary(adoption: Dictionary, adoption_wall_msec: int, service: Variant, native_path: String) -> Dictionary:

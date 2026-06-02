@@ -9975,7 +9975,9 @@ bool native_rmg_full_parity_supported(const Dictionary &normalized) {
 
 String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 	if (h3maped_small_rmg::supports_scope(normalized)) {
-		return String("h3maped_small_validated_package_ready");
+		return h3maped_small_rmg::supports_medium_land_scope(normalized)
+				? String("h3maped_medium_phase_port_runtime_blocked")
+				: String("h3maped_small_validated_package_ready");
 	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
 		return String("scoped_structural_profile_supported");
@@ -9991,7 +9993,9 @@ String native_rmg_generation_status_for_config(const Dictionary &normalized) {
 
 String native_rmg_full_generation_status_for_config(const Dictionary &normalized) {
 	if (h3maped_small_rmg::supports_scope(normalized)) {
-		return String("h3maped_small_public_package_production_ready_strict_small_land");
+		return h3maped_small_rmg::supports_medium_land_scope(normalized)
+				? String("h3maped_medium_waiting_for_executable_phase_port")
+				: String("h3maped_small_public_package_production_ready_strict_small_land");
 	}
 	if (native_rmg_scoped_structural_profile_supported(normalized)) {
 		return String("scoped_structural_profile_not_full_parity");
@@ -11793,10 +11797,15 @@ Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized
 			+ String("|players:") + String::num_int64(player_count)
 			+ String("|water:") + water_mode;
 	classification["template_family"] = h3maped_small_rmg::supports_scope(normalized)
-			? String("h3maped_small_reset_template")
+			? (h3maped_small_rmg::supports_medium_land_scope(normalized) ? String("h3maped_medium_strict_source_template") : String("h3maped_small_reset_template"))
 			: (template_id.begins_with("translated_rmg_template_") ? String("translated_recovered_template") : String("legacy_or_foundation_template"));
-	classification["reset_slice_id"] = h3maped_small_rmg::supports_scope(normalized) ? String("native-rmg-small-h3maped-port-10184") : String();
+	classification["reset_slice_id"] = h3maped_small_rmg::supports_scope(normalized)
+			? (h3maped_small_rmg::supports_medium_land_scope(normalized) ? String("native-rmg-medium-h3maped-land-template-authority-10184") : String("native-rmg-small-h3maped-port-10184"))
+			: String();
 	classification["h3maped_reset_scope"] = h3maped_small_rmg::supports_scope(normalized);
+	classification["h3maped_strict_scope"] = h3maped_small_rmg::supports_medium_land_scope(normalized)
+			? String("strict_medium_72x72_one_level_land_only")
+			: (h3maped_small_rmg::supports_small_land_scope(normalized) ? String("strict_small_36x36_one_level_land_only") : String());
 	classification["size_class_id"] = size_class_id;
 	classification["water_mode"] = water_mode;
 	classification["level_count"] = level_count;
@@ -25560,15 +25569,15 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["map_package_extension"] = ".amap";
 	result["scenario_package_extension"] = ".ascenario";
 	result["capabilities"] = capabilities();
-	result["native_rmg_generation_authority"] = "h3maped_small_reset_with_medium_ai_probe_unblock";
+	result["native_rmg_generation_authority"] = "h3maped_original_catalog_rng_strict_small_ready_medium_template_authority_blocked";
 	result["native_rmg_runtime_generation_allowed"] = true;
-	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated_plus_medium_72x72_land_translated_002_ai_probe_only";
+	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated; medium_72x72_land_h3maped_source_template_authority_only_runtime_blocked";
 	result["native_rmg_production_ready"] = true;
 	result["native_rmg_production_ready_scope"] = "strict_small_36x36_one_level_land_only";
-	result["native_rmg_medium_runtime_generation_unblock_scope"] = "translated_rmg_template_002_v1_medium_72x72_one_level_land_ai_probe_only";
+	result["native_rmg_medium_runtime_generation_unblock_scope"] = "none_until_native-rmg-medium-h3maped-land-runtime-adoption-10184";
 	result["native_rmg_unsupported_mode_policy"] = "explicit_blocked_no_fallback";
-	result["native_rmg_active_reset_slice_id"] = "native-rmg-small-h3maped-port-10184";
-	result["native_rmg_active_port_capability"] = "native_rmg_small_h3maped_port_boundary";
+	result["native_rmg_active_reset_slice_id"] = "native-rmg-medium-h3maped-land-template-authority-10184";
+	result["native_rmg_active_port_capability"] = "native_rmg_small_validated_runtime_plus_medium_h3maped_template_authority";
 	result["native_rmg_legacy_capability_policy"] = "inspection_debug_evidence_not_runtime_generation_authority";
 	result["status"] = "skeleton";
 	return result;
