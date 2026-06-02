@@ -1,4 +1,4 @@
-extends Node
+extends SceneTree
 
 const DEFAULT_OUTPUT_DIR := ".artifacts/rmg_h3m_native_phase_drift_audit"
 const DEFAULT_CASE_ID := "s_randomnumberofplayers"
@@ -6,8 +6,8 @@ const DEFAULT_OWNER_PATH := "res://maps/h3m-maps/S-RandomNumberofplayers.h3m"
 const DEFAULT_SEED := "11"
 const RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO := "native_catalog_auto"
 
-func _ready() -> void:
-	call_deferred("_run")
+func _init() -> void:
+	_run()
 
 func _run() -> void:
 	var output_dir := _arg_value("--out", DEFAULT_OUTPUT_DIR)
@@ -21,6 +21,7 @@ func _run() -> void:
 	var water_mode := _arg_value("--water", "land")
 	var level_count := int(_arg_value("--level-count", "1"))
 	var size_class_id := _arg_value("--size-class-id", "homm3_small")
+	var phase_limit := _arg_value("--phase-limit", "")
 	var controlled_reference_manifest := {}
 	if controlled_reference_manifest_path != "":
 		controlled_reference_manifest = _read_json_file(controlled_reference_manifest_path)
@@ -61,12 +62,17 @@ func _run() -> void:
 	var config := _build_native_random_map_config(seed, player_count, water_mode, level_count, size_class_id)
 	config["player_constraints"]["human_count"] = human_players
 	config["player_constraints"]["computer_count"] = computer_players
+	if phase_limit != "":
+		config["h3maped_inspection_phase_limit"] = phase_limit
 	var inspection_started_msec := Time.get_ticks_msec()
 	var inspection: Dictionary = service.inspect_h3maped_small_rmg_port(config)
 	var inspection_wall_msec := Time.get_ticks_msec() - inspection_started_msec
 	var generation_started_msec := Time.get_ticks_msec()
-	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "rmg_h3m_native_phase_drift_%s" % case_id})
-	var generation_wall_msec := Time.get_ticks_msec() - generation_started_msec
+	var generated: Dictionary = {}
+	var generation_wall_msec := 0
+	if phase_limit == "":
+		generated = service.generate_random_map(config, {"startup_path": "rmg_h3m_native_phase_drift_%s" % case_id})
+		generation_wall_msec = Time.get_ticks_msec() - generation_started_msec
 
 	var native_path := absolute_output_dir.path_join("%s.amap" % case_id)
 	var adoption_summary := {}
@@ -101,6 +107,8 @@ func _run() -> void:
 		"inspection_ok": bool(inspection.get("ok", false)),
 		"generation_ok": bool(generated.get("ok", false)),
 		"generation_status": String(generated.get("full_generation_status", "")),
+		"inspection_phase_limit": phase_limit,
+		"inspection_phase_limit_reached": bool(inspection.get("inspection_phase_limit_reached", false)),
 		"validation_status": String(generated.get("validation_status", "")),
 		"timing": {
 			"inspection_wall_msec": inspection_wall_msec,
@@ -411,4 +419,4 @@ func _finish(manifest: Dictionary, exit_code: int) -> void:
 		"inspection_ok": bool(manifest.get("inspection_ok", false)),
 		"generation_ok": bool(manifest.get("generation_ok", false)),
 	}))
-	get_tree().quit(exit_code)
+	quit(exit_code)

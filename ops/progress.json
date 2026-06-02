@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSliceId": "native-rmg-medium-h3maped-land-phase-port-10184",
-  "currentSliceTitle": "Native RMG Medium H3MapEd Land Phase Port",
+  "currentSliceId": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+  "currentSliceTitle": "Native RMG Medium H3MapEd Land Runtime Adoption",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next strict Medium H3MapEd RMG slice. Generalize the executable-derived phase chain to Medium 72x72x1 land while keeping public Medium output blocked until validator-gated runtime package adoption passes.",
+  "currentSliceNotes": "Next strict Medium H3MapEd RMG slice. Enable validator-gated public Medium 72x72x1 land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch after the executable phase-port validator is green.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-06-02T16:24:00Z",
+  "updatedAt": "2026-06-02T16:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39664,7 +39664,7 @@
     {
       "id": "native-rmg-medium-h3maped-land-phase-port-10184",
       "title": "Native RMG Medium H3MapEd Land Phase Port",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "native-rmg-medium-h3maped-land-goals-10184",
@@ -39694,7 +39694,89 @@
         "full HoMM3 byte/art parity claim"
       ],
       "createdAt": "2026-06-02T14:38:00Z",
-      "updatedAt": "2026-06-02T14:38:00Z"
+      "updatedAt": "2026-06-02T16:45:00Z",
+      "completedAt": "2026-06-02T16:45:00Z",
+      "evidence": {
+        "controlled_cases": [
+          {
+            "case_id": "medium_2p_seed_28_controlled",
+            "players": 2,
+            "seed": 28,
+            "selected_source_template_index": 35,
+            "selected_template_id": "h3maped_template_035",
+            "final_tile_byte_count": 5184,
+            "player_start_count": 2,
+            "owned_player_town_count": 2,
+            "neutral_town_count": 4,
+            "mine_count": 15,
+            "reward_count": 72,
+            "connection_blocker_count": 36,
+            "connection_guard_count": 56,
+            "road_record_count": 15,
+            "route_link_count": 18,
+            "route_link_without_blocker_or_guard_count": 0,
+            "exact_h3m_body_block_mismatch_count": 0,
+            "validator_failure_count": 0
+          },
+          {
+            "case_id": "medium_3p_seed_11_controlled",
+            "players": 3,
+            "seed": 11,
+            "selected_source_template_index": 37,
+            "selected_template_id": "h3maped_template_037",
+            "final_tile_byte_count": 5184,
+            "player_start_count": 3,
+            "owned_player_town_count": 3,
+            "neutral_town_count": 3,
+            "mine_count": 16,
+            "reward_count": 50,
+            "connection_blocker_count": 12,
+            "connection_guard_count": 25,
+            "road_record_count": 15,
+            "route_link_count": 6,
+            "route_link_without_blocker_or_guard_count": 0,
+            "exact_h3m_body_block_mismatch_count": 0,
+            "validator_failure_count": 0
+          },
+          {
+            "case_id": "medium_4p_seed_10_controlled",
+            "players": 4,
+            "seed": 10,
+            "selected_source_template_index": 15,
+            "selected_template_id": "h3maped_template_015",
+            "final_tile_byte_count": 5184,
+            "player_start_count": 4,
+            "owned_player_town_count": 4,
+            "neutral_town_count": 2,
+            "mine_count": 24,
+            "reward_count": 76,
+            "connection_blocker_count": 30,
+            "connection_guard_count": 52,
+            "road_record_count": 15,
+            "route_link_count": 15,
+            "route_link_without_blocker_or_guard_count": 0,
+            "exact_h3m_body_block_mismatch_count": 0,
+            "validator_failure_count": 0
+          }
+        ],
+        "public_runtime_generation_allowed": false,
+        "public_runtime_status": "h3maped_medium_phase_port_ready_runtime_adoption_blocked",
+        "public_runtime_full_generation_status": "h3maped_medium_runtime_adoption_pending_strict_medium_land"
+      },
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
+        "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
+        "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "summary": "Completed. Medium 72x72x1 land now runs the executable-derived H3MapEd phase chain through final tile-byte/writeout draft and strict structural validation for the 2p/3p/4p controlled cases. Public Medium runtime output remains deliberately blocked until the runtime-adoption slice."
     },
     {
       "id": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
@@ -50945,13 +51027,13 @@
     "summary": "Strict Medium H3MapEd reference corpus is ready for 2p/3p/4p 72x72x1 land cases. Tooling now derives canonical Medium dimensions, records required body/block/visit/route metrics, recovers Wine Save As outputs from stale directories, and audits the corpus. Native Medium strict generation remains incomplete and is blocked at source-template authority."
   },
   "active_slice": {
-    "id": "native-rmg-medium-h3maped-land-phase-port-10184",
-    "title": "Native RMG Medium H3MapEd Land Phase Port",
+    "id": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
+    "title": "Native RMG Medium H3MapEd Land Runtime Adoption",
     "status": "pending",
-    "updatedAt": "2026-06-02T16:24:00Z",
-    "summary": "Next strict Medium H3MapEd RMG slice. Generalize executable-derived phases to 72x72x1 land through final tile-byte/writeout draft and structural validation; public Medium output remains blocked."
+    "updatedAt": "2026-06-02T16:45:00Z",
+    "summary": "Next strict Medium H3MapEd RMG slice. Enable validator-gated public Medium 72x72x1 land package generation, save/load, disk startup, runtime pathing, and generated skirmish launch; water, underground, Large, XL, AI tuning, and balance are out of scope."
   },
-  "currentSliceUpdatedAt": "2026-06-02T16:24:00Z",
+  "currentSliceUpdatedAt": "2026-06-02T16:45:00Z",
   "validationHistory": [
     {
       "status": "pass",
@@ -54162,23 +54244,25 @@
       }
     }
   ],
-  "currentSlice": "native-rmg-medium-h3maped-land-phase-port-10184",
+  "currentSlice": "native-rmg-medium-h3maped-land-runtime-adoption-10184",
   "validation": {
     "status": "pass",
-    "updatedAt": "2026-06-02T16:24:00Z",
-    "currentSliceId": "native-rmg-medium-h3maped-land-template-authority-10184",
-    "summary": "Strict Medium H3MapEd source-template authority completed for 2p/3p/4p 72x72x1 land cases; next active slice is Medium executable phase port.",
+    "updatedAt": "2026-06-02T16:45:00Z",
+    "currentSliceId": "native-rmg-medium-h3maped-land-phase-port-10184",
+    "summary": "Strict Medium H3MapEd executable phase port completed for controlled 2p/3p/4p 72x72x1 land cases; next active slice is validator-gated public runtime adoption.",
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
+      "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty",
+      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
       "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
       "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn",
-      "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn",
       "python3 tests/validate_repo.py",
       "jq empty ops/progress.json",
       "git diff --check"
     ],
-    "latestSummary": "Strict Medium H3MapEd source-template authority now matches controlled 2p/3p/4p references, exposes deterministic accepted vectors and bounded seed coverage, overrides translated-template requests, and keeps Medium runtime generation blocked until phase-port/runtime-adoption slices pass."
+    "latestSummary": "Medium executable-derived phase output now materializes 5184-cell final tile bytes, requested player starts and owned towns, neutral towns, mines, rewards, blockers, guards, roads, decorative blockers, full package masks, and zero structural validator failures for the controlled 2p/3p/4p references. Public runtime generation stays blocked with h3maped_medium_runtime_adoption_pending_strict_medium_land until the runtime-adoption slice."
   }
 }

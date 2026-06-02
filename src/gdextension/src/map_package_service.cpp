@@ -25782,7 +25782,11 @@ Dictionary MapPackageService::inspect_random_map_generator_data_model(Dictionary
 }
 
 Dictionary MapPackageService::inspect_h3maped_small_rmg_port(Dictionary config) const {
-	return h3maped_small_rmg::inspect_port(normalize_random_map_config(config));
+	Dictionary normalized = normalize_random_map_config(config);
+	if (config.has("h3maped_inspection_phase_limit")) {
+		normalized["h3maped_inspection_phase_limit"] = config.get("h3maped_inspection_phase_limit", "");
+	}
+	return h3maped_small_rmg::inspect_port(normalized);
 }
 
 Dictionary MapPackageService::inspect_h3maped_small_rmg_negative_validator_cases(Dictionary config) const {
