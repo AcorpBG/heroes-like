@@ -5,6 +5,11 @@ This repository is for a full-production, release-bound fantasy strategy game in
 ## Read first
 - `project.md`
 - `PLAN.md`
+- `docs/lessons-learned.md`
+
+`docs/lessons-learned.md`, especially "Native RMG Recovery Discipline", is mandatory context before touching native RMG/parity work. It records the owner-called-out source-parity mistakes that must not be repeated, including treating disassembly or partial decompile as complete source, patching from final-map deltas, translating HoMM3 semantics too early, accepting report/gate progress as implementation progress, and iterating experiments instead of naming unrecovered functions or data structures.
+
+For native RMG work, read that file before editing code, tools, validators, reports, or progress claims. Unrecovered H3MapEd functions/data structures must be named as blockers instead of being papered over with heuristics, density scalars, gates, brute-force retries, or final-map delta tuning.
 
 Do not load all of `ops/progress.json` by default. It is an operations tracker, not onboarding context. Use the heroes-progress workflow/helper to query the current implementation status and selected next slice when needed. If available, run: `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like`.
 
@@ -44,6 +49,7 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Update `ops/progress.json` whenever a step starts, completes, or is blocked.
 - If you make a major architectural choice, record it clearly in `project.md`.
 - Prefer clear folder structure and production-minded tooling over clever hacks.
+- For native RMG work, follow `docs/lessons-learned.md`: prove recovered H3MapEd behavior through phase/private-state parity before changing generation rules, and do not replace missing recovery with density scalars, gates, brute-force retries, or final-map report tuning.
 
 ## Completion marker
 When finished with a run, print:
