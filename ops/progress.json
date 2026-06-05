@@ -443,20 +443,23 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete.",
+    "currentSliceNotes": "2026-06-05 RMG wrapper-state checkpoint: decorative filler no longer seeds connection blockers/guards as 0x49e1bf prior object-vector wrappers; those records remain generated-cell blockers/package records. Prior object wrappers now attempt recovered 0x49dc9e rand_trn score attachment. Focused Python export .artifacts/rmg_native_wrapper_state_checkpoint_20260605 passed for Small seed11 and Medium seed10. Counts remain parity-open: Small native 323 vs h3maped 299 objects (decoration +29, guard 0, object +2, reward -7, town 0); Medium native 1154 vs h3maped 1256 objects (decoration -98, guard +10, object -6, reward -8, town 0). Counters: Small prior wrapper score matches 0/missing 38, deferred connection blockers 10/guards 5; Medium matches 1/missing 176, deferred connection blockers 30/guards 20. Rejected isolated 0x4a54a7 descriptor-byte score-wave gating after probe .artifacts/rmg_native_4a54a7_descriptor_gate_20260605: it overproduced Small 409 objects and Medium 2183 objects because upstream reward candidate-retirement/private object-vector state is still unrecovered. Do not land that behavior until the paired upstream limiter is ported.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
+      "status": "focused_exports_pass_parity_open_descriptor_gate_rejected",
+      "updatedAt": "2026-06-05T09:29:03Z",
       "commands": [
-        "python3 tests/validate_repo.py",
-        "jq empty ops/progress.json",
-        "git diff --check"
-      ],
-      "status": "focused_exports_pass_full_parity_open",
-      "updatedAt": "2026-06-05T00:26:01Z"
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_wrapper_state_checkpoint_20260605 --controlled-case small_3p_seed_11_controlled:small:3:11:none:1:3:0 --controlled-case medium_4p_seed_10_controlled:medium:4:10:none:1:4:0 --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_fast_audit.py --compare ...small... (failed as expected: parity still open)",
+        "python3 tools/rmg_fast_audit.py --compare ...medium... (failed as expected: parity still open)",
+        "git diff --check",
+        "jq empty ops/progress.json"
+      ]
     },
     "latestEvidence": {
       "focused_export": "RMG_NATIVE_BATCH_EXPORT_PY status=pass exported=2 failed=0",
@@ -470,7 +473,7 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete.",
+    "notes": "2026-06-05 RMG wrapper-state checkpoint: decorative filler no longer seeds connection blockers/guards as 0x49e1bf prior object-vector wrappers; those records remain generated-cell blockers/package records. Prior object wrappers now attempt recovered 0x49dc9e rand_trn score attachment. Focused Python export .artifacts/rmg_native_wrapper_state_checkpoint_20260605 passed for Small seed11 and Medium seed10. Counts remain parity-open: Small native 323 vs h3maped 299 objects (decoration +29, guard 0, object +2, reward -7, town 0); Medium native 1154 vs h3maped 1256 objects (decoration -98, guard +10, object -6, reward -8, town 0). Counters: Small prior wrapper score matches 0/missing 38, deferred connection blockers 10/guards 5; Medium matches 1/missing 176, deferred connection blockers 30/guards 20. Rejected isolated 0x4a54a7 descriptor-byte score-wave gating after probe .artifacts/rmg_native_4a54a7_descriptor_gate_20260605: it overproduced Small 409 objects and Medium 2183 objects because upstream reward candidate-retirement/private object-vector state is still unrecovered. Do not land that behavior until the paired upstream limiter is ported.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -484,7 +487,7 @@
     "status": "in_progress",
     "summary": "Investigated the reward/object-vector density discrepancy against h3maped.exe disassembly for 0x4aab7e, 0x4aa354, 0x4aa1db, 0x49d471, and 0x4aa9b7. Confirmed the sqrt reward value is the 0x4aa9b7 coordinate score threshold, not a placement count cap, and confirmed native must not add density gates. Tested a source-member behavioral prototype for 0x4aa1db secondary composite members and 0x4aa3e9 member score depletion, then rejected and reverted it because focused export worsened reward overproduction (Small reward coordinates 116 vs prior 61; Medium 671 vs prior 278). Revert export returned to prior baseline (Small reward coordinates 61/decorative 219; Medium reward coordinates 278/decorative 774). Next implementation target is full 0x4aa3e9 generated-cell merge plus reward guard/package member projection as one source unit; enabling secondary members alone is proven unsafe.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-04T23:40:00Z",
+    "updatedAt": "2026-06-05T09:29:03Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9125,10 +9128,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete.",
+  "currentSliceNotes": "2026-06-05 RMG wrapper-state checkpoint: decorative filler no longer seeds connection blockers/guards as 0x49e1bf prior object-vector wrappers; those records remain generated-cell blockers/package records. Prior object wrappers now attempt recovered 0x49dc9e rand_trn score attachment. Focused Python export .artifacts/rmg_native_wrapper_state_checkpoint_20260605 passed for Small seed11 and Medium seed10. Counts remain parity-open: Small native 323 vs h3maped 299 objects (decoration +29, guard 0, object +2, reward -7, town 0); Medium native 1154 vs h3maped 1256 objects (decoration -98, guard +10, object -6, reward -8, town 0). Counters: Small prior wrapper score matches 0/missing 38, deferred connection blockers 10/guards 5; Medium matches 1/missing 176, deferred connection blockers 30/guards 20. Rejected isolated 0x4a54a7 descriptor-byte score-wave gating after probe .artifacts/rmg_native_4a54a7_descriptor_gate_20260605: it overproduced Small 409 objects and Medium 2183 objects because upstream reward candidate-retirement/private object-vector state is still unrecovered. Do not land that behavior until the paired upstream limiter is ported.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-05T00:26:01Z",
+  "currentSliceUpdatedAt": "2026-06-05T09:29:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10081,13 +10084,17 @@
     }
   },
   "lastValidation": {
-    "commands": [
-      "python3 tests/validate_repo.py",
-      "jq empty ops/progress.json",
-      "git diff --check"
-    ],
-    "status": "validation_passed_focused_parity_open",
-    "updatedAt": "2026-06-05T00:26:01Z"
+    "status": "pass_in_progress_wrapper_state_checkpoint_parity_open",
+    "updatedAt": "2026-06-05T09:29:03Z",
+    "summary": "Kept source-clean native RMG wrapper-state corrections and rejected unsafe isolated 0x4a54a7 descriptor-gate behavior after focused controlled exports.",
+    "checks": [
+      "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_wrapper_state_checkpoint_20260605 --controlled-case small_3p_seed_11_controlled:small:3:11:none:1:3:0 --controlled-case medium_4p_seed_10_controlled:medium:4:10:none:1:4:0 --emit-phase-snapshot --print-manifest",
+      "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_wrapper_state_checkpoint_20260605/small_3p_seed_11_controlled.amap --compare",
+      "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_medium_4p_seed_10_controlled.h3m --amap .artifacts/rmg_native_wrapper_state_checkpoint_20260605/medium_4p_seed_10_controlled.amap --compare",
+      "git diff --check",
+      "jq empty ops/progress.json"
+    ]
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "plannedSlices": [
@@ -50209,7 +50216,7 @@
     }
   ],
   "taskId": "10184",
-  "updatedAt": "2026-06-04T23:40:00Z",
+  "updatedAt": "2026-06-05T09:29:03Z",
   "validation": {
     "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
     "evidence": [
@@ -57335,6 +57342,64 @@
       "status": "pass_in_progress_49dc9e_no_def_gate_behavior_neutral",
       "summary": "Removed the non-source mapped-DEF rejection from decorative candidate construction. Direct 0x49dc9e disassembly shows score-row attachment by lookup type, first terrain bit, and object group field +0x20, not DEF-name membership. Focused Small/Medium output is behavior-neutral because the removed filter rejected 0 candidates in these cases, but the native-only gate is gone and phase metadata now records mapped DEF data as metadata only. The overall RMG object-density/source-parity objective remains in progress.",
       "updatedAt": "2026-06-04T23:40:00Z"
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass_in_progress_wrapper_state_checkpoint_parity_open",
+      "updatedAt": "2026-06-05T09:29:03Z",
+      "summary": "Kept source-clean native RMG wrapper-state corrections and rejected unsafe isolated 0x4a54a7 descriptor-gate behavior after focused controlled exports.",
+      "currentSliceNotes": "2026-06-05 RMG wrapper-state checkpoint: decorative filler no longer seeds connection blockers/guards as 0x49e1bf prior object-vector wrappers; those records remain generated-cell blockers/package records. Prior object wrappers now attempt recovered 0x49dc9e rand_trn score attachment. Focused Python export .artifacts/rmg_native_wrapper_state_checkpoint_20260605 passed for Small seed11 and Medium seed10. Counts remain parity-open: Small native 323 vs h3maped 299 objects (decoration +29, guard 0, object +2, reward -7, town 0); Medium native 1154 vs h3maped 1256 objects (decoration -98, guard +10, object -6, reward -8, town 0). Counters: Small prior wrapper score matches 0/missing 38, deferred connection blockers 10/guards 5; Medium matches 1/missing 176, deferred connection blockers 30/guards 20. Rejected isolated 0x4a54a7 descriptor-byte score-wave gating after probe .artifacts/rmg_native_4a54a7_descriptor_gate_20260605: it overproduced Small 409 objects and Medium 2183 objects because upstream reward candidate-retirement/private object-vector state is still unrecovered. Do not land that behavior until the paired upstream limiter is ported.",
+      "checks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_wrapper_state_checkpoint_20260605 --controlled-case small_3p_seed_11_controlled:small:3:11:none:1:3:0 --controlled-case medium_4p_seed_10_controlled:medium:4:10:none:1:4:0 --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_wrapper_state_checkpoint_20260605/small_3p_seed_11_controlled.amap --compare",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_medium_4p_seed_10_controlled.h3m --amap .artifacts/rmg_native_wrapper_state_checkpoint_20260605/medium_4p_seed_10_controlled.amap --compare",
+        "git diff --check",
+        "jq empty ops/progress.json"
+      ],
+      "metrics": {
+        "small_3p_seed_11_controlled": {
+          "native_objects": 323,
+          "h3maped_objects": 299,
+          "category_delta": {
+            "decoration": 29,
+            "guard": 0,
+            "object": 2,
+            "reward": -7,
+            "town": 0
+          },
+          "prior_wrapper_score_matches": 0,
+          "prior_wrapper_score_missing": 38,
+          "deferred_connection_blockers": 10,
+          "deferred_connection_guards": 5
+        },
+        "medium_4p_seed_10_controlled": {
+          "native_objects": 1154,
+          "h3maped_objects": 1256,
+          "category_delta": {
+            "decoration": -98,
+            "guard": 10,
+            "object": -6,
+            "reward": -8,
+            "town": 0
+          },
+          "prior_wrapper_score_matches": 1,
+          "prior_wrapper_score_missing": 176,
+          "deferred_connection_blockers": 30,
+          "deferred_connection_guards": 20
+        },
+        "rejected_probe_0x4a54a7_descriptor_gate": {
+          "artifact": ".artifacts/rmg_native_4a54a7_descriptor_gate_20260605",
+          "small_native_objects": 409,
+          "medium_native_objects": 2183,
+          "reason": "isolated descriptor gate overproduces because upstream reward candidate-retirement/private object-vector limiter is not recovered"
+        },
+        "source_correctness": {
+          "density_scalar_or_gate_added": false,
+          "final_map_patch_added": false,
+          "overall_goal_complete": false
+        }
+      }
     }
   ],
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete."
