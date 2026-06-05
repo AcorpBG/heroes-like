@@ -7338,7 +7338,7 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 }
 
 
-Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_phase, const Dictionary &terrain_tile_byte_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<int32_t> &live_terrain_code) {
+Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_phase, const Dictionary &terrain_tile_byte_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code) {
 	Dictionary phase;
 	phase["phase_id"] = "town_castle_phase";
 	phase["h3maped_anchor"] = "0x4a8d2c/0x4a8db2/0x4a93a2";
@@ -8200,6 +8200,25 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 			default:
 				break;
 		}
+		H3MaskPoint town_object_origin_0x2c_0x30 { 2, 0 };
+		Dictionary town_catalog_load;
+		for (const H3ObjectRow &row : h3_object_rows_by_type_from_recovered_catalog(98, town_catalog_load)) {
+			if (row.source_line == town_template_source_line || row.def_name.to_lower() == town_template_def_name.to_lower()) {
+				town_object_origin_0x2c_0x30 = h3_object_row_origin_0x2c_0x30_from_action_mask(row.action_mask);
+				break;
+			}
+		}
+		const int32_t route_x_0x4a95af = x - town_object_origin_0x2c_0x30.dx;
+		const int32_t route_y_0x4a95af = y - town_object_origin_0x2c_0x30.dy;
+		const int64_t town_post_append_mutation_flat_0x4a95b7 = h3maped_cell_index(map_width, map_height, route_x_0x4a95af, route_y_0x4a95af + 1, level);
+		bool town_post_append_mutation_applied_0x4a95d7 = false;
+		if (town_post_append_mutation_flat_0x4a95b7 >= 0
+				&& town_post_append_mutation_flat_0x4a95b7 < int64_t(live_cell_word_0x28.size())) {
+			uint32_t &word_0x28 = live_cell_word_0x28[size_t(town_post_append_mutation_flat_0x4a95b7)];
+			word_0x28 &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+			word_0x28 |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+			town_post_append_mutation_applied_0x4a95d7 = true;
+		}
 
 		Array body_tiles;
 		for (const H3MaskPoint &point : town_body_points) {
@@ -8242,6 +8261,17 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 		town_record["x"] = x;
 		town_record["y"] = y;
 		town_record["level"] = level;
+		town_record["object_x_0x49ba89"] = x;
+		town_record["object_y_0x49ba89"] = y;
+		town_record["object_level_0x49ba89"] = level;
+		town_record["route_x_0x4a95af"] = route_x_0x4a95af;
+		town_record["route_y_0x4a95af"] = route_y_0x4a95af;
+		town_record["route_level_0x4a95af"] = level;
+		town_record["source_object_origin_x_0x2c"] = town_object_origin_0x2c_0x30.dx;
+		town_record["source_object_origin_y_0x30"] = town_object_origin_0x2c_0x30.dy;
+		town_record["source_object_origin_derivation"] = "0x4906fb_action_mask_first_set_bit_used_by_0x4a95af_subtract";
+		town_record["town_route_post_append_mutation_flat_0x4a95b7"] = int32_t(town_post_append_mutation_flat_0x4a95b7);
+		town_record["town_route_post_append_mutation_applied_0x4a95d7"] = town_post_append_mutation_applied_0x4a95d7;
 		town_record["primary_tile"] = h3_cell_dictionary(x, y, level);
 		town_record["body_tiles"] = body_tiles;
 		town_record["approach_tiles"] = approach_tiles;
@@ -13115,6 +13145,9 @@ void append_generator_0x14b0_coordinate_record(Array &result, const Dictionary &
 	record["x"] = x;
 	record["y"] = y;
 	record["level"] = level;
+	record["object_x"] = source.get("x", x);
+	record["object_y"] = source.get("y", y);
+	record["object_level"] = source.get("level", level);
 	record["coordinate_triplet"] = Array::make(x, y, level);
 	record["route_endpoint_source"] = "object_coordinate_0x4a95af";
 	record["complete_executable_vector_claim"] = true;
@@ -19513,7 +19546,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	if (inspection_phase_limit_reached(normalized_config, report, "terrain_tile_byte_writeback")) {
 		return report;
 	}
-	Dictionary town_castle = town_castle_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, terrain_tile_byte_writeback, zone_words, live_cell_word_0x20, live_terrain_code);
+	Dictionary town_castle = town_castle_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, terrain_tile_byte_writeback, zone_words, live_cell_word_0x20, live_cell_word_0x28, live_terrain_code);
 	town_castle["source_range"] = "0x4a8d2c/0x4a8db2/0x4a93a2/0x49aa93/0x49a09c/0x49b3c1/0x49ba89";
 	town_castle["binary_byte_prefix_0x4a8d2c"] = "55 8b ec 51 53 56 57 8b 7d 08 8b d9 8b 37 8b 47";
 	town_castle["binary_byte_prefix_0x4a8db2"] = "55 8b ec 83 ec 48 8b 45 08 53 56 33 db 8b 30 8b";
