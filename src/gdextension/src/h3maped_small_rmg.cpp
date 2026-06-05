@@ -5834,6 +5834,15 @@ Dictionary terrain_cell_writeout_phase(const Dictionary &normalized_config, cons
 	for (int32_t index = 0; index < selected_terrain_ids.size() && index < int32_t(runtime_zone_terrain_ids.size()); ++index) {
 		runtime_zone_terrain_ids[size_t(index)] = int32_t(selected_terrain_ids[index]);
 	}
+	std::map<int32_t, int32_t> runtime_index_by_zone_word_id;
+	for (int64_t runtime_record_index = 0; runtime_record_index < runtime_zones.size(); ++runtime_record_index) {
+		if (Variant(runtime_zones[runtime_record_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zones[runtime_record_index];
+		const int32_t runtime_index = int32_t(runtime.get("runtime_zone_index", runtime.get("runtime_index", runtime_record_index)));
+		runtime_index_by_zone_word_id[zone_word_id_for_runtime_zone(runtime)] = runtime_index;
+	}
 
 	std::map<int32_t, int32_t> owner_low_byte_counts;
 	std::map<int32_t, int32_t> terrain_code_counts;
@@ -5853,10 +5862,12 @@ Dictionary terrain_cell_writeout_phase(const Dictionary &normalized_config, cons
 			continue;
 		}
 		const int32_t owner_byte = int32_t((zone_word >> 16U) & 0xffU);
-		if (owner_byte < 0 || owner_byte >= int32_t(runtime_zone_terrain_ids.size())) {
+		const auto runtime_index_found = runtime_index_by_zone_word_id.find(owner_byte);
+		const int32_t runtime_index = runtime_index_found == runtime_index_by_zone_word_id.end() ? -1 : runtime_index_found->second;
+		if (runtime_index < 0 || runtime_index >= int32_t(runtime_zone_terrain_ids.size())) {
 			continue;
 		}
-		const int32_t terrain_id = runtime_zone_terrain_ids[size_t(owner_byte)];
+		const int32_t terrain_id = runtime_zone_terrain_ids[size_t(runtime_index)];
 		const String project_terrain = project_terrain_for_h3maped_id(terrain_id);
 		assigned_owner_cell_count += 1;
 		owner_low_byte_counts[owner_byte] += 1;
