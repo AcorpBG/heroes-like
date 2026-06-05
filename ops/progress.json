@@ -443,37 +443,55 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "2026-06-05 RMG wrapper-state checkpoint: decorative filler no longer seeds connection blockers/guards as 0x49e1bf prior object-vector wrappers; those records remain generated-cell blockers/package records. Prior object wrappers now attempt recovered 0x49dc9e rand_trn score attachment. Focused Python export .artifacts/rmg_native_wrapper_state_checkpoint_20260605 passed for Small seed11 and Medium seed10. Counts remain parity-open: Small native 323 vs h3maped 299 objects (decoration +29, guard 0, object +2, reward -7, town 0); Medium native 1154 vs h3maped 1256 objects (decoration -98, guard +10, object -6, reward -8, town 0). Counters: Small prior wrapper score matches 0/missing 38, deferred connection blockers 10/guards 5; Medium matches 1/missing 176, deferred connection blockers 30/guards 20. Rejected isolated 0x4a54a7 descriptor-byte score-wave gating after probe .artifacts/rmg_native_4a54a7_descriptor_gate_20260605: it overproduced Small 409 objects and Medium 2183 objects because upstream reward candidate-retirement/private object-vector state is still unrecovered. Do not land that behavior until the paired upstream limiter is ported.",
+    "currentSliceNotes": "Kept h3maped town post-append generated-cell mutation from 0x4a95b7..0x4a95e6 while preserving current road endpoint behavior; strict bit25 traversal and origin-adjusted road endpoint probes were rejected.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "status": "focused_exports_pass_parity_open_descriptor_gate_rejected",
-      "updatedAt": "2026-06-05T09:29:03Z",
-      "commands": [
-        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_wrapper_state_checkpoint_20260605 --controlled-case small_3p_seed_11_controlled:small:3:11:none:1:3:0 --controlled-case medium_4p_seed_10_controlled:medium:4:10:none:1:4:0 --emit-phase-snapshot --print-manifest",
-        "python3 tools/rmg_fast_audit.py --compare ...small... (failed as expected: parity still open)",
-        "python3 tools/rmg_fast_audit.py --compare ...medium... (failed as expected: parity still open)",
-        "git diff --check",
-        "jq empty ops/progress.json"
-      ]
+      "status": "focused_pass_in_progress_compare_fail_expected_parity_gap",
+      "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605"
     },
     "latestEvidence": {
-      "focused_export": "RMG_NATIVE_BATCH_EXPORT_PY status=pass exported=2 failed=0",
-      "medium_counts": "native objects 1275 vs h3maped 1256; movement/object blocked 2483 vs 3313; roads 228 vs 136; category deltas decoration -29 guard +14 object -28 reward +62 town 0",
-      "remaining_blocker": "Recover exact reward coordinate commit/private object-vector mutation path 0x4aa354/0x4aa9b7/0x4aa3e9 and related generated-cell score/footprint semantics.",
-      "small_counts": "native objects 396 vs h3maped 299; movement/object blocked 746 vs 816; roads 46 vs 81; category deltas decoration +63 guard +33 object -8 reward +9 town 0",
-      "structural": "focused package adoption out-of-bounds objects cleared; exact body/block mismatch remains 0 in focused snapshots"
+      "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
+      "change_kept": "Town phase now carries live generated-cell word +0x28 and applies the recovered 0x4a95b7..0x4a95e6 mutation at the origin-adjusted coordinate below the selected town, clearing bit26 and setting bit27. Visible/package town coordinates and current generator+0x14b0 road endpoints remain unchanged.",
+      "source_basis": "h3maped.exe 0x4a9589..0x4a95af subtracts object row +0x2c/+0x30 for route bookkeeping; 0x4a95b7..0x4a95e6 then increments y and mutates generated-cell +0x28 by clearing 0x04000000 and setting 0x08000000 when generated-cell +0x2c bit0 is clear. Native derives +0x2c/+0x30 from the recovered town action mask first set bit.",
+      "rejected_probe": "Strict 0x4aae7b bit25 traversal plus origin-adjusted town road endpoints rejected: both focused cases produced 0 accepted road chains / 0 road cells. Origin-adjusted endpoints without strict bit25 also rejected because it worsened road overdraw (Small +14 vs owner, Medium +187 vs owner).",
+      "focused_result": {
+        "small_3p_seed_11_controlled": {
+          "native_objects": 327,
+          "h3maped_objects": 299,
+          "object_delta": 28,
+          "previous_checkpoint_delta": 24,
+          "road_cells_native": 90,
+          "road_cells_h3maped": 81,
+          "road_delta": 9,
+          "package_decorative_obstacles": 188,
+          "private_decorative_records": 232,
+          "interpretation": "Small object density moved farther from h3maped; this checkpoint is not a final density fix."
+        },
+        "medium_4p_seed_10_controlled": {
+          "native_objects": 1175,
+          "h3maped_objects": 1256,
+          "object_delta": -81,
+          "previous_checkpoint_delta": -102,
+          "road_cells_native": 311,
+          "road_cells_h3maped": 136,
+          "road_delta": 175,
+          "package_decorative_obstacles": 711,
+          "private_decorative_records": 808,
+          "interpretation": "Medium total object density moved closer without changing the known road overdraw."
+        }
+      },
+      "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-05 RMG wrapper-state checkpoint: decorative filler no longer seeds connection blockers/guards as 0x49e1bf prior object-vector wrappers; those records remain generated-cell blockers/package records. Prior object wrappers now attempt recovered 0x49dc9e rand_trn score attachment. Focused Python export .artifacts/rmg_native_wrapper_state_checkpoint_20260605 passed for Small seed11 and Medium seed10. Counts remain parity-open: Small native 323 vs h3maped 299 objects (decoration +29, guard 0, object +2, reward -7, town 0); Medium native 1154 vs h3maped 1256 objects (decoration -98, guard +10, object -6, reward -8, town 0). Counters: Small prior wrapper score matches 0/missing 38, deferred connection blockers 10/guards 5; Medium matches 1/missing 176, deferred connection blockers 30/guards 20. Rejected isolated 0x4a54a7 descriptor-byte score-wave gating after probe .artifacts/rmg_native_4a54a7_descriptor_gate_20260605: it overproduced Small 409 objects and Medium 2183 objects because upstream reward candidate-retirement/private object-vector state is still unrecovered. Do not land that behavior until the paired upstream limiter is ported.",
+    "notes": "2026-06-05 town post-append mutation checkpoint kept. Net focused absolute object-count gap improved across Small+Medium (126 -> 109), but Small got worse and roads remain overdrawn on Medium, so this is a source-backed checkpoint only, not completion.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -487,7 +505,7 @@
     "status": "in_progress",
     "summary": "Investigated the reward/object-vector density discrepancy against h3maped.exe disassembly for 0x4aab7e, 0x4aa354, 0x4aa1db, 0x49d471, and 0x4aa9b7. Confirmed the sqrt reward value is the 0x4aa9b7 coordinate score threshold, not a placement count cap, and confirmed native must not add density gates. Tested a source-member behavioral prototype for 0x4aa1db secondary composite members and 0x4aa3e9 member score depletion, then rejected and reverted it because focused export worsened reward overproduction (Small reward coordinates 116 vs prior 61; Medium 671 vs prior 278). Revert export returned to prior baseline (Small reward coordinates 61/decorative 219; Medium reward coordinates 278/decorative 774). Next implementation target is full 0x4aa3e9 generated-cell merge plus reward guard/package member projection as one source unit; enabling secondary members alone is proven unsafe.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-05T09:29:03Z",
+    "updatedAt": "2026-06-05T09:55:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -43527,34 +43545,55 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete.",
+      "currentSliceNotes": "Kept h3maped town post-append generated-cell mutation from 0x4a95b7..0x4a95e6 while preserving current road endpoint behavior; strict bit25 traversal and origin-adjusted road endpoint probes were rejected.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "commands": [
-          "python3 tests/validate_repo.py",
-          "jq empty ops/progress.json",
-          "git diff --check"
-        ],
-        "status": "focused_exports_pass_full_parity_open",
-        "updatedAt": "2026-06-05T00:26:01Z"
+        "status": "focused_pass_in_progress_compare_fail_expected_parity_gap",
+        "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605"
       },
       "latestEvidence": {
-        "focused_export": "RMG_NATIVE_BATCH_EXPORT_PY status=pass exported=2 failed=0",
-        "medium_counts": "native objects 1275 vs h3maped 1256; movement/object blocked 2483 vs 3313; roads 228 vs 136; category deltas decoration -29 guard +14 object -28 reward +62 town 0",
-        "remaining_blocker": "Recover exact reward coordinate commit/private object-vector mutation path 0x4aa354/0x4aa9b7/0x4aa3e9 and related generated-cell score/footprint semantics.",
-        "small_counts": "native objects 396 vs h3maped 299; movement/object blocked 746 vs 816; roads 46 vs 81; category deltas decoration +63 guard +33 object -8 reward +9 town 0",
-        "structural": "focused package adoption out-of-bounds objects cleared; exact body/block mismatch remains 0 in focused snapshots"
+        "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
+        "change_kept": "Town phase now carries live generated-cell word +0x28 and applies the recovered 0x4a95b7..0x4a95e6 mutation at the origin-adjusted coordinate below the selected town, clearing bit26 and setting bit27. Visible/package town coordinates and current generator+0x14b0 road endpoints remain unchanged.",
+        "source_basis": "h3maped.exe 0x4a9589..0x4a95af subtracts object row +0x2c/+0x30 for route bookkeeping; 0x4a95b7..0x4a95e6 then increments y and mutates generated-cell +0x28 by clearing 0x04000000 and setting 0x08000000 when generated-cell +0x2c bit0 is clear. Native derives +0x2c/+0x30 from the recovered town action mask first set bit.",
+        "rejected_probe": "Strict 0x4aae7b bit25 traversal plus origin-adjusted town road endpoints rejected: both focused cases produced 0 accepted road chains / 0 road cells. Origin-adjusted endpoints without strict bit25 also rejected because it worsened road overdraw (Small +14 vs owner, Medium +187 vs owner).",
+        "focused_result": {
+          "small_3p_seed_11_controlled": {
+            "native_objects": 327,
+            "h3maped_objects": 299,
+            "object_delta": 28,
+            "previous_checkpoint_delta": 24,
+            "road_cells_native": 90,
+            "road_cells_h3maped": 81,
+            "road_delta": 9,
+            "package_decorative_obstacles": 188,
+            "private_decorative_records": 232,
+            "interpretation": "Small object density moved farther from h3maped; this checkpoint is not a final density fix."
+          },
+          "medium_4p_seed_10_controlled": {
+            "native_objects": 1175,
+            "h3maped_objects": 1256,
+            "object_delta": -81,
+            "previous_checkpoint_delta": -102,
+            "road_cells_native": 311,
+            "road_cells_h3maped": 136,
+            "road_delta": 175,
+            "package_decorative_obstacles": 711,
+            "private_decorative_records": 808,
+            "interpretation": "Medium total object density moved closer without changing the known road overdraw."
+          }
+        },
+        "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete.",
+      "notes": "2026-06-05 town post-append mutation checkpoint kept. Net focused absolute object-count gap improved across Small+Medium (126 -> 109), but Small got worse and roads remain overdrawn on Medium, so this is a source-backed checkpoint only, not completion.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -43568,7 +43607,7 @@
       "status": "in_progress",
       "summary": "Investigated the reward/object-vector density discrepancy against h3maped.exe disassembly for 0x4aab7e, 0x4aa354, 0x4aa1db, 0x49d471, and 0x4aa9b7. Confirmed the sqrt reward value is the 0x4aa9b7 coordinate score threshold, not a placement count cap, and confirmed native must not add density gates. Tested a source-member behavioral prototype for 0x4aa1db secondary composite members and 0x4aa3e9 member score depletion, then rejected and reverted it because focused export worsened reward overproduction (Small reward coordinates 116 vs prior 61; Medium 671 vs prior 278). Revert export returned to prior baseline (Small reward coordinates 61/decorative 219; Medium reward coordinates 278/decorative 774). Next implementation target is full 0x4aa3e9 generated-cell merge plus reward guard/package member projection as one source unit; enabling secondary members alone is proven unsafe.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-05T00:00:00Z",
+      "updatedAt": "2026-06-05T09:55:00Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
@@ -55302,6 +55341,52 @@
       "summary": "Kept source-backed 0x49e700 selected-coordinate scoring/adoption and 0x4a9f1c reward template-selection timing; focused Small/Medium native exports pass, but full density/block-surface parity remains open.",
       "updatedAt": "2026-06-05T00:26:01Z",
       "currentSliceNotes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete."
+    },
+    {
+      "id": "rmg-small-generalization-hardening-10184",
+      "status": "in_progress_town_post_append_mutation_kept",
+      "updatedAt": "2026-06-05T09:55:00Z",
+      "summary": "Kept h3maped town post-append generated-cell mutation from 0x4a95b7..0x4a95e6 while preserving current road endpoint behavior; strict bit25 traversal and origin-adjusted road endpoint probes were rejected.",
+      "commands": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_town_post_append_mutation_20260605 --controlled-case small_3p_seed_11_controlled:small:3:11:none:1:3:0 --controlled-case medium_4p_seed_10_controlled:medium:4:10:none:1:4:0 --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_town_post_append_mutation_20260605/small_3p_seed_11_controlled.amap --compare",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_medium_4p_seed_10_controlled.h3m --amap .artifacts/rmg_native_town_post_append_mutation_20260605/medium_4p_seed_10_controlled.amap --compare"
+      ],
+      "evidence": {
+        "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
+        "change_kept": "Town phase now carries live generated-cell word +0x28 and applies the recovered 0x4a95b7..0x4a95e6 mutation at the origin-adjusted coordinate below the selected town, clearing bit26 and setting bit27. Visible/package town coordinates and current generator+0x14b0 road endpoints remain unchanged.",
+        "source_basis": "h3maped.exe 0x4a9589..0x4a95af subtracts object row +0x2c/+0x30 for route bookkeeping; 0x4a95b7..0x4a95e6 then increments y and mutates generated-cell +0x28 by clearing 0x04000000 and setting 0x08000000 when generated-cell +0x2c bit0 is clear. Native derives +0x2c/+0x30 from the recovered town action mask first set bit.",
+        "rejected_probe": "Strict 0x4aae7b bit25 traversal plus origin-adjusted town road endpoints rejected: both focused cases produced 0 accepted road chains / 0 road cells. Origin-adjusted endpoints without strict bit25 also rejected because it worsened road overdraw (Small +14 vs owner, Medium +187 vs owner).",
+        "focused_result": {
+          "small_3p_seed_11_controlled": {
+            "native_objects": 327,
+            "h3maped_objects": 299,
+            "object_delta": 28,
+            "previous_checkpoint_delta": 24,
+            "road_cells_native": 90,
+            "road_cells_h3maped": 81,
+            "road_delta": 9,
+            "package_decorative_obstacles": 188,
+            "private_decorative_records": 232,
+            "interpretation": "Small object density moved farther from h3maped; this checkpoint is not a final density fix."
+          },
+          "medium_4p_seed_10_controlled": {
+            "native_objects": 1175,
+            "h3maped_objects": 1256,
+            "object_delta": -81,
+            "previous_checkpoint_delta": -102,
+            "road_cells_native": 311,
+            "road_cells_h3maped": 136,
+            "road_delta": 175,
+            "package_decorative_obstacles": 711,
+            "private_decorative_records": 808,
+            "interpretation": "Medium total object density moved closer without changing the known road overdraw."
+          }
+        },
+        "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
+      },
+      "notes": "2026-06-05 town post-append mutation checkpoint kept. Net focused absolute object-count gap improved across Small+Medium (126 -> 109), but Small got worse and roads remain overdrawn on Medium, so this is a source-backed checkpoint only, not completion."
     }
   ],
   "validationResults": [
