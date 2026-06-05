@@ -9146,7 +9146,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-05 town post-append mutation checkpoint kept. Net focused absolute object-count gap improved across Small+Medium (126 -> 109), but Small got worse and roads remain overdrawn on Medium, so this is a source-backed checkpoint only, not completion. 2026-06-05 terrain writeout follow-up: fixed terrain_cell_writeout zone-word adoption to map h3maped span-fill source zone ids back to runtime-zone indices before selected-terrain lookup. Focused Small/Medium export shows all span-filled zones counted instead of dropping the last zone as water; public object-density parity remains in progress. 2026-06-05 source-backed RMG private-state checkpoint: adopted 0x4a2105 filled zone rectangles and 0x4a2ffa centroids into post-terrain town/object/connection coordinate consumers; focused Small/Medium export moved package object counts Small 327->338 and Medium 1175->1182 while targeted Python validation passed.",
+  "currentSliceNotes": "2026-06-05 cumulative RMG hardening: kept prior source-backed checkpoints for town post-append mutation, terrain writeout source-zone to runtime-zone adoption, and filled-zone rectangle/centroid adoption. Latest checkpoint corrects native runtime terrain selection 0x49b53d to consume the post-coordinate-replay RNG state from 0x4a218c instead of the later boundary/span-fill RNG. Focused Small/Medium exports pass; Medium h3maped compare improves object delta -74 -> -54 while remaining non-parity. 0x49b4e1 monster-town runtime selection is recorded as the next named recovery target before object RNG parity can be claimed.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-05T09:29:03Z",
@@ -43593,7 +43593,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "2026-06-05 town post-append mutation checkpoint kept. Net focused absolute object-count gap improved across Small+Medium (126 -> 109), but Small got worse and roads remain overdrawn on Medium, so this is a source-backed checkpoint only, not completion. 2026-06-05 terrain writeout follow-up: fixed terrain_cell_writeout zone-word adoption to map h3maped span-fill source zone ids back to runtime-zone indices before selected-terrain lookup. Focused Small/Medium export shows all span-filled zones counted instead of dropping the last zone as water; public object-density parity remains in progress. 2026-06-05 source-backed RMG private-state checkpoint: adopted 0x4a2105 filled zone rectangles and 0x4a2ffa centroids into post-terrain town/object/connection coordinate consumers; focused Small/Medium export moved package object counts Small 327->338 and Medium 1175->1182 while targeted Python validation passed.",
+      "notes": "2026-06-05 cumulative RMG hardening: kept prior source-backed checkpoints for town post-append mutation, terrain writeout source-zone to runtime-zone adoption, and filled-zone rectangle/centroid adoption. Latest checkpoint corrects native runtime terrain selection 0x49b53d to consume the post-coordinate-replay RNG state from 0x4a218c instead of the later boundary/span-fill RNG. Focused Small/Medium exports pass; Medium h3maped compare improves object delta -74 -> -54 while remaining non-parity. 0x49b4e1 monster-town runtime selection is recorded as the next named recovery target before object RNG parity can be claimed.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -43607,7 +43607,7 @@
       "status": "in_progress",
       "summary": "Investigated the reward/object-vector density discrepancy against h3maped.exe disassembly for 0x4aab7e, 0x4aa354, 0x4aa1db, 0x49d471, and 0x4aa9b7. Confirmed the sqrt reward value is the 0x4aa9b7 coordinate score threshold, not a placement count cap, and confirmed native must not add density gates. Tested a source-member behavioral prototype for 0x4aa1db secondary composite members and 0x4aa3e9 member score depletion, then rejected and reverted it because focused export worsened reward overproduction (Small reward coordinates 116 vs prior 61; Medium 671 vs prior 278). Revert export returned to prior baseline (Small reward coordinates 61/decorative 219; Medium reward coordinates 278/decorative 774). Next implementation target is full 0x4aa3e9 generated-cell merge plus reward guard/package member projection as one source unit; enabling secondary members alone is proven unsafe.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-05T10:36:56Z",
+      "updatedAt": "2026-06-05T11:37:14Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
@@ -50255,7 +50255,7 @@
     }
   ],
   "taskId": "10184",
-  "updatedAt": "2026-06-05T10:36:56Z",
+  "updatedAt": "2026-06-05T11:37:14Z",
   "validation": {
     "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
     "evidence": [

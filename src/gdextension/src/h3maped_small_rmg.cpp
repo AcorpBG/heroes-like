@@ -5847,9 +5847,11 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 	phase["h3maped_anchor"] = "0x49b53d";
 	phase["town_to_terrain_table_address"] = "0x540908";
 	phase["allowed_terrain_flags_source"] = "source_zone+0x85..0x8c";
-	const uint32_t rng_state_after_boundary = uint32_t(int64_t(span_fill_phase.get("boundary_rng_state_after_0x4a2777_uint32", coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0))));
-	phase["rng_state_before_0x49b53d_uint32"] = int64_t(rng_state_after_boundary);
-	phase["rng_state_before_0x49b53d_source"] = "0x4a2777_boundary_rng_state_after_randomized_boundary_writers";
+	const uint32_t rng_state_after_coordinate_replay = uint32_t(int64_t(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0)));
+	phase["rng_state_before_0x49b53d_uint32"] = int64_t(rng_state_after_coordinate_replay);
+	phase["rng_state_before_0x49b53d_source"] = "0x4a218c_post_bbox_rescale_runtime_terrain_selection";
+	phase["boundary_rng_state_after_0x4a2777_uint32_diagnostic"] = span_fill_phase.get("boundary_rng_state_after_0x4a2777_uint32", 0);
+	phase["unrecovered_followup"] = "0x49b4e1 monster-town runtime selection follows 0x49b53d in h3maped.exe and remains a named recovery target before object RNG parity can be claimed";
 	phase["strict_port_scope"] = "runtime-zone terrain id selection only; no terrain cell writeout, TerrainPlacement art, map cells, package tiles, or public output";
 	phase["materializes_runtime_zone_terrain_ids"] = false;
 	phase["materializes_terrain_cells"] = false;
@@ -5873,7 +5875,7 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 		return phase;
 	}
 
-	H3MapedRng rng { rng_state_after_boundary };
+	H3MapedRng rng { rng_state_after_coordinate_replay };
 	Array runtime_records = coordinate_phase.get("runtime_zone_records_after_0x49b3c1", Array());
 	Array selections;
 	Array selected_ids;
@@ -5952,7 +5954,7 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 	}
 
 	phase["status"] = "active_strict_executable_port";
-	phase["source"] = "h3maped 0x49b53d runtime terrain selection over the 0x49b3c1 town choices and source-zone allowed terrain flags";
+	phase["source"] = "h3maped 0x4a218c calls 0x49b53d after bbox rescale over the 0x49b3c1 town choices and source-zone allowed terrain flags";
 	phase["materializes_runtime_zone_terrain_ids"] = true;
 	phase["selection_count"] = selections.size();
 	phase["selections"] = selections;
