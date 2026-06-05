@@ -994,6 +994,39 @@ constexpr const char *H3MAPED_ALLOWED_MAIN_TOWNS[] = {
 	"elemental",
 };
 
+String h3maped_town_id_for_original_index(int32_t index) {
+	if (index >= 0 && index < int32_t(sizeof(H3MAPED_ALLOWED_MAIN_TOWNS) / sizeof(H3MAPED_ALLOWED_MAIN_TOWNS[0]))) {
+		return String(H3MAPED_ALLOWED_MAIN_TOWNS[index]);
+	}
+	return String();
+}
+
+int32_t h3maped_town_original_index_from_id(const String &town_id) {
+	for (int32_t index = 0; index < int32_t(sizeof(H3MAPED_ALLOWED_MAIN_TOWNS) / sizeof(H3MAPED_ALLOWED_MAIN_TOWNS[0])); ++index) {
+		if (town_id == String(H3MAPED_ALLOWED_MAIN_TOWNS[index])) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+Array h3maped_allowed_town_slots_0x49b3c1(const Array &allowed_towns) {
+	std::array<bool, 9> flags = {};
+	for (int64_t index = 0; index < allowed_towns.size(); ++index) {
+		const int32_t town_index = h3maped_town_original_index_from_id(String(allowed_towns[index]));
+		if (town_index >= 0 && town_index < int32_t(flags.size())) {
+			flags[size_t(town_index)] = true;
+		}
+	}
+	Array slots;
+	for (int32_t index = 0; index < int32_t(flags.size()); ++index) {
+		if (flags[size_t(index)]) {
+			slots.append(index);
+		}
+	}
+	return slots;
+}
+
 int32_t nested_or_flat_i32(const Dictionary &dict, const char *nested_key, const char *flat_key, int32_t fallback) {
 	Dictionary nested = dict.get(nested_key, Dictionary());
 	if (nested.has(flat_key)) {
@@ -1610,10 +1643,16 @@ String h3maped_project_decorative_blocker_object_id_for_terrain(int32_t terrain_
 }
 
 Array h3maped_terrain_ids_from_original_names(const Array &terrain_names) {
-	Array terrain_ids;
+	std::array<bool, 8> flags = {};
 	for (int64_t index = 0; index < terrain_names.size(); ++index) {
 		const int32_t terrain_id = h3maped_terrain_id_from_name(String(terrain_names[index]));
-		if (terrain_id >= 0) {
+		if (terrain_id >= 0 && terrain_id < int32_t(flags.size())) {
+			flags[size_t(terrain_id)] = true;
+		}
+	}
+	Array terrain_ids;
+	for (int32_t terrain_id = 0; terrain_id < int32_t(flags.size()); ++terrain_id) {
+		if (flags[size_t(terrain_id)]) {
 			terrain_ids.append(terrain_id);
 		}
 	}
@@ -4449,22 +4488,28 @@ Dictionary coordinate_replay_phase(const Dictionary &normalized_config, const Di
 		}
 		Dictionary runtime = runtime_records[zone_index];
 		Array allowed_factions = runtime.get("allowed_faction_ids_for_49b3c1", Array());
-		if (!allowed_factions.is_empty()) {
+		Array allowed_town_slots = h3maped_allowed_town_slots_0x49b3c1(allowed_factions);
+		if (!allowed_town_slots.is_empty()) {
 			const int32_t rng_value = rng.next();
-			const int32_t town_choice_index = rng_value % int32_t(allowed_factions.size());
-			runtime["selected_faction_id_49b3c1"] = String(allowed_factions[town_choice_index]);
+			const int32_t selected_allowed_ordinal = rng_value % int32_t(allowed_town_slots.size());
+			const int32_t town_choice_index = int32_t(allowed_town_slots[selected_allowed_ordinal]);
+			runtime["selected_faction_id_49b3c1"] = h3maped_town_id_for_original_index(town_choice_index);
 			runtime["town_choice_index_49b3c1"] = town_choice_index;
 			runtime["faction_id"] = runtime["selected_faction_id_49b3c1"];
 			runtime["town_choice_index"] = town_choice_index;
-			runtime["faction_source"] = "0x49b3c1_allowed_town_choice";
+			runtime["town_choice_selected_allowed_ordinal_49b3c1"] = selected_allowed_ordinal;
+			runtime["allowed_original_town_indices_49b3c1"] = allowed_town_slots;
+			runtime["faction_source"] = "0x49b3c1_allowed_town_choice_source_flag_slot";
 			town_choice_rng_calls += 1;
 			Dictionary event;
 			event["consumer"] = "0x49b3c1";
 			event["runtime_zone_index"] = zone_index;
 			event["value"] = rng_value;
-			event["modulus"] = allowed_factions.size();
+			event["modulus"] = allowed_town_slots.size();
+			event["selected_allowed_ordinal"] = selected_allowed_ordinal;
 			event["selected_index"] = town_choice_index;
 			event["selected_faction_id"] = runtime["selected_faction_id_49b3c1"];
+			event["allowed_original_town_indices"] = allowed_town_slots;
 			rng_events.append(event);
 		}
 		runtime_records[zone_index] = runtime;
@@ -7888,14 +7933,18 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 			String resolution_source = "0x4a901a_owner_minus_one_same_type_reused_caller_choice";
 			if (!same_type_neutral || resolved_town_choice < 0 || resolved_faction_id.is_empty()) {
 				Array allowed_factions = scheduled.get("allowed_faction_ids_for_49b3c1", Array());
-				if (!allowed_factions.is_empty()) {
+				Array allowed_town_slots = h3maped_allowed_town_slots_0x49b3c1(allowed_factions);
+				if (!allowed_town_slots.is_empty()) {
 					const int32_t rng_value = object_rng.next();
 					weighted_owner_minus_one_town_choice_rng_call_count += 1;
-					resolved_town_choice = rng_value % int32_t(allowed_factions.size());
-					resolved_faction_id = String(allowed_factions[resolved_town_choice]);
-					resolution_source = "0x4a901a_owner_minus_one_calls_0x49b3c1_allowed_town_choice";
+					const int32_t selected_allowed_ordinal = rng_value % int32_t(allowed_town_slots.size());
+					resolved_town_choice = int32_t(allowed_town_slots[selected_allowed_ordinal]);
+					resolved_faction_id = h3maped_town_id_for_original_index(resolved_town_choice);
+					resolution_source = "0x4a901a_owner_minus_one_calls_0x49b3c1_allowed_town_choice_source_flag_slot";
 					record["town_choice_rng_value_0x4a901a"] = rng_value;
-					record["town_choice_rng_modulus_0x4a901a"] = allowed_factions.size();
+					record["town_choice_rng_modulus_0x4a901a"] = allowed_town_slots.size();
+					record["town_choice_selected_allowed_ordinal_0x4a901a"] = selected_allowed_ordinal;
+					record["allowed_original_town_indices_0x4a901a"] = allowed_town_slots;
 					weighted_owner_minus_one_allowed_choice_count += 1;
 				} else {
 					const int32_t rng_value = object_rng.next();
