@@ -4388,7 +4388,7 @@ void prune_candidates_4a1ad8_single_level(const RuntimeZoneSeed &current_templat
 		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
 		const int32_t height = candidate_max_y - candidate_min_y;
 		const int32_t width = candidate_max_x - candidate_min_x;
-		return std::max(height, width);
+		return std::max(std::min(coordinate_prune_span_budget, height), width);
 	};
 
 	int32_t best_metric = 0x7d00;
