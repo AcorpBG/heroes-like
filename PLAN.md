@@ -18,12 +18,13 @@ Rules:
 - A slice is complete only when implementation/content/tooling changes satisfy the referenced requirements and validation gates.
 - Documentation-only and report-only work must stay distinct from implemented gameplay/system/content completion.
 - Do not continue ad hoc UI cue/performance/content work unless it is selected here and tracked in `ops/progress.json`.
+- Test, report, audit, and export tooling should be Python-owned. GDScript should be reserved for live game/runtime behavior, not validation/report launchers.
 
 ## Current Tactical State
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: none selected after completing the strict Medium H3MapEd land RMG track. Strict Medium `72x72x1` one-level land generation is now public through the generated-map flow; unsupported Medium water/underground and larger sizes remain hidden or blocked until separately scoped.
+- Current implementation slice: `rmg-small-generalization-hardening-10184` is in progress. The active work is strict H3MapEd behavior hardening for Small/Medium one-level land RMG parity, focused on source-backed phase fixes rather than density multipliers, extra gates, or report-only churn.
 - Paused/in-progress evidence slice: `strategic-ai-medium-long-run-seed-matrix-10184` remains in progress as strategic-AI evidence, but it is no longer the selected immediate work while the Medium H3MapEd RMG track is being planned and staged.
 - Latest completed planning slice: `native-rmg-medium-h3maped-land-goals-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-public-ui-10184`.
@@ -253,6 +254,7 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 - Earlier completed slice: `battle-fast-faction-benchmark-10184`.
 - Earlier completed slice: `economy-native-rmg-required-source-support-10184`.
 - `ops/progress.json` remains the operational source of truth for completed evidence, validation commands, and paused/superseded slice state.
+- RMG test/report/export work is Python-owned. Do not add or run GDScript report/export launchers for RMG validation; GDScript remains for live in-game runtime behavior.
 
 Latest economy/town evidence:
 - Runtime-inclusive economy/town scorecard: 30/30.

@@ -44,11 +44,12 @@ Documentation is not implementation unless a slice is explicitly documentation-o
 Locked stack for the current production foundation:
 
 - Engine: Godot 4 stable series.
-- Gameplay language: GDScript.
+- Gameplay language: GDScript for in-game runtime behavior.
+- Tooling language: Python for tests, reports, audits, and export/validation helpers.
 - Rendering: 2D-first scenes and UI.
 - Authored content: JSON files under `content/` until a selected migration replaces specific domains.
 - Runtime saves: versioned JSON snapshots and campaign progression under `user://saves/` until a selected migration introduces asset-reference saves plus compact deltas.
-- Validation: Python repository checks plus focused Godot smoke/report scenes.
+- Validation: Python repository checks plus focused runtime smoke coverage where engine execution is required.
 - Native extension candidate: Phase 2 map/scenario persistence may introduce a Godot GDExtension written in C++ for typed map documents, durable map packages, validation, save/load, and migration.
 
 Native extensions, external asset pipelines, or new storage layers may be added only through concrete tactical slices with rollback, compatibility, and validation gates.

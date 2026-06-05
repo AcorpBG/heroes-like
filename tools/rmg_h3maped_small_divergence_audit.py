@@ -54,28 +54,10 @@ def write_json(path: Path, payload: dict[str, Any], pretty: bool) -> None:
 def run_native_export(args: argparse.Namespace) -> Path:
     if args.native_snapshot:
         return args.native_snapshot
-    args.out.mkdir(parents=True, exist_ok=True)
-    command = [
-        args.godot_bin,
-        "--headless",
-        "--path",
-        ".",
-        "--quit-after",
-        "1",
-        "tools/rmg_h3maped_small_divergence_export.tscn",
-        "--",
-        "--out",
-        str(args.out),
-    ]
-    result = run_command(command, args.timeout_seconds)
-    if result.returncode != 0:
-        raise RuntimeError(f"native broad export failed:\n{command_tail(result.stdout)}")
-    if not DEFAULT_NATIVE_SNAPSHOT.exists() and args.out == DEFAULT_OUT_DIR:
-        raise RuntimeError(f"native broad export did not write {DEFAULT_NATIVE_SNAPSHOT}")
-    snapshot_path = args.out / "native_broad_snapshot.json"
-    if not snapshot_path.exists():
-        raise RuntimeError(f"native broad export did not write {snapshot_path}")
-    return snapshot_path
+    raise RuntimeError(
+        "native broad snapshot is required. GDScript report/export launchers are disabled for this audit; "
+        "provide --native-snapshot from a Python/native export artifact."
+    )
 
 
 def metrics(case: dict[str, Any]) -> dict[str, Any]:
@@ -267,42 +249,16 @@ def run_deep_drift(args: argparse.Namespace, case: dict[str, Any], manifest_path
             "manifest_status": manifest.get("status", ""),
             "blocker": manifest.get("blocker", manifest.get("error", "")),
         }
-    snapshot_dir = case_dir / "phase_snapshot"
-    snapshot_dir.mkdir(parents=True, exist_ok=True)
-    snapshot_command = [
-        args.godot_bin,
-        "--headless",
-        "--path",
-        ".",
-        "--quit-after",
-        "1",
-        "tools/rmg_h3m_native_phase_snapshot_export.tscn",
-        "--",
-        "--out",
-        str(snapshot_dir),
-        "--case-id",
-        str(case.get("case_id", "")),
-        "--seed",
-        str(case.get("seed", "")),
-        "--players",
-        str(case.get("players", "")),
-        "--human-players",
-        "1",
-        "--water",
-        "land",
-        "--level-count",
-        "1",
-    ]
-    snapshot_result = run_command(snapshot_command, args.timeout_seconds)
-    (case_dir / "phase_snapshot_command.log").write_text(snapshot_result.stdout)
-    if snapshot_result.returncode != 0:
+    snapshot_path = Path(str(case.get("phase_snapshot_path", "")))
+    if not snapshot_path.exists() and args.phase_snapshot_root:
+        snapshot_path = args.phase_snapshot_root / str(case.get("case_id", "")) / "phase_snapshot.json"
+    if not snapshot_path.exists():
         return {
             "case_id": case.get("case_id", ""),
-            "status": "phase_snapshot_failed",
+            "status": "phase_snapshot_missing",
             "manifest": str(manifest_path),
-            "log_tail": command_tail(snapshot_result.stdout),
+            "blocker": "GDScript phase snapshot export is disabled; provide phase_snapshot_path in the native snapshot or --phase-snapshot-root.",
         }
-    snapshot_path = snapshot_dir / "phase_snapshot.json"
     drift_dir = case_dir / "phase_drift"
     drift_command = [
         sys.executable,
@@ -478,7 +434,7 @@ def main() -> int:
     parser.add_argument("--reuse-existing-references", action="store_true")
     parser.add_argument("--existing-references-only", action="store_true")
     parser.add_argument("--reference-root", type=Path, default=DEFAULT_REFERENCE_ROOT)
-    parser.add_argument("--godot-bin", default="godot")
+    parser.add_argument("--phase-snapshot-root", type=Path)
     parser.add_argument("--timeout-seconds", type=int, default=180)
     parser.add_argument("--controlled-timeout-seconds", type=int, default=180)
     parser.add_argument("--pretty", action="store_true")

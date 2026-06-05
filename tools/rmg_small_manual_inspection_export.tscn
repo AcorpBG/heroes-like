@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://tools/rmg_small_manual_inspection_export.gd" id="1_export"]
-
-[node name="RmgSmallManualInspectionExport" type="Node"]
-script = ExtResource("1_export")

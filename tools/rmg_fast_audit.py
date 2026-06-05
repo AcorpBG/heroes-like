@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import gzip
 import json
+import re
 from collections import Counter, deque
 from pathlib import Path
 from typing import Any
@@ -28,7 +29,7 @@ H3M_BLOCKING_TERRAIN_TYPE_IDS = {8, 9}
 DECORATION_TYPE_IDS = {118, 119, 120, 134, 135, 136, 137, 147, 150, 155, 199, 207, 210}
 GUARD_TYPE_IDS = {54, 71}
 TOWN_TYPE_IDS = {98}
-RESOURCE_REWARD_TYPE_IDS = {5, 53, 79, 83, 88, 89, 90, 93, 101}
+RESOURCE_REWARD_TYPE_IDS = {5, 53, 66, 67, 68, 69, 76, 79, 83, 88, 89, 90, 93, 101}
 REWARD_KINDS = {"mine", "neutral_dwelling", "resource_site", "reward_reference"}
 
 
@@ -189,6 +190,40 @@ def parse_h3m_object_instances(data: bytes, offset: int, templates: list[dict[st
     }
 
 
+def h3m_generation_summary(data: bytes) -> dict[str, Any]:
+    text = data.decode("latin-1", "ignore")
+    marker = "Map created by the Random Map Generator"
+    offset = text.find(marker)
+    if offset < 0:
+        return {
+            "status": "missing",
+            "reason": "No plaintext h3maped random-map description string was found in the saved H3M.",
+        }
+    end = text.find("\x00", offset)
+    if end < 0:
+        end = min(len(text), offset + 512)
+    summary_text = text[offset:end]
+    parsed: dict[str, Any] = {}
+    match = re.search(
+        r"Template was (?P<template>.*?), Random seed was (?P<seed>-?\d+), size (?P<size>\d+), "
+        r"levels (?P<levels>\d+), humans (?P<humans>\d+), computers (?P<computers>\d+), "
+        r"water (?P<water>.*?), monsters (?P<monsters>-?\d+)",
+        summary_text,
+    )
+    if match:
+        parsed = {
+            "template": match.group("template"),
+            "seed": int(match.group("seed")),
+            "size": int(match.group("size")),
+            "levels": int(match.group("levels")),
+            "humans": int(match.group("humans")),
+            "computers": int(match.group("computers")),
+            "water": match.group("water"),
+            "monsters": int(match.group("monsters")),
+        }
+    return {"status": "found", "text": summary_text, "parsed": parsed}
+
+
 def mask_points(record: dict[str, Any], action_mask: bool, width: int, height: int) -> list[dict[str, int]]:
     mask = record.get("action_mask" if action_mask else "passability_mask", b"")
     if len(mask) < 6:
@@ -347,6 +382,7 @@ def h3m_metrics(path: Path, data: bytes, records: list[dict[str, Any]], tile_off
         "road_cell_count_by_level": road_counts,
         "road_cell_count_total": sum(road_counts.values()),
         "road_component_sizes_by_level": road_components,
+        "h3maped_generation_summary": h3m_generation_summary(data),
         "semantic_layout": semantic_from_h3m(data, tile_offset, records, width, level_count),
     }
 
@@ -367,16 +403,25 @@ def native_category(kind: str) -> str:
     return "object"
 
 
+def native_object_category(obj: dict[str, Any]) -> str:
+    kind = str(obj.get("kind", obj.get("native_record_kind", obj.get("category_id", "object"))))
+    return native_category(kind)
+
+
 def load_amap(path: Path) -> dict[str, Any]:
     package = json.loads(path.read_text())
     doc = package.get("document", package)
     objects = doc.get("objects", [])
+    metadata = doc.get("metadata", {})
+    normalized_config = metadata.get("normalized_config", {}) if isinstance(metadata, dict) else {}
+    h3maped_selection = normalized_config.get("h3maped_template_selection", {}) if isinstance(normalized_config, dict) else {}
+    selected_template = h3maped_selection.get("selected_template", {}) if isinstance(h3maped_selection, dict) else {}
     counts_by_kind = Counter(str(obj.get("kind", obj.get("native_record_kind", obj.get("category_id", "object")))) for obj in objects)
-    counts_by_category = Counter(native_category(kind) for kind in counts_by_kind.elements())
+    counts_by_category = Counter(native_object_category(obj) for obj in objects)
     counts_by_level: dict[str, Counter[str]] = {}
     for obj in objects:
         level_key = str(int(obj.get("level", 0)))
-        counts_by_level.setdefault(level_key, Counter())[native_category(str(obj.get("kind", "")))] += 1
+        counts_by_level.setdefault(level_key, Counter())[native_object_category(obj)] += 1
     road_counts, road_components = native_roads(doc)
     return {
         "status": "parsed",
@@ -385,7 +430,17 @@ def load_amap(path: Path) -> dict[str, Any]:
         "width": int(doc.get("width", 0)),
         "height": int(doc.get("height", 0)),
         "level_count": int(doc.get("level_count", 1)),
-        "normalized_config": doc.get("metadata", {}).get("normalized_config", {}),
+        "normalized_config": normalized_config,
+        "native_generation_identity": {
+            "seed": normalized_config.get("normalized_seed", "") if isinstance(normalized_config, dict) else "",
+            "size_class_id": normalized_config.get("size_class_id", "") if isinstance(normalized_config, dict) else "",
+            "water_mode": normalized_config.get("water_mode", "") if isinstance(normalized_config, dict) else "",
+            "level_count": normalized_config.get("level_count", doc.get("level_count", 1)) if isinstance(normalized_config, dict) else doc.get("level_count", 1),
+            "player_constraints": normalized_config.get("player_constraints", {}) if isinstance(normalized_config, dict) else {},
+            "source_template_id": metadata.get("source_template_id", "") if isinstance(metadata, dict) else "",
+            "source_catalog_index": metadata.get("source_catalog_index", selected_template.get("source_catalog_index", -1)) if isinstance(metadata, dict) else selected_template.get("source_catalog_index", -1),
+            "source_template_name": selected_template.get("source_name", "") if isinstance(selected_template, dict) else "",
+        },
         "object_count": len(objects),
         "counts_by_kind": dict(sorted(counts_by_kind.items())),
         "counts_by_category": dict(sorted(counts_by_category.items())),
