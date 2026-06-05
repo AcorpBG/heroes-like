@@ -7584,7 +7584,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
 	const int32_t map_level_count = std::max(1, level_count(normalized_config));
-	const int32_t generator_mode_0x08 = decorative_filler_generator_mode_0x08(normalized_config);
+	const int32_t generator_mode_0x08 = water_mode_code(normalized_config);
 	const int32_t cell_count = int32_t(zone_words.size());
 	const int32_t expected_cell_count = map_width * map_height * map_level_count;
 	Array runtime_zone_records = runtime_zone_phase.get("runtime_zone_records", Array());
@@ -8635,7 +8635,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	phase["weighted_owner_minus_one_allowed_choice_count"] = weighted_owner_minus_one_allowed_choice_count;
 	phase["weighted_owner_minus_one_random_fallback_choice_count"] = weighted_owner_minus_one_random_fallback_choice_count;
 	phase["weighted_owner_minus_one_town_choice_policy"] = "0x4a901a owner_minus_one uses caller choice only when source +0x40 same-type permits it; otherwise it calls 0x49b3c1 against source +0x41..+0x49 before placement";
-	phase["weighted_owner_minus_one_random_fallback_policy"] = "when 0x49b3c1 still returns -1, 0x4a901a consumes 0x4e7276 and selects an original H3 town-choice index modulo 8 or 9 based on generator +0x08";
+	phase["weighted_owner_minus_one_random_fallback_policy"] = "when 0x49b3c1 still returns -1, 0x4a901a consumes 0x4e7276 and selects an original H3 town-choice index modulo 8 or 9 based on generator +0x08; town fallback uses the executable mode field, not the decorative filler land override";
 	phase["generator_mode_0x08_for_0x4a901a_random_fallback"] = generator_mode_0x08;
 	phase["scheduled_direct_minimum_object_count"] = direct_first_success_schedule_count;
 	phase["scheduled_total_town_object_candidate_count"] = scheduled_records.size();
