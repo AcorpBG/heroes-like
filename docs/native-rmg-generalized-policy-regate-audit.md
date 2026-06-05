@@ -213,7 +213,7 @@ The same tool now supports batch scans for corpus-level policy evidence:
 - Owner H3M group densities now provide a fast policy baseline instead of sample-by-sample Godot startup: for example, owner 36x36 one-level evidence is about `229.167` objects / 1000 tiles and `70.216` road cells / 1000 tiles, while owner 144x144 one-level evidence averages about `196.856` objects / 1000 tiles and `34.658` road cells / 1000 tiles.
 - The local native AMAP batch is not a matched corpus; it is evidence that parsed package inspection can run quickly and should be fed by future generated package batches.
 
-`tools/rmg_native_batch_export.tscn` now performs the remaining Godot-only step: one batch generation/export pass through `MapPackageService.generate_random_map`, `convert_generated_payload`, and `save_map_package`. The exported `.amap` files can then be audited by Python. A full owner-file-derived export run wrote `18` generated native packages with `0` export failures; `python3 tools/rmg_fast_audit.py --amap-dir .artifacts/rmg_native_batch_export_current --allow-failures` parsed those `18` packages in about `3.208s` with `0` parse failures.
+`tools/rmg_native_batch_export.py` now orchestrates the remaining Godot-only step: one batch generation/export pass through `MapPackageService.generate_random_map`, `convert_generated_payload`, and `save_map_package`. The exported `.amap` files can then be audited by Python. A full owner-file-derived export run wrote `18` generated native packages with `0` export failures; `python3 tools/rmg_fast_audit.py --amap-dir .artifacts/rmg_native_batch_export_current --allow-failures` parsed those `18` packages in about `3.208s` with `0` parse failures.
 
 The generated-native batch confirms the broad production gap:
 
@@ -294,7 +294,7 @@ Normal generated catalog-auto packages now let the generalized guard floor raise
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix --case s_randomnumberofplayers` exported `1/1` targeted package with `0` failures.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix --case s_randomnumberofplayers` exported `1/1` targeted package with `0` failures.
 - `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix/s_randomnumberofplayers.amap --pretty` reports category counts `decoration 169`, `guard 47`, `object 26`, `reward 80`, `town 6`, with guarded reachable town pairs still `0`.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix --allow-failures --pretty` reports the targeted `36x36_l1` package as `pass`, with guard/reward ratio `0.588` and `0` policy gaps.
 - A combined `18` package evidence set with that targeted package replacing the prior `s_randomnumberofplayers.amap` reports `0` parse failures, `0` native rule failures, `0` density gaps, and `4` policy gaps instead of `5`. Remaining gaps are town density on `108x108_l2` and `36x36_l2`, road density on `36x36_l2`, and a near-threshold `144x144_l1` road floor.
@@ -308,7 +308,7 @@ Normal generated Small two-level catalog-auto packages now add a generalized roa
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor --case s_2playerss_normalwater_2level,s_randomnumberofplayers_islands_2level` exported `2/2` targeted packages with `0` failures.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor --case s_2playerss_normalwater_2level,s_randomnumberofplayers_islands_2level` exported `2/2` targeted packages with `0` failures.
 - `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor/s_2playerss_normalwater_2level.amap --pretty` reports `116` road cells: `87` surface and `29` underground, with guarded reachable town pairs `0`.
 - `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor/s_randomnumberofplayers_islands_2level.amap --pretty` reports `116` road cells: `87` surface and `29` underground, with guarded reachable town pairs `0`.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor --allow-failures --pretty` reports the targeted `36x36_l2` road-density policy gap is gone; the targeted remaining policy gap is town density.
@@ -338,16 +338,16 @@ Native catalog-auto generation now uses size/level-aware object density floors, 
 
 The underground copy pass deliberately excludes towns, guards, mines, resources, dwellings, and reward references. That keeps economy, reward, and settlement-site per-zone limits valid while still preventing empty underground levels.
 
-`tools/rmg_native_batch_export.gd` also now accepts a comma-separated `--case` filter so failures can be regenerated through Godot only for the named cases under investigation. The expected loop is still to run Godot once to create fresh native packages, then use Python for parsing, validation, and comparison iterations.
+`tools/rmg_native_batch_export.py` also accepts a comma-separated `--case` filter so failures can be regenerated through Godot only for the named cases under investigation. The expected loop is still to run Godot once to create fresh native packages, then use Python for parsing, validation, and comparison iterations.
 
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --limit 4` exported `4/4` Large islands/normal-water one-level and two-level native packages.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --limit 4` exported `4/4` Large islands/normal-water one-level and two-level native packages.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --pretty` parsed `18` owner H3Ms and `4` native AMAPs in about `5.945s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_targeted_after_full_failures --case s_randomnumberofplayers,xl_islands_2levels,xl_nowater_2levels,xl_water_2levels` exported the four previously failing cases with `0` export failures.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_targeted_after_full_failures --case s_randomnumberofplayers,xl_islands_2levels,xl_nowater_2levels,xl_water_2levels` exported the four previously failing cases with `0` export failures.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_targeted_after_full_failures --pretty` parsed `18` owner H3Ms and `4` targeted native AMAPs in about `6.523s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_full_after_export_failure_fix` exported all `18/18` owner-file-derived native packages with `0` export failures.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_full_after_export_failure_fix` exported all `18/18` owner-file-derived native packages with `0` export failures.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_full_after_export_failure_fix --pretty` parsed `18` owner H3Ms and `18` native AMAPs in about `8.535s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
 
 The exact owner comparison rows still show count/topology deltas. Those remain diagnostics for future policy work, not production pass/fail targets.
@@ -379,7 +379,7 @@ The supplement records recovered neutral-town semantics (`+0x30`, `neutral_minim
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_twolevel_town_floor --case s_2playerss_normalwater_2level,s_randomnumberofplayers_islands_2level,l_islands_randomplayers_2level,l_normalwater_randomplayers_2level,l_nowater_randomplayers_2level` exported `5/5` targeted packages with `0` failures.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_twolevel_town_floor --case s_2playerss_normalwater_2level,s_randomnumberofplayers_islands_2level,l_islands_randomplayers_2level,l_normalwater_randomplayers_2level,l_nowater_randomplayers_2level` exported `5/5` targeted packages with `0` failures.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor --allow-failures --pretty` reports `status: pass`, `0` parse failures, `0` native rule failures, `0` density gaps, and `0` policy gaps for the targeted package set.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor_combined --allow-failures --pretty` reports `status: pass` across the combined `18` package evidence set, with `0` parse failures, `0` native rule failures, `0` density gaps, and `0` policy gaps in about `8.796s`.
 
@@ -416,8 +416,8 @@ The materializer is generalized by size and level count:
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 600 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_general_road_components` exported `18/18` packages with `0` failures.
-- After tightening the no-stacking guard, `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_general_road_components --case xl_nowater` re-exported the one package that had combined generalized and owner-adjusted roads.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_general_road_components` exported `18/18` packages with `0` failures.
+- After tightening the no-stacking guard, `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_general_road_components --case xl_nowater` re-exported the one package that had combined generalized and owner-adjusted roads.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_general_road_components --allow-failures --pretty` now reports `status: pass`, `18` matched comparisons, `0` parse failures, `0` native rule failures, `0` density gaps, `0` policy gaps, and `0` topology gaps.
 - `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_general_road_components/xl_nowater.amap --pretty` reports `727` road cells and component sizes `[485, 188, 54]`, proving the generalized materializer no longer stacks on that existing owner-adjusted path.
 
@@ -440,7 +440,7 @@ Validation evidence:
 - Targeted XL re-export for `xl_islands,xl_nowater,xl_water` passed with `3/3` packages and `0` export failures.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_general_road_components --allow-failures --pretty` reports `status: pass`, `18` matched comparisons, and `0` parse/native/density/policy/topology gaps.
 - Runtime override scan across the generated batch now reports only `s_randomnumberofplayers.amap` with `owner_small_049_profile_policy`; `xl_nowater.amap` no longer reports `owner_xl_land_profile_policy`.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `seed_specific_runtime_override_case_count: 0`; this remains an integration smoke, not the default parser/comparison loop.
+- Historical Godot integration smoke evidence passed with `seed_specific_runtime_override_case_count: 0`; this remains runtime/editor evidence, not the default parser/comparison loop.
 
 The slow `tests/native_random_map_production_parity_completion_audit_report.tscn` run was stopped after more than seven minutes with no useful output. That is intentional for the current testing posture: H3M parsing, native AMAP inspection, road topology, density policy, town/guard/blocker route closure, and owner comparison belong in the Python CLI validation path. Godot should be used for the native generation/export boundary and editor/runtime behavior.
 
@@ -457,10 +457,10 @@ Normal native catalog-auto scenic/other-object floors are now size- and level-aw
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 900 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_object_category_floor` exported `18/18` packages with `0` failures.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_object_category_floor` exported `18/18` packages with `0` failures.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_object_category_floor --allow-failures --pretty` reports `status: pass`, `18` matched comparisons, `0` parse/native/density/policy/topology gaps, and the stricter `object: 0.6` category floor.
 - The native object-category totals improved materially in the generated batch: `108x108_l1 243 -> 558`, `108x108_l2 955 -> 1624`, `144x144_l1 540 -> 1260`, `144x144_l2 1097 -> 1441`, `72x72_l1 44 -> 105`, `72x72_l2 211 -> 364`, `36x36_l1 26 -> 32`, and `36x36_l2 57 -> 96`.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `seed_specific_runtime_override_case_count: 0`.
+- Historical Godot integration smoke evidence passed with `seed_specific_runtime_override_case_count: 0`.
 
 The full export now takes about eight and a half minutes with the denser XL object placement, so the next performance target should profile and optimize native placement loops without moving correctness comparison back into Godot.
 
@@ -496,9 +496,9 @@ Native town/guard placement now avoids two avoidable costs:
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_extension_profile_report.tscn` passed. Representative wall times improved from about `13.2s -> 6.4s` for `medium_default_002`, `9.5s -> 4.3s` for `medium_validation_gate_005`, and `9.7s -> 7.4s` for `xl_islands_012`.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `11/11` cases and `seed_specific_runtime_override_case_count: 0`.
-- `/usr/bin/time -p env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 900 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_town_guard_perf` exported `18/18` packages with `0` failures in `real 476.65s`.
+- Historical Godot extension profile smoke evidence passed. Representative wall times improved from about `13.2s -> 6.4s` for `medium_default_002`, `9.5s -> 4.3s` for `medium_validation_gate_005`, and `9.7s -> 7.4s` for `xl_islands_012`.
+- Historical Godot integration smoke evidence passed with `11/11` cases and `seed_specific_runtime_override_case_count: 0`.
+- `/usr/bin/time -p python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_after_town_guard_perf` exported `18/18` packages with `0` failures in `real 476.65s`.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_town_guard_perf --summary` reported `status=pass`, `18` matched comparisons, and `0` parse/native/density/policy/topology gaps in about `8.649s`.
 
 This does not make generation fast enough yet. It removes a major avoidable town/guard cost while leaving object placement and full XL export time as active performance targets.
@@ -510,7 +510,7 @@ Owner review correctly called out that RMG correctness validation should not req
 - Godot is used when the native GDExtension must generate/export fresh packages, or when editor/runtime behavior is under test.
 - Python is used for H3M parsing, AMAP parsing, owner/native comparison, density/policy/topology checks, and batch timing summary.
 
-`tools/rmg_native_batch_export.gd` now records per-case timings in the export `manifest.json`:
+`tools/rmg_native_batch_export.py` now records per-case timings in the export `manifest.json`:
 
 - generation wall time;
 - package conversion wall time;
@@ -528,8 +528,8 @@ The Python validation path now distinguishes targeted diagnosis from the full co
 Validation evidence:
 
 - `python3 -m py_compile tools/rmg_export_timing_summary.py tools/rmg_python_validation_gate.py tools/rmg_fast_audit.py tools/rmg_fast_validation.py` passed.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_timing_smoke --limit 2` exported `2/2` packages and wrote timing fields.
-- `/usr/bin/time -p env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 900 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_timing_full` exported `18/18` packages with `0` failures in `real 480.73s`; the manifest reports `total_wall_msec: 476985`.
+- `python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_timing_smoke --limit 2` exported `2/2` packages and wrote timing fields.
+- `/usr/bin/time -p python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_timing_full` exported `18/18` packages with `0` failures in `real 480.73s`; the manifest reports `total_wall_msec: 476985`.
 - `python3 tools/rmg_python_validation_gate.py --failure-limit 2` selected `.artifacts/rmg_native_batch_export_timing_full`, parsed `18/18` owner H3Ms plus `18/18` native AMAPs, matched `18` comparisons, completed parsing in about `8.865s`, and reported `status=pass` with `0` parse/native/density/policy/topology gaps.
 - `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_timing_full --limit 8` reported phase totals of `268716ms` generation, `142418ms` conversion, and `58620ms` save. The worst case is `xl_nowater_2levels` at `74628ms`, with `29890ms` generation, `37880ms` conversion, `6858ms` save, and native `object_placement` as the top generation phase at about `15579ms`.
 
@@ -574,7 +574,7 @@ The follow-up XL profile showed that object-placement record signing and the fin
 - combined object/town/guard occupancy signatures now hash compact record keys and counts instead of canonical-hashing the full occupancy dictionary;
 - no-op town access corridor and connection guard choke clearance passes attach their summaries without rehashing the full object-placement payload;
 - town access corridor clearance now uses level-aware keys, preventing two-level maps from treating surface and underground corridor cells as the same tile;
-- `tools/rmg_native_batch_export.gd` now records the top six native profile phases per profile in the manifest, making single-case performance runs useful without digging through full generation payloads.
+- `tools/rmg_native_batch_export.py` now records the top six native profile phases per profile in the manifest, making single-case performance runs useful without digging through full generation payloads.
 
 Validation evidence:
 
@@ -583,8 +583,8 @@ Validation evidence:
 - After compact combined occupancy and level-aware corridor clearance, targeted `xl_nowater_2levels` reported `case_wall_msec: 36115`, `generation_wall_msec: 24484`, `conversion_wall_msec: 5879`, and `save_wall_msec: 5752`. The original timed baseline for this case was `74628ms` total with `37880ms` spent in conversion.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_level_aware_corridor_xl_nowater_2levels --summary` passed with `0` parse/native/density/policy/topology gaps and total parse time about `5.632s`.
 - `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_compact_occupancy_xl_nowater_2levels --limit 8` passed and showed the remaining XL bottleneck is native generation, not parser/comparison work.
-- `tests/native_random_map_object_placement_report.gd` now validates the generated `MapDocument` by counting records tagged `native_record_kind == "object_placement"`, because the document correctly contains object placements plus towns, guards, and gates. The focused object-placement report passed after that assertion was corrected.
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed as the broader native generator integration smoke.
+- Historical object-placement runtime smoke evidence validates the generated `MapDocument` by counting records tagged `native_record_kind == "object_placement"`, because the document correctly contains object placements plus towns, guards, and gates.
+- Historical Godot integration smoke evidence passed as the broader native generator integration smoke.
 
 This reinforces the testing split: correctness validation and owner comparison remain Python-only once `.amap` packages exist. Godot is still only needed for fresh package generation/export through the current `MapPackageService` boundary and for actual editor/runtime smokes.
 

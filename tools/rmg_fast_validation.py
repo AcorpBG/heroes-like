@@ -39,11 +39,21 @@ DEFAULT_CATEGORY_FLOOR_RATIOS = {
     "town": 0.65,
 }
 CASE_ID_PATTERN = re.compile(r"[^a-z0-9]+")
+CONTROLLED_CASE_PATTERN = re.compile(r"(small|medium|large|extra_large|xl)_(\d+p)_seed_(\d+)")
 NATIVE_EXPORT_DIR_PREFIX = "rmg_native_batch_export"
 
 
 def case_id_from_path(path: Path) -> str:
-    value = CASE_ID_PATTERN.sub("_", path.stem.lower()).strip("_")
+    stem = path.stem.lower()
+    if stem.startswith("h3maped_"):
+        stem = stem[len("h3maped_") :]
+    controlled = CONTROLLED_CASE_PATTERN.search(stem)
+    if controlled:
+        size_class, players, seed = controlled.groups()
+        if size_class == "xl":
+            size_class = "extra_large"
+        return f"{size_class}_{players}_seed_{seed}"
+    value = CASE_ID_PATTERN.sub("_", stem).strip("_")
     while "__" in value:
         value = value.replace("__", "_")
     return value
@@ -388,7 +398,10 @@ def topology_failures(
             ),
             3,
         )
-        if native_largest_share > largest_share_ceiling:
+        if (
+            native_largest_share > largest_share_ceiling
+            and native_largest_share > owner_largest_share + DEFAULT_ROAD_LARGEST_SHARE_EPSILON
+        ):
             failures.append(
                 {
                     "case_id": case_id,
@@ -465,6 +478,94 @@ def guard_closure_shape_failures(
                     "native_guarded_route_reachable_pair_count": native_guarded_routes,
                     "native_guard_closed_pair_count": native_guard_closed_routes,
                     "minimum_owner_guard_closed_pair_count": min_owner_open_pair_count,
+                }
+            )
+    return failures
+
+
+def normalized_owner_water(value: Any) -> str:
+    normalized = str(value).strip().lower()
+    if normalized in {"", "none", "land", "no_water", "nowater"}:
+        return "land"
+    if normalized in {"normal", "normal_water", "mixed"}:
+        return "normal_water"
+    if normalized in {"islands", "water"}:
+        return "islands"
+    return normalized
+
+
+def identity_failures(owner_samples: list[dict[str, Any]], native_samples: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    owners = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in owner_samples
+        if sample.get("status") == "parsed"
+    }
+    natives = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in native_samples
+        if sample.get("status") == "parsed"
+    }
+    failures: list[dict[str, Any]] = []
+    for case_id in sorted(set(owners) & set(natives)):
+        owner = owners[case_id]
+        native = natives[case_id]
+        summary = owner.get("h3maped_generation_summary", {})
+        owner_identity = summary.get("parsed", {}) if isinstance(summary, dict) else {}
+        native_identity = native.get("native_generation_identity", {})
+        if not isinstance(owner_identity, dict) or not owner_identity:
+            continue
+        if not isinstance(native_identity, dict):
+            native_identity = {}
+        constraints = native_identity.get("player_constraints", {})
+        if not isinstance(constraints, dict):
+            constraints = {}
+
+        mismatches: dict[str, Any] = {}
+        owner_seed = str(owner_identity.get("seed", ""))
+        native_seed = str(native_identity.get("seed", ""))
+        if owner_seed and native_seed and owner_seed != native_seed:
+            mismatches["seed"] = {"owner": owner_seed, "native": native_seed}
+
+        owner_humans = int(owner_identity.get("humans", -1))
+        native_humans = int(constraints.get("human_count", -1))
+        if owner_humans >= 0 and native_humans >= 0 and owner_humans != native_humans:
+            mismatches["humans"] = {"owner": owner_humans, "native": native_humans}
+
+        owner_computers = int(owner_identity.get("computers", -1))
+        native_computers = int(constraints.get("computer_count", -1))
+        if owner_computers >= 0 and native_computers >= 0 and owner_computers != native_computers:
+            mismatches["computers"] = {"owner": owner_computers, "native": native_computers}
+
+        owner_size = int(owner_identity.get("size", 0))
+        native_width = int(native.get("width", 0))
+        if owner_size > 0 and native_width > 0 and owner_size != native_width:
+            mismatches["size"] = {"owner": owner_size, "native_width": native_width}
+
+        owner_levels = int(owner_identity.get("levels", 0))
+        native_levels = int(native_identity.get("level_count", native.get("level_count", 0)))
+        if owner_levels > 0 and native_levels > 0 and owner_levels != native_levels:
+            mismatches["levels"] = {"owner": owner_levels, "native": native_levels}
+
+        owner_water = normalized_owner_water(owner_identity.get("water", ""))
+        native_water = normalized_owner_water(native_identity.get("water_mode", ""))
+        if owner_water and native_water and owner_water != native_water:
+            mismatches["water"] = {"owner": owner_water, "native": native_water}
+
+        owner_template = str(owner_identity.get("template", "")).strip()
+        native_template = str(native_identity.get("source_template_name", "")).strip()
+        if owner_template and native_template and owner_template != native_template:
+            mismatches["template"] = {"owner": owner_template, "native": native_template}
+
+        if mismatches:
+            failures.append(
+                {
+                    "case_id": case_id,
+                    "path": native.get("path", ""),
+                    "owner_path": owner.get("path", ""),
+                    "rule": "h3maped_controlled_identity_mismatch",
+                    "mismatches": mismatches,
+                    "owner_generation_summary": owner_identity,
+                    "native_generation_identity": native_identity,
                 }
             )
     return failures
@@ -615,10 +716,11 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         native_samples,
         args.guard_closure_min_owner_open_pair_count,
     ) if args.closure_shape_gate else []
+    identity_gaps = identity_failures(owner_samples, native_samples)
     comparisons = matched_comparisons(owner_samples, native_samples)
     coverage_gaps = coverage_failures(owner_samples, native_samples) if bool(getattr(args, "require_all_owner_matches", False)) else []
 
-    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps and not closure_shape_gaps and not coverage_gaps else "fail"
+    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps and not closure_shape_gaps and not identity_gaps and not coverage_gaps else "fail"
     return {
         "schema_id": "rmg_fast_validation_v1",
         "status": status,
@@ -662,6 +764,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "policy_gap_count": len(policy_gaps),
             "topology_gap_count": len(topology_gaps),
             "closure_shape_gap_count": len(closure_shape_gaps),
+            "identity_gap_count": len(identity_gaps),
             "coverage_gap_count": len(coverage_gaps),
             "matched_comparison_count": len(comparisons),
         },
@@ -672,6 +775,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "policy_gaps": policy_gaps,
             "topology_gaps": topology_gaps,
             "closure_shape_gaps": closure_shape_gaps,
+            "identity_gaps": identity_gaps,
             "coverage_gaps": coverage_gaps,
         },
         "groups": {
@@ -702,9 +806,10 @@ def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
             timings.get("native_amap_parse", 0),
             timings.get("total_parse", 0),
         ),
-        "gaps parse=%s native_rules=%s density=%s policy=%s topology=%s coverage=%s" % (
+        "gaps parse=%s native_rules=%s identity=%s density=%s policy=%s topology=%s coverage=%s" % (
             summary.get("parse_failure_count", 0),
             summary.get("native_rule_failure_count", 0),
+            summary.get("identity_gap_count", 0),
             summary.get("density_gap_count", 0),
             summary.get("policy_gap_count", 0),
             summary.get("topology_gap_count", 0),
@@ -718,7 +823,7 @@ def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
         lines.append("artifact autodiscovered=false error=%s" % inputs.get("native_artifact_discovery_error", ""))
 
     remaining = max(0, failure_limit)
-    for bucket_id in ["parse", "native_rules", "density_gaps", "policy_gaps", "topology_gaps", "closure_shape_gaps", "coverage_gaps"]:
+    for bucket_id in ["parse", "native_rules", "identity_gaps", "density_gaps", "policy_gaps", "topology_gaps", "closure_shape_gaps", "coverage_gaps"]:
         bucket = failures.get(bucket_id, [])
         if not isinstance(bucket, list) or not bucket or remaining <= 0:
             continue

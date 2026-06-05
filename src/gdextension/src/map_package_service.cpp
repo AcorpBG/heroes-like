@@ -24263,6 +24263,39 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 
 Array combined_native_map_objects(const Dictionary &generated_map) {
 	Array result;
+	if (bool(generated_map.get("native_runtime_authoritative", false)) || bool(generated_map.get("public_runtime_authoritative", false))) {
+		Array authoritative_objects = generated_map.get("objects", Array());
+		if (!authoritative_objects.is_empty()) {
+			for (int64_t index = 0; index < authoritative_objects.size(); ++index) {
+				if (Variant(authoritative_objects[index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary record = Dictionary(authoritative_objects[index]).duplicate(true);
+				record["public_runtime_authoritative"] = true;
+				record["runtime_generation_allowed"] = true;
+				record["package_surface_adoption_state"] = record.get("package_surface_adoption_state", "strict_h3maped_validated_package_surface_preserved");
+				record["signature"] = hash32_hex(canonical_variant(record));
+				result.append(record);
+			}
+			return result;
+		}
+		Dictionary map_document_payload = generated_map.get("map_document_payload", Dictionary());
+		Array payload_objects = map_document_payload.get("objects", Array());
+		if (!payload_objects.is_empty()) {
+			for (int64_t index = 0; index < payload_objects.size(); ++index) {
+				if (Variant(payload_objects[index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary record = Dictionary(payload_objects[index]).duplicate(true);
+				record["public_runtime_authoritative"] = true;
+				record["runtime_generation_allowed"] = true;
+				record["package_surface_adoption_state"] = record.get("package_surface_adoption_state", "strict_h3maped_validated_package_surface_preserved");
+				record["signature"] = hash32_hex(canonical_variant(record));
+				result.append(record);
+			}
+			return result;
+		}
+	}
 	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
 	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
 	const int32_t width = int32_t(terrain_grid.get("width", normalized.get("width", 36)));
@@ -25941,7 +25974,6 @@ Dictionary MapPackageService::random_map_config_identity(Dictionary config) cons
 }
 
 Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary options) const {
-	(void)options;
 	const std::chrono::steady_clock::time_point profile_started_at = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point phase_started_at = profile_started_at;
 	Array extension_profile_phases;
@@ -25951,7 +25983,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	if (h3maped_small_rmg::supports_scope(normalized)) {
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
-		return h3maped_small_rmg::validator_gated_generation_result(normalized, extension_profile);
+		return h3maped_small_rmg::validator_gated_generation_result(normalized, extension_profile, bool(options.get("include_h3maped_small_port", false)));
 	}
 	if (!native_rmg_medium_runtime_generation_unblock_scope(normalized)) {
 		Dictionary reset_extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);

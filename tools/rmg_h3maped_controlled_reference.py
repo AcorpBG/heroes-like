@@ -180,6 +180,8 @@ def verify_exe(path: Path) -> dict[str, Any]:
 
 def build_base_manifest(args: argparse.Namespace, out_dir: Path, mode: str) -> dict[str, Any]:
     h3maped = verify_exe(args.h3maped_exe)
+    human_computer_players = int(args.players)
+    computer_only_players = int(args.computer_only_players)
     return {
         "schema_id": "rmg_h3maped_controlled_reference_manifest_v1",
         "status": "initializing",
@@ -191,9 +193,10 @@ def build_base_manifest(args: argparse.Namespace, out_dir: Path, mode: str) -> d
         "h3maped": h3maped,
         "inputs": {
             "seed": str(args.seed),
-            "players": int(args.players),
-            "human_players": int(args.human_players),
-            "computer_only_players": int(args.computer_only_players),
+            "players": human_computer_players + computer_only_players,
+            "human_computer_players": human_computer_players,
+            "human_players": human_computer_players,
+            "computer_only_players": computer_only_players,
             "size": args.size,
             "width": int(args.width),
             "height": int(args.height),
@@ -205,7 +208,9 @@ def build_base_manifest(args: argparse.Namespace, out_dir: Path, mode: str) -> d
         "controlled_identity": {
             "requested_seed": str(args.seed),
             "seed": "",
-            "players": int(args.players),
+            "players": human_computer_players + computer_only_players,
+            "requested_humans": human_computer_players,
+            "requested_computers": computer_only_players,
             "source_template_id": args.source_template_id,
             "source_catalog_index": args.source_catalog_index,
             "same_seed_parity_supported": False,

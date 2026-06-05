@@ -148,8 +148,8 @@ Reference/audit workflow:
 
 ```bash
 python3 tools/rmg_h3maped_controlled_reference.py --size medium --water land --level-count 1 --players 4 --human-players 1 --seed <seed> --case <case_id>
-godot --headless --path . --script tools/rmg_h3m_native_phase_snapshot_export.gd -- --size-class-id homm3_medium --water land --level-count 1 --players 4 --seed <seed> --case-id <case_id>
-python3 tools/rmg_phase_drift_audit.py --snapshot <snapshot> --h3m <controlled_reference_h3m>
+python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_<case_id> --controlled-case <case_id>:medium:4:<seed>:land:1:1
+python3 tools/rmg_phase_drift_audit.py --snapshot .artifacts/rmg_native_batch_export_<case_id>/manifest.json --h3m <controlled_reference_h3m>
 ```
 
 Success means:

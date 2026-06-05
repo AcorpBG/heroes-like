@@ -1,5 +1,6 @@
 #include "map_document.hpp"
 #include "map_package_service.hpp"
+#include "rmg_native_batch_export_runner.hpp"
 #include "scenario_document.hpp"
 
 #include <gdextension_interface.h>
@@ -16,6 +17,7 @@ void initialize_aurelion_map_persistence(ModuleInitializationLevel level) {
 	ClassDB::register_class<MapDocument>();
 	ClassDB::register_class<ScenarioDocument>();
 	ClassDB::register_class<MapPackageService>();
+	ClassDB::register_class<RmgNativeBatchExportRunner>();
 }
 
 void uninitialize_aurelion_map_persistence(ModuleInitializationLevel level) {

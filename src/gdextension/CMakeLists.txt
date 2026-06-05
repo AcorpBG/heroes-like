@@ -24,6 +24,7 @@ add_library(aurelion_map_persistence SHARED
 	src/h3maped_small_rmg_embedded_data.cpp
 	src/h3maped_small_rmg.cpp
 	src/map_document.cpp
+	src/rmg_native_batch_export_runner.cpp
 	src/scenario_document.cpp
 	src/map_package_service.cpp
 	src/rmg_data_model.cpp

@@ -26,8 +26,22 @@ PYTHON_GATE_MODULES = [
     ROOT / "tools" / "rmg_fast_audit.py",
     ROOT / "tools" / "rmg_fast_validation.py",
     ROOT / "tools" / "rmg_export_timing_summary.py",
+    ROOT / "tools" / "rmg_native_batch_export.py",
     ROOT / "tools" / "rmg_production_gap_audit.py",
     ROOT / "tools" / "rmg_quick_validation.py",
+]
+NATIVE_FRESHNESS_INPUTS = [
+    ROOT / "src" / "gdextension" / "include" / "rmg_native_batch_export_runner.hpp",
+    ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg.cpp",
+    ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg_embedded_data.cpp",
+    ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp",
+    ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_runner.cpp",
+    ROOT / "tools" / "rmg_native_batch_export.py",
+    ROOT / "tools" / "rmg_native_batch_export_native.tscn",
+    ROOT / "bin" / "libaurelion_map_persistence.linux.template_debug.x86_64.so",
+    ROOT / "bin" / "libaurelion_map_persistence.linux.template_release.x86_64.so",
+    ROOT / "bin" / "aurelion_map_persistence.windows.template_debug.x86_64.dll",
+    ROOT / "bin" / "aurelion_map_persistence.windows.template_release.x86_64.dll",
 ]
 
 
@@ -68,6 +82,40 @@ def validation_args(args: argparse.Namespace) -> argparse.Namespace:
 def write_report(path: Path, report: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+
+
+def native_export_freshness(report: dict[str, Any]) -> dict[str, Any]:
+    inputs = report.get("inputs", {})
+    native_dir = Path(str(inputs.get("amap_dir", "")))
+    if not native_dir:
+        return {"status": "missing", "reason": "native_amap_dir_missing"}
+    if not native_dir.is_absolute():
+        native_dir = ROOT / native_dir
+    if not native_dir.exists() or not native_dir.is_dir():
+        return {"status": "missing", "native_dir": str(native_dir), "reason": "native_amap_dir_not_found"}
+
+    export_files = [path for path in native_dir.glob("*.amap")]
+    manifest = native_dir / "manifest.json"
+    if manifest.exists():
+        export_files.append(manifest)
+    if not export_files:
+        return {"status": "missing", "native_dir": str(native_dir), "reason": "native_export_files_not_found"}
+
+    existing_inputs = [path for path in NATIVE_FRESHNESS_INPUTS if path.exists()]
+    if not existing_inputs:
+        return {"status": "unknown", "native_dir": str(native_dir), "reason": "native_freshness_inputs_missing"}
+
+    export_mtime = max(path.stat().st_mtime for path in export_files)
+    newest_input = max(existing_inputs, key=lambda path: path.stat().st_mtime)
+    newest_input_mtime = newest_input.stat().st_mtime
+    return {
+        "status": "pass" if export_mtime >= newest_input_mtime else "stale",
+        "native_dir": str(native_dir.relative_to(ROOT) if native_dir.is_relative_to(ROOT) else native_dir),
+        "export_mtime": export_mtime,
+        "newest_native_input": str(newest_input.relative_to(ROOT)),
+        "newest_native_input_mtime": newest_input_mtime,
+        "freshness_policy": "selected native AMAP batch must be newer than native RMG sources and platform binaries",
+    }
 
 
 def build_timing_summary(manifest_path: Path, limit: int, status: str = "pass") -> dict[str, Any]:
@@ -154,6 +202,17 @@ def timing_summary_lines(timing: dict[str, Any]) -> list[str]:
     return lines
 
 
+def freshness_summary_line(freshness: dict[str, Any]) -> str:
+    return (
+        "native_export_freshness=%s native_dir=%s newest_native_input=%s"
+        % (
+            freshness.get("status", "unknown"),
+            freshness.get("native_dir", ""),
+            freshness.get("newest_native_input", ""),
+        )
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h3m-dir", "--owner-dir", dest="h3m_dir", type=Path, default=rmg_fast_validation.DEFAULT_OWNER_DIR)
@@ -184,18 +243,21 @@ def main() -> int:
     compile_results = [] if args.skip_py_compile else compile_gate_modules()
     compile_ok = all(result.get("status") == "pass" for result in compile_results)
     report = rmg_fast_validation.build_report(validation_args(args))
+    freshness = native_export_freshness(report)
     timing = timing_summary_for_validation(report, args.timing_limit, not args.skip_timing_summary)
     timing_required_ok = not args.require_timing_summary or timing.get("status") in {"pass", "fallback"}
     timing_ok = timing.get("status") != "fail" and timing_required_ok
+    freshness_ok = freshness.get("status") == "pass"
     combined = {
         "schema_id": "rmg_python_validation_gate_v1",
-        "status": "pass" if compile_ok and report.get("status") == "pass" and timing_ok else "fail",
+        "status": "pass" if compile_ok and report.get("status") == "pass" and timing_ok and freshness_ok else "fail",
         "compile": {
             "enabled": not args.skip_py_compile,
             "status": "pass" if compile_ok else "fail",
             "modules": compile_results,
         },
         "fast_validation": report,
+        "native_export_freshness": freshness,
         "timing": timing,
     }
     write_report(args.report_json, combined)
@@ -203,6 +265,7 @@ def main() -> int:
     print("RMG_PYTHON_VALIDATION_GATE status=%s" % combined["status"])
     print("checks python_compile=%s fast_validation=%s" % (combined["compile"]["status"], report.get("status", "unknown")))
     print("report_json=%s" % args.report_json)
+    print(freshness_summary_line(freshness))
     print(rmg_fast_validation.compact_summary(report, args.failure_limit))
     for line in timing_summary_lines(timing):
         print(line)
