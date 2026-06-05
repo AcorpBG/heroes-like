@@ -10102,7 +10102,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				}
 			}
 			const bool source_score_wave_enabled_0x4a54a7 = selected_template.descriptor_byte_0x29 != 0;
-				const int32_t score_depleted_cells = h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, selected.x, selected.y, selected.level);
+			const int32_t score_depleted_cells = h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, selected.x, selected.y, selected.level);
 			primary_category_score_depletion_call_count += 1;
 			primary_category_score_depletion_mutated_cell_count += score_depleted_cells;
 			placement["status"] = "0x4a901a_primary_category_object_record_projected_private";
@@ -10118,7 +10118,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			placement["selected_score_low_word"] = selected.score;
 			placement["source_object_descriptor_byte_0x29"] = selected_template.descriptor_byte_0x29;
 			placement["source_generated_cell_score_depletion_wave_enabled_0x4a54a7"] = source_score_wave_enabled_0x4a54a7;
-				placement["generated_cell_score_depletion_policy_0x4a54a7"] = "behavior keeps current native score wave; source descriptor byte +0x29 remains diagnostic because direct adoption overproduces until upstream candidate-retirement state is recovered";
+			placement["generated_cell_score_depletion_policy_0x4a54a7"] = "behavior keeps current native score wave; source descriptor byte +0x29 remains diagnostic because direct adoption overproduces until upstream candidate-retirement state is recovered";
 			placement["x"] = selected.x;
 			placement["y"] = selected.y;
 			placement["level"] = selected.level;
@@ -15743,33 +15743,41 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 				mark_flat_occupied(int32_t(record.get("flat_cell_index", -1)));
 			}
 	}
-	// Roads are intentionally not seeded into decorative occupancy. The
-	// recovered phase runner places 0x49eb8d before the 0x4ab52a road/adjustment
-	// pass, so using road overlay cells here suppresses legitimate filler.
+	// Roads and connection records are intentionally not seeded into this
+	// decorative object-vector snapshot. 0x49e1bf scans generated-cell object
+	// vectors, while connection blockers/guards are already represented by
+	// generated-cell bit state and are adopted later as package blockers.
 	Array blocker_records = connections_phase.get("private_blocker_records", Array());
-		for (int64_t index = 0; index < blocker_records.size(); ++index) {
-			if (Variant(blocker_records[index]).get_type() == Variant::DICTIONARY) {
-				Dictionary record = blocker_records[index];
-				seed_decorative_type_count(record);
-				if (Variant(record.get("body_tiles", Variant())).get_type() == Variant::ARRAY) {
-					mark_cell_dictionary_array(record.get("body_tiles", Array()));
-				} else {
-					mark_flat_occupied(int32_t(record.get("flat_cell_index", -1)));
-				}
+	Array guard_records = connections_phase.get("private_guard_records", Array());
+	const int32_t deferred_connection_blocker_record_count_0x49e1bf = int32_t(blocker_records.size());
+	const int32_t deferred_connection_guard_record_count_0x49e1bf = int32_t(guard_records.size());
+	Dictionary prior_obstacle_catalog_load_0x49dc9e;
+	const std::vector<H3DecorationObstacleRow> prior_obstacle_rows_0x49dc9e = h3maped_decoration_obstacle_rows_from_recovered_csv(prior_obstacle_catalog_load_0x49dc9e);
+	std::map<std::tuple<int32_t, int32_t, int32_t>, int32_t> prior_obstacle_id_by_lookup_type_terrain_subtype_0x49dc9e;
+	for (const H3DecorationObstacleRow &obstacle : prior_obstacle_rows_0x49dc9e) {
+		const std::tuple<int32_t, int32_t, int32_t> lookup_key(obstacle.type_id, obstacle.terrain_id, obstacle.subtype_id);
+		if (prior_obstacle_id_by_lookup_type_terrain_subtype_0x49dc9e.find(lookup_key) != prior_obstacle_id_by_lookup_type_terrain_subtype_0x49dc9e.end()) {
+			continue;
 		}
+		prior_obstacle_id_by_lookup_type_terrain_subtype_0x49dc9e[lookup_key] = obstacle.obstacle_id;
 	}
-		Array guard_records = connections_phase.get("private_guard_records", Array());
-		for (int64_t index = 0; index < guard_records.size(); ++index) {
-			if (Variant(guard_records[index]).get_type() == Variant::DICTIONARY) {
-				Dictionary record = guard_records[index];
-				mark_flat_occupied(int32_t(record.get("flat_cell_index", -1)));
+	auto prior_object_score_obstacle_id_0x49dc9e = [&](const H3ObjectRow &row) -> int32_t {
+		const int32_t lookup_type = h3_object_row_rand_trn_lookup_type_0x57c648(row);
+		const int32_t terrain_id = h3_object_row_first_runtime_terrain_bit_0x49dc9e(row);
+		if (terrain_id >= 9) {
+			return -1;
 		}
-	}
+		const std::tuple<int32_t, int32_t, int32_t> lookup_key(lookup_type, terrain_id, row.group_id);
+		auto found = prior_obstacle_id_by_lookup_type_terrain_subtype_0x49dc9e.find(lookup_key);
+		return found == prior_obstacle_id_by_lookup_type_terrain_subtype_0x49dc9e.end() ? -1 : found->second;
+	};
 		const std::vector<uint8_t> prior_object_vector_occupied_0x49abd6 = object_occupied;
 		std::map<int32_t, std::vector<H3ObjectRow>> prior_wrapper_rows_by_type_cache_0x49abd6;
 		int32_t prior_object_wrapper_seed_count_0x49abd6 = 0;
 		int32_t prior_object_wrapper_reference_count_0x49abd6 = 0;
 		int32_t prior_object_wrapper_missing_template_count_0x49abd6 = 0;
+		int32_t prior_object_wrapper_score_attachment_match_count_0x49dc9e = 0;
+		int32_t prior_object_wrapper_score_attachment_missing_count_0x49dc9e = 0;
 		auto prior_object_row_for_record_0x49abd6 = [&](const Dictionary &record, H3ObjectRow &out_row) -> bool {
 			const int32_t type_id = int32_t(record.get("selected_template_type_id",
 					record.get("homm3_re_object_type_id", record.get("h3maped_type_id", -1))));
@@ -15850,12 +15858,18 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 			wrapper_state.object_type_id = row.type_id;
 			wrapper_state.object_subtype_id = row.subtype_id;
 			wrapper_state.obstacle_id = -1;
-			wrapper_state.attached_score_obstacle_id_0x49dc9e = -1;
+			const int32_t prior_attached_score_obstacle_id_0x49dc9e = prior_object_score_obstacle_id_0x49dc9e(row);
+			wrapper_state.attached_score_obstacle_id_0x49dc9e = prior_attached_score_obstacle_id_0x49dc9e;
 			wrapper_state.body_flats = body_flats;
 			wrapper_state.source_wrapper_vector_flats_0x49abd6 = source_wrapper_vector_flats_0x49abd6;
 			wrapper_state.recalculation_table_0x49b89c = h3_object_row_recalculation_table_0x49b89c(row);
 			decorative_wrapper_records.push_back(wrapper_state);
-			decorative_obstacle_id_by_wrapper.push_back(-1);
+			decorative_obstacle_id_by_wrapper.push_back(prior_attached_score_obstacle_id_0x49dc9e);
+			if (prior_attached_score_obstacle_id_0x49dc9e > 0) {
+				prior_object_wrapper_score_attachment_match_count_0x49dc9e += 1;
+			} else {
+				prior_object_wrapper_score_attachment_missing_count_0x49dc9e += 1;
+			}
 			for (const int32_t flat : source_wrapper_vector_flats_0x49abd6) {
 				source_decorative_wrapper_ids_by_flat_0x49abd6[size_t(flat)].push_back(wrapper_id);
 				prior_object_wrapper_reference_count_0x49abd6 += 1;
@@ -15874,7 +15888,6 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 		seed_prior_object_wrapper_array_0x49abd6(mine_adjacent_resource_records);
 		seed_prior_object_wrapper_array_0x49abd6(reward_records);
 		seed_prior_object_wrapper_array_0x49abd6(primary_category_records);
-		seed_prior_object_wrapper_array_0x49abd6(blocker_records);
 		std::vector<int32_t> town_visit_flats;
 	for (int64_t index = 0; index < town_records.size(); ++index) {
 		if (Variant(town_records[index]).get_type() != Variant::DICTIONARY) {
@@ -16802,7 +16815,11 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 		phase["prior_object_wrapper_seed_count_0x49abd6"] = prior_object_wrapper_seed_count_0x49abd6;
 		phase["prior_object_wrapper_reference_count_0x49abd6"] = prior_object_wrapper_reference_count_0x49abd6;
 		phase["prior_object_wrapper_missing_template_count_0x49abd6"] = prior_object_wrapper_missing_template_count_0x49abd6;
-		phase["prior_object_wrapper_seed_policy_0x49abd6"] = "active_source_object_vector_state: pre-decorative h3maped-derived towns/mines/rewards/primary/blockers with selected template rows seed the same 0x49abd6 wrapper-vector relation scan used by 0x49e1bf; wrappers without rand_trn score ids still participate in byte +0x14/+0x15 hard-conflict checks";
+		phase["prior_object_wrapper_score_attachment_match_count_0x49dc9e"] = prior_object_wrapper_score_attachment_match_count_0x49dc9e;
+		phase["prior_object_wrapper_score_attachment_missing_count_0x49dc9e"] = prior_object_wrapper_score_attachment_missing_count_0x49dc9e;
+		phase["deferred_connection_blocker_record_count_0x49e1bf"] = deferred_connection_blocker_record_count_0x49e1bf;
+		phase["deferred_connection_guard_record_count_0x49e1bf"] = deferred_connection_guard_record_count_0x49e1bf;
+		phase["prior_object_wrapper_seed_policy_0x49abd6"] = "active_source_object_vector_state: pre-decorative h3maped-derived towns/mines/rewards/primary objects with selected template rows seed the 0x49abd6 wrapper-vector relation scan used by 0x49e1bf; existing wrapper score ids are resolved through recovered 0x49dc9e rand_trn lookup, and connection blockers/guards remain generated-cell blockers/package records rather than unscored relation wrappers";
 			phase["private_decorative_wrapper_vector_nonempty_cell_count"] = private_decorative_wrapper_vector_nonempty_cell_count;
 		phase["private_decorative_wrapper_vector_reference_count"] = private_decorative_wrapper_vector_reference_count;
 		phase["private_decorative_wrapper_vector_max_cell_size"] = private_decorative_wrapper_vector_max_cell_size;
