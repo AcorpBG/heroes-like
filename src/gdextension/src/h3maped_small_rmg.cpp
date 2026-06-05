@@ -729,8 +729,8 @@ struct PolygonModelNode {
 	int32_t previous = -1;
 	bool active = true;
 	bool finalized = false;
-	int32_t finalized_x = 0;
-	int32_t finalized_y = 0;
+	int32_t finalized_x = -1;
+	int32_t finalized_y = -1;
 };
 
 struct PolygonModel {
@@ -4654,6 +4654,148 @@ int32_t zone_word_id_for_runtime_zone(const Dictionary &runtime_zone) {
 	return runtime_index;
 }
 
+Array filled_zone_geometry_4a2105_4a2ffa(const Dictionary &normalized_config, const Array &runtime_zones, const std::vector<uint32_t> &zone_words) {
+	struct Geometry {
+		int32_t runtime_index = -1;
+		int32_t zone_word_id = -1;
+		int32_t min_x = 0x7fffffff;
+		int32_t min_y = 0x7fffffff;
+		int32_t max_x_exclusive = 0;
+		int32_t max_y_exclusive = 0;
+		int64_t sum_x = 0;
+		int64_t sum_y = 0;
+		int32_t count = 0;
+	};
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	std::map<int32_t, int32_t> runtime_index_by_zone_word_id;
+	std::map<int32_t, Geometry> geometry_by_runtime_index;
+	for (int64_t index = 0; index < runtime_zones.size(); ++index) {
+		if (Variant(runtime_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = runtime_zones[index];
+		const int32_t runtime_index = int32_t(runtime.get("runtime_zone_index", runtime.get("runtime_index", index)));
+		const int32_t zone_word_id = zone_word_id_for_runtime_zone(runtime);
+		runtime_index_by_zone_word_id[zone_word_id] = runtime_index;
+		Geometry geometry;
+		geometry.runtime_index = runtime_index;
+		geometry.zone_word_id = zone_word_id;
+		geometry_by_runtime_index[runtime_index] = geometry;
+	}
+
+	if (map_width > 0 && map_height > 0 && expected_cell_count == int32_t(zone_words.size())) {
+		for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+			const uint32_t masked = zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+			if (masked == H3MAPED_UNASSIGNED_ZONE_WORD) {
+				continue;
+			}
+			const int32_t zone_word_id = int32_t((masked >> 16U) & 0xffU);
+			const auto runtime_found = runtime_index_by_zone_word_id.find(zone_word_id);
+			if (runtime_found == runtime_index_by_zone_word_id.end()) {
+				continue;
+			}
+			const int32_t runtime_index = runtime_found->second;
+			Geometry &geometry = geometry_by_runtime_index[runtime_index];
+			const int32_t level_tile_count = map_width * map_height;
+			const int32_t remainder = flat % level_tile_count;
+			const int32_t x = remainder % map_width;
+			const int32_t y = remainder / map_width;
+			geometry.min_x = std::min(geometry.min_x, x);
+			geometry.min_y = std::min(geometry.min_y, y);
+			geometry.max_x_exclusive = std::max(geometry.max_x_exclusive, x + 1);
+			geometry.max_y_exclusive = std::max(geometry.max_y_exclusive, y + 1);
+			geometry.sum_x += x;
+			geometry.sum_y += y;
+			geometry.count += 1;
+		}
+	}
+
+	Array records;
+	for (const auto &item : geometry_by_runtime_index) {
+		const Geometry &geometry = item.second;
+		Dictionary record;
+		record["runtime_zone_index"] = geometry.runtime_index;
+		record["zone_word_id"] = geometry.zone_word_id;
+		record["filled_cell_count"] = geometry.count;
+		record["has_filled_cells"] = geometry.count > 0;
+		if (geometry.count > 0) {
+			record["filled_rect_min_x_0x20"] = geometry.min_x;
+			record["filled_rect_min_y_0x24"] = geometry.min_y;
+			record["filled_rect_max_x_exclusive_0x28"] = geometry.max_x_exclusive;
+			record["filled_rect_max_y_exclusive_0x2c"] = geometry.max_y_exclusive;
+			record["centroid_x_0x10"] = int32_t(geometry.sum_x / geometry.count);
+			record["centroid_y_0x14"] = int32_t(geometry.sum_y / geometry.count);
+			record["centroid_level_0x18"] = 0;
+		}
+		records.append(record);
+	}
+	return records;
+}
+
+Dictionary coordinate_phase_with_filled_zone_geometry_4a2105_4a2ffa(const Dictionary &coordinate_phase, const Dictionary &terrain_cell_phase) {
+	Dictionary adopted = coordinate_phase.duplicate(true);
+	Array geometry_records = terrain_cell_phase.get("filled_zone_geometry_records_0x4a2105_0x4a2ffa", Array());
+	Dictionary geometry_by_runtime_index;
+	for (int64_t index = 0; index < geometry_records.size(); ++index) {
+		if (Variant(geometry_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary geometry = geometry_records[index];
+		geometry_by_runtime_index[String::num_int64(int64_t(geometry.get("runtime_zone_index", -1)))] = geometry;
+	}
+
+	auto apply_geometry = [&](Dictionary record) {
+		const String key = String::num_int64(int64_t(record.get("runtime_zone_index", record.get("runtime_index", -1))));
+		if (!geometry_by_runtime_index.has(key)) {
+			return record;
+		}
+		Dictionary geometry = geometry_by_runtime_index[key];
+		if (!bool(geometry.get("has_filled_cells", false))) {
+			return record;
+		}
+		record["pre_0x4a2ffa_x_after_bbox_rescale"] = record.get("x_after_bbox_rescale", record.get("x", 0));
+		record["pre_0x4a2ffa_y_after_bbox_rescale"] = record.get("y_after_bbox_rescale", record.get("y", 0));
+		record["x_after_bbox_rescale"] = geometry.get("centroid_x_0x10", record.get("x_after_bbox_rescale", record.get("x", 0)));
+		record["y_after_bbox_rescale"] = geometry.get("centroid_y_0x14", record.get("y_after_bbox_rescale", record.get("y", 0)));
+		record["filled_rect_min_x_0x20"] = geometry.get("filled_rect_min_x_0x20", 0);
+		record["filled_rect_min_y_0x24"] = geometry.get("filled_rect_min_y_0x24", 0);
+		record["filled_rect_max_x_exclusive_0x28"] = geometry.get("filled_rect_max_x_exclusive_0x28", 0);
+		record["filled_rect_max_y_exclusive_0x2c"] = geometry.get("filled_rect_max_y_exclusive_0x2c", 0);
+		record["filled_cell_count_0x4a2ffa"] = geometry.get("filled_cell_count", 0);
+		record["coordinate_source_after_terrain"] = "0x4a2105_rect_and_0x4a2ffa_centroid_from_private_owner_grid";
+		return record;
+	};
+
+	Array scaled_coordinates = coordinate_phase.get("scaled_zone_coordinates", Array());
+	Array adopted_scaled_coordinates;
+	for (int64_t index = 0; index < scaled_coordinates.size(); ++index) {
+		if (Variant(scaled_coordinates[index]).get_type() == Variant::DICTIONARY) {
+			adopted_scaled_coordinates.append(apply_geometry(Dictionary(scaled_coordinates[index]).duplicate()));
+		} else {
+			adopted_scaled_coordinates.append(scaled_coordinates[index]);
+		}
+	}
+	adopted["scaled_zone_coordinates"] = adopted_scaled_coordinates;
+
+	Array runtime_after_choice = coordinate_phase.get("runtime_zone_records_after_0x49b3c1", Array());
+	Array adopted_runtime_after_choice;
+	for (int64_t index = 0; index < runtime_after_choice.size(); ++index) {
+		if (Variant(runtime_after_choice[index]).get_type() == Variant::DICTIONARY) {
+			adopted_runtime_after_choice.append(apply_geometry(Dictionary(runtime_after_choice[index]).duplicate()));
+		} else {
+			adopted_runtime_after_choice.append(runtime_after_choice[index]);
+		}
+	}
+	adopted["runtime_zone_records_after_0x49b3c1"] = adopted_runtime_after_choice;
+	adopted["terrain_geometry_adoption_source"] = "h3maped 0x4a3f27 calls 0x4a2105 then 0x4a2ffa before later town/object/connection phases";
+	adopted["terrain_geometry_adoption_record_count"] = geometry_records.size();
+	return adopted;
+}
+
 ClipResult clip_point_4a2b33(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const ClipBounds &bounds) {
 	ClipResult result;
 	result.x = x1;
@@ -5262,22 +5404,20 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 		const int32_t level = int32_t(runtime_zone.get("level", 0));
 		const bool flagged_branch = !(map_level_count == 2 && level != 1);
 		const int32_t random_span_limit = std::max<int32_t>(1, int32_t(runtime_zone.get("runtime_size_after_bbox_rescale", runtime_zone.get("source_base_size", 1))));
-		std::vector<PolygonPoint> finalized_points;
+		std::vector<PolygonPoint> source_points;
 		for (const SourceCycleNode &node : walk.cycle_nodes) {
-			if (node.finalized) {
-				finalized_points.push_back(PolygonPoint { node.finalized_x, node.finalized_y });
-			}
+			source_points.push_back(PolygonPoint { node.finalized_x, node.finalized_y });
 		}
-		if (finalized_points.size() < 2) {
+		if (source_points.size() < 2) {
 			blocked_zone_count += 1;
 			continue;
 		}
 		int32_t selected_segment_index = -1;
 		ClipResult clipped_current;
 		ClipResult clipped_target;
-		for (int32_t index = 0; index < int32_t(finalized_points.size()); ++index) {
-			const PolygonPoint from = finalized_points[size_t(index)];
-			const PolygonPoint to = finalized_points[size_t((index + 1) % int32_t(finalized_points.size()))];
+		for (int32_t index = 0; index < int32_t(source_points.size()); ++index) {
+			const PolygonPoint from = source_points[size_t(index)];
+			const PolygonPoint to = source_points[size_t((index + 1) % int32_t(source_points.size()))];
 			if (from.x == to.x && from.y == to.y) {
 				continue;
 			}
@@ -5304,14 +5444,14 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 		int32_t current_y = clipped_target.y;
 		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
 		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
-		int32_t source_index = (selected_segment_index + 1) % int32_t(finalized_points.size());
-		for (int32_t guard = 0; guard < int32_t(finalized_points.size()) + 4; ++guard) {
-			const int32_t next_source_index = (source_index + 1) % int32_t(finalized_points.size());
+		int32_t source_index = (selected_segment_index + 1) % int32_t(source_points.size());
+		for (int32_t guard = 0; guard < int32_t(source_points.size()) + 4; ++guard) {
+			const int32_t next_source_index = (source_index + 1) % int32_t(source_points.size());
 			if (source_index == selected_segment_index) {
 				break;
 			}
-			const PolygonPoint from = finalized_points[size_t(source_index)];
-			const PolygonPoint to = finalized_points[size_t(next_source_index)];
+			const PolygonPoint from = source_points[size_t(source_index)];
+			const PolygonPoint to = source_points[size_t(next_source_index)];
 			source_index = next_source_index;
 			if (from.x == to.x && from.y == to.y) {
 				continue;
@@ -5824,6 +5964,7 @@ Dictionary terrain_cell_writeout_phase(const Dictionary &normalized_config, cons
 			uint32_t(int64_t(coordinate_phase.get("rng_state_after_0x4a218c_replay_uint32", 0))),
 			&zone_words,
 			&cell_flags);
+	const Array filled_zone_geometry_records = filled_zone_geometry_4a2105_4a2ffa(normalized_config, runtime_zones, zone_words);
 
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
@@ -5895,6 +6036,16 @@ Dictionary terrain_cell_writeout_phase(const Dictionary &normalized_config, cons
 	for (const auto &item : terrain_project_counts) {
 		terrain_project_counts_report[item.first] = item.second;
 	}
+	int32_t filled_geometry_adoptable_zone_count = 0;
+	for (int64_t index = 0; index < filled_zone_geometry_records.size(); ++index) {
+		if (Variant(filled_zone_geometry_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = filled_zone_geometry_records[index];
+		if (bool(record.get("has_filled_cells", false))) {
+			filled_geometry_adoptable_zone_count += 1;
+		}
+	}
 
 	phase["status"] = "active_strict_executable_port";
 	phase["source"] = "h3maped 0x4a3f27 private terrain cell writeout over the real 0x4a325d zone-word buffer and 0x49b53d runtime terrain selections";
@@ -5914,6 +6065,9 @@ Dictionary terrain_cell_writeout_phase(const Dictionary &normalized_config, cons
 	phase["owner_low_byte_counts"] = owner_counts_report;
 	phase["terrain_code_counts"] = terrain_code_counts_report;
 	phase["terrain_project_counts"] = terrain_project_counts_report;
+	phase["filled_zone_geometry_source"] = "0x4a2105 recomputes zone+0x20 rectangle from cell+0x20 owner bytes; 0x4a2ffa writes zone+0x10/+0x14 centroid averages";
+	phase["filled_zone_geometry_records_0x4a2105_0x4a2ffa"] = filled_zone_geometry_records;
+	phase["filled_geometry_adoptable_zone_count"] = filled_geometry_adoptable_zone_count;
 	phase["materializes_private_terrain_cell_buffer"] = true;
 	return phase;
 }
@@ -19508,6 +19662,18 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	if (inspection_phase_limit_reached(normalized_config, report, "terrain_cell_writeout")) {
 		return report;
 	}
+	Dictionary coordinate_after_terrain_geometry = coordinate_phase_with_filled_zone_geometry_4a2105_4a2ffa(coordinate_replay, terrain_cell);
+	Dictionary terrain_geometry_adoption;
+	terrain_geometry_adoption["phase_id"] = "terrain_filled_zone_geometry_adoption";
+	terrain_geometry_adoption["status"] = "active_strict_private_state";
+	terrain_geometry_adoption["source_range"] = "0x4a2105/0x4a2ffa";
+	terrain_geometry_adoption["source"] = "post-terrain runtime zone rectangles and centers are adopted from the filled private owner grid before town/object/connection phases consume zone coordinates";
+	terrain_geometry_adoption["record_count"] = terrain_cell.get("filled_geometry_adoptable_zone_count", 0);
+	terrain_geometry_adoption["geometry_records"] = terrain_cell.get("filled_zone_geometry_records_0x4a2105_0x4a2ffa", Array());
+	report["terrain_filled_zone_geometry_adoption"] = terrain_geometry_adoption;
+	if (inspection_phase_limit_reached(normalized_config, report, "terrain_filled_zone_geometry_adoption")) {
+		return report;
+	}
 	Dictionary terrainplacement_visual = terrainplacement_visual_tables_phase(terrain_cell);
 	terrainplacement_visual["source_range"] = "0x4bcff5/0x4bb5ce/0x4bd099/0x4bb74b/0x4bc5f0/0x4bcfc3/0x4bce6d/0x543108/0x543380/0x5434f0/0x5435b0/0x542f88";
 	terrainplacement_visual["binary_byte_prefix_0x4bcff5"] = "b8 8a ba 52 00 e8 d1 90 02 00 83 ec 28 56 8b f1";
@@ -19557,7 +19723,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	if (inspection_phase_limit_reached(normalized_config, report, "terrain_tile_byte_writeback")) {
 		return report;
 	}
-	Dictionary town_castle = town_castle_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, terrain_tile_byte_writeback, zone_words, live_cell_word_0x20, live_cell_word_0x28, live_terrain_code);
+	Dictionary town_castle = town_castle_phase(normalized_config, runtime_zones, coordinate_after_terrain_geometry, terrain_cell, terrain_tile_byte_writeback, zone_words, live_cell_word_0x20, live_cell_word_0x28, live_terrain_code);
 	town_castle["source_range"] = "0x4a8d2c/0x4a8db2/0x4a93a2/0x49aa93/0x49a09c/0x49b3c1/0x49ba89";
 	town_castle["binary_byte_prefix_0x4a8d2c"] = "55 8b ec 51 53 56 57 8b 7d 08 8b d9 8b 37 8b 47";
 	town_castle["binary_byte_prefix_0x4a8db2"] = "55 8b ec 83 ec 48 8b 45 08 53 56 33 db 8b 30 8b";
@@ -19573,7 +19739,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	Dictionary pre_road_phase;
 	pre_road_phase["status"] = "not_yet_run_source_order_after_0x49eb8d";
 	pre_road_phase["source_order_policy"] = "h3maped 0x4a8c15 dispatches 0x4a79a3 before 0x4ab52a roads; native connection dispatch must not consume road RNG or road output";
-	Dictionary connections = connections_blockers_guards_phase(normalized_config, coordinate_replay, link_seeds, town_castle, pre_road_phase, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code);
+	Dictionary connections = connections_blockers_guards_phase(normalized_config, coordinate_after_terrain_geometry, link_seeds, town_castle, pre_road_phase, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code);
 	connections["source_range"] = "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03";
 	connections["binary_byte_prefix_0x4a79a3"] = "b8 eb a9 52 00 e8 23 e7 03 00 83 ec 78 8a 45 f3";
 	connections["binary_byte_prefix_0x4a61bc"] = "b8 24 a9 52 00 e8 0a ff 03 00 83 ec 58 53 8b 55";
@@ -19586,7 +19752,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	if (inspection_phase_limit_reached(normalized_config, report, "connections_blockers_guards")) {
 		return report;
 	}
-	Dictionary object_vector = object_vector_prerequisite_phase(normalized_config, runtime_zones, coordinate_replay, terrain_cell, town_castle, zone_words, cell_flags, live_cell_word_0x28, live_terrain_code);
+	Dictionary object_vector = object_vector_prerequisite_phase(normalized_config, runtime_zones, coordinate_after_terrain_geometry, terrain_cell, town_castle, zone_words, cell_flags, live_cell_word_0x28, live_terrain_code);
 	object_vector["source_range"] = "0x4a9d6a/0x4a9911/0x4a9641/0x4a9c7c/0x4aab7e/0x4aa354/0x4a9f1c/0x4aa9b7/0x4aa603/0x4aa3e9/0x49f95a";
 	object_vector["binary_byte_prefix_0x4a9d6a"] = "55 8b ec 83 ec 14 83 65 ec 00 53 56 57 8b f9 8b";
 	object_vector["binary_byte_prefix_0x4a9911"] = "b8 ac aa 52 00 e8 b5 c7 03 00 83 ec 40 8a 45 0f";
