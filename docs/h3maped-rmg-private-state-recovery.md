@@ -28,6 +28,7 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/seed58_interactive_4a80dc_return_to_4a4c8e/winedbg_interactive_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_piped_4a8260_route_call_sites_to_4a4c8e_full/winedbg_recovery_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_trace_analysis.json`
+- `.artifacts/rmg_recovery/ghidra_downstream_state_dump/`
 
 ## Generated Cell Layout
 
@@ -203,11 +204,27 @@ The companion interactive `0x49a932` trace remains intentionally bounded:
 
 Static reconstruction and the complete `0x49a962` caller trace explain why event tracing `0x49a932` directly is the wrong unit for this phase: the high-volume pre-boundary stream is dominated by repeated `0x49a85d` 3x3 stamps from the route/line generation inside `0x4a8260`, plus caller-side clears from `0x49a962`. The recovered caller-side replay now accounts for the seed-58 pre-`0x4a4c8e` bit26 and bit27 surfaces.
 
+## Downstream Ghidra Dump
+
+The downstream Ghidra artifact `.artifacts/rmg_recovery/ghidra_downstream_state_dump/` was generated with the repository `H3MapEdRmgDump.java` script against:
+
+`0x49cf34,0x49eb8d,0x4a54a7,0x4a5767,0x4a606b,0x4a746b,0x4aa3e9`.
+
+Ghidra identified all seven target functions and eight caller dumps, but the decompiler did not complete for these targets. The artifact is therefore call-graph/reference/instruction evidence, not clean recovered C source. Current source-backed facts from the dump:
+
+- `0x49cf34` is called by `0x4aa354` and `0x4adb72`. Its references show calls to `0x49d7c3`, `0x49d2c7`, `0x49a1d8`, `0x49aa63`, `0x49a932`, `0x49d2e0`, `0x49d69d`, and `0x49d6e0`.
+- `0x49eb8d` is called by `0x4ac552` and `0x4af910`. It counts bit26 cells, derives a `0x4374c / count` work budget, calls `0x49e700` for valid flagged cells, then calls `0x49a932(true)` on remaining valid cells whose bit27 is clear.
+- `0x4a54a7` reaches `0x49abd6`, so it is an object-footprint commit path, but the surrounding object/vector projection is not replayed yet.
+- `0x4a5767` is called by `0x4a8c15`, `0x4a746b`, and `0x4ac552`. It calls `0x4a59e2`, `0x49a1d8`, `0x49a932`, `0x49a318`, and `0x4a5a23`.
+- `0x4a606b` is called by `0x4a61bc` and calls `0x49aa63` and `0x49a932` in a connection-region generated-cell writer path.
+- `0x4a746b` is called twice by `0x4a7605`; it calls `0x4a5767`, `0x4a5e73`, and `0x49aa63`.
+- `0x4aa3e9` is called by `0x4aa9b7` and calls `0x49d2c7`, `0x49a1d8`, `0x49a932`, and `0x49aa63`.
+
 ## Current Unrecovered Gap
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps now identify the downstream generated-cell writer call graph, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
 - `0x49cf34`
 - `0x49eb8d`
