@@ -132,6 +132,8 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
                 events += 1
                 child.expect(PROMPT_RE, timeout=args.debugger_timeout)
                 commands = ["info reg", "x/8x $esp"]
+                if args.lite and args.lite_extra_command:
+                    commands.append(args.lite_extra_command)
                 if not args.lite:
                     commands.extend(["x/12x $ecx", "x/12x $esi", args.dump_command])
                 for command in commands:
@@ -164,6 +166,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--generate-wait-seconds", type=int, default=2)
     parser.add_argument("--debugger-timeout", type=int, default=60)
     parser.add_argument("--lite", action="store_true", help="Only dump registers and stack at each breakpoint.")
+    parser.add_argument("--lite-extra-command", default="", help="Optional extra winedbg command to run in lite mode.")
     parser.add_argument("--inside-xvfb", action="store_true")
     return parser
 
@@ -218,6 +221,8 @@ def main() -> int:
         ]
         if args.lite:
             command.append("--lite")
+        if args.lite_extra_command:
+            command.extend(["--lite-extra-command", args.lite_extra_command])
         if args.stop_after:
             command.extend(["--stop-after", args.stop_after])
         completed = subprocess.run(command, cwd=repo_root, text=True)
