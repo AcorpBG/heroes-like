@@ -30,12 +30,14 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/seed58_trace_analysis.json`
 - `.artifacts/rmg_recovery/ghidra_downstream_state_dump/`
 - `.artifacts/rmg_recovery/ghidra_downstream_helper_dump/`
+- `.artifacts/rmg_recovery/ghidra_object_projection_helper_dump/`
 
 ## Generated Cell Layout
 
 Recovered layout:
 
 - Stride: `0x30`.
+- `+0x04/+0x08`: object-reference dword vector begin/end observed by `0x49e1bf`.
 - `+0x20`: score/owner word consumed by the `0x4a4c8e` family.
 - `+0x24`: terrain/art word; low 6 bits are terrain id.
 - `+0x28`: generated-cell bit-state word.
@@ -237,10 +239,11 @@ It identifies the next helper layer:
 - `0x41e951` is an object descriptor bitset lookup. It reads the bitset at `ecx+0x04`, computes bit index `47 - 8*y - x`, and returns whether that bit is set. It calls `0x42f2ec` if the computed index is outside the expected `0..47` range.
 - `0x49eb6d` maps `(x, y, level)` to a generated-cell pointer using wrapper fields `+0x08/+0x0c/+0x10`: `cell = buffer + (((level * height) + y) * width + x) * 0x30`.
 - `0x49ba89` constructs an object record with vtable `0x540a74`, descriptor pointer at `+0x04`, increments descriptor refcount at `descriptor+0x08`, and initializes record `+0x08/+0x0c/+0x10` to `-1`. The later projection meanings of those initialized fields remain replay-pending.
+- `0x49b89c` is an object-record mask/score cache builder. It is idempotent on record byte `+0xe4`, reads the descriptor through record `+0x00`, walks descriptor dimensions `+0x34/+0x38`, calls the descriptor mask helpers `0x41e915` and `0x41e951`, and fills a record-local dword table beginning at `+0x18`. Exact score-table semantic names remain replay-pending.
 - `0x4a9e40` selects an object descriptor from a bucket vector at `+0x38/+0x3c`, filters candidate descriptor fields `+0x20`, `+0x24`, and bitset `+0x18`, then chooses one descriptor by `0x4e7276 % candidate_count`. Exact selector argument names and descriptor class values remain replay-pending.
 - `0x49a6f9` is called by `0x49aa93`, `0x49d2e0`, and `0x4aa603`. It is an object-descriptor footprint acceptance gate: it reads descriptor dimensions at `+0x34/+0x38`, walks the candidate footprint through generated-cell validity, owner, terrain, optional bit26, and `0x41e951` mask tests, and returns rejection as true. Exact descriptor field names beyond dimensions and terrain policy branches remain replay-pending.
 - `0x49e700` is called by `0x49eb8d`. It iterates the terrain-object descriptor table `0x54092c..0x5409e0`, rejects invalid candidate cells and terrain type `9`, filters object type ranges by map level count, scans local footprint offsets through `0x41e951`, calls `0x49e1bf` for scoring/emission feasibility, accumulates accepted weights, then creates/projects one weighted decorative object and clears bit26 around the chosen footprint unless `GeneratedCell+0x2c` bit0 suppresses mutation. Exact object record allocation/projection fields remain replay-pending.
-- `0x49e1bf` is now directly dumped but not fully recovered. It is the current object-emission blocker: references and instruction flow show candidate rectangle scans, generated-cell bit checks, terrain checks, route/adjacency tests, and output-vector appends, but the full score/output field semantics still need replay before native parity changes.
+- `0x49e1bf` is the decorative object scoring and emission-feasibility helper called by `0x49e700`. Static recovery shows it reads the generator generated-cell grid through `+0x14/+0x18/+0x1c`, the candidate object record and descriptor, candidate x/y/level stack args, descriptor dimensions `+0x34/+0x38`, descriptor masks `+0x04/+0x14/+0x3c`, generated-cell words `+0x24/+0x28/+0x2b`, and the `GeneratedCell+0x04/+0x08` object-reference vector. It builds stack-local footprint records with flags `0x1/0x2/0x4`, records terrain-class hits in ten buckets, scans neighbor cells through a scratch rectangle, sets temporary object-reference flags at `+0x14..+0x18`, appends flagged object references through `0x40bb26`, adjusts the score through descriptor score tables prepared by `0x49b89c`, clears those temporary flags, and returns a candidate score or one of the observed rejection values `-1`, `-5000`, or a low terrain-weight total below `-1000`. Exact semantic names for the descriptor score tables and the object-reference flag classes remain replay-pending.
 - `0x49a318` is called by `0x4a5767` and `0x4a89da`; it is part of the object-anchor/high-owner projection path.
 - `0x4a5a23` is called by `0x4a5767` and `0x4a61bc`; it reaches allocation/object-selection helpers including `0x4a9e40`, `0x5044b1`, and `0x49ba89`.
 - `0x4a5e73` is called by `0x4a61bc`, `0x4a696b`, `0x4a6cf2`, and `0x4a746b`; it reaches endpoint/allocation helpers including `0x5044b1`, `0x49ba89`, and `0x4a7312`.
@@ -249,7 +252,7 @@ It identifies the next helper layer:
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper fields, generated-cell addressing, object mask lookup, the object record constructor, the object-descriptor selector, the object-descriptor footprint gate, and the decorative candidate filler shell. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper fields, generated-cell addressing, object mask lookup, the object record constructor, the object-record mask/score cache builder, the object-descriptor selector, the object-descriptor footprint gate, the decorative candidate filler shell, and the decorative object scoring/emission-feasibility shell. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
 - `0x49cf34`
 - `0x49eb8d`
