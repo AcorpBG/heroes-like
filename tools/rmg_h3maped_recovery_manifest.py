@@ -118,6 +118,14 @@ FUNCTIONS: list[dict[str, Any]] = [
         "reads": ["generator+0x14 generated cells", "generator+0x10e4 runtime-zone relation vectors"],
     },
     {
+        "address": "0x4a80dc",
+        "name": "route_line_cut_point_picker",
+        "status": "recovered_static_and_seed58_runtime_pairs",
+        "reads": ["grid generated-cell bit27 neighborhoods along a Bresenham-style line"],
+        "returns": ["an output coordinate pair written through the caller-provided pointer"],
+        "runtime_trace": "seed58_interactive_4a80dc_return_to_4a4c8e records 52 entry/return pairs before 0x4a4c8e.",
+    },
+    {
         "address": "0x4a8c15",
         "name": "generated_cell_post_terrain_phase_driver",
         "status": "recovered_static_and_seed58_runtime_prefix",

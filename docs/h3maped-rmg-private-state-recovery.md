@@ -21,6 +21,9 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/seed58_downstream_writer_trace_reparsed_cells/winedbg_recovery_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_interactive_49aa63_to_4a4c8e/winedbg_interactive_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_interactive_49a932_to_4a4c8e_lite/winedbg_interactive_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_interactive_49a85d_to_4a4c8e_lite/winedbg_interactive_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_interactive_4a80dc_return_to_4a4c8e/winedbg_interactive_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_trace_analysis.json`
 
 ## Generated Cell Layout
 
@@ -100,6 +103,8 @@ It calls `0x49a932(true)` for the center cell and then calls `0x49a932(true)` fo
 
 `0x49abd6` stamps object/vector footprints into generated-cell state. Runtime seed-58 trace shows five calls before the bounded trace stopped, all returning through `0x4a54d6`; inside it, valid target cells call `0x49a932`.
 
+`0x4a80dc` chooses a route/line cut point. It receives an output pointer, start coordinate, target coordinate, and level. The target coordinate may be off-map; runtime traces show values like `(-2, 38)` and `(68, -32)`. Static reconstruction shows a Bresenham-style line walk from start toward target. After the first two steps, for each in-bounds interior point, it scans a clipped 3x3 neighborhood for bit27. When it finds bit27, it writes the previous coordinate to the output pointer and returns that pointer. If it reaches an out-of-bounds point first, it writes the current candidate coordinate.
+
 `0x4a8c15` is a post-terrain generated-cell phase driver. Ghidra shows this order:
 
 1. `0x4a8260`
@@ -142,6 +147,19 @@ The interactive phase trace fixes the earlier piped-debugger limitation and prov
 
 That matches the already dumped seed-58 `0x4a4c8e` entry bit26 count (`490`). This is a recovered source-backed boundary for `0x49aa63` on seed 58.
 
+The interactive route-stamp trace proves the seed-58 `0x49a85d` route path:
+
+- `0x4a8260` calls `0x49a85d` exactly `340` times before `0x4a4c8e`.
+- All calls return through `0x004a8594`.
+- The `340` calls contain `238` unique center coordinates, all on level `0`.
+- Replaying `0x49a85d` clipped 3x3 stamps from those centers produces `3,029` stamp events over `756` unique generated-cell flats.
+- Those stamped flats cover `357` of the final `407` pre-`0x4a4c8e` bit27 cells.
+- `50` final bit27 cells are outside the recovered `0x49a85d` stamp coverage and still require another source path.
+- `399` stamped flats are not final bit27 cells, consistent with later clearing by `0x49aa63`/other writers.
+- The recovered `0x49a85d` stamp coverage does not intersect the final bit26 cells.
+
+The interactive `0x4a80dc` trace records `52` route-line helper entry/return pairs before `0x4a4c8e`, with `51` unique returned coordinates. These are the line-cut inputs used by the route list logic that ultimately feeds `0x49a85d`.
+
 The companion interactive `0x49a932` trace remains intentionally bounded, not complete:
 
 - The lite trace records `0x4a8c15`, `0x4a8260`, then `2,999` `0x49a932` events before hitting the configured `3,000` event cap.
@@ -159,8 +177,8 @@ The full end-to-end state is not yet recovered.
 The missing piece is a complete ordered replay of all pre-`0x4a4c8e` callers that mutate `GeneratedCell+0x20/+0x24/+0x28/+0x2c`, especially the call paths through:
 
 - `0x4a8260`
-- the route/line coordinate sequence inside `0x4a8260` that feeds `0x49a85d`
-- the complete pre-`0x4a4c8e` `0x49a932` stream
+- the remaining `0x4a8260` route-list transform from `0x4a80dc` returned cut points to the `340` `0x49a85d` stamp centers
+- the source path for the `50` final bit27 cells outside recovered `0x49a85d` stamp coverage
 - `0x49cf34`
 - `0x49eb8d`
 - `0x4a54a7`
