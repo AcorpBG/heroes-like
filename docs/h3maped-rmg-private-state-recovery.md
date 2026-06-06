@@ -225,12 +225,14 @@ The helper-layer Ghidra artifact `.artifacts/rmg_recovery/ghidra_downstream_help
 
 `0x49d7c3,0x49d2e0,0x49d69d,0x49d6e0,0x49e700,0x49a318,0x4a5a23,0x4a5e73`.
 
-It identifies the next unresolved helper layer:
+It identifies the next helper layer:
 
-- `0x49d2e0` is called by `0x49cf34` and `0x49d471`; it reads the direction tables at `0x5a2658` / `0x5a2680` and calls `0x49a1d8`.
-- `0x49d69d` is called by `0x49cf34`; it appends through `0x40bb26` and stamps an object footprint through `0x49abd6`.
-- `0x49d6e0` is called by `0x49cf34`, `0x4aa1db`, `0x4adb72`, and `0x4ad947`; it scans generated cells through `0x49a1d8`.
-- `0x49d7c3` is called by `0x49cf34` and reward/guard setup callers; it rebuilds candidate vectors through generated-cell validity scans.
+- `0x4ccecb` is the 4-byte record vector insert primitive, parallel to the 8-byte coordinate insert helper `0x4072b5`. `0x40bb26` wraps it to append one dword at vector end.
+- The reward/guard wrapper uses generated-cell buffer/dimensions at `+0x08/+0x0c/+0x10`, bounds at `+0x18/+0x1c/+0x20/+0x24`, a selected-member dword vector anchored at `+0x28`, and a candidate-coordinate vector anchored at `+0x38`.
+- `0x49d2e0` is called by `0x49cf34` and `0x49d471`. It reads the object descriptor through arg1, candidate coordinates from the stack, wrapper grid fields at `ecx+0x08/+0x0c/+0x10`, and direction tables at `0x5a2658` / `0x5a2680`. It returns false when bit22/object adjacency/terrain rules reject the candidate and true when the candidate passes those checks. Exact descriptor field names remain replay-pending.
+- `0x49d69d` is called by `0x49cf34`. It appends arg1 to the wrapper's selected-member dword vector anchored at `+0x28`, then stamps arg2/arg3/level-0 through `0x49abd6`.
+- `0x49d6e0` is called by `0x49cf34`, `0x4aa1db`, `0x4adb72`, and `0x4ad947`. It initializes wrapper bounds to `0x7d00/0xffff8300` sentinels, scans generated cells through `0x49a1d8`, and updates bounds for cells that are invalid, have bit22 set, or have bit27 clear.
+- `0x49d7c3` is called by `0x49cf34` and reward/guard setup callers. When the wrapper candidate-coordinate vector is empty, it finds the first valid bit27 cell with bit22 clear, traces the contour using the `0x5a2658` direction table, and appends 8-byte coordinates into the vector anchored at `+0x38`.
 - `0x49e700` is called by `0x49eb8d`; it calls the footprint gate `0x41e951` and object emission helper `0x49e1bf`.
 - `0x49a318` is called by `0x4a5767` and `0x4a89da`; it is part of the object-anchor/high-owner projection path.
 - `0x4a5a23` is called by `0x4a5767` and `0x4a61bc`; it reaches allocation/object-selection helpers including `0x4a9e40`, `0x5044b1`, and `0x49ba89`.
@@ -240,7 +242,7 @@ It identifies the next unresolved helper layer:
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps now identify the downstream generated-cell writer call graph and helper layer, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, and reward/guard wrapper fields, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
 - `0x49cf34`
 - `0x49eb8d`
