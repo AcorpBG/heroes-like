@@ -55,6 +55,16 @@ FUNCTIONS: list[dict[str, Any]] = [
         "returns_true_when": ["cell+0x2b has bit 0x02 set", "terrain id (cell+0x24 & 0x3f) is not 9"],
     },
     {
+        "address": "0x49a85d",
+        "name": "generated_cell_bit27_neighborhood_stamp",
+        "status": "recovered_static_ghidra",
+        "writes": [
+            "calls 0x49a932(true) for the center cell",
+            "calls 0x49a932(true) for every cell in clipped [x-1,x+2) by [y-1,y+2) neighborhood on the same level",
+        ],
+        "coordinate_formula": "cell = grid+0x08 + 0x30 * (((level * grid_height) + y) * grid_width + x)",
+    },
+    {
         "address": "0x49a932",
         "name": "generated_cell_occupied_bit_writer",
         "status": "recovered_static_ghidra_bounded_runtime_trace_incomplete",
@@ -67,6 +77,16 @@ FUNCTIONS: list[dict[str, Any]] = [
         "status": "recovered_static_and_seed58_pre_0x4a4c8e_runtime",
         "writes": ["when cell+0x2c bit0 clear: arg false clears bit26", "arg true sets bit26 then clears bit27"],
         "runtime_trace": "seed58_interactive_49aa63_to_4a4c8e shows 490 calls, all arg true, 490 unique generated-cell flats, then 0x4a4c8e. This matches the seed-58 pre-0x4a4c8e bit26 count.",
+    },
+    {
+        "address": "0x49a962",
+        "name": "generated_cell_bit26_center_and_bit27_neighborhood_clear",
+        "status": "recovered_static_ghidra_seed58_runtime_count",
+        "writes": [
+            "calls 0x49aa63(true) for the center cell",
+            "for the clipped 3x3 neighborhood, calls 0x49a932(false) only when bit22 is clear, 0x49a1d8 is true, and terrain id is not 8",
+        ],
+        "coordinate_formula": "cell = grid+0x08 + 0x30 * (((level * grid_height) + y) * grid_width + x)",
     },
     {
         "address": "0x49acf6",

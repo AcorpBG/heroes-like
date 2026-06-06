@@ -76,6 +76,12 @@ So the initializer intentionally sets bit25 and bit27. The pre-`0x4a4c8e` H3MapE
 - writes `cell+0x28` by clearing bit `15` and OR-ing `((arg3 & 1) | ((arg4 & 1) << 1)) << 15`;
 - is called by `0x49ce64` after `0x49a072` reset in a full-grid stride-`0x30` loop.
 
+`0x49a85d` is a clipped 3x3 bit27 neighborhood stamp. It uses the grid wrapper layout `+0x08` cell buffer, `+0x0c` width, `+0x10` height. For coordinate `(x, y, level)`, it computes:
+
+`cell = grid+0x08 + 0x30 * (((level * height) + y) * width + x)`.
+
+It calls `0x49a932(true)` for the center cell and then calls `0x49a932(true)` for every cell in the clipped rectangle `[x - 1, x + 2) x [y - 1, y + 2)` on that level. This intentionally revisits the center cell.
+
 `0x49a932` is a bit27 writer guarded by `cell+0x2c bit0`:
 
 - false argument clears bit27;
@@ -85,6 +91,12 @@ So the initializer intentionally sets bit25 and bit27. The pre-`0x4a4c8e` H3MapE
 
 - false argument clears bit26;
 - true argument sets bit26 and clears bit27.
+
+`0x49a962` is the related bit26/bit27 neighborhood helper. It uses the same coordinate formula as `0x49a85d`. It calls `0x49aa63(true)` for the center cell, then scans the clipped 3x3 neighborhood. For each neighbor, it calls `0x49a932(false)` only when:
+
+- bit22 in `cell+0x28` is clear;
+- `0x49a1d8(cell)` returns true;
+- terrain id `(cell+0x24 & 0x3f)` is not `8`.
 
 `0x49abd6` stamps object/vector footprints into generated-cell state. Runtime seed-58 trace shows five calls before the bounded trace stopped, all returning through `0x4a54d6`; inside it, valid target cells call `0x49a932`.
 
@@ -138,6 +150,8 @@ The companion interactive `0x49a932` trace remains intentionally bounded, not co
 - The stream revisits cells heavily: `2,998` parsed generated-cell flats but only `702` unique flats.
 - It did not reach `0x4a4c8e` before the cap, so the full `0x49a932` replay is still unrecovered.
 
+Static reconstruction explains why event tracing `0x49a932` directly is the wrong unit for the remaining recovery: the high-volume pre-boundary stream is dominated by repeated `0x49a85d` 3x3 stamps from the route/line generation inside `0x4a8260`. The remaining recovery target is therefore the caller-side coordinate sequence that feeds `0x49a85d`, not another larger single-step trace of `0x49a932`.
+
 ## Current Unrecovered Gap
 
 The full end-to-end state is not yet recovered.
@@ -145,8 +159,7 @@ The full end-to-end state is not yet recovered.
 The missing piece is a complete ordered replay of all pre-`0x4a4c8e` callers that mutate `GeneratedCell+0x20/+0x24/+0x28/+0x2c`, especially the call paths through:
 
 - `0x4a8260`
-- `0x49a85d`
-- `0x49a962`
+- the route/line coordinate sequence inside `0x4a8260` that feeds `0x49a85d`
 - the complete pre-`0x4a4c8e` `0x49a932` stream
 - `0x49cf34`
 - `0x49eb8d`
