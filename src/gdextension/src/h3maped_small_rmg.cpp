@@ -288,6 +288,7 @@ struct H3DecorativeWrapperState {
 };
 
 int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
+Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor);
 bool h3_object_row_matches_runtime_terrain(const H3ObjectRow &row, int32_t h3maped_terrain_id);
 bool h3_object_row_matches_decorative_score_terrain_0x49e1bf(const H3ObjectRow &row, int32_t h3maped_terrain_id);
 bool h3maped_49a1d8_generated_cell_valid(const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, int64_t flat);
@@ -7426,6 +7427,16 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	phase["seed_samples"] = seed_samples;
 	phase["drain_samples"] = drain_samples;
 	phase["sample_records"] = sample_records;
+	phase["private_state_checkpoint_after_terrain_live_feedback"] = private_state_checkpoint_0x4a4c8e_generated_cells(
+			map_width,
+			map_height,
+			std::max(1, map_level_count),
+			live_cell_word_0x20,
+			live_cell_word_0x24,
+			live_cell_word_0x28,
+			live_terrain_code,
+			"after_terrain_live_feedback",
+			"0x49acf6_after_0x4bc5f0");
 	phase["blocked_next"] = "terrain_tile_byte_writeback_0x49b2b6";
 	if (out_zone_words != nullptr) {
 		*out_zone_words = zone_words;
@@ -15054,7 +15065,145 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	return phase;
 }
 
-Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> *out_live_cell_word_0x2c = nullptr) {
+Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor) {
+	Dictionary checkpoint;
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	checkpoint["schema_id"] = "h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1";
+	checkpoint["checkpoint_id"] = checkpoint_id != nullptr ? checkpoint_id : "";
+	checkpoint["checkpoint_scope"] = "native_generated_cell_private_grid";
+	checkpoint["h3maped_entry_anchor"] = h3maped_entry_anchor != nullptr ? h3maped_entry_anchor : "0x4a4c8e";
+	checkpoint["h3maped_cell_base_pointer"] = "generator+0x14";
+	checkpoint["h3maped_cell_stride_bytes"] = 0x30;
+	checkpoint["h3maped_words_per_cell"] = 12;
+	checkpoint["cell_count"] = expected_cell_count;
+	checkpoint["width"] = map_width;
+	checkpoint["height"] = map_height;
+	checkpoint["level_count"] = map_level_count;
+	checkpoint["word_0x20_source"] = "cell_dword_index_8";
+	checkpoint["word_0x24_source"] = "cell_dword_index_9";
+	checkpoint["word_0x28_source"] = "cell_dword_index_10";
+	checkpoint["owner_byte2_source"] = "0x4a4ccc sign-extends cell +0x20 byte 2";
+
+	Array records;
+	const bool grid_available = expected_cell_count >= 0
+			&& expected_cell_count == int32_t(live_cell_word_0x20.size())
+			&& expected_cell_count == int32_t(live_cell_word_0x24.size())
+			&& expected_cell_count == int32_t(live_cell_word_0x28.size())
+			&& expected_cell_count == int32_t(live_terrain_code.size());
+	checkpoint["status"] = grid_available ? "available" : "blocked_missing_native_generated_cell_words";
+	if (!grid_available) {
+		checkpoint["records"] = records;
+		return checkpoint;
+	}
+	Dictionary owner_byte2_signed_histogram;
+	Dictionary owner_byte3_signed_histogram;
+	Dictionary word_0x24_terrain_histogram;
+	Dictionary word_0x24_art_histogram;
+	Dictionary word_0x28_top_byte_histogram;
+	int32_t word_0x28_bit22_count = 0;
+	int32_t word_0x28_bit25_count = 0;
+	int32_t word_0x28_bit26_count = 0;
+	int32_t word_0x28_bit27_count = 0;
+	auto increment_histogram = [](Dictionary &histogram, int32_t value) {
+		const String key = String::num_int64(value);
+		histogram[key] = int32_t(histogram.get(key, 0)) + 1;
+	};
+	for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+		const int32_t level = flat / (map_width * map_height);
+		const int32_t remainder = flat % (map_width * map_height);
+		const uint32_t word_0x20 = live_cell_word_0x20[size_t(flat)];
+		const uint32_t word_0x24 = live_cell_word_0x24[size_t(flat)];
+		const uint32_t word_0x28 = live_cell_word_0x28[size_t(flat)];
+		const int32_t owner_byte2_signed = int32_t(int8_t((word_0x20 >> 16U) & 0xffU));
+		const int32_t owner_byte3_signed = int32_t(int8_t((word_0x20 >> 24U) & 0xffU));
+		const int32_t terrain_bits = int32_t(word_0x24 & 0x3fU);
+		const int32_t art_bits = int32_t((word_0x24 >> 6U) & 0xffU);
+		const int32_t word_0x28_top_byte = int32_t((word_0x28 >> 24U) & 0xffU);
+		if ((word_0x28 & H3MAPED_CELL_ACTION_CONTROL_BIT_22) != 0U) {
+			word_0x28_bit22_count += 1;
+		}
+		if ((word_0x28 & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U) {
+			word_0x28_bit25_count += 1;
+		}
+		if ((word_0x28 & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+			word_0x28_bit26_count += 1;
+		}
+		if ((word_0x28 & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+			word_0x28_bit27_count += 1;
+		}
+		increment_histogram(owner_byte2_signed_histogram, owner_byte2_signed);
+		increment_histogram(owner_byte3_signed_histogram, owner_byte3_signed);
+		increment_histogram(word_0x24_terrain_histogram, terrain_bits);
+		increment_histogram(word_0x24_art_histogram, art_bits);
+		increment_histogram(word_0x28_top_byte_histogram, word_0x28_top_byte);
+		Dictionary record;
+		record["flat"] = flat;
+		record["x"] = remainder % map_width;
+		record["y"] = remainder / map_width;
+		record["level"] = level;
+		record["word_0x20"] = int64_t(word_0x20);
+		record["word_0x24"] = int64_t(word_0x24);
+		record["word_0x28"] = int64_t(word_0x28);
+		record["owner_byte2_signed"] = owner_byte2_signed;
+		record["owner_byte3_signed"] = owner_byte3_signed;
+		record["terrain_code"] = live_terrain_code[size_t(flat)];
+		records.append(record);
+	}
+	checkpoint["word_0x28_bit22_count"] = word_0x28_bit22_count;
+	checkpoint["word_0x28_bit25_count"] = word_0x28_bit25_count;
+	checkpoint["word_0x28_bit26_count"] = word_0x28_bit26_count;
+	checkpoint["word_0x28_bit27_count"] = word_0x28_bit27_count;
+	checkpoint["owner_byte2_signed_histogram"] = owner_byte2_signed_histogram;
+	checkpoint["owner_byte3_signed_histogram"] = owner_byte3_signed_histogram;
+	checkpoint["word_0x24_terrain_histogram"] = word_0x24_terrain_histogram;
+	checkpoint["word_0x24_art_histogram"] = word_0x24_art_histogram;
+	checkpoint["word_0x28_top_byte_histogram"] = word_0x28_top_byte_histogram;
+	checkpoint["records"] = records;
+	return checkpoint;
+}
+
+Dictionary private_state_checkpoint_0x49b3fb_relations(const Dictionary &relation_vectors_0x49b3fb) {
+	Dictionary checkpoint;
+	checkpoint["schema_id"] = "h3maped_private_state_checkpoint_0x49b3fb_relations_v1";
+	checkpoint["h3maped_lookup_anchor"] = "0x49b3fb";
+	checkpoint["record_first_dword_source"] = "0x49b423..0x49b431 compares relation record first dword to pushed neighbor key";
+	checkpoint["byte_plus_8_source"] = "relation_record+0x8";
+	Array records;
+	Array owner_keys = relation_vectors_0x49b3fb.keys();
+	int32_t record_count = 0;
+	for (int64_t owner_index = 0; owner_index < owner_keys.size(); ++owner_index) {
+		const Variant owner_key_variant = owner_keys[owner_index];
+		Array owner_records = relation_vectors_0x49b3fb.get(owner_key_variant, Array());
+		for (int64_t record_index = 0; record_index < owner_records.size(); ++record_index) {
+			if (Variant(owner_records[record_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary source = owner_records[record_index];
+			Dictionary record;
+			record["owner_key"] = owner_key_variant;
+			record["owner_record_index"] = record_index;
+			record["first_dword_zone_word_id"] = int32_t(source.get("first_dword_zone_word_id", source.get("neighbor_zone_word_id", -1)));
+			record["byte_plus_8_wide"] = int32_t(source.get("byte_plus_8_wide", 0));
+			record["relation_owner_key"] = int32_t(source.get("relation_owner_key", -1));
+			record["relation_neighbor_key"] = int32_t(source.get("relation_neighbor_key", -1));
+			record["owner_zone_word_id"] = int32_t(source.get("owner_zone_word_id", -1));
+			record["neighbor_zone_word_id"] = int32_t(source.get("neighbor_zone_word_id", -1));
+			record["owner_runtime_zone"] = int32_t(source.get("owner_runtime_zone", -1));
+			record["neighbor_runtime_zone"] = int32_t(source.get("neighbor_runtime_zone", -1));
+			record["first_dword_runtime_zone"] = int32_t(source.get("first_dword_runtime_zone", -1));
+			record["link_index"] = int32_t(source.get("link_index", -1));
+			records.append(record);
+			record_count += 1;
+		}
+	}
+	checkpoint["status"] = "available";
+	checkpoint["owner_key_count"] = owner_keys.size();
+	checkpoint["record_count"] = record_count;
+	checkpoint["records"] = records;
+	return checkpoint;
+}
+
+Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> *out_live_cell_word_0x2c = nullptr) {
 	static constexpr std::array<std::array<int32_t, 2>, 8> NEIGHBOR_DELTAS = { {
 		{ 1, 0 },
 		{ 1, 1 },
@@ -15092,6 +15241,7 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			&& map_height > 0
 			&& expected_cell_count == int32_t(zone_words.size())
 			&& zone_words.size() == live_cell_word_0x20.size()
+			&& zone_words.size() == live_cell_word_0x24.size()
 			&& zone_words.size() == cell_flags.size()
 			&& zone_words.size() == live_terrain_code.size()
 			&& zone_words.size() == live_cell_word_0x28.size();
@@ -15287,6 +15437,8 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	}
 
 	Dictionary relation_vectors_0x49b3fb = connections_phase.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
+	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = private_state_checkpoint_0x4a4c8e_generated_cells(map_width, map_height, map_level_count, live_cell_word_0x20, live_cell_word_0x24, live_cell_word_0x28, live_terrain_code, "pre_0x4a4c8e", "0x4a4c8e");
+	phase["private_state_checkpoint_0x49b3fb_relations"] = private_state_checkpoint_0x49b3fb_relations(relation_vectors_0x49b3fb);
 	auto lookup_relation_0x49b3fb = [&](int32_t runtime_zone, int32_t neighbor_runtime_zone, bool &wide_byte_plus_8) {
 		wide_byte_plus_8 = false;
 		if (runtime_zone < 0 || neighbor_runtime_zone < 0) {
@@ -15298,16 +15450,10 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 				continue;
 			}
 			Dictionary record = records[index];
-			const int32_t relation_neighbor_key = int32_t(record.get("relation_neighbor_key", -1));
 			const int32_t first_dword_zone_word_id = int32_t(record.get("first_dword_zone_word_id", record.get("neighbor_zone_word_id", -1)));
-			const int32_t neighbor_zone_word_id = int32_t(record.get("neighbor_zone_word_id", -1));
-			const int32_t first_dword_runtime_zone = int32_t(record.get("first_dword_runtime_zone", record.get("neighbor_runtime_zone", -1)));
-			const int32_t stored_neighbor_runtime_zone = int32_t(record.get("neighbor_runtime_zone", -1));
-			if (relation_neighbor_key != neighbor_runtime_zone
-					&& first_dword_zone_word_id != neighbor_runtime_zone
-					&& neighbor_zone_word_id != neighbor_runtime_zone
-					&& first_dword_runtime_zone != neighbor_runtime_zone
-					&& stored_neighbor_runtime_zone != neighbor_runtime_zone) {
+			// 0x49b423..0x49b431 dereferences each relation record and compares only
+			// its first dword to the pushed neighbor key.
+			if (first_dword_zone_word_id != neighbor_runtime_zone) {
 				continue;
 			}
 			wide_byte_plus_8 = int32_t(record.get("byte_plus_8_wide", 0)) != 0;
@@ -15343,8 +15489,10 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 				}
 				const int32_t flat = int32_t(flat64);
 				land_edge_0x4a4c8e_scan_cell_count += 1;
-				const int32_t owner_high_signed = int8_t((live_cell_word_0x20[size_t(flat)] >> 24U) & 0xffU);
-				if (owner_high_signed < 0) {
+				// 0x4a4ccc..0x4a4cd5 sign-extends byte 2 of generated cell +0x20:
+				// (word << 8) >> 24, not the top byte.
+				const int32_t owner_signed_0x4a4c8e = int8_t((live_cell_word_0x20[size_t(flat)] >> 16U) & 0xffU);
+				if (owner_signed_0x4a4c8e < 0) {
 					land_edge_0x4a4c8e_owner_high_negative_skip_count += 1;
 					continue;
 				}
@@ -15361,20 +15509,20 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 						}
 						const int32_t neighbor_flat = int32_t(neighbor_flat64);
 						land_edge_0x4a4c8e_neighbor_probe_cell_count += 1;
-						const int32_t neighbor_owner_high_signed = int8_t((live_cell_word_0x20[size_t(neighbor_flat)] >> 24U) & 0xffU);
-						if (neighbor_owner_high_signed < 0) {
+						const int32_t neighbor_owner_signed_0x4a4c8e = int8_t((live_cell_word_0x20[size_t(neighbor_flat)] >> 16U) & 0xffU);
+						if (neighbor_owner_signed_0x4a4c8e < 0) {
 							if ((live_terrain_code[size_t(neighbor_flat)] & 0x3f) == 8) {
 								land_edge_0x4a4c8e_unassigned_water_trigger_count += 1;
 								triggered = true;
 							}
 							continue;
 						}
-						if (neighbor_owner_high_signed == owner_high_signed) {
+						if (neighbor_owner_signed_0x4a4c8e == owner_signed_0x4a4c8e) {
 							continue;
 						}
 						land_edge_0x4a4c8e_relation_lookup_required_count += 1;
 						bool relation_wide_byte_plus_8 = false;
-						const bool relation_found = lookup_relation_0x49b3fb(owner_high_signed, neighbor_owner_high_signed, relation_wide_byte_plus_8);
+						const bool relation_found = lookup_relation_0x49b3fb(owner_signed_0x4a4c8e, neighbor_owner_signed_0x4a4c8e, relation_wide_byte_plus_8);
 						if (!relation_found) {
 							land_edge_0x4a4c8e_relation_lookup_missing_count += 1;
 							triggered = true;
@@ -19783,6 +19931,16 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	town_castle["binary_byte_prefix_0x49a09c"] = "55 8b ec 51 51 8b 45 1c 80 65 ff 00 53 56 83 78";
 	town_castle["binary_byte_prefix_0x49b3c1"] = "56 57 33 ff 8b f1 33 c0 80 7c 06 41 00 74 01 47";
 	town_castle["binary_byte_prefix_0x49ba89"] = "8b 44 24 04 56 8b f1 c7 06 74 0a 54 00 89 46 04";
+	town_castle["private_state_checkpoint_after_town_castle"] = private_state_checkpoint_0x4a4c8e_generated_cells(
+			width(normalized_config),
+			height(normalized_config),
+			std::max(1, level_count(normalized_config)),
+			live_cell_word_0x20,
+			live_cell_word_0x24,
+			live_cell_word_0x28,
+			live_terrain_code,
+			"after_town_castle",
+			"0x4a8d2c_0x4a93a2_after_town_castle");
 	report["town_castle_phase"] = town_castle;
 	if (inspection_phase_limit_reached(normalized_config, report, "town_castle_phase")) {
 		return report;
@@ -19816,11 +19974,22 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	object_vector["binary_byte_prefix_0x4aa603"] = "55 8b ec 83 ec 48 53 8b 5d 08 56 57 8d 73 18 8d";
 	object_vector["binary_byte_prefix_0x4aa3e9"] = "55 8b ec 83 ec 3c 53 8b 5d 08 56 57 8d 7b 54 8d";
 	object_vector["binary_byte_prefix_0x49f95a"] = "55 8b ec 83 ec 3c 53 56 57 6a 14 5f 89 4d f0 57";
+	object_vector["private_state_checkpoint_after_object_vector_live_grid"] = private_state_checkpoint_0x4a4c8e_generated_cells(
+			width(normalized_config),
+			height(normalized_config),
+			std::max(1, level_count(normalized_config)),
+			live_cell_word_0x20,
+			live_cell_word_0x24,
+			live_cell_word_0x28,
+			live_terrain_code,
+			"after_object_vector_live_grid",
+			"0x4a9d6a_0x4aa3e9_after_object_vector_live_grid");
+	object_vector["live_grid_mutation_note"] = "native object_vector currently records private_generated_word_0x28 mutations inside the phase but does not return them to the live grid consumed by 0x4a4c8e";
 	report["mines_rewards_and_object_vector"] = object_vector;
 	if (inspection_phase_limit_reached(normalized_config, report, "mines_rewards_and_object_vector")) {
 		return report;
 	}
-		Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, pre_road_phase, connections, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code, live_cell_word_0x28, &live_cell_word_0x2c);
+		Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, pre_road_phase, connections, zone_words, live_cell_word_0x20, live_cell_word_0x24, cell_flags, live_terrain_code, live_cell_word_0x28, &live_cell_word_0x2c);
 	generated_cell_bit_state["source_range"] = "0x4a4c8e/0x49aa63/0x49a932/0x4a5a23/0x4a4fc5/0x49eb8d";
 	generated_cell_bit_state["binary_byte_prefix_0x49aa63"] = "generated_cell_decor_candidate_bit_26_helper_recovered_spec_boundary";
 	generated_cell_bit_state["binary_byte_prefix_0x49a932"] = "generated_cell_occupied_blocked_bit_27_helper_recovered_spec_boundary";
