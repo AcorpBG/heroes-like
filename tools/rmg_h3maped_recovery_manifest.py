@@ -595,7 +595,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "reads": [
             "generator pointer in ecx",
             "coordinate triple args at stack+0x08/+0x0c/+0x10",
-            "low-nibble source/flag arg at stack+0x14",
+            "low-nibble source/flag arg at stack+0x14; both 0x4a61bc callers pass the nonnegative return value from 0x4a5e73",
             "generated-cell buffer/width/height at generator+0x14/+0x18/+0x1c",
             "generated-cell object-reference vector begin/end at +0x04/+0x08",
             "generated-cell projection triple at +0x10/+0x14/+0x18",
@@ -608,7 +608,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "after the rectangle pass, reads the source coordinate cell's +0x10/+0x14/+0x18 projection triple",
             "when that projected x/y is in bounds, clears low five bits of the projected target cell +0x2c and calls 0x49a932(true)",
         ],
-        "ghidra_dump": "Called twice by 0x4a61bc. Static recovery shows a clamped connection-region pass around the provided x/y/level coordinate, object-reference-vector emptiness gating, bit26 writes through 0x49aa63(true), private low-bit flag packing in GeneratedCell+0x2c, and a follow-up projected target cell bit27 write through 0x49a932(true). Exact caller coordinate meanings and runtime ordered replay remain pending.",
+        "caller_contract": "Both 0x4a61bc call sites are gated by control byte [arg2+0x09] and a successful 0x4a5e73 return. The first call passes the selected 12-byte temporary candidate coordinate at EBP-0x3c..-0x34 after 0x4a5e73(generator, selected_candidate, true, relation_record_from_generator+0x10e4) returns nonnegative. The second call passes the direction-adjacent coordinate at EBP-0x48..-0x40, computed from the selected candidate plus direction offset 0x5a2658[(selected_cell+0x28 >> 12) & 7], after 0x4a5e73(generator, direction_adjacent, true, stack_arg+0x08) returns nonnegative. In both calls the 0x4a606b low-nibble arg is the 0x4a5e73 return value.",
+        "ghidra_dump": "Called twice by 0x4a61bc. Static recovery shows a clamped connection-region pass around the provided x/y/level coordinate, object-reference-vector emptiness gating, bit26 writes through 0x49aa63(true), private low-bit flag packing in GeneratedCell+0x2c, and a follow-up projected target cell bit27 write through 0x49a932(true). Caller coordinate meanings are statically recovered from 0x4a61bc; runtime ordered replay remains pending.",
     },
     {
         "address": "0x4a746b",
