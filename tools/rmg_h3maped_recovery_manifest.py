@@ -614,7 +614,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a746b",
         "name": "connection_endpoint_writer",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_caller_offsets_replay_pending",
         "calls": ["0x4a5767", "0x4a5e73", "0x49aa63"],
         "reads": [
             "generator pointer in ecx",
@@ -626,7 +626,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "generated-cell owner/score dword at +0x20, including byte2 owner/relation index",
             "generated-cell bit-state dword at +0x28, including bit27",
             "generated-cell private flags at +0x2c",
-            "observed stack-local five-entry endpoint offset table at ebp-0x48..ebp-0x20",
+            "stack-local five-entry endpoint offset table at ebp-0x48..ebp-0x20: (0,1), (1,0), (-1,0), (1,1), (-1,1)",
         ],
         "writes": [
             "calls 0x4a5767(generator) before endpoint selection",
@@ -640,7 +640,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "for each stamped cell, writes cell+0x2c = (old & 0xffffffe1) | ((result & 0x0f) << 1) | 1",
             "returns true when 0x4a5e73 returns nonnegative and false otherwise",
         ],
-        "ghidra_dump": "Called twice by 0x4a7605. Static recovery shows the normalize-first endpoint writer: it calls 0x4a5767, derives a source cell from the input coordinate, chooses an endpoint either from source projection fields, one of five local offset records with matching owner/bit27, or fallback (x,y+1,level), calls 0x4a5e73, and on success stamps five endpoint-offset cells through 0x49aa63(true) plus GeneratedCell+0x2c low-bit packing. Caller coordinate meanings, local endpoint offset semantics, and runtime ordered replay remain pending.",
+        "caller_contract": "Both 0x4a7605 call sites are gated by control byte [arg2+0x09] and pass the newly allocated object record's relative coordinate triple at record+0x08/+0x0c/+0x10. The first call validates the allocated record against the original stack arg1, appends it to the generator+0x14c0/0x14d0 vector selected by local flag -0x14, records the coordinate in arg1+0x404, and calls 0x4a746b(generator, record+0x08 triple, relation record selected from generator+0x10e4 by arg2 index). The second call validates against that selected relation record, appends to the generator vector, records the coordinate in relation+0x404, and calls 0x4a746b(generator, record+0x08 triple, original stack arg1).",
+        "ghidra_dump": "Called twice by 0x4a7605. Static recovery shows the normalize-first endpoint writer: it calls 0x4a5767, derives a source cell from the input coordinate, chooses an endpoint either from source projection fields, one of five local offset records with matching owner/bit27, or fallback (x,y+1,level), calls 0x4a5e73, and on success stamps the five endpoint-offset cells (0,1), (1,0), (-1,0), (1,1), and (-1,1) through 0x49aa63(true) plus GeneratedCell+0x2c low-bit packing. Caller coordinate meanings and local endpoint offsets are statically recovered; 0x4a5e73 vector-entry semantics/policy and runtime ordered replay remain pending.",
     },
     {
         "address": "0x4a5e73",
