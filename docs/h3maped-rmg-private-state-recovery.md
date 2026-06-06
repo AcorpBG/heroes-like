@@ -233,8 +233,14 @@ It identifies the next helper layer:
 - `0x49d69d` is called by `0x49cf34`. It appends arg1 to the wrapper's selected-member dword vector anchored at `+0x28`, then stamps arg2/arg3/level-0 through `0x49abd6`.
 - `0x49d6e0` is called by `0x49cf34`, `0x4aa1db`, `0x4adb72`, and `0x4ad947`. It initializes wrapper bounds to `0x7d00/0xffff8300` sentinels, scans generated cells through `0x49a1d8`, and updates bounds for cells that are invalid, have bit22 set, or have bit27 clear.
 - `0x49d7c3` is called by `0x49cf34` and reward/guard setup callers. When the wrapper candidate-coordinate vector is empty, it finds the first valid bit27 cell with bit22 clear, traces the contour using the `0x5a2658` direction table, and appends 8-byte coordinates into the vector anchored at `+0x38`.
+- The focused object-projection helper dump `.artifacts/rmg_recovery/ghidra_object_projection_helper_dump/` covers `0x49e1bf`, `0x41e951`, `0x49ba89`, `0x4a9e40`, and `0x49eb6d`.
+- `0x41e951` is an object descriptor bitset lookup. It reads the bitset at `ecx+0x04`, computes bit index `47 - 8*y - x`, and returns whether that bit is set. It calls `0x42f2ec` if the computed index is outside the expected `0..47` range.
+- `0x49eb6d` maps `(x, y, level)` to a generated-cell pointer using wrapper fields `+0x08/+0x0c/+0x10`: `cell = buffer + (((level * height) + y) * width + x) * 0x30`.
+- `0x49ba89` constructs an object record with vtable `0x540a74`, descriptor pointer at `+0x04`, increments descriptor refcount at `descriptor+0x08`, and initializes record `+0x08/+0x0c/+0x10` to `-1`. The later projection meanings of those initialized fields remain replay-pending.
+- `0x4a9e40` selects an object descriptor from a bucket vector at `+0x38/+0x3c`, filters candidate descriptor fields `+0x20`, `+0x24`, and bitset `+0x18`, then chooses one descriptor by `0x4e7276 % candidate_count`. Exact selector argument names and descriptor class values remain replay-pending.
 - `0x49a6f9` is called by `0x49aa93`, `0x49d2e0`, and `0x4aa603`. It is an object-descriptor footprint acceptance gate: it reads descriptor dimensions at `+0x34/+0x38`, walks the candidate footprint through generated-cell validity, owner, terrain, optional bit26, and `0x41e951` mask tests, and returns rejection as true. Exact descriptor field names beyond dimensions and terrain policy branches remain replay-pending.
 - `0x49e700` is called by `0x49eb8d`. It iterates the terrain-object descriptor table `0x54092c..0x5409e0`, rejects invalid candidate cells and terrain type `9`, filters object type ranges by map level count, scans local footprint offsets through `0x41e951`, calls `0x49e1bf` for scoring/emission feasibility, accumulates accepted weights, then creates/projects one weighted decorative object and clears bit26 around the chosen footprint unless `GeneratedCell+0x2c` bit0 suppresses mutation. Exact object record allocation/projection fields remain replay-pending.
+- `0x49e1bf` is now directly dumped but not fully recovered. It is the current object-emission blocker: references and instruction flow show candidate rectangle scans, generated-cell bit checks, terrain checks, route/adjacency tests, and output-vector appends, but the full score/output field semantics still need replay before native parity changes.
 - `0x49a318` is called by `0x4a5767` and `0x4a89da`; it is part of the object-anchor/high-owner projection path.
 - `0x4a5a23` is called by `0x4a5767` and `0x4a61bc`; it reaches allocation/object-selection helpers including `0x4a9e40`, `0x5044b1`, and `0x49ba89`.
 - `0x4a5e73` is called by `0x4a61bc`, `0x4a696b`, `0x4a6cf2`, and `0x4a746b`; it reaches endpoint/allocation helpers including `0x5044b1`, `0x49ba89`, and `0x4a7312`.
@@ -243,10 +249,11 @@ It identifies the next helper layer:
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper fields, the object-descriptor footprint gate, and the decorative candidate filler shell. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper fields, generated-cell addressing, object mask lookup, the object record constructor, the object-descriptor selector, the object-descriptor footprint gate, and the decorative candidate filler shell. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
 - `0x49cf34`
 - `0x49eb8d`
+- `0x49e1bf`
 - `0x4a54a7`
 - `0x4a5767`
 - `0x4a606b`
