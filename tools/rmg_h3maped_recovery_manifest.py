@@ -419,6 +419,9 @@ FUNCTIONS: list[dict[str, Any]] = [
             "candidate x/y/level args at stack+0x0c/+0x10/+0x14",
             "descriptor dimensions at +0x34/+0x38",
             "descriptor mask ranges at +0x04/+0x14/+0x3c",
+            "candidate descriptor terrain policy at +0x14 checked through 0x42cc99",
+            "candidate object terrain score table at record+0x10 with ten terrain-class contributions",
+            "candidate descriptor neighbor score tables at +0x30 and +0x40",
             "GeneratedCell+0x04/+0x08 object-reference vector",
             "GeneratedCell+0x24 terrain/art word",
             "GeneratedCell+0x28 bit-state word",
@@ -430,7 +433,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "stack-local scratch rectangle used for neighbor scans",
             "temporary object-reference flags at +0x14/+0x15/+0x16/+0x17/+0x18",
             "appends flagged object-reference pointers to a local dword vector through 0x40bb26",
-            "clears the temporary object-reference flags before returning",
+            "adds descriptor +0x30/+0x40 table contributions for flagged neighbor references",
+            "clears the temporary object-reference flags at +0x14..+0x18 before returning",
         ],
         "returns": [
             "positive candidate emission score when accepted by 0x49e700",
@@ -438,7 +442,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "-5000 when a hard placement/neighbor conflict path is hit",
             "terrain-weight total directly when the total is below -1000",
         ],
-        "ghidra_dump": "Focused dump recovers the candidate footprint scan, generated-cell addressing, terrain-class score summation, neighbor object-reference flagging, table adjustments through 0x49b89c, and final score/reject return paths. Exact semantic names for the descriptor score tables and object-reference flag classes remain replay-pending.",
+        "ghidra_dump": "Focused dump recovers the ordered footprint pass and neighbor-reference pass. The footprint pass walks descriptor height/width, checks descriptor masks through 0x42ccc6, validates terrain through descriptor+0x14/0x42cc99, rejects bit27 cells, records ten terrain-class hits, and expands a stack-local scratch rectangle. The neighbor pass walks descriptor dimensions plus a one-cell border, gates on the scratch rectangle, scans GeneratedCell+0x04/+0x08 object references, prepares referenced records through 0x49b89c, sets temporary flags +0x14..+0x18, appends flagged references through 0x40bb26, applies descriptor +0x30/+0x40 score-table adjustments, clears flags, and returns the final score/rejection. Exact semantic names for record+0x10 terrain scores, descriptor +0x30/+0x40 neighbor tables, object-reference flag classes, and runtime ordered replay remain pending.",
     },
     {
         "address": "0x49e700",
