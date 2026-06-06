@@ -20,6 +20,7 @@ DEFAULT_AA63 = Path(".artifacts/rmg_recovery/seed58_interactive_49aa63_to_4a4c8e
 DEFAULT_A80DC = Path(".artifacts/rmg_recovery/seed58_interactive_4a80dc_return_to_4a4c8e/winedbg_interactive_trace_ledger.json")
 DEFAULT_A962 = Path(".artifacts/rmg_recovery/seed58_interactive_49a962_to_4a4c8e_lite/winedbg_interactive_trace_ledger.json")
 DEFAULT_ABD6_BODY = Path(".artifacts/rmg_recovery/seed58_interactive_49abd6_body_cells_to_4a8c15/winedbg_interactive_trace_ledger.json")
+DEFAULT_ROUTE_CALLS = Path(".artifacts/rmg_recovery/seed58_piped_4a8260_route_call_sites_to_4a4c8e_full/winedbg_recovery_trace_ledger.json")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/seed58_trace_analysis.json")
 
 
@@ -155,6 +156,38 @@ def parse_generated_cell_call_site(path: Path, address: str) -> list[int]:
     return flats
 
 
+def parse_route_call_sites(path: Path) -> dict[str, Any]:
+    insert_sites = {"0x004a8491", "0x004a849d", "0x004a84a9", "0x004a84b5", "0x004a863e", "0x004a864a"}
+    insertions: list[dict[str, Any]] = []
+    stamp_coords: list[tuple[int, int, int]] = []
+    event_addresses: list[str] = []
+    for index, event in enumerate(load_json(path).get("events", [])):
+        address = event.get("address")
+        if not isinstance(address, str):
+            continue
+        event_addresses.append(address)
+        esp = event.get("registers", {}).get("esp")
+        if not isinstance(esp, int):
+            continue
+        if address in insert_sites:
+            pointer = word_at(event, esp)
+            coord: list[int | None] = [None, None]
+            if isinstance(pointer, int):
+                coord = [word_at(event, pointer), word_at(event, pointer + 4)]
+            insertions.append({"event_index": index, "call_site": address, "pointer": pointer, "coord": coord})
+        elif address == "0x004a858f":
+            x = word_at(event, esp)
+            y = word_at(event, esp + 4)
+            level = word_at(event, esp + 8)
+            if x is not None and y is not None and level is not None:
+                stamp_coords.append((x, y, level))
+    return {
+        "event_addresses": event_addresses,
+        "insertions": insertions,
+        "stamp_coords": stamp_coords,
+    }
+
+
 def normalize_address(value: str) -> str:
     return "0x%08x" % int(value, 0)
 
@@ -223,6 +256,11 @@ def parse_a80dc_pairs(path: Path) -> list[dict[str, Any]]:
             eax = event.get("registers", {}).get("eax")
             if isinstance(eax, int):
                 pending["return"] = [word_at(event, eax), word_at(event, eax + 4)]
+            if "return" in pending:
+                start_x, start_y = pending["start"]
+                return_x, return_y = pending["return"]
+                if return_x is not None and return_y is not None:
+                    pending["return_start_distance_squared"] = (return_x - start_x) ** 2 + (return_y - start_y) ** 2
             pairs.append(pending)
             pending = None
     return pairs
@@ -236,6 +274,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--a80dc", type=Path, default=DEFAULT_A80DC)
     parser.add_argument("--a962", type=Path, default=DEFAULT_A962)
     parser.add_argument("--abd6-body", type=Path, default=DEFAULT_ABD6_BODY)
+    parser.add_argument("--route-calls", type=Path, default=DEFAULT_ROUTE_CALLS)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--cell-base", type=lambda value: int(value, 0), default=0x0188B6D4)
     parser.add_argument("--width", type=int, default=36)
@@ -256,6 +295,7 @@ def main() -> int:
     a80dc_pairs = parse_a80dc_pairs(args.a80dc)
     a962_coords = parse_coordinate_entries(args.a962, "0x49a962")
     abd6_body_flats = parse_generated_cell_call_site(args.abd6_body, "0x49ac6b")
+    route_calls = parse_route_call_sites(args.route_calls)
 
     bit_sets = pre["bit_sets"]
     total_cells = args.width * args.height * args.levels
@@ -269,6 +309,15 @@ def main() -> int:
         pre["terrain_by_flat"],
     )
     bit27_outside_a85d = bit_sets["bit27"] - a85d_set
+    route_insertions = route_calls["insertions"]
+    route_stamp_coords = route_calls["stamp_coords"]
+    route_call_counts = Counter(route_calls["event_addresses"])
+    far_a80dc_pairs = [
+        pair for pair in a80dc_pairs if int(pair.get("return_start_distance_squared", -1)) >= 25
+    ]
+    route_far_insertions = [
+        insertion for insertion in route_insertions if insertion["call_site"] in {"0x004a863e", "0x004a864a"}
+    ]
     result = {
         "schema_id": "h3maped_seed58_trace_analysis_v1",
         "pre_4a4c8e": {
@@ -321,7 +370,26 @@ def main() -> int:
         "a80dc": {
             "pair_count": len(a80dc_pairs),
             "unique_return_count": len({tuple(pair.get("return", [])) for pair in a80dc_pairs}),
+            "return_start_distance_squared_gte_25_count": len(far_a80dc_pairs),
             "pairs": a80dc_pairs,
+        },
+        "route_call_sites": {
+            "ledger": str(args.route_calls),
+            "event_count": len(route_calls["event_addresses"]),
+            "call_site_counts": dict(sorted(route_call_counts.items())),
+            "first_4a4c8e_index": route_calls["event_addresses"].index("0x004a4c8e") if "0x004a4c8e" in route_calls["event_addresses"] else None,
+            "insert_call_count": len(route_insertions),
+            "unique_insert_coord_count": len({tuple(insertion["coord"]) for insertion in route_insertions}),
+            "insert_call_counts_by_site": dict(sorted(Counter(insertion["call_site"] for insertion in route_insertions).items())),
+            "far_cut_insert_call_count": len(route_far_insertions),
+            "far_cut_insert_pair_count": len(route_far_insertions) // 2,
+            "far_cut_insert_pairs_match_a80dc_distance_gate": len(route_far_insertions) // 2 == len(far_a80dc_pairs),
+            "stamp_call_count": len(route_stamp_coords),
+            "unique_stamp_coord_count": len(set(route_stamp_coords)),
+            "stamp_coords_match_a85d_trace_order": route_stamp_coords == a85d_coords,
+            "stamp_coords_match_a85d_trace_multiset": Counter(route_stamp_coords) == Counter(a85d_coords),
+            "first_insertions": route_insertions[:24],
+            "last_insertions": route_insertions[-24:],
         },
         "samples": {
             "bit27_outside_a85d_stamp_sample": sorted(bit27_outside_a85d)[:80],
@@ -333,7 +401,7 @@ def main() -> int:
     print(
         "RMG_H3MAPED_TRACE_ANALYSIS "
         f"status=pass a85d_calls={len(a85d_coords)} aa63_calls={len(aa63_calls)} "
-        f"a962_calls={len(a962_coords)} a80dc_pairs={len(a80dc_pairs)} "
+        f"a962_calls={len(a962_coords)} a80dc_pairs={len(a80dc_pairs)} route_events={len(route_calls['event_addresses'])} "
         f"a962_replay_matches={a962_replay['remaining_bit27'] == bit_sets['bit27']} out={args.out}"
     )
     return 0

@@ -129,9 +129,18 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a8260",
         "name": "pre_land_edge_route_and_boundary_phase",
-        "status": "recovered_partial_static_and_seed58_writer_replay",
-        "calls": ["0x4a80dc route cut helper", "0x49a85d route/neighborhood stamp", "0x49a962 boundary center and neighborhood clear"],
-        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears.",
+        "status": "recovered_seed58_route_call_site_stream_static_helpers_pending",
+        "calls": [
+            "0x40bb15 route-vector insertion helper",
+            "0x4ae501 route-vector setup helper",
+            "0x4afaea route-vector erase/pop helper",
+            "0x4ae5a8 route-vector pointer helper",
+            "0x4ae5e6 route-vector endpoint helper",
+            "0x4a80dc route cut helper",
+            "0x49a85d route/neighborhood stamp",
+            "0x49a962 boundary center and neighborhood clear",
+        ],
+        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 1,686 route insertion call-site events, 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears. The 0x4a858f stamp coordinate order exactly matches the direct 0x49a85d trace, and the 11 far-cut insertion pairs match the 0x4a80dc squared-distance >= 25 gate.",
     },
     {
         "address": "0x4a8c15",

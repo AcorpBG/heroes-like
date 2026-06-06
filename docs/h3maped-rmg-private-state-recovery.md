@@ -26,6 +26,7 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/seed58_interactive_49abd6_to_4a8c15/winedbg_interactive_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_interactive_49abd6_body_cells_to_4a8c15/winedbg_interactive_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_interactive_4a80dc_return_to_4a4c8e/winedbg_interactive_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_piped_4a8260_route_call_sites_to_4a4c8e_full/winedbg_recovery_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_trace_analysis.json`
 
 ## Generated Cell Layout
@@ -173,6 +174,15 @@ The interactive `0x49a962` trace proves the seed-58 boundary clear path:
 
 The interactive `0x4a80dc` trace records `52` route-line helper entry/return pairs before `0x4a4c8e`, with `51` unique returned coordinates. These are the line-cut inputs used by the route list logic that ultimately feeds `0x49a85d`.
 
+The piped `0x4a8260` route call-site trace recovers the seed-58 route insertion/stamp stream up to `0x4a4c8e`:
+
+- The trace records `2,027` ordered events; the first `0x4a4c8e` event is index `2026`.
+- Route-vector insert call sites fire `1,686` times total: `0x4a8491`, `0x4a849d`, `0x4a84a9`, and `0x4a84b5` fire `416` times each, while `0x4a863e` and `0x4a864a` fire `11` times each.
+- Those insertions contain `361` unique coordinate pairs.
+- The same trace records all `340` `0x4a858f -> 0x49a85d` stamp calls, with `238` unique stamp coordinates.
+- The traced `0x4a858f` stamp coordinate order exactly matches the direct `0x49a85d` trace.
+- The `11` `0x4a863e`/`0x4a864a` insertion pairs match the `0x4a80dc` return-distance gate: exactly `11` of the `52` route-line helper pairs have squared distance from start to returned cut point greater than or equal to `25`.
+
 The companion interactive `0x49a932` trace remains intentionally bounded:
 
 - The lite trace records `0x4a8c15`, `0x4a8260`, then `2,999` `0x49a932` events before hitting the configured `3,000` event cap.
@@ -187,10 +197,10 @@ Static reconstruction and the complete `0x49a962` caller trace explain why event
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` bit26/bit27 surface is now caller-side replayed, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream and bit26/bit27 surface are now caller-side replayed, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the call paths through:
 
 - `0x4a8260`
-- the remaining `0x4a8260` route-list transform from `0x4a80dc` returned cut points to the `340` `0x49a85d` stamp centers
+- the remaining static recovery of the `0x4a8260` route-vector helper contracts around `0x40bb15`, `0x4ae501`, `0x4afaea`, `0x4ae5a8`, and `0x4ae5e6`
 - `0x49cf34`
 - `0x49eb8d`
 - `0x4a54a7`
