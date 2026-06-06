@@ -15,9 +15,12 @@ Generated artifacts:
 
 - `.artifacts/rmg_recovery/ghidra_private_state_dump/`
 - `.artifacts/rmg_recovery/ghidra_private_state_expanded_dump/`
+- `.artifacts/rmg_recovery/ghidra_private_state_terrain_writer_dump/`
 - `.artifacts/rmg_recovery/seed58_existing_0x4a4c8e_parse/winedbg_recovery_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_writer_trace_reparsed_cells/winedbg_recovery_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_downstream_writer_trace_reparsed_cells/winedbg_recovery_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_interactive_49aa63_to_4a4c8e/winedbg_interactive_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_interactive_49a932_to_4a4c8e_lite/winedbg_interactive_trace_ledger.json`
 
 ## Generated Cell Layout
 
@@ -67,6 +70,12 @@ So the initializer intentionally sets bit25 and bit27. The pre-`0x4a4c8e` H3MapE
 - `cell+0x2b & 0x02` is non-zero;
 - `(cell+0x24 & 0x3f) != 9`.
 
+`0x49acf6` writes terrain/art and private per-cell flag bits. It:
+
+- writes `cell+0x24 = (old & 0xffffc000) | (terrain_arg & 0x3f) | ((arg2 & 0xff) << 6)`;
+- writes `cell+0x28` by clearing bit `15` and OR-ing `((arg3 & 1) | ((arg4 & 1) << 1)) << 15`;
+- is called by `0x49ce64` after `0x49a072` reset in a full-grid stride-`0x30` loop.
+
 `0x49a932` is a bit27 writer guarded by `cell+0x2c bit0`:
 
 - false argument clears bit27;
@@ -109,6 +118,26 @@ The bounded writer trace found:
 
 That ties the observed bit27 reduction to `0x49a932` callers, especially `0x49a85d`, `0x49a962`, and the `0x49abd6` footprint path.
 
+The interactive phase trace fixes the earlier piped-debugger limitation and proves the seed-58 bit26 boundary path:
+
+- `0x4a8c15` enters from return address `0x004ac778`.
+- `0x4a8c15` calls `0x4a8260`, return address `0x004a8c25`.
+- Inside `0x4a8260`, H3MapEd calls `0x49aa63` exactly `490` times before `0x4a4c8e`.
+- All `0x49aa63` calls return through `0x0049a992`.
+- All traced `0x49aa63` stack arguments are `true`.
+- The `490` calls target `490` unique generated-cell flats, min `3`, max `1291`.
+- The next phase-boundary event is `0x4a4c8e`, return address `0x004a8c2c`.
+
+That matches the already dumped seed-58 `0x4a4c8e` entry bit26 count (`490`). This is a recovered source-backed boundary for `0x49aa63` on seed 58.
+
+The companion interactive `0x49a932` trace remains intentionally bounded, not complete:
+
+- The lite trace records `0x4a8c15`, `0x4a8260`, then `2,999` `0x49a932` events before hitting the configured `3,000` event cap.
+- Return addresses in that bounded sample are `0x0049a91d` (`2,690`), `0x0049a88d` (`303`), and `0x0049ac70` (`5`).
+- The traced calls use true stack arguments in the parsed events.
+- The stream revisits cells heavily: `2,998` parsed generated-cell flats but only `702` unique flats.
+- It did not reach `0x4a4c8e` before the cap, so the full `0x49a932` replay is still unrecovered.
+
 ## Current Unrecovered Gap
 
 The full end-to-end state is not yet recovered.
@@ -118,6 +147,7 @@ The missing piece is a complete ordered replay of all pre-`0x4a4c8e` callers tha
 - `0x4a8260`
 - `0x49a85d`
 - `0x49a962`
+- the complete pre-`0x4a4c8e` `0x49a932` stream
 - `0x49cf34`
 - `0x49eb8d`
 - `0x4a54a7`
