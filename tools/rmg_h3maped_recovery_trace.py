@@ -26,6 +26,7 @@ DWORD_LINE_RE = re.compile(r"(?:^|>)\s*(?:0x)?([0-9a-fA-F]+):\s+(.+)$")
 STOP_RE = re.compile(r"Stopped on breakpoint\s+(\d+)\s+at\s+0x([0-9a-fA-F]+)")
 REGISTER_RE = re.compile(r"\b(eax|ebx|ecx|edx|esi|edi|ebp|esp|eip)[:=]([0-9a-fA-F]{8})\b", re.IGNORECASE)
 HEX_WORD_RE = re.compile(r"\b[0-9a-fA-F]{1,8}\b")
+ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]|\x1b\][^\a]*(?:\a|\x1b\\)")
 
 
 def q(value: str | Path) -> str:
@@ -37,6 +38,7 @@ def parse_winedbg_log(path: Path, generated_cell_base: int | None = None, genera
     events: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
     for line in text.splitlines():
+        line = ANSI_RE.sub("", line).replace("\r", "")
         stop = STOP_RE.search(line)
         if stop:
             current = {

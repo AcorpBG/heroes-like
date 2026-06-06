@@ -57,20 +57,33 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49a932",
         "name": "generated_cell_occupied_bit_writer",
-        "status": "recovered_static_ghidra_must_trace_all_callers",
+        "status": "recovered_static_ghidra_bounded_runtime_trace_incomplete",
         "writes": ["when cell+0x2c bit0 clear: arg false clears bit27", "arg true sets bit27 then clears bit26"],
+        "runtime_trace": "seed58_interactive_49a932_to_4a4c8e_lite hit the 3000-event cap without reaching 0x4a4c8e; the stream revisits cells and is not yet a complete pre-boundary replay.",
     },
     {
         "address": "0x49aa63",
         "name": "generated_cell_decor_candidate_writer",
-        "status": "recovered_static_ghidra_must_trace_all_callers",
+        "status": "recovered_static_and_seed58_pre_0x4a4c8e_runtime",
         "writes": ["when cell+0x2c bit0 clear: arg false clears bit26", "arg true sets bit26 then clears bit27"],
+        "runtime_trace": "seed58_interactive_49aa63_to_4a4c8e shows 490 calls, all arg true, 490 unique generated-cell flats, then 0x4a4c8e. This matches the seed-58 pre-0x4a4c8e bit26 count.",
+    },
+    {
+        "address": "0x49acf6",
+        "name": "generated_cell_terrain_art_and_flag_writer",
+        "status": "recovered_static_ghidra",
+        "writes": [
+            "cell+0x24 = (old & 0xffffc000) | (terrain_arg & 0x3f) | ((arg2 & 0xff) << 6)",
+            "cell+0x28 = (old & 0xfffe7fff) | (((arg3 & 1) | ((arg4 & 1) << 1)) << 15)",
+        ],
+        "callers": ["0x49ce64 full-grid loop after 0x49a072 reset", "0x4af463", "0x49acee local/internal path"],
     },
     {
         "address": "0x49abd6",
         "name": "object_mask_stamp_generated_cell_mutator",
-        "status": "must_recover_call_contract",
+        "status": "recovered_partial_runtime_call_contract",
         "writes": ["cell+0x28 bit22", "cell+0x28 bit25", "cell+0x28 bit27 via 0x49a932"],
+        "runtime_trace": "seed58 combined traces show five calls before 0x4a8c15, all returning through 0x4a54d6 and followed by 0x49a932/0x49ac70 cell writes.",
     },
     {
         "address": "0x4aa3e9",
@@ -87,8 +100,9 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a8c15",
         "name": "generated_cell_post_terrain_phase_driver",
-        "status": "recovered_static_ghidra_sequence",
+        "status": "recovered_static_and_seed58_runtime_prefix",
         "calls_in_order": ["0x4a8260", "0x4a4c8e", "per-cell scan calling 0x49a962", "0x4a4913 loop over generator+0x10e4 vector", "0x4a5767", "0x4a4fc5", "0x4a79a3"],
+        "runtime_trace": "seed58_interactive_49aa63_to_4a4c8e confirms 0x4a8c15 -> 0x4a8260 -> 490 calls to 0x49aa63 -> 0x4a4c8e for the bit26 writer stream.",
     },
     {
         "address": "0x49b3fb",
