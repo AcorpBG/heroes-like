@@ -295,9 +295,21 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49eb8d",
         "name": "bit26_decorative_candidate_budget_pass",
-        "status": "ghidra_reference_dumped_replay_pending",
+        "status": "recovered_static_contract_replay_pending",
         "calls": ["0x49a1d8", "0x49e700", "0x49a932"],
-        "ghidra_dump": "Counts bit26 cells, derives a 0x4374c/count work budget, calls 0x49e700 for valid flagged cells, then locks remaining valid non-bit27 cells with 0x49a932(true); decompile failed, so full replay remains pending.",
+        "reads": [
+            "generator pointer in ecx",
+            "generated-cell buffer at generator+0x14",
+            "map width/height/level count at generator+0x18/+0x1c/+0x20",
+            "GeneratedCell+0x28 bit-state word",
+            "optional handler pointer at generator+0xed4",
+        ],
+        "writes": [
+            "calls 0x49e700 for valid bit26 candidate cells with x/y/level and budget",
+            "calls optional generator+0xed4 vtable slot +0x08 for invalid bit26 candidate cells",
+            "calls 0x49a932(true) for valid cells whose bit27 is clear after decorative attempts",
+        ],
+        "ghidra_dump": "Instruction dump recovers three ordered full-grid passes. Pass 1 counts cells where (GeneratedCell+0x28 >> 26) & 1 is set. If count is nonzero, pass 2 computes budget = 0x4374c / count and scans z/y/x in generator +0x20/+0x1c/+0x18 order; for each bit26 cell it calls 0x49e700 when 0x49a1d8 is true, otherwise calls an optional generator+0xed4 indirect handler with the same budget. Pass 3 scans the grid again and calls 0x49a932(true) when bit27 is clear and 0x49a1d8 is true. Runtime coordinate/count replay remains pending.",
     },
     {
         "address": "0x49eb6d",
@@ -444,6 +456,7 @@ STRUCTS: list[dict[str, Any]] = [
             "+0x18": "map_width",
             "+0x1c": "map_height",
             "+0x20": "level_count",
+            "+0xed4": "optional handler pointer used by 0x49eb8d for invalid bit26 candidate cells; vtable slot +0x08 is called with the per-cell budget",
             "+0x10e4": "runtime_zone_relation_vector_table",
             "+0x14b0": "strategic_route_coordinate_vector_begin",
             "+0x14b4": "strategic_route_coordinate_vector_end",
