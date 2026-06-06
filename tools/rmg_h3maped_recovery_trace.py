@@ -87,16 +87,11 @@ def build_debugger_input(args: argparse.Namespace) -> str:
     for address in args.breakpoints:
         lines.append(f"break *{address}")
     for _ in range(args.max_events):
-        lines.extend(
-            [
-                "cont",
-                "info reg",
-                "x/8x $esp",
-                "x/12x $ecx",
-                "x/12x $esi",
-                args.dump_command,
-            ]
-        )
+        lines.extend(["cont", "info reg", "x/8x $esp"])
+        if args.lite and args.lite_extra_command:
+            lines.append(args.lite_extra_command)
+        if not args.lite:
+            lines.extend(["x/12x $ecx", "x/12x $esi", args.dump_command])
     lines.append("q")
     return "".join(f"  printf {q(line + chr(10))}\n" for line in lines)
 
@@ -192,6 +187,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--breakpoints", nargs="+", default=DEFAULT_BREAKPOINTS)
     parser.add_argument("--max-events", type=int, default=64)
     parser.add_argument("--dump-command", default="x/16x *(int*)($esi+0x14)")
+    parser.add_argument("--lite", action="store_true", help="Only dump registers and stack at each breakpoint.")
+    parser.add_argument("--lite-extra-command", default="", help="Optional extra winedbg command to run in lite mode.")
     parser.add_argument("--generated-cell-base", default="", help="Optional hex generated-cell base pointer for flat-index derivation.")
     parser.add_argument("--generated-cell-stride", type=int, default=0x30)
     parser.add_argument("--display-number", type=int, default=107)
@@ -241,6 +238,8 @@ def main() -> int:
     ledger["breakpoints"] = args.breakpoints
     ledger["max_events"] = args.max_events
     ledger["dump_command"] = args.dump_command
+    ledger["lite"] = bool(args.lite)
+    ledger["lite_extra_command"] = args.lite_extra_command
     ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if ledger["event_count"] else "no_events"
     print(f"RMG_H3MAPED_RECOVERY_TRACE status={status} events={ledger['event_count']} ledger={ledger_path}")
