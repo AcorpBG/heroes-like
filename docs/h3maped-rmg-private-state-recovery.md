@@ -57,6 +57,7 @@ The generator object seen by `0x4a4c8e` / `0x4a8c15` uses:
 - `+0x18`: width.
 - `+0x1c`: height.
 - `+0x20`: level count.
+- `+0xed4`: optional handler pointer used by `0x49eb8d` for invalid bit26 candidate cells; vtable slot `+0x08` is called with the per-cell budget.
 - `+0x10e4..+0x10e8`: relation/vector range consumed after `0x4a4c8e`.
 
 ## Recovered Functions
@@ -216,7 +217,7 @@ The downstream Ghidra artifact `.artifacts/rmg_recovery/ghidra_downstream_state_
 Ghidra identified all seven target functions and eight caller dumps, but the decompiler did not complete for these targets. The artifact is therefore call-graph/reference/instruction evidence, not clean recovered C source. Current source-backed facts from the dump:
 
 - `0x49cf34` is called by `0x4aa354` and `0x4adb72`. Its references show calls to `0x49d7c3`, `0x49d2c7`, `0x49a1d8`, `0x49aa63`, `0x49a932`, `0x49d2e0`, `0x49d69d`, and `0x49d6e0`.
-- `0x49eb8d` is called by `0x4ac552` and `0x4af910`. It counts bit26 cells, derives a `0x4374c / count` work budget, calls `0x49e700` for valid flagged cells, then calls `0x49a932(true)` on remaining valid cells whose bit27 is clear.
+- `0x49eb8d` is called by `0x4ac552` and `0x4af910`. Its static control flow is now recovered as three ordered full-grid passes over generator fields `+0x14/+0x18/+0x1c/+0x20`. Pass 1 counts cells where `(GeneratedCell+0x28 >> 26) & 1` is set. If the count is zero, it exits without mutation. Otherwise pass 2 computes `budget = 0x4374c / count`, scans z/y/x in level/height/width order, and handles each bit26 cell: valid cells according to `0x49a1d8` call `0x49e700(x, y, level, budget)`, while invalid cells call the optional `generator+0xed4` handler vtable slot `+0x08` with the same budget when the handler exists. Pass 3 scans all cells again and calls `0x49a932(true)` when bit27 is clear and `0x49a1d8` is true. Runtime coordinate/count replay remains pending.
 - `0x4a54a7` reaches `0x49abd6`, so it is an object-footprint commit path, but the surrounding object/vector projection is not replayed yet.
 - `0x4a5767` is called by `0x4a8c15`, `0x4a746b`, and `0x4ac552`. It calls `0x4a59e2`, `0x49a1d8`, `0x49a932`, `0x49a318`, and `0x4a5a23`.
 - `0x4a606b` is called by `0x4a61bc` and calls `0x49aa63` and `0x49a932` in a connection-region generated-cell writer path.
@@ -252,10 +253,10 @@ It identifies the next helper layer:
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper fields, generated-cell addressing, object mask lookup, the object record constructor, the object-record mask/score cache builder, the object-descriptor selector, the object-descriptor footprint gate, the decorative candidate filler shell, and the decorative object scoring/emission-feasibility shell. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper fields, generated-cell addressing, object mask lookup, the object record constructor, the object-record mask/score cache builder, the object-descriptor selector, the object-descriptor footprint gate, the bit26 decorative candidate budget pass, the decorative candidate filler shell, and the decorative object scoring/emission-feasibility shell. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
 - `0x49cf34`
-- `0x49eb8d`
+- `0x49eb8d` runtime coordinate/count replay around `0x49e700` and the optional `+0xed4` handler
 - `0x49e1bf`
 - `0x4a54a7`
 - `0x4a5767`
