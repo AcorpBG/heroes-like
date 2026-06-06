@@ -59,11 +59,15 @@ The generator object seen by `0x4a4c8e` / `0x4a8c15` uses:
 - `+0x18`: width.
 - `+0x1c`: height.
 - `+0x20`: level count.
+- `+0xc8/+0xcc`: index-keyed pointer vector begin/end used by `0x4a5e73`.
+- `+0xd8/+0xdc`: index-keyed pointer vector begin/end used by `0x4a5e73`.
 - `+0xec4`: object record vector anchor observed by `0x4a54a7`.
 - `+0xecc`: object record vector insertion/end pointer observed by `0x4a54a7`.
 - `+0xed4`: optional handler pointer used by `0x49eb8d` for invalid bit26 candidate cells; vtable slot `+0x08` is called with the per-cell budget.
+- `+0xf5c`: current endpoint/index cursor used and advanced by `0x4a5e73`.
 - `+0x10e4`: relation/vector begin pointer consumed after `0x4a4c8e`.
 - `+0x10e8`: relation/vector end pointer consumed after `0x4a4c8e`.
+- `+0x1104/+0x1108`: byte-state vector begin/end used by `0x4a5e73` to mark and advance the index cursor.
 - `+0x1110`: descriptor-type counter table indexed by descriptor `+0x1c` in `0x4a54a7`.
 
 ## Recovered Functions
@@ -253,7 +257,7 @@ It identifies the next helper layer:
 - `0x49e1bf` is the decorative object scoring and emission-feasibility helper called by `0x49e700`. Static recovery shows it reads the generator generated-cell grid through `+0x14/+0x18/+0x1c`, the candidate object record and descriptor, candidate x/y/level stack args, descriptor dimensions `+0x34/+0x38`, descriptor masks `+0x04/+0x14/+0x3c`, generated-cell words `+0x24/+0x28/+0x2b`, and the `GeneratedCell+0x04/+0x08` object-reference vector. It builds stack-local footprint records with flags `0x1/0x2/0x4`, records terrain-class hits in ten buckets, scans neighbor cells through a scratch rectangle, sets temporary object-reference flags at `+0x14..+0x18`, appends flagged object references through `0x40bb26`, adjusts the score through descriptor score tables prepared by `0x49b89c`, clears those temporary flags, and returns a candidate score or one of the observed rejection values `-1`, `-5000`, or a low terrain-weight total below `-1000`. Exact semantic names for the descriptor score tables and the object-reference flag classes remain replay-pending.
 - `0x49a318` is called by `0x4a5767` and `0x4a89da`; it is part of the object-anchor/high-owner projection path.
 - `0x4a5a23` is called by `0x4a5767` and `0x4a61bc`; it reaches allocation/object-selection helpers including `0x4a9e40`, `0x5044b1`, and `0x49ba89`.
-- `0x4a5e73` is called by `0x4a61bc`, `0x4a696b`, `0x4a6cf2`, and `0x4a746b`; it reaches endpoint/allocation helpers including `0x5044b1`, `0x49ba89`, and `0x4a7312`.
+- `0x4a5e73` is a connection endpoint selection/projection helper called by `0x4a61bc`, `0x4a696b`, `0x4a6cf2`, and `0x4a746b`. Static instruction recovery shows it receives the generator pointer in `ecx`, a coordinate triple at stack `+0x08/+0x0c/+0x10`, a repeat/count argument at stack `+0x14`, and a mode/source argument at stack `+0x18` that is passed into `0x4a7312`. It reads the current generator index from `+0xf5c`, searches the pointer vector at `generator+0xd8..+0xdc` for an entry whose dereferenced record `+0x20` matches that index, and returns `-1` if no match exists. It then searches `generator+0xc8..+0xcc` for a matching entry and returns `0` when the first vector matched but the second vector did not. When both vectors match, it allocates a `0x1c`-byte object record, initializes it through `0x49ba89` using the `+0xd8` matched entry, and calls `0x4a7312(generator, allocated record, arg5)`. If that helper rejects the record, `0x4a5e73` destroys the allocated record and returns `-1`. If the repeat/count argument is positive, it allocates one `0x1c`-byte object record per repeat using the `+0xc8` matched entry, computes the generated cell at the current coordinate, clears low five bits of `cell+0x2c`, sets bit27 and clears bit26 in `cell+0x28`, calls generator vtable slot `+0x04` with the current coordinate triple and the allocated record, then increments x and decrements the repeat counter. After validation/projection, it marks `generator+0x1104[original +0xf5c] = 1`, resets `generator+0xf5c` to zero, advances it while the byte-state vector contains nonzero entries, and returns the original index. Exact vector entry semantics, `0x4a7312` policy, and ordered runtime replay remain pending.
 
 ## Current Unrecovered Gap
 
@@ -267,7 +271,7 @@ The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper c
 - `0x4a54a7` local vector/relation-table/generator-cell `+0x20` projection replay
 - `0x4a5767` relation-record field semantics, helper semantics, and ordered runtime replay
 - `0x4a606b` caller coordinate meanings and runtime ordered replay
-- `0x4a746b` caller coordinate meanings, local endpoint offset semantics, and runtime ordered replay
+- `0x4a746b` caller coordinate meanings, local endpoint offset semantics, 0x4a5e73 vector-entry semantics/policy, and runtime ordered replay
 - `0x4aa3e9` selected-member record semantics, callback contracts, and runtime ordered replay
 
 Until that ordered replay matches the H3MapEd `0x4a4c8e` entry grid, native RMG remains blocked for source-backed parity fixes.
