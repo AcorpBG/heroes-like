@@ -22,22 +22,49 @@ DEFAULT_OUT = Path(".artifacts/rmg_recovery/h3maped_recovery_manifest.json")
 
 FUNCTIONS: list[dict[str, Any]] = [
     {
+        "address": "0x499e65",
+        "name": "generated_cell_constructor",
+        "status": "recovered_static_ghidra",
+        "writes": ["cell+0x00 byte argument", "cell+0x04/+0x08/+0x0c zero", "calls 0x499ea3"],
+    },
+    {
+        "address": "0x49a072",
+        "name": "generated_cell_grid_reset",
+        "status": "recovered_static_ghidra",
+        "reads": ["grid+0x08 cell buffer", "grid+0x0c width", "grid+0x10 height", "grid+0x14 level count"],
+        "writes": ["calls 0x499ea3 for width*height*levels cells with stride 0x30"],
+    },
+    {
         "address": "0x499ea3",
-        "name": "generated_cell_initializer_or_prefill_context",
-        "status": "must_recover",
-        "reason": "native model mass-prefills bit27; H3MapEd pre-0x4a4c8e has far fewer bit27 cells",
+        "name": "generated_cell_initializer",
+        "status": "recovered_static_ghidra",
+        "writes": [
+            "cell+0x10 = 0xffffffff",
+            "cell+0x1c = 0x7fbc7fbc",
+            "cell+0x20 = 0xffff7fbc",
+            "cell+0x24 = (old & 0xc0000548) | 0x00000548",
+            "cell+0x28 = (old & bit24) | bit25 | bit27",
+            "cell+0x2c clears bit0",
+        ],
+        "reason": "This is the source prefill; the bit27 reduction before 0x4a4c8e is caused by later callers of 0x49a932/0x49aa63, not by a different initializer.",
+    },
+    {
+        "address": "0x49a1d8",
+        "name": "generated_cell_validity_predicate",
+        "status": "recovered_static_ghidra",
+        "returns_true_when": ["cell+0x2b has bit 0x02 set", "terrain id (cell+0x24 & 0x3f) is not 9"],
     },
     {
         "address": "0x49a932",
         "name": "generated_cell_occupied_bit_writer",
-        "status": "known_helper_must_trace_all_callers",
-        "writes": ["cell+0x28 bit27", "cell+0x28 bit26 when true arg"],
+        "status": "recovered_static_ghidra_must_trace_all_callers",
+        "writes": ["when cell+0x2c bit0 clear: arg false clears bit27", "arg true sets bit27 then clears bit26"],
     },
     {
         "address": "0x49aa63",
         "name": "generated_cell_decor_candidate_writer",
-        "status": "known_helper_must_trace_all_callers",
-        "writes": ["cell+0x28 bit26"],
+        "status": "recovered_static_ghidra_must_trace_all_callers",
+        "writes": ["when cell+0x2c bit0 clear: arg false clears bit26", "arg true sets bit26 then clears bit27"],
     },
     {
         "address": "0x49abd6",
@@ -56,6 +83,12 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "land_edge_generated_cell_bit_writer_entry_checkpoint",
         "status": "checkpoint_authority",
         "reads": ["generator+0x14 generated cells", "generator+0x10e4 runtime-zone relation vectors"],
+    },
+    {
+        "address": "0x4a8c15",
+        "name": "generated_cell_post_terrain_phase_driver",
+        "status": "recovered_static_ghidra_sequence",
+        "calls_in_order": ["0x4a8260", "0x4a4c8e", "per-cell scan calling 0x49a962", "0x4a4913 loop over generator+0x10e4 vector", "0x4a5767", "0x4a4fc5", "0x4a79a3"],
     },
     {
         "address": "0x49b3fb",
