@@ -109,6 +109,16 @@ It calls `0x49a932(true)` for the center cell and then calls `0x49a932(true)` fo
 
 `0x4a80dc` chooses a route/line cut point. It receives an output pointer, start coordinate, target coordinate, and level. The target coordinate may be off-map; runtime traces show values like `(-2, 38)` and `(68, -32)`. Static reconstruction shows a Bresenham-style line walk from start toward target. After the first two steps, for each in-bounds interior point, it scans a clipped 3x3 neighborhood for bit27. When it finds bit27, it writes the previous coordinate to the output pointer and returns that pointer. If it reaches an out-of-bounds point first, it writes the current candidate coordinate.
 
+The `0x4a8260` route container helpers are recovered as 8-byte coordinate container primitives:
+
+- `0x4072b5` inserts one or more 8-byte coordinate records into a dynamic vector whose begin/end/capacity pointers live at `ecx+0x04/+0x08/+0x0c`. It reallocates through `0x5044b1` when the existing capacity is insufficient, copies records before and after the insertion point, then updates begin/end/capacity.
+- `0x40bb15` appends one 8-byte coordinate record by calling `0x4072b5` with insertion position `vector+0x08` and count `1`.
+- `0x4ae501` inserts one 8-byte coordinate record at a caller-provided vector position and returns the inserted-position pointer adjusted for possible reallocation.
+- `0x4afaea` erases one 8-byte coordinate record from a vector by shifting later records left and decrementing the end pointer by `8`.
+- `0x4ae64c` allocates a 16-byte doubly linked list node with previous/next pointers at `+0x00/+0x04`.
+- `0x4ae5a8` inserts a linked-list node after a caller-provided node, copies an 8-byte coordinate payload into `node+0x08/+0x0c`, increments the list count at `ecx+0x08`, and writes the new node pointer through the caller output pointer.
+- `0x4ae5e6` removes a linked-list node, relinks previous/next, frees the node through `0x5044da`, decrements the list count at `ecx+0x08`, and writes the previous node pointer through the caller output pointer.
+
 `0x4a8c15` is a post-terrain generated-cell phase driver. Ghidra shows this order:
 
 1. `0x4a8260`
@@ -197,10 +207,8 @@ Static reconstruction and the complete `0x49a962` caller trace explain why event
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream and bit26/bit27 surface are now caller-side replayed, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered, but the full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
-- `0x4a8260`
-- the remaining static recovery of the `0x4a8260` route-vector helper contracts around `0x40bb15`, `0x4ae501`, `0x4afaea`, `0x4ae5a8`, and `0x4ae5e6`
 - `0x49cf34`
 - `0x49eb8d`
 - `0x4a54a7`
