@@ -465,9 +465,25 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a606b",
         "name": "connection_region_generated_cell_writer",
-        "status": "ghidra_reference_dumped_replay_pending",
+        "status": "recovered_static_contract_replay_pending",
         "calls": ["0x49aa63", "0x49a932"],
-        "ghidra_dump": "Called by 0x4a61bc. Ghidra references show generated-cell bit26/bit27 writers in a bounded region path; full connection replay remains pending.",
+        "reads": [
+            "generator pointer in ecx",
+            "coordinate triple args at stack+0x08/+0x0c/+0x10",
+            "low-nibble source/flag arg at stack+0x14",
+            "generated-cell buffer/width/height at generator+0x14/+0x18/+0x1c",
+            "generated-cell object-reference vector begin/end at +0x04/+0x08",
+            "generated-cell projection triple at +0x10/+0x14/+0x18",
+            "generated-cell private flags at +0x2c",
+        ],
+        "writes": [
+            "clamps a 3x3 rectangle around the x/y coordinate args to [0,width) and [0,height) on the supplied level",
+            "for cells in that rectangle whose object-reference vector is empty, calls 0x49aa63(true)",
+            "for the same accepted cells, writes cell+0x2c = (old & 0xffffffe1) | ((arg4 & 0x0f) << 1) | 1",
+            "after the rectangle pass, reads the source coordinate cell's +0x10/+0x14/+0x18 projection triple",
+            "when that projected x/y is in bounds, clears low five bits of the projected target cell +0x2c and calls 0x49a932(true)",
+        ],
+        "ghidra_dump": "Called twice by 0x4a61bc. Static recovery shows a clamped connection-region pass around the provided x/y/level coordinate, object-reference-vector emptiness gating, bit26 writes through 0x49aa63(true), private low-bit flag packing in GeneratedCell+0x2c, and a follow-up projected target cell bit27 write through 0x49a932(true). Exact caller coordinate meanings and runtime ordered replay remain pending.",
     },
     {
         "address": "0x4a746b",
@@ -512,6 +528,9 @@ STRUCTS: list[dict[str, Any]] = [
         "known_fields": {
             "+0x04": "object-reference dword vector begin pointer observed by 0x49e1bf",
             "+0x08": "object-reference dword vector end pointer observed by 0x49e1bf",
+            "+0x10": "projection/local coordinate dword 0 written by 0x4a5767 and read by 0x4a606b",
+            "+0x14": "projection/local coordinate dword 1 written by 0x4a5767 and read by 0x4a606b",
+            "+0x18": "projection/local coordinate dword 2 written by 0x4a5767 and read by 0x4a606b",
             "+0x20": "owner/score dword consumed by 0x4a4c8e byte2 owner",
             "+0x24": "terrain/art dword consumed by 0x4a4c8e and 0x49b2b6",
             "+0x28": "generated-cell bit-state dword",
