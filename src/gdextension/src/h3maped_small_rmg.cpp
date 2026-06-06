@@ -8808,7 +8808,7 @@ Dictionary h3_candidate_selector_boundary() {
 	return boundary;
 }
 
-Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_phase, const Dictionary &town_castle_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code) {
+Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &coordinate_phase, const Dictionary &terrain_phase, const Dictionary &town_castle_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> *out_private_generated_word_0x20 = nullptr, std::vector<uint32_t> *out_private_generated_word_0x28 = nullptr) {
 	Dictionary phase;
 	phase["phase_id"] = "mines_rewards_and_object_vector";
 	phase["status"] = "blocked_until_town_castle_phase";
@@ -8880,6 +8880,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			&& map_height > 0
 			&& expected_cell_count == int32_t(zone_words.size())
 			&& zone_words.size() == cell_flags.size()
+			&& zone_words.size() == live_cell_word_0x24.size()
 			&& zone_words.size() == live_cell_word_0x28.size()
 			&& zone_words.size() == live_terrain_code.size();
 	std::vector<uint8_t> object_occupied(size_t(std::max(0, expected_cell_count)), 0);
@@ -13283,6 +13284,16 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["complete_object_reward_guard_exact_port_claim"] = false;
 	phase["exactness_blocker"] = "primary/reward coordinate commits and guard coordinates now use generated-cell score and full footprint gates, but mine coordinates, adjacent resources, object constructors, and reward/primary proxy catalogs are not yet complete executable ports";
 	phase["private_generated_cell_word_0x28_state_source"] = "copied_from_live_generated_cell_word_0x28_then_private_0x499ea3_bit27_prefill_then_mutated_by_object_vector_stamps_for_0x4aa603; action stamps set bit22/bit27 through 0x49a932(true), nonpassable body stamps clear bit25 through 0x49abd6, 0x4aa3e9 mirrors wrapper bit26/bit27 into generated cells";
+	phase["private_state_checkpoint_after_object_vector_private_grid"] = private_state_checkpoint_0x4a4c8e_generated_cells(
+			map_width,
+			map_height,
+			map_level_count,
+			private_generated_word_0x20,
+			live_cell_word_0x24,
+			private_generated_word_0x28,
+			live_terrain_code,
+			"after_object_vector_private_grid",
+			"0x4a9d6a_0x4aa3e9_private_generated_grid");
 	phase["private_generated_cell_word_0x28_bit27_prefill_count_0x499ea3"] = private_generated_word_0x28_bit27_prefill_count_0x499ea3;
 	phase["private_generated_cell_word_0x28_body_mutation_count"] = private_generated_word_0x28_body_mutation_count;
 	phase["private_generated_cell_word_0x28_action_mutation_count"] = private_generated_word_0x28_action_mutation_count;
@@ -13350,6 +13361,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["project_object_adoption_candidate_count"] = primary_category_records.size();
 	phase["partial_coordinate_record_count"] = town_records.size() + mine_coordinate_records.size() + primary_category_records.size() + primary_category_guard_records.size() + reward_coordinate_records.size();
 	phase["blocked_next"] = "roads_rivers_blockers_guards_0x4ab52a_0x4aae7b_0x4a79a3_0x4a61bc_0x4a696b_0x4a6cf2";
+	if (out_private_generated_word_0x20 != nullptr) {
+		*out_private_generated_word_0x20 = private_generated_word_0x20;
+	}
+	if (out_private_generated_word_0x28 != nullptr) {
+		*out_private_generated_word_0x28 = private_generated_word_0x28;
+	}
 	return phase;
 }
 
@@ -19961,7 +19978,21 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	if (inspection_phase_limit_reached(normalized_config, report, "connections_blockers_guards")) {
 		return report;
 	}
-	Dictionary object_vector = object_vector_prerequisite_phase(normalized_config, runtime_zones, coordinate_after_terrain_geometry, terrain_cell, town_castle, zone_words, cell_flags, live_cell_word_0x28, live_terrain_code);
+	std::vector<uint32_t> object_vector_private_cell_word_0x20;
+	std::vector<uint32_t> object_vector_private_cell_word_0x28;
+	Dictionary object_vector = object_vector_prerequisite_phase(
+			normalized_config,
+			runtime_zones,
+			coordinate_after_terrain_geometry,
+			terrain_cell,
+			town_castle,
+			zone_words,
+			cell_flags,
+			live_cell_word_0x24,
+			live_cell_word_0x28,
+			live_terrain_code,
+			&object_vector_private_cell_word_0x20,
+			&object_vector_private_cell_word_0x28);
 	object_vector["source_range"] = "0x4a9d6a/0x4a9911/0x4a9641/0x4a9c7c/0x4aab7e/0x4aa354/0x4a9f1c/0x4aa9b7/0x4aa603/0x4aa3e9/0x49f95a";
 	object_vector["binary_byte_prefix_0x4a9d6a"] = "55 8b ec 83 ec 14 83 65 ec 00 53 56 57 8b f9 8b";
 	object_vector["binary_byte_prefix_0x4a9911"] = "b8 ac aa 52 00 e8 b5 c7 03 00 83 ec 40 8a 45 0f";
@@ -19984,7 +20015,27 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 			live_terrain_code,
 			"after_object_vector_live_grid",
 			"0x4a9d6a_0x4aa3e9_after_object_vector_live_grid");
-	object_vector["live_grid_mutation_note"] = "native object_vector currently records private_generated_word_0x28 mutations inside the phase but does not return them to the live grid consumed by 0x4a4c8e";
+	const bool object_vector_private_grid_available = object_vector_private_cell_word_0x20.size() == live_cell_word_0x20.size()
+			&& object_vector_private_cell_word_0x28.size() == live_cell_word_0x28.size()
+			&& object_vector_private_cell_word_0x20.size() == live_cell_word_0x24.size();
+	int32_t object_vector_adopted_word_0x20_difference_count = 0;
+	int32_t object_vector_adopted_word_0x28_difference_count = 0;
+	if (object_vector_private_grid_available) {
+		for (int64_t flat = 0; flat < int64_t(live_cell_word_0x28.size()); ++flat) {
+			if (live_cell_word_0x20[size_t(flat)] != object_vector_private_cell_word_0x20[size_t(flat)]) {
+				object_vector_adopted_word_0x20_difference_count += 1;
+			}
+			if (live_cell_word_0x28[size_t(flat)] != object_vector_private_cell_word_0x28[size_t(flat)]) {
+				object_vector_adopted_word_0x28_difference_count += 1;
+			}
+		}
+	}
+	object_vector["adopts_private_generated_grid_before_0x4a4c8e"] = false;
+	object_vector["private_generated_grid_candidate_available"] = object_vector_private_grid_available;
+	object_vector["private_generated_word_0x20_candidate_difference_count"] = object_vector_adopted_word_0x20_difference_count;
+	object_vector["private_generated_word_0x28_candidate_difference_count"] = object_vector_adopted_word_0x28_difference_count;
+	object_vector["private_generated_grid_adoption_status"] = "blocked_until_0x499ea3_0x49a932_private_grid_state_matches_h3maped";
+	object_vector["private_generated_grid_adoption_blocker"] = "object_vector private_generated_word_0x28 currently mass-prefills bit27 through modeled 0x499ea3; H3MapEd checkpoint evidence shows this candidate grid is not yet the source grid consumed before 0x4a4c8e, so adopting it would be a false parity fix";
 	report["mines_rewards_and_object_vector"] = object_vector;
 	if (inspection_phase_limit_reached(normalized_config, report, "mines_rewards_and_object_vector")) {
 		return report;
