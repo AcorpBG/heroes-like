@@ -67,9 +67,9 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49a932",
         "name": "generated_cell_occupied_bit_writer",
-        "status": "recovered_static_ghidra_bounded_runtime_trace_incomplete",
+        "status": "recovered_static_ghidra_hot_helper",
         "writes": ["when cell+0x2c bit0 clear: arg false clears bit27", "arg true sets bit27 then clears bit26"],
-        "runtime_trace": "seed58_interactive_49a932_to_4a4c8e_lite hit the 3000-event cap without reaching 0x4a4c8e; the stream revisits cells and is not yet a complete pre-boundary replay.",
+        "runtime_trace": "Direct seed58 helper tracing is intentionally bounded because repeated 0x49a85d stamps make 0x49a932 too hot; caller-side traces now explain the pre-0x4a4c8e bit27 surface.",
     },
     {
         "address": "0x49aa63",
@@ -81,12 +81,13 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49a962",
         "name": "generated_cell_bit26_center_and_bit27_neighborhood_clear",
-        "status": "recovered_static_ghidra_seed58_runtime_count",
+        "status": "recovered_static_and_seed58_pre_0x4a4c8e_runtime_replay",
         "writes": [
             "calls 0x49aa63(true) for the center cell",
             "for the clipped 3x3 neighborhood, calls 0x49a932(false) only when bit22 is clear, 0x49a1d8 is true, and terrain id is not 8",
         ],
         "coordinate_formula": "cell = grid+0x08 + 0x30 * (((level * grid_height) + y) * grid_width + x)",
+        "runtime_trace": "seed58_interactive_49a962_to_4a4c8e_lite records 490 calls before 0x4a4c8e; replaying its clear rule leaves exactly the 407 dumped bit27 cells.",
     },
     {
         "address": "0x49acf6",
@@ -101,9 +102,9 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49abd6",
         "name": "object_mask_stamp_generated_cell_mutator",
-        "status": "recovered_partial_runtime_call_contract",
+        "status": "recovered_static_and_seed58_body_cell_trace",
         "writes": ["cell+0x28 bit22", "cell+0x28 bit25", "cell+0x28 bit27 via 0x49a932"],
-        "runtime_trace": "seed58 combined traces show five calls before 0x4a8c15, all returning through 0x4a54d6 and followed by 0x49a932/0x49ac70 cell writes.",
+        "runtime_trace": "seed58_interactive_49abd6_to_4a8c15 records five object-footprint calls; seed58_interactive_49abd6_body_cells_to_4a8c15 records five 0x49ac6b body-cell writes at flats 184, 666, 604, 975, and 1059.",
     },
     {
         "address": "0x4aa3e9",
@@ -124,6 +125,13 @@ FUNCTIONS: list[dict[str, Any]] = [
         "reads": ["grid generated-cell bit27 neighborhoods along a Bresenham-style line"],
         "returns": ["an output coordinate pair written through the caller-provided pointer"],
         "runtime_trace": "seed58_interactive_4a80dc_return_to_4a4c8e records 52 entry/return pairs before 0x4a4c8e.",
+    },
+    {
+        "address": "0x4a8260",
+        "name": "pre_land_edge_route_and_boundary_phase",
+        "status": "recovered_partial_static_and_seed58_writer_replay",
+        "calls": ["0x4a80dc route cut helper", "0x49a85d route/neighborhood stamp", "0x49a962 boundary center and neighborhood clear"],
+        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears.",
     },
     {
         "address": "0x4a8c15",
