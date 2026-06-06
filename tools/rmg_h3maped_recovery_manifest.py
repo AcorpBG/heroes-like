@@ -109,8 +109,9 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4aa3e9",
         "name": "reward_object_final_commit_and_wrapper_projection",
-        "status": "must_recover",
+        "status": "ghidra_reference_dumped_replay_pending",
         "writes": ["object vector", "generated cell bit state through 0x49a932/0x49aa63"],
+        "ghidra_dump": "ghidra_downstream_state_dump shows caller 0x4aa9b7 and internal calls to 0x49d2c7, 0x49a1d8, 0x49a932, and 0x49aa63; decompile did not complete, so this remains replay-pending.",
     },
     {
         "address": "0x4a4c8e",
@@ -207,6 +208,48 @@ FUNCTIONS: list[dict[str, Any]] = [
         "address": "0x49b3fb",
         "name": "runtime_zone_relation_lookup",
         "status": "known_helper_must_keep_in_manifest",
+    },
+    {
+        "address": "0x49cf34",
+        "name": "reward_guard_attach_generated_cell_pass",
+        "status": "ghidra_reference_dumped_replay_pending",
+        "calls": ["0x49d7c3", "0x49d2c7", "0x49a1d8", "0x49aa63", "0x49a932", "0x49d2e0", "0x49d69d", "0x49d6e0"],
+        "ghidra_dump": "Called by 0x4aa354 and 0x4adb72. Ghidra references show vector filtering and generated-cell writes, but target decompile failed; exact object/vector replay remains pending.",
+    },
+    {
+        "address": "0x49eb8d",
+        "name": "bit26_decorative_candidate_budget_pass",
+        "status": "ghidra_reference_dumped_replay_pending",
+        "calls": ["0x49a1d8", "0x49e700", "0x49a932"],
+        "ghidra_dump": "Counts bit26 cells, derives a 0x4374c/count work budget, calls 0x49e700 for valid flagged cells, then locks remaining valid non-bit27 cells with 0x49a932(true); decompile failed, so full replay remains pending.",
+    },
+    {
+        "address": "0x4a54a7",
+        "name": "object_footprint_commit_and_local_owner_projection",
+        "status": "ghidra_reference_dumped_replay_pending",
+        "calls": ["0x49abd6"],
+        "ghidra_dump": "Ghidra references show data-table entry use and an object footprint call through 0x49abd6; the surrounding object/vector projection still needs replay proof.",
+    },
+    {
+        "address": "0x4a5767",
+        "name": "cell_occupancy_reset_and_object_anchor_normalization",
+        "status": "ghidra_reference_dumped_replay_pending",
+        "calls": ["0x4a59e2", "0x49a1d8", "0x49a932", "0x49a318", "0x4a5a23"],
+        "ghidra_dump": "Called by 0x4a8c15 and connection helpers. Ghidra references show full-grid reset plus relation-vector/object-anchor scans, but exact ordered replay remains pending.",
+    },
+    {
+        "address": "0x4a606b",
+        "name": "connection_region_generated_cell_writer",
+        "status": "ghidra_reference_dumped_replay_pending",
+        "calls": ["0x49aa63", "0x49a932"],
+        "ghidra_dump": "Called by 0x4a61bc. Ghidra references show generated-cell bit26/bit27 writers in a bounded region path; full connection replay remains pending.",
+    },
+    {
+        "address": "0x4a746b",
+        "name": "connection_endpoint_writer",
+        "status": "ghidra_reference_dumped_replay_pending",
+        "calls": ["0x4a5767", "0x4a5e73", "0x49aa63"],
+        "ghidra_dump": "Called twice by 0x4a7605. Ghidra references show it normalizes through 0x4a5767 and marks endpoint candidates through 0x49aa63; endpoint selection replay remains pending.",
     },
 ]
 
