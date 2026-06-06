@@ -362,7 +362,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49eb8d",
         "name": "bit26_decorative_candidate_budget_pass",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_seed58_breakpoint_layout_replay_pending",
         "calls": ["0x49a1d8", "0x49e700", "0x49a932"],
         "reads": [
             "generator pointer in ecx",
@@ -376,7 +376,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "calls optional generator+0xed4 vtable slot +0x08 for invalid bit26 candidate cells",
             "calls 0x49a932(true) for valid cells whose bit27 is clear after decorative attempts",
         ],
-        "ghidra_dump": "Instruction dump recovers three ordered full-grid passes. Pass 1 counts cells where (GeneratedCell+0x28 >> 26) & 1 is set. If count is nonzero, pass 2 computes budget = 0x4374c / count and scans z/y/x in generator +0x20/+0x1c/+0x18 order; for each bit26 cell it calls 0x49e700 when 0x49a1d8 is true, otherwise calls an optional generator+0xed4 indirect handler with the same budget. Pass 3 scans the grid again and calls 0x49a932(true) when bit27 is clear and 0x49a1d8 is true. Runtime coordinate/count replay remains pending.",
+        "runtime_trace": "tools/rmg_h3maped_49eb8d_trace_summary.py parses the existing seed58 raw winedbg logs into .artifacts/rmg_recovery/seed58_49eb8d_trace_summary.json. The 0x49ec01 breakpoint log proves generated-cell dimensions 36x36x1, bit26 count local [EBP-0x8] = 406, and computed budget 0x4374c // 406 = 680 for that run. A separate 0x49e700 entry breakpoint log proves stack argument layout x=3, y=0, level=0, budget=678 for its first captured dispatch. These are separate debugger runs, so they are layout/count evidence and not a same-run ordered replay.",
+        "ghidra_dump": "Instruction dump recovers three ordered full-grid passes. Pass 1 counts cells where (GeneratedCell+0x28 >> 26) & 1 is set. If count is nonzero, pass 2 computes budget = 0x4374c / count and scans z/y/x in generator +0x20/+0x1c/+0x18 order; for each bit26 cell it calls 0x49e700 when 0x49a1d8 is true, otherwise calls an optional generator+0xed4 indirect handler with the same budget. Pass 3 scans the grid again and calls 0x49a932(true) when bit27 is clear and 0x49a1d8 is true. Same-run coordinate/count/dispatch replay remains pending.",
     },
     {
         "address": "0x49eb6d",
