@@ -804,14 +804,16 @@ FUNCTIONS: list[dict[str, Any]] = [
             "generator pointer in ecx/ebx during the sampled direct-generation run",
             "generator object-record vector begin/end at +0xec8/+0xecc",
             "generator object-record vector anchor at +0xec4 for diagnostic snapshots",
+            "object-record pointers exposed through EDX at 0x4a7d36 during the vector loop",
+            "object record vtables and descriptor wrapper pointers from the 19 sampled entries",
             "generator +0xc8/+0xcc records through 0x49b3fb lookup calls",
         ],
         "writes": [
             "connection/blocker/guard post-processing state remains payload-replay pending",
         ],
-        "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records 44 events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. At 0x4a79a3 entry the sampled +0xec8/+0xecc span was 8 dword entries; inside the later 0x4a7d2c/0x4a7d36 loop the span was 19 dword entries and 0x4a7d99 confirmed EDX=19; the later 0x49eb8d handoff observed a 107-dword span. The interactive driver timed out after these useful hits, so this is partial live evidence, not a completed generation replay.",
+        "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records 44 events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. At 0x4a79a3 entry the sampled +0xec8/+0xecc span was 8 dword entries; inside the later 0x4a7d2c/0x4a7d36 loop the span was 19 dword entries and 0x4a7d99 confirmed EDX=19; the later 0x49eb8d handoff observed a 107-dword span. Follow-up payload trace .artifacts/rmg_recovery/4a79a3_payload_trace_summary.json proves the 19 vector entries exactly match the 19 dumped object-record pointers, captures each 12-word object record and descriptor-wrapper sample, and records vtable counts 0x540a9c x8 plus 0x540a88 x11. Static provenance links 0x540a9c to 0x4a901a/0x4a93a2 constructor sites and 0x540a88 to 0x4a5c07 called by 0x4aa354.",
         "ghidra_dump": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json and focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump/caller_004a79a3_FUN_004a79a3.txt prove 0x4a79a3 reads generator +0xec8/+0xecc, computes (end - begin) / 4, and uses the object/vector state after the 0x4a8c15 ordered phase prefix.",
-        "remaining_gap": "Decode the 19 dword entries observed at 0x4a7d2c/0x4a7d36 and replay their connection/blocker/guard generated-cell mutations end-to-end.",
+        "remaining_gap": "Name the remaining record/descriptor fields and replay the connection/blocker/guard generated-cell mutations that consume the recovered 19 object records end-to-end.",
     },
     {
         "address": "0x49b3fb",
