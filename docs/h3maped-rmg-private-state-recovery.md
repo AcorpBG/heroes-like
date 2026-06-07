@@ -38,6 +38,8 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/ghidra_object_commit_projection_vector_dump/`
 - `.artifacts/rmg_recovery/ghidra_cell_reset_flag_helper_dump/`
 - `.artifacts/rmg_recovery/ghidra_cell_record_reset_leaf_dump/`
+- `.artifacts/rmg_recovery/ghidra_reward_guard_probe_helper_dump/`
+- `.artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump/`
 
 ## Generated Cell Layout
 
@@ -146,6 +148,13 @@ The `0x4a8260` route container helpers are recovered as 8-byte coordinate contai
 - `0x4ae64c` allocates a 16-byte doubly linked list node with previous/next pointers at `+0x00/+0x04`.
 - `0x4ae5a8` inserts a linked-list node after a caller-provided node, copies an 8-byte coordinate payload into `node+0x08/+0x0c`, increments the list count at `ecx+0x08`, and writes the new node pointer through the caller output pointer.
 - `0x4ae5e6` removes a linked-list node, relinks previous/next, frees the node through `0x5044da`, decrements the list count at `ecx+0x08`, and writes the previous node pointer through the caller output pointer.
+
+The reward/guard and object-placement candidate helpers include these recovered 12-byte and 8-byte primitives:
+
+- `0x49d2c7` stores a 12-byte coordinate triple. The destination pointer is in `ecx`, stack `+0x04/+0x08/+0x0c` are written to destination `+0x00/+0x04/+0x08`, and the destination pointer is returned in `eax`.
+- `0x4ae1fd` appends one 12-byte coordinate record into a vector whose end pointer is at `ecx+0x08`; it delegates to `0x430b35` with insertion position `vector+0x08`, count `1`, and the stack `+0x04` source record pointer.
+- `0x4ae52a` erases a 12-byte coordinate-vector range. It receives the vector in `ecx`, destination pointer at stack `+0x04`, source pointer at stack `+0x08`, shifts records from `[source, vector_end)` down to `destination`, and updates `vector+0x08` to the new end.
+- `0x4ae2d0` does the same range erase/shift operation for 8-byte coordinate records.
 
 `0x4a8c15` is a post-terrain generated-cell phase driver. Ghidra shows this order:
 
