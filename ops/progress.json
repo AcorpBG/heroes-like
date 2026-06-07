@@ -443,20 +443,21 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence; full reward/guard/private-state chain remains in progress.",
+    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json",
+      "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
       "commands": [
+        "python3 tools/rmg_h3maped_49c_writer_surface_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json (passed: 0x49be93 has 16 writer slot +0x08 calls, 0x49c273 has 17 writer slot +0x08 calls, both zero-hit in sampled generation trace)",
         "python3 tools/rmg_h3maped_4aa3e9_slot8_summary.py --out .artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json (passed: 42 events, 12 paired 0x4aa3e9 entry/pre-return boundaries, 18 final slot +0x08 callbacks all target 0x49baf5, no projection-object vtables/methods/drivers hit)",
         "python3 tools/rmg_h3maped_49c_projection_constructor_summary.py --constructor-ledger .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json --wrapper-ledger .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json (passed: 14 constructor events, 7 paired constructor/base-initializer pairs, wrapper no-hit invariant held)",
         "python3 tools/rmg_h3maped_49c_projection_static_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json (passed: vtable/static constructor/method surface)",
-        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 122 function entries)",
-        "python3 -m py_compile tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 function entries)",
+        "python3 -m py_compile tools/rmg_h3maped_49c_writer_surface_summary.py tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
@@ -571,6 +572,12 @@
         "scope": "This broadens the sampled 0x4aa3e9 final selected-member slot +0x08 evidence and rules out that sampled surface as the observed projection-object dispatch path. It does not recover where projection objects with vtables 0x540b00/0x540b14 are stored or later dispatched, and it does not complete object-vector/private-state parity.",
         "source_basis": "Live H3MapEd winedbg trace of 0x4aa3e9 entry, final selected-member slot +0x08 site 0x4aa5f6, pre-return 0x4aa5fc, and projection-method/downstream-driver no-hit breakpoints, summarized by tools/rmg_h3maped_4aa3e9_slot8_summary.py."
       },
+      "recovery_checkpoint_2026_06_07_49c_writer_surface": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
+        "runtime_result": "Static/runtime summary passes: 0x49be93 has 16 repeated writer slot +0x08 calls and 0x49c273 has 17, both with ECX reset to the writer/context pointer loaded from stack+0x08. The sampled constructor/generation trace was instrumented for both helpers and recorded zero hits.",
+        "scope": "This classifies the nearby 0x49be93/0x49c273 slot +0x08 surfaces as writer/serializer-like helpers for the sampled generation path, not the missing projection-object dispatch. It narrows the next recovery target to projection-object storage/consumption for vtables 0x540b00/0x540b14.",
+        "source_basis": "Ghidra dumps under .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump plus constructor trace summary .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, summarized by tools/rmg_h3maped_49c_writer_surface_summary.py."
+      },
       "recovery_checkpoint_2026_06_07_4aa3e9_ordered_single_call": {
         "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_ordered_single_call_trace/4aa3e9_ordered_summary.json",
         "runtime_result": "Parsed 1,284 events for one complete invocation: one entry, one slot +0x04 callback, 256 branch-after sites, 256 destination bit26 mirror pairs, 256 destination bit27 mirror pairs, one slot +0x08 callback, and one pre-return. The invocation did not enter the optional source clear/set branch. Wrapper and selected coordinate match from entry to return, and every destination bit26/bit27 after-call state matches its call argument.",
@@ -639,9 +646,9 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence are recovered; broader reward/guard/native parity remains incomplete.",
+    "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-07T09:05:00Z",
+    "updatedAt": "2026-06-07T09:30:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9282,10 +9289,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence; full reward/guard/private-state chain remains in progress.",
+  "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-07T09:05:00Z",
+  "currentSliceUpdatedAt": "2026-06-07T09:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -43696,20 +43703,21 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence; full reward/guard/private-state chain remains in progress.",
+      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json",
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
         "commands": [
+          "python3 tools/rmg_h3maped_49c_writer_surface_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json (passed: 0x49be93 has 16 writer slot +0x08 calls, 0x49c273 has 17 writer slot +0x08 calls, both zero-hit in sampled generation trace)",
           "python3 tools/rmg_h3maped_4aa3e9_slot8_summary.py --out .artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json (passed: 42 events, 12 paired 0x4aa3e9 entry/pre-return boundaries, 18 final slot +0x08 callbacks all target 0x49baf5, no projection-object vtables/methods/drivers hit)",
           "python3 tools/rmg_h3maped_49c_projection_constructor_summary.py --constructor-ledger .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json --wrapper-ledger .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json (passed: 14 constructor events, 7 paired constructor/base-initializer pairs, wrapper no-hit invariant held)",
           "python3 tools/rmg_h3maped_49c_projection_static_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json (passed: vtable/static constructor/method surface)",
           "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
-          "python3 -m py_compile tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_49c_writer_surface_summary.py tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
@@ -43824,6 +43832,12 @@
           "scope": "This broadens the sampled 0x4aa3e9 final selected-member slot +0x08 evidence and rules out that sampled surface as the observed projection-object dispatch path. It does not recover where projection objects with vtables 0x540b00/0x540b14 are stored or later dispatched, and it does not complete object-vector/private-state parity.",
           "source_basis": "Live H3MapEd winedbg trace of 0x4aa3e9 entry, final selected-member slot +0x08 site 0x4aa5f6, pre-return 0x4aa5fc, and projection-method/downstream-driver no-hit breakpoints, summarized by tools/rmg_h3maped_4aa3e9_slot8_summary.py."
         },
+        "recovery_checkpoint_2026_06_07_49c_writer_surface": {
+          "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
+          "runtime_result": "Static/runtime summary passes: 0x49be93 has 16 repeated writer slot +0x08 calls and 0x49c273 has 17, both with ECX reset to the writer/context pointer loaded from stack+0x08. The sampled constructor/generation trace was instrumented for both helpers and recorded zero hits.",
+          "scope": "This classifies the nearby 0x49be93/0x49c273 slot +0x08 surfaces as writer/serializer-like helpers for the sampled generation path, not the missing projection-object dispatch. It narrows the next recovery target to projection-object storage/consumption for vtables 0x540b00/0x540b14.",
+          "source_basis": "Ghidra dumps under .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump plus constructor trace summary .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, summarized by tools/rmg_h3maped_49c_writer_surface_summary.py."
+        },
         "recovery_checkpoint_2026_06_07_4aa3e9_ordered_single_call": {
           "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_ordered_single_call_trace/4aa3e9_ordered_summary.json",
           "runtime_result": "Parsed 1,284 events for one complete invocation: one entry, one slot +0x04 callback, 256 branch-after sites, 256 destination bit26 mirror pairs, 256 destination bit27 mirror pairs, one slot +0x08 callback, and one pre-return. The invocation did not enter the optional source clear/set branch. Wrapper and selected coordinate match from entry to return, and every destination bit26/bit27 after-call state matches its call argument.",
@@ -43880,9 +43894,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence are recovered; broader reward/guard/native parity remains incomplete.",
+      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-07T09:05:00Z",
+      "updatedAt": "2026-06-07T09:30:00Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
@@ -50530,11 +50544,11 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence are recovered; broader reward/guard/native parity remains incomplete.",
+  "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-07T09:05:00Z",
+  "updatedAt": "2026-06-07T09:30:00Z",
   "validation": {
-    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, and broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence; full reward/guard/private-state chain remains in progress.",
+    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
     "evidence": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2",
       "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_source_order_road_after_decor_no_bit25_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
@@ -50577,16 +50591,25 @@
         "date": "2026-06-07",
         "kind": "source_backed_recovery_checkpoint",
         "summary": "Broad 0x4aa3e9 final selected-member slot +0x08 trace records 18 callbacks, all target 0x49baf5, with no 0x540b00/0x540b14 projection-object vtables and zero 0x49c019/0x49c0a6/0x4adb72/0x4ad947/0x4ad7f7/0x4adb07 hits; projection-object storage/dispatch remains unrecovered."
+      },
+      {
+        "artifacts": [
+          ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json"
+        ],
+        "date": "2026-06-07",
+        "kind": "source_backed_recovery_checkpoint",
+        "summary": "Classified nearby 0x49be93/0x49c273 slot +0x08 surfaces as writer/serializer-like helpers: 16 and 17 writer slot calls respectively, both zero-hit in the sampled generation trace; projection-object storage/consumption for 0x540b00/0x540b14 remains the next unrecovered target."
       }
     ],
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "partial_pass_goal_still_in_progress",
     "lastValidationCommands": [
+      "python3 tools/rmg_h3maped_49c_writer_surface_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json (passed: 0x49be93/0x49c273 writer-helper surface)",
       "python3 tools/rmg_h3maped_4aa3e9_slot8_summary.py --out .artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json (passed: 42 events, 18 slot +0x08 callbacks all 0x49baf5)",
       "python3 tools/rmg_h3maped_49c_projection_constructor_summary.py --constructor-ledger .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json --wrapper-ledger .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json (passed: 14 constructor events, 7 paired constructor/base-initializer pairs, wrapper no-hit invariant held)",
       "python3 tools/rmg_h3maped_49c_projection_static_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json (passed: vtable/static constructor/method surface)",
-      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 122 function entries)",
-      "python3 -m py_compile tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 function entries)",
+      "python3 -m py_compile tools/rmg_h3maped_49c_writer_surface_summary.py tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
