@@ -43,6 +43,11 @@ def run_xdotool(args: list[str], *, timeout: float = 10.0) -> None:
     subprocess.run(["xdotool", *args], check=True, timeout=timeout)
 
 
+def take_screenshot(screen_dir: Path, name: str) -> None:
+    screen_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["scrot", str(screen_dir / f"{name}.png")], check=False)
+
+
 def wait_for_main_window() -> None:
     for _ in range(80):
         completed = subprocess.run(
@@ -57,36 +62,67 @@ def wait_for_main_window() -> None:
     raise RuntimeError("H3MapEd main window did not appear")
 
 
-def drive_h3maped_ui(generate_wait_seconds: int) -> None:
-    wait_for_main_window()
-    time.sleep(2)
+def wait_for_named_window(name: str, attempts: int = 40) -> bool:
+    for _ in range(attempts):
+        completed = subprocess.run(
+            ["xdotool", "search", "--onlyvisible", "--name", name],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if completed.returncode == 0:
+            return True
+        time.sleep(0.25)
+    return False
+
+
+def open_new_dialog() -> None:
     run_xdotool(["key", "Alt+f"])
     time.sleep(0.2)
     run_xdotool(["key", "n"])
-    time.sleep(1)
+    if wait_for_named_window("New Map"):
+        return
+    run_xdotool(["mousemove", "18", "41", "click", "1"])
+    time.sleep(0.2)
+    run_xdotool(["mousemove", "35", "61", "click", "1"])
+    if not wait_for_named_window("New Map"):
+        raise RuntimeError("H3MapEd New Map dialog did not appear")
+
+
+def drive_h3maped_ui(generate_wait_seconds: int, screen_dir: Path) -> None:
+    wait_for_main_window()
+    time.sleep(3)
+    take_screenshot(screen_dir, "01_main")
+    open_new_dialog()
+    time.sleep(0.2)
+    take_screenshot(screen_dir, "02_new_dialog")
 
     run_xdotool(["mousemove", "244", "318", "click", "1"])
     time.sleep(0.1)
     run_xdotool(["mousemove", "231", "369", "click", "1"])
     time.sleep(0.1)
     run_xdotool(["mousemove", "231", "388", "click", "1"])
-    time.sleep(0.3)
+    time.sleep(0.1)
+    take_screenshot(screen_dir, "03_random_expanded")
 
-    run_xdotool(["mousemove", "432", "441", "click", "1"])
+    run_xdotool(["mousemove", "528", "538", "click", "1"])
     time.sleep(0.1)
     run_xdotool(["key", "Down"])
     run_xdotool(["key", "Down"])
     run_xdotool(["key", "Return"])
     time.sleep(0.1)
-    run_xdotool(["mousemove", "648", "441", "click", "1"])
+    run_xdotool(["mousemove", "744", "538", "click", "1"])
     time.sleep(0.1)
     run_xdotool(["key", "Down"])
     run_xdotool(["key", "Return"])
     time.sleep(0.1)
-    run_xdotool(["mousemove", "351", "553", "click", "1"])
-    time.sleep(0.1)
-    run_xdotool(["mousemove", "494", "214", "click", "1"])
+    run_xdotool(["mousemove", "449", "647", "click", "1"])
+    run_xdotool(["mousemove", "340", "697", "click", "1"])
+    time.sleep(0.2)
+    take_screenshot(screen_dir, "04_configured")
+    run_xdotool(["mousemove", "592", "311", "click", "1"])
     time.sleep(generate_wait_seconds)
+    take_screenshot(screen_dir, "05_after_generate_click")
 
 
 def issue_and_wait(child: pexpect.spawn, command: str, timeout: int) -> None:
@@ -118,7 +154,7 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
                 issue_and_wait(child, f"break *{address}", args.debugger_timeout)
 
             child.send("cont\r")
-            drive_h3maped_ui(args.generate_wait_seconds)
+            drive_h3maped_ui(args.generate_wait_seconds, args.out_dir / "screenshots")
 
             events = 0
             stop_after = normalize_address(args.stop_after) if args.stop_after else ""
@@ -131,7 +167,7 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
                 address = normalize_address("0x" + child.match.group(1))
                 events += 1
                 child.expect(PROMPT_RE, timeout=args.debugger_timeout)
-                commands = ["info reg", "x/8x $esp"]
+                commands = ["info reg", "x/8x $esp", *args.extra_command]
                 if args.lite and args.lite_extra_command:
                     commands.append(args.lite_extra_command)
                 if not args.lite:
@@ -167,6 +203,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--debugger-timeout", type=int, default=60)
     parser.add_argument("--lite", action="store_true", help="Only dump registers and stack at each breakpoint.")
     parser.add_argument("--lite-extra-command", default="", help="Optional extra winedbg command to run in lite mode.")
+    parser.add_argument(
+        "--extra-command",
+        action="append",
+        default=[],
+        help="Additional winedbg command to run at every breakpoint stop. May be repeated.",
+    )
     parser.add_argument("--inside-xvfb", action="store_true")
     return parser
 
@@ -219,6 +261,8 @@ def main() -> int:
             "--breakpoints",
             *args.breakpoints,
         ]
+        for extra_command in args.extra_command:
+            command.extend(["--extra-command", extra_command])
         if args.lite:
             command.append("--lite")
         if args.lite_extra_command:
@@ -238,6 +282,7 @@ def main() -> int:
     ledger["stop_after"] = args.stop_after
     ledger["max_events"] = args.max_events
     ledger["dump_command"] = args.dump_command
+    ledger["extra_command"] = args.extra_command
     ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if ledger["event_count"] else "no_events"
     print(f"RMG_H3MAPED_INTERACTIVE_TRACE status={status} events={ledger['event_count']} ledger={ledger_path}")
