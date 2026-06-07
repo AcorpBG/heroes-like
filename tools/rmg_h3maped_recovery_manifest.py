@@ -798,7 +798,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a79a3",
         "name": "connection_postprocess_object_vector_consumer",
-        "status": "partial_live_recovery_object_vector_count_payload_replay_pending",
+        "status": "partial_live_recovery_object_vector_payload_and_dispatch_replay_pending",
         "calls": ["0x49d2c7", "0x49b3fb"],
         "reads": [
             "generator pointer in ecx/ebx during the sampled direct-generation run",
@@ -806,14 +806,18 @@ FUNCTIONS: list[dict[str, Any]] = [
             "generator object-record vector anchor at +0xec4 for diagnostic snapshots",
             "object-record pointers exposed through EDX at 0x4a7d36 during the vector loop",
             "object record vtables and descriptor wrapper pointers from the 19 sampled entries",
-            "generator +0xc8/+0xcc records through 0x49b3fb lookup calls",
+            "nested source pointer through object record +0x04 -> descriptor wrapper [0]",
+            "nested source field +0x1c compared to 0x57 at 0x4a7d51",
+            "generated-cell +0x20 owner byte for records that pass the source-type gate",
+            "generator +0xc8/+0xcc 0x1c-byte records through 0x49b3fb lookup calls",
         ],
         "writes": [
             "connection/blocker/guard post-processing state remains payload-replay pending",
+            "paired +0xc8 records are marked through byte +0x0a at 0x4a7e21 and 0x4a7e25 in the sampled dispatch path",
         ],
-        "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records 44 events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. At 0x4a79a3 entry the sampled +0xec8/+0xecc span was 8 dword entries; inside the later 0x4a7d2c/0x4a7d36 loop the span was 19 dword entries and 0x4a7d99 confirmed EDX=19; the later 0x49eb8d handoff observed a 107-dword span. Follow-up payload trace .artifacts/rmg_recovery/4a79a3_payload_trace_summary.json proves the 19 vector entries exactly match the 19 dumped object-record pointers, captures each 12-word object record and descriptor-wrapper sample, and records vtable counts 0x540a9c x8 plus 0x540a88 x11. Static provenance links 0x540a9c to 0x4a901a/0x4a93a2 constructor sites and 0x540a88 to 0x4a5c07 called by 0x4aa354.",
+        "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records 44 events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. At 0x4a79a3 entry the sampled +0xec8/+0xecc span was 8 dword entries; inside the later 0x4a7d2c/0x4a7d36 loop the span was 19 dword entries and 0x4a7d99 confirmed EDX=19; the later 0x49eb8d handoff observed a 107-dword span. Follow-up payload trace .artifacts/rmg_recovery/4a79a3_payload_trace_summary.json proves the 19 vector entries exactly match the 19 dumped object-record pointers, captures each 12-word object record and descriptor-wrapper sample, and records vtable counts 0x540a9c x8 plus 0x540a88 x11. Static provenance links 0x540a9c to 0x4a901a/0x4a93a2 constructor sites and 0x540a88 to 0x4a5c07 called by 0x4aa354. Filter/dispatch trace .artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json proves all 19 payload records reached the nested source +0x1c type check: type counts were 0x00000062 x8 and 0x00000036 x11, so no sampled record passed the 0x57 gate and no 0x4a68e0 call executed. The same checkpoint partially recovers the later +0xc8 dispatch by proving one 0x4a696b call and one fallback 0x4a7605 call returned from 0x4a79a3, followed by pair mark sites 0x4a7e21 and 0x4a7e25.",
         "ghidra_dump": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json and focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump/caller_004a79a3_FUN_004a79a3.txt prove 0x4a79a3 reads generator +0xec8/+0xecc, computes (end - begin) / 4, and uses the object/vector state after the 0x4a8c15 ordered phase prefix.",
-        "remaining_gap": "Name the remaining record/descriptor fields and replay the connection/blocker/guard generated-cell mutations that consume the recovered 19 object records end-to-end.",
+        "remaining_gap": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations, exact +0xc8 record semantic names, and the connection from those writes back to the 0x4a79a3 dispatch record pair before changing native RMG behavior.",
     },
     {
         "address": "0x49b3fb",

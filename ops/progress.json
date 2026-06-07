@@ -9314,10 +9314,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.",
+  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T09:39:22Z: Recorded partial 0x4a79a3 filter/+0xc8 dispatch recovery evidence; full private-state chain remains unrecovered and native RMG behavior remains unchanged.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-07T09:30:00Z",
+  "currentSliceUpdatedAt": "2026-06-07T09:39:22Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10327,6 +10327,14 @@
       "source_basis": "Live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_descriptor_payload_trace/winedbg_interactive_trace.log plus static constructor dumps for 0x4a901a, 0x4a93a2, and 0x4a5c07.",
       "remaining_blocker": "Name remaining record/descriptor fields and replay the connection/blocker/guard GeneratedCell mutations that consume these 19 records end-to-end.",
       "updatedAt": "2026-06-07T09:30:00Z"
+    },
+    "recovery_checkpoint_2026_06_07_4a79a3_filter_dispatch": {
+      "artifact": ".artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json",
+      "runtime_result": "Parsed focused 0x4a79a3 filter/dispatch traces. All 19 recovered +0xec8 payload records reached the nested source +0x1c type check; source-type counts were 0x62 x8 and 0x36 x11, so no sampled record passed the 0x57 gate and no 0x4a68e0 call executed. The later +0xc8 dispatch sample hit one 0x4a696b call and one fallback 0x4a7605 call owned by 0x4a79a3, then reached pair mark sites 0x4a7e21 and 0x4a7e25.",
+      "scope": "Partial H3MapEd private-state recovery only. No native RMG behavior changed and no parity fix is claimed.",
+      "source_basis": "Static 0x4a79a3 recovery from Ghidra dump plus live winedbg traces .artifacts/rmg_recovery/direct_generation_4a79a3_filter_call_trace/winedbg_interactive_trace.log and .artifacts/rmg_recovery/direct_generation_4a79a3_c8_dispatch_trace/winedbg_interactive_trace.log, summarized by tools/rmg_h3maped_4a79a3_filter_dispatch_summary.py.",
+      "remaining_blocker": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations, exact +0xc8 record semantic names, and the connection from those writes back to the 0x4a79a3 dispatch record pair before changing native RMG behavior.",
+      "updatedAt": "2026-06-07T09:39:22Z"
     }
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
