@@ -1102,7 +1102,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4aa1db",
         "name": "reward_guard_wrapper_object_seed_helper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_and_sampled_selected_lifetime_replay",
         "calls": ["0x4a9f1c", "0x40bb26", "0x49abd6", "0x49d471", "0x49d6e0"],
         "reads": [
             "generator/context pointer in ecx",
@@ -1121,12 +1121,13 @@ FUNCTIONS: list[dict[str, Any]] = [
             "validates secondary records through 0x49d471 and destroys rejected records through their vtable",
             "calls 0x49d6e0 before returning the consumed/current value",
         ],
-        "ghidra_dump": "Focused dump recovers the selection/stamp/retry shell. Exact budget argument names and same-run object sequence remain replay-pending.",
+        "runtime_trace": "Focused selected-lifetime trace .artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/winedbg_interactive_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json, records 421 breakpoint events: 62 0x4a9f1c selected-create returns through 0x4aa168, 29 initial-consumer returns at 0x4aa22b, 33 secondary-consumer returns at 0x4aa2fd, 32 secondary validator entries at 0x49d471, 21 validator stamp calls from 0x49d636 into 0x49abd6, 11 failed-secondary cleanup pairs through returned-object slot +0x04 then destructor slot +0x00, and 127 total 0x49abd6 stamp-helper hits. The sampled selected-object lifetime path did not hit 0x49c019 or 0x49c0a6 and returned no objects with vtables 0x540b00/0x540b14.",
+        "ghidra_dump": "Focused dump recovers the selection/stamp/retry shell. The live selected-lifetime trace proves sampled 0x4a9f1c returns are consumed by the initial and secondary 0x4aa1db paths, with secondary acceptance validated by 0x49d471 and stamped through 0x49abd6. Exact budget argument names, full same-run object sequence, and the separate projection-object vtable dispatch path remain replay-pending.",
     },
     {
         "address": "0x4a9f1c",
         "name": "reward_guard_value_bounded_object_selector",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_and_sampled_selected_lifetime_replay",
         "calls": ["0x4a9e40", "0x49a6f9", "0x40bb26", "0x4e7276", "0x42bde9", "0x42c92d"],
         "reads": [
             "generator/context pointer in ecx",
@@ -1156,7 +1157,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "null when no accepted candidate survives filtering",
         ],
         "callers": ["0x4aa1db", "0x4adef7"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a9f1c_reward_guard_object_selector_dump recovers this as the higher-level reward/guard object selector used before 0x4aa1db stamping. It scans generator+0x10f4 buckets, enforces per-type limits, delegates descriptor choice to 0x4a9e40, optionally gates placement through 0x49a6f9, builds accepted vectors, performs weighted 0x4e7276 selection, writes the selected value, and returns the selected object record. Exact stack-argument names, candidate vtable contracts, and same-run ordered replay remain pending.",
+        "runtime_trace": "Focused selected-lifetime trace .artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/winedbg_interactive_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json, records 62 selected-create returns at 0x4aa168. The selected-create callbacks sampled at 0x4aa166 were 0x49c553 x30, 0x49c58a x3, 0x49c6e2 x1, 0x49c806 x1, 0x49c8b0 x18, 0x49c9e3 x4, and 0x49ccec x5. Returned object vtables at 0x4aa168 were 0x540a74 x30, 0x540ab0 x1, 0x540ac4 x3, 0x540ad8 x18, 0x540aec x1, 0x540b64 x4, and 0x540b78 x5; no sampled return used 0x540b00 or 0x540b14.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a9f1c_reward_guard_object_selector_dump recovers this as the higher-level reward/guard object selector used before 0x4aa1db stamping. It scans generator+0x10f4 buckets, enforces per-type limits, delegates descriptor choice to 0x4a9e40, optionally gates placement through 0x49a6f9, builds accepted vectors, performs weighted 0x4e7276 selection, writes the selected value, and returns the selected object record. The sampled selected-object lifetime through 0x4aa1db/0x49d471/0x49abd6 is now proven; exact stack-argument names, full candidate vtable contracts, and the separate 0x540b00/0x540b14 projection-object method-dispatch consumer remain pending.",
     },
     {
         "address": "0x4aa195",
@@ -1227,7 +1229,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "when 0x4a9f1c returns a replacement record, calls generator/context vtable slot +0x04 with the copied coordinate triple and replacement record",
         ],
         "callers": ["0x4ad947"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a9f1c_reward_guard_object_selector_dump/caller_004adef7_FUN_004adef7.txt recovers this as the non-wrapper caller of 0x4a9f1c. Exact value scalar meaning, stack flag names, and vtable callback contract remain replay-pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a9f1c_reward_guard_object_selector_dump/caller_004adef7_FUN_004adef7.txt recovers this as the non-wrapper caller of 0x4a9f1c. It consumes a replacement record by passing it as an argument to generator/context vtable slot +0x04, not by dispatching the replacement object's slot +0x08. Exact value scalar meaning, stack flag names, and vtable callback contract remain replay-pending.",
     },
     {
         "address": "0x4ad7f7",
