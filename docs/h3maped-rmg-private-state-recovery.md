@@ -43,6 +43,7 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/ghidra_49aa93_eligibility_helper_dump/`
 - `.artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/`
 - `.artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/`
+- `.artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/`
 
 ## Generated Cell Layout
 
@@ -289,6 +290,7 @@ It identifies the next helper layer:
 - The focused object-projection helper dump `.artifacts/rmg_recovery/ghidra_object_projection_helper_dump/` covers `0x49e1bf`, `0x41e951`, `0x49ba89`, `0x4a9e40`, and `0x49eb6d`.
 - `0x41e951` is an object descriptor bitset lookup. It reads the bitset at `ecx+0x04`, computes bit index `47 - 8*y - x`, and returns whether that bit is set. It calls `0x42f2ec` if the computed index is outside the expected `0..47` range.
 - `0x4268eb` is the sibling object descriptor bitset lookup used by `0x49a6f9`, `0x49b76d`, `0x49abd6`, and other object placement/projection callers. Static instruction recovery from `.artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/` shows the same coordinate-to-bit formula as `0x41e951`: it reads x/y from the two stack arguments, computes bit index `47 - 8*y - x`, calls `0x42f2ec` if the index is outside `0..47`, reads the descriptor bitset at `ecx+0x0c`, and returns true when that bit is set. Exact semantic distinction between descriptor bitsets `+0x04` and `+0x0c` remains replay-pending.
+- `0x41e915` is the third recovered object descriptor bitset lookup used by `0x49b89c` and earlier descriptor/mask callers. Static instruction recovery from `.artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/` shows the same coordinate-to-bit formula as `0x41e951` and `0x4268eb`: it reads x/y from the two stack arguments, computes bit index `47 - 8*y - x`, calls `0x42f2ec` if the index is outside `0..47`, reads the descriptor bitset at `ecx+0x3c`, and returns true when that bit is set. Exact semantic distinction between descriptor bitsets `+0x04`, `+0x0c`, and `+0x3c` remains replay-pending.
 - `0x49eb6d` maps `(x, y, level)` to a generated-cell pointer using wrapper fields `+0x08/+0x0c/+0x10`: `cell = buffer + (((level * height) + y) * width + x) * 0x30`.
 - `0x49ba89` constructs an object record with vtable `0x540a74`, descriptor pointer at `+0x04`, increments descriptor refcount at `descriptor+0x08`, and initializes record `+0x08/+0x0c/+0x10` to `-1`. The later projection meanings of those initialized fields remain replay-pending.
 - `0x49b89c` is an object-record mask/score cache builder. It is idempotent on record byte `+0xe4`, reads the descriptor through record `+0x00`, walks descriptor dimensions `+0x34/+0x38`, calls the descriptor mask helpers `0x41e915` and `0x41e951`, and fills a record-local dword table beginning at `+0x18`. Exact score-table semantic names remain replay-pending.

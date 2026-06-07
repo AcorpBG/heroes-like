@@ -304,6 +304,15 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump recovers the exact bit index formula and bitset base. It is the ecx+0x0c sibling of 0x41e951's ecx+0x04 lookup and calls 0x42f2ec when computed index is outside 0..47.",
     },
     {
+        "address": "0x41e915",
+        "name": "object_mask_tertiary_bit_test",
+        "status": "recovered_static_ghidra",
+        "reads": ["object descriptor bitset at ecx+0x3c", "x arg", "y arg"],
+        "returns": ["true when bit 47 - 8*y - x is set in the descriptor bitset", "false when that bit is clear"],
+        "callers": ["0x41e84b", "0x428d45", "0x42ac12", "0x4205b9", "0x49b89c"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump recovers the exact bit index formula and bitset base. It is the ecx+0x3c sibling of 0x41e951's ecx+0x04 lookup and 0x4268eb's ecx+0x0c lookup, and calls 0x42f2ec when computed index is outside 0..47.",
+    },
+    {
         "address": "0x4ae501",
         "name": "route_coordinate_vector_insert_one_return_position",
         "status": "recovered_static_ghidra",
@@ -1357,6 +1366,7 @@ STRUCTS: list[dict[str, Any]] = [
             "+0x0c": "48-bit object descriptor bitset tested by 0x4268eb with bit index 47 - 8*y - x",
             "+0x34": "descriptor width used by placement, footprint, and contour helpers",
             "+0x38": "descriptor height used by placement, footprint, and contour helpers",
+            "+0x3c": "48-bit object descriptor bitset tested by 0x41e915 with bit index 47 - 8*y - x",
         },
     },
     {
