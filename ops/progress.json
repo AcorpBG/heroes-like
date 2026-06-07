@@ -520,6 +520,12 @@
         "same_run_result": "Focused fallthrough trace paired 18 0x49d2e0 entries with 11 accepts, 7 rejects, and 1 manually cut missing outcome. Three rejects stop at 0x49d3e2 before falling through to 0x49d3e8, proving the non-54/9 0x49a6f9 true-return rejection class that was not instrumented in the prior branch trace.",
         "scope": "This resolves the missing direct-false class for non-54/9 footprint/object probe rejection. Residual warm-up/direct-false samples, exact descriptor field names, selected-member vector contents, and final 0x4aa3e9 wrapper-to-generator projection remain unrecovered."
       },
+      "recovery_checkpoint_2026_06_07_4aa3e9_projection_state": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_projection_state_ebx_exit/4aa3e9_projection_summary.json",
+        "source_basis": "Static 0x4aa3e9 disassembly shows wrapper selected-coordinate writes at +0x54/+0x58/+0x5c, selected-member vector iteration through wrapper +0x2c/+0x30, generator/context vtable slot +0x04 member projection, overlap-cell bit26/bit27 mirroring through 0x49aa63/0x49a932, and final selected-member vtable slot +0x08 callbacks.",
+        "same_run_result": "Focused entry/pre-return trace paired 12 0x4aa3e9 calls. Every pre-return wrapper pointer matched the entry wrapper, every exit selected-coordinate triple matched the stack coordinate args, and selected-member vectors were non-empty with 10 one-member cases and 2 two-member cases. The corrected pre-return wrapper source is EBX; [EBP+8] is reused as an internal loop variable.",
+        "scope": "This proves selected-coordinate storage and selected-member vector boundary shape at the final wrapper projection boundary. It does not complete member vtable callback semantics, per-cell generated/wrapper mutation stream, generated-cell before/after parity, or package/native adoption."
+      },
       "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
     },
     "nonGoals": [
@@ -527,11 +533,11 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, a focused same-run trace pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects, a branch trace classifies five sampled rejects by exact internal branch site, and a follow-up fallthrough trace proves the non-54/9 0x49a6f9 true-return rejection class at 0x49d3e2. Final writer state remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
+    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, a focused same-run trace pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects, a branch trace classifies five sampled rejects by exact internal branch site, and a follow-up fallthrough trace proves the non-54/9 0x49a6f9 true-return rejection class at 0x49d3e2. 2026-06-07 0x4aa3e9 checkpoint: selected-coordinate writes and selected-member vector boundary shape are runtime-proven for 12 paired calls; member callback semantics and per-cell mutation replay remain pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Resolve residual warm-up/direct-false 0x49d2e0 samples, recover selected-member vector contents, descriptor field names, exact 0x4aa3e9 wrapper-to-generator projection, reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
+    "remainingWork": "Resolve residual warm-up/direct-false 0x49d2e0 samples, recover descriptor field names, 0x4aa3e9 member vtable callback contracts, 0x4aa3e9 per-cell generated/wrapper mutation stream, generated-cell before/after parity, reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
