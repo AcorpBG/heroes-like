@@ -43638,7 +43638,7 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay and 0x49d69d selected-coordinate/member stamp replay; full reward/guard/private-state chain remains in progress.",
+      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, and 0x49cf34 post-stamp finalization/cleanup replay; full reward/guard/private-state chain remains in progress.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
@@ -43646,12 +43646,13 @@
       ],
       "lastValidation": {
         "status": "focused_recovery_checkpoint_pass_full_parity_in_progress",
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/49d69d_runtime_summary.json",
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json",
         "commands": [
+          "python3 tools/rmg_h3maped_49cf34_finalization_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json (passed: 4 calls, 3 completed success paths, 32 primary bit27 writes, 21 neighbor bit27 writes)",
           "python3 tools/rmg_h3maped_49d69d_runtime_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/49d69d_runtime_summary.json (passed: 38 entries, 37 completed stamp cycles)",
           "python3 tools/rmg_h3maped_49d7c3_runtime_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json (passed: 20 entries, 19 completed calls, 259 appends)",
           "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 115 functions)",
-          "python3 -m py_compile tools/rmg_h3maped_49d69d_runtime_summary.py tools/rmg_h3maped_49d7c3_runtime_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_49cf34_finalization_summary.py tools/rmg_h3maped_49d69d_runtime_summary.py tools/rmg_h3maped_49d7c3_runtime_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
@@ -43700,6 +43701,12 @@
           "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d69d entry, 0x49d6af selected-member vector append call site, 0x49d6d4 0x49abd6 stamp call site, and 0x49d6d9 post-stamp state; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json.",
           "runtime_result": "Parsed 149 events: 38 entries, 37 completed stamp cycles, and one incomplete final entry before manual trace cut. Every completed sampled call preserves selected x/y into the (x,y,0) stamp coordinate and grows the selected-member vector by one. First completed call uses member 0x0364de30 at selected coordinate (10,7), growing the selected-member vector from 1 to 2 while leaving candidate-coordinate vector count 8.",
           "scope": "Recovers the live selected-coordinate/member stamp handoff from 0x49cf34 into 0x49d69d and 0x49abd6. Wrapper +0x4c/+0x50/+0x48 finalization, caller-side candidate cleanup, object/vector projection, and final native parity remain in progress."
+        },
+        "recovery_checkpoint_2026_06_07_49cf34_finalization": {
+          "artifact": ".artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json",
+          "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49cf34 entry, post-0x49d69d resume at 0x49d176, bit27 write call sites 0x49d1ed/0x49d270, final field writes at 0x49d29b, candidate-vector cleanup at 0x49d2ab/0x49d2b0, bounds refresh at 0x49d2b7, and success at 0x49d2be.",
+          "runtime_result": "Parsed 79 events: 4 entries, 3 completed success paths, one incomplete final call from manual trace cut, 32 primary bit27 write stops, and 21 neighbor bit27 write stops. Completed paths set wrapper +0x4c/+0x50/+0x48 from relative locals, clear the non-empty candidate-coordinate vector to 0 through 0x4ae2d0, and rebuild candidates through 0x49d6e0/0x49d7c3 before success.",
+          "scope": "Recovers the live 0x49cf34 post-stamp finalization, caller-side candidate cleanup, direction-neighborhood bit27 write surface, and post-cleanup candidate rebuild. Full 0x4aa3e9 generated/wrapper before-after parity, object/vector projection, and final native parity remain in progress."
         }
       },
       "nonGoals": [
@@ -43711,7 +43718,7 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingWork": "Recover wrapper +0x4c/+0x50/+0x48 finalization, caller-side candidate-vector cleanup, 0x49cf34 post-stamp direction-neighborhood bit27 writes, 0x4aa3e9 generated/wrapper before-after parity, object/vector projection, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
+      "remainingWork": "Recover 0x4aa3e9 generated/wrapper before-after parity, 0x4aa9b7 coordinate commit ordering, 0x4ad7f7/0x4adb72 relation/object-vector projection, object/vector projection, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
         "project.md",
@@ -43719,9 +43726,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay and 0x49d69d selected-coordinate/member stamp replay are recovered; broader reward/guard/native parity remains incomplete.",
+      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, and 0x49cf34 post-stamp finalization/cleanup replay are recovered; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-07T04:55:00Z",
+      "updatedAt": "2026-06-07T04:44:38Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
