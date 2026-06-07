@@ -131,6 +131,27 @@ FUNCTIONS: list[dict[str, Any]] = [
         "runtime_trace": "seed58_interactive_49abd6_to_4a8c15 records five object-footprint calls; seed58_interactive_49abd6_body_cells_to_4a8c15 records five 0x49ac6b body-cell writes at flats 184, 666, 604, 975, and 1059.",
     },
     {
+        "address": "0x499ee8",
+        "name": "generated_cell_object_reference_remove",
+        "status": "recovered_static_ghidra",
+        "calls": ["0x4cce95"],
+        "reads": [
+            "generated-cell pointer in ecx",
+            "object record pointer at stack+0x04",
+            "cell object-reference vector begin/end at cell+0x04/+0x08",
+            "cell bit-state word at +0x28",
+            "cell owner/score word at +0x20",
+        ],
+        "writes": [
+            "calls 0x4cce95 with the matching object-reference vector position",
+            "when the object-reference vector is empty after removal, clears cell+0x28 bit22",
+            "when the object-reference vector is empty after removal, sets cell+0x28 bit25",
+            "sets the low word of cell+0x20 to 0x7fbc while preserving the high word",
+        ],
+        "callers": ["0x4add76", "0x4af910"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump recovers this generated-cell object-reference removal helper and its bit22/bit25/cell+0x20 low-word mutation.",
+    },
+    {
         "address": "0x49d2c7",
         "name": "coord12_triple_store",
         "status": "recovered_static_contract",
