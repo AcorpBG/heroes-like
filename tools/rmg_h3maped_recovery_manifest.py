@@ -1389,7 +1389,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49d69d",
         "name": "reward_guard_member_stamp_helper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_and_live_selected_coordinate_replay",
         "calls": ["0x40bb26", "0x49abd6"],
         "reads": [
             "reward/guard wrapper pointer in ecx",
@@ -1402,7 +1402,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "builds a local 12-byte coordinate triple (arg2, arg3, 0)",
             "calls 0x49abd6 with ecx=wrapper, arg1=member pointer, and the local coordinate triple",
         ],
-        "ghidra_dump": "Called by 0x49cf34 after that caller filters candidate coordinates and chooses one with 0x4e7276. Static/Ghidra-backed summary .artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json verifies the exact call shape, including caller push order selected_y/selected_x/member, wrapper+0x28 vector append through 0x40bb26, local (x,y,0) stamp through 0x49abd6, and ret 0x0c. The helper does not perform RNG, candidate filtering, wrapper+0x4c/+0x50/+0x48 finalization, or final package/object-vector projection. Runtime ordered replay of the caller-selected coordinate stream remains pending.",
+        "runtime_trace": "Direct-generation trace .artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/winedbg_recovery_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/49d69d_runtime_summary.json, records 38 entries and 37 completed stamp cycles before manual cut. Entry stack layout is return address, member pointer, selected x, selected y. At 0x49d6af EAX points to the member-pointer argument copied into wrapper+0x28 through 0x40bb26. At 0x49d6d4 the 0x49abd6 stack payload is member pointer followed by (x,y,0). Every completed sampled call preserves selected x/y into the stamp coordinate and grows the selected-member vector by one. Wrapper finalization and caller-side cleanup remain pending.",
+        "ghidra_dump": "Called by 0x49cf34 after that caller filters candidate coordinates and chooses one with 0x4e7276. Static/Ghidra-backed summary .artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json verifies the exact call shape, including caller push order selected_y/selected_x/member, wrapper+0x28 vector append through 0x40bb26, local (x,y,0) stamp through 0x49abd6, and ret 0x0c. The helper does not perform RNG, candidate filtering, wrapper+0x4c/+0x50/+0x48 finalization, or final package/object-vector projection.",
     },
     {
         "address": "0x49d6e0",
