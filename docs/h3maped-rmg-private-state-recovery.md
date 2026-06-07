@@ -30,6 +30,8 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
 - `.artifacts/rmg_recovery/seed58_interactive_4a8c15_to_4a4c8e_full_grid/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
 - `.artifacts/rmg_recovery/direct_generation_4a8c15_to_4a4c8e_grid_delta_summary.json`
+- `.artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
+- `.artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_grid_delta_summary.json`
 - `.artifacts/rmg_recovery/seed58_trace_analysis.json`
 - `.artifacts/rmg_recovery/ghidra_downstream_state_dump/`
 - `.artifacts/rmg_recovery/ghidra_downstream_helper_dump/`
@@ -271,7 +273,9 @@ The two-boundary direct-generation trace `.artifacts/rmg_recovery/seed58_interac
 - changed state cells: `1040`;
 - `GeneratedCell+0x28` bit deltas: bit22=`0`, bit25=`0`, bit26=`+793`, bit27=`-1040`.
 
-This narrows the live phase recovery target: `0x4a8260` and its direct helpers account for the major pre-`0x4a4c8e` bit26/bit27 mutation in this same run, while owner-byte2 and `+0x2c` remain unchanged across the captured boundary.
+The isolated `0x4a8260` direct-generation trace `.artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi/winedbg_interactive_trace_ledger.json` confirms that this mutation occurs inside `0x4a8260`. It captures the same generated-cell base `0x0188b6d4` at entry `0x004a8260` and return site `0x004a8c25`; the delta summary matches the wider `0x4a8c15 -> 0x4a4c8e` checkpoint exactly: `1040` changed state cells, `+793` bit26 cells, `-1040` bit27 cells, and no `+0x20`, `+0x24`, or `+0x2c` changes.
+
+This narrows the live phase recovery target further: `0x4a8260` and its direct helpers account for the major pre-`0x4a4c8e` bit26/bit27 mutation in this same run, while owner-byte2 and `+0x2c` remain unchanged across the captured boundary.
 
 The interactive route-stamp trace proves the seed-58 `0x49a85d` route path:
 
