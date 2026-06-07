@@ -48,6 +48,7 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/ghidra_49d471_secondary_reward_guard_validator_dump/`
 - `.artifacts/rmg_recovery/ghidra_4a9f1c_reward_guard_object_selector_dump/`
 - `.artifacts/rmg_recovery/ghidra_4aa195_object_mask_extent_helper_dump/`
+- `.artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump/`
 
 ## Generated Cell Layout
 
@@ -144,6 +145,8 @@ It calls `0x49a932(true)` for the center cell and then calls `0x49a932(true)` fo
 - terrain id `(cell+0x24 & 0x3f)` is not `8`.
 
 `0x49abd6` stamps object/vector footprints into generated-cell state. Runtime seed-58 trace shows five calls before `0x4a8c15`, all returning through `0x4a54d6`. The internal `0x49ac6b` call-site trace records exactly five body-cell writes through `0x49a932(true)`, at generated-cell flats `184`, `666`, `604`, `975`, and `1059`. These five flats are the seed-58 pre-`0x4a4c8e` bit22 cells and also retain bit27.
+
+`0x499ee8` removes an object record reference from a generated cell. Static instruction recovery from `.artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump/` shows it receives the generated cell in `ecx` and the object record pointer on the stack, scans the cell object-reference vector at `cell+0x04/+0x08` for that record pointer, and calls `0x4cce95` with the matching vector position. After removal, when the object-reference vector is empty, it clears generated-cell bit22 and sets bit25 in `cell+0x28`. It also resets the low word of `cell+0x20` to `0x7fbc` while preserving the high word. It is called by `0x4add76` and `0x4af910`.
 
 `0x4a80dc` chooses a route/line cut point. It receives an output pointer, start coordinate, target coordinate, and level. The target coordinate may be off-map; runtime traces show values like `(-2, 38)` and `(68, -32)`. Static reconstruction shows a Bresenham-style line walk from start toward target. After the first two steps, for each in-bounds interior point, it scans a clipped 3x3 neighborhood for bit27. When it finds bit27, it writes the previous coordinate to the output pointer and returns that pointer. If it reaches an out-of-bounds point first, it writes the current candidate coordinate.
 
