@@ -496,6 +496,12 @@
         "runtime_result": "Focused direct-generation traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only. They did not hit 0x49d2e0, 0x49d471, 0x4aa1db, 0x4aa3e9, or 0x4aa9b7 before that boundary.",
         "scope": "Static helper contract is strengthened, but same-run ordered reward/guard replay remains unrecovered. Next work must find or drive an H3MapEd path that actually exercises the reward/guard chain before any native reward/object-vector behavior change."
       },
+      "recovery_checkpoint_2026_06_07_reward_chain_exercised": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_reward_chain_through_4ac552/reward_chain_trace_summary.json",
+        "source_basis": "Static inspection of h3maped.exe 0x4ac552 shows 0x4a8c15 is followed by 0x4a9d6a, 0x4aadd2, 0x4a5767, relation iteration, and 0x4aab7e reward scheduling. The earlier 0x4a8c15 stop boundary was therefore too early for the reward/guard chain.",
+        "same_run_result": "Focused same-run trace through the 0x4ac552 span recorded all targeted reward-chain functions: 0x4aab7e twice, 0x4aa354 45 times, 0x4aa1db 45 times, 0x49d471 44 times, 0x49d2e0 459 times, 0x4aa9b7 44 times, and 0x4aa3e9 15 times. 0x49d2e0 returned to both known caller sites: 347 hits to 0x49d5a5 inside 0x49d471 and 112 hits to 0x49d111 inside 0x49cf34.",
+        "scope": "The reward/guard chain now has an exercising same-run trace. Remaining recovery is ordered per-coordinate accept/reject replay, descriptor field naming, selected-member vector contents, and final wrapper-to-generator mutation state, not finding the chain."
+      },
       "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
     },
     "nonGoals": [
@@ -503,11 +509,11 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, but direct-generation traces did not exercise the reward/guard chain before 0x4a8c15; same-run ordered replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
+    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, and a later 0x4ac552-span trace now exercises the reward/guard chain after 0x4a8c15. Same-run ordered per-coordinate replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Find or drive an H3MapEd reference path that exercises 0x4aa1db/0x49d471/0x49d2e0/0x4aa3e9/0x4aa9b7, then recover exact reward coordinate commit/private object-vector mutation semantics and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
+    "remainingWork": "Use the exercised 0x4ac552 reward-chain trace to recover ordered per-coordinate accept/reject replay for 0x4aa1db/0x49d471/0x49d2e0/0x49cf34/0x4aa9b7/0x4aa3e9, selected-member vector contents, descriptor field names, exact reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",

@@ -1383,8 +1383,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "true when at least one required adjacent/control direction remains valid for the object type policy",
             "false when bit22 adjacency, 0x49a1d8 validity, bit26 availability, or 0x49a6f9 footprint/object rules reject the candidate",
         ],
-        "runtime_trace": "Direct-generation focused traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only: no 0x49d2e0, 0x49d471, 0x4aa1db, 0x4aa3e9, or 0x4aa9b7 hits were recorded before that boundary. This proves the current UI-driven trace path is non-exercising for the reward/guard chain; it is not evidence that the helper is unused.",
-        "ghidra_dump": "Called by 0x49cf34 and 0x49d471. Static pass recovers direction-table scans, policy-byte gates, bit22/bit26 checks, and 0x49a6f9 footprint probes. Exact object descriptor field naming and same-run ordered coordinate replay remain pending until a reference path exercises the reward/guard chain.",
+        "runtime_trace": "The earlier focused traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only and therefore stopped before the reward/guard chain. The later same-run trace summarized by .artifacts/rmg_recovery/direct_generation_reward_chain_through_4ac552/reward_chain_trace_summary.json proves that the 0x4ac552 span reaches 0x4aab7e after 0x4a8c15 and records 459 hits at 0x49d2e0: 347 returning to 0x49d5a5 inside 0x49d471 and 112 returning to 0x49d111 inside 0x49cf34.",
+        "ghidra_dump": "Called by 0x49cf34 and 0x49d471. Static pass recovers direction-table scans, policy-byte gates, bit22/bit26 checks, and 0x49a6f9 footprint probes. Same-run reward-chain exercising is now proven through the 0x4ac552 trace; exact object descriptor field naming and ordered per-coordinate accept/reject replay remain pending.",
     },
     {
         "address": "0x49d69d",
