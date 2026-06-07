@@ -75,6 +75,10 @@ def has_watchpoint_stop(events: list[dict[str, Any]]) -> bool:
     return any("watchpoint" in event["kind"] for event in events)
 
 
+def has_rejected_watch_command(text: str) -> bool:
+    return "watch *($esi+0x9)" in text and "No type or type mismatch" in text
+
+
 def trace_summary(name: str, trace_dir: Path) -> dict[str, Any]:
     text = read_text(log_path(trace_dir))
     ledger = read_ledger(trace_dir)
@@ -89,6 +93,7 @@ def trace_summary(name: str, trace_dir: Path) -> dict[str, Any]:
         "stop_event_count": len(events),
         "address_counts": address_counts(events),
         "watchpoint_stops": has_watchpoint_stop(events),
+        "rejected_watch_command": has_rejected_watch_command(text),
     }
 
 
@@ -105,8 +110,8 @@ def summarize(trace_dirs: dict[str, Path]) -> dict[str, Any]:
     constructor_counts = traces["constructor_probe"]["address_counts"]
     invariants = {
         "fixed_ui_watch_trace_exists": traces["plus9_watch"]["log_exists"],
-        "watch_installed_at_4a7605": "watch *($esi+0x9)" in plus9_log,
-        "no_post_4a7605_plus9_watchpoint_stop": not traces["plus9_watch"]["watchpoint_stops"],
+        "watch_command_rejected_not_installed": traces["plus9_watch"]["rejected_watch_command"],
+        "no_plus9_watchpoint_evidence_claimed": not traces["plus9_watch"]["watchpoint_stops"],
         "c8_header_seen_at_first_boundary": "0x0031e120:" in c8_boundary_log
         or "x/8x $ecx+0xc8" in c8_boundary_log,
         "c8_record_content_seen_before_4a7605": "0x016bc080:" in c8_record_log
@@ -131,8 +136,9 @@ def summarize(trace_dirs: dict[str, Path]) -> dict[str, Any]:
         "traces": traces,
         "human_readable_result": [
             "The fixed UI driver now reaches the intended one-level direct random-map generation path.",
-            "A live watch installed at the sampled 0x4a7605 control record byte +0x09 produced no watchpoint stop after 0x4a7605, so the consumed byte is already initialized before the consumer path.",
-            "The generator+0xc8 compact record stream is populated at the first checked boundary, but the sampled 0x4a7605 ESI control record is a separate edge/control record passed beside the source relation pointer, not the generator+0xc8 vector header itself.",
+            "The prior watch command for the sampled 0x4a7605 control record byte +0x09 was rejected by winedbg, so this checkpoint must not claim watchpoint proof.",
+            "The generator+0xc8 surface sampled at 0x4a8c15 is an 8-entry pointer vector header, not the 0x1c-byte record stream consumed later by 0x4a79a3.",
+            "The sampled 0x4a7605 ESI control record is a separate edge/control record passed beside the source relation pointer, not the generator+0xc8 vector header itself.",
             "The byte read at +0x09 is part of the dword at edge/control-record +0x08; sibling records in the sampled contiguous block carry different +0x08 dword values such as 0x00010000.",
             "The related 0x4b3c4e and 0x4b3d3c dword-copy constructors did not fire before the sampled fallback consumer, so they are not the live producer for this direct-generation sample.",
         ],
