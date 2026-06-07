@@ -873,7 +873,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "initializes object+0x24 to 6",
         ],
         "runtime_trace": "Constructor trace .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, records 7 sampled 0x49c0d3 calls paired with projection-object constructors.",
-        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump verifies 0x49c0d3 as the base initializer used by constructors 0x49cac2, 0x49cb83, and 0x49cc22. Static verifier .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json proves the raw vtable layout: 0x540b00 contains 0x49c019 at slot +0x08, 0x540b14 contains 0x49c0a6 at slot +0x08, and 0x540b28 contains 0x49baf5 at slot +0x08.",
+        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump verifies 0x49c0d3 as the base initializer used by constructors 0x49cac2, 0x49cb83, and 0x49cc22. Static verifier .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json proves the raw projection-vtable layout: 0x540b00 contains 0x49c019 at slot +0x08, 0x540b14 contains 0x49c0a6 at slot +0x08, and 0x540b28 contains 0x49baf5 at slot +0x08. The same verifier proves the candidate descriptor create slots 0x540c60/0x540c70/0x540c80/0x540ca0 point to 0x49cac2/0x49cb83/0x49cc22/0x49cdb1 respectively.",
     },
     {
         "address": "0x49cac2",
@@ -916,6 +916,26 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "runtime_trace": "Constructor trace records 1 sampled 0x49cc22 entry paired with 0x49c0d3 returning to 0x49cc50.",
         "ghidra_dump": "Ghidra caller dump shows 0x49cc22 calls 0x49c0d3 at 0x49cc4b, calls 0x4a9e40 at 0x49cc61, and installs final vtable 0x540b14.",
+    },
+    {
+        "address": "0x49cdb1",
+        "name": "projection_object_adjacent_constructor",
+        "status": "recovered_static_candidate_create_callback",
+        "calls": ["0x5044b1", "0x49ba89"],
+        "reads": [
+            "candidate descriptor/context pointer in ecx",
+            "stack arguments at +0x08/+0x0c used by 0x49ba89 and object+0x1c",
+            "descriptor/context +0x0c copied into object+0x20",
+        ],
+        "writes": [
+            "allocates a 0x24-byte projection object through 0x5044b1",
+            "initializes the copied object record through 0x49ba89",
+            "stores object+0x20 from descriptor/context +0x0c",
+            "stores object+0x1c from stack +0x0c",
+            "installs adjacent projection vtable 0x540b00",
+        ],
+        "runtime_trace": "The 0x49cdb1 constructor has static candidate-create recovery only in this checkpoint; ordered runtime dispatch through 0x540b00+0x08 remains pending.",
+        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_0049cdb1_FUN_0049cdb1.txt plus static verifier .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json prove candidate descriptor vtable 0x540ca0 slot +0x00 targets 0x49cdb1 and that 0x49cdb1 installs projection vtable 0x540b00.",
     },
     {
         "address": "0x49c019",

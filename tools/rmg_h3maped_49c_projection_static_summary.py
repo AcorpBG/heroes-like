@@ -14,6 +14,7 @@ from typing import Any
 DEFAULT_BINARY = Path(".artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped.exe")
 DEFAULT_DUMP_DIR = Path(".artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump")
 DEFAULT_DRIVER_DUMP_DIR = Path(".artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump")
+DEFAULT_OBJECT_PROJECTION_DUMP_DIR = Path(".artifacts/rmg_recovery/ghidra_object_projection_helper_dump")
 DEFAULT_CONSTRUCTOR_SUMMARY = Path(
     ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json"
 )
@@ -22,10 +23,17 @@ IMAGE_RDATA_VMA = 0x52F000
 IMAGE_RDATA_FILE_OFFSET = 0x12F000
 
 
-VTABLE_WORDS = {
+PROJECTION_VTABLE_WORDS = {
     "0x00540b00": ["0x0049bb76", "0x0040ed06", "0x0049c019", "0x0049baf8", "0x00557700"],
     "0x00540b14": ["0x0049c049", "0x0040ed06", "0x0049c0a6", "0x0049bd81", "0x00557750"],
     "0x00540b28": ["0x0049bb76", "0x0040ed06", "0x0049baf5", "0x0049c105", "0x005577a0"],
+}
+
+CANDIDATE_VTABLE_WORDS = {
+    "0x00540c60": ["0x0049cac2", "0x0049ca8b", "0x0049baf5", "0x00557d50"],
+    "0x00540c70": ["0x0049cb83", "0x0049cb60", "0x0049baf5", "0x00557da0"],
+    "0x00540c80": ["0x0049cc22", "0x0049cb60", "0x0049baf5", "0x00557df0"],
+    "0x00540ca0": ["0x0049cdb1", "0x0049cd97", "0x0049baf5", "0x00557e88"],
 }
 
 
@@ -96,6 +104,23 @@ DRIVER_FILE_NEEDLES = {
     "caller_0049c0a6_FUN_0049c0a6.txt": ["0049c0ad: CALL 0x004ad947"],
 }
 
+OBJECT_PROJECTION_FILE_NEEDLES = {
+    "caller_0049cdb1_FUN_0049cdb1.txt": [
+        "0049cdc0: PUSH 0x24",
+        "0049cdc2: CALL 0x005044b1",
+        "0049cdde: CALL 0x0049ba89",
+        "0049cde6: MOV dword ptr [ESI + 0x20],EDI",
+        "0049cde9: MOV dword ptr [ESI + 0x1c],EAX",
+        "0049cdec: MOV dword ptr [ESI],0x540b00",
+    ],
+    "caller_004a9f1c_FUN_004a9f1c.txt": [
+        "004a9fc7: CALL dword ptr [EAX + 0x8]",
+        "004aa001: CALL dword ptr [EAX + 0x4]",
+        "004aa151: CALL dword ptr [EAX + 0x4]",
+        "004aa166: CALL dword ptr [EAX]",
+    ],
+}
+
 
 def run_objdump(binary: Path, start: str, stop: str) -> str:
     completed = subprocess.run(
@@ -124,10 +149,10 @@ def vtable_file_offset(virtual_address: int) -> int:
     return IMAGE_RDATA_FILE_OFFSET + (virtual_address - IMAGE_RDATA_VMA)
 
 
-def read_vtables(binary: Path) -> dict[str, list[str]]:
+def read_vtables(binary: Path, expected_words: dict[str, list[str]]) -> dict[str, list[str]]:
     data = binary.read_bytes()
     out: dict[str, list[str]] = {}
-    for address, expected in VTABLE_WORDS.items():
+    for address, expected in expected_words.items():
         offset = vtable_file_offset(int(address, 16))
         size = len(expected) * 4
         words = struct.unpack("<" + "I" * len(expected), data[offset : offset + size])
@@ -139,10 +164,18 @@ def file_checks(base: Path, checks: dict[str, list[str]]) -> dict[str, bool]:
     return {name: contains_all(read_text(base / name), needles) for name, needles in checks.items()}
 
 
-def summarize(binary: Path, dump_dir: Path, driver_dump_dir: Path, constructor_summary_path: Path) -> dict[str, Any]:
-    vtables = read_vtables(binary)
+def summarize(
+    binary: Path,
+    dump_dir: Path,
+    driver_dump_dir: Path,
+    object_projection_dump_dir: Path,
+    constructor_summary_path: Path,
+) -> dict[str, Any]:
+    projection_vtables = read_vtables(binary, PROJECTION_VTABLE_WORDS)
+    candidate_vtables = read_vtables(binary, CANDIDATE_VTABLE_WORDS)
     static_file_checks = file_checks(dump_dir, FILE_NEEDLES)
     driver_file_checks = file_checks(driver_dump_dir, DRIVER_FILE_NEEDLES)
+    object_projection_file_checks = file_checks(object_projection_dump_dir, OBJECT_PROJECTION_FILE_NEEDLES)
 
     constructor_summary: dict[str, Any] = {}
     if constructor_summary_path.exists():
@@ -158,10 +191,13 @@ def summarize(binary: Path, dump_dir: Path, driver_dump_dir: Path, constructor_s
         "binary": str(binary),
         "ghidra_dump_dir": str(dump_dir),
         "driver_dump_dir": str(driver_dump_dir),
+        "object_projection_dump_dir": str(object_projection_dump_dir),
         "constructor_summary": str(constructor_summary_path),
-        "vtable_words": vtables,
+        "vtable_words": projection_vtables,
+        "candidate_vtable_words": candidate_vtables,
         "static_contract": {
             "vtable_0x540b00": {
+                "installed_by": ["0x0049cdb1"],
                 "slot_0x08": "0x0049c019",
                 "method": "attempts reward/guard vector attachment through 0x4adb72, then fallback replacement through 0x4adef7",
             },
@@ -181,6 +217,13 @@ def summarize(binary: Path, dump_dir: Path, driver_dump_dir: Path, constructor_s
                 "+0x28": "constructor-specific secondary scalar initialized by base/constructor C",
                 "+0x2c/+0x30": "constructor A copies source +0x14/+0x18 into the base object record",
             },
+            "candidate_descriptor_surface": {
+                "0x540c60+0x00": "0x0049cac2 projection constructor A",
+                "0x540c70+0x00": "0x0049cb83 projection constructor B",
+                "0x540c80+0x00": "0x0049cc22 projection constructor C",
+                "0x540ca0+0x00": "0x0049cdb1 adjacent projection constructor that installs 0x540b00",
+                "0x4a9f1c": "candidate selector calls slot +0x08 as disabled predicate, slot +0x04 as value scorer, and slot +0x00 as selected create callback",
+            },
         },
         "method_objdump": method_objdump,
         "constructor_trace_counts": {
@@ -190,9 +233,13 @@ def summarize(binary: Path, dump_dir: Path, driver_dump_dir: Path, constructor_s
             "wrapper_execution_event_count": constructor_summary.get("wrapper_execution_event_count"),
         },
         "invariants": {
-            "vtable_bytes_match_expected_layout": vtables == VTABLE_WORDS,
+            "vtable_bytes_match_expected_layout": projection_vtables == PROJECTION_VTABLE_WORDS,
+            "candidate_vtable_bytes_match_projection_constructor_slots": candidate_vtables == CANDIDATE_VTABLE_WORDS,
             "static_dump_files_match_expected_constructor_and_method_surface": all(static_file_checks.values()),
             "driver_dump_confirms_direct_downstream_calls": all(driver_file_checks.values()),
+            "object_projection_dump_confirms_49cdb1_and_selector_callind_surface": all(
+                object_projection_file_checks.values()
+            ),
             "constructor_summary_passed_pairing": bool(
                 constructor_summary.get("invariants", {}).get("constructors_pair_with_base_initializer")
                 and constructor_summary.get("invariants", {}).get("initializer_returns_match_constructor_sites")
@@ -202,10 +249,12 @@ def summarize(binary: Path, dump_dir: Path, driver_dump_dir: Path, constructor_s
         "file_check_results": {
             "static": static_file_checks,
             "driver": driver_file_checks,
+            "object_projection": object_projection_file_checks,
         },
         "notes": [
             "This is a static/lifecycle checkpoint, not ordered wrapper-method execution replay.",
             "0x49c019 is in the adjacent 0x540b00 table; 0x49c0a6 is slot +0x08 of constructor-installed vtable 0x540b14.",
+            "0x49cdb1 is the candidate create callback that installs adjacent projection-object vtable 0x540b00.",
             "The next runtime target should drive or identify a callind path that dispatches 0x540b00+0x08 or 0x540b14+0x08, not just direct breakpoints on 0x4adb72/0x4ad947.",
         ],
     }
@@ -216,6 +265,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--binary", type=Path, default=DEFAULT_BINARY)
     parser.add_argument("--dump-dir", type=Path, default=DEFAULT_DUMP_DIR)
     parser.add_argument("--driver-dump-dir", type=Path, default=DEFAULT_DRIVER_DUMP_DIR)
+    parser.add_argument("--object-projection-dump-dir", type=Path, default=DEFAULT_OBJECT_PROJECTION_DUMP_DIR)
     parser.add_argument("--constructor-summary", type=Path, default=DEFAULT_CONSTRUCTOR_SUMMARY)
     parser.add_argument("--out", type=Path, required=True)
     return parser
@@ -223,7 +273,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
-    summary = summarize(args.binary, args.dump_dir, args.driver_dump_dir, args.constructor_summary)
+    summary = summarize(
+        args.binary,
+        args.dump_dir,
+        args.driver_dump_dir,
+        args.object_projection_dump_dir,
+        args.constructor_summary,
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if all(summary["invariants"].values()) else "partial"
