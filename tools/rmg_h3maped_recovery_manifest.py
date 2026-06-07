@@ -1391,9 +1391,18 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "reward_guard_member_stamp_helper",
         "status": "recovered_static_contract_replay_pending",
         "calls": ["0x40bb26", "0x49abd6"],
-        "reads": ["arg1 object/member pointer", "arg2 x", "arg3 y"],
-        "writes": ["appends arg1 to wrapper+0x28 dword vector", "stamps arg2/arg3/level 0 through 0x49abd6"],
-        "ghidra_dump": "Called by 0x49cf34. Static contract is recovered; member object projection into final package/object vector remains replay-pending.",
+        "reads": [
+            "reward/guard wrapper pointer in ecx",
+            "stack+0x08 object/member record pointer",
+            "stack+0x0c selected candidate x from 0x49cf34",
+            "stack+0x10 selected candidate y from 0x49cf34",
+        ],
+        "writes": [
+            "calls 0x40bb26 with ecx=wrapper+0x28 and source=&arg1, appending the member pointer to the selected-member dword vector",
+            "builds a local 12-byte coordinate triple (arg2, arg3, 0)",
+            "calls 0x49abd6 with ecx=wrapper, arg1=member pointer, and the local coordinate triple",
+        ],
+        "ghidra_dump": "Called by 0x49cf34 after that caller filters candidate coordinates and chooses one with 0x4e7276. Static/Ghidra-backed summary .artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json verifies the exact call shape, including caller push order selected_y/selected_x/member, wrapper+0x28 vector append through 0x40bb26, local (x,y,0) stamp through 0x49abd6, and ret 0x0c. The helper does not perform RNG, candidate filtering, wrapper+0x4c/+0x50/+0x48 finalization, or final package/object-vector projection. Runtime ordered replay of the caller-selected coordinate stream remains pending.",
     },
     {
         "address": "0x49d6e0",
