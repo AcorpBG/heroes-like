@@ -108,6 +108,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--event-index", type=int, default=0)
     parser.add_argument("--width", type=int, default=36)
     parser.add_argument("--height", type=int, default=36)
     parser.add_argument("--levels", type=int, default=1)
@@ -120,9 +121,14 @@ def main() -> int:
     events = ledger.get("events", [])
     if not events:
         raise SystemExit(f"no events in ledger: {args.ledger}")
-    base, words = choose_grid_words(events[0])
+    if args.event_index < 0 or args.event_index >= len(events):
+        raise SystemExit(f"event index {args.event_index} is outside ledger event count {len(events)}")
+    event = events[args.event_index]
+    base, words = choose_grid_words(event)
     summary = summarize_cells(base, words, width=args.width, height=args.height, levels=args.levels)
     summary["ledger"] = str(args.ledger)
+    summary["event_index"] = args.event_index
+    summary["event_address"] = event.get("address", "")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

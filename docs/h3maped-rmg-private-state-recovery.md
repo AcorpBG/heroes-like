@@ -27,6 +27,9 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/seed58_interactive_49abd6_body_cells_to_4a8c15/winedbg_interactive_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_interactive_4a80dc_return_to_4a4c8e/winedbg_interactive_trace_ledger.json`
 - `.artifacts/rmg_recovery/seed58_piped_4a8260_route_call_sites_to_4a4c8e_full/winedbg_recovery_trace_ledger.json`
+- `.artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
+- `.artifacts/rmg_recovery/seed58_interactive_4a8c15_to_4a4c8e_full_grid/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
+- `.artifacts/rmg_recovery/direct_generation_4a8c15_to_4a4c8e_grid_delta_summary.json`
 - `.artifacts/rmg_recovery/seed58_trace_analysis.json`
 - `.artifacts/rmg_recovery/ghidra_downstream_state_dump/`
 - `.artifacts/rmg_recovery/ghidra_downstream_helper_dump/`
@@ -256,6 +259,20 @@ The interactive phase trace fixes the earlier piped-debugger limitation and prov
 
 That matches the already dumped seed-58 `0x4a4c8e` entry bit26 count (`490`). This is a recovered source-backed boundary for `0x49aa63` on seed 58.
 
+## Direct-Generation Phase Checkpoint
+
+The fresh interactive `0x4a4c8e` and `0x4a8c15 -> 0x4a4c8e` full-grid traces use the seed-58 runtime directory and canonical executable, but the trace driver does not control H3MapEd's random seed. Treat these as same-run phase-shape evidence, not as seed-58 parity evidence.
+
+The two-boundary direct-generation trace `.artifacts/rmg_recovery/seed58_interactive_4a8c15_to_4a4c8e_full_grid/winedbg_interactive_trace_ledger.json` captures full 1296-cell `GeneratedCell` grids at both phase events. The delta summary `.artifacts/rmg_recovery/direct_generation_4a8c15_to_4a4c8e_grid_delta_summary.json` records:
+
+- from event `0x004a8c15`: bit22=`4`, bit25=`1248`, bit26=`0`, bit27=`1296`, checksum `88d6d7ef92324a2785c9ea7f6c658ac8829f8d5f4f0468d33998c549999dd702`;
+- to event `0x004a4c8e`: bit22=`4`, bit25=`1248`, bit26=`793`, bit27=`256`, checksum `b2123cd91d77cdc66ab448d41e651b45cfc6c28e6c652b8611c6253f1f02b002`;
+- unchanged owner-byte2 distribution `{0:299, 1:322, 2:264, 3:197, 4:214}`;
+- changed state cells: `1040`;
+- `GeneratedCell+0x28` bit deltas: bit22=`0`, bit25=`0`, bit26=`+793`, bit27=`-1040`.
+
+This narrows the live phase recovery target: `0x4a8260` and its direct helpers account for the major pre-`0x4a4c8e` bit26/bit27 mutation in this same run, while owner-byte2 and `+0x2c` remain unchanged across the captured boundary.
+
 The interactive route-stamp trace proves the seed-58 `0x49a85d` route path:
 
 - `0x4a8260` calls `0x49a85d` exactly `340` times before `0x4a4c8e`.
@@ -369,7 +386,7 @@ It identifies the next helper layer:
 
 The full end-to-end state is not yet recovered.
 
-The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. A fresh direct-generation runtime boundary trace at `.artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary/` hit `0x4a4c8e` with generator `0x0031e058`, dimensions `36x36x1`, generated-cell buffer `0x0188b6d4`, and live vector anchors at generator `+0xc8/+0xd8`. A full-grid dump summarized by `tools/rmg_h3maped_4a4c8e_grid_summary.py` at `.artifacts/rmg_recovery/seed58_4a4c8e_grid_summary.json` records 1296 cells, `GeneratedCell+0x28` counts bit22=`8`, bit25=`1200`, bit26=`652`, bit27=`368`, nonzero `+0x2c` count `0`, owner-byte2 counts `{-1:1, 0:136, 1:222, 2:196, 3:137, 4:204, 5:151, 6:150, 7:99}`, and checksum `b5e238bc3f17d9f8891f76619bc8017f4ae5316c3daef699214b0bc29618ef3d` over `+0x20/+0x24/+0x28/+0x2c`. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper lifecycle helpers, reward/guard relation ordering, reward/guard coordinate scan and feasibility filtering, generated-cell addressing, object mask lookups, the object record constructor, the object-record mask/score cache builder, the object-descriptor selector, the object-descriptor footprint gate, the object-descriptor contour/vector cache builder, the source/relation object-coordinate eligibility gate, the source-handler generator phase initializer and pending cleanup link, the bit26 decorative candidate budget pass, the decorative candidate filler shell, the decorative object scoring/emission-feasibility shell, the object-footprint commit/local projection shell, the `0x49b3fb` `+0xc8` lookup, the `0x4adb72` reward/guard attachment attempt wrapper, and the `0x4a7312` endpoint placement policy. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
+The seed-58 pre-`0x4a4c8e` route call-site stream, the route coordinate helper contracts, and the bit26/bit27 surface are now caller-side replayed or statically recovered. The later direct-generation, non-seed-pinned traces add reusable full-grid checkpoint tooling and same-run phase-delta evidence for `0x4a8c15 -> 0x4a4c8e`, but they do not replace the controlled seed-58 counts. Ghidra reference dumps and static helper recovery now identify the downstream generated-cell writer call graph, candidate-vector helpers, reward/guard wrapper lifecycle helpers, reward/guard relation ordering, reward/guard coordinate scan and feasibility filtering, generated-cell addressing, object mask lookups, the object record constructor, the object-record mask/score cache builder, the object-descriptor selector, the object-descriptor footprint gate, the object-descriptor contour/vector cache builder, the source/relation object-coordinate eligibility gate, the source-handler generator phase initializer and pending cleanup link, the bit26 decorative candidate budget pass, the decorative candidate filler shell, the decorative object scoring/emission-feasibility shell, the object-footprint commit/local projection shell, the `0x49b3fb` `+0xc8` lookup, the `0x4adb72` reward/guard attachment attempt wrapper, and the `0x4a7312` endpoint placement policy. The full generator state chain is still incomplete. The missing piece is a complete ordered replay of all generated-cell and object/vector phases, including `GeneratedCell+0x20/+0x24/+0x28/+0x2c` and the object/vector structures that feed them, especially the downstream call paths through:
 
 - `0x49cf34` object/member descriptor-payload semantics, direction-policy class values, and runtime ordered replay
 - `0x4adb72` / `0x4aa1db` / `0x4ad7f7` / `0x4ad6a8` / `0x4aa9b7` / `0x4aa603` same-run reward/guard attachment ordering, object selection, relation-distance priority propagation, coordinate scan/filter selection, and `+0xc8/+0x1104/+0xf5c` state replay
