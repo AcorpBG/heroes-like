@@ -443,7 +443,7 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "2026-06-07 H3MapEd object-vector recovery checkpoint: static classification now separates 0x4a54a7 producer append, 0x4add76/0x4af910 cleanup erase consumers, and 0x4a79a3 phase count consumer on generator +0xec4/+0xec8/+0xecc. Focused live trace hit 0x4a4c8e -> 0x4a79a3 with repeated 0x4a7d2c/0x4a7d36 reads; observed spans were 8 dwords at 0x4a79a3 entry, 19 dwords in the internal loop with EDX=19 at 0x4a7d99, and 107 dwords at later 0x49eb8d handoff. This is partial private-state recovery only; payload decoding and generated-cell mutation replay remain blockers before native RMG changes.",
+    "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
@@ -644,6 +644,14 @@
         "scope": "Partial private-state recovery only; the interactive driver timed out after useful hits and this does not complete end-to-end payload replay or authorize native RMG behavior changes.",
         "source_basis": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json plus live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log.",
         "remaining_blocker": "Decode the observed 0x4a79a3 object-vector payload entries and replay their connection/blocker/guard GeneratedCell mutations end-to-end before changing native RMG behavior."
+      },
+      "recovery_checkpoint_2026_06_07_4a79a3_payload_records": {
+        "artifact": ".artifacts/rmg_recovery/4a79a3_payload_trace_summary.json",
+        "runtime_result": "Parsed 21 focused direct-generation trace events: twenty 0x4a7d36 stops and one 0x4a7d99 count checkpoint. The parser verifies vector payload entries match the 19 dumped object-record pointers and EDX shifted count is 19.",
+        "scope": "Partial private-state payload recovery only; no native RMG behavior changed and generated-cell mutation replay remains incomplete.",
+        "source_basis": "Live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_descriptor_payload_trace/winedbg_interactive_trace.log plus static constructor dumps for 0x4a901a, 0x4a93a2, and 0x4a5c07.",
+        "remaining_blocker": "Name remaining record/descriptor fields and replay the connection/blocker/guard GeneratedCell mutations that consume these 19 records end-to-end.",
+        "updatedAt": "2026-06-07T09:30:00Z"
       }
     },
     "nonGoals": [
@@ -655,7 +663,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Decode the observed 0x4a79a3 object-vector payload entries and replay their connection/blocker/guard GeneratedCell mutations end-to-end before changing native RMG behavior.",
+    "remainingWork": "Name remaining record/descriptor fields and replay the connection/blocker/guard GeneratedCell mutations that consume these 19 records end-to-end.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -665,7 +673,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-07T09:13:06Z",
+    "updatedAt": "2026-06-07T09:30:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9306,10 +9314,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-07 H3MapEd object-vector recovery checkpoint: static classification now separates 0x4a54a7 producer append, 0x4add76/0x4af910 cleanup erase consumers, and 0x4a79a3 phase count consumer on generator +0xec4/+0xec8/+0xecc. Focused live trace hit 0x4a4c8e -> 0x4a79a3 with repeated 0x4a7d2c/0x4a7d36 reads; observed spans were 8 dwords at 0x4a79a3 entry, 19 dwords in the internal loop with EDX=19 at 0x4a7d99, and 107 dwords at later 0x49eb8d handoff. This is partial private-state recovery only; payload decoding and generated-cell mutation replay remain blockers before native RMG changes.",
+  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-07T09:13:06Z",
+  "currentSliceUpdatedAt": "2026-06-07T09:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10311,6 +10319,14 @@
       "scope": "Partial private-state recovery only; the interactive driver timed out after useful hits and this does not complete end-to-end payload replay or authorize native RMG behavior changes.",
       "source_basis": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json plus live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log.",
       "remaining_blocker": "Decode the observed 0x4a79a3 object-vector payload entries and replay their connection/blocker/guard GeneratedCell mutations end-to-end before changing native RMG behavior."
+    },
+    "recovery_checkpoint_2026_06_07_4a79a3_payload_records": {
+      "artifact": ".artifacts/rmg_recovery/4a79a3_payload_trace_summary.json",
+      "runtime_result": "Parsed 21 focused direct-generation trace events: twenty 0x4a7d36 stops and one 0x4a7d99 count checkpoint. The parser verifies vector payload entries match the 19 dumped object-record pointers and EDX shifted count is 19.",
+      "scope": "Partial private-state payload recovery only; no native RMG behavior changed and generated-cell mutation replay remains incomplete.",
+      "source_basis": "Live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_descriptor_payload_trace/winedbg_interactive_trace.log plus static constructor dumps for 0x4a901a, 0x4a93a2, and 0x4a5c07.",
+      "remaining_blocker": "Name remaining record/descriptor fields and replay the connection/blocker/guard GeneratedCell mutations that consume these 19 records end-to-end.",
+      "updatedAt": "2026-06-07T09:30:00Z"
     }
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
@@ -50598,7 +50614,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-07T09:13:06Z",
+  "updatedAt": "2026-06-07T09:30:00Z",
   "validation": {
     "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
     "evidence": [
