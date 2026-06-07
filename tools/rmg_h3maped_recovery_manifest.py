@@ -608,6 +608,25 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a9f1c_reward_guard_object_selector_dump recovers this as the higher-level reward/guard object selector used before 0x4aa1db stamping. It scans generator+0x10f4 buckets, enforces per-type limits, delegates descriptor choice to 0x4a9e40, optionally gates placement through 0x49a6f9, builds accepted vectors, performs weighted 0x4e7276 selection, writes the selected value, and returns the selected object record. Exact stack-argument names, candidate vtable contracts, and same-run ordered replay remain pending.",
     },
     {
+        "address": "0x4aa195",
+        "name": "object_descriptor_primary_secondary_mask_extent_count",
+        "status": "recovered_static_ghidra",
+        "calls": ["0x41e951", "0x4268eb"],
+        "reads": [
+            "descriptor pointer at stack+0x04",
+            "descriptor width at +0x34",
+            "descriptor height at +0x38",
+            "primary descriptor bitset at descriptor+0x04 through 0x41e951",
+            "secondary descriptor bitset at descriptor+0x0c through 0x4268eb",
+        ],
+        "returns": [
+            "count of footprint cells where the primary mask is clear",
+            "plus cells where both primary and secondary masks are set",
+        ],
+        "callers": ["0x4a9f1c"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4aa195_object_mask_extent_helper_dump recovers the exact width/height loop and mask-count rule. 0x4a9f1c uses the returned count as a divisor in its accepted-candidate value-band check.",
+    },
+    {
         "address": "0x4ad7f7",
         "name": "reward_guard_relation_ordering_projection_driver",
         "status": "recovered_static_contract_replay_pending",
