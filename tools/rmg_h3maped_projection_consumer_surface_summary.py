@@ -28,6 +28,7 @@ DEFAULT_WRITER_SUMMARY = Path(
     ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json"
 )
 DEFAULT_POINTER_TRACE_SUMMARY = Path(".artifacts/rmg_recovery/projection_pointer_trace_summary.json")
+DEFAULT_4ADD76_TRACE_SUMMARY = Path(".artifacts/rmg_recovery/projection_4add76_trace_summary.json")
 
 
 CALL_SLOT8_RE = re.compile(r"^(?P<address>[0-9a-f]{8}): CALL dword ptr \[(?P<register>[A-Z]+) \+ 0x8\]$", re.MULTILINE)
@@ -212,9 +213,11 @@ def summarize(
     slot8_summary: Path,
     writer_summary: Path,
     pointer_trace_summary: Path,
+    add76_trace_summary: Path,
 ) -> dict[str, Any]:
     consumer = read_json(consumer_stamp_summary)
     pointer_trace = read_json(pointer_trace_summary)
+    add76_trace = read_json(add76_trace_summary)
     ec51_ruled_out = (
         pointer_trace.get("data", {}).get("status") == "partial_recovery_ec51_ruled_out_for_sample"
         and pointer_trace.get("data", {}).get("invariants", {}).get("cold_ec51_dispatch_is_not_49c_projection_method")
@@ -236,9 +239,16 @@ def summarize(
     invariants = {
         "consumer_stamp_summary_exists": consumer.get("exists", False),
         "pointer_trace_summary_exists": pointer_trace.get("exists", False),
+        "4add76_trace_summary_exists": add76_trace.get("exists", False),
         "sampled_0x540b14_objects_reach_49abd6": bool(
             consumer.get("data", {}).get("invariants", {}).get("sampled_projection_returns_are_0x540b14")
             and consumer.get("data", {}).get("invariants", {}).get("sampled_projection_returns_reach_stamp_helper")
+        ),
+        "4add76_bounded_sample_has_storage_but_no_projection_driver_hits": bool(
+            add76_trace.get("data", {}).get("status") == "partial_recovery_4add76_nohit_storage_observed"
+            and add76_trace.get("data", {})
+            .get("invariants", {})
+            .get("no_4add76_or_projection_driver_hits_in_bounded_sample")
         ),
         "0x4a54a7_static_storage_shape_recovered": bool(
             surfaces["candidate_storage_0x004a54a7"]["exists"]
@@ -263,6 +273,7 @@ def summarize(
         "schema_id": "h3maped_projection_consumer_surface_summary_v1",
         "consumer_stamp_summary": consumer,
         "pointer_trace_summary": pointer_trace,
+        "projection_4add76_trace_summary": add76_trace,
         "candidate_surfaces": surfaces,
         "ruled_out_surfaces": ruled_out,
         "invariants": invariants,
@@ -273,8 +284,10 @@ def summarize(
                 "The chain is recovered through constructor return, selected-object adoption, and 0x49abd6 "
                 "stamp. Static Ghidra and pointer traces recover 0x4a54a7 as a generator storage/queue "
                 "surface while ruling out sampled 0x49eb8d/0x49ec51 optional dispatch as the 49c projection "
-                "method path. What remains unrecovered is the later consumer, if any, that dispatches "
-                "0x540b14+0x08/0x540b00+0x08 into 0x49c0a6/0x49c019."
+                "method path. A bounded 0x4add76-focused trace observes storage callbacks but records no "
+                "0x4add76/0x4adef7/0x4adb72/0x4ad947 or 0x49c019/0x49c0a6 hits. What remains unrecovered "
+                "is the later consumer, if any, that dispatches 0x540b14+0x08/0x540b00+0x08 into "
+                "0x49c0a6/0x49c019."
             ),
             "required_next_trace": [
                 "Break on 0x49cac2/0x49cb83 constructor returns and record object pointer/vtable.",
@@ -288,6 +301,7 @@ def summarize(
             "The normal 0x4aa3e9 final-wrapper slot +0x08 path is not the sampled projection-object dispatch.",
             "The writer helpers are not the sampled direct-generation runtime consumer.",
             "0x49eb8d/0x49ec51 is a recovered static optional handler surface, but sampled runtime rules it out as the 49c projection-object dispatch without new pointer-paired evidence.",
+            "0x4add76 is a recovered static object-vector cleanup consumer, but the bounded storage-heavy direct-generation trace did not hit it or its 49c projection-driver callers.",
         ],
     }
 
@@ -300,6 +314,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--slot8-summary", type=Path, default=DEFAULT_SLOT8_SUMMARY)
     parser.add_argument("--writer-summary", type=Path, default=DEFAULT_WRITER_SUMMARY)
     parser.add_argument("--pointer-trace-summary", type=Path, default=DEFAULT_POINTER_TRACE_SUMMARY)
+    parser.add_argument("--add76-trace-summary", type=Path, default=DEFAULT_4ADD76_TRACE_SUMMARY)
     parser.add_argument("--out", type=Path, required=True)
     return parser
 
@@ -313,6 +328,7 @@ def main() -> int:
         args.slot8_summary,
         args.writer_summary,
         args.pointer_trace_summary,
+        args.add76_trace_summary,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
