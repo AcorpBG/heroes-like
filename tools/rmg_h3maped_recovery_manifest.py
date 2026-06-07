@@ -1157,7 +1157,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4aa9b7",
         "name": "reward_guard_coordinate_scan_and_commit",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_and_sampled_ordered_commit_replay",
         "calls": ["0x4aa603", "0x4ae52a", "0x4ae1fd", "0x4e7276", "0x4aa3e9", "0x42c92d"],
         "reads": [
             "generator pointer in ecx",
@@ -1185,7 +1185,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "destroys the local coordinate vector through 0x42c92d",
         ],
         "returns": ["true after selecting and projecting a coordinate", "false when the accepted coordinate vector is empty"],
-        "ghidra_dump": "Focused dump recovers the coordinate scan, best-score candidate vector, random selection, and 0x4aa3e9 commit call. Runtime ordered replay remains pending.",
+        "runtime_trace": "Focused ordered commit trace .artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/winedbg_interactive_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/4aa9b7_ordered_commit_summary.json, records 403 parsed events over 85 completed 0x4aa9b7 calls: 79 false returns, 6 successful commits into 0x4aa3e9, 9 accepted-candidate stops, 4 threshold resets, and 9 candidate appends. For every successful sampled commit, the selected vector element pointer equals local candidate-vector begin plus selected index times 12, the copied selected coordinate matches the stack coordinate at the 0x4aa3e9 call site, the 0x4aa3e9 entry receives the same wrapper pointer and coordinate triple, and false returns do not enter the 0x4aa3e9 commit path.",
+        "ghidra_dump": "Focused dump recovers the coordinate scan, best-score candidate vector, random selection, and 0x4aa3e9 commit call. Sampled runtime replay now proves the ordered local-vector-to-0x4aa3e9 handoff. Caller-side 0x4ad7f7 relation ordering and 0x4adb72 object-vector projection remain pending.",
     },
     {
         "address": "0x4aa603",
