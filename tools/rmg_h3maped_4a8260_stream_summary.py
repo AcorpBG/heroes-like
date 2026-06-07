@@ -9,9 +9,12 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from rmg_h3maped_4a4c8e_grid_summary import GENERATED_CELL_DWORDS, choose_grid_words
+
 
 DEFAULT_LEDGER = Path(".artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream/winedbg_interactive_trace_ledger.json")
 DEFAULT_GRID_DELTA = Path(".artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_grid_delta_summary.json")
+DEFAULT_GRID_LEDGER = Path(".artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi/winedbg_interactive_trace_ledger.json")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream_summary.json")
 ROUTE_STAMP = "0x0049a85d"
 BOUNDARY_CLEAR = "0x0049a962"
@@ -41,6 +44,36 @@ def clipped_3x3_coverage(coordinates: list[tuple[int, int, int]], *, width: int,
             for xx in range(max(0, x - 1), min(width, x + 2)):
                 coverage.add((xx, yy, level))
     return coverage
+
+
+def cell_index(coordinate: tuple[int, int, int], *, width: int, height: int) -> int:
+    x, y, level = coordinate
+    return (level * height + y) * width + x
+
+
+def cell_state(words: list[int], coordinate: tuple[int, int, int], *, width: int, height: int) -> dict[str, int]:
+    index = cell_index(coordinate, width=width, height=height)
+    offset = index * GENERATED_CELL_DWORDS
+    cell_words = words[offset : offset + GENERATED_CELL_DWORDS]
+    w20 = cell_words[8]
+    w24 = cell_words[9]
+    w28 = cell_words[10]
+    w2c = cell_words[11]
+    return {
+        "flat": index,
+        "x": coordinate[0],
+        "y": coordinate[1],
+        "level": coordinate[2],
+        "w20": w20,
+        "w24": w24,
+        "w28": w28,
+        "w2c": w2c,
+        "bit22": (w28 >> 22) & 1,
+        "bit25": (w28 >> 25) & 1,
+        "bit26": (w28 >> 26) & 1,
+        "bit27": (w28 >> 27) & 1,
+        "terrain_class": (w24 >> 26) & 0x3F,
+    }
 
 
 def summarize_coordinate_helper(events: list[dict[str, Any]], address: str, *, width: int, height: int) -> dict[str, Any]:
@@ -82,10 +115,58 @@ def summarize_bit26_writer(events: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def summarize_boundary_skip_predicates(
+    *,
+    grid_ledger_path: Path,
+    raw_coverage: set[tuple[int, int, int]],
+    width: int,
+    height: int,
+) -> dict[str, Any] | None:
+    if not grid_ledger_path.exists():
+        return None
+    ledger = json.loads(grid_ledger_path.read_text(encoding="utf-8"))
+    events = ledger.get("events", [])
+    if len(events) < 2:
+        return None
+    _before_base, before_words = choose_grid_words(events[0])
+    _after_base, after_words = choose_grid_words(events[1])
+    cleared: set[tuple[int, int, int]] = set()
+    cell_count = len(before_words) // GENERATED_CELL_DWORDS
+    for index in range(cell_count):
+        before_w28 = before_words[index * GENERATED_CELL_DWORDS + 10]
+        after_w28 = after_words[index * GENERATED_CELL_DWORDS + 10]
+        if ((before_w28 >> 27) & 1) and not ((after_w28 >> 27) & 1):
+            x = index % width
+            y = (index // width) % height
+            level = index // (width * height)
+            cleared.add((x, y, level))
+
+    skipped = sorted(raw_coverage - cleared, key=lambda item: (item[2], item[1], item[0]))
+    classes: Counter[str] = Counter()
+    skipped_states: list[dict[str, int]] = []
+    for coordinate in skipped:
+        state = cell_state(before_words, coordinate, width=width, height=height)
+        classes[
+            "bit22={bit22} bit25={bit25} bit26={bit26} bit27={bit27} w2c={w2c} terrain={terrain_class}".format(
+                **state
+            )
+        ] += 1
+        skipped_states.append(state)
+    return {
+        "grid_ledger": str(grid_ledger_path),
+        "bit27_cleared_cell_count": len(cleared),
+        "raw_coverage_cell_count": len(raw_coverage),
+        "skipped_cell_count": len(skipped),
+        "skipped_class_counts": dict(sorted(classes.items())),
+        "skipped_cells": skipped_states,
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
     parser.add_argument("--grid-delta", type=Path, default=DEFAULT_GRID_DELTA)
+    parser.add_argument("--grid-ledger", type=Path, default=DEFAULT_GRID_LEDGER)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--width", type=int, default=36)
     parser.add_argument("--height", type=int, default=36)
@@ -105,6 +186,19 @@ def main() -> int:
     route_stamp = summarize_coordinate_helper(events, ROUTE_STAMP, width=args.width, height=args.height)
     boundary_clear = summarize_coordinate_helper(events, BOUNDARY_CLEAR, width=args.width, height=args.height)
     bit26_writer = summarize_bit26_writer(events)
+    boundary_coordinates = [
+        coordinate
+        for event in events
+        if event.get("address") == BOUNDARY_CLEAR
+        if (coordinate := coordinate_from_stack(event)) is not None
+    ]
+    boundary_raw_coverage = clipped_3x3_coverage(boundary_coordinates, width=args.width, height=args.height)
+    skip_predicates = summarize_boundary_skip_predicates(
+        grid_ledger_path=args.grid_ledger,
+        raw_coverage=boundary_raw_coverage,
+        width=args.width,
+        height=args.height,
+    )
 
     grid_delta: dict[str, Any] | None = None
     if args.grid_delta.exists():
@@ -141,6 +235,7 @@ def main() -> int:
         "boundary_clear_0x49a962": boundary_clear,
         "bit26_writer_0x49aa63": bit26_writer,
         "grid_delta_comparison": comparison,
+        "boundary_clear_skip_predicates": skip_predicates,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
