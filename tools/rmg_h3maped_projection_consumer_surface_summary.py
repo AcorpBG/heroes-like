@@ -27,6 +27,7 @@ DEFAULT_SLOT8_SUMMARY = Path(
 DEFAULT_WRITER_SUMMARY = Path(
     ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json"
 )
+DEFAULT_POINTER_TRACE_SUMMARY = Path(".artifacts/rmg_recovery/projection_pointer_trace_summary.json")
 
 
 CALL_SLOT8_RE = re.compile(r"^(?P<address>[0-9a-f]{8}): CALL dword ptr \[(?P<register>[A-Z]+) \+ 0x8\]$", re.MULTILINE)
@@ -146,9 +147,9 @@ def classify_49eb8d(private_dump: Path) -> dict[str, Any]:
             "Otherwise builds a coordinate triple and calls 0x49e700 on the normal path.",
         ],
         "remaining_gap": (
-            "The runtime identity of generator+0xed4 at 0x49ec51 is not yet proven for the sampled "
-            "0x540b14 projection objects; the next trace must capture ECX/[ECX] at 0x49ec51 and pair it "
-            "back to constructor/stamp object pointers."
+            "This static optional handler surface is not enough to identify the missing 49c projection-object "
+            "method dispatch. Runtime traces must pointer-pair ECX/[ECX] and slot +0x08 targets before "
+            "attributing this site to sampled 0x540b14/0x540b00 projection objects."
         ),
     }
 
@@ -210,15 +211,31 @@ def summarize(
     consumer_stamp_summary: Path,
     slot8_summary: Path,
     writer_summary: Path,
+    pointer_trace_summary: Path,
 ) -> dict[str, Any]:
     consumer = read_json(consumer_stamp_summary)
+    pointer_trace = read_json(pointer_trace_summary)
+    ec51_ruled_out = (
+        pointer_trace.get("data", {}).get("status") == "partial_recovery_ec51_ruled_out_for_sample"
+        and pointer_trace.get("data", {}).get("invariants", {}).get("cold_ec51_dispatch_is_not_49c_projection_method")
+    )
     surfaces = {
         "candidate_storage_0x004a54a7": classify_4a54a7(private_dump),
         "candidate_dispatch_0x0049eb8d": classify_49eb8d(private_dump),
     }
+    if ec51_ruled_out:
+        surfaces["candidate_dispatch_0x0049eb8d"]["classification"] = (
+            "ruled_out_for_projection_object_dispatch_in_sample"
+        )
+        surfaces["candidate_dispatch_0x0049eb8d"]["remaining_gap"] = (
+            "Cold runtime trace hit 0x49ec51, but ECX/[ECX] resolved to handler vtable 0x00539660 "
+            "and slot +0x08 target 0x0045e1a6, not 0x49c019/0x49c0a6. Treat 0x49ec51 as ruled out "
+            "for sampled 49c projection-method dispatch unless a future pointer-paired trace proves otherwise."
+        )
     ruled_out = classify_ruled_out_surfaces(private_dump, object_projection_dump, slot8_summary, writer_summary)
     invariants = {
         "consumer_stamp_summary_exists": consumer.get("exists", False),
+        "pointer_trace_summary_exists": pointer_trace.get("exists", False),
         "sampled_0x540b14_objects_reach_49abd6": bool(
             consumer.get("data", {}).get("invariants", {}).get("sampled_projection_returns_are_0x540b14")
             and consumer.get("data", {}).get("invariants", {}).get("sampled_projection_returns_reach_stamp_helper")
@@ -239,35 +256,38 @@ def summarize(
             and ruled_out["0x0049be93_0x0049c273_writer_helpers"]["summary"].get("exists")
             and ruled_out["0x004a9f1c_candidate_selector_slot8"]["exists"]
         ),
+        "0x49ec51_ruled_out_for_sampled_projection_dispatch": bool(ec51_ruled_out),
     }
+    status = "partial_recovery_ec51_ruled_out_for_sample" if all(invariants.values()) else "incomplete_evidence"
     return {
         "schema_id": "h3maped_projection_consumer_surface_summary_v1",
         "consumer_stamp_summary": consumer,
+        "pointer_trace_summary": pointer_trace,
         "candidate_surfaces": surfaces,
         "ruled_out_surfaces": ruled_out,
         "invariants": invariants,
-        "status": "partial_recovery" if all(invariants.values()) else "incomplete_evidence",
+        "status": status,
         "remaining_blocker": {
-            "name": "projection_object_0x540b14_to_generator_ed4_dispatch_pairing",
+            "name": "projection_object_0x540b14_later_method_dispatch_consumer",
             "description": (
                 "The chain is recovered through constructor return, selected-object adoption, and 0x49abd6 "
-                "stamp. Static Ghidra now narrows the later slot +0x08 consumer to candidate dispatch "
-                "0x49eb8d/0x49ec51 and candidate storage/queue 0x4a54a7. What remains unrecovered is an "
-                "ordered runtime trace proving that a sampled 0x540b14/0x540b00 object pointer is stored "
-                "into generator+0xed4 or the generator+0xec4/+0xecc queue, then dispatched at 0x49ec51."
+                "stamp. Static Ghidra and pointer traces recover 0x4a54a7 as a generator storage/queue "
+                "surface while ruling out sampled 0x49eb8d/0x49ec51 optional dispatch as the 49c projection "
+                "method path. What remains unrecovered is the later consumer, if any, that dispatches "
+                "0x540b14+0x08/0x540b00+0x08 into 0x49c0a6/0x49c019."
             ),
             "required_next_trace": [
                 "Break on 0x49cac2/0x49cb83 constructor returns and record object pointer/vtable.",
                 "Break on 0x4aa168/0x4aa22b/0x49abd6 and pair the same object pointer through stamping.",
                 "Break on 0x4a54d1/0x4a54ea and capture generator+0xec4/+0xecc queue writes for the same pointer.",
-                "Break on 0x49ec51 and capture ECX, [ECX], [ECX]+0x08 target, generator+0xed4, and the stack budget arg.",
+                "Search/trace downstream consumers of generator +0xec4/+0xecc queued records and object-record vectors; do not assume 0x49ec51 is the projection-object dispatch without new pointer proof.",
             ],
         },
         "notes": [
             "This checkpoint deliberately does not mutate native RMG behavior.",
             "The normal 0x4aa3e9 final-wrapper slot +0x08 path is not the sampled projection-object dispatch.",
             "The writer helpers are not the sampled direct-generation runtime consumer.",
-            "0x49eb8d/0x49ec51 is now the concrete unrecovered dispatch surface, not an unnamed side quest.",
+            "0x49eb8d/0x49ec51 is a recovered static optional handler surface, but sampled runtime rules it out as the 49c projection-object dispatch without new pointer-paired evidence.",
         ],
     }
 
@@ -279,6 +299,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--consumer-stamp-summary", type=Path, default=DEFAULT_CONSUMER_STAMP_SUMMARY)
     parser.add_argument("--slot8-summary", type=Path, default=DEFAULT_SLOT8_SUMMARY)
     parser.add_argument("--writer-summary", type=Path, default=DEFAULT_WRITER_SUMMARY)
+    parser.add_argument("--pointer-trace-summary", type=Path, default=DEFAULT_POINTER_TRACE_SUMMARY)
     parser.add_argument("--out", type=Path, required=True)
     return parser
 
@@ -291,6 +312,7 @@ def main() -> int:
         args.consumer_stamp_summary,
         args.slot8_summary,
         args.writer_summary,
+        args.pointer_trace_summary,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -299,7 +321,7 @@ def main() -> int:
         "RMG_H3MAPED_PROJECTION_CONSUMER_SURFACE_SUMMARY "
         f"status={status} remaining={summary['remaining_blocker']['name']} out={args.out}"
     )
-    return 0 if status == "partial_recovery" else 1
+    return 0 if status == "partial_recovery_ec51_ruled_out_for_sample" else 1
 
 
 if __name__ == "__main__":
