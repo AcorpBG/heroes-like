@@ -22,7 +22,7 @@ from typing import Any
 DEFAULT_RUNTIME = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime")
 DEFAULT_OUT_DIR = Path(".artifacts/rmg_recovery/seed58_trace")
 DEFAULT_BREAKPOINTS = ["0x499ea3", "0x49a932", "0x49aa63", "0x49abd6", "0x4aa3e9", "0x4a4c8e"]
-DWORD_LINE_RE = re.compile(r"(?:^|>)\s*(?:0x)?([0-9a-fA-F]+):\s+(.+)$")
+DWORD_LINE_RE = re.compile(r"(?:^|>)\s*(?:0x)?([0-9a-fA-F]+)(?:\s+[^:]+)?:\s+(.+)$")
 STOP_RE = re.compile(r"Stopped on breakpoint\s+(\d+)\s+at\s+0x([0-9a-fA-F]+)")
 REGISTER_RE = re.compile(r"\b(eax|ebx|ecx|edx|esi|edi|ebp|esp|eip)[:=]([0-9a-fA-F]{8})\b", re.IGNORECASE)
 HEX_WORD_RE = re.compile(r"\b[0-9a-fA-F]{1,8}\b")
