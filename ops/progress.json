@@ -508,6 +508,12 @@
         "same_run_result": "Focused entry/outcome trace recorded 141 0x49d2e0 entries and paired 140 with outcomes: 124 accept and 16 reject. Caller split: 0x49cf34 via return 0x49d111 had 52 accept, 5 reject, and 1 manually cut missing outcome; 0x49d471 via return 0x49d5a5 had 72 accept and 11 reject.",
         "scope": "This proves ordered candidate accept/reject surface for the sampled same-run span. Remaining recovery is deeper per-reject branch classification, descriptor field names, selected-member vector contents, and final wrapper-to-generator mutation state."
       },
+      "recovery_checkpoint_2026_06_07_49d2e0_branch_reasons": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_branch_reasons/49d2e0_branch_summary.json",
+        "source_basis": "Static 0x49d2e0 disassembly names false-return branch sites: 0x49d34c policy precheck, 0x49d3a7 neighbor policy byte +2, 0x49d3ad neighbor policy byte +1, 0x49d408 type 54/9 0x49a6f9 collision probe, and 0x49d466 type 54/9 no-neighbor-available check.",
+        "same_run_result": "Focused branch trace paired 99 0x49d2e0 entries with 91 accepts, 8 rejects, and 1 manually cut missing outcome. Five rejects are branch-classified: 0x49d3ad policy byte +1 missing x3, 0x49d3a7 policy byte +2 missing x1, and 0x49d466 type 54/9 no available neighbor x1. Three rejects remain explicitly unclassified because the parsed trace had no intermediate branch stop between entry and final false.",
+        "scope": "This narrows 0x49d2e0 reject reasons from final false outcomes to exact branch-site evidence for the classified sample. It does not complete descriptor field naming, the unclassified direct-false cases, selected-member vector contents, or final 0x4aa3e9 wrapper-to-generator projection."
+      },
       "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
     },
     "nonGoals": [
@@ -515,11 +521,11 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, and a focused same-run trace now pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects. Deeper per-reject branch classification and final writer state remain pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
+    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, a focused same-run trace pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects, and a branch trace classifies five sampled rejects by exact internal branch site while keeping three direct-false rejects unresolved. Final writer state remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover deeper per-reject branch classification for 0x49d2e0, selected-member vector contents, descriptor field names, exact 0x4aa3e9 wrapper-to-generator projection, reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
+    "remainingWork": "Resolve the unclassified direct-false 0x49d2e0 rejects, recover selected-member vector contents, descriptor field names, exact 0x4aa3e9 wrapper-to-generator projection, reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
