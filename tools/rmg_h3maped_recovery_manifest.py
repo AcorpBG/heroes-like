@@ -859,7 +859,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "returns true after successful candidate selection and wrapper refresh",
         ],
         "runtime_trace": "Direct-generation trace .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/winedbg_recovery_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json, records 4 entries, 3 completed success paths, one incomplete final call from manual trace cut, 32 primary 0x49a932(true) bit27 write call-site stops at 0x49d1ed, and 21 neighbor bit27 write call-site stops at 0x49d270. In every completed sampled success path, wrapper+0x4c/+0x50 match the relative x/y locals, wrapper byte +0x48 is set to 1, the candidate-coordinate vector is non-empty before 0x4ae2d0 cleanup, empty immediately after cleanup, and rebuilt by the 0x49d6e0/0x49d7c3 refresh before success. The first completed path records relative coordinate (8,7), clears a 9-entry candidate vector to 0, and returns with 32 candidate coordinates rebuilt.",
-        "ghidra_dump": "Called by 0x4aa354 and 0x4adb72. Static recovery shows a three-phase reward/guard attach pass: selected-member neighborhood mutation using object-record fields +0x04 and +0x08/+0x0c/+0x10, reverse filtering of wrapper candidate coordinates through bit26 and 0x49d2e0, then random candidate selection with 0x49d69d stamping, direction-neighborhood bit27 writes, wrapper+0x4c/+0x50/+0x48 finalization, candidate-vector range cleanup, and wrapper bounds/candidate refresh. Runtime finalization/cleanup replay is proven through the direct-generation trace. The caller-side projection-driver class around 0x49c019/0x49c0a6 is now recovered to static vtable and sampled constructor boundaries, but exact descriptor/payload semantic names, direction-policy class values, full caller-to-generator object projection, and generated-cell before/after parity remain pending.",
+        "ghidra_dump": "Called by 0x4aa354 and 0x4adb72. Static recovery shows a three-phase reward/guard attach pass: selected-member neighborhood mutation using object-record fields +0x04 and +0x08/+0x0c/+0x10, reverse filtering of wrapper candidate coordinates through bit26 and 0x49d2e0, then random candidate selection with 0x49d69d stamping, direction-neighborhood bit27 writes, wrapper+0x4c/+0x50/+0x48 finalization, candidate-vector range cleanup, and wrapper bounds/candidate refresh. Runtime finalization/cleanup replay is proven through the direct-generation trace. The caller-side projection-driver family around 0x49c019/0x49c0a6 is now recovered to static vtable and sampled constructor boundaries, but exact descriptor/payload semantic names, direction-policy class values, full caller-to-generator object projection, and generated-cell before/after parity remain pending.",
     },
     {
         "address": "0x49c0d3",
@@ -873,7 +873,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "initializes object+0x24 to 6",
         ],
         "runtime_trace": "Constructor trace .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, records 7 sampled 0x49c0d3 calls paired with projection-object constructors.",
-        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump verifies 0x49c0d3 as the base initializer used by constructors 0x49cac2, 0x49cb83, and 0x49cc22.",
+        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump verifies 0x49c0d3 as the base initializer used by constructors 0x49cac2, 0x49cb83, and 0x49cc22. Static verifier .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json proves the raw vtable layout: 0x540b00 contains 0x49c019 at slot +0x08, 0x540b14 contains 0x49c0a6 at slot +0x08, and 0x540b28 contains 0x49baf5 at slot +0x08.",
     },
     {
         "address": "0x49cac2",
@@ -897,6 +897,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "writes": [
             "allocates/initializes the projection object through 0x49c0d3",
             "stores constructor arguments into object+0x1c/+0x20/+0x24",
+            "copies source +0x14 into object+0x20 after the secondary object-record build",
             "installs final vtable 0x540b14",
         ],
         "runtime_trace": "Constructor trace records 4 sampled 0x49cb83 entries, each immediately paired with 0x49c0d3 returning to 0x49cbb3.",
@@ -910,6 +911,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "writes": [
             "allocates/initializes the projection object through 0x49c0d3",
             "stores constructor arguments into object+0x1c/+0x20/+0x24",
+            "sets object+0x24 to 6 and copies source +0x14 into object+0x28 after the secondary object-record build",
             "installs final vtable 0x540b14",
         ],
         "runtime_trace": "Constructor trace records 1 sampled 0x49cc22 entry paired with 0x49c0d3 returning to 0x49cc50.",
@@ -922,10 +924,10 @@ FUNCTIONS: list[dict[str, Any]] = [
         "calls": ["0x4adb72", "0x4adef7"],
         "reads": [
             "projection object fields initialized by the 0x49c0d3 constructor family",
-            "final vtable entry referenced from 0x540b08",
+            "adjacent vtable slot 0x540b00+0x08 referenced from raw data address 0x540b08",
         ],
         "runtime_trace": "Separate wrapper-execution no-hit trace .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json completed a 36x36 generation path with zero hits at 0x49c019, 0x49c0a6, 0x4adb72, 0x4ad947, 0x4ad7f7, and 0x4adef7.",
-        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump proves 0x49c019 is the direct caller of 0x4adb72 and 0x4adef7. Ghidra dump .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump links it to vtable data reference 0x540b08. Ordered execution replay remains pending.",
+        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump proves 0x49c019 is the direct caller of 0x4adb72 and 0x4adef7. Static verifier .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json links it to raw vtable slot 0x540b00+0x08, not the constructor-installed 0x540b14 table. Ordered execution replay remains pending.",
     },
     {
         "address": "0x49c0a6",
@@ -934,10 +936,10 @@ FUNCTIONS: list[dict[str, Any]] = [
         "calls": ["0x4ad947"],
         "reads": [
             "projection object fields initialized by the 0x49c0d3 constructor family",
-            "final vtable entry referenced from 0x540b1c",
+            "constructor-installed vtable slot 0x540b14+0x08 referenced from raw data address 0x540b1c",
         ],
         "runtime_trace": "Separate wrapper-execution no-hit trace .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json completed a 36x36 generation path with zero hits at 0x49c019, 0x49c0a6, 0x4adb72, 0x4ad947, 0x4ad7f7, and 0x4adef7.",
-        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump proves 0x49c0a6 is the direct caller of 0x4ad947. Ghidra dump .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump links it to vtable data reference 0x540b1c. Ordered execution replay remains pending.",
+        "ghidra_dump": "Ghidra dump .artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump proves 0x49c0a6 is the direct caller of 0x4ad947. Static verifier .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json links it to constructor-installed vtable slot 0x540b14+0x08. Ordered execution replay remains pending.",
     },
     {
         "address": "0x4adb72",

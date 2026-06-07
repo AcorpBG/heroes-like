@@ -128,11 +128,12 @@ def summarize(constructor_ledger: dict[str, Any], wrapper_ledger: dict[str, Any]
         "static_recovery": {
             "base_initializer": BASE_INITIALIZER,
             "base_initializer_vtable": BASE_INITIALIZER_VTABLE,
+            "adjacent_attachment_vtable": "0x00540b00",
             "final_constructor_vtable": "0x00540b14",
             "wrapper_execution_addresses": sorted(WRAPPER_EXECUTION_ADDRESSES),
-            "projection_driver_vtable_entries": {
-                "0x00540b08": "0x0049c019",
-                "0x00540b1c": "0x0049c0a6",
+            "projection_driver_vtable_slots": {
+                "0x00540b00+0x08": "0x0049c019",
+                "0x00540b14+0x08": "0x0049c0a6",
             },
             "projection_driver_targets": {
                 "0x0049c019": ["0x004adb72", "0x004adef7"],
@@ -152,7 +153,8 @@ def summarize(constructor_ledger: dict[str, Any], wrapper_ledger: dict[str, Any]
         },
         "notes": [
             "Constructor hits show the 0x49c* projection object class is instantiated in the sampled UI/generation setup path.",
-            "The base initializer 0x49c0d3 writes vtable 0x540b28; caller constructors later install final vtable 0x540b14.",
+            "The base initializer 0x49c0d3 writes vtable 0x540b28; sampled caller constructors later install final vtable 0x540b14.",
+            "0x49c019 is slot +0x08 of adjacent vtable 0x540b00, while 0x49c0a6 is slot +0x08 of constructor-installed vtable 0x540b14.",
             "The separate wrapper-execution no-hit trace generated a 36x36 map without hitting 0x49c019/0x49c0a6 or their 0x4adb72/0x4ad947/0x4ad7f7 callees.",
             "This is a recovery checkpoint only. It does not prove runtime ordered replay for 0x4adb72/0x4ad947; that remains pending until a path that executes the vtable methods is captured.",
         ],
