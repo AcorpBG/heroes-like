@@ -131,6 +131,73 @@ FUNCTIONS: list[dict[str, Any]] = [
         "runtime_trace": "seed58_interactive_49abd6_to_4a8c15 records five object-footprint calls; seed58_interactive_49abd6_body_cells_to_4a8c15 records five 0x49ac6b body-cell writes at flats 184, 666, 604, 975, and 1059.",
     },
     {
+        "address": "0x49d2c7",
+        "name": "coord12_triple_store",
+        "status": "recovered_static_contract",
+        "reads": [
+            "destination pointer in ecx",
+            "coordinate dword 0 at stack+0x04",
+            "coordinate dword 1 at stack+0x08",
+            "coordinate dword 2 at stack+0x0c",
+        ],
+        "writes": [
+            "writes stack+0x04 to destination+0x00",
+            "writes stack+0x08 to destination+0x04",
+            "writes stack+0x0c to destination+0x08",
+            "returns the destination pointer in eax",
+        ],
+        "callers": ["0x49cf34", "0x4aa603", "0x4aa3e9", "0x4a79a3", "0x4ab6ac", "0x4aba05", "0x4abd5f"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_reward_guard_probe_helper_dump recovers this as a direct 12-byte coordinate-triple store helper used by reward/guard probe and projection callers.",
+    },
+    {
+        "address": "0x4ae1fd",
+        "name": "coord12_vector_append_one",
+        "status": "recovered_static_contract",
+        "calls": ["0x430b35"],
+        "reads": [
+            "12-byte vector anchor in ecx",
+            "vector end pointer at ecx+0x08",
+            "source 12-byte coordinate record pointer at stack+0x04",
+        ],
+        "writes": [
+            "delegates to 0x430b35 with insertion position vector+0x08, count 1, and the source coordinate record pointer",
+            "appends one 12-byte coordinate record to the vector",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump recovers this as the common 12-byte coordinate append wrapper used by reward/guard, connection, terrain, and decorative candidate scans.",
+    },
+    {
+        "address": "0x4ae52a",
+        "name": "coord12_vector_erase_range",
+        "status": "recovered_static_contract",
+        "reads": [
+            "12-byte vector anchor in ecx",
+            "vector end pointer at ecx+0x08",
+            "destination pointer at stack+0x04",
+            "source pointer at stack+0x08",
+        ],
+        "writes": [
+            "moves 12-byte records from [source, vector_end) down to destination",
+            "updates vector end pointer at ecx+0x08 to destination plus the moved tail length",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump recovers this as a 12-byte coordinate-vector range erase/shift helper used by candidate-vector filters.",
+    },
+    {
+        "address": "0x4ae2d0",
+        "name": "coord8_vector_erase_range",
+        "status": "recovered_static_contract",
+        "reads": [
+            "8-byte vector anchor in ecx",
+            "vector end pointer at ecx+0x08",
+            "destination pointer at stack+0x04",
+            "source pointer at stack+0x08",
+        ],
+        "writes": [
+            "moves 8-byte records from [source, vector_end) down to destination",
+            "updates vector end pointer at ecx+0x08 to destination plus the moved tail length",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump recovers this as an 8-byte coordinate-vector range erase/shift helper used by wrapper candidate cleanup and other coordinate-vector paths.",
+    },
+    {
         "address": "0x4aa3e9",
         "name": "reward_object_final_commit_and_wrapper_projection",
         "status": "recovered_static_contract_replay_pending",
@@ -1171,6 +1238,15 @@ STRUCTS: list[dict[str, Any]] = [
             "+0x04": "begin pointer",
             "+0x08": "end pointer",
             "+0x0c": "capacity pointer",
+        },
+    },
+    {
+        "name": "Coord12CandidateVector",
+        "record_size_bytes": 12,
+        "status": "recovered_static_helper_contract",
+        "known_fields": {
+            "+0x04/+0x08/+0x0c": "begin/end/capacity pointer triad for 12-byte coordinate records; helper callers may pass the anchor or an interior anchor depending on wrapper layout",
+            "+0x08": "end pointer read/written by 0x4ae1fd and 0x4ae52a when ecx is the vector anchor",
         },
     },
     {
