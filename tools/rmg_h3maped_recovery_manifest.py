@@ -734,6 +734,28 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_49aa93_eligibility_helper_dump recovers the source/relation object-coordinate eligibility gate from instruction/reference evidence. Ghidra decompile still fails, so exact semantic names and ordered replay remain pending.",
     },
     {
+        "address": "0x49b76d",
+        "name": "object_descriptor_contour_vector_cache_builder",
+        "status": "recovered_static_contract_replay_pending",
+        "calls": ["0x41e951", "0x4268eb", "0x40bb15"],
+        "reads": [
+            "object descriptor/cache record pointer in ecx",
+            "descriptor pointer at record+0x00",
+            "8-byte vector begin/end pointers at record+0x18/+0x1c for the vector anchored at record+0x14",
+            "descriptor dimensions at descriptor+0x34/+0x38",
+            "descriptor mask tests through 0x41e951 and 0x4268eb",
+            "direction offsets at 0x5a2658..0x5a2698",
+        ],
+        "writes": [
+            "early-outs without mutation when record+0x18 is nonzero and the record+0x14 vector has a nonzero 8-byte record count",
+            "uses stack-local x/y trace coordinates and direction ordinals to walk descriptor-mask contour edges",
+            "appends 8-byte coordinate records to the vector anchored at record+0x14 through 0x40bb15",
+        ],
+        "returns": ["no explicit boolean return contract observed; callers use it as a cache-populating side-effect helper"],
+        "callers": ["0x49aa93", "0x4a9641"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump recovers the descriptor contour/vector cache builder. Ghidra decompile still fails; exact descriptor-mask semantic names and ordered vector replay remain pending.",
+    },
+    {
         "address": "0x49a6f9",
         "name": "object_descriptor_footprint_acceptance_gate",
         "status": "recovered_static_contract_replay_pending",
@@ -1318,6 +1340,18 @@ STRUCTS: list[dict[str, Any]] = [
             "+0x10": "initialized to -1 by 0x49ba89; relative level/z coordinate in reward/guard selected-member wrapper passes",
             "+0x18": "start of record-local dword table filled by 0x49b89c",
             "+0xe4": "cache-built byte checked and set by 0x49b89c",
+        },
+    },
+    {
+        "name": "ObjectDescriptorContourCacheRecord",
+        "status": "recovered_static_fields_replay_pending",
+        "producer": "0x49b76d",
+        "known_fields": {
+            "+0x00": "object descriptor pointer read by 0x49b76d",
+            "+0x14": "8-byte coordinate/vector anchor populated by 0x49b76d",
+            "+0x18": "vector begin pointer for the record+0x14 vector",
+            "+0x1c": "vector end pointer for the record+0x14 vector",
+            "+0x20": "vector capacity pointer inferred from the standard 8-byte vector anchor layout",
         },
     },
     {
