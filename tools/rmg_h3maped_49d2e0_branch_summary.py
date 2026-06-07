@@ -18,6 +18,7 @@ BRANCH_LABELS = {
     "0x0049d34c": "policy-plus-1-zero precheck rejects when a 0x5a2680-window wrapper cell has bit22 set",
     "0x0049d3a7": "existing bit22 control neighbor rejects when neighbor descriptor policy byte +2 is zero",
     "0x0049d3ad": "existing bit22 control neighbor rejects when neighbor descriptor policy byte +1 is zero",
+    "0x0049d3e2": "non-54/9 footprint/object probe rejects when 0x49a6f9 returns true and falls through to false",
     "0x0049d408": "type 54/9 special-case footprint probe rejects when 0x49a6f9 reports collision",
     "0x0049d466": "type 54/9 special-case rejects when all eight neighbor cells are unavailable after collision pass",
 }
