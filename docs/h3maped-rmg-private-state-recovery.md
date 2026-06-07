@@ -32,6 +32,8 @@ Generated artifacts:
 - `.artifacts/rmg_recovery/direct_generation_4a8c15_to_4a4c8e_grid_delta_summary.json`
 - `.artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
 - `.artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_grid_delta_summary.json`
+- `.artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream/winedbg_interactive_trace_ledger.json` (direct-generation run; seed not controlled)
+- `.artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream_summary.json`
 - `.artifacts/rmg_recovery/seed58_trace_analysis.json`
 - `.artifacts/rmg_recovery/ghidra_downstream_state_dump/`
 - `.artifacts/rmg_recovery/ghidra_downstream_helper_dump/`
@@ -275,7 +277,9 @@ The two-boundary direct-generation trace `.artifacts/rmg_recovery/seed58_interac
 
 The isolated `0x4a8260` direct-generation trace `.artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi/winedbg_interactive_trace_ledger.json` confirms that this mutation occurs inside `0x4a8260`. It captures the same generated-cell base `0x0188b6d4` at entry `0x004a8260` and return site `0x004a8c25`; the delta summary matches the wider `0x4a8c15 -> 0x4a4c8e` checkpoint exactly: `1040` changed state cells, `+793` bit26 cells, `-1040` bit27 cells, and no `+0x20`, `+0x24`, or `+0x2c` changes.
 
-This narrows the live phase recovery target further: `0x4a8260` and its direct helpers account for the major pre-`0x4a4c8e` bit26/bit27 mutation in this same run, while owner-byte2 and `+0x2c` remain unchanged across the captured boundary.
+The direct-generation helper-stream trace `.artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream/winedbg_interactive_trace_ledger.json` records the ordered helper calls inside the same phase shape: `200` calls to `0x49a85d` through return `0x004a8594`, `793` calls to `0x49a962` through return `0x004a86e3`, one `0x4a8260` entry, and one `0x4a8c25` return. The stream summary records `150` unique `0x49a85d` coordinates with raw clipped 3x3 coverage `463`, and `793` unique `0x49a962` coordinates with raw clipped 3x3 coverage `1080`. The `0x49a962` unique centers exactly match the `+793` bit26 delta; its raw coverage exceeds the `1040` bit27 clears by `40`, which makes those skipped cells the next precise predicate-recovery target.
+
+This narrows the live phase recovery target further: `0x4a8260` and its direct helpers account for the major pre-`0x4a4c8e` bit26/bit27 mutation in this same run, while owner-byte2 and `+0x2c` remain unchanged across the captured boundary. The remaining `0x4a8260` sub-gap is the exact `0x49a962` skip predicate over the 40 raw-coverage cells that do not clear bit27.
 
 The interactive route-stamp trace proves the seed-58 `0x49a85d` route path:
 
