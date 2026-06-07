@@ -1409,8 +1409,20 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "reward_guard_candidate_grid_refresh_helper",
         "status": "recovered_static_contract_replay_pending",
         "calls": ["0x49a1d8"],
-        "writes": ["wrapper+0x18/+0x1c initialized to 0x7d00", "wrapper+0x20/+0x24 initialized to 0xffff8300", "updates bounds over cells that are invalid, bit22 set, or bit27 clear"],
-        "ghidra_dump": "Called by 0x49cf34, 0x4aa1db, 0x4adb72, and 0x4ad947. Static bounds recomputation is recovered; exact caller ordering and vector contents remain replay-pending.",
+        "reads": [
+            "reward/guard wrapper pointer in ecx",
+            "wrapper generated-cell buffer at +0x08",
+            "wrapper grid width/height at +0x0c/+0x10",
+            "GeneratedCell+0x28 bit22 and bit27 state",
+        ],
+        "writes": [
+            "wrapper+0x18/+0x1c initialized to 0x7d00",
+            "wrapper+0x20/+0x24 initialized to 0xffff8300",
+            "scans y outer/x inner over the wrapper grid with 0x30-byte generated-cell stride",
+            "updates inclusive min x/y and exclusive max x/y bounds for cells that are invalid, bit22 set, or bit27 clear",
+            "skips bounds updates only for cells that are valid, bit22-clear, and bit27-set",
+        ],
+        "ghidra_dump": "Called by 0x49cf34, 0x4aa1db, 0x4adb72, and 0x4ad947. Static/Ghidra-backed summary .artifacts/rmg_recovery/direct_generation_49d6e0_static/49d6e0_static_summary.json verifies wrapper+0x08/+0x0c/+0x10 grid reads, sentinel initialization for +0x18/+0x1c/+0x20/+0x24, 0x49a1d8 validity gating, bit22/bit27 inclusion rules, and exclusive max-bound writes as x+1/y+1. Exact caller ordering and concrete wrapper cell contents remain replay-pending.",
     },
     {
         "address": "0x49d7c3",
