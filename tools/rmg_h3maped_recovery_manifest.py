@@ -202,6 +202,26 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and objdump artifact .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump/vtable_53eafc_objdump.txt recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Same-run pending-entry replay remains pending.",
     },
     {
+        "address": "0x4afa99",
+        "name": "source_handler_phase_wrapper",
+        "status": "recovered_static_contract_replay_pending",
+        "calls": ["0x4af463", "0x4af910", "0x4af65e"],
+        "reads": [
+            "caller argument at stack+0x04 forwarded as the source handler into 0x4af463",
+            "caller flag at stack+0x08 forwarded into 0x4af910",
+            "caller mode/source argument at stack+0x0c forwarded into 0x4af463",
+            "caller dimension/budget argument at stack+0x10 forwarded into 0x4af463",
+        ],
+        "writes": [
+            "allocates a stack-local generator/context at EBP-0xf08",
+            "calls 0x4af463 on the stack-local generator",
+            "immediately calls 0x4af910 on the same stack-local generator with the caller flag",
+            "tears down the stack-local generator through 0x4af65e",
+        ],
+        "callers": ["0x484d9f at 0x484e65", "0x484d9f at 0x484e9e"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump/target_004afa99_FUN_004afa99.txt recovers this wrapper. The two 0x484d9f call sites construct a stack 0x53eafc handler through 0x4802ac and call 0x4afa99(handler, 1, mode, dimension_or_budget); the second call is gated by 0x42a1f9(source) and a source-size check.",
+    },
+    {
         "address": "0x4802ac",
         "name": "source_handler_53eafc_constructor",
         "status": "recovered_static_contract",
