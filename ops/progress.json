@@ -443,26 +443,27 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
+    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, and sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6; full reward/guard/private-state chain and 0x540b00/0x540b14 projection-object method dispatch remain in progress.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
+      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json",
       "commands": [
+        "python3 tools/rmg_h3maped_49c_selected_lifetime_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json (passed: 421 events, 62 0x4a9f1c selected-create returns, 127 0x49abd6 stamp-helper hits, zero 0x49c019/0x49c0a6 projection-method hits)",
         "python3 tools/rmg_h3maped_49c_writer_surface_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json (passed: 0x49be93 has 16 writer slot +0x08 calls, 0x49c273 has 17 writer slot +0x08 calls, both zero-hit in sampled generation trace)",
         "python3 tools/rmg_h3maped_4aa3e9_slot8_summary.py --out .artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json (passed: 42 events, 12 paired 0x4aa3e9 entry/pre-return boundaries, 18 final slot +0x08 callbacks all target 0x49baf5, no projection-object vtables/methods/drivers hit)",
         "python3 tools/rmg_h3maped_49c_projection_constructor_summary.py --constructor-ledger .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json --wrapper-ledger .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json (passed: 14 constructor events, 7 paired constructor/base-initializer pairs, wrapper no-hit invariant held)",
         "python3 tools/rmg_h3maped_49c_projection_static_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json (passed: vtable/static constructor/method surface)",
-        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 function entries)",
-        "python3 -m py_compile tools/rmg_h3maped_49c_writer_surface_summary.py tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_49c_selected_lifetime_summary.py tools/rmg_h3maped_49c_writer_surface_summary.py tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
-      "status": "focused_static_recovery_checkpoint_pass_full_parity_in_progress"
+      "status": "focused_runtime_lifetime_recovery_checkpoint_pass_full_parity_in_progress"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
@@ -9289,7 +9290,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
+  "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, and sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6; full reward/guard/private-state chain and 0x540b00/0x540b14 projection-object method dispatch remain in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-07T09:30:00Z",
@@ -10245,19 +10246,24 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/4aa9b7_ordered_commit_summary.json",
+    "artifact": ".artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json",
     "commands": [
-      "python3 tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py --ledger .artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/4aa9b7_ordered_commit_summary.json (passed: 85 completed calls, 6 successful 0x4aa3e9 commits, 9 candidate appends)",
-      "python3 tools/rmg_h3maped_4aa3e9_source_sites_ordered_summary.py --ledger .artifacts/rmg_recovery/direct_generation_4aa3e9_source_sites_ordered_trace/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_4aa3e9_source_sites_ordered_trace/4aa3e9_source_sites_ordered_summary.json (passed)",
+      "python3 tools/rmg_h3maped_49c_selected_lifetime_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json (passed: 421 events, 62 0x4a9f1c selected-create returns, 127 0x49abd6 stamp-helper hits, zero 0x49c019/0x49c0a6 projection-method hits)",
       "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
-      "python3 -m py_compile tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_source_sites_ordered_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_49c_selected_lifetime_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "status": "focused_recovery_checkpoint_pass_full_parity_in_progress"
+    "status": "focused_runtime_lifetime_recovery_checkpoint_pass_full_parity_in_progress"
   },
   "latestEvidence": {
+    "recovery_checkpoint_2026_06_07_49c_selected_lifetime": {
+      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json",
+      "runtime_result": "Parsed 421 selected-lifetime trace events: 62 0x4a9f1c selected-create returns at 0x4aa168, 29 initial-consumer returns at 0x4aa22b, 33 secondary-consumer returns at 0x4aa2fd, 32 secondary validator entries at 0x49d471, 21 validator stamp calls from 0x49d636 into 0x49abd6, 11 failed-secondary cleanup pairs through slot +0x04 then destructor slot +0x00, and 127 total 0x49abd6 stamp-helper hits. Returned object vtables were 0x540a74/0x540ab0/0x540ac4/0x540ad8/0x540aec/0x540b64/0x540b78, with no sampled 0x540b00/0x540b14 returns.",
+      "scope": "This proves the sampled selected-object lifetime from 0x4a9f1c into 0x4aa1db, 0x49d471, and 0x49abd6. It also rules out that sampled path as the 0x540b00/0x540b14 projection-method dispatch site. Full reward/guard/private-state parity and the true storage/consumer path for projection objects constructed by 0x49cac2/0x49cb83/0x49cc22/0x49cdb1 remain incomplete.",
+      "source_basis": "Live H3MapEd winedbg trace of selected-create call/return 0x4aa166/0x4aa168, 0x4aa1db consumer sites 0x4aa22b/0x4aa2fd/0x4aa30e/0x4aa31e/0x4aa327, validator 0x49d471/0x49d636, stamp helper 0x49abd6, and no-hit breakpoints for 0x49c019/0x49c0a6."
+    },
     "recovery_checkpoint_2026_06_07_4aa3e9_source_sites_ordered": {
       "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_source_sites_ordered_trace/4aa3e9_source_sites_ordered_summary.json",
       "runtime_result": "Parsed 196 events over 30 completed 0x4aa3e9 calls. The trace records 23 source bit27-clear before/after pairs and 8 completed calls that reach the source bit26 set-before site. Source-clear pairs leave source bit27 false and source bit26 stable; completed calls preserve wrapper pointer and selected-coordinate state from entry to return.",
@@ -10272,7 +10278,7 @@
     }
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending.",
+  "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
   "plannedSlices": [
     {
       "baselineChecks": [
