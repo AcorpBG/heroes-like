@@ -1427,7 +1427,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49d7c3",
         "name": "reward_guard_candidate_vector_rebuild_helper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_and_live_append_runtime_replay",
         "calls": ["0x49a1d8", "0x40bb15"],
         "reads": [
             "reward/guard wrapper pointer in ecx",
@@ -1444,7 +1444,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "appends 8-byte coordinates to wrapper+0x38 through 0x40bb15",
             "probes up to four direction-table neighbors before stepping and loops until it returns to the initial x/y pair",
         ],
-        "ghidra_dump": "Called by 0x4aa354, 0x49cf34, 0x4adb72, and 0x4ad947. Static/Ghidra-backed summary .artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json verifies the non-empty vector no-op, seed scan, boundary/control-cell start condition, wrapper+0x38 8-byte coordinate append through 0x40bb15, direction-table contour walk, and expected caller set. Exact runtime coordinate sequence must still be traced and replayed.",
+        "runtime_trace": "Direct-generation trace .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/winedbg_recovery_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json, records 20 entries, 19 completed calls, and 259 append-call-site hits at 0x49d868 before manual cut. At each append, EAX points to the local coordinate pair at EBP-0x0c/EBP-0x08 and wrapper+0x3c/+0x40/+0x44 expose pre-append vector begin/end/capacity. The first completed call appends 18 coordinates from an empty vector and exits with vector count 18. Broader caller-specific replay through 0x49cf34 filtering/selection and object-vector mutation remains pending.",
+        "ghidra_dump": "Called by 0x4aa354, 0x49cf34, 0x4adb72, and 0x4ad947. Static/Ghidra-backed summary .artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json verifies the non-empty vector no-op, seed scan, boundary/control-cell start condition, wrapper+0x38 8-byte coordinate append through 0x40bb15, direction-table contour walk, and expected caller set.",
     },
     {
         "address": "0x49eb8d",

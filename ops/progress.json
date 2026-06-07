@@ -443,15 +443,23 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Recovered the upstream 0x49abd6/0x49ac8e source for pre-0x4a8260 GeneratedCell bit25 clears; this is a private-state recovery checkpoint, not a native density/parity fix.",
+    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour candidate-vector append replay; full reward/guard/private-state chain remains in progress.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "status": "focused_pass_in_progress_compare_fail_expected_parity_gap",
-      "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605"
+      "status": "focused_recovery_checkpoint_pass_full_parity_in_progress",
+      "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json",
+      "commands": [
+        "python3 tools/rmg_h3maped_49d7c3_runtime_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json (passed: 20 entries, 19 completed calls, 259 appends)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 115 functions)",
+        "python3 -m py_compile tools/rmg_h3maped_49d7c3_runtime_summary.py tools/rmg_h3maped_49d7c3_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ]
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
@@ -556,7 +564,13 @@
         "same_run_result": "The static checker verifies the expected caller set from Ghidra references: 0x4aa354, two 0x49cf34 call sites, 0x4adb72, and 0x4ad947.",
         "scope": "This resolves the static candidate-vector rebuild/contour contract and corrects the prior shorthand that implied it starts from a valid bit27 passable cell. It does not complete exact runtime coordinate sequence replay, 0x49cf34 ordered candidate filtering/selection, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity."
       },
-      "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
+      "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates.",
+      "recovery_checkpoint_2026_06_07_49d7c3_runtime": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json",
+        "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d7c3 entry, 0x49d868 append call site, and 0x49d90f exit; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json.",
+        "runtime_result": "Parsed 298 events: 20 entries, 19 completed calls, and 259 append-call-site hits before manual trace cut. At 0x49d868 EAX points to EBP-0x0c/EBP-0x08 append coordinate and wrapper+0x3c/+0x40/+0x44 exposes pre-append vector begin/end/capacity. First completed call appends 18 coordinates and exits with vector count 18.",
+        "scope": "Recovers the live 0x49d7c3 contour candidate-vector append surface. Full reward/guard caller replay through 0x49cf34 filtering, selected-coordinate mutation, object-vector updates, and final native parity remains in progress."
+      }
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -567,7 +581,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Resolve residual warm-up/direct-false 0x49d2e0 samples, recover descriptor field names, complete 0x4aa3e9 generated/wrapper cell before/after parity, reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
+    "remainingWork": "Recover exact reward/guard caller replay after 0x49d7c3, including 0x49cf34 candidate filtering/selection, 0x49d69d selected-coordinate stream, object/vector mutation, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -575,9 +589,9 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Investigated the reward/object-vector density discrepancy against h3maped.exe disassembly for 0x4aab7e, 0x4aa354, 0x4aa1db, 0x49d471, and 0x4aa9b7. Confirmed the sqrt reward value is the 0x4aa9b7 coordinate score threshold, not a placement count cap, and confirmed native must not add density gates. Tested a source-member behavioral prototype for 0x4aa1db secondary composite members and 0x4aa3e9 member score depletion, then rejected and reverted it because focused export worsened reward overproduction (Small reward coordinates 116 vs prior 61; Medium 671 vs prior 278). Revert export returned to prior baseline (Small reward coordinates 61/decorative 219; Medium reward coordinates 278/decorative 774). Next implementation target is full 0x4aa3e9 generated-cell merge plus reward guard/package member projection as one source unit; enabling secondary members alone is proven unsafe.",
+    "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 live contour candidate-vector append replay is recovered; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-07T00:00:00Z",
+    "updatedAt": "2026-06-07T04:35:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -43617,15 +43631,23 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Kept h3maped town post-append generated-cell mutation from 0x4a95b7..0x4a95e6 while preserving current road endpoint behavior; strict bit25 traversal and origin-adjusted road endpoint probes were rejected.",
+      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour candidate-vector append replay; full reward/guard/private-state chain remains in progress.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "status": "focused_pass_in_progress_compare_fail_expected_parity_gap",
-        "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605"
+        "status": "focused_recovery_checkpoint_pass_full_parity_in_progress",
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json",
+        "commands": [
+          "python3 tools/rmg_h3maped_49d7c3_runtime_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json (passed: 20 entries, 19 completed calls, 259 appends)",
+          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 115 functions)",
+          "python3 -m py_compile tools/rmg_h3maped_49d7c3_runtime_summary.py tools/rmg_h3maped_49d7c3_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ]
       },
       "latestEvidence": {
         "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
@@ -43658,7 +43680,13 @@
             "interpretation": "Medium total object density moved closer without changing the known road overdraw."
           }
         },
-        "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
+        "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates.",
+        "recovery_checkpoint_2026_06_07_49d7c3_runtime": {
+          "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json",
+          "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d7c3 entry, 0x49d868 append call site, and 0x49d90f exit; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json.",
+          "runtime_result": "Parsed 298 events: 20 entries, 19 completed calls, and 259 append-call-site hits before manual trace cut. At 0x49d868 EAX points to EBP-0x0c/EBP-0x08 append coordinate and wrapper+0x3c/+0x40/+0x44 exposes pre-append vector begin/end/capacity. First completed call appends 18 coordinates and exits with vector count 18.",
+          "scope": "Recovers the live 0x49d7c3 contour candidate-vector append surface. Full reward/guard caller replay through 0x49cf34 filtering, selected-coordinate mutation, object-vector updates, and final native parity remains in progress."
+        }
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -43669,7 +43697,7 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingWork": "Recover exact reward coordinate commit/private object-vector mutation semantics and blocked-surface parity from h3maped.exe; do not use density scalars, broad gates, or count-fitting.",
+      "remainingWork": "Recover exact reward/guard caller replay after 0x49d7c3, including 0x49cf34 candidate filtering/selection, 0x49d69d selected-coordinate stream, object/vector mutation, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
         "project.md",
@@ -43677,9 +43705,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Investigated the reward/object-vector density discrepancy against h3maped.exe disassembly for 0x4aab7e, 0x4aa354, 0x4aa1db, 0x49d471, and 0x4aa9b7. Confirmed the sqrt reward value is the 0x4aa9b7 coordinate score threshold, not a placement count cap, and confirmed native must not add density gates. Tested a source-member behavioral prototype for 0x4aa1db secondary composite members and 0x4aa3e9 member score depletion, then rejected and reverted it because focused export worsened reward overproduction (Small reward coordinates 116 vs prior 61; Medium 671 vs prior 278). Revert export returned to prior baseline (Small reward coordinates 61/decorative 219; Medium reward coordinates 278/decorative 774). Next implementation target is full 0x4aa3e9 generated-cell merge plus reward guard/package member projection as one source unit; enabling secondary members alone is proven unsafe.",
+      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 live contour candidate-vector append replay is recovered; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-05T14:26:38Z",
+      "updatedAt": "2026-06-07T04:35:00Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
