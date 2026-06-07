@@ -43638,7 +43638,7 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, and 0x49cf34 post-stamp finalization/cleanup replay; full reward/guard/private-state chain remains in progress.",
+      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, 0x49cf34 post-stamp finalization/cleanup replay, and sampled 0x4aa3e9 destination bit26/bit27 projection replay; full reward/guard/private-state chain remains in progress.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
@@ -43646,13 +43646,14 @@
       ],
       "lastValidation": {
         "status": "focused_recovery_checkpoint_pass_full_parity_in_progress",
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json",
+        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_cell_projection_trace/4aa3e9_cell_projection_summary.json",
         "commands": [
+          "python3 tools/rmg_h3maped_4aa3e9_cell_projection_summary.py --ledger .artifacts/rmg_recovery/direct_generation_4aa3e9_cell_projection_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_4aa3e9_cell_projection_trace/4aa3e9_cell_projection_summary.json (passed: 98 completed source/destination loop samples, one incomplete loop sample)",
           "python3 tools/rmg_h3maped_49cf34_finalization_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json (passed: 4 calls, 3 completed success paths, 32 primary bit27 writes, 21 neighbor bit27 writes)",
           "python3 tools/rmg_h3maped_49d69d_runtime_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/49d69d_runtime_summary.json (passed: 38 entries, 37 completed stamp cycles)",
           "python3 tools/rmg_h3maped_49d7c3_runtime_summary.py --ledger .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json (passed: 20 entries, 19 completed calls, 259 appends)",
           "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 115 functions)",
-          "python3 -m py_compile tools/rmg_h3maped_49cf34_finalization_summary.py tools/rmg_h3maped_49d69d_runtime_summary.py tools/rmg_h3maped_49d7c3_runtime_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_4aa3e9_cell_projection_summary.py tools/rmg_h3maped_49cf34_finalization_summary.py tools/rmg_h3maped_49d69d_runtime_summary.py tools/rmg_h3maped_49d7c3_runtime_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
@@ -43706,7 +43707,13 @@
           "artifact": ".artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json",
           "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49cf34 entry, post-0x49d69d resume at 0x49d176, bit27 write call sites 0x49d1ed/0x49d270, final field writes at 0x49d29b, candidate-vector cleanup at 0x49d2ab/0x49d2b0, bounds refresh at 0x49d2b7, and success at 0x49d2be.",
           "runtime_result": "Parsed 79 events: 4 entries, 3 completed success paths, one incomplete final call from manual trace cut, 32 primary bit27 write stops, and 21 neighbor bit27 write stops. Completed paths set wrapper +0x4c/+0x50/+0x48 from relative locals, clear the non-empty candidate-coordinate vector to 0 through 0x4ae2d0, and rebuild candidates through 0x49d6e0/0x49d7c3 before success.",
-          "scope": "Recovers the live 0x49cf34 post-stamp finalization, caller-side candidate cleanup, direction-neighborhood bit27 write surface, and post-cleanup candidate rebuild. Full 0x4aa3e9 generated/wrapper before-after parity, object/vector projection, and final native parity remain in progress."
+          "scope": "Recovers the live 0x49cf34 post-stamp finalization, caller-side candidate cleanup, direction-neighborhood bit27 write surface, and post-cleanup candidate rebuild. 0x4aa3e9 source-conditional before/after parity, object/vector projection, and final native parity remain in progress."
+        },
+        "recovery_checkpoint_2026_06_07_4aa3e9_destination_projection": {
+          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_cell_projection_trace/4aa3e9_cell_projection_summary.json",
+          "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x4aa3e9 entry, source/destination cell pre-mirror at 0x4aa54f, after-source-conditional/pre-destination-mirror at 0x4aa5a9, and after-destination-mirror at 0x4aa5bd.",
+          "runtime_result": "Parsed 296 events from a manually cut trace: one 0x4aa3e9 entry, 98 completed source/destination loop samples, and one incomplete loop sample. Each completed sample keeps source ESI and destination EDI stable through the loop and ends with destination bit26/bit27 matching the source pre-mirror bit26/bit27.",
+          "scope": "Recovers sampled 0x4aa3e9 destination wrapper bit26/bit27 mirror parity from concrete source generated cells. Full source-conditional before/after parity, complete entry-to-return ordered replay, object/vector projection, and final native parity remain in progress."
         }
       },
       "nonGoals": [
@@ -43718,7 +43725,7 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingWork": "Recover 0x4aa3e9 generated/wrapper before-after parity, 0x4aa9b7 coordinate commit ordering, 0x4ad7f7/0x4adb72 relation/object-vector projection, object/vector projection, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
+      "remainingWork": "Recover 0x4aa3e9 source-conditional before/after parity, 0x4aa9b7 coordinate commit ordering, 0x4ad7f7/0x4adb72 relation/object-vector projection, object/vector projection, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
         "project.md",
@@ -43726,9 +43733,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, and 0x49cf34 post-stamp finalization/cleanup replay are recovered; broader reward/guard/native parity remains incomplete.",
+      "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, 0x49cf34 post-stamp finalization/cleanup replay, and sampled 0x4aa3e9 destination projection replay are recovered; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-07T04:44:38Z",
+      "updatedAt": "2026-06-07T04:52:07Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
