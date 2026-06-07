@@ -151,9 +151,10 @@ def summarize(dump_dir: Path, field_summary_path: Path) -> dict[str, Any]:
             "endpoint_stamping_enabled remains unrecovered."
         ),
         "next_recovery_target": (
-            "Use a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 "
-            "record byte +0x09 before 0x4a79a3/0x4a7605 consumes it; if the byte is already initialized, "
-            "move the trace boundary earlier and name that earlier producer."
+            "Use the runtime boundary summary to continue from the actual 0x4a79a3 edge/control-record "
+            "iterator. The sampled 0x4a7605 ESI record is not the generator+0xc8 header itself, so the "
+            "next producer recovery must find the allocator or append path that fills edge/control-record "
+            "+0x08 before 0x4a7dcd/0x4a7dd0 selects the pair."
         ),
         "native_behavior_changed": False,
     }
