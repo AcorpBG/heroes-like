@@ -39,6 +39,20 @@ def normalize_address(value: str) -> str:
     return "0x%08x" % int(value, 0)
 
 
+def parse_address_commands(values: list[str]) -> dict[str, list[str]]:
+    commands: dict[str, list[str]] = {}
+    for value in values:
+        if "=" not in value:
+            raise ValueError(f"--address-command must be ADDRESS=COMMAND, got: {value}")
+        address, command = value.split("=", 1)
+        address = normalize_address(address.strip())
+        command = command.strip()
+        if not command:
+            raise ValueError(f"--address-command has an empty command for {address}")
+        commands.setdefault(address, []).append(command)
+    return commands
+
+
 def run_xdotool(args: list[str], *, timeout: float = 10.0) -> None:
     subprocess.run(["xdotool", *args], check=True, timeout=timeout)
 
@@ -158,6 +172,7 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
 
             events = 0
             stop_after = normalize_address(args.stop_after) if args.stop_after else ""
+            address_commands = parse_address_commands(args.address_command)
             while events < args.max_events:
                 index = child.expect([STOP_RE, pexpect.EOF, pexpect.TIMEOUT], timeout=args.debugger_timeout)
                 if index == 1:
@@ -168,6 +183,7 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
                 events += 1
                 child.expect(PROMPT_RE, timeout=args.debugger_timeout)
                 commands = ["info reg", "x/8x $esp", *args.extra_command]
+                commands.extend(address_commands.get(address, []))
                 if args.lite and args.lite_extra_command:
                     commands.append(args.lite_extra_command)
                 if not args.lite:
@@ -208,6 +224,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="Additional winedbg command to run at every breakpoint stop. May be repeated.",
+    )
+    parser.add_argument(
+        "--address-command",
+        action="append",
+        default=[],
+        help="Additional winedbg command to run only at ADDRESS. Format: ADDRESS=COMMAND. May be repeated.",
     )
     parser.add_argument("--inside-xvfb", action="store_true")
     return parser
@@ -263,6 +285,8 @@ def main() -> int:
         ]
         for extra_command in args.extra_command:
             command.extend(["--extra-command", extra_command])
+        for address_command in args.address_command:
+            command.extend(["--address-command", address_command])
         if args.lite:
             command.append("--lite")
         if args.lite_extra_command:
@@ -283,6 +307,7 @@ def main() -> int:
     ledger["max_events"] = args.max_events
     ledger["dump_command"] = args.dump_command
     ledger["extra_command"] = args.extra_command
+    ledger["address_command"] = args.address_command
     ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if ledger["event_count"] else "no_events"
     print(f"RMG_H3MAPED_INTERACTIVE_TRACE status={status} events={ledger['event_count']} ledger={ledger_path}")

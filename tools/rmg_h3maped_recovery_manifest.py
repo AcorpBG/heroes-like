@@ -126,9 +126,13 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49abd6",
         "name": "object_mask_stamp_generated_cell_mutator",
-        "status": "recovered_static_and_seed58_body_cell_trace",
-        "writes": ["cell+0x28 bit22", "cell+0x28 bit25", "cell+0x28 bit27 via 0x49a932"],
-        "runtime_trace": "seed58_interactive_49abd6_to_4a8c15 records five object-footprint calls; seed58_interactive_49abd6_body_cells_to_4a8c15 records five 0x49ac6b body-cell writes at flats 184, 666, 604, 975, and 1059.",
+        "status": "recovered_static_and_runtime_body_validity_trace",
+        "writes": [
+            "accepted descriptor-mask cells set cell+0x2a bit 0x40 and call 0x49a932(true), which sets w28 bit27 and clears bit26",
+            "rejected descriptor-mask cells that also fail 0x41e951 clear cell+0x2b bit 0x02, which clears w28 bit25",
+            "calls 0x40bb26 after both accepted and rejected cell mutation paths",
+        ],
+        "runtime_trace": "seed58_interactive_49abd6_to_4a8c15 records five object-footprint calls; seed58_interactive_49abd6_body_cells_to_4a8c15 records five 0x49ac6b body-cell writes at flats 184, 666, 604, 975, and 1059. A same-run direct-generation trace .artifacts/rmg_recovery/direct_generation_49ac8e_clears_to_4a8260 records 48 hits at 0x49ac8e before 0x4a8260; .artifacts/rmg_recovery/direct_generation_49ac8e_bit25_clear_summary.json proves those 48 unique clear flats equal the 48 bit25-clear cells in the 0x4a8260 boundary grid checksum 88d6d7ef92324a2785c9ea7f6c658ac8829f8d5f4f0468d33998c549999dd702.",
     },
     {
         "address": "0x499ee8",
@@ -781,7 +785,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "0x49a85d route/neighborhood stamp",
             "0x49a962 boundary center and neighborhood clear",
         ],
-        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 1,686 route insertion call-site events, 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears. The 0x4a858f stamp coordinate order exactly matches the direct 0x49a85d trace, and the 11 far-cut insertion pairs match the 0x4a80dc squared-distance >= 25 gate. A separate non-seed-pinned direct-generation full-grid trace .artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi proves the 0x4a8c15->0x4a4c8e state mutation is isolated inside 0x4a8260: same grid base 0x0188b6d4 at 0x4a8260 and 0x4a8c25, 1040 changed state cells, w28-only changes, bit26 delta +793, bit27 delta -1040. The matching helper-stream summary .artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream_summary.json records 200 0x49a85d calls, 793 0x49a962 calls, 793 unique 0x49a962 centers matching the bit26 delta, and 1080 raw 0x49a962 clipped-3x3 coverage cells. The 40 raw-coverage skips classify as 4 bit22-set cells and 36 bit25-clear cells; the bit22 case matches the recovered explicit exclusion, while the bit25-clear case is the next predicate-source target.",
+        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 1,686 route insertion call-site events, 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears. The 0x4a858f stamp coordinate order exactly matches the direct 0x49a85d trace, and the 11 far-cut insertion pairs match the 0x4a80dc squared-distance >= 25 gate. A separate non-seed-pinned direct-generation full-grid trace .artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi proves the 0x4a8c15->0x4a4c8e state mutation is isolated inside 0x4a8260: same grid base 0x0188b6d4 at 0x4a8260 and 0x4a8c25, 1040 changed state cells, w28-only changes, bit26 delta +793, bit27 delta -1040. The matching helper-stream summary .artifacts/rmg_recovery/direct_generation_4a8260_stamp_clear_stream_summary.json records 200 0x49a85d calls, 793 0x49a962 calls, 793 unique 0x49a962 centers matching the bit26 delta, and 1080 raw 0x49a962 clipped-3x3 coverage cells. The 40 raw-coverage skips classify as 4 bit22-set cells and 36 bit25-clear cells; the bit22 case matches the recovered explicit exclusion, and a same-run 0x49ac8e clear trace proves the upstream bit25-clear source is 0x49abd6 clearing GeneratedCell+0x2b bit 0x02.",
     },
     {
         "address": "0x4a8c15",
@@ -1906,8 +1910,8 @@ STRUCTS: list[dict[str, Any]] = [
             "+0x1c": "projection/local dword; 0x4a59e2 writes the high word and 0x4a5767 forces the low word before 0x4a746b thresholds it",
             "+0x20": "owner/score dword consumed by 0x4a4c8e byte2 owner; 0x4a59e2 writes byte3 while preserving the lower 24 bits",
             "+0x24": "terrain/art dword consumed by 0x4a4c8e and 0x49b2b6; 0x49acf6 writes terrain low six bits and an arg2 byte at bits 6..13",
-            "+0x28": "generated-cell bit-state dword; 0x4a59e2 writes bits 12..14, 0x49acf6 writes bits 15..16, 0x49aa63/0x49a932 toggle bits 26/27",
-            "+0x2b": "validity/private byte; bit 0x02 is required by 0x49a1d8 and tested by 0x49e1bf neighbor scans; bit 0x04 is cleared by 0x4a5a23 for nearby same-owner cells",
+            "+0x28": "generated-cell bit-state dword; 0x4a59e2 writes bits 12..14, 0x49acf6 writes bits 15..16, 0x49abd6 clears bit25 through byte +0x2b bit 0x02, and 0x49aa63/0x49a932 toggle bits 26/27",
+            "+0x2b": "validity/private byte; bit 0x02 is required by 0x49a1d8, tested by 0x49e1bf neighbor scans, and cleared by 0x49abd6 at 0x49ac8e for rejected descriptor-mask cells; bit 0x04 is cleared by 0x4a5a23 for nearby same-owner cells",
             "+0x2c": "cell private flags; bit0 skips 0x49a932/0x49aa63 helpers",
         },
     },
