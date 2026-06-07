@@ -649,7 +649,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "land_edge_generated_cell_bit_writer_entry_checkpoint",
         "status": "checkpoint_authority",
         "reads": ["generator+0x14 generated cells", "generator+0x10e4 runtime-zone relation vectors"],
-        "runtime_trace": "Fresh direct-generation trace .artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary hit 0x4a4c8e once with generator 0x0031e058, dimensions 36x36x1, generated-cell buffer 0x0188b6d4, and live +0xc8/+0xd8 vector anchors.",
+        "runtime_trace": "Fresh direct-generation trace .artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary hit 0x4a4c8e once with generator 0x0031e058, dimensions 36x36x1, generated-cell buffer 0x0188b6d4, and live +0xc8/+0xd8 vector anchors. Full-grid summary .artifacts/rmg_recovery/seed58_4a4c8e_grid_summary.json records 1296 cells, w28 bit22=8 bit25=1200 bit26=652 bit27=368, nonzero w2c=0, owner-byte2 counts {-1:1,0:136,1:222,2:196,3:137,4:204,5:151,6:150,7:99}, and w20/w24/w28/w2c sha256 b5e238bc3f17d9f8891f76619bc8017f4ae5316c3daef699214b0bc29618ef3d.",
     },
     {
         "address": "0x4a80dc",
