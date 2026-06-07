@@ -443,252 +443,33 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.",
+    "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/connection_record_field_summary.json",
+      "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
+      "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
       "commands": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgOffsetAccessScan.java .artifacts/rmg_recovery/connection_record_offset_access_scan.txt 0x8,0x9,0xa -readOnly (passed)",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
+        "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
         "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
-        "python3 -m py_compile tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_connection_record_producer_static_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_interactive_trace.py tools/rmg_h3maped_recovery_trace.py tools/rmg_h3maped_recovery_manifest.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "python3 tests/validate_repo.py (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
-      ],
-      "status": "focused_connection_record_plus9_consumer_surface_pass_producer_unrecovered"
+      ]
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
-      "change_kept": "Town phase now carries live generated-cell word +0x28 and applies the recovered 0x4a95b7..0x4a95e6 mutation at the origin-adjusted coordinate below the selected town, clearing bit26 and setting bit27. Visible/package town coordinates and current generator+0x14b0 road endpoints remain unchanged.",
-      "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates.",
-      "focused_result": {
-        "medium_4p_seed_10_controlled": {
-          "h3maped_objects": 1256,
-          "interpretation": "Medium total object density moved closer without changing the known road overdraw.",
-          "native_objects": 1175,
-          "object_delta": -81,
-          "package_decorative_obstacles": 711,
-          "previous_checkpoint_delta": -102,
-          "private_decorative_records": 808,
-          "road_cells_h3maped": 136,
-          "road_cells_native": 311,
-          "road_delta": 175
-        },
-        "small_3p_seed_11_controlled": {
-          "h3maped_objects": 299,
-          "interpretation": "Small object density moved farther from h3maped; this checkpoint is not a final density fix.",
-          "native_objects": 327,
-          "object_delta": 28,
-          "package_decorative_obstacles": 188,
-          "previous_checkpoint_delta": 24,
-          "private_decorative_records": 232,
-          "road_cells_h3maped": 81,
-          "road_cells_native": 90,
-          "road_delta": 9
-        }
-      },
-      "recovery_checkpoint_2026_06_07": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49ac8e_bit25_clear_summary.json",
-        "same_run_result": "Focused direct-generation trace recorded 48 hits at 0x49ac8e before 0x4a8260. The 48 unique clear flats exactly equal the 48 bit25-clear cells in the same-run 0x4a8260 boundary grid; checksum 88d6d7ef92324a2785c9ea7f6c658ac8829f8d5f4f0468d33998c549999dd702 matches the existing 0x4a8c15 boundary checkpoint.",
-        "scope": "Explains the prior 0x4a8260 raw-coverage skips caused by 0x49a1d8 false on bit25-clear cells. It does not complete reward/object-vector placement semantics or native RMG parity.",
-        "source_basis": "h3maped.exe 0x49abd6 walks descriptor-mask footprint cells; accepted cells call 0x49a932(true), while rejected cells that also fail 0x41e951 execute 0x49ac8e AND byte ptr [ESI + 0x2b],0xfd. That clears GeneratedCell+0x2b bit 0x02, which is w28 bit25 and the validity bit consumed by 0x49a1d8."
-      },
-      "recovery_checkpoint_2026_06_07_49baf5_static_leaf": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_inner_calls/49baf5_static_summary.json",
-        "same_run_result": "The static checker verifies the exact leaf bytes, no memory writes, AL=1 return contract, and slot +0x08 linkage from the 0x4aa3e9 inner summary.",
-        "scope": "This resolves downstream 0x49baf5 side effects as no-op/true-return for the sampled 0x4aa3e9 final selected-member callback. It does not complete full generated/wrapper before/after parity, reward coordinate object-vector commit ordering, package/native adoption, or broader RMG parity.",
-        "source_basis": "Static objdump of h3maped.exe at 0x49baf5 shows b0 01 c3 (mov al,1; ret). The 0x4aa3e9 inner-call trace links this address as the selected-member slot +0x08 target."
-      },
-      "recovery_checkpoint_2026_06_07_49c_candidate_projection_dispatch_surface": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json",
-        "same_run_result": "Static verifier now also passes candidate descriptor/projection dispatch-surface invariants: raw candidate vtables 0x540c60/0x540c70/0x540c80/0x540ca0 slot +0x00 target constructors 0x49cac2/0x49cb83/0x49cc22/0x49cdb1; Ghidra dump confirms 0x49cdb1 allocates a 0x24-byte projection object, initializes a copied object record through 0x49ba89, stores +0x1c/+0x20, and installs adjacent projection vtable 0x540b00; Ghidra dump confirms 0x4a9f1c selector callind sites at +0x08, +0x04, and +0x00.",
-        "scope": "Names the descriptor-vtable layer that creates projection objects and recovers the static constructor path for adjacent vtable 0x540b00. This is still not ordered runtime replay of 0x540b00+0x08 or 0x540b14+0x08 and does not complete final generated/private-state parity.",
-        "source_basis": "Raw h3maped.exe candidate vtable bytes at 0x540c60/0x540c70/0x540c80/0x540ca0, Ghidra dump .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_0049cdb1_FUN_0049cdb1.txt, Ghidra dump .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_004a9f1c_FUN_004a9f1c.txt, and checker tools/rmg_h3maped_49c_projection_static_summary.py."
-      },
-      "recovery_checkpoint_2026_06_07_49c_constructor_return_adoption": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json",
-        "runtime_result": "Parsed 361 selected-create/constructor-return trace events: 178 0x4aa166 selected-create stops, 177 0x4aa168 selected-return stops, one 0x49cac2 constructor and two 0x49cc22 constructors, with three constructor pre-returns immediately followed by 0x4aa168. Each selected-return object preserved the constructor EAX pointer and vtable 0x540b14. Continuations split to 0x4aa22b twice and 0x4aa2fd once.",
-        "scope": "This proves sampled 0x540b14 projection objects created by 0x49cac2/0x49cc22 are returned/adopted by the selected-create path. It does not prove later slot +0x08 dispatch into 0x49c0a6, and 0x49cdb1/0x540b00 was instrumented but not hit in this bounded sample.",
-        "source_basis": "Live H3MapEd winedbg trace of selected-create site 0x4aa166, constructor entries/pre-returns 0x49cac2/0x49cb52 and 0x49cc22/0x49ccb0, selected-return site 0x4aa168, plus static vtable recovery linking 0x540b14+0x08 to 0x49c0a6 and 0x540b00+0x08 to 0x49c019."
-      },
-      "recovery_checkpoint_2026_06_07_49c_consumer_stamp": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
-        "runtime_result": "Parsed 721 consumer/stamp trace events: 110 selected returns at 0x4aa168, 47 initial-consumer paths through 0x4aa22b/0x4aa23d/0x4aa27e, 63 secondary-consumer stops at 0x4aa2fd, 62 validator entries at 0x49d471, 35 validator stamp call sites at 0x49d636, and 197 stamp-helper entries at 0x49abd6. The 49c-specific subset contains two sampled 0x540b14 projection returns, from 0x49cb83/0x49cc12 and 0x49cac2/0x49cb52; both enter the initial branch and reach 0x49abd6 with the stamp-helper object argument matching the selected projection object pointer.",
-        "scope": "This proves sampled post-adoption consumer/stamp behavior for 0x540b14 projection objects. It does not prove later slot +0x08 dispatch into 0x49c0a6 or 0x49c019, and 0x49cdb1/0x540b00 remains unhit in bounded runtime samples.",
-        "source_basis": "Live H3MapEd winedbg trace of constructor pre-return sites 0x49cb52/0x49cc12, selected-return 0x4aa168, initial consumer/stamp sites 0x4aa22b/0x4aa23d/0x4aa27e, stamp helper 0x49abd6, and secondary validator sites 0x4aa2fd/0x4aa30e/0x49d471/0x49d636."
-      },
-      "recovery_checkpoint_2026_06_07_49c_projection_constructor_boundary": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json",
-        "same_run_result": "Constructor trace records 14 events: 7 projection-object constructor entries (0x49cac2 x2, 0x49cb83 x4, 0x49cc22 x1) paired with 7 base-initializer 0x49c0d3 entries. All initializer return sites match the constructor call sites. Static Ghidra recovery links adjacent vtable slot 0x540b00+0x08 to 0x49c019 and constructor-installed vtable slot 0x540b14+0x08 to 0x49c0a6; a separate completed 36x36 wrapper-execution trace recorded 0 hits at 0x49c019, 0x49c0a6, 0x4adb72, 0x4ad947, 0x4ad7f7, and 0x4adef7.",
-        "scope": "Recovers the sampled constructor/vtable boundary for the 0x49c* projection object class and proves the current completed UI generation path did not execute the wrapper methods. It does not recover ordered execution replay for 0x4adb72, 0x4ad947, 0x4ad7f7, object-vector projection, or final native parity.",
-        "source_basis": "Ghidra dumps .artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump and .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump plus live H3MapEd constructor trace .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json and wrapper no-hit ledger .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json."
-      },
-      "recovery_checkpoint_2026_06_07_49c_projection_static_lifecycle": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json",
-        "same_run_result": "Static verifier passed all invariants: raw vtable bytes match 0x540b00=[...,0x49c019,...], constructor-installed 0x540b14=[...,0x49c0a6,...], and base 0x540b28=[...,0x49baf5,...]; Ghidra dumps match expected constructor/method field surface; driver dumps confirm direct downstream calls 0x49c019->0x4adb72/0x4adef7 and 0x49c0a6->0x4ad947; constructor summary still records 14 events, 7 paired constructor/base-initializer pairs, and 0 wrapper-method execution events in the completed 36x36 no-hit trace.",
-        "scope": "Corrects and tightens the 0x49c projection-object static/lifecycle recovery: 0x49c019 is slot +0x08 of adjacent table 0x540b00, 0x49c0a6 is slot +0x08 of constructor-installed table 0x540b14, and 0x49c0d3 installs base table 0x540b28. This does not recover ordered wrapper-method dispatch or final generated/private-state parity.",
-        "source_basis": "Raw h3maped.exe vtable bytes, Ghidra dumps .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump and .artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump, constructor summary .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, and checker tools/rmg_h3maped_49c_projection_static_summary.py."
-      },
-      "recovery_checkpoint_2026_06_07_49c_selected_create_dispatch_runtime": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49c_selected_create_dispatch_trace/49c_selected_dispatch_summary.json",
-        "runtime_result": "Bounded selected-create trace records 301 events: 148 selected value-score call-site stops at 0x4aa151, 148 selected create call-site stops at 0x4aa166, one constructor hit at 0x49cb83, and four constructor hits at 0x49cc22. Every constructor hit immediately follows a matching 0x4aa166 selected-create vtable: 0x540c70 -> 0x49cb83 and 0x540c80 -> 0x49cc22. The same trace records zero hits at projection methods 0x49c019/0x49c0a6 and downstream driver targets 0x4adb72/0x4ad947/0x4ad7f7/0x4adb07.",
-        "scope": "Recovers sampled runtime selected candidate-create dispatch into 49c projection constructors. This still does not recover ordered projection-object method dispatch through 0x540b00+0x08 or 0x540b14+0x08, object-vector projection, or final generated/private-state parity.",
-        "source_basis": "Live H3MapEd winedbg trace .artifacts/rmg_recovery/direct_generation_49c_selected_create_dispatch_trace/winedbg_recovery_trace_ledger.json summarized by tools/rmg_h3maped_49c_selected_dispatch_summary.py."
-      },
-      "recovery_checkpoint_2026_06_07_49c_writer_surface": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
-        "runtime_result": "Static/runtime summary passes: 0x49be93 has 16 repeated writer slot +0x08 calls and 0x49c273 has 17, both with ECX reset to the writer/context pointer loaded from stack+0x08. The sampled constructor/generation trace was instrumented for both helpers and recorded zero hits.",
-        "scope": "This classifies the nearby 0x49be93/0x49c273 slot +0x08 surfaces as writer/serializer-like helpers for the sampled generation path, not the missing projection-object dispatch. It narrows the next recovery target to projection-object storage/consumption for vtables 0x540b00/0x540b14.",
-        "source_basis": "Ghidra dumps under .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump plus constructor trace summary .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, summarized by tools/rmg_h3maped_49c_writer_surface_summary.py."
-      },
-      "recovery_checkpoint_2026_06_07_49d2e0_49a6f9_fallthrough": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_fallthrough_reasons/49d2e0_fallthrough_summary.json",
-        "same_run_result": "Focused fallthrough trace paired 18 0x49d2e0 entries with 11 accepts, 7 rejects, and 1 manually cut missing outcome. Three rejects stop at 0x49d3e2 before falling through to 0x49d3e8, proving the non-54/9 0x49a6f9 true-return rejection class that was not instrumented in the prior branch trace.",
-        "scope": "This resolves the missing direct-false class for non-54/9 footprint/object probe rejection. Residual warm-up/direct-false samples, exact descriptor field names, selected-member vector contents, and final 0x4aa3e9 wrapper-to-generator projection remain unrecovered.",
-        "source_basis": "Static 0x49d2e0 disassembly shows the non-54/9 path calls 0x49a6f9, tests AL at 0x49d3e0, jumps to accept at 0x49d3e2 only when AL is zero, and otherwise falls through directly to the false return at 0x49d3e8."
-      },
-      "recovery_checkpoint_2026_06_07_49d2e0_branch_reasons": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_branch_reasons/49d2e0_branch_summary.json",
-        "same_run_result": "Focused branch trace paired 99 0x49d2e0 entries with 91 accepts, 8 rejects, and 1 manually cut missing outcome. Five rejects are branch-classified: 0x49d3ad policy byte +1 missing x3, 0x49d3a7 policy byte +2 missing x1, and 0x49d466 type 54/9 no available neighbor x1. Three rejects remain explicitly unclassified because the parsed trace had no intermediate branch stop between entry and final false.",
-        "scope": "This narrows 0x49d2e0 reject reasons from final false outcomes to exact branch-site evidence for the classified sample. It does not complete descriptor field naming, the unclassified direct-false cases, selected-member vector contents, or final 0x4aa3e9 wrapper-to-generator projection.",
-        "source_basis": "Static 0x49d2e0 disassembly names false-return branch sites: 0x49d34c policy precheck, 0x49d3a7 neighbor policy byte +2, 0x49d3ad neighbor policy byte +1, 0x49d408 type 54/9 0x49a6f9 collision probe, and 0x49d466 type 54/9 no-neighbor-available check."
-      },
-      "recovery_checkpoint_2026_06_07_49d2e0_entry_outcomes": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_entry_outcomes/49d2e0_outcome_summary.json",
-        "same_run_result": "Focused entry/outcome trace recorded 141 0x49d2e0 entries and paired 140 with outcomes: 124 accept and 16 reject. Caller split: 0x49cf34 via return 0x49d111 had 52 accept, 5 reject, and 1 manually cut missing outcome; 0x49d471 via return 0x49d5a5 had 72 accept and 11 reject.",
-        "scope": "This proves ordered candidate accept/reject surface for the sampled same-run span. Remaining recovery is deeper per-reject branch classification, descriptor field names, selected-member vector contents, and final wrapper-to-generator mutation state.",
-        "source_basis": "Static recovery of 0x49d2e0 shows accept path at 0x49d468 (MOV AL,1), reject path at 0x49d3e8 (XOR AL,AL), and both funnel to RET 0x10 at 0x49d46e."
-      },
-      "recovery_checkpoint_2026_06_07_49d2e0_static": {
-        "artifact": "docs/h3maped-rmg-private-state-recovery.md and tools/rmg_h3maped_recovery_manifest.py",
-        "runtime_result": "Focused direct-generation traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only. They did not hit 0x49d2e0, 0x49d471, 0x4aa1db, 0x4aa3e9, or 0x4aa9b7 before that boundary.",
-        "scope": "Static helper contract is strengthened, but same-run ordered reward/guard replay remains unrecovered. Next work must find or drive an H3MapEd path that actually exercises the reward/guard chain before any native reward/object-vector behavior change.",
-        "source_basis": "Ghidra static recovery of h3maped.exe 0x49d2e0 shows the reward/guard candidate acceptance helper uses wrapper grid fields, object descriptor offsets/dimensions/type, policy table 0x57c648, direction tables 0x5a2658/0x5a2680, GeneratedCell bit22/bit26 state, 0x49a1d8 validity, and 0x49a6f9 footprint/object probes."
-      },
-      "recovery_checkpoint_2026_06_07_49d69d_runtime": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/49d69d_runtime_summary.json",
-        "runtime_result": "Parsed 149 events: 38 entries, 37 completed stamp cycles, and one incomplete final entry before manual trace cut. Every completed sampled call preserves selected x/y into the (x,y,0) stamp coordinate and grows the selected-member vector by one. First completed call uses member 0x0364de30 at selected coordinate (10,7), growing the selected-member vector from 1 to 2 while leaving candidate-coordinate vector count 8.",
-        "scope": "Recovers the live selected-coordinate/member stamp handoff from 0x49cf34 into 0x49d69d and 0x49abd6. Wrapper +0x4c/+0x50/+0x48 finalization, caller-side candidate cleanup, object/vector projection, and final native parity remain in progress.",
-        "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d69d entry, 0x49d6af selected-member vector append call site, 0x49d6d4 0x49abd6 stamp call site, and 0x49d6d9 post-stamp state; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json."
-      },
-      "recovery_checkpoint_2026_06_07_49d69d_static_stamp": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json",
-        "same_run_result": "The checker also verifies the 0x49cf34 call-site push order: selected_y, selected_x, object/member record, then call 0x49d69d.",
-        "scope": "This resolves the static selected-member stamp helper contract. It does not complete 0x49cf34 ordered candidate-coordinate replay, wrapper +0x4c/+0x50/+0x48 finalization replay, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity.",
-        "source_basis": "Static objdump and existing Ghidra pcode dumps verify 0x49d69d receives wrapper in ECX, object/member record at stack +0x08, selected x/y at +0x0c/+0x10, appends the member pointer to wrapper+0x28 through 0x40bb26, builds local coordinate triple (x,y,0), calls 0x49abd6, and returns with ret 0x0c."
-      },
-      "recovery_checkpoint_2026_06_07_49d6e0_static_bounds": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d6e0_static/49d6e0_static_summary.json",
-        "same_run_result": "The static checker verifies the known caller set from Ghidra references: 0x49cf34, 0x4aa1db, 0x4adb72, and 0x4ad947.",
-        "scope": "This resolves the static wrapper bounds refresh contract: included cells are invalid, bit22 set, or bit27 clear; +0x18/+0x1c are inclusive min bounds and +0x20/+0x24 are exclusive max bounds written as x+1/y+1. It does not complete caller-specific ordered wrapper-content replay, 0x49d7c3 candidate-vector replay, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity.",
-        "source_basis": "Static objdump and existing Ghidra pcode dumps verify 0x49d6e0 receives wrapper in ECX, initializes wrapper +0x18/+0x1c to 0x7d00 and +0x20/+0x24 to 0xffff8300, scans wrapper cells from +0x08 using width/height +0x0c/+0x10 and 0x30-byte cell stride, and gates inclusion through 0x49a1d8 plus GeneratedCell bit22/bit27."
-      },
-      "recovery_checkpoint_2026_06_07_49d7c3_runtime": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json",
-        "runtime_result": "Parsed 298 events: 20 entries, 19 completed calls, and 259 append-call-site hits before manual trace cut. At 0x49d868 EAX points to EBP-0x0c/EBP-0x08 append coordinate and wrapper+0x3c/+0x40/+0x44 exposes pre-append vector begin/end/capacity. First completed call appends 18 coordinates and exits with vector count 18.",
-        "scope": "Recovers the live 0x49d7c3 contour candidate-vector append surface. Full reward/guard caller replay through 0x49cf34 filtering, selected-coordinate mutation, object-vector updates, and final native parity remains in progress.",
-        "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d7c3 entry, 0x49d868 append call site, and 0x49d90f exit; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json."
-      },
-      "recovery_checkpoint_2026_06_07_49d7c3_static_contour": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json",
-        "same_run_result": "The static checker verifies the expected caller set from Ghidra references: 0x4aa354, two 0x49cf34 call sites, 0x4adb72, and 0x4ad947.",
-        "scope": "This resolves the static candidate-vector rebuild/contour contract and corrects the prior shorthand that implied it starts from a valid bit27 passable cell. It does not complete exact runtime coordinate sequence replay, 0x49cf34 ordered candidate filtering/selection, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity.",
-        "source_basis": "Static objdump and existing Ghidra pcode dumps verify 0x49d7c3 receives wrapper in ECX, returns without rebuilding when wrapper+0x38 candidate vector already has nonzero 8-byte entries, scans y/x over wrapper cells while cells are bit22-clear, 0x49a1d8-valid, and bit27-set, starts contour work at the first bit22-set/invalid/bit27-clear boundary cell, and appends coordinates to wrapper+0x38 through 0x40bb15 while walking direction table 0x5a2658/0x5a265c."
-      },
-      "recovery_checkpoint_2026_06_07_4aa3e9_inner_calls": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_inner_calls/4aa3e9_inner_summary.json",
-        "same_run_result": "Combined focused traces pass the inner-call invariants. The callback trace paired 12 complete 0x4aa3e9 calls and proved callback counts match member counts: 16 generator/context slot +0x04 callbacks all target 0x4a54a7, and 14 final member slot +0x08 callbacks all target 0x49baf5. The destination-mirror trace captured 109 0x49aa63 destination bit26 mirror calls paired with 109 0x49a932 destination bit27 mirror calls. The source-mutation trace paired 15 complete 0x4aa3e9 calls and captured 14 source 0x49a932(false) bit27-clear calls plus 5 source 0x49aa63(true) bit26-set calls.",
-        "scope": "This resolves the sampled 0x4aa3e9 callback dispatch targets and inner mutation call-site stream. It does not complete full generated/wrapper cell before/after parity, reward coordinate object-vector commit ordering, package/native adoption, or broader RMG parity.",
-        "source_basis": "Static 0x4aa3e9 disassembly gives exact inner call sites for selected-member generator/context slot +0x04 dispatch, conditional source-cell 0x49a932(false) and 0x49aa63(true) mutations, destination wrapper-cell bit26/bit27 mirror calls, and final selected-member slot +0x08 dispatch."
-      },
-      "recovery_checkpoint_2026_06_07_4aa3e9_ordered_single_call": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_ordered_single_call_trace/4aa3e9_ordered_summary.json",
-        "runtime_result": "Parsed 1,284 events for one complete invocation: one entry, one slot +0x04 callback, 256 branch-after sites, 256 destination bit26 mirror pairs, 256 destination bit27 mirror pairs, one slot +0x08 callback, and one pre-return. The invocation did not enter the optional source clear/set branch. Wrapper and selected coordinate match from entry to return, and every destination bit26/bit27 after-call state matches its call argument.",
-        "scope": "Recovers one complete non-source-mutating 0x4aa3e9 ordered entry-to-return projection replay. Same-invocation source-mutating entry-to-return replay, caller reward/object-vector commit ordering, object/vector projection, and final native parity remain in progress.",
-        "source_basis": "Live H3MapEd trace of one 0x4aa3e9 invocation from entry through selected-member slot +0x04 callback, destination mirror loop, final slot +0x08 callback, and pre-return 0x4aa5fc."
-      },
-      "recovery_checkpoint_2026_06_07_4aa3e9_projection_state": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_projection_state_ebx_exit/4aa3e9_projection_summary.json",
-        "same_run_result": "Focused entry/pre-return trace paired 12 0x4aa3e9 calls. Every pre-return wrapper pointer matched the entry wrapper, every exit selected-coordinate triple matched the stack coordinate args, and selected-member vectors were non-empty with 10 one-member cases and 2 two-member cases. The corrected pre-return wrapper source is EBX; [EBP+8] is reused as an internal loop variable.",
-        "scope": "This proves selected-coordinate storage and selected-member vector boundary shape at the final wrapper projection boundary. It does not complete member vtable callback semantics, per-cell generated/wrapper mutation stream, generated-cell before/after parity, or package/native adoption.",
-        "source_basis": "Static 0x4aa3e9 disassembly shows wrapper selected-coordinate writes at +0x54/+0x58/+0x5c, selected-member vector iteration through wrapper +0x2c/+0x30, generator/context vtable slot +0x04 member projection, overlap-cell bit26/bit27 mirroring through 0x49aa63/0x49a932, and final selected-member vtable slot +0x08 callbacks."
-      },
-      "recovery_checkpoint_2026_06_07_4aa3e9_slot8_broad_runtime": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json",
-        "runtime_result": "Parsed 42 events from the broad 0x4aa3e9 slot +0x08 trace: 12 paired entry/pre-return boundaries and 18 final selected-member slot +0x08 callbacks. Every sampled slot +0x08 callback targets 0x49baf5. No slot +0x08 record used projection-object vtables 0x540b00 or 0x540b14, and the trace recorded zero hits at 0x49c019, 0x49c0a6, 0x4adb72, 0x4ad947, 0x4ad7f7, or 0x4adb07.",
-        "scope": "This broadens the sampled 0x4aa3e9 final selected-member slot +0x08 evidence and rules out that sampled surface as the observed projection-object dispatch path. It does not recover where projection objects with vtables 0x540b00/0x540b14 are stored or later dispatched, and it does not complete object-vector/private-state parity.",
-        "source_basis": "Live H3MapEd winedbg trace of 0x4aa3e9 entry, final selected-member slot +0x08 site 0x4aa5f6, pre-return 0x4aa5fc, and projection-method/downstream-driver no-hit breakpoints, summarized by tools/rmg_h3maped_4aa3e9_slot8_summary.py."
-      },
-      "recovery_checkpoint_2026_06_07_4aa3e9_source_set_after": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_source_set_after_trace/4aa3e9_source_set_after_summary.json",
-        "runtime_result": "Parsed 138 events: one 0x4aa3e9 entry, 2 paired before/after source bit26-set samples, and 135 after-set site stops. Each paired sample keeps source and destination pointers stable, records source bit26 true after the optional set call, and leaves source bit27 unchanged.",
-        "scope": "Recovers sampled source bit26 after-set state. Complete 0x4aa3e9 entry-to-return ordered replay, reward coordinate object-vector commit ordering, object/vector projection, and final native parity remain in progress.",
-        "source_basis": "Live H3MapEd trace of 0x4aa3e9 entry, source bit26-set call site 0x4aa5a0, and after-set site 0x4aa5a9."
-      },
-      "recovery_checkpoint_2026_06_07_reward_chain_exercised": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_reward_chain_through_4ac552/reward_chain_trace_summary.json",
-        "same_run_result": "Focused same-run trace through the 0x4ac552 span recorded all targeted reward-chain functions: 0x4aab7e twice, 0x4aa354 45 times, 0x4aa1db 45 times, 0x49d471 44 times, 0x49d2e0 459 times, 0x4aa9b7 44 times, and 0x4aa3e9 15 times. 0x49d2e0 returned to both known caller sites: 347 hits to 0x49d5a5 inside 0x49d471 and 112 hits to 0x49d111 inside 0x49cf34.",
-        "scope": "The reward/guard chain now has an exercising same-run trace. Remaining recovery is ordered per-coordinate accept/reject replay, descriptor field naming, selected-member vector contents, and final wrapper-to-generator mutation state, not finding the chain.",
-        "source_basis": "Static inspection of h3maped.exe 0x4ac552 shows 0x4a8c15 is followed by 0x4a9d6a, 0x4aadd2, 0x4a5767, relation iteration, and 0x4aab7e reward scheduling. The earlier 0x4a8c15 stop boundary was therefore too early for the reward/guard chain."
-      },
-      "rejected_probe": "Strict 0x4aae7b bit25 traversal plus origin-adjusted town road endpoints rejected: both focused cases produced 0 accepted road chains / 0 road cells. Origin-adjusted endpoints without strict bit25 also rejected because it worsened road overdraw (Small +14 vs owner, Medium +187 vs owner).",
-      "source_basis": "h3maped.exe 0x4a9589..0x4a95af subtracts object row +0x2c/+0x30 for route bookkeeping; 0x4a95b7..0x4a95e6 then increments y and mutates generated-cell +0x28 by clearing 0x04000000 and setting 0x08000000 when generated-cell +0x2c bit0 is clear. Native derives +0x2c/+0x30 from the recovered town action mask first set bit.",
-      "recovery_checkpoint_2026_06_07_projection_consumer_surface": {
-        "artifact": ".artifacts/rmg_recovery/projection_consumer_surface_summary.json",
-        "runtime_result": "Focused static/evidence summary passes partial-recovery invariants: sampled 0x540b14 projection returns are proven to reach 0x49abd6; 0x4a54a7 is proven as the generator +0xec4/+0xecc storage/queue candidate; pointer trace proves sampled 0x49ec51 resolves to handler vtable 0x00539660 with slot +0x08 target 0x0045e1a6, not 0x49c019/0x49c0a6; bounded 0x4add76 trace records 552 direct-generation events with three sampled 0x540b14 constructor returns, 84 0x4a54d1 and 84 0x4a54ea storage callbacks, and zero 0x4add76/0x4adef7/0x4adb72/0x4ad947/0x49c019/0x49c0a6 hits; sampled 0x4aa3e9 final-wrapper slot +0x08 and 0x49be93/0x49c273 writer helpers remain ruled out for this dispatch.",
-        "scope": "This is a recovery/narrowing checkpoint only. It does not complete full private-state parity, does not mutate native RMG, and does not prove 0x49c019/0x49c0a6 runtime execution.",
-        "remaining_blocker": "projection_object_0x540b14_later_method_dispatch_consumer: recover the later consumer of 0x540b14/0x540b00 slot +0x08 downstream of 0x4a54a7/generator +0xec4/+0xecc storage; do not attribute it to 0x49ec51 without new pointer proof, and do not treat 0x4add76 as proven direct-generation consumer because the bounded storage-heavy sample did not hit it."
-      },
-      "recovery_checkpoint_2026_06_07_4a79a3_object_vector": {
-        "artifact": ".artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json",
-        "runtime_result": "Parsed 44 focused direct-generation trace events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. Object-vector spans were 8 dwords at 0x4a79a3 entry, 19 dwords in the internal loop with EDX=19, and 107 dwords at 0x49eb8d.",
-        "scope": "Partial private-state recovery only; the interactive driver timed out after useful hits and this does not complete end-to-end payload replay or authorize native RMG behavior changes.",
-        "source_basis": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json plus live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log.",
-        "remaining_blocker": "Decode the observed 0x4a79a3 object-vector payload entries and replay their connection/blocker/guard GeneratedCell mutations end-to-end before changing native RMG behavior."
-      },
-      "recovery_checkpoint_2026_06_07_4a79a3_payload_records": {
-        "artifact": ".artifacts/rmg_recovery/4a79a3_payload_trace_summary.json",
-        "runtime_result": "Parsed 21 focused direct-generation trace events: twenty 0x4a7d36 stops and one 0x4a7d99 count checkpoint. The parser verifies vector payload entries match the 19 dumped object-record pointers and EDX shifted count is 19.",
-        "scope": "Partial private-state payload recovery only; no native RMG behavior changed and generated-cell mutation replay remains incomplete.",
-        "source_basis": "Live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_descriptor_payload_trace/winedbg_interactive_trace.log plus static constructor dumps for 0x4a901a, 0x4a93a2, and 0x4a5c07.",
-        "remaining_blocker": "Name remaining record/descriptor fields and replay the connection/blocker/guard GeneratedCell mutations that consume these 19 records end-to-end.",
-        "updatedAt": "2026-06-07T09:30:00Z"
-      },
-      "recovery_checkpoint_2026_06_07_696b_7605_static_surface": {
-        "artifact": ".artifacts/rmg_recovery/696b_7605_static_surface_summary.json",
-        "runtime_result": "Builds on the prior live 0x4a79a3 +0xc8 dispatch summary, which proved one 0x4a696b call and one fallback 0x4a7605 call returned from 0x4a79a3 in the sampled run.",
-        "static_result": "Ghidra dump checks prove 0x4a696b directly mutates GeneratedCell+0x28 as (old & 0xfbffffff) | 0x08000000 when GeneratedCell+0x2c bit0 is clear, and prove 0x4a7605 coordinates four 0x4a7312 endpoint-placement attempts, two 0x4a746b endpoint-writer calls, coordinate vector appends, and downstream 0x4a5e03 materialization without a direct GeneratedCell+0x28 write visible in that dump.",
-        "source_basis": "Existing Ghidra dumps .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_004a696b_FUN_004a696b.txt and .artifacts/rmg_recovery/ghidra_downstream_state_dump/caller_004a7605_FUN_004a7605.txt, plus .artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json.",
-        "remaining_blocker": "Full end-to-end recovery remains incomplete: runtime ordered replay is still required for selected coordinates, GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state, delegated 0x4a7605 callee outcomes, and exact source/relation/vector-entry semantic names before native RMG behavior changes.",
-        "native_behavior_changed": false
-      },
-      "recovery_checkpoint_2026_06_07_connection_endpoint_chain_static": {
-        "artifact": ".artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json",
-        "static_result": "Checked Ghidra instruction sites prove the downstream connection endpoint chain under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 surfaces: 0x4a5e73 consumes +0xf5c plus +0xd8/+0xdc and +0xc8/+0xcc cursor-keyed vectors, projects repeated +0xc8 records into generated cells while setting bit27 and clearing bit26, and advances +0x1104/+0x1108 byte-state; 0x4a746b normalizes through 0x4a5767, selects endpoint coordinates, and packs the 0x4a5e73 low-nibble result into five GeneratedCell+0x2c stamps; 0x4a7312 builds a source-bounded candidate vector through 0x49aa93 and commits one RNG-selected coordinate through generator vtable slot +0x04.",
-        "source_basis": "Existing Ghidra dumps .artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_004a5e73_FUN_004a5e73.txt, .artifacts/rmg_recovery/ghidra_downstream_state_dump/target_004a746b_FUN_004a746b.txt, and .artifacts/rmg_recovery/ghidra_4a7312_policy_dump/target_004a7312_FUN_004a7312.txt, summarized by tools/rmg_h3maped_connection_endpoint_chain_static_summary.py.",
-        "remaining_blocker": "Full end-to-end recovery remains incomplete: same-run runtime replay is still required for 0x4a5e73 entry/return cursor and vectors, 0x4a5fd8/0x4a5ff1 generated-cell before/after state, 0x4a746b selected endpoint plus five stamped cells, and 0x4a7312 candidate vector/RNG/selected object record before native RMG behavior changes.",
-        "native_behavior_changed": false
-      },
-      "recovery_checkpoint_2026_06_07_7605_direct_7312_runtime": {
-        "artifact": ".artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json",
-        "runtime_result": "Bounded live winedbg trace .artifacts/rmg_recovery/direct_generation_c8_dispatch_plus_endpoint_trace/winedbg_interactive_trace.log recorded 12 events: 0x4a696b x3, 0x4a7605 x1, 0x4a7312 x2, 0x4a7447 x2, 0x4a7d99 x1, 0x4a7df4 x1, and pair mark sites 0x4a7e21/0x4a7e25. The sampled 0x4a79a3-owned +0xc8 path reaches 0x4a7605 and two direct 0x4a7312 commits with selected coordinates (12,11,0) and (33,30,0).",
-        "source_basis": "Live trace summarized by tools/rmg_h3maped_dispatch_endpoint_runtime_summary.py, building on checked static endpoint chain .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json.",
-        "remaining_blocker": "Full end-to-end recovery remains incomplete: this sample had zero hits at 0x4a746b, 0x4a5e73, 0x4a5fd8, 0x4a5ff1, and 0x4a75f1, so delegated endpoint-writer generated-cell before/after replay, exact +0xc8/+0xd8 vector semantics, full 0x4a7312 candidate vectors/RNG, and GeneratedCell+0x20/+0x24/+0x28/+0x2c state replay remain blockers before native RMG behavior changes.",
-        "native_behavior_changed": false
-      },
-      "recovery_checkpoint_2026_06_07_7605_control_byte_gate_skip": {
-        "artifact": ".artifacts/rmg_recovery/7605_branch_gate_summary.json",
-        "runtime_result": "Parsed 16 focused live endpoint trace events: one 0x4a7605 dispatch endpoint, two direct 0x4a7312 commits, two 0x4a7447 selected-coordinate commits, both 0x4a7605 control-byte compare gates, both skip targets, and pair mark sites 0x4a7e21/0x4a7e25. At both compare gates ESI=0x03654aac and [ESI+0x09] == 0; 0x4a746b call sites 0x4a7763/0x4a7853 were absent.",
-        "scope": "Explains why the sampled 0x4a7605 invocation produced zero delegated endpoint-writer hits. This is not a replay of 0x4a746b/0x4a5e73 generated-cell writes and does not justify native RMG behavior changes.",
-        "remaining_blocker": "Need a live 0x4a7605 sample with [ESI+0x09] != 0 or another branch that reaches 0x4a746b, then capture 0x4a5e73 generated-cell before/after state and exact source/relation/vector-entry semantics.",
-        "source_basis": "Live H3MapEd winedbg trace summarized by tools/rmg_h3maped_7605_branch_gate_summary.py, cross-checked against .artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json and the static 0x4a7605 Ghidra dump."
-      }
+      "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
+      "source_basis": "Focused Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump generated from h3maped.exe through H3MapEdRmgDump.java, summarized by tools/rmg_h3maped_connection_record_producer_static_summary.py.",
+      "result": "0x4b3c03 is a copy adapter/serializer surface for records containing bytes +0x08/+0x09, not a proven direct generator+0xc8/+0xcc semantic producer in the checked static caller surface.",
+      "remaining_blocker": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+      "native_behavior_changed": false
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -699,7 +480,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover ordered dispatch for the nonzero-control-byte or alternate 0x4a746b endpoint-writer path, 0x4a5e73 generated-cell before/after state, exact +0xc8/+0xd8 source/relation/vector-entry semantics, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
+    "remainingWork": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -709,7 +490,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-07T11:20:00Z",
+    "updatedAt": "2026-06-07T16:53:19Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9351,10 +9132,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T09:39:22Z: Recorded partial 0x4a79a3 filter/+0xc8 dispatch recovery evidence; full private-state chain remains unrecovered and native RMG behavior remains unchanged.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.",
+  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T09:39:22Z: Recorded partial 0x4a79a3 filter/+0xc8 dispatch recovery evidence; full private-state chain remains unrecovered and native RMG behavior remains unchanged.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-07T11:20:00Z",
+  "currentSliceUpdatedAt": "2026-06-07T16:53:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10307,108 +10088,26 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/connection_record_field_summary.json",
+    "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
+    "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
     "commands": [
-      ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgOffsetAccessScan.java .artifacts/rmg_recovery/connection_record_offset_access_scan.txt 0x8,0x9,0xa -readOnly (passed)",
+      ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
+      "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
       "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
       "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
-      "python3 -m py_compile tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_connection_record_producer_static_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_interactive_trace.py tools/rmg_h3maped_recovery_trace.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "python3 tests/validate_repo.py (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
-    ],
-    "status": "focused_connection_record_plus9_consumer_surface_pass_producer_unrecovered"
+    ]
   },
   "latestEvidence": {
-    "recovery_checkpoint_2026_06_07_49c_constructor_return_adoption": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json",
-      "runtime_result": "Parsed 361 selected-create/constructor-return trace events: 178 0x4aa166 selected-create stops, 177 0x4aa168 selected-return stops, one 0x49cac2 constructor and two 0x49cc22 constructors, with three constructor pre-returns immediately followed by 0x4aa168. Each selected-return object preserved the constructor EAX pointer and vtable 0x540b14. Continuations split to 0x4aa22b twice and 0x4aa2fd once.",
-      "scope": "This proves sampled 0x540b14 projection objects created by 0x49cac2/0x49cc22 are returned/adopted by the selected-create path. It does not prove later slot +0x08 dispatch into 0x49c0a6, and 0x49cdb1/0x540b00 was instrumented but not hit in this bounded sample.",
-      "source_basis": "Live H3MapEd winedbg trace of selected-create site 0x4aa166, constructor entries/pre-returns 0x49cac2/0x49cb52 and 0x49cc22/0x49ccb0, selected-return site 0x4aa168, plus static vtable recovery linking 0x540b14+0x08 to 0x49c0a6 and 0x540b00+0x08 to 0x49c019."
-    },
-    "recovery_checkpoint_2026_06_07_49c_consumer_stamp": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
-      "runtime_result": "Parsed 721 consumer/stamp trace events: 110 selected returns at 0x4aa168, 47 initial-consumer paths through 0x4aa22b/0x4aa23d/0x4aa27e, 63 secondary-consumer stops at 0x4aa2fd, 62 validator entries at 0x49d471, 35 validator stamp call sites at 0x49d636, and 197 stamp-helper entries at 0x49abd6. The 49c-specific subset contains two sampled 0x540b14 projection returns, from 0x49cb83/0x49cc12 and 0x49cac2/0x49cb52; both enter the initial branch and reach 0x49abd6 with the stamp-helper object argument matching the selected projection object pointer.",
-      "scope": "This proves sampled post-adoption consumer/stamp behavior for 0x540b14 projection objects. It does not prove later slot +0x08 dispatch into 0x49c0a6 or 0x49c019, and 0x49cdb1/0x540b00 remains unhit in bounded runtime samples.",
-      "source_basis": "Live H3MapEd winedbg trace of constructor pre-return sites 0x49cb52/0x49cc12, selected-return 0x4aa168, initial consumer/stamp sites 0x4aa22b/0x4aa23d/0x4aa27e, stamp helper 0x49abd6, and secondary validator sites 0x4aa2fd/0x4aa30e/0x49d471/0x49d636."
-    },
-    "recovery_checkpoint_2026_06_07_49c_selected_lifetime": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json",
-      "runtime_result": "Parsed 421 selected-lifetime trace events: 62 0x4a9f1c selected-create returns at 0x4aa168, 29 initial-consumer returns at 0x4aa22b, 33 secondary-consumer returns at 0x4aa2fd, 32 secondary validator entries at 0x49d471, 21 validator stamp calls from 0x49d636 into 0x49abd6, 11 failed-secondary cleanup pairs through slot +0x04 then destructor slot +0x00, and 127 total 0x49abd6 stamp-helper hits. Returned object vtables were 0x540a74/0x540ab0/0x540ac4/0x540ad8/0x540aec/0x540b64/0x540b78, with no sampled 0x540b00/0x540b14 returns.",
-      "scope": "This proves the sampled selected-object lifetime from 0x4a9f1c into 0x4aa1db, 0x49d471, and 0x49abd6. It also rules out that sampled path as the 0x540b00/0x540b14 projection-method dispatch site. Full reward/guard/private-state parity and the true storage/consumer path for projection objects constructed by 0x49cac2/0x49cb83/0x49cc22/0x49cdb1 remain incomplete.",
-      "source_basis": "Live H3MapEd winedbg trace of selected-create call/return 0x4aa166/0x4aa168, 0x4aa1db consumer sites 0x4aa22b/0x4aa2fd/0x4aa30e/0x4aa31e/0x4aa327, validator 0x49d471/0x49d636, stamp helper 0x49abd6, and no-hit breakpoints for 0x49c019/0x49c0a6."
-    },
-    "recovery_checkpoint_2026_06_07_4aa3e9_source_sites_ordered": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_source_sites_ordered_trace/4aa3e9_source_sites_ordered_summary.json",
-      "runtime_result": "Parsed 196 events over 30 completed 0x4aa3e9 calls. The trace records 23 source bit27-clear before/after pairs and 8 completed calls that reach the source bit26 set-before site. Source-clear pairs leave source bit27 false and source bit26 stable; completed calls preserve wrapper pointer and selected-coordinate state from entry to return.",
-      "scope": "This resolves completed-call source-site replay for 0x4aa3e9 source bit27 clear and source bit26 set-before sites. Source bit26 after-set state remains covered by the separate source-set-after trace. Caller reward/object-vector commit ordering and native parity remain incomplete.",
-      "source_basis": "Live H3MapEd trace of 0x4aa3e9 entry, source bit27 clear before/after sites 0x4aa58d/0x4aa596, source bit26 set-before site 0x4aa5a0, selected-member slot +0x08 site 0x4aa5f6, and pre-return 0x4aa5fc."
-    },
-    "recovery_checkpoint_2026_06_07_4aa9b7_ordered_commit": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/4aa9b7_ordered_commit_summary.json",
-      "runtime_result": "Parsed 403 events over 85 completed 0x4aa9b7 calls: 79 false returns, 6 successful commits into 0x4aa3e9, 9 accepted-candidate stops, 4 threshold resets, and 9 candidate appends. Successful sampled commits preserve selected vector pointer/index math, selected coordinate copying, wrapper pointer, and 0x4aa3e9 stack arguments; false returns do not enter the commit path.",
-      "scope": "This resolves sampled ordered local candidate-vector selection and handoff from 0x4aa9b7 into 0x4aa3e9. It does not recover 0x4ad7f7 relation-priority vector ordering, 0x4adb72 wrapper/object-vector projection, or final native parity.",
-      "source_basis": "Live H3MapEd trace of 0x4aa9b7 entry, candidate accept/reset/append sites, candidate count check, random selection, selected coordinate copy, 0x4aa3e9 call site and entry, cleanup, and return."
-    },
-    "recovery_checkpoint_2026_06_07_projection_consumer_surface": {
-      "artifact": ".artifacts/rmg_recovery/projection_consumer_surface_summary.json",
-      "runtime_result": "Focused static/evidence summary passes partial-recovery invariants: sampled 0x540b14 projection returns are proven to reach 0x49abd6; 0x4a54a7 is proven as the generator +0xec4/+0xecc storage/queue candidate; pointer trace proves sampled 0x49ec51 resolves to handler vtable 0x00539660 with slot +0x08 target 0x0045e1a6, not 0x49c019/0x49c0a6; bounded 0x4add76 trace records 552 direct-generation events with three sampled 0x540b14 constructor returns, 84 0x4a54d1 and 84 0x4a54ea storage callbacks, and zero 0x4add76/0x4adef7/0x4adb72/0x4ad947/0x49c019/0x49c0a6 hits; sampled 0x4aa3e9 final-wrapper slot +0x08 and 0x49be93/0x49c273 writer helpers remain ruled out for this dispatch.",
-      "scope": "This is a recovery/narrowing checkpoint only. It does not complete full private-state parity, does not mutate native RMG, and does not prove 0x49c019/0x49c0a6 runtime execution.",
-      "remaining_blocker": "projection_object_0x540b14_later_method_dispatch_consumer: recover the later consumer of 0x540b14/0x540b00 slot +0x08 downstream of 0x4a54a7/generator +0xec4/+0xecc storage; do not attribute it to 0x49ec51 without new pointer proof, and do not treat 0x4add76 as proven direct-generation consumer because the bounded storage-heavy sample did not hit it."
-    },
-    "recovery_checkpoint_2026_06_07_4a79a3_object_vector": {
-      "artifact": ".artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json",
-      "runtime_result": "Parsed 44 focused direct-generation trace events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. Object-vector spans were 8 dwords at 0x4a79a3 entry, 19 dwords in the internal loop with EDX=19, and 107 dwords at 0x49eb8d.",
-      "scope": "Partial private-state recovery only; the interactive driver timed out after useful hits and this does not complete end-to-end payload replay or authorize native RMG behavior changes.",
-      "source_basis": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json plus live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log.",
-      "remaining_blocker": "Decode the observed 0x4a79a3 object-vector payload entries and replay their connection/blocker/guard GeneratedCell mutations end-to-end before changing native RMG behavior."
-    },
-    "recovery_checkpoint_2026_06_07_4a79a3_payload_records": {
-      "artifact": ".artifacts/rmg_recovery/4a79a3_payload_trace_summary.json",
-      "runtime_result": "Parsed 21 focused direct-generation trace events: twenty 0x4a7d36 stops and one 0x4a7d99 count checkpoint. The parser verifies vector payload entries match the 19 dumped object-record pointers and EDX shifted count is 19.",
-      "scope": "Partial private-state payload recovery only; no native RMG behavior changed and generated-cell mutation replay remains incomplete.",
-      "source_basis": "Live trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_descriptor_payload_trace/winedbg_interactive_trace.log plus static constructor dumps for 0x4a901a, 0x4a93a2, and 0x4a5c07.",
-      "remaining_blocker": "Name remaining record/descriptor fields and replay the connection/blocker/guard GeneratedCell mutations that consume these 19 records end-to-end.",
-      "updatedAt": "2026-06-07T09:30:00Z"
-    },
-    "recovery_checkpoint_2026_06_07_4a79a3_filter_dispatch": {
-      "artifact": ".artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json",
-      "runtime_result": "Parsed focused 0x4a79a3 filter/dispatch traces. All 19 recovered +0xec8 payload records reached the nested source +0x1c type check; source-type counts were 0x62 x8 and 0x36 x11, so no sampled record passed the 0x57 gate and no 0x4a68e0 call executed. The later +0xc8 dispatch sample hit one 0x4a696b call and one fallback 0x4a7605 call owned by 0x4a79a3, then reached pair mark sites 0x4a7e21 and 0x4a7e25.",
-      "scope": "Partial H3MapEd private-state recovery only. No native RMG behavior changed and no parity fix is claimed.",
-      "source_basis": "Static 0x4a79a3 recovery from Ghidra dump plus live winedbg traces .artifacts/rmg_recovery/direct_generation_4a79a3_filter_call_trace/winedbg_interactive_trace.log and .artifacts/rmg_recovery/direct_generation_4a79a3_c8_dispatch_trace/winedbg_interactive_trace.log, summarized by tools/rmg_h3maped_4a79a3_filter_dispatch_summary.py.",
-      "remaining_blocker": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations, exact +0xc8 record semantic names, and the connection from those writes back to the 0x4a79a3 dispatch record pair before changing native RMG behavior.",
-      "updatedAt": "2026-06-07T09:39:22Z"
-    },
-    "recovery_checkpoint_2026_06_07_696b_7605_static_surface": {
-      "artifact": ".artifacts/rmg_recovery/696b_7605_static_surface_summary.json",
-      "runtime_result": "Builds on the prior live 0x4a79a3 +0xc8 dispatch summary, which proved one 0x4a696b call and one fallback 0x4a7605 call returned from 0x4a79a3 in the sampled run.",
-      "static_result": "Ghidra dump checks prove 0x4a696b directly mutates GeneratedCell+0x28 as (old & 0xfbffffff) | 0x08000000 when GeneratedCell+0x2c bit0 is clear, and prove 0x4a7605 coordinates four 0x4a7312 endpoint-placement attempts, two 0x4a746b endpoint-writer calls, coordinate vector appends, and downstream 0x4a5e03 materialization without a direct GeneratedCell+0x28 write visible in that dump.",
-      "source_basis": "Existing Ghidra dumps .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_004a696b_FUN_004a696b.txt and .artifacts/rmg_recovery/ghidra_downstream_state_dump/caller_004a7605_FUN_004a7605.txt, plus .artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json.",
-      "remaining_blocker": "Full end-to-end recovery remains incomplete: runtime ordered replay is still required for selected coordinates, GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state, delegated 0x4a7605 callee outcomes, and exact source/relation/vector-entry semantic names before native RMG behavior changes.",
-      "native_behavior_changed": false
-    },
-    "recovery_checkpoint_2026_06_07_connection_endpoint_chain_static": {
-      "artifact": ".artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json",
-      "static_result": "Checked Ghidra instruction sites prove the downstream connection endpoint chain under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 surfaces: 0x4a5e73 consumes +0xf5c plus +0xd8/+0xdc and +0xc8/+0xcc cursor-keyed vectors, projects repeated +0xc8 records into generated cells while setting bit27 and clearing bit26, and advances +0x1104/+0x1108 byte-state; 0x4a746b normalizes through 0x4a5767, selects endpoint coordinates, and packs the 0x4a5e73 low-nibble result into five GeneratedCell+0x2c stamps; 0x4a7312 builds a source-bounded candidate vector through 0x49aa93 and commits one RNG-selected coordinate through generator vtable slot +0x04.",
-      "source_basis": "Existing Ghidra dumps .artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_004a5e73_FUN_004a5e73.txt, .artifacts/rmg_recovery/ghidra_downstream_state_dump/target_004a746b_FUN_004a746b.txt, and .artifacts/rmg_recovery/ghidra_4a7312_policy_dump/target_004a7312_FUN_004a7312.txt, summarized by tools/rmg_h3maped_connection_endpoint_chain_static_summary.py.",
-      "remaining_blocker": "Full end-to-end recovery remains incomplete: same-run runtime replay is still required for 0x4a5e73 entry/return cursor and vectors, 0x4a5fd8/0x4a5ff1 generated-cell before/after state, 0x4a746b selected endpoint plus five stamped cells, and 0x4a7312 candidate vector/RNG/selected object record before native RMG behavior changes.",
-      "native_behavior_changed": false
-    },
-    "recovery_checkpoint_2026_06_07_7605_direct_7312_runtime": {
-      "artifact": ".artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json",
-      "runtime_result": "Bounded live winedbg trace .artifacts/rmg_recovery/direct_generation_c8_dispatch_plus_endpoint_trace/winedbg_interactive_trace.log recorded 12 events: 0x4a696b x3, 0x4a7605 x1, 0x4a7312 x2, 0x4a7447 x2, 0x4a7d99 x1, 0x4a7df4 x1, and pair mark sites 0x4a7e21/0x4a7e25. The sampled 0x4a79a3-owned +0xc8 path reaches 0x4a7605 and two direct 0x4a7312 commits with selected coordinates (12,11,0) and (33,30,0).",
-      "source_basis": "Live trace summarized by tools/rmg_h3maped_dispatch_endpoint_runtime_summary.py, building on checked static endpoint chain .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json.",
-      "remaining_blocker": "Full end-to-end recovery remains incomplete: this sample had zero hits at 0x4a746b, 0x4a5e73, 0x4a5fd8, 0x4a5ff1, and 0x4a75f1, so delegated endpoint-writer generated-cell before/after replay, exact +0xc8/+0xd8 vector semantics, full 0x4a7312 candidate vectors/RNG, and GeneratedCell+0x20/+0x24/+0x28/+0x2c state replay remain blockers before native RMG behavior changes.",
-      "native_behavior_changed": false
-    },
-    "recovery_checkpoint_2026_06_07_7605_control_byte_gate_skip": {
-      "artifact": ".artifacts/rmg_recovery/7605_branch_gate_summary.json",
-      "runtime_result": "Parsed 16 focused live endpoint trace events: one 0x4a7605 dispatch endpoint, two direct 0x4a7312 commits, two 0x4a7447 selected-coordinate commits, both 0x4a7605 control-byte compare gates, both skip targets, and pair mark sites 0x4a7e21/0x4a7e25. At both compare gates ESI=0x03654aac and [ESI+0x09] == 0; 0x4a746b call sites 0x4a7763/0x4a7853 were absent.",
-      "scope": "Explains why the sampled 0x4a7605 invocation produced zero delegated endpoint-writer hits. This is not a replay of 0x4a746b/0x4a5e73 generated-cell writes and does not justify native RMG behavior changes.",
-      "remaining_blocker": "Need a live 0x4a7605 sample with [ESI+0x09] != 0 or another branch that reaches 0x4a746b, then capture 0x4a5e73 generated-cell before/after state and exact source/relation/vector-entry semantics.",
-      "source_basis": "Live H3MapEd winedbg trace summarized by tools/rmg_h3maped_7605_branch_gate_summary.py, cross-checked against .artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json and the static 0x4a7605 Ghidra dump."
-    }
+    "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
+    "source_basis": "Focused Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump generated from h3maped.exe through H3MapEdRmgDump.java, summarized by tools/rmg_h3maped_connection_record_producer_static_summary.py.",
+    "result": "0x4b3c03 is a copy adapter/serializer surface for records containing bytes +0x08/+0x09, not a proven direct generator+0xc8/+0xcc semantic producer in the checked static caller surface.",
+    "remaining_blocker": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+    "native_behavior_changed": false
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -43842,225 +43541,33 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, sampled 0x540b14 projection-constructor return adoption through 0x4aa168, and sampled 0x540b14 initial consumer/stamp through 0x4aa22b/0x4aa23d/0x4aa27e into 0x49abd6; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress. 2026-06-07 projection pointer trace checkpoint: sampled 0x49cc22/0x49ccb0 object 0x0364d670 with vtable 0x540b14 reaches 0x4aa168 and three 0x49abd6 stamp entries; cold 0x49ec51 resolves to handler vtable 0x00539660 with slot +0x08 target 0x0045e1a6 and no 0x49c019/0x49c0a6 hits. Therefore sampled 0x49ec51 is ruled out for the 49c projection-method dispatch. Remaining blocker is the later consumer of 0x540b14/0x540b00 slot +0x08 downstream of 0x4a54a7 storage; a bounded 0x4add76-focused direct-generation trace observed storage callbacks but no 0x4add76/0x4adef7/projection-method hits.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.",
+      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, sampled 0x540b14 projection-constructor return adoption through 0x4aa168, and sampled 0x540b14 initial consumer/stamp through 0x4aa22b/0x4aa23d/0x4aa27e into 0x49abd6; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress. 2026-06-07 projection pointer trace checkpoint: sampled 0x49cc22/0x49ccb0 object 0x0364d670 with vtable 0x540b14 reaches 0x4aa168 and three 0x49abd6 stamp entries; cold 0x49ec51 resolves to handler vtable 0x00539660 with slot +0x08 target 0x0045e1a6 and no 0x49c019/0x49c0a6 hits. Therefore sampled 0x49ec51 is ruled out for the 49c projection-method dispatch. Remaining blocker is the later consumer of 0x540b14/0x540b00 slot +0x08 downstream of 0x4a54a7 storage; a bounded 0x4add76-focused direct-generation trace observed storage callbacks but no 0x4add76/0x4adef7/projection-method hits.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/7605_branch_gate_summary.json",
+        "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
+        "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
         "commands": [
-          "python3 tools/rmg_h3maped_7605_branch_gate_summary.py (passed: partial_live_recovery_7605_control_byte_gate_skips_746b)",
-          "python3 tools/rmg_h3maped_dispatch_endpoint_runtime_summary.py (passed: partial_live_recovery_7605_direct_7312_endpoint_commits)",
-          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=127)",
-          "python3 -m py_compile tools/rmg_h3maped_7605_branch_gate_summary.py tools/rmg_h3maped_dispatch_endpoint_runtime_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
+          "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
+          "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
+          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
+          "python3 -m py_compile tools/rmg_h3maped_connection_record_producer_static_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_interactive_trace.py tools/rmg_h3maped_recovery_trace.py tools/rmg_h3maped_recovery_manifest.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)",
           "python3 tests/validate_repo.py (passed)",
           "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
-        ],
-        "status": "focused_7605_control_byte_gate_skip_checkpoint_pass_full_parity_in_progress"
+        ]
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
-        "change_kept": "Town phase now carries live generated-cell word +0x28 and applies the recovered 0x4a95b7..0x4a95e6 mutation at the origin-adjusted coordinate below the selected town, clearing bit26 and setting bit27. Visible/package town coordinates and current generator+0x14b0 road endpoints remain unchanged.",
-        "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates.",
-        "focused_result": {
-          "medium_4p_seed_10_controlled": {
-            "h3maped_objects": 1256,
-            "interpretation": "Medium total object density moved closer without changing the known road overdraw.",
-            "native_objects": 1175,
-            "object_delta": -81,
-            "package_decorative_obstacles": 711,
-            "previous_checkpoint_delta": -102,
-            "private_decorative_records": 808,
-            "road_cells_h3maped": 136,
-            "road_cells_native": 311,
-            "road_delta": 175
-          },
-          "small_3p_seed_11_controlled": {
-            "h3maped_objects": 299,
-            "interpretation": "Small object density moved farther from h3maped; this checkpoint is not a final density fix.",
-            "native_objects": 327,
-            "object_delta": 28,
-            "package_decorative_obstacles": 188,
-            "previous_checkpoint_delta": 24,
-            "private_decorative_records": 232,
-            "road_cells_h3maped": 81,
-            "road_cells_native": 90,
-            "road_delta": 9
-          }
-        },
-        "recovery_checkpoint_2026_06_07": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49ac8e_bit25_clear_summary.json",
-          "same_run_result": "Focused direct-generation trace recorded 48 hits at 0x49ac8e before 0x4a8260. The 48 unique clear flats exactly equal the 48 bit25-clear cells in the same-run 0x4a8260 boundary grid; checksum 88d6d7ef92324a2785c9ea7f6c658ac8829f8d5f4f0468d33998c549999dd702 matches the existing 0x4a8c15 boundary checkpoint.",
-          "scope": "Explains the prior 0x4a8260 raw-coverage skips caused by 0x49a1d8 false on bit25-clear cells. It does not complete reward/object-vector placement semantics or native RMG parity.",
-          "source_basis": "h3maped.exe 0x49abd6 walks descriptor-mask footprint cells; accepted cells call 0x49a932(true), while rejected cells that also fail 0x41e951 execute 0x49ac8e AND byte ptr [ESI + 0x2b],0xfd. That clears GeneratedCell+0x2b bit 0x02, which is w28 bit25 and the validity bit consumed by 0x49a1d8."
-        },
-        "recovery_checkpoint_2026_06_07_49baf5_static_leaf": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_inner_calls/49baf5_static_summary.json",
-          "same_run_result": "The static checker verifies the exact leaf bytes, no memory writes, AL=1 return contract, and slot +0x08 linkage from the 0x4aa3e9 inner summary.",
-          "scope": "This resolves downstream 0x49baf5 side effects as no-op/true-return for the sampled 0x4aa3e9 final selected-member callback. It does not complete full generated/wrapper before/after parity, reward coordinate object-vector commit ordering, package/native adoption, or broader RMG parity.",
-          "source_basis": "Static objdump of h3maped.exe at 0x49baf5 shows b0 01 c3 (mov al,1; ret). The 0x4aa3e9 inner-call trace links this address as the selected-member slot +0x08 target."
-        },
-        "recovery_checkpoint_2026_06_07_49c_constructor_return_adoption": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json",
-          "runtime_result": "Parsed 361 selected-create/constructor-return trace events: 178 0x4aa166 selected-create stops, 177 0x4aa168 selected-return stops, one 0x49cac2 constructor and two 0x49cc22 constructors, with three constructor pre-returns immediately followed by 0x4aa168. Each selected-return object preserved the constructor EAX pointer and vtable 0x540b14. Continuations split to 0x4aa22b twice and 0x4aa2fd once.",
-          "scope": "This proves sampled 0x540b14 projection objects created by 0x49cac2/0x49cc22 are returned/adopted by the selected-create path. It does not prove later slot +0x08 dispatch into 0x49c0a6, and 0x49cdb1/0x540b00 was instrumented but not hit in this bounded sample.",
-          "source_basis": "Live H3MapEd winedbg trace of selected-create site 0x4aa166, constructor entries/pre-returns 0x49cac2/0x49cb52 and 0x49cc22/0x49ccb0, selected-return site 0x4aa168, plus static vtable recovery linking 0x540b14+0x08 to 0x49c0a6 and 0x540b00+0x08 to 0x49c019."
-        },
-        "recovery_checkpoint_2026_06_07_49c_consumer_stamp": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
-          "runtime_result": "Parsed 721 consumer/stamp trace events: 110 selected returns at 0x4aa168, 47 initial-consumer paths through 0x4aa22b/0x4aa23d/0x4aa27e, 63 secondary-consumer stops at 0x4aa2fd, 62 validator entries at 0x49d471, 35 validator stamp call sites at 0x49d636, and 197 stamp-helper entries at 0x49abd6. The 49c-specific subset contains two sampled 0x540b14 projection returns, from 0x49cb83/0x49cc12 and 0x49cac2/0x49cb52; both enter the initial branch and reach 0x49abd6 with the stamp-helper object argument matching the selected projection object pointer.",
-          "scope": "This proves sampled post-adoption consumer/stamp behavior for 0x540b14 projection objects. It does not prove later slot +0x08 dispatch into 0x49c0a6 or 0x49c019, and 0x49cdb1/0x540b00 remains unhit in bounded runtime samples.",
-          "source_basis": "Live H3MapEd winedbg trace of constructor pre-return sites 0x49cb52/0x49cc12, selected-return 0x4aa168, initial consumer/stamp sites 0x4aa22b/0x4aa23d/0x4aa27e, stamp helper 0x49abd6, and secondary validator sites 0x4aa2fd/0x4aa30e/0x49d471/0x49d636."
-        },
-        "recovery_checkpoint_2026_06_07_49c_writer_surface": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
-          "runtime_result": "Static/runtime summary passes: 0x49be93 has 16 repeated writer slot +0x08 calls and 0x49c273 has 17, both with ECX reset to the writer/context pointer loaded from stack+0x08. The sampled constructor/generation trace was instrumented for both helpers and recorded zero hits.",
-          "scope": "This classifies the nearby 0x49be93/0x49c273 slot +0x08 surfaces as writer/serializer-like helpers for the sampled generation path, not the missing projection-object dispatch. It narrows the next recovery target to projection-object storage/consumption for vtables 0x540b00/0x540b14.",
-          "source_basis": "Ghidra dumps under .artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump plus constructor trace summary .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json, summarized by tools/rmg_h3maped_49c_writer_surface_summary.py."
-        },
-        "recovery_checkpoint_2026_06_07_49d2e0_49a6f9_fallthrough": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_fallthrough_reasons/49d2e0_fallthrough_summary.json",
-          "same_run_result": "Focused fallthrough trace paired 18 0x49d2e0 entries with 11 accepts, 7 rejects, and 1 manually cut missing outcome. Three rejects stop at 0x49d3e2 before falling through to 0x49d3e8, proving the non-54/9 0x49a6f9 true-return rejection class that was not instrumented in the prior branch trace.",
-          "scope": "This resolves the missing direct-false class for non-54/9 footprint/object probe rejection. Residual warm-up/direct-false samples, exact descriptor field names, selected-member vector contents, and final 0x4aa3e9 wrapper-to-generator projection remain unrecovered.",
-          "source_basis": "Static 0x49d2e0 disassembly shows the non-54/9 path calls 0x49a6f9, tests AL at 0x49d3e0, jumps to accept at 0x49d3e2 only when AL is zero, and otherwise falls through directly to the false return at 0x49d3e8."
-        },
-        "recovery_checkpoint_2026_06_07_49d2e0_branch_reasons": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_branch_reasons/49d2e0_branch_summary.json",
-          "same_run_result": "Focused branch trace paired 99 0x49d2e0 entries with 91 accepts, 8 rejects, and 1 manually cut missing outcome. Five rejects are branch-classified: 0x49d3ad policy byte +1 missing x3, 0x49d3a7 policy byte +2 missing x1, and 0x49d466 type 54/9 no available neighbor x1. Three rejects remain explicitly unclassified because the parsed trace had no intermediate branch stop between entry and final false.",
-          "scope": "This narrows 0x49d2e0 reject reasons from final false outcomes to exact branch-site evidence for the classified sample. It does not complete descriptor field naming, the unclassified direct-false cases, selected-member vector contents, or final 0x4aa3e9 wrapper-to-generator projection.",
-          "source_basis": "Static 0x49d2e0 disassembly names false-return branch sites: 0x49d34c policy precheck, 0x49d3a7 neighbor policy byte +2, 0x49d3ad neighbor policy byte +1, 0x49d408 type 54/9 0x49a6f9 collision probe, and 0x49d466 type 54/9 no-neighbor-available check."
-        },
-        "recovery_checkpoint_2026_06_07_49d2e0_entry_outcomes": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_entry_outcomes/49d2e0_outcome_summary.json",
-          "same_run_result": "Focused entry/outcome trace recorded 141 0x49d2e0 entries and paired 140 with outcomes: 124 accept and 16 reject. Caller split: 0x49cf34 via return 0x49d111 had 52 accept, 5 reject, and 1 manually cut missing outcome; 0x49d471 via return 0x49d5a5 had 72 accept and 11 reject.",
-          "scope": "This proves ordered candidate accept/reject surface for the sampled same-run span. Remaining recovery is deeper per-reject branch classification, descriptor field names, selected-member vector contents, and final wrapper-to-generator mutation state.",
-          "source_basis": "Static recovery of 0x49d2e0 shows accept path at 0x49d468 (MOV AL,1), reject path at 0x49d3e8 (XOR AL,AL), and both funnel to RET 0x10 at 0x49d46e."
-        },
-        "recovery_checkpoint_2026_06_07_49d2e0_static": {
-          "artifact": "docs/h3maped-rmg-private-state-recovery.md and tools/rmg_h3maped_recovery_manifest.py",
-          "runtime_result": "Focused direct-generation traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only. They did not hit 0x49d2e0, 0x49d471, 0x4aa1db, 0x4aa3e9, or 0x4aa9b7 before that boundary.",
-          "scope": "Static helper contract is strengthened, but same-run ordered reward/guard replay remains unrecovered. Next work must find or drive an H3MapEd path that actually exercises the reward/guard chain before any native reward/object-vector behavior change.",
-          "source_basis": "Ghidra static recovery of h3maped.exe 0x49d2e0 shows the reward/guard candidate acceptance helper uses wrapper grid fields, object descriptor offsets/dimensions/type, policy table 0x57c648, direction tables 0x5a2658/0x5a2680, GeneratedCell bit22/bit26 state, 0x49a1d8 validity, and 0x49a6f9 footprint/object probes."
-        },
-        "recovery_checkpoint_2026_06_07_49d69d_runtime": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/49d69d_runtime_summary.json",
-          "runtime_result": "Parsed 149 events: 38 entries, 37 completed stamp cycles, and one incomplete final entry before manual trace cut. Every completed sampled call preserves selected x/y into the (x,y,0) stamp coordinate and grows the selected-member vector by one. First completed call uses member 0x0364de30 at selected coordinate (10,7), growing the selected-member vector from 1 to 2 while leaving candidate-coordinate vector count 8.",
-          "scope": "Recovers the live selected-coordinate/member stamp handoff from 0x49cf34 into 0x49d69d and 0x49abd6. Wrapper +0x4c/+0x50/+0x48 finalization, caller-side candidate cleanup, object/vector projection, and final native parity remain in progress.",
-          "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d69d entry, 0x49d6af selected-member vector append call site, 0x49d6d4 0x49abd6 stamp call site, and 0x49d6d9 post-stamp state; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json."
-        },
-        "recovery_checkpoint_2026_06_07_49d69d_static_stamp": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d69d_static/49d69d_static_summary.json",
-          "same_run_result": "The checker also verifies the 0x49cf34 call-site push order: selected_y, selected_x, object/member record, then call 0x49d69d.",
-          "scope": "This resolves the static selected-member stamp helper contract. It does not complete 0x49cf34 ordered candidate-coordinate replay, wrapper +0x4c/+0x50/+0x48 finalization replay, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity.",
-          "source_basis": "Static objdump and existing Ghidra pcode dumps verify 0x49d69d receives wrapper in ECX, object/member record at stack +0x08, selected x/y at +0x0c/+0x10, appends the member pointer to wrapper+0x28 through 0x40bb26, builds local coordinate triple (x,y,0), calls 0x49abd6, and returns with ret 0x0c."
-        },
-        "recovery_checkpoint_2026_06_07_49d6e0_static_bounds": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d6e0_static/49d6e0_static_summary.json",
-          "same_run_result": "The static checker verifies the known caller set from Ghidra references: 0x49cf34, 0x4aa1db, 0x4adb72, and 0x4ad947.",
-          "scope": "This resolves the static wrapper bounds refresh contract: included cells are invalid, bit22 set, or bit27 clear; +0x18/+0x1c are inclusive min bounds and +0x20/+0x24 are exclusive max bounds written as x+1/y+1. It does not complete caller-specific ordered wrapper-content replay, 0x49d7c3 candidate-vector replay, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity.",
-          "source_basis": "Static objdump and existing Ghidra pcode dumps verify 0x49d6e0 receives wrapper in ECX, initializes wrapper +0x18/+0x1c to 0x7d00 and +0x20/+0x24 to 0xffff8300, scans wrapper cells from +0x08 using width/height +0x0c/+0x10 and 0x30-byte cell stride, and gates inclusion through 0x49a1d8 plus GeneratedCell bit22/bit27."
-        },
-        "recovery_checkpoint_2026_06_07_49d7c3_runtime": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_runtime_trace/49d7c3_runtime_summary.json",
-          "runtime_result": "Parsed 298 events: 20 entries, 19 completed calls, and 259 append-call-site hits before manual trace cut. At 0x49d868 EAX points to EBP-0x0c/EBP-0x08 append coordinate and wrapper+0x3c/+0x40/+0x44 exposes pre-append vector begin/end/capacity. First completed call appends 18 coordinates and exits with vector count 18.",
-          "scope": "Recovers the live 0x49d7c3 contour candidate-vector append surface. Full reward/guard caller replay through 0x49cf34 filtering, selected-coordinate mutation, object-vector updates, and final native parity remains in progress.",
-          "source_basis": "Live H3MapEd direct-generation winedbg trace of 0x49d7c3 entry, 0x49d868 append call site, and 0x49d90f exit; static contract remains backed by .artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json."
-        },
-        "recovery_checkpoint_2026_06_07_49d7c3_static_contour": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_49d7c3_static/49d7c3_static_summary.json",
-          "same_run_result": "The static checker verifies the expected caller set from Ghidra references: 0x4aa354, two 0x49cf34 call sites, 0x4adb72, and 0x4ad947.",
-          "scope": "This resolves the static candidate-vector rebuild/contour contract and corrects the prior shorthand that implied it starts from a valid bit27 passable cell. It does not complete exact runtime coordinate sequence replay, 0x49cf34 ordered candidate filtering/selection, 0x4aa3e9 generated/wrapper before/after parity, package/native adoption, or broader RMG parity.",
-          "source_basis": "Static objdump and existing Ghidra pcode dumps verify 0x49d7c3 receives wrapper in ECX, returns without rebuilding when wrapper+0x38 candidate vector already has nonzero 8-byte entries, scans y/x over wrapper cells while cells are bit22-clear, 0x49a1d8-valid, and bit27-set, starts contour work at the first bit22-set/invalid/bit27-clear boundary cell, and appends coordinates to wrapper+0x38 through 0x40bb15 while walking direction table 0x5a2658/0x5a265c."
-        },
-        "recovery_checkpoint_2026_06_07_4aa3e9_inner_calls": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_inner_calls/4aa3e9_inner_summary.json",
-          "same_run_result": "Combined focused traces pass the inner-call invariants. The callback trace paired 12 complete 0x4aa3e9 calls and proved callback counts match member counts: 16 generator/context slot +0x04 callbacks all target 0x4a54a7, and 14 final member slot +0x08 callbacks all target 0x49baf5. The destination-mirror trace captured 109 0x49aa63 destination bit26 mirror calls paired with 109 0x49a932 destination bit27 mirror calls. The source-mutation trace paired 15 complete 0x4aa3e9 calls and captured 14 source 0x49a932(false) bit27-clear calls plus 5 source 0x49aa63(true) bit26-set calls.",
-          "scope": "This resolves the sampled 0x4aa3e9 callback dispatch targets and inner mutation call-site stream. It does not complete full generated/wrapper cell before/after parity, reward coordinate object-vector commit ordering, package/native adoption, or broader RMG parity.",
-          "source_basis": "Static 0x4aa3e9 disassembly gives exact inner call sites for selected-member generator/context slot +0x04 dispatch, conditional source-cell 0x49a932(false) and 0x49aa63(true) mutations, destination wrapper-cell bit26/bit27 mirror calls, and final selected-member slot +0x08 dispatch."
-        },
-        "recovery_checkpoint_2026_06_07_4aa3e9_ordered_single_call": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_ordered_single_call_trace/4aa3e9_ordered_summary.json",
-          "runtime_result": "Parsed 1,284 events for one complete invocation: one entry, one slot +0x04 callback, 256 branch-after sites, 256 destination bit26 mirror pairs, 256 destination bit27 mirror pairs, one slot +0x08 callback, and one pre-return. The invocation did not enter the optional source clear/set branch. Wrapper and selected coordinate match from entry to return, and every destination bit26/bit27 after-call state matches its call argument.",
-          "scope": "Recovers one complete non-source-mutating 0x4aa3e9 ordered entry-to-return projection replay. Same-invocation source-mutating entry-to-return replay, caller reward/object-vector commit ordering, object/vector projection, and final native parity remain in progress.",
-          "source_basis": "Live H3MapEd trace of one 0x4aa3e9 invocation from entry through selected-member slot +0x04 callback, destination mirror loop, final slot +0x08 callback, and pre-return 0x4aa5fc."
-        },
-        "recovery_checkpoint_2026_06_07_4aa3e9_projection_state": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_projection_state_ebx_exit/4aa3e9_projection_summary.json",
-          "same_run_result": "Focused entry/pre-return trace paired 12 0x4aa3e9 calls. Every pre-return wrapper pointer matched the entry wrapper, every exit selected-coordinate triple matched the stack coordinate args, and selected-member vectors were non-empty with 10 one-member cases and 2 two-member cases. The corrected pre-return wrapper source is EBX; [EBP+8] is reused as an internal loop variable.",
-          "scope": "This proves selected-coordinate storage and selected-member vector boundary shape at the final wrapper projection boundary. It does not complete member vtable callback semantics, per-cell generated/wrapper mutation stream, generated-cell before/after parity, or package/native adoption.",
-          "source_basis": "Static 0x4aa3e9 disassembly shows wrapper selected-coordinate writes at +0x54/+0x58/+0x5c, selected-member vector iteration through wrapper +0x2c/+0x30, generator/context vtable slot +0x04 member projection, overlap-cell bit26/bit27 mirroring through 0x49aa63/0x49a932, and final selected-member vtable slot +0x08 callbacks."
-        },
-        "recovery_checkpoint_2026_06_07_4aa3e9_slot8_broad_runtime": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json",
-          "runtime_result": "Parsed 42 events from the broad 0x4aa3e9 slot +0x08 trace: 12 paired entry/pre-return boundaries and 18 final selected-member slot +0x08 callbacks. Every sampled slot +0x08 callback targets 0x49baf5. No slot +0x08 record used projection-object vtables 0x540b00 or 0x540b14, and the trace recorded zero hits at 0x49c019, 0x49c0a6, 0x4adb72, 0x4ad947, 0x4ad7f7, or 0x4adb07.",
-          "scope": "This broadens the sampled 0x4aa3e9 final selected-member slot +0x08 evidence and rules out that sampled surface as the observed projection-object dispatch path. It does not recover where projection objects with vtables 0x540b00/0x540b14 are stored or later dispatched, and it does not complete object-vector/private-state parity.",
-          "source_basis": "Live H3MapEd winedbg trace of 0x4aa3e9 entry, final selected-member slot +0x08 site 0x4aa5f6, pre-return 0x4aa5fc, and projection-method/downstream-driver no-hit breakpoints, summarized by tools/rmg_h3maped_4aa3e9_slot8_summary.py."
-        },
-        "recovery_checkpoint_2026_06_07_4aa3e9_source_set_after": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_source_set_after_trace/4aa3e9_source_set_after_summary.json",
-          "runtime_result": "Parsed 138 events: one 0x4aa3e9 entry, 2 paired before/after source bit26-set samples, and 135 after-set site stops. Each paired sample keeps source and destination pointers stable, records source bit26 true after the optional set call, and leaves source bit27 unchanged.",
-          "scope": "Recovers sampled source bit26 after-set state. Complete 0x4aa3e9 entry-to-return ordered replay, reward coordinate object-vector commit ordering, object/vector projection, and final native parity remain in progress.",
-          "source_basis": "Live H3MapEd trace of 0x4aa3e9 entry, source bit26-set call site 0x4aa5a0, and after-set site 0x4aa5a9."
-        },
-        "recovery_checkpoint_2026_06_07_4aa3e9_source_sites_ordered": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa3e9_source_sites_ordered_trace/4aa3e9_source_sites_ordered_summary.json",
-          "runtime_result": "Parsed 196 events over 30 completed 0x4aa3e9 calls. The trace records 23 source bit27-clear before/after pairs and 8 completed calls that reach the source bit26 set-before site. Source-clear pairs leave source bit27 false and source bit26 stable; completed calls preserve wrapper pointer and selected-coordinate state from entry to return.",
-          "scope": "This resolves completed-call source-site replay for 0x4aa3e9 source bit27 clear and source bit26 set-before sites. Source bit26 after-set state remains covered by the separate source-set-after trace. Caller reward/object-vector commit ordering and native parity remain incomplete.",
-          "source_basis": "Live H3MapEd trace of 0x4aa3e9 entry, source bit27 clear before/after sites 0x4aa58d/0x4aa596, source bit26 set-before site 0x4aa5a0, selected-member slot +0x08 site 0x4aa5f6, and pre-return 0x4aa5fc."
-        },
-        "recovery_checkpoint_2026_06_07_4aa9b7_ordered_commit": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/4aa9b7_ordered_commit_summary.json",
-          "runtime_result": "Parsed 403 events over 85 completed 0x4aa9b7 calls: 79 false returns, 6 successful commits into 0x4aa3e9, 9 accepted-candidate stops, 4 threshold resets, and 9 candidate appends. Successful sampled commits preserve selected vector pointer/index math, selected coordinate copying, wrapper pointer, and 0x4aa3e9 stack arguments; false returns do not enter the commit path.",
-          "scope": "This resolves sampled ordered local candidate-vector selection and handoff from 0x4aa9b7 into 0x4aa3e9. It does not recover 0x4ad7f7 relation-priority vector ordering, 0x4adb72 wrapper/object-vector projection, or final native parity.",
-          "source_basis": "Live H3MapEd trace of 0x4aa9b7 entry, candidate accept/reset/append sites, candidate count check, random selection, selected coordinate copy, 0x4aa3e9 call site and entry, cleanup, and return."
-        },
-        "recovery_checkpoint_2026_06_07_reward_chain_exercised": {
-          "artifact": ".artifacts/rmg_recovery/direct_generation_reward_chain_through_4ac552/reward_chain_trace_summary.json",
-          "same_run_result": "Focused same-run trace through the 0x4ac552 span recorded all targeted reward-chain functions: 0x4aab7e twice, 0x4aa354 45 times, 0x4aa1db 45 times, 0x49d471 44 times, 0x49d2e0 459 times, 0x4aa9b7 44 times, and 0x4aa3e9 15 times. 0x49d2e0 returned to both known caller sites: 347 hits to 0x49d5a5 inside 0x49d471 and 112 hits to 0x49d111 inside 0x49cf34.",
-          "scope": "The reward/guard chain now has an exercising same-run trace. Remaining recovery is ordered per-coordinate accept/reject replay, descriptor field naming, selected-member vector contents, and final wrapper-to-generator mutation state, not finding the chain.",
-          "source_basis": "Static inspection of h3maped.exe 0x4ac552 shows 0x4a8c15 is followed by 0x4a9d6a, 0x4aadd2, 0x4a5767, relation iteration, and 0x4aab7e reward scheduling. The earlier 0x4a8c15 stop boundary was therefore too early for the reward/guard chain."
-        },
-        "rejected_probe": "Strict 0x4aae7b bit25 traversal plus origin-adjusted town road endpoints rejected: both focused cases produced 0 accepted road chains / 0 road cells. Origin-adjusted endpoints without strict bit25 also rejected because it worsened road overdraw (Small +14 vs owner, Medium +187 vs owner).",
-        "source_basis": "h3maped.exe 0x4a9589..0x4a95af subtracts object row +0x2c/+0x30 for route bookkeeping; 0x4a95b7..0x4a95e6 then increments y and mutates generated-cell +0x28 by clearing 0x04000000 and setting 0x08000000 when generated-cell +0x2c bit0 is clear. Native derives +0x2c/+0x30 from the recovered town action mask first set bit.",
-        "recovery_checkpoint_2026_06_07_projection_consumer_surface": {
-          "artifact": ".artifacts/rmg_recovery/projection_consumer_surface_summary.json",
-          "runtime_result": "Focused static/evidence summary passes partial-recovery invariants: sampled 0x540b14 projection returns are proven to reach 0x49abd6; 0x4a54a7 is proven as the generator +0xec4/+0xecc storage/queue candidate; pointer trace proves sampled 0x49ec51 resolves to handler vtable 0x00539660 with slot +0x08 target 0x0045e1a6, not 0x49c019/0x49c0a6; bounded 0x4add76 trace records 552 direct-generation events with three sampled 0x540b14 constructor returns, 84 0x4a54d1 and 84 0x4a54ea storage callbacks, and zero 0x4add76/0x4adef7/0x4adb72/0x4ad947/0x49c019/0x49c0a6 hits; sampled 0x4aa3e9 final-wrapper slot +0x08 and 0x49be93/0x49c273 writer helpers remain ruled out for this dispatch.",
-          "scope": "This is a recovery/narrowing checkpoint only. It does not complete full private-state parity, does not mutate native RMG, and does not prove 0x49c019/0x49c0a6 runtime execution.",
-          "remaining_blocker": "projection_object_0x540b14_later_method_dispatch_consumer: recover the later consumer of 0x540b14/0x540b00 slot +0x08 downstream of 0x4a54a7/generator +0xec4/+0xecc storage; do not attribute it to 0x49ec51 without new pointer proof, and do not treat 0x4add76 as proven direct-generation consumer because the bounded storage-heavy sample did not hit it."
-        },
-        "recovery_checkpoint_2026_06_07_696b_7605_static_surface": {
-          "artifact": ".artifacts/rmg_recovery/696b_7605_static_surface_summary.json",
-          "runtime_result": "Builds on the prior live 0x4a79a3 +0xc8 dispatch summary, which proved one 0x4a696b call and one fallback 0x4a7605 call returned from 0x4a79a3 in the sampled run.",
-          "static_result": "Ghidra dump checks prove 0x4a696b directly mutates GeneratedCell+0x28 as (old & 0xfbffffff) | 0x08000000 when GeneratedCell+0x2c bit0 is clear, and prove 0x4a7605 coordinates four 0x4a7312 endpoint-placement attempts, two 0x4a746b endpoint-writer calls, coordinate vector appends, and downstream 0x4a5e03 materialization without a direct GeneratedCell+0x28 write visible in that dump.",
-          "source_basis": "Existing Ghidra dumps .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_004a696b_FUN_004a696b.txt and .artifacts/rmg_recovery/ghidra_downstream_state_dump/caller_004a7605_FUN_004a7605.txt, plus .artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json.",
-          "remaining_blocker": "Full end-to-end recovery remains incomplete: runtime ordered replay is still required for selected coordinates, GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state, delegated 0x4a7605 callee outcomes, and exact source/relation/vector-entry semantic names before native RMG behavior changes.",
-          "native_behavior_changed": false
-        },
-        "recovery_checkpoint_2026_06_07_connection_endpoint_chain_static": {
-          "artifact": ".artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json",
-          "static_result": "Checked Ghidra instruction sites prove the downstream connection endpoint chain under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 surfaces: 0x4a5e73 consumes +0xf5c plus +0xd8/+0xdc and +0xc8/+0xcc cursor-keyed vectors, projects repeated +0xc8 records into generated cells while setting bit27 and clearing bit26, and advances +0x1104/+0x1108 byte-state; 0x4a746b normalizes through 0x4a5767, selects endpoint coordinates, and packs the 0x4a5e73 low-nibble result into five GeneratedCell+0x2c stamps; 0x4a7312 builds a source-bounded candidate vector through 0x49aa93 and commits one RNG-selected coordinate through generator vtable slot +0x04.",
-          "source_basis": "Existing Ghidra dumps .artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_004a5e73_FUN_004a5e73.txt, .artifacts/rmg_recovery/ghidra_downstream_state_dump/target_004a746b_FUN_004a746b.txt, and .artifacts/rmg_recovery/ghidra_4a7312_policy_dump/target_004a7312_FUN_004a7312.txt, summarized by tools/rmg_h3maped_connection_endpoint_chain_static_summary.py.",
-          "remaining_blocker": "Full end-to-end recovery remains incomplete: same-run runtime replay is still required for 0x4a5e73 entry/return cursor and vectors, 0x4a5fd8/0x4a5ff1 generated-cell before/after state, 0x4a746b selected endpoint plus five stamped cells, and 0x4a7312 candidate vector/RNG/selected object record before native RMG behavior changes.",
-          "native_behavior_changed": false
-        },
-        "recovery_checkpoint_2026_06_07_7605_direct_7312_runtime": {
-          "artifact": ".artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json",
-          "runtime_result": "Bounded live winedbg trace .artifacts/rmg_recovery/direct_generation_c8_dispatch_plus_endpoint_trace/winedbg_interactive_trace.log recorded 12 events: 0x4a696b x3, 0x4a7605 x1, 0x4a7312 x2, 0x4a7447 x2, 0x4a7d99 x1, 0x4a7df4 x1, and pair mark sites 0x4a7e21/0x4a7e25. The sampled 0x4a79a3-owned +0xc8 path reaches 0x4a7605 and two direct 0x4a7312 commits with selected coordinates (12,11,0) and (33,30,0).",
-          "source_basis": "Live trace summarized by tools/rmg_h3maped_dispatch_endpoint_runtime_summary.py, building on checked static endpoint chain .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json.",
-          "remaining_blocker": "Full end-to-end recovery remains incomplete: this sample had zero hits at 0x4a746b, 0x4a5e73, 0x4a5fd8, 0x4a5ff1, and 0x4a75f1, so delegated endpoint-writer generated-cell before/after replay, exact +0xc8/+0xd8 vector semantics, full 0x4a7312 candidate vectors/RNG, and GeneratedCell+0x20/+0x24/+0x28/+0x2c state replay remain blockers before native RMG behavior changes.",
-          "native_behavior_changed": false
-        },
-        "recovery_checkpoint_2026_06_07_7605_control_byte_gate_skip": {
-          "artifact": ".artifacts/rmg_recovery/7605_branch_gate_summary.json",
-          "runtime_result": "Parsed 16 focused live endpoint trace events: one 0x4a7605 dispatch endpoint, two direct 0x4a7312 commits, two 0x4a7447 selected-coordinate commits, both 0x4a7605 control-byte compare gates, both skip targets, and pair mark sites 0x4a7e21/0x4a7e25. At both compare gates ESI=0x03654aac and [ESI+0x09] == 0; 0x4a746b call sites 0x4a7763/0x4a7853 were absent.",
-          "scope": "Explains why the sampled 0x4a7605 invocation produced zero delegated endpoint-writer hits. This is not a replay of 0x4a746b/0x4a5e73 generated-cell writes and does not justify native RMG behavior changes.",
-          "remaining_blocker": "Need a live 0x4a7605 sample with [ESI+0x09] != 0 or another branch that reaches 0x4a746b, then capture 0x4a5e73 generated-cell before/after state and exact source/relation/vector-entry semantics.",
-          "source_basis": "Live H3MapEd winedbg trace summarized by tools/rmg_h3maped_7605_branch_gate_summary.py, cross-checked against .artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json and the static 0x4a7605 Ghidra dump."
-        }
+        "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
+        "source_basis": "Focused Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump generated from h3maped.exe through H3MapEdRmgDump.java, summarized by tools/rmg_h3maped_connection_record_producer_static_summary.py.",
+        "result": "0x4b3c03 is a copy adapter/serializer surface for records containing bytes +0x08/+0x09, not a proven direct generator+0xc8/+0xcc semantic producer in the checked static caller surface.",
+        "remaining_blocker": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+        "native_behavior_changed": false
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -44071,7 +43578,7 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingWork": "Recover ordered dispatch for the nonzero-control-byte or alternate 0x4a746b endpoint-writer path, 0x4a5e73 generated-cell before/after state, exact +0xc8/+0xd8 source/relation/vector-entry semantics, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
+      "remainingWork": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
         "project.md",
@@ -44081,7 +43588,7 @@
       "status": "in_progress",
       "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-07T11:20:00Z",
+      "updatedAt": "2026-06-07T16:53:19Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
@@ -50490,7 +49997,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover ordered dispatch for the nonzero-control-byte or alternate 0x4a746b endpoint-writer path, 0x4a5e73 generated-cell before/after state, exact +0xc8/+0xd8 source/relation/vector-entry semantics, and final generated-cell/private-state phase parity. Do not use density scalars, gates, retries, or final-map delta tuning.",
+  "remainingWork": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50731,7 +50238,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-07T11:20:00Z",
+  "updatedAt": "2026-06-07T16:53:19Z",
   "validation": {
     "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
     "evidence": [
@@ -55908,6 +55415,23 @@
       "status": "in_progress_town_post_append_mutation_kept",
       "summary": "Kept h3maped town post-append generated-cell mutation from 0x4a95b7..0x4a95e6 while preserving current road endpoint behavior; strict bit25 traversal and origin-adjusted road endpoint probes were rejected.",
       "updatedAt": "2026-06-05T09:55:00Z"
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
+      "updatedAt": "2026-06-07T16:53:19Z",
+      "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
+      "commands": [
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
+        "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
+        "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
+        "python3 -m py_compile tools/rmg_h3maped_connection_record_producer_static_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_interactive_trace.py tools/rmg_h3maped_recovery_trace.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
+      ]
     }
   ],
   "validationResults": [

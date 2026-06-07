@@ -20,6 +20,7 @@ DEFAULT_ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_SCAN = DEFAULT_ROOT / "connection_record_offset_access_scan.txt"
 DEFAULT_GATE = DEFAULT_ROOT / "7605_branch_gate_summary.json"
 DEFAULT_OUT = DEFAULT_ROOT / "connection_record_field_summary.json"
+DEFAULT_PRODUCER_STATIC = DEFAULT_ROOT / "connection_record_producer_static_summary.json"
 
 DEFAULT_49B3FB_DUMP = DEFAULT_ROOT / "ghidra_private_state_dump/target_0049b3fb_FUN_0049b3fb.txt"
 DEFAULT_4A4C8E_DUMP = DEFAULT_ROOT / "ghidra_private_state_expanded_dump/target_004a4c8e_FUN_004a4c8e.txt"
@@ -114,6 +115,7 @@ def summarize_scan(entries: list[dict[str, str]]) -> dict[str, Any]:
 def summarize(
     scan_path: Path,
     gate_path: Path,
+    producer_static_path: Path,
     dump_49b3fb: Path,
     dump_4a4c8e: Path,
     dump_4a4fc5: Path,
@@ -122,6 +124,7 @@ def summarize(
     scan_entries = parse_scan(scan_path)
     scan = summarize_scan(scan_entries)
     gate = read_json(gate_path)
+    producer_static = read_json(producer_static_path)
     text_49b3fb = read_text(dump_49b3fb)
     text_4a4c8e = read_text(dump_4a4c8e)
     text_4a4fc5 = read_text(dump_4a4fc5)
@@ -172,6 +175,7 @@ def summarize(
         "source_artifacts": {
             "offset_scan": str(scan_path),
             "gate_summary": str(gate_path),
+            "producer_static_summary": str(producer_static_path),
             "dump_49b3fb": str(dump_49b3fb),
             "dump_4a4c8e": str(dump_4a4c8e),
             "dump_4a4fc5": str(dump_4a4fc5),
@@ -232,6 +236,12 @@ def summarize(
                 "the semantic producer of the RMG compact connection record until the owning caller and "
                 "vtable source are tied to generator+0xc8/+0xcc."
             ),
+            "static_followup": {
+                "status": producer_static.get("status", "missing"),
+                "classification": producer_static.get("candidate", {}).get("classification"),
+                "result": producer_static.get("human_readable_result"),
+                "next_recovery_target": producer_static.get("next_recovery_target"),
+            },
         },
         "recovered_contract": (
             "Byte +0x09 is best named as a connection recipe endpoint-stamping enable flag for now. "
@@ -252,6 +262,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scan", type=Path, default=DEFAULT_SCAN)
     parser.add_argument("--gate-summary", type=Path, default=DEFAULT_GATE)
+    parser.add_argument("--producer-static-summary", type=Path, default=DEFAULT_PRODUCER_STATIC)
     parser.add_argument("--dump-49b3fb", type=Path, default=DEFAULT_49B3FB_DUMP)
     parser.add_argument("--dump-4a4c8e", type=Path, default=DEFAULT_4A4C8E_DUMP)
     parser.add_argument("--dump-4a4fc5", type=Path, default=DEFAULT_4A4FC5_DUMP)
@@ -265,6 +276,7 @@ def main() -> int:
     summary = summarize(
         args.scan,
         args.gate_summary,
+        args.producer_static_summary,
         args.dump_49b3fb,
         args.dump_4a4c8e,
         args.dump_4a4fc5,
