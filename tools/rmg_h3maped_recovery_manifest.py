@@ -1367,11 +1367,24 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49d2e0",
         "name": "reward_guard_candidate_acceptance_helper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_runtime_exerciser_pending",
         "calls": ["0x49a1d8", "0x49a6f9"],
-        "reads": ["object descriptor through arg1", "candidate x/y/level args", "wrapper grid at ecx+0x08/+0x0c/+0x10", "direction tables 0x5a2658 and 0x5a2680"],
-        "returns": ["true when the candidate passes object terrain/footprint/ring checks", "false when bit22/object adjacency/terrain rules reject it"],
-        "ghidra_dump": "Called by 0x49cf34 and 0x49d471. Static pass recovers direction-table scans and 0x49a6f9 footprint probes; exact object descriptor field naming remains replay-pending.",
+        "reads": [
+            "reward/guard wrapper in ecx",
+            "object/member descriptor through arg1",
+            "candidate x/y/level args adjusted by descriptor offsets +0x2c/+0x30",
+            "wrapper grid at ecx+0x08/+0x0c/+0x10",
+            "descriptor type/class at +0x1c and dimensions/offset fields",
+            "policy table 0x57c648",
+            "direction tables 0x5a2658 and 0x5a2680",
+            "GeneratedCell+0x28 bit22/bit26 state through mapped wrapper cells",
+        ],
+        "returns": [
+            "true when at least one required adjacent/control direction remains valid for the object type policy",
+            "false when bit22 adjacency, 0x49a1d8 validity, bit26 availability, or 0x49a6f9 footprint/object rules reject the candidate",
+        ],
+        "runtime_trace": "Direct-generation focused traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only: no 0x49d2e0, 0x49d471, 0x4aa1db, 0x4aa3e9, or 0x4aa9b7 hits were recorded before that boundary. This proves the current UI-driven trace path is non-exercising for the reward/guard chain; it is not evidence that the helper is unused.",
+        "ghidra_dump": "Called by 0x49cf34 and 0x49d471. Static pass recovers direction-table scans, policy-byte gates, bit22/bit26 checks, and 0x49a6f9 footprint probes. Exact object descriptor field naming and same-run ordered coordinate replay remain pending until a reference path exercises the reward/guard chain.",
     },
     {
         "address": "0x49d69d",

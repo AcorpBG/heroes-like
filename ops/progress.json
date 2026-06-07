@@ -490,6 +490,12 @@
         "same_run_result": "Focused direct-generation trace recorded 48 hits at 0x49ac8e before 0x4a8260. The 48 unique clear flats exactly equal the 48 bit25-clear cells in the same-run 0x4a8260 boundary grid; checksum 88d6d7ef92324a2785c9ea7f6c658ac8829f8d5f4f0468d33998c549999dd702 matches the existing 0x4a8c15 boundary checkpoint.",
         "scope": "Explains the prior 0x4a8260 raw-coverage skips caused by 0x49a1d8 false on bit25-clear cells. It does not complete reward/object-vector placement semantics or native RMG parity."
       },
+      "recovery_checkpoint_2026_06_07_49d2e0_static": {
+        "artifact": "docs/h3maped-rmg-private-state-recovery.md and tools/rmg_h3maped_recovery_manifest.py",
+        "source_basis": "Ghidra static recovery of h3maped.exe 0x49d2e0 shows the reward/guard candidate acceptance helper uses wrapper grid fields, object descriptor offsets/dimensions/type, policy table 0x57c648, direction tables 0x5a2658/0x5a2680, GeneratedCell bit22/bit26 state, 0x49a1d8 validity, and 0x49a6f9 footprint/object probes.",
+        "runtime_result": "Focused direct-generation traces .artifacts/rmg_recovery/direct_generation_49d2e0_runtime_outcomes_to_4a8c15 and .artifacts/rmg_recovery/direct_generation_reward_chain_hits_to_4a8c15 reached 0x4a8c15 only. They did not hit 0x49d2e0, 0x49d471, 0x4aa1db, 0x4aa3e9, or 0x4aa9b7 before that boundary.",
+        "scope": "Static helper contract is strengthened, but same-run ordered reward/guard replay remains unrecovered. Next work must find or drive an H3MapEd path that actually exercises the reward/guard chain before any native reward/object-vector behavior change."
+      },
       "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
     },
     "nonGoals": [
@@ -497,11 +503,11 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
+    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, but direct-generation traces did not exercise the reward/guard chain before 0x4a8c15; same-run ordered replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover exact reward coordinate commit/private object-vector mutation semantics and blocked-surface parity from h3maped.exe; do not use density scalars, broad gates, or count-fitting.",
+    "remainingWork": "Find or drive an H3MapEd reference path that exercises 0x4aa1db/0x49d471/0x49d2e0/0x4aa3e9/0x4aa9b7, then recover exact reward coordinate commit/private object-vector mutation semantics and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
