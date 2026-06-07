@@ -892,6 +892,32 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump recovers candidate filtering and random tie selection. Exact semantic names for selector args and descriptor class values remain replay-pending.",
     },
     {
+        "address": "0x42ccc6",
+        "name": "descriptor_bitset48_index_test",
+        "status": "recovered_static_ghidra",
+        "reads": ["bitset base pointer in ecx", "bit index at stack+0x04"],
+        "returns": [
+            "true when bitset[index >> 5] has bit (1 << (index & 31)) set",
+            "false when that bit is clear",
+        ],
+        "range_guard": "unsigned index must be below 48; out-of-range calls 0x42f2ec before continuing",
+        "callers": ["0x42650e", "0x42ac12", "0x42b127", "0x47dac4", "0x49e1bf"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_42ccc6_42cc99_descriptor_predicate_dump recovers this as a generic 48-bit bitset predicate. In 0x49e1bf it is used against descriptor mask storage at descriptor+0x3c and descriptor+0x04 during decorative footprint/border scoring.",
+    },
+    {
+        "address": "0x42cc99",
+        "name": "descriptor_bitset10_index_test",
+        "status": "recovered_static_ghidra",
+        "reads": ["bitset base pointer in ecx", "bit index at stack+0x04"],
+        "returns": [
+            "true when bitset[index >> 5] has bit (1 << (index & 31)) set",
+            "false when that bit is clear",
+        ],
+        "range_guard": "unsigned index must be below 10; out-of-range calls 0x401b93 before continuing",
+        "callers": ["0x4205b9", "0x49e1bf", "0x4a9911"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_42ccc6_42cc99_descriptor_predicate_dump recovers this as a generic 10-bit bitset predicate. In 0x49e1bf it is called with descriptor+0x14 and the signed terrain/class extracted from GeneratedCell+0x24 bits 26..31.",
+    },
+    {
         "address": "0x49e1bf",
         "name": "decorative_object_scoring_and_emission_feasibility",
         "status": "recovered_static_contract_replay_pending",
@@ -1364,9 +1390,10 @@ STRUCTS: list[dict[str, Any]] = [
         "known_fields": {
             "+0x04": "48-bit object descriptor bitset tested by 0x41e951 with bit index 47 - 8*y - x",
             "+0x0c": "48-bit object descriptor bitset tested by 0x4268eb with bit index 47 - 8*y - x",
+            "+0x14": "10-bit descriptor terrain/policy bitset tested by 0x42cc99 with a generated-cell terrain/class index",
             "+0x34": "descriptor width used by placement, footprint, and contour helpers",
             "+0x38": "descriptor height used by placement, footprint, and contour helpers",
-            "+0x3c": "48-bit object descriptor bitset tested by 0x41e915 with bit index 47 - 8*y - x",
+            "+0x3c": "48-bit object descriptor bitset tested by 0x41e915 with bit index 47 - 8*y - x and by 0x42ccc6 with caller-computed flat indices in decorative scoring",
         },
     },
     {
