@@ -443,32 +443,31 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.",
+    "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.\n2026-06-07T17:55:00Z: Recorded live runtime boundary recovery for the 0x4a79a3/0x4a7605 edge/control-record flag. Fixed the interactive H3MapEd New Map driver to click relative to the live dialog; the fixed traces prove no post-0x4a7605 write to +0x09, show the sampled 0x4a7605 ESI record is separate from the generator+0xc8 header, and rule out 0x4b3c4e/0x4b3d3c as live producers before the sampled fallback consumer. The remaining source-backed blocker is now the allocator/vector append path that fills edge/control-record +0x08 before 0x4a79a3 selects the pair. Native RMG behavior remains unchanged.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
-      "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
+      "status": "focused_connection_record_runtime_boundary_pass_full_parity_in_progress",
+      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
       "commands": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
-        "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
-        "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
-        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
-        "python3 -m py_compile tools/rmg_h3maped_connection_record_producer_static_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_interactive_trace.py tools/rmg_h3maped_recovery_trace.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "jq empty ops/progress.json (passed)",
-        "git diff --check (passed)",
-        "python3 tests/validate_repo.py (passed)",
-        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_plus9_watch_probe_fixed_ui ... (passed: events=16, no watchpoint stops)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_c8_boundary_probe_fixed_ui ... (passed: events=4)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_relation_record_boundary_probe ... (passed: events=4)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_argument_probe ... (passed: events=1)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_4b3c4e_4b3d3c_constructor_probe ... (passed: only 0x4a7605 hit)",
+        "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed)",
+        "python3 tools/rmg_h3maped_connection_record_runtime_boundary_summary.py (passed: partial_runtime_boundary_checkpoint)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py (passed: functions=129)"
       ]
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
-      "source_basis": "Focused Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump generated from h3maped.exe through H3MapEdRmgDump.java, summarized by tools/rmg_h3maped_connection_record_producer_static_summary.py.",
-      "result": "0x4b3c03 is a copy adapter/serializer surface for records containing bytes +0x08/+0x09, not a proven direct generator+0xc8/+0xcc semantic producer in the checked static caller surface.",
-      "remaining_blocker": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
+      "source_basis": "Fixed live H3MapEd direct-generation winedbg traces summarized by tools/rmg_h3maped_connection_record_runtime_boundary_summary.py, plus refreshed manifest .artifacts/rmg_recovery/h3maped_recovery_manifest.json.",
+      "result": "The sampled 0x4a7605 control byte +0x09 is already initialized before the consumer, the consumed ESI edge/control record is separate from the generator+0xc8 header, and 0x4b3c4e/0x4b3d3c do not fire before this fallback consumer.",
+      "remaining_blocker": "Recover the owner and population path for the edge/control-record block iterated by 0x4a79a3 before 0x4a7dcd/0x4a7dd0 selects a pair; break on the allocator/vector append that fills edge/control-record +0x08, then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state.",
       "native_behavior_changed": false
     },
     "nonGoals": [
@@ -480,7 +479,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+    "remainingWork": "Recover the owner and population path for the edge/control-record block iterated by 0x4a79a3 before 0x4a7dcd/0x4a7dd0 selects a pair; break on the allocator/vector append that fills edge/control-record +0x08, then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -490,7 +489,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-07T16:53:19Z",
+    "updatedAt": "2026-06-07T17:55:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9132,10 +9131,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T09:39:22Z: Recorded partial 0x4a79a3 filter/+0xc8 dispatch recovery evidence; full private-state chain remains unrecovered and native RMG behavior remains unchanged.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.",
+  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T09:39:22Z: Recorded partial 0x4a79a3 filter/+0xc8 dispatch recovery evidence; full private-state chain remains unrecovered and native RMG behavior remains unchanged.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.\n2026-06-07T17:55:00Z: Recorded live runtime boundary recovery for the 0x4a79a3/0x4a7605 edge/control-record flag. Fixed the interactive H3MapEd New Map driver to click relative to the live dialog; the fixed traces prove no post-0x4a7605 write to +0x09, show the sampled 0x4a7605 ESI record is separate from the generator+0xc8 header, and rule out 0x4b3c4e/0x4b3d3c as live producers before the sampled fallback consumer. The remaining source-backed blocker is now the allocator/vector append path that fills edge/control-record +0x08 before 0x4a79a3 selects the pair. Native RMG behavior remains unchanged.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-07T16:53:19Z",
+  "currentSliceUpdatedAt": "2026-06-07T17:55:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10088,25 +10087,24 @@
     }
   },
   "lastValidation": {
-    "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
-    "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
+    "status": "focused_connection_record_runtime_boundary_pass_full_parity_in_progress",
+    "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
     "commands": [
-      ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
-      "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
-      "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
-      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
-      "python3 -m py_compile tools/rmg_h3maped_connection_record_producer_static_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_recovery_interactive_trace.py tools/rmg_h3maped_recovery_trace.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
-      "python3 tests/validate_repo.py (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_plus9_watch_probe_fixed_ui ... (passed: events=16, no watchpoint stops)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_c8_boundary_probe_fixed_ui ... (passed: events=4)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_relation_record_boundary_probe ... (passed: events=4)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_argument_probe ... (passed: events=1)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_4b3c4e_4b3d3c_constructor_probe ... (passed: only 0x4a7605 hit)",
+      "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed)",
+      "python3 tools/rmg_h3maped_connection_record_runtime_boundary_summary.py (passed: partial_runtime_boundary_checkpoint)",
+      "python3 tools/rmg_h3maped_recovery_manifest.py (passed: functions=129)"
     ]
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
-    "source_basis": "Focused Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump generated from h3maped.exe through H3MapEdRmgDump.java, summarized by tools/rmg_h3maped_connection_record_producer_static_summary.py.",
-    "result": "0x4b3c03 is a copy adapter/serializer surface for records containing bytes +0x08/+0x09, not a proven direct generator+0xc8/+0xcc semantic producer in the checked static caller surface.",
-    "remaining_blocker": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+    "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
+    "source_basis": "Fixed live H3MapEd direct-generation winedbg traces summarized by tools/rmg_h3maped_connection_record_runtime_boundary_summary.py, plus refreshed manifest .artifacts/rmg_recovery/h3maped_recovery_manifest.json.",
+    "result": "The sampled 0x4a7605 control byte +0x09 is already initialized before the consumer, the consumed ESI edge/control record is separate from the generator+0xc8 header, and 0x4b3c4e/0x4b3d3c do not fire before this fallback consumer.",
+    "remaining_blocker": "Recover the owner and population path for the edge/control-record block iterated by 0x4a79a3 before 0x4a7dcd/0x4a7dd0 selects a pair; break on the allocator/vector append that fills edge/control-record +0x08, then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state.",
     "native_behavior_changed": false
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
@@ -49997,7 +49995,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover the actual semantic producer of compact connection-record byte +0x09 with a runtime write watch or earlier phase boundary snapshot on an actual generator+0xc8 record before 0x4a79a3/0x4a7605 consumes it; then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state. Do not use density scalars, gates, retries, or final-map delta tuning.",
+  "remainingWork": "Recover the owner and population path for the edge/control-record block iterated by 0x4a79a3 before 0x4a7dcd/0x4a7dd0 selects a pair; break on the allocator/vector append that fills edge/control-record +0x08, then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50238,74 +50236,28 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-07T16:53:19Z",
+  "updatedAt": "2026-06-07T17:55:00Z",
   "validation": {
-    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
-    "evidence": [
-      "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_source_order_road_after_decor_no_bit25_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
-      "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-      "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
-      "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
-      "python3 tests/validate_repo.py",
-      "jq empty ops/progress.json",
-      "git diff --check",
-      {
-        "artifacts": [
-          ".artifacts/rmg_native_batch_export_49e700_no_type_limit_gate_20260604"
-        ],
-        "date": "2026-06-04",
-        "kind": "source_backed_implementation",
-        "summary": "Removed source-inaccurate decorative 0x49e700 global/zone type-limit gate; focused exports unchanged because prior rejected_type_limit_count_0x49e700 was 0."
-      },
-      {
-        "artifacts": [
-          ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json",
-          ".artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json"
-        ],
-        "date": "2026-06-07",
-        "kind": "source_backed_recovery_checkpoint",
-        "summary": "Recovered sampled 0x49c* projection-object constructor/base-initializer pairing and static vtable links; completed wrapper-method trace recorded no execution, so ordered 0x4adb72/0x4ad947/0x4ad7f7 replay remains pending."
-      },
-      {
-        "artifacts": [
-          ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json",
-          ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json"
-        ],
-        "date": "2026-06-07",
-        "kind": "source_backed_static_recovery_checkpoint",
-        "summary": "Corrected 0x49c projection-object vtable layout and static lifecycle: 0x49c019 belongs to 0x540b00+0x08, 0x49c0a6 to constructor-installed 0x540b14+0x08, base initializer table is 0x540b28; ordered wrapper dispatch remains pending."
-      },
-      {
-        "artifacts": [
-          ".artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json"
-        ],
-        "date": "2026-06-07",
-        "kind": "source_backed_recovery_checkpoint",
-        "summary": "Broad 0x4aa3e9 final selected-member slot +0x08 trace records 18 callbacks, all target 0x49baf5, with no 0x540b00/0x540b14 projection-object vtables and zero 0x49c019/0x49c0a6/0x4adb72/0x4ad947/0x4ad7f7/0x4adb07 hits; projection-object storage/dispatch remains unrecovered."
-      },
-      {
-        "artifacts": [
-          ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json"
-        ],
-        "date": "2026-06-07",
-        "kind": "source_backed_recovery_checkpoint",
-        "summary": "Classified nearby 0x49be93/0x49c273 slot +0x08 surfaces as writer/serializer-like helpers: 16 and 17 writer slot calls respectively, both zero-hit in the sampled generation trace; projection-object storage/consumption for 0x540b00/0x540b14 remains the next unrecovered target."
-      }
-    ],
-    "lastValidationCommands": [
-      "python3 tools/rmg_h3maped_49c_writer_surface_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json (passed: 0x49be93/0x49c273 writer-helper surface)",
-      "python3 tools/rmg_h3maped_4aa3e9_slot8_summary.py --out .artifacts/rmg_recovery/direct_generation_4aa3e9_slot8_broad_trace/4aa3e9_slot8_summary.json (passed: 42 events, 18 slot +0x08 callbacks all 0x49baf5)",
-      "python3 tools/rmg_h3maped_49c_projection_constructor_summary.py --constructor-ledger .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/winedbg_recovery_trace_ledger.json --wrapper-ledger .artifacts/rmg_recovery/direct_generation_49c019_49c0a6_projection_driver_hit_trace/winedbg_recovery_trace_ledger.json --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json (passed: 14 constructor events, 7 paired constructor/base-initializer pairs, wrapper no-hit invariant held)",
-      "python3 tools/rmg_h3maped_49c_projection_static_summary.py --out .artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_static_summary.json (passed: vtable/static constructor/method surface)",
-      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 function entries)",
-      "python3 -m py_compile tools/rmg_h3maped_49c_writer_surface_summary.py tools/rmg_h3maped_4aa3e9_slot8_summary.py tools/rmg_h3maped_49c_projection_constructor_summary.py tools/rmg_h3maped_49c_projection_static_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
-    ],
+    "status": "focused_connection_record_runtime_boundary_pass_full_parity_in_progress",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "partial_pass_goal_still_in_progress"
+    "evidence": {
+      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
+      "source_basis": "Fixed live H3MapEd direct-generation winedbg traces summarized by tools/rmg_h3maped_connection_record_runtime_boundary_summary.py, plus refreshed manifest .artifacts/rmg_recovery/h3maped_recovery_manifest.json.",
+      "result": "The sampled 0x4a7605 control byte +0x09 is already initialized before the consumer, the consumed ESI edge/control record is separate from the generator+0xc8 header, and 0x4b3c4e/0x4b3d3c do not fire before this fallback consumer.",
+      "remaining_blocker": "Recover the owner and population path for the edge/control-record block iterated by 0x4a79a3 before 0x4a7dcd/0x4a7dd0 selects a pair; break on the allocator/vector append that fills edge/control-record +0x08, then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state.",
+      "native_behavior_changed": false
+    },
+    "currentSliceNotes": "2026-06-07T17:55:00Z: Recorded live runtime boundary recovery for the 0x4a79a3/0x4a7605 edge/control-record flag. Fixed the interactive H3MapEd New Map driver to click relative to the live dialog; the fixed traces prove no post-0x4a7605 write to +0x09, show the sampled 0x4a7605 ESI record is separate from the generator+0xc8 header, and rule out 0x4b3c4e/0x4b3d3c as live producers before the sampled fallback consumer. The remaining source-backed blocker is now the allocator/vector append path that fills edge/control-record +0x08 before 0x4a79a3 selects the pair. Native RMG behavior remains unchanged.",
+    "lastValidationCommands": [
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_plus9_watch_probe_fixed_ui ... (passed: events=16, no watchpoint stops)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_c8_boundary_probe_fixed_ui ... (passed: events=4)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_relation_record_boundary_probe ... (passed: events=4)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_argument_probe ... (passed: events=1)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_4b3c4e_4b3d3c_constructor_probe ... (passed: only 0x4a7605 hit)",
+      "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed)",
+      "python3 tools/rmg_h3maped_connection_record_runtime_boundary_summary.py (passed: partial_runtime_boundary_checkpoint)",
+      "python3 tools/rmg_h3maped_recovery_manifest.py (passed: functions=129)"
+    ]
   },
   "validationHistory": [
     {
@@ -57547,6 +57499,13 @@
       "status": "pass_in_progress_wrapper_state_checkpoint_parity_open",
       "summary": "Kept source-clean native RMG wrapper-state corrections and rejected unsafe isolated 0x4a54a7 descriptor-gate behavior after focused controlled exports.",
       "updatedAt": "2026-06-05T09:29:03Z"
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "at": "2026-06-07T17:55:00Z",
+      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
+      "summary": "Focused runtime boundary checkpoint passed; full H3MapEd private-state parity still in progress and native behavior unchanged."
     }
   ]
 }

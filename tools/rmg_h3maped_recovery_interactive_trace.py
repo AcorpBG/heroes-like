@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -90,6 +91,43 @@ def wait_for_named_window(name: str, attempts: int = 40) -> bool:
     return False
 
 
+def find_named_window_id(name: str, attempts: int = 40) -> str:
+    for _ in range(attempts):
+        completed = subprocess.run(
+            ["xdotool", "search", "--onlyvisible", "--name", name],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False,
+        )
+        ids = [line.strip() for line in completed.stdout.splitlines() if line.strip()]
+        if ids:
+            return ids[-1]
+        time.sleep(0.25)
+    raise RuntimeError(f"{name} window did not appear")
+
+
+def window_geometry(window_id: str) -> tuple[int, int, int, int]:
+    completed = subprocess.run(
+        ["xdotool", "getwindowgeometry", "--shell", window_id],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
+    values: dict[str, int] = {}
+    for line in completed.stdout.splitlines():
+        match = re.match(r"^(X|Y|WIDTH|HEIGHT)=(-?\d+)$", line)
+        if match:
+            values[match.group(1)] = int(match.group(2))
+    return values["X"], values["Y"], values["WIDTH"], values["HEIGHT"]
+
+
+def click_window_relative(window_id: str, rel_x: int, rel_y: int) -> None:
+    x, y, _, _ = window_geometry(window_id)
+    run_xdotool(["mousemove", str(x + rel_x), str(y + rel_y), "click", "1"])
+
+
 def open_new_dialog() -> None:
     run_xdotool(["key", "Alt+f"])
     time.sleep(0.2)
@@ -111,30 +149,32 @@ def drive_h3maped_ui(generate_wait_seconds: int, screen_dir: Path) -> None:
     time.sleep(0.2)
     take_screenshot(screen_dir, "02_new_dialog")
 
-    run_xdotool(["mousemove", "244", "318", "click", "1"])
+    new_map = find_named_window_id("New Map")
+    click_window_relative(new_map, 29, 125)
     time.sleep(0.1)
-    run_xdotool(["mousemove", "231", "369", "click", "1"])
+    click_window_relative(new_map, 16, 176)
     time.sleep(0.1)
-    run_xdotool(["mousemove", "231", "388", "click", "1"])
+    click_window_relative(new_map, 16, 195)
     time.sleep(0.1)
     take_screenshot(screen_dir, "03_random_expanded")
 
-    run_xdotool(["mousemove", "528", "538", "click", "1"])
+    new_map = find_named_window_id("New Map")
+    click_window_relative(new_map, 313, 345)
     time.sleep(0.1)
     run_xdotool(["key", "Down"])
     run_xdotool(["key", "Down"])
     run_xdotool(["key", "Return"])
     time.sleep(0.1)
-    run_xdotool(["mousemove", "744", "538", "click", "1"])
+    click_window_relative(new_map, 529, 345)
     time.sleep(0.1)
     run_xdotool(["key", "Down"])
     run_xdotool(["key", "Return"])
     time.sleep(0.1)
-    run_xdotool(["mousemove", "449", "647", "click", "1"])
-    run_xdotool(["mousemove", "340", "697", "click", "1"])
+    click_window_relative(new_map, 234, 454)
+    click_window_relative(new_map, 125, 502)
     time.sleep(0.2)
     take_screenshot(screen_dir, "04_configured")
-    run_xdotool(["mousemove", "592", "311", "click", "1"])
+    click_window_relative(new_map, 377, 118)
     time.sleep(generate_wait_seconds)
     take_screenshot(screen_dir, "05_after_generate_click")
 
