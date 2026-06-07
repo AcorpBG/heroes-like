@@ -2023,7 +2023,11 @@ FUNCTIONS: list[dict[str, Any]] = [
             "returns true when 0x4a5e73 returns nonnegative and false otherwise",
         ],
         "caller_contract": "Both 0x4a7605 call sites are gated by control byte [arg2+0x09] and pass the newly allocated object record's relative coordinate triple at record+0x08/+0x0c/+0x10. The first call validates the allocated record against the original stack arg1, appends it to the generator+0x14c0/0x14d0 vector selected by local flag -0x14, records the coordinate in arg1+0x404, and calls 0x4a746b(generator, record+0x08 triple, relation record selected from generator+0x10e4 by arg2 index). The second call validates against that selected relation record, appends to the generator vector, records the coordinate in relation+0x404, and calls 0x4a746b(generator, record+0x08 triple, original stack arg1).",
-        "ghidra_dump": "Called twice by 0x4a7605. Static recovery shows the normalize-first endpoint writer: it calls 0x4a5767, derives a source cell from the input coordinate, chooses an endpoint either from source projection fields, one of five local offset records with matching owner/bit27, or fallback (x,y+1,level), calls 0x4a5e73, and on success stamps the five endpoint-offset cells (0,1), (1,0), (-1,0), (1,1), and (-1,1) through 0x49aa63(true) plus GeneratedCell+0x2c low-bit packing. Caller coordinate meanings, local endpoint offsets, and the downstream 0x4a7312 selection policy are statically recovered; runtime ordered replay remains pending.",
+        "ghidra_dump": "Called twice by 0x4a7605. Static recovery shows the normalize-first endpoint writer: it calls 0x4a5767, derives a source cell from the input coordinate, chooses an endpoint either from source projection fields, one of five local offset records with matching owner/bit27, or fallback (x,y+1,level), calls 0x4a5e73, and on success stamps the five endpoint-offset cells (0,1), (1,0), (-1,0), (1,1), and (-1,1) through 0x49aa63(true) plus GeneratedCell+0x2c low-bit packing. Checked chain summary .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json verifies the exact instruction sites for 0x4a5767 normalization, 0x7530 low-word rejection, five-offset owner/bit27 tests, y+1 fallback, 0x4a5e73 call, 0x49aa63 stamps, and packed low-nibble cell+0x2c writes. Caller coordinate meanings, local endpoint offsets, and the downstream 0x4a7312 selection policy are statically recovered; runtime ordered replay remains pending.",
+        "next_runtime_replay": [
+            "capture 0x4a746b entry source cell, low word, owner byte, and source projection triple",
+            "capture selected endpoint at 0x4a7593, 0x4a5e73 return value, and five stamped offset cells at 0x4a75f1",
+        ],
     },
     {
         "address": "0x4a5e73",
@@ -2058,7 +2062,11 @@ FUNCTIONS: list[dict[str, Any]] = [
             "resets generator+0xf5c to zero and advances it while generator+0x1104[index] is nonzero within the +0x1104/+0x1108 byte-vector range",
             "returns the original generator+0xf5c index after successful validation/projection",
         ],
-        "ghidra_dump": "Called by 0x4a61bc, 0x4a696b, 0x4a6cf2, and 0x4a746b. Static recovery shows an endpoint helper keyed by generator+0xf5c: it matches entries in generator+0xd8/+0xdc and +0xc8/+0xcc pointer vectors, validates an allocated +0xd8-derived object through 0x4a7312, optionally projects a repeated run of +0xc8-derived records across generated cells while forcing bit27 and clearing bit26, updates the byte-state vector at +0x1104/+0x1108, advances +0xf5c, and returns the original index or a failure sentinel. Exact vector-entry semantic names and runtime ordered replay remain pending.",
+        "ghidra_dump": "Called by 0x4a61bc, 0x4a696b, 0x4a6cf2, and 0x4a746b. Static recovery shows an endpoint helper keyed by generator+0xf5c: it matches entries in generator+0xd8/+0xdc and +0xc8/+0xcc pointer vectors, validates an allocated +0xd8-derived object through 0x4a7312, optionally projects a repeated run of +0xc8-derived records across generated cells while forcing bit27 and clearing bit26, updates the byte-state vector at +0x1104/+0x1108, advances +0xf5c, and returns the original index or a failure sentinel. Checked chain summary .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json verifies the exact instruction sites for +0xf5c cursor reads/writes, +0xd8/+0xdc and +0xc8/+0xcc vector scans, +0x2c/+0x28 generated-cell mutation, generator vtable slot +0x04 calls, and +0x1104/+0x1108 byte-state cursor advancement. Exact vector-entry semantic names and runtime ordered replay remain pending.",
+        "next_runtime_replay": [
+            "capture 0x4a5e73 entry/return generator+0xf5c, +0xd8/+0xdc, +0xc8/+0xcc, +0x1104/+0x1108, stack coordinate triple, repeat/count, and return value",
+            "capture generated-cell address plus +0x20/+0x24/+0x28/+0x2c before and after the 0x4a5fd8/0x4a5ff1 repeat projection mutation",
+        ],
     },
     {
         "address": "0x4a7312",
@@ -2088,7 +2096,11 @@ FUNCTIONS: list[dict[str, Any]] = [
             "destroys the local coordinate vector through 0x42c92d before return",
         ],
         "returns": ["true after committing the selected object coordinate through generator vtable slot +0x04", "false when no eligible coordinate exists"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a7312_policy_dump recovers the policy from assembly. Ghidra decompile still fails, so exact source/relation field names and runtime ordered replay remain pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4a7312_policy_dump recovers the policy from assembly. Checked chain summary .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json verifies the exact instruction sites for descriptor dimension reads, source bounds/coordinate copies, owner-byte candidate filtering, 0x49aa93 eligibility calls, 0x4ae1fd candidate appends, 0x4e7276 % candidate_count selection, generator vtable slot +0x04 commit, and 0x42c92d candidate-vector destruction. Ghidra decompile still fails, so exact source/relation field names and runtime ordered replay remain pending.",
+        "next_runtime_replay": [
+            "capture 0x4a7312 entry source/relation record fields, object record/descriptor fields, and candidate scan bounds",
+            "capture 0x4a73e0 candidate vector appends, 0x4e7276 selected index, 0x4a7447 selected coordinate, and object record passed to generator vtable slot +0x04",
+        ],
     },
 ]
 
