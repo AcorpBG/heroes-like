@@ -502,6 +502,12 @@
         "same_run_result": "Focused same-run trace through the 0x4ac552 span recorded all targeted reward-chain functions: 0x4aab7e twice, 0x4aa354 45 times, 0x4aa1db 45 times, 0x49d471 44 times, 0x49d2e0 459 times, 0x4aa9b7 44 times, and 0x4aa3e9 15 times. 0x49d2e0 returned to both known caller sites: 347 hits to 0x49d5a5 inside 0x49d471 and 112 hits to 0x49d111 inside 0x49cf34.",
         "scope": "The reward/guard chain now has an exercising same-run trace. Remaining recovery is ordered per-coordinate accept/reject replay, descriptor field naming, selected-member vector contents, and final wrapper-to-generator mutation state, not finding the chain."
       },
+      "recovery_checkpoint_2026_06_07_49d2e0_entry_outcomes": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49d2e0_entry_outcomes/49d2e0_outcome_summary.json",
+        "source_basis": "Static recovery of 0x49d2e0 shows accept path at 0x49d468 (MOV AL,1), reject path at 0x49d3e8 (XOR AL,AL), and both funnel to RET 0x10 at 0x49d46e.",
+        "same_run_result": "Focused entry/outcome trace recorded 141 0x49d2e0 entries and paired 140 with outcomes: 124 accept and 16 reject. Caller split: 0x49cf34 via return 0x49d111 had 52 accept, 5 reject, and 1 manually cut missing outcome; 0x49d471 via return 0x49d5a5 had 72 accept and 11 reject.",
+        "scope": "This proves ordered candidate accept/reject surface for the sampled same-run span. Remaining recovery is deeper per-reject branch classification, descriptor field names, selected-member vector contents, and final wrapper-to-generator mutation state."
+      },
       "completion_state": "density parity incomplete; active slice remains in_progress. Next source target is still exact road/bit25 upstream state plus decorative selected-coordinate/private scorer lifecycle, not density scalars or gates."
     },
     "nonGoals": [
@@ -509,11 +515,11 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, and a later 0x4ac552-span trace now exercises the reward/guard chain after 0x4a8c15. Same-run ordered per-coordinate replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
+    "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, and a focused same-run trace now pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects. Deeper per-reject branch classification and final writer state remain pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Use the exercised 0x4ac552 reward-chain trace to recover ordered per-coordinate accept/reject replay for 0x4aa1db/0x49d471/0x49d2e0/0x49cf34/0x4aa9b7/0x4aa3e9, selected-member vector contents, descriptor field names, exact reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
+    "remainingWork": "Recover deeper per-reject branch classification for 0x49d2e0, selected-member vector contents, descriptor field names, exact 0x4aa3e9 wrapper-to-generator projection, reward coordinate commit/private object-vector mutation semantics, and blocked-surface parity from same-run state; do not use density scalars, broad gates, or count-fitting.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
