@@ -900,7 +900,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "copies source +0x14 into object+0x20 after the secondary object-record build",
             "installs final vtable 0x540b14",
         ],
-        "runtime_trace": "Constructor trace records 4 sampled 0x49cb83 entries, each immediately paired with 0x49c0d3 returning to 0x49cbb3.",
+        "runtime_trace": "Constructor trace records 4 sampled 0x49cb83 entries, each immediately paired with 0x49c0d3 returning to 0x49cbb3. Selected-dispatch trace .artifacts/rmg_recovery/direct_generation_49c_selected_create_dispatch_trace/49c_selected_dispatch_summary.json records one 0x4aa166 selected-create event with candidate vtable 0x540c70 immediately followed by 0x49cb83.",
         "ghidra_dump": "Ghidra caller dump shows 0x49cb83 calls 0x49c0d3 at 0x49cbae, calls 0x4a9e40 at 0x49cbc6, and installs final vtable 0x540b14.",
     },
     {
@@ -914,7 +914,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "sets object+0x24 to 6 and copies source +0x14 into object+0x28 after the secondary object-record build",
             "installs final vtable 0x540b14",
         ],
-        "runtime_trace": "Constructor trace records 1 sampled 0x49cc22 entry paired with 0x49c0d3 returning to 0x49cc50.",
+        "runtime_trace": "Constructor trace records 1 sampled 0x49cc22 entry paired with 0x49c0d3 returning to 0x49cc50. Selected-dispatch trace .artifacts/rmg_recovery/direct_generation_49c_selected_create_dispatch_trace/49c_selected_dispatch_summary.json records four 0x4aa166 selected-create events with candidate vtable 0x540c80 immediately followed by 0x49cc22.",
         "ghidra_dump": "Ghidra caller dump shows 0x49cc22 calls 0x49c0d3 at 0x49cc4b, calls 0x4a9e40 at 0x49cc61, and installs final vtable 0x540b14.",
     },
     {
