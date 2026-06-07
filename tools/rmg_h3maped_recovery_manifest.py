@@ -152,6 +152,29 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump recovers this generated-cell object-reference removal helper and its bit22/bit25/cell+0x20 low-word mutation.",
     },
     {
+        "address": "0x4af6db",
+        "name": "pending_object_cleanup_bit27_acceptance_predicate",
+        "status": "recovered_static_ghidra",
+        "calls": ["0x41e951"],
+        "reads": [
+            "generator/context pointer in ecx",
+            "object record pointer at stack+0x08",
+            "record coordinate triple at record+0x08/+0x0c/+0x10",
+            "descriptor through record+0x04",
+            "descriptor dimensions at +0x34/+0x38",
+            "descriptor primary mask at +0x04 through 0x41e951",
+            "generator generated-cell buffer/dimensions at +0x14/+0x18/+0x1c",
+            "generated-cell bit-state word at +0x28",
+        ],
+        "returns": [
+            "false when no in-bounds primary-mask-clear footprint cell is found",
+            "false immediately when any in-bounds primary-mask-clear footprint cell has bit27 set",
+            "true when at least one in-bounds primary-mask-clear footprint cell exists and none of those cells has bit27 set",
+        ],
+        "callers": ["0x4af910"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af6db_pending_cleanup_predicate_dump recovers this as a non-mutating cleanup acceptance predicate used by 0x4af910 before uncommitting queued object records.",
+    },
+    {
         "address": "0x4af910",
         "name": "pending_object_cleanup_flush_then_decor_budget_pass",
         "status": "recovered_static_contract_replay_pending",
@@ -181,7 +204,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "destroys the object record through vtable slot +0x00 with argument true",
             "calls 0x49eb8d after the optional cleanup loop",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump/caller_004af910_FUN_004af910.txt recovers this pending-object cleanup path and its handoff into 0x49eb8d. Exact 0x4af6db predicate semantics, generator+0xed8 handler contract, and same-run ordered replay remain pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump/caller_004af910_FUN_004af910.txt recovers this pending-object cleanup path and its handoff into 0x49eb8d. Exact generator+0xed8 handler contract and same-run ordered replay remain pending.",
     },
     {
         "address": "0x49d2c7",
