@@ -443,23 +443,23 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, and sampled 0x540b14 projection-constructor return adoption through 0x4aa168 into 0x4aa22b/0x4aa2fd; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress.",
+    "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, sampled 0x540b14 projection-constructor return adoption through 0x4aa168, and sampled 0x540b14 initial consumer/stamp through 0x4aa22b/0x4aa23d/0x4aa27e into 0x49abd6; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json",
+      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
       "commands": [
-        "python3 tools/rmg_h3maped_49c_constructor_return_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json (passed: 361 events, 3 projection-constructor pre-returns, 3 selected-create returns preserving vtable 0x540b14; continuations 0x4aa22b x2 and 0x4aa2fd x1)",
+        "python3 tools/rmg_h3maped_49c_consumer_stamp_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json (passed: 721 events, 2 sampled 0x540b14 projection returns, both initial_0x4aa22b, both passed to 0x49abd6 with matching object pointer)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 functions)",
-        "python3 -m py_compile tools/rmg_h3maped_49c_constructor_return_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_49c_consumer_stamp_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
-      "status": "focused_constructor_return_recovery_checkpoint_pass_full_parity_in_progress"
+      "status": "focused_consumer_stamp_recovery_checkpoint_pass_full_parity_in_progress"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
@@ -514,6 +514,12 @@
         "runtime_result": "Parsed 361 selected-create/constructor-return trace events: 178 0x4aa166 selected-create stops, 177 0x4aa168 selected-return stops, one 0x49cac2 constructor and two 0x49cc22 constructors, with three constructor pre-returns immediately followed by 0x4aa168. Each selected-return object preserved the constructor EAX pointer and vtable 0x540b14. Continuations split to 0x4aa22b twice and 0x4aa2fd once.",
         "scope": "This proves sampled 0x540b14 projection objects created by 0x49cac2/0x49cc22 are returned/adopted by the selected-create path. It does not prove later slot +0x08 dispatch into 0x49c0a6, and 0x49cdb1/0x540b00 was instrumented but not hit in this bounded sample.",
         "source_basis": "Live H3MapEd winedbg trace of selected-create site 0x4aa166, constructor entries/pre-returns 0x49cac2/0x49cb52 and 0x49cc22/0x49ccb0, selected-return site 0x4aa168, plus static vtable recovery linking 0x540b14+0x08 to 0x49c0a6 and 0x540b00+0x08 to 0x49c019."
+      },
+      "recovery_checkpoint_2026_06_07_49c_consumer_stamp": {
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
+        "runtime_result": "Parsed 721 consumer/stamp trace events: 110 selected returns at 0x4aa168, 47 initial-consumer paths through 0x4aa22b/0x4aa23d/0x4aa27e, 63 secondary-consumer stops at 0x4aa2fd, 62 validator entries at 0x49d471, 35 validator stamp call sites at 0x49d636, and 197 stamp-helper entries at 0x49abd6. The 49c-specific subset contains two sampled 0x540b14 projection returns, from 0x49cb83/0x49cc12 and 0x49cac2/0x49cb52; both enter the initial branch and reach 0x49abd6 with the stamp-helper object argument matching the selected projection object pointer.",
+        "scope": "This proves sampled post-adoption consumer/stamp behavior for 0x540b14 projection objects. It does not prove later slot +0x08 dispatch into 0x49c0a6 or 0x49c019, and 0x49cdb1/0x540b00 remains unhit in bounded runtime samples.",
+        "source_basis": "Live H3MapEd winedbg trace of constructor pre-return sites 0x49cb52/0x49cc12, selected-return 0x4aa168, initial consumer/stamp sites 0x4aa22b/0x4aa23d/0x4aa27e, stamp helper 0x49abd6, and secondary validator sites 0x4aa2fd/0x4aa30e/0x49d471/0x49d636."
       },
       "recovery_checkpoint_2026_06_07_49c_projection_constructor_boundary": {
         "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_projection_constructor_summary.json",
@@ -651,7 +657,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-07T07:58:00Z",
+    "updatedAt": "2026-06-07T08:10:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9292,10 +9298,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, and sampled 0x540b14 projection-constructor return adoption through 0x4aa168 into 0x4aa22b/0x4aa2fd; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress.",
+  "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, sampled 0x540b14 projection-constructor return adoption through 0x4aa168, and sampled 0x540b14 initial consumer/stamp through 0x4aa22b/0x4aa23d/0x4aa27e into 0x49abd6; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-07T07:58:00Z",
+  "currentSliceUpdatedAt": "2026-06-07T08:10:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10248,16 +10254,16 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json",
+    "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
     "commands": [
-      "python3 tools/rmg_h3maped_49c_constructor_return_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json (passed: 361 events, 3 projection-constructor pre-returns, 3 selected-create returns preserving vtable 0x540b14; continuations 0x4aa22b x2 and 0x4aa2fd x1)",
+      "python3 tools/rmg_h3maped_49c_consumer_stamp_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json (passed: 721 events, 2 sampled 0x540b14 projection returns, both initial_0x4aa22b, both passed to 0x49abd6 with matching object pointer)",
       "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 functions)",
-      "python3 -m py_compile tools/rmg_h3maped_49c_constructor_return_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_49c_consumer_stamp_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
     ],
-    "status": "focused_constructor_return_recovery_checkpoint_pass_full_parity_in_progress"
+    "status": "focused_consumer_stamp_recovery_checkpoint_pass_full_parity_in_progress"
   },
   "latestEvidence": {
     "recovery_checkpoint_2026_06_07_49c_constructor_return_adoption": {
@@ -10265,6 +10271,12 @@
       "runtime_result": "Parsed 361 selected-create/constructor-return trace events: 178 0x4aa166 selected-create stops, 177 0x4aa168 selected-return stops, one 0x49cac2 constructor and two 0x49cc22 constructors, with three constructor pre-returns immediately followed by 0x4aa168. Each selected-return object preserved the constructor EAX pointer and vtable 0x540b14. Continuations split to 0x4aa22b twice and 0x4aa2fd once.",
       "scope": "This proves sampled 0x540b14 projection objects created by 0x49cac2/0x49cc22 are returned/adopted by the selected-create path. It does not prove later slot +0x08 dispatch into 0x49c0a6, and 0x49cdb1/0x540b00 was instrumented but not hit in this bounded sample.",
       "source_basis": "Live H3MapEd winedbg trace of selected-create site 0x4aa166, constructor entries/pre-returns 0x49cac2/0x49cb52 and 0x49cc22/0x49ccb0, selected-return site 0x4aa168, plus static vtable recovery linking 0x540b14+0x08 to 0x49c0a6 and 0x540b00+0x08 to 0x49c019."
+    },
+    "recovery_checkpoint_2026_06_07_49c_consumer_stamp": {
+      "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
+      "runtime_result": "Parsed 721 consumer/stamp trace events: 110 selected returns at 0x4aa168, 47 initial-consumer paths through 0x4aa22b/0x4aa23d/0x4aa27e, 63 secondary-consumer stops at 0x4aa2fd, 62 validator entries at 0x49d471, 35 validator stamp call sites at 0x49d636, and 197 stamp-helper entries at 0x49abd6. The 49c-specific subset contains two sampled 0x540b14 projection returns, from 0x49cb83/0x49cc12 and 0x49cac2/0x49cb52; both enter the initial branch and reach 0x49abd6 with the stamp-helper object argument matching the selected projection object pointer.",
+      "scope": "This proves sampled post-adoption consumer/stamp behavior for 0x540b14 projection objects. It does not prove later slot +0x08 dispatch into 0x49c0a6 or 0x49c019, and 0x49cdb1/0x540b00 remains unhit in bounded runtime samples.",
+      "source_basis": "Live H3MapEd winedbg trace of constructor pre-return sites 0x49cb52/0x49cc12, selected-return 0x4aa168, initial consumer/stamp sites 0x4aa22b/0x4aa23d/0x4aa27e, stamp helper 0x49abd6, and secondary validator sites 0x4aa2fd/0x4aa30e/0x49d471/0x49d636."
     },
     "recovery_checkpoint_2026_06_07_49c_selected_lifetime": {
       "artifact": ".artifacts/rmg_recovery/direct_generation_49c_selected_lifetime_trace/49c_selected_lifetime_summary.json",
@@ -43717,23 +43729,23 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, and sampled 0x540b14 projection-constructor return adoption through 0x4aa168 into 0x4aa22b/0x4aa2fd; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress.",
+      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, sampled 0x540b14 projection-constructor return adoption through 0x4aa168, and sampled 0x540b14 initial consumer/stamp through 0x4aa22b/0x4aa23d/0x4aa27e into 0x49abd6; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json",
+        "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
         "commands": [
-          "python3 tools/rmg_h3maped_49c_constructor_return_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_constructor_return_trace/49c_constructor_return_summary.json (passed: 361 events, 3 projection-constructor pre-returns, 3 selected-create returns preserving vtable 0x540b14; continuations 0x4aa22b x2 and 0x4aa2fd x1)",
+          "python3 tools/rmg_h3maped_49c_consumer_stamp_summary.py --out .artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json (passed: 721 events, 2 sampled 0x540b14 projection returns, both initial_0x4aa22b, both passed to 0x49abd6 with matching object pointer)",
           "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: 124 functions)",
-          "python3 -m py_compile tools/rmg_h3maped_49c_constructor_return_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_49c_consumer_stamp_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
         ],
-        "status": "focused_constructor_return_recovery_checkpoint_pass_full_parity_in_progress"
+        "status": "focused_consumer_stamp_recovery_checkpoint_pass_full_parity_in_progress"
       },
       "latestEvidence": {
         "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
@@ -43782,6 +43794,12 @@
           "runtime_result": "Parsed 361 selected-create/constructor-return trace events: 178 0x4aa166 selected-create stops, 177 0x4aa168 selected-return stops, one 0x49cac2 constructor and two 0x49cc22 constructors, with three constructor pre-returns immediately followed by 0x4aa168. Each selected-return object preserved the constructor EAX pointer and vtable 0x540b14. Continuations split to 0x4aa22b twice and 0x4aa2fd once.",
           "scope": "This proves sampled 0x540b14 projection objects created by 0x49cac2/0x49cc22 are returned/adopted by the selected-create path. It does not prove later slot +0x08 dispatch into 0x49c0a6, and 0x49cdb1/0x540b00 was instrumented but not hit in this bounded sample.",
           "source_basis": "Live H3MapEd winedbg trace of selected-create site 0x4aa166, constructor entries/pre-returns 0x49cac2/0x49cb52 and 0x49cc22/0x49ccb0, selected-return site 0x4aa168, plus static vtable recovery linking 0x540b14+0x08 to 0x49c0a6 and 0x540b00+0x08 to 0x49c019."
+        },
+        "recovery_checkpoint_2026_06_07_49c_consumer_stamp": {
+          "artifact": ".artifacts/rmg_recovery/direct_generation_49c_consumer_stamp_trace/49c_consumer_stamp_summary.json",
+          "runtime_result": "Parsed 721 consumer/stamp trace events: 110 selected returns at 0x4aa168, 47 initial-consumer paths through 0x4aa22b/0x4aa23d/0x4aa27e, 63 secondary-consumer stops at 0x4aa2fd, 62 validator entries at 0x49d471, 35 validator stamp call sites at 0x49d636, and 197 stamp-helper entries at 0x49abd6. The 49c-specific subset contains two sampled 0x540b14 projection returns, from 0x49cb83/0x49cc12 and 0x49cac2/0x49cb52; both enter the initial branch and reach 0x49abd6 with the stamp-helper object argument matching the selected projection object pointer.",
+          "scope": "This proves sampled post-adoption consumer/stamp behavior for 0x540b14 projection objects. It does not prove later slot +0x08 dispatch into 0x49c0a6 or 0x49c019, and 0x49cdb1/0x540b00 remains unhit in bounded runtime samples.",
+          "source_basis": "Live H3MapEd winedbg trace of constructor pre-return sites 0x49cb52/0x49cc12, selected-return 0x4aa168, initial consumer/stamp sites 0x4aa22b/0x4aa23d/0x4aa27e, stamp helper 0x49abd6, and secondary validator sites 0x4aa2fd/0x4aa30e/0x49d471/0x49d636."
         },
         "recovery_checkpoint_2026_06_07_49c_writer_surface": {
           "artifact": ".artifacts/rmg_recovery/direct_generation_49cac2_projection_constructor_hit_trace/49c_writer_surface_summary.json",
@@ -43913,7 +43931,7 @@
       "status": "in_progress",
       "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-07T07:58:00Z",
+      "updatedAt": "2026-06-07T08:10:00Z",
       "validation": {
         "checks": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
@@ -50563,7 +50581,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-07T07:58:00Z",
+  "updatedAt": "2026-06-07T08:10:00Z",
   "validation": {
     "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification; full reward/guard/private-state chain remains in progress.",
     "evidence": [
