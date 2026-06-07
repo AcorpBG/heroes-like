@@ -649,7 +649,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "land_edge_generated_cell_bit_writer_entry_checkpoint",
         "status": "checkpoint_authority",
         "reads": ["generator+0x14 generated cells", "generator+0x10e4 runtime-zone relation vectors"],
-        "runtime_trace": "Fresh direct-generation trace .artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary hit 0x4a4c8e once with generator 0x0031e058, dimensions 36x36x1, generated-cell buffer 0x0188b6d4, and live +0xc8/+0xd8 vector anchors. Full-grid summary .artifacts/rmg_recovery/seed58_4a4c8e_grid_summary.json records 1296 cells, w28 bit22=8 bit25=1200 bit26=652 bit27=368, nonzero w2c=0, owner-byte2 counts {-1:1,0:136,1:222,2:196,3:137,4:204,5:151,6:150,7:99}, and w20/w24/w28/w2c sha256 b5e238bc3f17d9f8891f76619bc8017f4ae5316c3daef699214b0bc29618ef3d.",
+        "runtime_trace": "Fresh direct-generation trace .artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary hit 0x4a4c8e once with generator 0x0031e058, dimensions 36x36x1, generated-cell buffer 0x0188b6d4, and live +0xc8/+0xd8 vector anchors. This trace uses the seed58 runtime directory but does not control H3MapEd's random seed. Full-grid summary .artifacts/rmg_recovery/seed58_4a4c8e_grid_summary.json records 1296 cells, w28 bit22=8 bit25=1200 bit26=652 bit27=368, nonzero w2c=0, owner-byte2 counts {-1:1,0:136,1:222,2:196,3:137,4:204,5:151,6:150,7:99}, and w20/w24/w28/w2c sha256 b5e238bc3f17d9f8891f76619bc8017f4ae5316c3daef699214b0bc29618ef3d. Treat these as direct-generation phase-shape evidence, not controlled seed-58 parity evidence.",
     },
     {
         "address": "0x4a80dc",
@@ -788,7 +788,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "generated_cell_post_terrain_phase_driver",
         "status": "recovered_static_and_seed58_runtime_prefix",
         "calls_in_order": ["0x4a8260", "0x4a4c8e", "per-cell scan calling 0x49a962", "0x4a4913 loop over generator+0x10e4 vector", "0x4a5767", "0x4a4fc5", "0x4a79a3"],
-        "runtime_trace": "seed58_interactive_49aa63_to_4a4c8e confirms 0x4a8c15 -> 0x4a8260 -> 490 calls to 0x49aa63 -> 0x4a4c8e for the bit26 writer stream.",
+        "runtime_trace": "seed58_interactive_49aa63_to_4a4c8e confirms 0x4a8c15 -> 0x4a8260 -> 490 calls to 0x49aa63 -> 0x4a4c8e for the controlled seed-58 bit26 writer stream. A separate non-seed-pinned direct-generation full-grid trace summarized at .artifacts/rmg_recovery/direct_generation_4a8c15_to_4a4c8e_grid_delta_summary.json records the same phase shape from 0x4a8c15 bit26=0/bit27=1296 to 0x4a4c8e bit26=793/bit27=256, with 1040 changed state cells, bit26 delta +793, bit27 delta -1040, and unchanged owner-byte2 distribution.",
     },
     {
         "address": "0x49b3fb",
