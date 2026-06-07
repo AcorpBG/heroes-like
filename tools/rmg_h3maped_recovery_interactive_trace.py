@@ -27,7 +27,7 @@ from rmg_h3maped_recovery_trace import (
 
 
 DEFAULT_OUT_DIR = Path(".artifacts/rmg_recovery/seed58_interactive_trace")
-STOP_RE = r"Stopped on breakpoint\s+\d+\s+at\s+0x([0-9a-fA-F]+)"
+STOP_RE = r"Stopped on [A-Za-z _-]*(?:breakpoint|watchpoint)\s+\d+\s+at\s+0x([0-9a-fA-F]+)"
 PROMPT_RE = r"Wine-dbg>"
 
 
@@ -166,6 +166,8 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
             child.expect(PROMPT_RE, timeout=args.debugger_timeout)
             for address in args.breakpoints:
                 issue_and_wait(child, f"break *{address}", args.debugger_timeout)
+            for command in args.pre_cont_command:
+                issue_and_wait(child, command, args.debugger_timeout)
 
             child.send("cont\r")
             drive_h3maped_ui(args.generate_wait_seconds, args.out_dir / "screenshots")
@@ -224,6 +226,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="Additional winedbg command to run at every breakpoint stop. May be repeated.",
+    )
+    parser.add_argument(
+        "--pre-cont-command",
+        action="append",
+        default=[],
+        help="Additional winedbg command to run after initial breakpoints are installed and before the first cont. May be repeated.",
     )
     parser.add_argument(
         "--address-command",
@@ -285,6 +293,8 @@ def main() -> int:
         ]
         for extra_command in args.extra_command:
             command.extend(["--extra-command", extra_command])
+        for pre_cont_command in args.pre_cont_command:
+            command.extend(["--pre-cont-command", pre_cont_command])
         for address_command in args.address_command:
             command.extend(["--address-command", address_command])
         if args.lite:
@@ -307,6 +317,7 @@ def main() -> int:
     ledger["max_events"] = args.max_events
     ledger["dump_command"] = args.dump_command
     ledger["extra_command"] = args.extra_command
+    ledger["pre_cont_command"] = args.pre_cont_command
     ledger["address_command"] = args.address_command
     ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if ledger["event_count"] else "no_events"
