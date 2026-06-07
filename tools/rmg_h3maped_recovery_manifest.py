@@ -812,7 +812,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x49cf34",
         "name": "reward_guard_attach_generated_cell_pass",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_and_live_finalization_replay",
         "calls": [
             "0x49d7c3",
             "0x49d2c7",
@@ -857,7 +857,8 @@ FUNCTIONS: list[dict[str, Any]] = [
             "calls 0x4ae2d0 over the candidate-coordinate vector range, then refreshes bounds/candidates through 0x49d6e0 and 0x49d7c3",
             "returns true after successful candidate selection and wrapper refresh",
         ],
-        "ghidra_dump": "Called by 0x4aa354 and 0x4adb72. Static recovery shows a three-phase reward/guard attach pass: selected-member neighborhood mutation using object-record fields +0x04 and +0x08/+0x0c/+0x10, reverse filtering of wrapper candidate coordinates through bit26 and 0x49d2e0, then random candidate selection with 0x49d69d stamping, direction-neighborhood bit27 writes, wrapper+0x4c/+0x50/+0x48 finalization, candidate-vector range cleanup, and wrapper bounds/candidate refresh. Exact descriptor/payload semantics, direction-policy class values, and runtime ordered replay remain pending.",
+        "runtime_trace": "Direct-generation trace .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/winedbg_recovery_trace_ledger.json, summarized by .artifacts/rmg_recovery/direct_generation_49cf34_finalization_trace/49cf34_finalization_summary.json, records 4 entries, 3 completed success paths, one incomplete final call from manual trace cut, 32 primary 0x49a932(true) bit27 write call-site stops at 0x49d1ed, and 21 neighbor bit27 write call-site stops at 0x49d270. In every completed sampled success path, wrapper+0x4c/+0x50 match the relative x/y locals, wrapper byte +0x48 is set to 1, the candidate-coordinate vector is non-empty before 0x4ae2d0 cleanup, empty immediately after cleanup, and rebuilt by the 0x49d6e0/0x49d7c3 refresh before success. The first completed path records relative coordinate (8,7), clears a 9-entry candidate vector to 0, and returns with 32 candidate coordinates rebuilt.",
+        "ghidra_dump": "Called by 0x4aa354 and 0x4adb72. Static recovery shows a three-phase reward/guard attach pass: selected-member neighborhood mutation using object-record fields +0x04 and +0x08/+0x0c/+0x10, reverse filtering of wrapper candidate coordinates through bit26 and 0x49d2e0, then random candidate selection with 0x49d69d stamping, direction-neighborhood bit27 writes, wrapper+0x4c/+0x50/+0x48 finalization, candidate-vector range cleanup, and wrapper bounds/candidate refresh. Runtime finalization/cleanup replay is proven through the direct-generation trace; exact descriptor/payload semantic names, direction-policy class values, full caller-to-generator object projection, and generated-cell before/after parity remain pending.",
     },
     {
         "address": "0x4adb72",
