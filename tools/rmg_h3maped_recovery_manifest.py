@@ -781,7 +781,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "0x49a85d route/neighborhood stamp",
             "0x49a962 boundary center and neighborhood clear",
         ],
-        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 1,686 route insertion call-site events, 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears. The 0x4a858f stamp coordinate order exactly matches the direct 0x49a85d trace, and the 11 far-cut insertion pairs match the 0x4a80dc squared-distance >= 25 gate.",
+        "runtime_trace": "For seed 58, caller-side traces before 0x4a4c8e record 1,686 route insertion call-site events, 52 0x4a80dc pairs, 340 0x49a85d route stamps, and 490 0x49a962 boundary clears. The 0x4a858f stamp coordinate order exactly matches the direct 0x49a85d trace, and the 11 far-cut insertion pairs match the 0x4a80dc squared-distance >= 25 gate. A separate non-seed-pinned direct-generation full-grid trace .artifacts/rmg_recovery/direct_generation_4a8260_entry_to_return_full_grid_esi proves the 0x4a8c15->0x4a4c8e state mutation is isolated inside 0x4a8260: same grid base 0x0188b6d4 at 0x4a8260 and 0x4a8c25, 1040 changed state cells, w28-only changes, bit26 delta +793, bit27 delta -1040.",
     },
     {
         "address": "0x4a8c15",
