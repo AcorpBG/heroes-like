@@ -199,7 +199,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "resolves an object descriptor through 0x4af785, constructs a 0x1c object record through 0x49ba89, commits it with 0x49e6cd, and appends an 8-byte (handler key, object record) pair to generator+0xeec",
         ],
         "callers": ["0x4afa99"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and objdump artifact .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump/vtable_53eafc_objdump.txt recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Same-run pending-entry replay remains pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and objdump artifact .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump/vtable_53eafc_objdump.txt recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Runtime probe .artifacts/rmg_recovery/seed58_interactive_484d9f_probe drove direct seed-58 random generation to completion without hitting 0x484d9f, so this source-handler chain is not the observed direct Small-generation blocker until a live owning caller/action is identified.",
     },
     {
         "address": "0x4afa99",
@@ -219,7 +219,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "tears down the stack-local generator through 0x4af65e",
         ],
         "callers": ["0x484d9f at 0x484e65", "0x484d9f at 0x484e9e"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump/target_004afa99_FUN_004afa99.txt recovers this wrapper. The two 0x484d9f call sites construct a stack 0x53eafc handler through 0x4802ac and call 0x4afa99(handler, 1, mode, dimension_or_budget); the second call is gated by 0x42a1f9(source) and a source-size check.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump/target_004afa99_FUN_004afa99.txt recovers this wrapper. The two 0x484d9f call sites construct a stack 0x53eafc handler through 0x4802ac and call 0x4afa99(handler, 1, mode, dimension_or_budget); the second call is gated by 0x42a1f9(source) and a source-size check. Runtime probe .artifacts/rmg_recovery/seed58_interactive_484d9f_probe did not hit 0x484d9f during direct seed-58 random generation, and a pointer scan found 0x00484d9f only in .rdata exception/unwind metadata.",
     },
     {
         "address": "0x4802ac",
@@ -649,6 +649,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "name": "land_edge_generated_cell_bit_writer_entry_checkpoint",
         "status": "checkpoint_authority",
         "reads": ["generator+0x14 generated cells", "generator+0x10e4 runtime-zone relation vectors"],
+        "runtime_trace": "Fresh direct-generation trace .artifacts/rmg_recovery/seed58_interactive_4a4c8e_fresh_boundary hit 0x4a4c8e once with generator 0x0031e058, dimensions 36x36x1, generated-cell buffer 0x0188b6d4, and live +0xc8/+0xd8 vector anchors.",
     },
     {
         "address": "0x4a80dc",
