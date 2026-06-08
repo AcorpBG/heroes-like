@@ -141,7 +141,19 @@ def open_new_dialog() -> None:
         raise RuntimeError("H3MapEd New Map dialog did not appear")
 
 
-def drive_h3maped_ui(generate_wait_seconds: int, screen_dir: Path) -> None:
+def click_combo_option(window_id: str, rel_x: int, rel_y: int, down_count: int) -> None:
+    if down_count < 0:
+        return
+    click_window_relative(window_id, rel_x, rel_y)
+    time.sleep(0.1)
+    for _ in range(down_count):
+        run_xdotool(["key", "Down"])
+        time.sleep(0.02)
+    run_xdotool(["key", "Return"])
+    time.sleep(0.1)
+
+
+def drive_h3maped_ui(args: argparse.Namespace, screen_dir: Path) -> None:
     wait_for_main_window()
     time.sleep(3)
     take_screenshot(screen_dir, "01_main")
@@ -159,23 +171,35 @@ def drive_h3maped_ui(generate_wait_seconds: int, screen_dir: Path) -> None:
     take_screenshot(screen_dir, "03_random_expanded")
 
     new_map = find_named_window_id("New Map")
-    click_window_relative(new_map, 313, 345)
-    time.sleep(0.1)
-    run_xdotool(["key", "Down"])
-    run_xdotool(["key", "Down"])
-    run_xdotool(["key", "Return"])
-    time.sleep(0.1)
-    click_window_relative(new_map, 529, 345)
-    time.sleep(0.1)
-    run_xdotool(["key", "Down"])
-    run_xdotool(["key", "Return"])
-    time.sleep(0.1)
+    if args.map_size == "medium":
+        click_window_relative(new_map, 29, 145)
+        time.sleep(0.1)
+    elif args.map_size == "large":
+        click_window_relative(new_map, 128, 125)
+        time.sleep(0.1)
+    elif args.map_size == "xlarge":
+        click_window_relative(new_map, 128, 145)
+        time.sleep(0.1)
+    if args.human_computer_down >= 0:
+        click_combo_option(new_map, 220, 245, args.human_computer_down)
+    if args.computer_only_down >= 0:
+        click_combo_option(new_map, 436, 245, args.computer_only_down)
+    if args.water_none:
+        click_window_relative(new_map, 138, 356)
+        time.sleep(0.1)
+    if args.monster_strength_down >= 0:
+        click_combo_option(new_map, 436, 405, args.monster_strength_down)
     click_window_relative(new_map, 234, 454)
     click_window_relative(new_map, 125, 502)
     time.sleep(0.2)
     take_screenshot(screen_dir, "04_configured")
     click_window_relative(new_map, 377, 118)
-    time.sleep(generate_wait_seconds)
+    time.sleep(0.2)
+    if wait_for_named_window("New Map", attempts=2):
+        run_xdotool(["mousemove", "497", "214", "click", "1"])
+        time.sleep(0.1)
+        run_xdotool(["key", "Return"])
+    time.sleep(args.generate_wait_seconds)
     take_screenshot(screen_dir, "05_after_generate_click")
 
 
@@ -210,7 +234,7 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
                 issue_and_wait(child, command, args.debugger_timeout)
 
             child.send("cont\r")
-            drive_h3maped_ui(args.generate_wait_seconds, args.out_dir / "screenshots")
+            drive_h3maped_ui(args, args.out_dir / "screenshots")
 
             events = 0
             stop_after = normalize_address(args.stop_after) if args.stop_after else ""
@@ -259,6 +283,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"))
     parser.add_argument("--generate-wait-seconds", type=int, default=2)
     parser.add_argument("--debugger-timeout", type=int, default=60)
+    parser.add_argument("--map-size", choices=["small", "medium", "large", "xlarge"], default="small")
+    parser.add_argument("--human-computer-down", type=int, default=-1, help="Select the Human/Computer player-count combo by Down-key count; -1 leaves it unchanged.")
+    parser.add_argument("--computer-only-down", type=int, default=-1, help="Select the Computer-only player-count combo by Down-key count; -1 leaves it unchanged.")
+    parser.add_argument("--monster-strength-down", type=int, default=-1, help="Select the monster-strength combo by Down-key count; -1 leaves it unchanged.")
+    parser.add_argument("--water-none", action="store_true", help="Click the Water content None radio button.")
     parser.add_argument("--lite", action="store_true", help="Only dump registers and stack at each breakpoint.")
     parser.add_argument("--lite-extra-command", default="", help="Optional extra winedbg command to run in lite mode.")
     parser.add_argument(
@@ -328,9 +357,19 @@ def main() -> int:
             str(args.generate_wait_seconds),
             "--debugger-timeout",
             str(args.debugger_timeout),
+            "--map-size",
+            args.map_size,
+            "--human-computer-down",
+            str(args.human_computer_down),
+            "--computer-only-down",
+            str(args.computer_only_down),
+            "--monster-strength-down",
+            str(args.monster_strength_down),
             "--breakpoints",
             *args.breakpoints,
         ]
+        if args.water_none:
+            command.append("--water-none")
         for extra_command in args.extra_command:
             command.extend(["--extra-command", extra_command])
         for pre_cont_command in args.pre_cont_command:
