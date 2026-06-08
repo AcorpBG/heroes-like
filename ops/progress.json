@@ -9125,10 +9125,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
+  "currentSliceNotes": "Source-backed 0x4a5e03 side-effect checkpoint: the two natural Medium seed-10 post-Border-Guard 0x4a7605 materialization calls enter 0x4a5e03 with arg0=0x2422 at (59,47,0) and (39,31,0), see empty target cell object-reference vectors, construct nonzero object records 0x036260c0 and 0x03626060, and delegate commit to generator vtable slot +0x04, statically resolved as 0x4a54a7. Post-0x4a54a7 cell/object-vector after-state is not captured yet.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T15:39:25Z",
+  "currentSliceUpdatedAt": "2026-06-08T15:54:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10115,11 +10115,11 @@
     "status": "passed"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_border_guard_followthrough_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a5e03_side_effect_summary_20260608.json",
     "native_behavior_changed": false,
-    "result": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
-    "source_basis": "Parsed WineDbg natural Medium seed-10 Border Guard follow-through trace summarized by tools/rmg_h3maped_border_guard_followthrough_summary.py.",
-    "remaining_blocker": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning."
+    "result": "Source-backed 0x4a5e03 side-effect checkpoint: the two natural Medium seed-10 post-Border-Guard 0x4a7605 materialization calls enter 0x4a5e03 with arg0=0x2422 at (59,47,0) and (39,31,0), see empty target cell object-reference vectors, construct nonzero object records 0x036260c0 and 0x03626060, and delegate commit to generator vtable slot +0x04, statically resolved as 0x4a54a7. Post-0x4a54a7 cell/object-vector after-state is not captured yet.",
+    "source_basis": "Parsed WineDbg target trace summarized by tools/rmg_h3maped_4a5e03_side_effect_summary.py, plus recovered vtable slot 0x540cbc+0x04 -> 0x004a54a7.",
+    "remaining_blocker": "Recover 0x4a54a7 callee-side generated-cell/object-vector side effects for the two 0x4a5e03-created object records and coordinates, including post-commit GeneratedCell+0x20/+0x24/+0x28/+0x2c after-state and generator +0xec4/+0xecc object-vector insertion. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -50003,7 +50003,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning.",
+  "remainingWork": "Recover 0x4a54a7 callee-side generated-cell/object-vector side effects for the two 0x4a5e03-created object records and coordinates, including post-commit GeneratedCell+0x20/+0x24/+0x28/+0x2c after-state and generator +0xec4/+0xecc object-vector insertion. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50193,6 +50193,21 @@
       "summary": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
       "tool": "tools/rmg_h3maped_border_guard_followthrough_summary.py",
       "updatedAt": "2026-06-08T15:39:25Z"
+    },
+    {
+      "id": "native-rmg-h3maped-recovery-checkpoints",
+      "system": "native RMG H3MapEd private-state recovery",
+      "sourceRefs": [
+        "docs/h3maped-rmg-private-state-recovery.md"
+      ],
+      "entries": [
+        {
+          "id": "rmg-h3maped-4a5e03-side-effect-checkpoint-10184",
+          "status": "completed",
+          "title": "Recover post-Border-Guard 0x4a5e03 delegation boundary",
+          "evidence": "Report-only recovery checkpoint. 0x4a5e03 is narrowed to target-cell empty check, 0x4a5c07 object construction, and vtable slot +0x04 delegation to 0x4a54a7. Native RMG behavior remains unchanged; 0x4a54a7 after-state replay remains pending."
+        }
+      ]
     }
   ],
   "status": "in_progress",
@@ -55469,6 +55484,21 @@
     }
   ],
   "validationResults": [
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Recorded source-backed post-Border-Guard 0x4a5e03 delegation checkpoint; native RMG behavior remains unchanged and 0x4a54a7 after-state replay remains the named blocker.",
+      "currentSliceNotes": "Source-backed 0x4a5e03 side-effect checkpoint: the two natural Medium seed-10 post-Border-Guard 0x4a7605 materialization calls enter 0x4a5e03 with arg0=0x2422 at (59,47,0) and (39,31,0), see empty target cell object-reference vectors, construct nonzero object records 0x036260c0 and 0x03626060, and delegate commit to generator vtable slot +0x04, statically resolved as 0x4a54a7. Post-0x4a54a7 cell/object-vector after-state is not captured yet.",
+      "updatedAt": "2026-06-08T15:54:19Z",
+      "validation": [
+        "python3 -m py_compile tools/rmg_h3maped_4a5e03_side_effect_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_4a5e03_side_effect_summary.py (passed: post_border_guard_4a5e03_delegates_to_4a54a7_commit_replay_pending)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
     {
       "currentSliceNotes": "2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.",
       "sliceId": "rmg-small-generalization-hardening-10184",
