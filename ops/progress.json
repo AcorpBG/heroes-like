@@ -443,101 +443,190 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Live Medium 0x4a901a weighted-branch rejection surface recovered for the sampled 0x4a8ffd calls: all eight sampled calls reach 0x4a9273 with an empty local candidate vector at EBP-0x54/-0x50/-0x4c, take the empty-vector false path at 0x4a9289, and return false at 0x4a9391. The early-loop sample shows 64 value-floor checks at 0x4a9150 with cell-value low words 20..34 below required argument 0xcb/203, so sampled candidates skip before 0x49aa93 eligibility. Native behavior unchanged. Remaining blocker: Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "currentSliceUpdatedAt": "2026-06-08T22:05:00Z",
-    "guardrailNote": "Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceNotes": "Focused 0x4a901a alternate-profile surface recovered without changing native behavior: four usable checked profiles reached 0x4a901a 26 times total, but none reached 0x49aa93 eligibility, 0x4ae52a/0x4ae1fd append, 0x540a9c materialization, or 0x4a54a7 projection. Observed value-floor/callsite surface: Medium no-water monster-strength 0 still uses 0x4a8ffd with required 0xcb/203; Large no-water uses 0x4a8ffd and 0x4a8f96 with required 0x90/144; XLarge no-water observed 0x4a8f96 with required 0xa6/166. Large value-gate samples had candidate low words 0..27 below required 0x90, so sampled candidates still skip before eligibility. Remaining blocker: Recover or drive the source-row/callsite condition that yields a 0x4a901a weighted scan whose value floor can pass, then capture 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceUpdatedAt": "2026-06-08T22:45:00Z",
+    "guardrailNote": "Recover or drive the source-row/callsite condition that yields a 0x4a901a weighted scan whose value floor can pass, then capture 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/4a901a_weighted_rejection_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/4a901a_profile_surface_summary_20260608.json",
       "commands": [
-        "python3 tools/rmg_h3maped_4a901a_weighted_rejection_summary.py (passed: medium_4a901a_weighted_branch_rejects_empty_candidate_vector)",
-        "python3 -m py_compile tools/rmg_h3maped_4a901a_weighted_rejection_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a901a_profile_surface_summary.py (passed: profile_scan_no_4a901a_append_materialization_path_found)",
+        "python3 -m py_compile tools/rmg_h3maped_4a901a_profile_surface_summary.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_4a901a_weighted_rejection": {
-          "status": "medium_4a901a_weighted_branch_rejects_empty_candidate_vector",
-          "native_behavior_changed": false,
-          "overall_goal_complete": false,
-          "early_trace_counts": {
-            "0x004a8ffd": 1,
-            "0x004a901a": 1,
-            "0x004a9085": 1,
-            "0x004a90e8": 1,
-            "0x004a90f7": 98,
-            "0x004a913f": 95,
-            "0x004a9150": 64,
-            "0x004a9167": 0,
-            "0x004a916e": 0
-          },
-          "late_trace_counts": {
-            "0x004a8ffd": 8,
-            "0x004a901a": 8,
-            "0x004a9085": 8,
-            "0x004a9167": 0,
-            "0x004a916e": 0,
-            "0x004a9232": 0,
-            "0x004a9248": 0,
-            "0x004a9254": 0,
-            "0x004a9273": 8,
-            "0x004a9289": 8,
-            "0x004a9290": 0,
-            "0x004a92bb": 0,
-            "0x004a92d5": 0,
-            "0x004a9322": 0,
-            "0x004a9325": 0,
-            "0x004a9391": 8
-          },
-          "early_value_gate_samples": {
-            "sample_count": 64,
-            "required_values_arg_0x18": [
-              203
+        "h3maped_4a901a_profile_surface": {
+          "aggregate": {
+            "checked_4a901a_hits": 26,
+            "profiles_with_value_gate_samples": [
+              "large_no_water_value_gate_trace"
             ],
-            "candidate_cell_value_low16_min": 20,
-            "candidate_cell_value_low16_max": 34,
-            "candidate_cell_value_low16_counts": {
-              "20": 1,
-              "22": 2,
-              "23": 3,
-              "24": 6,
-              "25": 7,
-              "26": 10,
-              "27": 10,
-              "28": 8,
-              "29": 4,
-              "30": 5,
-              "31": 3,
-              "32": 3,
-              "33": 1,
-              "34": 1
-            }
+            "success_surface_observed": false,
+            "thresholds_by_profile": {
+              "large_no_water_callsite_scan": [
+                144
+              ],
+              "large_no_water_value_gate_trace": [
+                144
+              ],
+              "medium_no_water_monster0_callsite_scan": [
+                203
+              ],
+              "xlarge_no_water_callsite_scan": [
+                166
+              ]
+            },
+            "usable_profile_count": 4
           },
-          "invariants": {
-            "all_late_sequences_have_empty_local_vector_at_gate": true,
-            "all_late_sequences_return_false": true,
-            "all_sampled_value_floor_checks_fail_required_value": true,
-            "early_value_gate_sample_does_not_reach_eligibility_helper_before_cap": true,
-            "early_value_gate_sample_reaches_value_floor": true,
-            "late_trace_covers_eight_4a901a_calls": true,
-            "late_trace_never_materializes_record": true,
-            "late_trace_never_reaches_append_sites": true,
-            "late_trace_never_reaches_eligibility_helper": true,
-            "late_trace_reaches_empty_vector_gate_for_every_call": true,
-            "late_trace_takes_false_gate_for_every_call": true
-          }
+          "native_behavior_changed": false,
+          "profile_summaries": [
+            {
+              "arg_14_enabled_values": [
+                0,
+                1
+              ],
+              "callsite_counts": {
+                "0x004a8f96": 8,
+                "0x004a8ffd": 8
+              },
+              "candidate_cell_value_low16_max": null,
+              "candidate_cell_value_low16_min": null,
+              "event_count": 32,
+              "profile_id": "large_no_water_callsite_scan",
+              "required_values_arg_0x18": [
+                144
+              ],
+              "success_surface_counts": {
+                "0x004a9167": 0,
+                "0x004a9248": 0,
+                "0x004a9254": 0,
+                "0x004a9290": 0,
+                "0x004a92bb": 0,
+                "0x004a92d5": 0,
+                "0x004a9322": 0
+              },
+              "usable": true,
+              "value_gate_sample_count": 0
+            },
+            {
+              "arg_14_enabled_values": [
+                1
+              ],
+              "callsite_counts": {
+                "0x004a8f96": 0,
+                "0x004a8ffd": 2
+              },
+              "candidate_cell_value_low16_max": 27,
+              "candidate_cell_value_low16_min": 0,
+              "event_count": 261,
+              "profile_id": "large_no_water_value_gate_trace",
+              "required_values_arg_0x18": [
+                144
+              ],
+              "success_surface_counts": {
+                "0x004a9167": 0,
+                "0x004a9248": 0,
+                "0x004a9254": 0,
+                "0x004a9290": 0,
+                "0x004a92bb": 0,
+                "0x004a92d5": 0,
+                "0x004a9322": 0
+              },
+              "usable": true,
+              "value_gate_sample_count": 254
+            },
+            {
+              "arg_14_enabled_values": [
+                1
+              ],
+              "callsite_counts": {
+                "0x004a8f96": 0,
+                "0x004a8ffd": 8
+              },
+              "candidate_cell_value_low16_max": null,
+              "candidate_cell_value_low16_min": null,
+              "event_count": 16,
+              "profile_id": "medium_no_water_monster0_callsite_scan",
+              "required_values_arg_0x18": [
+                203
+              ],
+              "success_surface_counts": {
+                "0x004a9167": 0,
+                "0x004a9248": 0,
+                "0x004a9254": 0,
+                "0x004a9290": 0,
+                "0x004a92bb": 0,
+                "0x004a92d5": 0,
+                "0x004a9322": 0
+              },
+              "usable": true,
+              "value_gate_sample_count": 0
+            },
+            {
+              "arg_14_enabled_values": [
+                0
+              ],
+              "callsite_counts": {
+                "0x004a8f96": 2,
+                "0x004a8ffd": 0
+              },
+              "candidate_cell_value_low16_max": null,
+              "candidate_cell_value_low16_min": null,
+              "event_count": 4,
+              "profile_id": "xlarge_no_water_callsite_scan",
+              "required_values_arg_0x18": [
+                166
+              ],
+              "success_surface_counts": {
+                "0x004a9167": 0,
+                "0x004a9248": 0,
+                "0x004a9254": 0,
+                "0x004a9290": 0,
+                "0x004a92bb": 0,
+                "0x004a92d5": 0,
+                "0x004a9322": 0
+              },
+              "usable": true,
+              "value_gate_sample_count": 0
+            },
+            {
+              "arg_14_enabled_values": [],
+              "callsite_counts": {
+                "0x004a8f96": 0,
+                "0x004a8ffd": 0
+              },
+              "candidate_cell_value_low16_max": null,
+              "candidate_cell_value_low16_min": null,
+              "event_count": 0,
+              "profile_id": "medium_water_callsite_scan",
+              "required_values_arg_0x18": [],
+              "success_surface_counts": {
+                "0x004a9167": 0,
+                "0x004a9248": 0,
+                "0x004a9254": 0,
+                "0x004a9290": 0,
+                "0x004a92bb": 0,
+                "0x004a92d5": 0,
+                "0x004a9322": 0
+              },
+              "usable": false,
+              "value_gate_sample_count": 0
+            }
+          ],
+          "status": "profile_scan_no_4a901a_append_materialization_path_found"
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-08T22:05:00Z",
-      "updatedAt": "2026-06-08T22:05:00Z"
+      "timestamp": "2026-06-08T22:45:00Z",
+      "updatedAt": "2026-06-08T22:45:00Z"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_recovery/4a901a_weighted_rejection_summary_20260608.json",
@@ -9207,7 +9296,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Live Medium 0x4a901a weighted-branch rejection surface recovered for the sampled 0x4a8ffd calls: all eight sampled calls reach 0x4a9273 with an empty local candidate vector at EBP-0x54/-0x50/-0x4c, take the empty-vector false path at 0x4a9289, and return false at 0x4a9391. The early-loop sample shows 64 value-floor checks at 0x4a9150 with cell-value low words 20..34 below required argument 0xcb/203, so sampled candidates skip before 0x49aa93 eligibility. Native behavior unchanged.",
+  "currentSliceNotes": "Focused 0x4a901a alternate-profile surface recovered without changing native behavior: four usable checked profiles reached 0x4a901a 26 times total, but none reached 0x49aa93 eligibility, 0x4ae52a/0x4ae1fd append, 0x540a9c materialization, or 0x4a54a7 projection. Observed value-floor/callsite surface: Medium no-water monster-strength 0 still uses 0x4a8ffd with required 0xcb/203; Large no-water uses 0x4a8ffd and 0x4a8f96 with required 0x90/144; XLarge no-water observed 0x4a8f96 with required 0xa6/166. Large value-gate samples had candidate low words 0..27 below required 0x90, so sampled candidates still skip before eligibility.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-08T22:05:00Z",
@@ -10207,102 +10296,191 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/4a901a_weighted_rejection_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/4a901a_profile_surface_summary_20260608.json",
     "commands": [
-      "python3 tools/rmg_h3maped_4a901a_weighted_rejection_summary.py (passed: medium_4a901a_weighted_branch_rejects_empty_candidate_vector)",
-      "python3 -m py_compile tools/rmg_h3maped_4a901a_weighted_rejection_summary.py (passed)",
+      "python3 tools/rmg_h3maped_4a901a_profile_surface_summary.py (passed: profile_scan_no_4a901a_append_materialization_path_found)",
+      "python3 -m py_compile tools/rmg_h3maped_4a901a_profile_surface_summary.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "h3maped_4a901a_weighted_rejection": {
-        "status": "medium_4a901a_weighted_branch_rejects_empty_candidate_vector",
-        "native_behavior_changed": false,
-        "overall_goal_complete": false,
-        "early_trace_counts": {
-          "0x004a8ffd": 1,
-          "0x004a901a": 1,
-          "0x004a9085": 1,
-          "0x004a90e8": 1,
-          "0x004a90f7": 98,
-          "0x004a913f": 95,
-          "0x004a9150": 64,
-          "0x004a9167": 0,
-          "0x004a916e": 0
-        },
-        "late_trace_counts": {
-          "0x004a8ffd": 8,
-          "0x004a901a": 8,
-          "0x004a9085": 8,
-          "0x004a9167": 0,
-          "0x004a916e": 0,
-          "0x004a9232": 0,
-          "0x004a9248": 0,
-          "0x004a9254": 0,
-          "0x004a9273": 8,
-          "0x004a9289": 8,
-          "0x004a9290": 0,
-          "0x004a92bb": 0,
-          "0x004a92d5": 0,
-          "0x004a9322": 0,
-          "0x004a9325": 0,
-          "0x004a9391": 8
-        },
-        "early_value_gate_samples": {
-          "sample_count": 64,
-          "required_values_arg_0x18": [
-            203
+      "h3maped_4a901a_profile_surface": {
+        "aggregate": {
+          "checked_4a901a_hits": 26,
+          "profiles_with_value_gate_samples": [
+            "large_no_water_value_gate_trace"
           ],
-          "candidate_cell_value_low16_min": 20,
-          "candidate_cell_value_low16_max": 34,
-          "candidate_cell_value_low16_counts": {
-            "20": 1,
-            "22": 2,
-            "23": 3,
-            "24": 6,
-            "25": 7,
-            "26": 10,
-            "27": 10,
-            "28": 8,
-            "29": 4,
-            "30": 5,
-            "31": 3,
-            "32": 3,
-            "33": 1,
-            "34": 1
-          }
+          "success_surface_observed": false,
+          "thresholds_by_profile": {
+            "large_no_water_callsite_scan": [
+              144
+            ],
+            "large_no_water_value_gate_trace": [
+              144
+            ],
+            "medium_no_water_monster0_callsite_scan": [
+              203
+            ],
+            "xlarge_no_water_callsite_scan": [
+              166
+            ]
+          },
+          "usable_profile_count": 4
         },
-        "invariants": {
-          "all_late_sequences_have_empty_local_vector_at_gate": true,
-          "all_late_sequences_return_false": true,
-          "all_sampled_value_floor_checks_fail_required_value": true,
-          "early_value_gate_sample_does_not_reach_eligibility_helper_before_cap": true,
-          "early_value_gate_sample_reaches_value_floor": true,
-          "late_trace_covers_eight_4a901a_calls": true,
-          "late_trace_never_materializes_record": true,
-          "late_trace_never_reaches_append_sites": true,
-          "late_trace_never_reaches_eligibility_helper": true,
-          "late_trace_reaches_empty_vector_gate_for_every_call": true,
-          "late_trace_takes_false_gate_for_every_call": true
-        }
+        "native_behavior_changed": false,
+        "profile_summaries": [
+          {
+            "arg_14_enabled_values": [
+              0,
+              1
+            ],
+            "callsite_counts": {
+              "0x004a8f96": 8,
+              "0x004a8ffd": 8
+            },
+            "candidate_cell_value_low16_max": null,
+            "candidate_cell_value_low16_min": null,
+            "event_count": 32,
+            "profile_id": "large_no_water_callsite_scan",
+            "required_values_arg_0x18": [
+              144
+            ],
+            "success_surface_counts": {
+              "0x004a9167": 0,
+              "0x004a9248": 0,
+              "0x004a9254": 0,
+              "0x004a9290": 0,
+              "0x004a92bb": 0,
+              "0x004a92d5": 0,
+              "0x004a9322": 0
+            },
+            "usable": true,
+            "value_gate_sample_count": 0
+          },
+          {
+            "arg_14_enabled_values": [
+              1
+            ],
+            "callsite_counts": {
+              "0x004a8f96": 0,
+              "0x004a8ffd": 2
+            },
+            "candidate_cell_value_low16_max": 27,
+            "candidate_cell_value_low16_min": 0,
+            "event_count": 261,
+            "profile_id": "large_no_water_value_gate_trace",
+            "required_values_arg_0x18": [
+              144
+            ],
+            "success_surface_counts": {
+              "0x004a9167": 0,
+              "0x004a9248": 0,
+              "0x004a9254": 0,
+              "0x004a9290": 0,
+              "0x004a92bb": 0,
+              "0x004a92d5": 0,
+              "0x004a9322": 0
+            },
+            "usable": true,
+            "value_gate_sample_count": 254
+          },
+          {
+            "arg_14_enabled_values": [
+              1
+            ],
+            "callsite_counts": {
+              "0x004a8f96": 0,
+              "0x004a8ffd": 8
+            },
+            "candidate_cell_value_low16_max": null,
+            "candidate_cell_value_low16_min": null,
+            "event_count": 16,
+            "profile_id": "medium_no_water_monster0_callsite_scan",
+            "required_values_arg_0x18": [
+              203
+            ],
+            "success_surface_counts": {
+              "0x004a9167": 0,
+              "0x004a9248": 0,
+              "0x004a9254": 0,
+              "0x004a9290": 0,
+              "0x004a92bb": 0,
+              "0x004a92d5": 0,
+              "0x004a9322": 0
+            },
+            "usable": true,
+            "value_gate_sample_count": 0
+          },
+          {
+            "arg_14_enabled_values": [
+              0
+            ],
+            "callsite_counts": {
+              "0x004a8f96": 2,
+              "0x004a8ffd": 0
+            },
+            "candidate_cell_value_low16_max": null,
+            "candidate_cell_value_low16_min": null,
+            "event_count": 4,
+            "profile_id": "xlarge_no_water_callsite_scan",
+            "required_values_arg_0x18": [
+              166
+            ],
+            "success_surface_counts": {
+              "0x004a9167": 0,
+              "0x004a9248": 0,
+              "0x004a9254": 0,
+              "0x004a9290": 0,
+              "0x004a92bb": 0,
+              "0x004a92d5": 0,
+              "0x004a9322": 0
+            },
+            "usable": true,
+            "value_gate_sample_count": 0
+          },
+          {
+            "arg_14_enabled_values": [],
+            "callsite_counts": {
+              "0x004a8f96": 0,
+              "0x004a8ffd": 0
+            },
+            "candidate_cell_value_low16_max": null,
+            "candidate_cell_value_low16_min": null,
+            "event_count": 0,
+            "profile_id": "medium_water_callsite_scan",
+            "required_values_arg_0x18": [],
+            "success_surface_counts": {
+              "0x004a9167": 0,
+              "0x004a9248": 0,
+              "0x004a9254": 0,
+              "0x004a9290": 0,
+              "0x004a92bb": 0,
+              "0x004a92d5": 0,
+              "0x004a9322": 0
+            },
+            "usable": false,
+            "value_gate_sample_count": 0
+          }
+        ],
+        "status": "profile_scan_no_4a901a_append_materialization_path_found"
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-08T22:05:00Z",
-    "updatedAt": "2026-06-08T22:05:00Z"
+    "timestamp": "2026-06-08T22:45:00Z",
+    "updatedAt": "2026-06-08T22:45:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/4a901a_weighted_rejection_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/4a901a_profile_surface_summary_20260608.json",
     "native_behavior_changed": false,
-    "remaining_blocker": "Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Live Medium 0x4a901a weighted-branch rejection surface recovered for the sampled 0x4a8ffd calls: all eight sampled calls reach 0x4a9273 with an empty local candidate vector at EBP-0x54/-0x50/-0x4c, take the empty-vector false path at 0x4a9289, and return false at 0x4a9391. The early-loop sample shows 64 value-floor checks at 0x4a9150 with cell-value low words 20..34 below required argument 0xcb/203, so sampled candidates skip before 0x49aa93 eligibility. Native behavior unchanged.",
-    "source_basis": "Focused WineDbg trace .artifacts/rmg_recovery/4a901a_weighted_candidate_loop_trace_20260608/ plus late trace .artifacts/rmg_recovery/4a901a_weighted_candidate_late_trace_20260608/; summarized by tools/rmg_h3maped_4a901a_weighted_rejection_summary.py.",
-    "validatedAt": "2026-06-08T22:05:00Z"
+    "remaining_blocker": "Recover or drive the source-row/callsite condition that yields a 0x4a901a weighted scan whose value floor can pass, then capture 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Focused 0x4a901a alternate-profile surface recovered without changing native behavior: four usable checked profiles reached 0x4a901a 26 times total, but none reached 0x49aa93 eligibility, 0x4ae52a/0x4ae1fd append, 0x540a9c materialization, or 0x4a54a7 projection. Observed value-floor/callsite surface: Medium no-water monster-strength 0 still uses 0x4a8ffd with required 0xcb/203; Large no-water uses 0x4a8ffd and 0x4a8f96 with required 0x90/144; XLarge no-water observed 0x4a8f96 with required 0xa6/166. Large value-gate samples had candidate low words 0..27 below required 0x90, so sampled candidates still skip before eligibility.",
+    "source_basis": "Focused WineDbg profile traces under .artifacts/rmg_recovery/4a901a_profile_*_20260608/; summarized by tools/rmg_h3maped_4a901a_profile_surface_summary.py.",
+    "validatedAt": "2026-06-08T22:45:00Z"
   },
-  "nextActionGuardrailNote": "Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recover or drive the source-row/callsite condition that yields a 0x4a901a weighted scan whose value floor can pass, then capture 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
   "plannedSlices": [
     {
@@ -50191,7 +50369,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover or drive the source-row/callsite condition that yields a 0x4a901a weighted scan whose value floor can pass, then capture 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
