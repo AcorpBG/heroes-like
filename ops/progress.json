@@ -443,8 +443,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Recovered the 0x4a8db2 source-side value-floor formula for weighted 0x4a901a calls without changing native behavior: arg_0x18_threshold = floor(sqrt(0x14400 / positive_density_sum)) over source fields +0x2c/+0x28/+0x3c/+0x38. Live Medium rows with density total 2 compute 203; live Large rows with totals 12 and 13 compute 83 and 79, matching observed callsite args. A Large low-threshold trace with required 83 sampled 496 owner-matching GeneratedCell+0x20 low-word checks at 0x4a9150, all only 0..40; no sample reached 0x49aa93, append, allocation, constructor, ready, or projection sites. Remaining blocker: Recover the pre-0x4a8db2 phase that raises or preserves GeneratedCell+0x20 low-word score values for owner-matching cells, then capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "currentSliceUpdatedAt": "2026-06-08T23:25:00Z",
+    "currentSliceNotes": "Recovered the pre-0x4a8db2 score/order surface without changing native behavior: a bounded Large no-water trace proves sixteen completed 0x4a54a7 object-footprint/local-score projection commits before the first 0x4a8db2 scheduler entry, all returning through 0x4a9586 and paired with 0x4a5756 projection completion. A second bounded trace proves forty-eight 0x4a8db2 scheduler entries, eight 0x4a8ffd weighted calls, eight 0x4a8f96 weighted calls, then 0x4a8c15, with no 0x4a79a3 before materialization. The prior Large 0x4a901a value-gate low-word range 0..40 is now consistent with the recovered 0x4a54a7 projection-distance field, not an unknown threshold formula.",
+    "currentSliceUpdatedAt": "2026-06-08T23:45:00Z",
     "guardrailNote": "Recover the pre-0x4a8db2 phase that raises or preserves GeneratedCell+0x20 low-word score values for owner-matching cells, then capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -452,95 +452,53 @@
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/4a8db2_threshold_formula_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/pre_4a8db2_score_order_summary_20260608.json",
       "commands": [
-        "python3 tools/rmg_h3maped_4a8db2_threshold_formula_summary.py (passed: 4a8db2_threshold_formula_recovered_value_gate_still_fails)",
-        "python3 -m py_compile tools/rmg_h3maped_4a8db2_threshold_formula_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/4a54a7_before_4a8db2_order_trace_20260608 ... (passed: 33 events)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/4a8db2_to_4a8c15_order_trace_20260608 ... (passed: 65 events)",
+        "python3 tools/rmg_h3maped_pre_4a8db2_score_order_summary.py (passed: pre_4a8db2_score_projection_order_recovered)",
+        "python3 -m py_compile tools/rmg_h3maped_pre_4a8db2_score_order_summary.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_4a8db2_threshold_formula": {
-          "invariants": {
-            "large_low_threshold_value_gate_never_appends_or_materializes": true,
-            "large_low_threshold_value_gate_never_reaches_eligibility": true,
-            "large_low_threshold_value_samples_all_fail": true,
-            "large_observed_thresholds_include_79_and_83": true,
-            "large_weighted_call_thresholds_match_source_formula": true,
-            "medium_active_rows_compute_threshold_203": true
-          },
-          "large_low_threshold_value_gate": {
-            "all_sampled_value_floor_checks_fail": true,
-            "candidate_cell_value_low16_max": 40,
-            "candidate_cell_value_low16_min": 0,
-            "counts": {
-              "0x004a8f96": 1,
-              "0x004a8ffd": 0,
-              "0x004a9150": 496,
-              "0x004a9167": 0,
-              "0x004a9248": 0,
-              "0x004a9254": 0,
-              "0x004a9273": 1,
-              "0x004a9289": 1,
-              "0x004a9290": 0,
-              "0x004a92bb": 0,
-              "0x004a9322": 0,
-              "0x004a9391": 2
-            },
-            "passing_value_floor_count": 0,
-            "required_threshold_counts": {
-              "83": 496
-            },
-            "sample_count": 496
-          },
-          "large_observed_thresholds": [
-            79,
-            83
-          ],
-          "large_weighted_thresholds_match_formula": true,
-          "medium_active_thresholds": [
-            203
-          ],
+        "h3maped_pre_4a8db2_score_order": {
+          "status": "pre_4a8db2_score_projection_order_recovered",
           "native_behavior_changed": false,
-          "static_formula": {
-            "accumulator_seed_fields_in_scheduler_order": [
-              "+0x24",
-              "+0x20",
-              "+0x34",
-              "+0x30"
-            ],
-            "density_fields_in_scheduler_order": [
-              "+0x2c",
-              "+0x28",
-              "+0x3c",
-              "+0x38"
-            ],
-            "formula": "arg_0x18_threshold = floor(sqrt(0x14400 / sum_positive(source[+0x2c], source[+0x28], source[+0x3c], source[+0x38])))",
-            "source": "objdump/Ghidra-backed 0x4a8db2 instruction stream",
-            "weighted_callsites_by_scheduler_index": {
-              "0": "0x004a8ffd",
-              "1": "0x004a8fd6",
-              "2": "0x004a8fb4",
-              "3": "0x004a8f96"
-            }
+          "pre_scheduler_projection_order": {
+            "4a54a7_commit_count_before_first_4a8db2": 16,
+            "4a5756_projection_done_count_before_first_4a8db2": 16,
+            "all_4a54a7_returns_are_0x4a9586": true
           },
-          "status": "4a8db2_threshold_formula_recovered_value_gate_still_fails"
+          "scheduler_to_materialization_order": {
+            "4a8db2_entries_before_first_4a8c15": 48,
+            "4a8ffd_weighted_calls": 8,
+            "4a8f96_weighted_calls": 8,
+            "no_4a79a3_before_4a8c15": true
+          },
+          "invariants": {
+            "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
+            "pre_4a8db2_commits_return_through_4a93a2_slot": true,
+            "same_run_4a8db2_repeats_before_4a8c15": true,
+            "no_4a79a3_before_4a8c15": true,
+            "value_gate_low_range_matches_recovered_projection_score_shape": true
+          }
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-08T23:25:00Z",
-      "updatedAt": "2026-06-08T23:25:00Z"
+      "timestamp": "2026-06-08T23:45:00Z",
+      "updatedAt": "2026-06-08T23:45:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/4a901a_weighted_rejection_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/pre_4a8db2_score_order_summary_20260608.json",
       "native_behavior_changed": false,
-      "remaining_blocker": "Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Live Medium 0x4a901a weighted-branch rejection surface recovered for the sampled 0x4a8ffd calls: all eight sampled calls reach 0x4a9273 with an empty local candidate vector at EBP-0x54/-0x50/-0x4c, take the empty-vector false path at 0x4a9289, and return false at 0x4a9391. The early-loop sample shows 64 value-floor checks at 0x4a9150 with cell-value low words 20..34 below required argument 0xcb/203, so sampled candidates skip before 0x49aa93 eligibility. Native behavior unchanged.",
-      "source_basis": "Focused WineDbg trace .artifacts/rmg_recovery/4a901a_weighted_candidate_loop_trace_20260608/ plus late trace .artifacts/rmg_recovery/4a901a_weighted_candidate_late_trace_20260608/; summarized by tools/rmg_h3maped_4a901a_weighted_rejection_summary.py.",
-      "validatedAt": "2026-06-08T22:05:00Z"
+      "remaining_blocker": "Capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility and appends through 0x4ae52a/0x4ae1fd, then record successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "result": "Recovered the pre-0x4a8db2 score/order surface without changing native behavior: a bounded Large no-water trace proves sixteen completed 0x4a54a7 object-footprint/local-score projection commits before the first 0x4a8db2 scheduler entry, all returning through 0x4a9586 and paired with 0x4a5756 projection completion. A second bounded trace proves forty-eight 0x4a8db2 scheduler entries, eight 0x4a8ffd weighted calls, eight 0x4a8f96 weighted calls, then 0x4a8c15, with no 0x4a79a3 before materialization. The prior Large 0x4a901a value-gate low-word range 0..40 is now consistent with the recovered 0x4a54a7 projection-distance field, not an unknown threshold formula.",
+      "source_basis": "Two bounded H3MapEd WineDbg Large no-water traces under .artifacts/rmg_recovery/4a54a7_before_4a8db2_order_trace_20260608/ and .artifacts/rmg_recovery/4a8db2_to_4a8c15_order_trace_20260608/, summarized with prior 0x4a54a7 projection-write and 0x4a8db2 threshold artifacts.",
+      "validatedAt": "2026-06-08T23:45:00Z"
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -551,7 +509,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Drive or identify a 0x4a901a weighted candidate scan that reaches 0x49aa93 and appends entries through 0x4ae52a/0x4ae1fd, then capture successful 0x540a9c materialization with selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "remainingWork": "Capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility and appends through 0x4ae52a/0x4ae1fd, then record successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -561,7 +519,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-08T22:05:00Z",
+    "updatedAt": "2026-06-08T23:45:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9202,10 +9160,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered the 0x4a8db2 source-side value-floor formula for weighted 0x4a901a calls without changing native behavior: arg_0x18_threshold = floor(sqrt(0x14400 / positive_density_sum)) over source fields +0x2c/+0x28/+0x3c/+0x38. Live Medium rows with density total 2 compute 203; live Large rows with totals 12 and 13 compute 83 and 79, matching observed callsite args. A Large low-threshold trace with required 83 sampled 496 owner-matching GeneratedCell+0x20 low-word checks at 0x4a9150, all only 0..40; no sample reached 0x49aa93, append, allocation, constructor, ready, or projection sites.",
+  "currentSliceNotes": "Recovered the pre-0x4a8db2 score/order surface without changing native behavior: a bounded Large no-water trace proves sixteen completed 0x4a54a7 object-footprint/local-score projection commits before the first 0x4a8db2 scheduler entry, all returning through 0x4a9586 and paired with 0x4a5756 projection completion. A second bounded trace proves forty-eight 0x4a8db2 scheduler entries, eight 0x4a8ffd weighted calls, eight 0x4a8f96 weighted calls, then 0x4a8c15, with no 0x4a79a3 before materialization. The prior Large 0x4a901a value-gate low-word range 0..40 is now consistent with the recovered 0x4a54a7 projection-distance field, not an unknown threshold formula.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T22:05:00Z",
+  "currentSliceUpdatedAt": "2026-06-08T23:45:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10202,95 +10160,53 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/4a8db2_threshold_formula_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/pre_4a8db2_score_order_summary_20260608.json",
     "commands": [
-      "python3 tools/rmg_h3maped_4a8db2_threshold_formula_summary.py (passed: 4a8db2_threshold_formula_recovered_value_gate_still_fails)",
-      "python3 -m py_compile tools/rmg_h3maped_4a8db2_threshold_formula_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/4a54a7_before_4a8db2_order_trace_20260608 ... (passed: 33 events)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/4a8db2_to_4a8c15_order_trace_20260608 ... (passed: 65 events)",
+      "python3 tools/rmg_h3maped_pre_4a8db2_score_order_summary.py (passed: pre_4a8db2_score_projection_order_recovered)",
+      "python3 -m py_compile tools/rmg_h3maped_pre_4a8db2_score_order_summary.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "h3maped_4a8db2_threshold_formula": {
-        "invariants": {
-          "large_low_threshold_value_gate_never_appends_or_materializes": true,
-          "large_low_threshold_value_gate_never_reaches_eligibility": true,
-          "large_low_threshold_value_samples_all_fail": true,
-          "large_observed_thresholds_include_79_and_83": true,
-          "large_weighted_call_thresholds_match_source_formula": true,
-          "medium_active_rows_compute_threshold_203": true
-        },
-        "large_low_threshold_value_gate": {
-          "all_sampled_value_floor_checks_fail": true,
-          "candidate_cell_value_low16_max": 40,
-          "candidate_cell_value_low16_min": 0,
-          "counts": {
-            "0x004a8f96": 1,
-            "0x004a8ffd": 0,
-            "0x004a9150": 496,
-            "0x004a9167": 0,
-            "0x004a9248": 0,
-            "0x004a9254": 0,
-            "0x004a9273": 1,
-            "0x004a9289": 1,
-            "0x004a9290": 0,
-            "0x004a92bb": 0,
-            "0x004a9322": 0,
-            "0x004a9391": 2
-          },
-          "passing_value_floor_count": 0,
-          "required_threshold_counts": {
-            "83": 496
-          },
-          "sample_count": 496
-        },
-        "large_observed_thresholds": [
-          79,
-          83
-        ],
-        "large_weighted_thresholds_match_formula": true,
-        "medium_active_thresholds": [
-          203
-        ],
+      "h3maped_pre_4a8db2_score_order": {
+        "status": "pre_4a8db2_score_projection_order_recovered",
         "native_behavior_changed": false,
-        "static_formula": {
-          "accumulator_seed_fields_in_scheduler_order": [
-            "+0x24",
-            "+0x20",
-            "+0x34",
-            "+0x30"
-          ],
-          "density_fields_in_scheduler_order": [
-            "+0x2c",
-            "+0x28",
-            "+0x3c",
-            "+0x38"
-          ],
-          "formula": "arg_0x18_threshold = floor(sqrt(0x14400 / sum_positive(source[+0x2c], source[+0x28], source[+0x3c], source[+0x38])))",
-          "source": "objdump/Ghidra-backed 0x4a8db2 instruction stream",
-          "weighted_callsites_by_scheduler_index": {
-            "0": "0x004a8ffd",
-            "1": "0x004a8fd6",
-            "2": "0x004a8fb4",
-            "3": "0x004a8f96"
-          }
+        "pre_scheduler_projection_order": {
+          "4a54a7_commit_count_before_first_4a8db2": 16,
+          "4a5756_projection_done_count_before_first_4a8db2": 16,
+          "all_4a54a7_returns_are_0x4a9586": true
         },
-        "status": "4a8db2_threshold_formula_recovered_value_gate_still_fails"
+        "scheduler_to_materialization_order": {
+          "4a8db2_entries_before_first_4a8c15": 48,
+          "4a8ffd_weighted_calls": 8,
+          "4a8f96_weighted_calls": 8,
+          "no_4a79a3_before_4a8c15": true
+        },
+        "invariants": {
+          "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
+          "pre_4a8db2_commits_return_through_4a93a2_slot": true,
+          "same_run_4a8db2_repeats_before_4a8c15": true,
+          "no_4a79a3_before_4a8c15": true,
+          "value_gate_low_range_matches_recovered_projection_score_shape": true
+        }
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-08T23:25:00Z",
-    "updatedAt": "2026-06-08T23:25:00Z"
+    "timestamp": "2026-06-08T23:45:00Z",
+    "updatedAt": "2026-06-08T23:45:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/4a8db2_threshold_formula_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/pre_4a8db2_score_order_summary_20260608.json",
     "native_behavior_changed": false,
-    "remaining_blocker": "Recover the pre-0x4a8db2 phase that raises or preserves GeneratedCell+0x20 low-word score values for owner-matching cells, then capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Recovered the 0x4a8db2 source-side value-floor formula for weighted 0x4a901a calls without changing native behavior: arg_0x18_threshold = floor(sqrt(0x14400 / positive_density_sum)) over source fields +0x2c/+0x28/+0x3c/+0x38. Live Medium rows with density total 2 compute 203; live Large rows with totals 12 and 13 compute 83 and 79, matching observed callsite args. A Large low-threshold trace with required 83 sampled 496 owner-matching GeneratedCell+0x20 low-word checks at 0x4a9150, all only 0..40; no sample reached 0x49aa93, append, allocation, constructor, ready, or projection sites.",
-    "source_basis": "Objdump/Ghidra-backed 0x4a8db2 instruction stream plus focused WineDbg traces under .artifacts/rmg_recovery/4a8db2_large_source_threshold_trace_20260608/ and .artifacts/rmg_recovery/4a901a_large_low_threshold_value_gate_trace_20260608/.",
-    "validatedAt": "2026-06-08T23:25:00Z"
+    "remaining_blocker": "Capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility and appends through 0x4ae52a/0x4ae1fd, then record successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Recovered the pre-0x4a8db2 score/order surface without changing native behavior: a bounded Large no-water trace proves sixteen completed 0x4a54a7 object-footprint/local-score projection commits before the first 0x4a8db2 scheduler entry, all returning through 0x4a9586 and paired with 0x4a5756 projection completion. A second bounded trace proves forty-eight 0x4a8db2 scheduler entries, eight 0x4a8ffd weighted calls, eight 0x4a8f96 weighted calls, then 0x4a8c15, with no 0x4a79a3 before materialization. The prior Large 0x4a901a value-gate low-word range 0..40 is now consistent with the recovered 0x4a54a7 projection-distance field, not an unknown threshold formula.",
+    "source_basis": "Two bounded H3MapEd WineDbg Large no-water traces under .artifacts/rmg_recovery/4a54a7_before_4a8db2_order_trace_20260608/ and .artifacts/rmg_recovery/4a8db2_to_4a8c15_order_trace_20260608/, summarized with prior 0x4a54a7 projection-write and 0x4a8db2 threshold artifacts.",
+    "validatedAt": "2026-06-08T23:45:00Z"
   },
   "nextActionGuardrailNote": "Recover the pre-0x4a8db2 phase that raises or preserves GeneratedCell+0x20 low-word score values for owner-matching cells, then capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -50181,7 +50097,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover the pre-0x4a8db2 phase that raises or preserves GeneratedCell+0x20 low-word score values for owner-matching cells, then capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility and appends through 0x4ae52a/0x4ae1fd, then record successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50541,7 +50457,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, live sampled 0x4a9f1c post-counter branch reasons, live 0x4a9f1c selected-create replay, and selected candidate vtable create/scorer contracts are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor type/category semantic names, 0x4add76 cleanup replay, downstream projection-object consumer linkage, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T22:05:00Z",
+  "updatedAt": "2026-06-08T23:45:00Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
