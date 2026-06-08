@@ -9125,10 +9125,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Source-backed 0x4a54a7 after-state checkpoint: the two natural Medium seed-10 post-Border-Guard 0x4a7605 materialization records append through 0x4a54a7 into the generator object vector and target-cell object-reference vectors. Object 0x036260c0 at (59,47,0) advances object-vector end 0x036261f8 -> 0x036261fc, stores 0x036260c0 in old-end slot 0x036261f8, and changes target cell +0x20/+0x24/+0x28/+0x2c from 0x00010002/0x00000d07/0x12005000/0x00000000 to 0x00010000/0x00000d07/0x1a405000/0x00000000. Object 0x03626060 at (39,31,0) advances 0x03626200 -> 0x03626204, stores 0x03626060 in old-end slot 0x03626200, and changes target cell words from 0x00040002/0x00000dc3/0x1a000000/0x00000000 to 0x00040000/0x00000dc3/0x1a400000/0x00000000. This is sampled target-cell/object-vector after-state only; full 0x4a54a7 projection-loop fan-out remains pending.",
+  "currentSliceNotes": "Source-backed 0x4a54a7 projection-write checkpoint: focused controlled Medium seed-10 traces recover two complete post-Border-Guard projection-loop write streams. First 0x4a77a8 -> 0x4a77ad: args (arg0=0x1388, x=5, y=63, level=0), object 0x03625580, 215 unique 0x4a56b6 cell writes, high word preserved, low word lowered. Second 0x4a7895 -> 0x4a789a: args (arg0=0x2422, x=67, y=60, level=0), object 0x03625490, 126 unique writes, same invariants. Native unchanged. Remaining blockers: descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, relation/control linkage, and coordinate reconciliation with earlier after-state replay.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T16:14:19Z",
+  "currentSliceUpdatedAt": "2026-06-08T16:31:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10107,10 +10107,10 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_afterstate_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a54a7_afterstate_summary.py",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_afterstate_summary.py",
+      "python3 -m py_compile tools/rmg_h3maped_4a54a7_projection_write_summary.py",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_projection_write_summary.py",
       "jq empty ops/progress.json",
       "git diff --check",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
@@ -10119,11 +10119,11 @@
     "status": "passed"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_afterstate_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json",
     "native_behavior_changed": false,
-    "result": "Source-backed 0x4a54a7 after-state checkpoint: the two natural Medium seed-10 post-Border-Guard target records append into the generator object vector (0x036261f8 -> 0x036261fc with old-end slot 0x036260c0; 0x03626200 -> 0x03626204 with old-end slot 0x03626060), target cells adopt object-reference vectors containing those records, and target-cell +0x20 low words clear while +0x28 updates. This is sampled target-cell/object-vector after-state only; full projection-loop fan-out remains pending.",
-    "source_basis": "Parsed WineDbg cell-ref trace summarized by tools/rmg_h3maped_4a54a7_afterstate_summary.py, building on recovered 0x4a5e03 delegation to vtable slot 0x540cbc+0x04 -> 0x004a54a7.",
-    "remaining_blocker": "Recover the full 0x4a54a7 projection-loop write set, descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, and relation/control linkage to later phase consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes."
+    "result": "Source-backed 0x4a54a7 projection-write checkpoint: two complete focused Medium seed-10 post-Border-Guard projection streams were recovered. The first stream at 0x4a77a8 writes 215 unique generated cells for args (arg0=0x1388, x=5, y=63, level=0); the second stream at 0x4a7895 writes 126 unique generated cells for args (arg0=0x2422, x=67, y=60, level=0). Both reach 0x4a5756, 0x4a5e6c, and their callsite returns; every captured 0x4a56b6 write preserves GeneratedCell+0x20 high word and lowers the low-word score. This is recovery evidence only; native behavior changed false.",
+    "source_basis": "Parsed focused WineDbg ledgers summarized by tools/rmg_h3maped_4a54a7_projection_write_summary.py, using recorded 0x4a7605 post-Border-Guard callsites and 0x4a54a7/0x4a56b6/0x4a5756/0x4a5e6c event streams.",
+    "remaining_blocker": "Recover descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, target-coordinate reconciliation between the earlier after-state replay and focused projection-write replay, and relation/control linkage into later phase consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -50007,7 +50007,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover the full 0x4a54a7 projection-loop write set, descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, and relation/control linkage to later phase consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, target-coordinate reconciliation between the earlier after-state replay and focused projection-write replay, and relation/control linkage into later phase consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50216,8 +50216,25 @@
           "status": "completed",
           "title": "Recover sampled 0x4a54a7 target after-state",
           "evidence": "Report-only recovery checkpoint. The two natural Medium seed-10 post-Border-Guard target records are proven to append through 0x4a54a7 into the generator object vector and target-cell object-reference vectors, with sampled target-cell +0x20/+0x28 after-state recovered. Native RMG behavior remains unchanged; full 0x4a54a7 projection-loop fan-out, descriptor semantics, relation counters, and relation/control linkage remain pending."
+        },
+        {
+          "id": "rmg-h3maped-4a54a7-projection-write-checkpoint-10184",
+          "title": "Recover focused 0x4a54a7 projection write streams",
+          "status": "completed",
+          "evidence": "Report-only recovery checkpoint. Two complete focused Medium seed-10 post-Border-Guard 0x4a54a7 projection-loop write streams are recovered: 215 unique writes from the 0x4a77a8 callsite and 126 unique writes from the 0x4a7895 callsite. Native RMG behavior remains unchanged; descriptor semantics, relation counters, coordinate reconciliation, and relation/control linkage remain pending."
         }
       ]
+    },
+    {
+      "id": "h3maped-4a54a7-projection-write-summary-20260608",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "report_only_recovery_evidence",
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json",
+      "tool": "tools/rmg_h3maped_4a54a7_projection_write_summary.py",
+      "native_behavior_changed": false,
+      "summary": "Source-backed 0x4a54a7 projection-write checkpoint: two complete focused Medium seed-10 post-Border-Guard projection streams were recovered. The first stream at 0x4a77a8 writes 215 unique generated cells for args (arg0=0x1388, x=5, y=63, level=0); the second stream at 0x4a7895 writes 126 unique generated cells for args (arg0=0x2422, x=67, y=60, level=0). Both reach 0x4a5756, 0x4a5e6c, and their callsite returns; every captured 0x4a56b6 write preserves GeneratedCell+0x20 high word and lowers the low-word score. This is recovery evidence only; native behavior changed false.",
+      "remainingWork": "Recover descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, target-coordinate reconciliation between the earlier after-state replay and focused projection-write replay, and relation/control linkage into later phase consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "updatedAt": "2026-06-08T16:31:50Z"
     }
   ],
   "status": "in_progress",
@@ -50320,22 +50337,22 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, and sampled 0x4a54a7 post-Border-Guard target-cell/object-vector after-state are recovered; broader reward/guard/native parity remains incomplete.",
+  "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper evidence, sampled 0x4a54a7 target-cell/object-vector after-state, and two complete sampled 0x4a54a7 projection-write streams. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor semantics, relation-counter roles, coordinate reconciliation, and relation/control linkage are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T16:14:19Z",
+  "updatedAt": "2026-06-08T16:31:50Z",
   "validation": {
-    "currentSliceNotes": "Source-backed 0x4a54a7 after-state checkpoint: the two natural Medium seed-10 post-Border-Guard target records append into the generator object vector, target cells adopt object-reference vectors containing those records, and target-cell +0x20 low words clear while +0x28 updates. This is sampled target-cell/object-vector after-state only; full projection-loop fan-out remains pending.",
-    "evidence": ".artifacts/rmg_recovery/medium_seed10_4a54a7_afterstate_summary_20260608.json",
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "passed",
+    "evidence": ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json",
+    "currentSliceNotes": "Source-backed 0x4a54a7 projection-write checkpoint: focused controlled Medium seed-10 traces recover two complete post-Border-Guard projection-loop write streams. First 0x4a77a8 -> 0x4a77ad: args (arg0=0x1388, x=5, y=63, level=0), object 0x03625580, 215 unique 0x4a56b6 cell writes, high word preserved, low word lowered. Second 0x4a7895 -> 0x4a789a: args (arg0=0x2422, x=67, y=60, level=0), object 0x03625490, 126 unique writes, same invariants. Native unchanged. Remaining blockers: descriptor +0x29/+0x2c/+0x30 semantic names, relation-counter roles, relation/control linkage, and coordinate reconciliation with earlier after-state replay.",
     "lastValidationCommands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a54a7_afterstate_summary.py",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_afterstate_summary.py",
+      "python3 -m py_compile tools/rmg_h3maped_4a54a7_projection_write_summary.py",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_projection_write_summary.py",
       "jq empty ops/progress.json",
       "git diff --check",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
       "python3 tests/validate_repo.py"
-    ],
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "passed"
+    ]
   },
   "validationHistory": [
     {
@@ -55495,6 +55512,20 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
       "updatedAt": "2026-06-08T15:30:32Z"
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json",
+      "commands": [
+        "python3 -m py_compile tools/rmg_h3maped_4a54a7_projection_write_summary.py",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_projection_write_summary.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
+        "python3 tests/validate_repo.py"
+      ],
+      "updatedAt": "2026-06-08T16:31:50Z"
     }
   ],
   "validationResults": [
@@ -57661,6 +57692,13 @@
       "status": "passed",
       "summary": "Border Guard follow-through summary tool compiled and generated a passing report; native behavior unchanged.",
       "updatedAt": "2026-06-08T15:39:25Z"
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json",
+      "summary": "4a54a7 projection write summary tool compiled and generated a passing report; native behavior unchanged.",
+      "updatedAt": "2026-06-08T16:31:50Z"
     }
   ]
 }
