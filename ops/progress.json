@@ -9125,10 +9125,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Source-backed 0x4a9f1c counter-decision checkpoint: live Medium trace replay parsed 60 complete candidate cycles (type 2 x1, type 4 x1, type 6 x58). Every sampled cycle reaches the global and relation-local counter checks with counters below limits, so global/relation-local counter-limit rejections by value are both 0. All sampled cycles still continue to 0x4aa0ef after the counter checks, proving this bounded sample's loop continuations are downstream of the recovered counter-limit checks. Native unchanged. Remaining blockers: recover the downstream post-counter 0x4a9f1c rejection reason, capture an accepted selected-create path in the same framing, recover a generation path that actually hits 0x4add76 cleanup, name descriptor types/candidate vtable contracts, and keep the older coordinate reconciliation explicit.",
+  "currentSliceNotes": "Source-backed 0x4a9f1c post-counter branch checkpoint: live Medium trace replay parsed 98 sampled candidate cycles after the counter checks, with 97 complete and one cut by the event cap. Complete sampled outcomes are 85 type-6 negative scorer returns (-1), 9 type-6 scores above the upper value bound, 1 type-2 score below the lower value bound, and 2 candidates that pass value bounds/descriptor selection and append to the accepted candidate/descriptor vectors. Native unchanged. Remaining blockers: capture final accepted-vector selection and selected-create through 0x4aa166/0x4aa168, name candidate scorer vtables and descriptor semantics, recover a generation path that actually hits 0x4add76 cleanup, and keep coordinate reconciliation explicit.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T17:13:43Z",
+  "currentSliceUpdatedAt": "2026-06-08T17:23:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10119,11 +10119,11 @@
     "status": "passed"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_4a9f1c_counter_decision_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_4a9f1c_post_counter_branch_summary_20260608.json",
     "native_behavior_changed": false,
-    "result": "Live 0x4a9f1c counter-decision replay recovered for 60 sampled Medium candidate cycles: no global or relation-local counter-limit rejections by value, all sampled cycles continue to 0x4aa0ef downstream of the counter checks, and no selected-create path appears in this bounded sample.",
-    "source_basis": "Focused winedbg interactive trace .artifacts/rmg_recovery/medium_4a9f1c_counter_decision_trace_20260608/winedbg_interactive_trace.log parsed by tools/rmg_h3maped_4a9f1c_counter_decision_summary.py.",
-    "remaining_blocker": "Recover the downstream post-counter 0x4a9f1c rejection reason, capture an accepted selected-create path in the same framing, recover a generation path that actually hits 0x4add76 cleanup, name descriptor type/candidate vtable contracts, and resolve the older coordinate reconciliation gap."
+    "result": "Live 0x4a9f1c post-counter branch replay recovered for 97 complete sampled Medium candidate cycles: 85 negative scorer returns, 9 upper-bound rejects, 1 lower-bound reject, and 2 accepted candidate/descriptor vector appends; final selected-create path not captured in this bounded trace.",
+    "source_basis": "Focused winedbg interactive trace .artifacts/rmg_recovery/medium_4a9f1c_post_counter_branch_trace_20260608/winedbg_interactive_trace.log parsed by tools/rmg_h3maped_4a9f1c_post_counter_branch_summary.py.",
+    "remaining_blocker": "Capture final accepted-vector selection and selected-create through 0x4aa166/0x4aa168, name candidate scorer vtables and descriptor semantics, recover a generation path that actually hits 0x4add76 cleanup, and resolve the older coordinate reconciliation gap."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -50007,7 +50007,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover the downstream post-counter 0x4a9f1c rejection reason after both counter checks pass, capture an accepted 0x4a9f1c selected-create path in the same counter-decision framing, recover a generation path that actually hits 0x4add76 cleanup, name descriptor type indices and candidate vtable contracts, and resolve the older after-state trace second-target coordinate difference. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Capture final accepted-vector selection and selected-object creation through 0x4aa166/0x4aa168 in the same 0x4a9f1c branch framing, name candidate vtable +0x04 scorer implementations and descriptor type semantics from source-backed data, recover a generation path that actually hits 0x4add76 cleanup, and resolve the older after-state trace second-target coordinate difference. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50354,24 +50354,24 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, and live 0x4a9f1c counter-decision replay are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; downstream 0x4a9f1c rejection reason, accepted selected-create replay, 0x4add76 cleanup replay, descriptor type/candidate contracts, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
+  "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, and live sampled 0x4a9f1c post-counter branch reasons are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; final 0x4a9f1c accepted-vector selection/selected-create replay, 0x4add76 cleanup replay, descriptor type/candidate contracts, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T17:13:43Z",
+  "updatedAt": "2026-06-08T17:23:47Z",
   "validation": {
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "evidence": ".artifacts/rmg_recovery/medium_4a9f1c_counter_decision_summary_20260608.json",
-    "currentSliceNotes": "Source-backed 0x4a9f1c counter-decision checkpoint: live Medium trace replay parsed 60 complete candidate cycles (type 2 x1, type 4 x1, type 6 x58). Every sampled cycle reaches the global and relation-local counter checks with counters below limits, so global/relation-local counter-limit rejections by value are both 0. All sampled cycles still continue to 0x4aa0ef after the counter checks, proving this bounded sample's loop continuations are downstream of the recovered counter-limit checks. Native unchanged. Remaining blockers: recover the downstream post-counter 0x4a9f1c rejection reason, capture an accepted selected-create path in the same framing, recover a generation path that actually hits 0x4add76 cleanup, name descriptor types/candidate vtable contracts, and keep the older coordinate reconciliation explicit.",
+    "evidence": ".artifacts/rmg_recovery/medium_4a9f1c_post_counter_branch_summary_20260608.json",
+    "currentSliceNotes": "Source-backed 0x4a9f1c post-counter branch checkpoint: live Medium trace replay parsed 98 sampled candidate cycles after the counter checks, with 97 complete and one cut by the event cap. Complete sampled outcomes are 85 type-6 negative scorer returns (-1), 9 type-6 scores above the upper value bound, 1 type-2 score below the lower value bound, and 2 candidates that pass value bounds/descriptor selection and append to the accepted candidate/descriptor vectors. Native unchanged. Remaining blockers: capture final accepted-vector selection and selected-create through 0x4aa166/0x4aa168, name candidate scorer vtables and descriptor semantics, recover a generation path that actually hits 0x4add76 cleanup, and keep coordinate reconciliation explicit.",
     "lastValidationCommands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a9f1c_counter_decision_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_counter_decision_summary.py (passed: passed_live_replay_no_counter_limit_rejects, cycles=60)",
+      "python3 -m py_compile tools/rmg_h3maped_4a9f1c_post_counter_branch_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_post_counter_branch_summary.py (passed: passed_live_replay_post_counter_paths_classified, complete_cycles=97)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "summary": "Live 0x4a9f1c counter-decision replay summary validated; native behavior unchanged and downstream rejection recovery remains pending.",
-    "updatedAt": "2026-06-08T17:13:43Z"
+    "summary": "Live 0x4a9f1c post-counter branch replay summary validated; native behavior unchanged and final selected-create recovery remains pending.",
+    "updatedAt": "2026-06-08T17:23:47Z"
   },
   "validationHistory": [
     {
@@ -57756,6 +57756,21 @@
       "validation": [
         "python3 -m py_compile tools/rmg_h3maped_4a9f1c_counter_decision_summary.py (passed)",
         "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_counter_decision_summary.py (passed: passed_live_replay_no_counter_limit_rejects, cycles=60)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Live 0x4a9f1c post-counter branch replay summary validated: 97 complete sampled cycles classified, two accepted vector appends captured, final selected-create not captured; native behavior unchanged.",
+      "currentSliceNotes": "Source-backed 0x4a9f1c post-counter branch checkpoint: live Medium trace replay parsed 98 sampled candidate cycles after the counter checks, with 97 complete and one cut by the event cap. Complete sampled outcomes are 85 type-6 negative scorer returns (-1), 9 type-6 scores above the upper value bound, 1 type-2 score below the lower value bound, and 2 candidates that pass value bounds/descriptor selection and append to the accepted candidate/descriptor vectors. Native unchanged. Remaining blockers: capture final accepted-vector selection and selected-create through 0x4aa166/0x4aa168, name candidate scorer vtables and descriptor semantics, recover a generation path that actually hits 0x4add76 cleanup, and keep coordinate reconciliation explicit.",
+      "updatedAt": "2026-06-08T17:23:47Z",
+      "validation": [
+        "python3 -m py_compile tools/rmg_h3maped_4a9f1c_post_counter_branch_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_post_counter_branch_summary.py (passed: passed_live_replay_post_counter_paths_classified, complete_cycles=97)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
