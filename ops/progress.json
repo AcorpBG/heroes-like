@@ -443,77 +443,74 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Focused same-run 0x4a901a/0x540a9c probe completed: the sampled trace hit none of the 0x4a901a-family breakpoints, while the ordinary projection stream still produced 19 non-null payload records through 0x4a54d6 -> 0x4a7d36 with matching pointers and vtable counts 0x00540a9c x8 plus 0x00540a88 x11. This is negative recovery evidence, not a native behavior change and not a runtime recovery of 0x4a901a. Remaining blocker: Find or drive a natural H3MapEd path that actually reaches 0x4a8db2 -> 0x4a901a, then recover the 0x4a901a/0x540a9c constructor, 0x4a54a7 projection, generated-cell before/after, and vector deltas in that same run. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "currentSliceUpdatedAt": "2026-06-08T21:50:00Z",
-    "guardrailNote": "Find or drive a natural H3MapEd path that actually reaches 0x4a8db2 -> 0x4a901a, then recover the 0x4a901a/0x540a9c constructor, 0x4a54a7 projection, generated-cell before/after, and vector deltas in that same run. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceNotes": "Live Medium 0x4a8db2 -> 0x4a901a surface recovered for the sampled one-level land path: 0x4a8db2 reaches 0x4a901a from callsite 0x4a8ffd; all observed calls enter the weighted body at 0x4a9085 and return false at 0x4a9391; none reaches the direct delegate 0x4a907b, constructor 0x4a92bb, ready site 0x4a92d5, or projection dispatch 0x4a9322/0x4a9325. Native behavior unchanged. Remaining blocker: Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceUpdatedAt": "2026-06-08T21:55:00Z",
+    "guardrailNote": "Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/same_run_4a901a_probe_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/4a8db2_4a901a_live_surface_summary_20260608.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_4a901a_probe_summary.py (passed)",
-        "python3 tools/rmg_h3maped_4a901a_probe_summary.py (passed: same_run_4a901a_not_hit_payload_ordinary_records_observed)",
+        "python3 tools/rmg_h3maped_4a8db2_4a901a_live_surface_summary.py (passed: medium_4a8db2_reaches_4a901a_weighted_path_no_materialization)",
+        "python3 -m py_compile tools/rmg_h3maped_4a8db2_4a901a_live_surface_summary.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_4a901a_probe": {
-          "status": "same_run_4a901a_not_hit_payload_ordinary_records_observed",
+        "h3maped_4a8db2_4a901a_live_surface": {
+          "status": "medium_4a8db2_reaches_4a901a_weighted_path_no_materialization",
           "native_behavior_changed": false,
           "overall_goal_complete": false,
-          "hit_counts": {
-            "0x004a54d6": 19,
-            "0x004a7d36": 20,
-            "0x004a7d99": 1,
-            "0x004a901a": 0,
+          "source_trace_counts": {
+            "0x004a8dca": 10,
+            "0x004a907b": 0,
             "0x004a92bb": 0,
             "0x004a92d5": 0,
             "0x004a9322": 0,
-            "0x004a9325": 0
+            "0x004a9325": 0,
+            "0x004ac769": 10
           },
-          "vtable_counts": {
-            "afterstamp_4a54d6": {
-              "0x00540a88": 11,
-              "0x00540a9c": 8
-            },
-            "payload_4a7d36_non_null": {
-              "0x00540a88": 11,
-              "0x00540a9c": 8
-            }
+          "body_trace_counts": {
+            "0x004a8ffd": 8,
+            "0x004a901a": 8,
+            "0x004a906b": 8,
+            "0x004a907b": 0,
+            "0x004a9085": 8,
+            "0x004a92bb": 0,
+            "0x004a92d5": 0,
+            "0x004a9322": 0,
+            "0x004a9325": 0,
+            "0x004a9391": 8
           },
-          "payload": {
-            "non_null_payload_records": 19,
-            "null_payload_events": 1,
-            "payload_count_edx_at_4a7d99": 19,
-            "total_4a7d36_events": 20
-          },
+          "body_sequence_count": 8,
           "invariants": {
-            "afterstamp_and_payload_pointers_match_by_order": true,
-            "afterstamp_and_payload_pointers_match_by_set": true,
-            "no_4a901a_probe_address_was_hit": true,
-            "non_null_payload_count_matches_4a7d99_edx": true,
-            "observed_vtables_are_expected_ordinary_records": true,
-            "ordinary_projection_stream_was_observed": true
+            "all_observed_calls_enter_weighted_body": true,
+            "all_observed_calls_return_false": true,
+            "body_trace_only_observed_4a8ffd_callsite": true,
+            "body_trace_reaches_4a901a": true,
+            "no_observed_call_delegates_to_4a93a2": true,
+            "no_observed_call_reaches_record_materialization": true,
+            "source_trace_reaches_4a8db2_body": true
           }
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-08T21:50:00Z",
-      "updatedAt": "2026-06-08T21:50:00Z"
+      "timestamp": "2026-06-08T21:55:00Z",
+      "updatedAt": "2026-06-08T21:55:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/same_run_4a901a_probe_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/4a8db2_4a901a_live_surface_summary_20260608.json",
       "native_behavior_changed": false,
-      "remaining_blocker": "Find or drive a natural H3MapEd path that actually reaches 0x4a8db2 -> 0x4a901a, then recover the 0x4a901a/0x540a9c constructor, 0x4a54a7 projection, generated-cell before/after, and vector deltas in that same run. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Focused same-run 0x4a901a/0x540a9c probe completed: the sampled trace hit none of the 0x4a901a-family breakpoints, while the ordinary projection stream still produced 19 non-null payload records through 0x4a54d6 -> 0x4a7d36 with matching pointers and vtable counts 0x00540a9c x8 plus 0x00540a88 x11. This is negative recovery evidence, not a native behavior change and not a runtime recovery of 0x4a901a.",
-      "source_basis": "Clean same-run WineDbg trace .artifacts/rmg_recovery/same_run_4a901a_probe_trace_20260608 plus static 0x4a901a contract from the Ghidra dump; summarized by tools/rmg_h3maped_4a901a_probe_summary.py.",
-      "validatedAt": "2026-06-08T21:50:00Z"
+      "remaining_blocker": "Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "result": "Live Medium 0x4a8db2 -> 0x4a901a surface recovered for the sampled one-level land path: 0x4a8db2 reaches 0x4a901a from callsite 0x4a8ffd; all observed calls enter the weighted body at 0x4a9085 and return false at 0x4a9391; none reaches the direct delegate 0x4a907b, constructor 0x4a92bb, ready site 0x4a92d5, or projection dispatch 0x4a9322/0x4a9325. Native behavior unchanged.",
+      "source_basis": "WineDbg logs parsed from .artifacts/rmg_recovery/4a8db2_source_record_surface_trace_20260608/ and .artifacts/rmg_recovery/4a901a_body_outcome_trace_20260608/; summarized by tools/rmg_h3maped_4a8db2_4a901a_live_surface_summary.py.",
+      "validatedAt": "2026-06-08T21:55:00Z"
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -524,7 +521,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Find or drive a natural H3MapEd path that actually reaches 0x4a8db2 -> 0x4a901a, then recover the 0x4a901a/0x540a9c constructor, 0x4a54a7 projection, generated-cell before/after, and vector deltas in that same run. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "remainingWork": "Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -534,7 +531,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-08T21:50:00Z",
+    "updatedAt": "2026-06-08T21:55:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9175,10 +9172,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Focused same-run 0x4a901a/0x540a9c probe completed: the sampled trace hit none of the 0x4a901a-family breakpoints, while the ordinary projection stream still produced 19 non-null payload records through 0x4a54d6 -> 0x4a7d36 with matching pointers and vtable counts 0x00540a9c x8 plus 0x00540a88 x11. This is negative recovery evidence, not a native behavior change and not a runtime recovery of 0x4a901a.",
+  "currentSliceNotes": "Live Medium 0x4a8db2 -> 0x4a901a surface recovered for the sampled one-level land path: 0x4a8db2 reaches 0x4a901a from callsite 0x4a8ffd; all observed calls enter the weighted body at 0x4a9085 and return false at 0x4a9391; none reaches the direct delegate 0x4a907b, constructor 0x4a92bb, ready site 0x4a92d5, or projection dispatch 0x4a9322/0x4a9325. Native behavior unchanged.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T21:50:00Z",
+  "currentSliceUpdatedAt": "2026-06-08T21:55:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10175,70 +10172,67 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/same_run_4a901a_probe_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/4a8db2_4a901a_live_surface_summary_20260608.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a901a_probe_summary.py (passed)",
-      "python3 tools/rmg_h3maped_4a901a_probe_summary.py (passed: same_run_4a901a_not_hit_payload_ordinary_records_observed)",
+      "python3 tools/rmg_h3maped_4a8db2_4a901a_live_surface_summary.py (passed: medium_4a8db2_reaches_4a901a_weighted_path_no_materialization)",
+      "python3 -m py_compile tools/rmg_h3maped_4a8db2_4a901a_live_surface_summary.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "h3maped_4a901a_probe": {
-        "status": "same_run_4a901a_not_hit_payload_ordinary_records_observed",
+      "h3maped_4a8db2_4a901a_live_surface": {
+        "status": "medium_4a8db2_reaches_4a901a_weighted_path_no_materialization",
         "native_behavior_changed": false,
         "overall_goal_complete": false,
-        "hit_counts": {
-          "0x004a54d6": 19,
-          "0x004a7d36": 20,
-          "0x004a7d99": 1,
-          "0x004a901a": 0,
+        "source_trace_counts": {
+          "0x004a8dca": 10,
+          "0x004a907b": 0,
           "0x004a92bb": 0,
           "0x004a92d5": 0,
           "0x004a9322": 0,
-          "0x004a9325": 0
+          "0x004a9325": 0,
+          "0x004ac769": 10
         },
-        "vtable_counts": {
-          "afterstamp_4a54d6": {
-            "0x00540a88": 11,
-            "0x00540a9c": 8
-          },
-          "payload_4a7d36_non_null": {
-            "0x00540a88": 11,
-            "0x00540a9c": 8
-          }
+        "body_trace_counts": {
+          "0x004a8ffd": 8,
+          "0x004a901a": 8,
+          "0x004a906b": 8,
+          "0x004a907b": 0,
+          "0x004a9085": 8,
+          "0x004a92bb": 0,
+          "0x004a92d5": 0,
+          "0x004a9322": 0,
+          "0x004a9325": 0,
+          "0x004a9391": 8
         },
-        "payload": {
-          "non_null_payload_records": 19,
-          "null_payload_events": 1,
-          "payload_count_edx_at_4a7d99": 19,
-          "total_4a7d36_events": 20
-        },
+        "body_sequence_count": 8,
         "invariants": {
-          "afterstamp_and_payload_pointers_match_by_order": true,
-          "afterstamp_and_payload_pointers_match_by_set": true,
-          "no_4a901a_probe_address_was_hit": true,
-          "non_null_payload_count_matches_4a7d99_edx": true,
-          "observed_vtables_are_expected_ordinary_records": true,
-          "ordinary_projection_stream_was_observed": true
+          "all_observed_calls_enter_weighted_body": true,
+          "all_observed_calls_return_false": true,
+          "body_trace_only_observed_4a8ffd_callsite": true,
+          "body_trace_reaches_4a901a": true,
+          "no_observed_call_delegates_to_4a93a2": true,
+          "no_observed_call_reaches_record_materialization": true,
+          "source_trace_reaches_4a8db2_body": true
         }
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-08T21:50:00Z",
-    "updatedAt": "2026-06-08T21:50:00Z"
+    "timestamp": "2026-06-08T21:55:00Z",
+    "updatedAt": "2026-06-08T21:55:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/same_run_4a901a_probe_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/4a8db2_4a901a_live_surface_summary_20260608.json",
     "native_behavior_changed": false,
-    "remaining_blocker": "Find or drive a natural H3MapEd path that actually reaches 0x4a8db2 -> 0x4a901a, then recover the 0x4a901a/0x540a9c constructor, 0x4a54a7 projection, generated-cell before/after, and vector deltas in that same run. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Focused same-run 0x4a901a/0x540a9c probe completed: the sampled trace hit none of the 0x4a901a-family breakpoints, while the ordinary projection stream still produced 19 non-null payload records through 0x4a54d6 -> 0x4a7d36 with matching pointers and vtable counts 0x00540a9c x8 plus 0x00540a88 x11. This is negative recovery evidence, not a native behavior change and not a runtime recovery of 0x4a901a.",
-    "source_basis": "Clean same-run WineDbg trace .artifacts/rmg_recovery/same_run_4a901a_probe_trace_20260608 plus static 0x4a901a contract from the Ghidra dump; summarized by tools/rmg_h3maped_4a901a_probe_summary.py.",
-    "validatedAt": "2026-06-08T21:50:00Z"
+    "remaining_blocker": "Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Live Medium 0x4a8db2 -> 0x4a901a surface recovered for the sampled one-level land path: 0x4a8db2 reaches 0x4a901a from callsite 0x4a8ffd; all observed calls enter the weighted body at 0x4a9085 and return false at 0x4a9391; none reaches the direct delegate 0x4a907b, constructor 0x4a92bb, ready site 0x4a92d5, or projection dispatch 0x4a9322/0x4a9325. Native behavior unchanged.",
+    "source_basis": "WineDbg logs parsed from .artifacts/rmg_recovery/4a8db2_source_record_surface_trace_20260608/ and .artifacts/rmg_recovery/4a901a_body_outcome_trace_20260608/; summarized by tools/rmg_h3maped_4a8db2_4a901a_live_surface_summary.py.",
+    "validatedAt": "2026-06-08T21:55:00Z"
   },
-  "nextActionGuardrailNote": "Find or drive a natural H3MapEd path that actually reaches 0x4a8db2 -> 0x4a901a, then recover the 0x4a901a/0x540a9c constructor, 0x4a54a7 projection, generated-cell before/after, and vector deltas in that same run. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
   "plannedSlices": [
     {
@@ -50127,7 +50121,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover why the 0x4a901a weighted local-vector body returns false in sampled calls, then capture a successful 0x4a901a materialization with candidate-vector contents, selected descriptor, constructed 0x540a9c record, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50487,7 +50481,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, live sampled 0x4a9f1c post-counter branch reasons, live 0x4a9f1c selected-create replay, and selected candidate vtable create/scorer contracts are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor type/category semantic names, 0x4add76 cleanup replay, downstream projection-object consumer linkage, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T21:50:00Z",
+  "updatedAt": "2026-06-08T21:55:00Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
