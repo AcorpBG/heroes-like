@@ -443,54 +443,54 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Same-run 0x4a54a7 coordinate-fill checkpoint recovered: live WineDbg traces prove 0x4a93a2 creates 0x540a9c records with unset +0x08/+0x0c/+0x10 coordinate words, 0x4a9583 dispatches the record plus x/y/level args, 0x4a54a7 calls 0x49abd6 before 0x4a54d6, and the same stamped records are consumed by the later 0x4a7d36 payload loop. Native RMG behavior unchanged. Remaining blocker: Recover analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths, plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "currentSliceUpdatedAt": "2026-06-08T20:35:00Z",
-    "guardrailNote": "Recover analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths, plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceNotes": "Sampled 0x4a5c07/0x540a88 state chain recovered for the natural Medium seed-10 post-Border-Guard path: existing 0x4a5e03 constructor evidence and 0x4a54a7 after-state evidence are joined by pointer and coordinate. Both sampled records are ordinary 0x540a88 records with unset coordinate words, the commit callback reuses the constructed pointers and coordinates, the generator object vector advances one dword per commit, and the target GeneratedCell object-ref vector and +0x20/+0x28 mutations match the recovered commit. Native RMG behavior unchanged. Remaining blocker: Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceUpdatedAt": "2026-06-08T21:20:00Z",
+    "guardrailNote": "Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/same_run_4a54a7_coord_fill_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a5c07_state_chain_summary_20260608.json",
       "commands": [
-        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/same_run_4a93a2_4a54a7_coord_fill_trace_20260608 --lite --breakpoints 0x004a9536 0x004a9583 0x004a54a7 0x004a54d1 0x004a54d6 0x004a54ef 0x004a5756 0x004a7d36 0x004a7d99 ... (passed: 221 events; captured pre/post stamp pairs)",
-        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/same_run_4a93a2_4a54a7_afterstamp_to_payload_trace_20260608 --lite --breakpoints 0x004a9536 0x004a9583 0x004a54d6 0x004a7d36 0x004a7d99 ... (passed: 56 events; reached payload)",
-        "python3 -m py_compile tools/rmg_h3maped_4a54a7_coord_fill_same_run_summary.py (passed)",
-        "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_coord_fill_same_run_summary.py (passed: same_run_4a54a7_coordinate_fill_and_payload_handoff_recovered)",
+        "python3 tools/rmg_h3maped_4a5e03_side_effect_summary.py (passed: post_border_guard_4a5e03_delegates_to_4a54a7_commit_replay_pending)",
+        "python3 tools/rmg_h3maped_4a54a7_afterstate_summary.py (passed: post_border_guard_4a54a7_object_vector_and_cell_afterstate_recovered)",
+        "python3 -m py_compile tools/rmg_h3maped_4a5c07_state_chain_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a5c07_state_chain_summary.py (passed: post_border_guard_4a5c07_to_4a54a7_state_chain_recovered)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_4a54a7_coord_fill_same_run": {
-          "afterstamp_records": 19,
-          "all_afterstamp_coordinates_match_payload_coordinates": true,
-          "all_dispatch_args_match_afterstamp_coordinates": true,
-          "all_ready_records_reach_payload": true,
-          "captured_stamp_pairs": 14,
+        "h3maped_4a5c07_state_chain": {
+          "all_commit_callbacks_reuse_constructed_object": true,
+          "all_commit_coordinates_match": true,
+          "all_constructor_coordinates_start_unset": true,
+          "all_object_vector_ends_advance_one_dword": true,
+          "all_target_cell_plus_0x20_low_words_cleared": true,
+          "all_target_cell_plus_0x28_bit22_set": true,
+          "all_target_cell_refs_contain_object": true,
+          "constructor_vtable": "0x00540a88",
           "native_behavior_changed": false,
           "overall_goal_complete": false,
-          "payload_records": 19,
-          "ready_0x4a93a2_records": 8,
-          "stamp_post_call_events": 42,
-          "stamp_pre_call_events": 42,
-          "status": "same_run_4a54a7_coordinate_fill_and_payload_handoff_recovered"
+          "sequence_count": 2,
+          "status": "post_border_guard_4a5c07_to_4a54a7_state_chain_recovered"
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-08T20:45:00Z",
-      "updatedAt": "2026-06-08T20:45:00Z"
+      "timestamp": "2026-06-08T21:25:00Z",
+      "updatedAt": "2026-06-08T21:25:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/same_run_4a54a7_coord_fill_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a5c07_state_chain_summary_20260608.json",
       "native_behavior_changed": false,
-      "remaining_blocker": "Recover analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths, plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Same-run 0x4a54a7 coordinate-fill checkpoint recovered: live WineDbg traces prove 0x4a93a2 creates 0x540a9c records with unset +0x08/+0x0c/+0x10 coordinate words, 0x4a9583 dispatches the record plus x/y/level args, 0x4a54a7 calls 0x49abd6 before 0x4a54d6, and the same stamped records are consumed by the later 0x4a7d36 payload loop. Native RMG behavior unchanged.",
-      "source_basis": "Two live same-run WineDbg ledgers plus static 0x4a54a7 Ghidra dump; summarized by tools/rmg_h3maped_4a54a7_coord_fill_same_run_summary.py.",
-      "validatedAt": "2026-06-08T20:35:00Z"
+      "remaining_blocker": "Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "result": "Sampled 0x4a5c07/0x540a88 state chain recovered for the natural Medium seed-10 post-Border-Guard path: existing 0x4a5e03 constructor evidence and 0x4a54a7 after-state evidence are joined by pointer and coordinate. Both sampled records are ordinary 0x540a88 records with unset coordinate words, the commit callback reuses the constructed pointers and coordinates, the generator object vector advances one dword per commit, and the target GeneratedCell object-ref vector and +0x20/+0x28 mutations match the recovered commit. Native RMG behavior unchanged.",
+      "source_basis": "Joined existing natural Medium seed-10 0x4a5e03 constructor trace summary with matching 0x4a54a7 after-state trace summary, plus static 0x4a5c07 constructor contract.",
+      "validatedAt": "2026-06-08T21:20:00Z"
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -501,7 +501,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths, plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "remainingWork": "Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -10185,7 +10185,7 @@
     "source_basis": "Clean same-run WineDbg trace .artifacts/rmg_recovery/same_run_4a93a2_payload_link_trace_lite_20260608 and tools/rmg_h3maped_4a93a2_payload_same_run_summary.py, backed by the static 0x4a93a2 writes in the Ghidra dump.",
     "validatedAt": "2026-06-08T19:50:00Z"
   },
-  "nextActionGuardrailNote": "Recover analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths, plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
   "plannedSlices": [
     {
@@ -50074,7 +50074,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths, plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -58059,6 +58059,40 @@
         "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/same_run_4a93a2_4a54a7_afterstamp_to_payload_trace_20260608 --lite --breakpoints 0x004a9536 0x004a9583 0x004a54d6 0x004a7d36 0x004a7d99 ... (passed: 56 events; reached payload)",
         "python3 -m py_compile tools/rmg_h3maped_4a54a7_coord_fill_same_run_summary.py (passed)",
         "PYTHONPATH=tools python3 tools/rmg_h3maped_4a54a7_coord_fill_same_run_summary.py (passed: same_run_4a54a7_coordinate_fill_and_payload_handoff_recovered)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a5c07_state_chain_summary_20260608.json",
+      "currentSliceNotes": "Sampled 0x4a5c07/0x540a88 state chain recovered for the natural Medium seed-10 post-Border-Guard path: existing 0x4a5e03 constructor evidence and 0x4a54a7 after-state evidence are joined by pointer and coordinate. Both sampled records are ordinary 0x540a88 records with unset coordinate words, the commit callback reuses the constructed pointers and coordinates, the generator object vector advances one dword per commit, and the target GeneratedCell object-ref vector and +0x20/+0x28 mutations match the recovered commit. Native RMG behavior unchanged. Remaining blocker: Recover analogous 0x4a901a/0x540a9c producer path and generated-cell/vector before/after deltas. Recover the full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic names for later relation/control consumers. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "metrics": {
+        "h3maped_4a5c07_state_chain": {
+          "all_commit_callbacks_reuse_constructed_object": true,
+          "all_commit_coordinates_match": true,
+          "all_constructor_coordinates_start_unset": true,
+          "all_object_vector_ends_advance_one_dword": true,
+          "all_target_cell_plus_0x20_low_words_cleared": true,
+          "all_target_cell_plus_0x28_bit22_set": true,
+          "all_target_cell_refs_contain_object": true,
+          "constructor_vtable": "0x00540a88",
+          "native_behavior_changed": false,
+          "overall_goal_complete": false,
+          "sequence_count": 2,
+          "status": "post_border_guard_4a5c07_to_4a54a7_state_chain_recovered"
+        }
+      },
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Sampled 0x4a5c07/0x540a88 state chain recovered for the natural Medium seed-10 post-Border-Guard path: existing 0x4a5e03 constructor evidence and 0x4a54a7 after-state evidence are joined by pointer and coordinate. Both sampled records are ordinary 0x540a88 records with unset coordinate words, the commit callback reuses the constructed pointers and coordinates, the generator object vector advances one dword per commit, and the target GeneratedCell object-ref vector and +0x20/+0x28 mutations match the recovered commit. Native RMG behavior unchanged.",
+      "updatedAt": "2026-06-08T21:25:00Z",
+      "validation": [
+        "python3 tools/rmg_h3maped_4a5e03_side_effect_summary.py (passed: post_border_guard_4a5e03_delegates_to_4a54a7_commit_replay_pending)",
+        "python3 tools/rmg_h3maped_4a54a7_afterstate_summary.py (passed: post_border_guard_4a54a7_object_vector_and_cell_afterstate_recovered)",
+        "python3 -m py_compile tools/rmg_h3maped_4a5c07_state_chain_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a5c07_state_chain_summary.py (passed: post_border_guard_4a5c07_to_4a54a7_state_chain_recovered)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
