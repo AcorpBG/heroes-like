@@ -443,28 +443,27 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.\n2026-06-07T17:55:00Z: Corrected live runtime boundary recovery for the 0x4a79a3/0x4a7605 edge/control-record flag. Fixed the interactive H3MapEd New Map driver to click relative to the live dialog; the fixed traces show the sampled 0x4a7605 ESI record is separate from the 0x4a8c15 generator+0xc8 pointer-vector header, rule out 0x4b3c4e/0x4b3d3c as live producers before the sampled fallback consumer, and record that the attempted +0x09 watch command was rejected rather than installed. The remaining source-backed blocker is the relation-object +0xc8/+0xcc record stream owner/population path and edge/control-record +0x08/+0x09 semantic producer. Native RMG behavior remains unchanged.\n2026-06-07T19:03:40Z: Recorded relation-builder runtime checkpoint. The sampled direct-generation run executes eight 0x4a8d2c -> 0x4a93a2 -> relation vslot +0x04 calls before 0x4a8c15; vslot +0x04 resolves to 0x4a54a7 and every sampled call reaches source-field writes 0x4a95a4/0x4a95e6. Static 0x4a54a7 recovery ties this builder to generator object-vector projection around +0xec4/+0xecc/+0x1110, not to the later relation-object +0xc8/+0xcc record-stream producer. Native RMG behavior remains unchanged.\n2026-06-08T14:00:00Z: Relation record producer summary completed. Created tools/rmg_h3maped_relation_record_producer_summary.py and scanned all 28 callers in the 0x4ae1fd vector-append set for +0x08/+0x09/+0x0a writes. Zero writes to +0x09 or +0x0a found. Confirmed via the full Ghidra offset access scan that the only non-stack byte write to +0x09 in the entire h3maped.exe is 0x4b3c37 (in FUN_004b3c03, the known copy adapter). FUN_004b3c03 has only DATA/vtable references (no direct code calls) and copies +0x08/+0x09 from a 12-byte local record filled by vtable slot +0x10. The semantic producer of compact connection record +0x08/+0x09 is the vtable slot +0x10 implementation on whatever object is passed into 0x4b3c03. Native RMG behavior remains unchanged; full private-state replay remains in progress.\n2026-06-08T15:05:00Z: Recovered H3MapEd candidate adoption RNG and natural selected Border Guard replay boundary. Static Ghidra dump ghidra_candidate_selection_rng_20260608 proves 0x4ac552 selects candidate_index = 0x4e7276_rand() % candidate_count, and 0x4e7276 is the MSVC LCG over 0x4eab23()+0x14. Live seed-58 selector trace proves pre_state 58 -> rand 228 -> 228 % 35 = 18, matching the selected non-Border-Guard candidate. Live controlled Medium seed-10 selector trace proves pre_state 10 -> rand 71 -> 71 % 35 = 1, matching a natural selected candidate with four +0x09 Border Guard relation records. Natural seed-10 downstream replay reaches three +0x09 branch checks, 0x4a64ff/0x4a6531 call sites, and six 0x4a5e73 entries, but all six fail at 0x4a5f84 with generator+0xf5c still 0x7a1befdf and no 0x4a5fd8/0x4a5ff1/0x4a606b mutation hits. A focused pre-first-0x4a5e73 probe records no 0x4adb72 or 0x4add76 cursor-writer hit before the first natural Border Guard 0x4a5e73. Native RMG behavior remains unchanged; the remaining blocker is recovering the real source path that seeds or bypasses +0xf5c/+0x1104 before successful border-guard endpoint materialization.\n2026-06-08T15:25:00Z: Exhausted the direct H3MapEd generator+0xf5c/+0x1104 offset-access surface. New summary .artifacts/rmg_recovery/cursor_f5c_1104_access_summary_20260608.json parses the Ghidra scan and cross-checks the natural seed-10 Border Guard replay: the only direct +0xf5c cursor writers are 0x4a5e73, 0x4adb72, and 0x4add76; 0x49f95a is only a +0x1104 sizing/initializer surface; and the extra 0x49cd9b site is a read-only helper/callback, not a cursor seeder. The natural seed-10 branch still reaches six 0x4a5e73 entries and all fail at 0x4a5f84 with generator+0xf5c=0x7a1befdf, with no 0x49cd9b, 0x4adb72, or 0x4add76 before the first 0x4a5e73. Native RMG behavior remains unchanged; the remaining blocker is the source path/precondition that seeds or intentionally bypasses +0xf5c/+0x1104 before successful Border Guard endpoint materialization.\n2026-06-08T16:05:00Z: Narrowed the natural seed-10 Border Guard 0x4a61bc -> 0x4a5e73 failure to the active endpoint-key precondition. New report .artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json joins the first 0x4a61bc call-site trace and the 0x4a5e73 +0xd8 scan probe. The first failing call is 0x4a64ff with arguments x=33, y=26, level=0, repeat_count=1, source_arg=0x01786958. The +0xd8 scan checks eight records whose +0x20 keys are exactly 0..7, then fails at 0x4a5f84 with generator+0xf5c still 0x7a1befdf before any +0xc8 match or generated-cell mutation. This rules out malformed 0x4a61bc coordinate arguments for the first failure; the remaining blocker is the unrecovered source path/precondition that initializes/selects generator+0xf5c to an active endpoint key in 0..7 before Border Guard materialization. Native RMG behavior remains unchanged.",
+    "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+    "currentSliceUpdatedAt": "2026-06-08T15:30:32Z",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "status": "natural_bg_first_5e73_cursor_unseeded_against_d8_key_range",
-      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
       "commands": [
-        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a61bc_first_5f84_callsite_probe_20260608 --breakpoints 0x004a64ff 0x004a6531 0x004a5e73 0x004a5ed7 0x004a5f84 --stop-after 0x004a5f84 (passed: events=4)",
-        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a5e73_d8_scan_probe_20260608 --breakpoints 0x004a5e73 0x004a5eb4 0x004a5f84 --stop-after 0x004a5f84 (passed: events=10)",
-        "python3 -m py_compile tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py (passed)",
-        "python3 tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py (passed: callsite=0x004a64ff, args=(33,26,0), d8_keys=0..7, cursor=0x7a1befdf)"
-      ]
+        "python3 -m py_compile tools/rmg_h3maped_cursor_lifetime_summary.py",
+        "python3 tools/rmg_h3maped_cursor_lifetime_summary.py"
+      ],
+      "status": "passed"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
-      "source_basis": "Focused live H3MapEd controlled Medium seed-10 traces for the first 0x4a61bc Border Guard call site and the matching 0x4a5e73 +0xd8 scan, summarized by tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py.",
-      "result": "The first natural Border Guard materialization failure enters 0x4a5e73 from 0x4a64ff with normal coordinate/count/source arguments (33,26,0,count=1,source=0x01786958). The active +0xd8 vector has eight records keyed 0..7 at record+0x20, but generator+0xf5c remains 0x7a1befdf, so 0x4a5e73 scans all eight records and fails at 0x4a5f84 before any +0xc8 match or generated-cell mutation.",
-      "remaining_blocker": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization.",
-      "native_behavior_changed": false
+      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "native_behavior_changed": false,
+      "remaining_blocker": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+      "result": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+      "source_basis": "H3MapEd static 0x49ecf2 dump, parsed Medium cursor lifecycle trace, and seed-10 natural Border Guard 0x4a61bc -> 0x4a5e73 callsite summary."
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -475,7 +474,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization. The first natural 0x4a61bc call has valid coordinate/count/source arguments, but +0xf5c remains a stale unseeded value and fails before +0xc8 or generated-cell mutation.",
+    "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -492,8 +491,7 @@
       "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --controlled-reference-manifest small_3p_seed_11_controlled --controlled-reference-manifest medium_4p_seed_10_controlled --emit-phase-snapshot --print-manifest (pass_exported_2_failed_0)",
       "package_surface_comparison": "stable checkpoint exact match: Small 399 objects 1047 body/block; Medium 1330 objects 3631 body/block",
       "rejected_probe": "0x4a54a7 primary-anchor-only behavior rejected after Small 634 objects / Medium 2501 objects reward overproduction"
-    },
-    "currentSliceUpdatedAt": "2026-06-08T16:05:00Z"
+    }
   },
   "completedImplementationEvidence": [
     {
@@ -9127,10 +9125,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-07 H3MapEd 0x4a79a3 payload recovery checkpoint: focused descriptor trace now proves the 19 object-vector entries exactly match 19 dumped object-record pointers. The dumped records split into vtable 0x540a9c x8 and 0x540a88 x11, with 12-word record payloads and descriptor-wrapper samples captured for every entry. Static constructor provenance links 0x540a9c to 0x4a901a/0x4a93a2 and 0x540a88 to 0x4a5c07 called by 0x4aa354. This is private-state payload recovery only; exact field names and downstream connection/blocker/guard GeneratedCell mutation replay remain blockers before native RMG changes.\n2026-06-07T09:39:22Z: Recorded partial 0x4a79a3 filter/+0xc8 dispatch recovery evidence; full private-state chain remains unrecovered and native RMG behavior remains unchanged.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T12:05:00Z: Recorded compact connection-record field recovery checkpoint. Full Ghidra offset scan and static consumers name byte +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled: zero allows sampled direct 0x4a7312 placement but skips delegated 0x4a746b/0x4a5e73 endpoint/corridor stamping. Byte +0x0a is 0x4a79a3 processed/pair bookkeeping and byte +0x08 is adjacent-relation route-stamp mode. The semantic producer of +0x09 remains unrecovered; the only non-stack writer candidate is 0x4b3c03 copy-adapter output+0x09, not yet tied to generator+0xc8/+0xcc. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.\n2026-06-07T17:55:00Z: Recorded live runtime boundary recovery for the 0x4a79a3/0x4a7605 edge/control-record flag. Fixed the interactive H3MapEd New Map driver to click relative to the live dialog; the fixed traces prove no post-0x4a7605 write to +0x09, show the sampled 0x4a7605 ESI record is separate from the generator+0xc8 header, and rule out 0x4b3c4e/0x4b3d3c as live producers before the sampled fallback consumer. The remaining source-backed blocker is now the allocator/vector append path that fills edge/control-record +0x08 before 0x4a79a3 selects the pair. Native RMG behavior remains unchanged.\n2026-06-08T15:25:00Z: Exhausted the direct H3MapEd generator+0xf5c/+0x1104 offset-access surface. New summary .artifacts/rmg_recovery/cursor_f5c_1104_access_summary_20260608.json parses the Ghidra scan and cross-checks the natural seed-10 Border Guard replay: the only direct +0xf5c cursor writers are 0x4a5e73, 0x4adb72, and 0x4add76; 0x49f95a is only a +0x1104 sizing/initializer surface; and the extra 0x49cd9b site is a read-only helper/callback, not a cursor seeder. The natural seed-10 branch still reaches six 0x4a5e73 entries and all fail at 0x4a5f84 with generator+0xf5c=0x7a1befdf, with no 0x49cd9b, 0x4adb72, or 0x4add76 before the first 0x4a5e73. Native RMG behavior remains unchanged; the remaining blocker is the source path/precondition that seeds or intentionally bypasses +0xf5c/+0x1104 before successful Border Guard endpoint materialization.\n2026-06-08T16:05:00Z: Narrowed the natural seed-10 Border Guard 0x4a61bc -> 0x4a5e73 failure to the active endpoint-key precondition. New report .artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json joins the first 0x4a61bc call-site trace and the 0x4a5e73 +0xd8 scan probe. The first failing call is 0x4a64ff with arguments x=33, y=26, level=0, repeat_count=1, source_arg=0x01786958. The +0xd8 scan checks eight records whose +0x20 keys are exactly 0..7, then fails at 0x4a5f84 with generator+0xf5c still 0x7a1befdf before any +0xc8 match or generated-cell mutation. This rules out malformed 0x4a61bc coordinate arguments for the first failure; the remaining blocker is the unrecovered source path/precondition that initializes/selects generator+0xf5c to an active endpoint key in 0..7 before Border Guard materialization. Native RMG behavior remains unchanged.",
+  "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T16:05:00Z",
+  "currentSliceUpdatedAt": "2026-06-08T15:30:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10048,6 +10046,32 @@
         "timestamp": "2026-06-04T17:55:00Z"
       }
     ],
+    "h3maped-4a61bc-5e73-callsite-summary-20260608": {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
+      "nativeBehaviorChanged": false,
+      "remainingBlocker": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization.",
+      "status": "report_only",
+      "summary": "The first natural Border Guard materialization failure enters 0x4a5e73 from 0x4a64ff with normal coordinate/count/source arguments (33,26,0,count=1,source=0x01786958). The active +0xd8 vector has eight records keyed 0..7 at record+0x20, but generator+0xf5c remains 0x7a1befdf, so 0x4a5e73 scans all eight records and fails at 0x4a5f84 before any +0xc8 match or generated-cell mutation.",
+      "updatedAt": "2026-06-08T16:05:00Z"
+    },
+    "h3maped-cursor-f5c-1104-access-summary-20260608": {
+      "artifact": ".artifacts/rmg_recovery/cursor_f5c_1104_access_summary_20260608.json",
+      "nativeBehaviorChanged": false,
+      "remainingBlocker": "Recover the source path or precondition that seeds or intentionally bypasses generator+0xf5c/+0x1104 before successful Border Guard endpoint materialization. The blocker is no longer an unknown direct cursor writer in the scanned surface.",
+      "status": "report_only",
+      "summary": "Direct +0xf5c cursor writer surface is exhausted: only 0x4a5e73, 0x4adb72, and 0x4add76 write/reset/advance the cursor in the scan. 0x49f95a only exposes the +0x1104 sizing/initializer surface, and the extra 0x49cd9b site is read-only and absent before the first natural seed-10 0x4a5e73. Natural seed-10 still reaches Border Guard 0x4a5e73 with generator+0xf5c unseeded and no generated-cell mutation hits.",
+      "updatedAt": "2026-06-08T15:25:00Z"
+    },
+    "h3maped-cursor-lifetime-summary-20260608": {
+      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "id": "h3maped-cursor-lifetime-summary-20260608",
+      "native_behavior_changed": false,
+      "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "report_only_recovery_evidence",
+      "summary": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+      "updatedAt": "2026-06-08T15:30:32Z"
+    },
     "native-rmg-generalized-policy-regate-10184": [
       "Medium two-level islands catalog-auto profile cleanup: focused m_4players_2levels_islands export wrote 1/1 package with native validation pass; fast audit improved production-gap severity from 2175 to 803, total object delta from +476 to +185, road delta from +54 to -5, terrain-blocked delta from -724 to +178, and kept guarded-route delta at 0 while reducing object-only reachable town pairs from 15 to 10. Merged 18-case evidence at .artifacts/rmg_native_batch_export_medium_islands_2level_profile_merged passed rmg_quick_validation and rmg_python_validation_gate with 18/18 matches and 0 parse/native/density/policy/topology/coverage/closure-shape gaps; production_ready remains false because exact road/terrain/category/route shape gaps remain.",
       "Medium two-level normal-water catalog-auto profile cleanup: focused m_normalw_4players_2levels export wrote 1/1 package with native validation pass; fast audit improved production-gap severity from 2027 to 429, total object delta from -663 to -4, road delta from -35 to 0, terrain-blocked delta from -141 to -40, category absolute delta from 663 to 10, reward count from 178 to 414 versus owner 416, and guard count from 104 to 191 versus owner 194. Merged 18-case evidence at .artifacts/rmg_native_batch_export_medium_normalwater_2level_profile_merged passed rmg_quick_validation and rmg_python_validation_gate with 18/18 matches and 0 parse/native/density/policy/topology/coverage/closure-shape gaps; production_ready remains false because exact road/terrain/category/route shape gaps remain, with xl_islands now the top blocker.",
@@ -10080,40 +10104,22 @@
       "scope": "Small 36x36 one-level land template-selection authority only",
       "status": "focused_regression_gate_passed",
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
-    },
-    "h3maped-cursor-f5c-1104-access-summary-20260608": {
-      "status": "report_only",
-      "updatedAt": "2026-06-08T15:25:00Z",
-      "artifact": ".artifacts/rmg_recovery/cursor_f5c_1104_access_summary_20260608.json",
-      "summary": "Direct +0xf5c cursor writer surface is exhausted: only 0x4a5e73, 0x4adb72, and 0x4add76 write/reset/advance the cursor in the scan. 0x49f95a only exposes the +0x1104 sizing/initializer surface, and the extra 0x49cd9b site is read-only and absent before the first natural seed-10 0x4a5e73. Natural seed-10 still reaches Border Guard 0x4a5e73 with generator+0xf5c unseeded and no generated-cell mutation hits.",
-      "remainingBlocker": "Recover the source path or precondition that seeds or intentionally bypasses generator+0xf5c/+0x1104 before successful Border Guard endpoint materialization. The blocker is no longer an unknown direct cursor writer in the scanned surface.",
-      "nativeBehaviorChanged": false
-    },
-    "h3maped-4a61bc-5e73-callsite-summary-20260608": {
-      "status": "report_only",
-      "updatedAt": "2026-06-08T16:05:00Z",
-      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
-      "summary": "The first natural Border Guard materialization failure enters 0x4a5e73 from 0x4a64ff with normal coordinate/count/source arguments (33,26,0,count=1,source=0x01786958). The active +0xd8 vector has eight records keyed 0..7 at record+0x20, but generator+0xf5c remains 0x7a1befdf, so 0x4a5e73 scans all eight records and fails at 0x4a5f84 before any +0xc8 match or generated-cell mutation.",
-      "remainingBlocker": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization.",
-      "nativeBehaviorChanged": false
     }
   },
   "lastValidation": {
-    "status": "natural_bg_first_5e73_cursor_unseeded_against_d8_key_range",
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
     "commands": [
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a61bc_first_5f84_callsite_probe_20260608 --breakpoints 0x004a64ff 0x004a6531 0x004a5e73 0x004a5ed7 0x004a5f84 --stop-after 0x004a5f84 (passed: events=4)",
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a5e73_d8_scan_probe_20260608 --breakpoints 0x004a5e73 0x004a5eb4 0x004a5f84 --stop-after 0x004a5f84 (passed: events=10)",
-      "python3 -m py_compile tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py (passed)",
-      "python3 tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py (passed: callsite=0x004a64ff, args=(33,26,0), d8_keys=0..7, cursor=0x7a1befdf)"
-    ]
+      "python3 -m py_compile tools/rmg_h3maped_cursor_lifetime_summary.py",
+      "python3 tools/rmg_h3maped_cursor_lifetime_summary.py"
+    ],
+    "status": "passed"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
-    "source_basis": "Focused live H3MapEd controlled Medium seed-10 traces for the first 0x4a61bc Border Guard call site and the matching 0x4a5e73 +0xd8 scan, summarized by tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py.",
-    "result": "The first natural Border Guard materialization failure enters 0x4a5e73 from 0x4a64ff with normal coordinate/count/source arguments (33,26,0,count=1,source=0x01786958). The active +0xd8 vector has eight records keyed 0..7 at record+0x20, but generator+0xf5c remains 0x7a1befdf, so 0x4a5e73 scans all eight records and fails at 0x4a5f84 before any +0xc8 match or generated-cell mutation.",
-    "remaining_blocker": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization.",
-    "native_behavior_changed": false
+    "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+    "native_behavior_changed": false,
+    "remaining_blocker": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+    "result": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+    "source_basis": "H3MapEd static 0x49ecf2 dump, parsed Medium cursor lifecycle trace, and seed-10 natural Border Guard 0x4a61bc -> 0x4a5e73 callsite summary."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -43547,28 +43553,27 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentSliceNotes": "Recovered live H3MapEd 0x49d7c3 contour replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 candidate-vector-to-0x4aa3e9 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, 0x49be93/0x49c273 writer-helper no-hit classification, sampled 0x4a9f1c selected-object lifetime into 0x4aa1db/0x49d471/0x49abd6, sampled 0x540b14 projection-constructor return adoption through 0x4aa168, and sampled 0x540b14 initial consumer/stamp through 0x4aa22b/0x4aa23d/0x4aa27e into 0x49abd6; full reward/guard/private-state chain plus later 0x540b00/0x540b14 slot +0x08 projection-method dispatch remain in progress. 2026-06-07 projection pointer trace checkpoint: sampled 0x49cc22/0x49ccb0 object 0x0364d670 with vtable 0x540b14 reaches 0x4aa168 and three 0x49abd6 stamp entries; cold 0x49ec51 resolves to handler vtable 0x00539660 with slot +0x08 target 0x0045e1a6 and no 0x49c019/0x49c0a6 hits. Therefore sampled 0x49ec51 is ruled out for the 49c projection-method dispatch. Remaining blocker is the later consumer of 0x540b14/0x540b00 slot +0x08 downstream of 0x4a54a7 storage; a bounded 0x4add76-focused direct-generation trace observed storage callbacks but no 0x4add76/0x4adef7/projection-method hits.\n2026-06-07T10:45:00Z: Recorded 0x4a696b/0x4a7605 static callee-surface checkpoint. 0x4a696b direct GeneratedCell+0x28 mutation and 0x4a7605 delegated fallback endpoint coordinator surfaces are now source-backed, but ordered runtime replay and exact vector semantics remain blockers; native RMG behavior remains unchanged.\n2026-06-07T10:55:00Z: Recorded checked static 0x4a5e73/0x4a746b/0x4a7312 connection endpoint chain. This names exact cursor/vector/generated-cell runtime replay targets under the 0x4a79a3-dispatched 0x4a696b/0x4a7605 path; native RMG behavior remains unchanged and the full private-state chain remains unrecovered.\n2026-06-07T11:05:00Z: Recorded bounded live 0x4a7605 -> 0x4a7312 direct endpoint commit replay. The sampled +0xc8 dispatch produced two direct 0x4a7312 selected-coordinate commits, but zero 0x4a746b/0x4a5e73 delegated endpoint-writer hits; native RMG behavior remains unchanged and full private-state replay remains in progress.\n2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.\n2026-06-07T16:53:19Z: Recorded focused static producer recovery for compact connection-record byte +0x09. Ghidra dump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump plus connection_record_producer_static_summary.json rule out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface: it is a vtable/data-referenced copy adapter that fills a stack-local 12-byte record and copies bytes +0x08/+0x09 to caller output. Interactive trace tooling now preserves breakpoint/watchpoint stop kinds and supports pre-cont winedbg commands for the next live write-watch boundary. Native RMG behavior remains unchanged.\n2026-06-08T15:05:00Z: Recovered H3MapEd candidate adoption RNG and natural selected Border Guard replay boundary. Static Ghidra dump ghidra_candidate_selection_rng_20260608 proves 0x4ac552 selects candidate_index = 0x4e7276_rand() % candidate_count, and 0x4e7276 is the MSVC LCG over 0x4eab23()+0x14. Live seed-58 selector trace proves pre_state 58 -> rand 228 -> 228 % 35 = 18, matching the selected non-Border-Guard candidate. Live controlled Medium seed-10 selector trace proves pre_state 10 -> rand 71 -> 71 % 35 = 1, matching a natural selected candidate with four +0x09 Border Guard relation records. Natural seed-10 downstream replay reaches three +0x09 branch checks, 0x4a64ff/0x4a6531 call sites, and six 0x4a5e73 entries, but all six fail at 0x4a5f84 with generator+0xf5c still 0x7a1befdf and no 0x4a5fd8/0x4a5ff1/0x4a606b mutation hits. A focused pre-first-0x4a5e73 probe records no 0x4adb72 or 0x4add76 cursor-writer hit before the first natural Border Guard 0x4a5e73. Native RMG behavior remains unchanged; the remaining blocker is recovering the real source path that seeds or bypasses +0xf5c/+0x1104 before successful border-guard endpoint materialization.",
+      "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+      "currentSliceUpdatedAt": "2026-06-08T15:30:32Z",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "status": "candidate_selection_rng_recovered_natural_bg_cursor_unseeded",
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_natural_border_guard_downstream_replay_20260608/natural_border_guard_downstream_summary.json",
+        "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
         "commands": [
-          "python3 tools/rmg_h3maped_selected_candidate_scan.py --tag 20260608_medium_seed10_runtime --h3maped-runtime .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/runtime --water-none --human-computer-down 1 --computer-only-down 1 (passed: selected index 1, 4 Border Guard relation records)",
-          "python3 tools/rmg_h3maped_candidate_selection_rng_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_candidate_selection_rng_state_20260608/winedbg_interactive_trace_ledger.json (passed: pre_state 10, rand 71, selected index 1)",
-          "python3 tools/rmg_h3maped_natural_border_guard_downstream_summary.py --trace-log .artifacts/rmg_recovery/medium_seed10_natural_border_guard_downstream_replay_20260608/winedbg_interactive_trace.log (passed: natural +0x09 branch reaches 0x4a5e73, all entries fail at 0x4a5f84)",
-          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --h3maped-runtime .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/runtime --breakpoints 0x004adb72 0x004add76 0x004a5e73 --stop-after 0x004a5e73 (passed: first event is 0x4a5e73, no prior 0x4adb72/0x4add76)"
-        ]
+          "python3 -m py_compile tools/rmg_h3maped_cursor_lifetime_summary.py",
+          "python3 tools/rmg_h3maped_cursor_lifetime_summary.py"
+        ],
+        "status": "passed"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_natural_border_guard_downstream_replay_20260608/natural_border_guard_downstream_summary.json",
-        "source_basis": "Static Ghidra dump of 0x4ac552/0x4e7276 plus live H3MapEd interactive traces for seed-58 and controlled Medium seed-10 selected-candidate adoption and downstream Border Guard branch replay.",
-        "result": "Candidate adoption RNG is recovered: selected_index = rand() % candidate_count using MSVC LCG state at 0x4eab23()+0x14. Controlled Medium seed-10 naturally selects candidate index 1, whose selected relation records include four Border Guard +0x09 records. The natural downstream branch reaches 0x4a5e73, but every 0x4a5e73 entry fails at 0x4a5f84 because generator+0xf5c is still 0x7a1befdf; no generated-cell mutation sites are reached.",
-        "remaining_blocker": "Recover the source path that seeds or intentionally bypasses generator+0xf5c/+0x1104 before successful border-guard endpoint materialization. The known cursor writer candidates 0x4adb72 and 0x4add76 do not execute before the first natural seed-10 0x4a5e73 entry.",
-        "native_behavior_changed": false
+        "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+        "native_behavior_changed": false,
+        "remaining_blocker": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+        "result": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+        "source_basis": "H3MapEd static 0x49ecf2 dump, parsed Medium cursor lifecycle trace, and seed-10 natural Border Guard 0x4a61bc -> 0x4a5e73 callsite summary."
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -43579,7 +43584,7 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingWork": "Recover the source path that seeds or intentionally bypasses generator+0xf5c/+0x1104 before successful Border Guard endpoint materialization. Candidate selection and natural selected +0x09 Border Guard branch capture are now recovered for controlled Medium seed-10, but 0x4a5e73 still fails before generated-cell mutation.",
+      "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
         "project.md",
@@ -43625,8 +43630,7 @@
         },
         "status": "pass_in_progress_source_backed_0x49e1bf_terrain_mask_fix",
         "timestamp": "2026-06-04T22:35:00Z"
-      },
-      "currentSliceUpdatedAt": "2026-06-08T15:05:00Z"
+      }
     },
     {
       "baselineChecks": [
@@ -49999,7 +50003,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization. The first natural 0x4a61bc call has valid coordinate/count/source arguments, but +0xf5c remains a stale unseeded value and fails before +0xc8 or generated-cell mutation.",
+  "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50138,36 +50142,46 @@
       "system": "progress governance reports"
     },
     {
-      "id": "h3maped-cursor-f5c-1104-access-summary-20260608",
-      "title": "H3MapEd Cursor +0xf5c/+0x1104 Access Summary",
-      "status": "completed_report_only",
-      "updatedAt": "2026-06-08T15:25:00Z",
       "artifact": ".artifacts/rmg_recovery/cursor_f5c_1104_access_summary_20260608.json",
-      "tool": "tools/rmg_h3maped_cursor_state_access_summary.py",
       "evidence": [
         "Static offset scan found only 0x4a5e73, 0x4adb72, and 0x4add76 as direct generator+0xf5c writers; live seed-10 callback probe recorded no 0x49cd9b before first 0x4a5e73.",
         "0x49f95a is a +0x1104 sizing/initializer surface and does not seed +0xf5c.",
         "0x49cd9b is a read-only helper/callback and does not seed or advance the cursor.",
         "Natural controlled Medium seed-10 Border Guard replay still reaches 0x4a5e73 with generator+0xf5c=0x7a1befdf and fails before generated-cell mutation."
       ],
+      "id": "h3maped-cursor-f5c-1104-access-summary-20260608",
+      "nativeBehaviorChanged": false,
       "remainingBlocker": "Recover the source path or precondition that seeds or intentionally bypasses generator+0xf5c/+0x1104 before successful Border Guard endpoint materialization. The blocker is no longer an unknown direct cursor writer in the scanned surface.",
-      "nativeBehaviorChanged": false
+      "status": "completed_report_only",
+      "title": "H3MapEd Cursor +0xf5c/+0x1104 Access Summary",
+      "tool": "tools/rmg_h3maped_cursor_state_access_summary.py",
+      "updatedAt": "2026-06-08T15:25:00Z"
     },
     {
-      "id": "h3maped-4a61bc-5e73-callsite-summary-20260608",
-      "title": "H3MapEd 0x4a61bc to 0x4a5e73 Callsite Summary",
-      "status": "completed_report_only",
-      "updatedAt": "2026-06-08T16:05:00Z",
       "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
-      "tool": "tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py",
       "evidence": [
         "First failing natural seed-10 Border Guard call site is 0x4a64ff.",
         "0x4a5e73 entry arguments are x=33, y=26, level=0, repeat_count=1, source_arg=0x01786958.",
         "The active +0xd8 vector has eight records keyed 0..7 at record+0x20.",
         "generator+0xf5c is 0x7a1befdf, not one of those keys, so failure occurs at 0x4a5f84 before +0xc8 or generated-cell mutation."
       ],
+      "id": "h3maped-4a61bc-5e73-callsite-summary-20260608",
+      "nativeBehaviorChanged": false,
       "remainingBlocker": "Recover the source phase/precondition that initializes or selects generator+0xf5c to one of the active endpoint keys 0..7 before successful Border Guard endpoint materialization.",
-      "nativeBehaviorChanged": false
+      "status": "completed_report_only",
+      "title": "H3MapEd 0x4a61bc to 0x4a5e73 Callsite Summary",
+      "tool": "tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py",
+      "updatedAt": "2026-06-08T16:05:00Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "id": "h3maped-cursor-lifetime-summary-20260608",
+      "native_behavior_changed": false,
+      "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "report_only_recovery_evidence",
+      "summary": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+      "updatedAt": "2026-06-08T15:30:32Z"
     }
   ],
   "status": "in_progress",
@@ -50272,28 +50286,16 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T16:05:00Z",
+  "updatedAt": "2026-06-08T15:30:32Z",
   "validation": {
-    "status": "focused_connection_record_runtime_boundary_pass_full_parity_in_progress",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "evidence": {
-      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
-      "source_basis": "Fixed live H3MapEd direct-generation winedbg traces summarized by tools/rmg_h3maped_connection_record_runtime_boundary_summary.py, plus refreshed manifest .artifacts/rmg_recovery/h3maped_recovery_manifest.json.",
-      "result": "The sampled 0x4a7605 control byte +0x09 is already initialized before the consumer, the consumed ESI edge/control record is separate from the generator+0xc8 header, and 0x4b3c4e/0x4b3d3c do not fire before this fallback consumer.",
-      "remaining_blocker": "Recover the owner and population path for the edge/control-record block iterated by 0x4a79a3 before 0x4a7dcd/0x4a7dd0 selects a pair; break on the allocator/vector append that fills edge/control-record +0x08, then replay a nonzero-control-byte or alternate 0x4a746b endpoint-writer path through 0x4a5e73 generated-cell before/after state.",
-      "native_behavior_changed": false
-    },
-    "currentSliceNotes": "2026-06-07T17:55:00Z: Recorded live runtime boundary recovery for the 0x4a79a3/0x4a7605 edge/control-record flag. Fixed the interactive H3MapEd New Map driver to click relative to the live dialog; the fixed traces prove no post-0x4a7605 write to +0x09, show the sampled 0x4a7605 ESI record is separate from the generator+0xc8 header, and rule out 0x4b3c4e/0x4b3d3c as live producers before the sampled fallback consumer. The remaining source-backed blocker is now the allocator/vector append path that fills edge/control-record +0x08 before 0x4a79a3 selects the pair. Native RMG behavior remains unchanged.",
+    "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+    "evidence": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
     "lastValidationCommands": [
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_plus9_watch_probe_fixed_ui ... (passed: events=16, no watchpoint stops)",
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_c8_boundary_probe_fixed_ui ... (passed: events=4)",
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_relation_record_boundary_probe ... (passed: events=4)",
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_7605_argument_probe ... (passed: events=1)",
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/direct_generation_4b3c4e_4b3d3c_constructor_probe ... (passed: only 0x4a7605 hit)",
-      "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed)",
-      "python3 tools/rmg_h3maped_connection_record_runtime_boundary_summary.py (passed: partial_runtime_boundary_checkpoint)",
-      "python3 tools/rmg_h3maped_recovery_manifest.py (passed: functions=129)"
-    ]
+      "python3 -m py_compile tools/rmg_h3maped_cursor_lifetime_summary.py",
+      "python3 tools/rmg_h3maped_cursor_lifetime_summary.py"
+    ],
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "passed"
   },
   "validationHistory": [
     {
@@ -55405,9 +55407,6 @@
       "updatedAt": "2026-06-05T09:55:00Z"
     },
     {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
-      "updatedAt": "2026-06-07T16:53:19Z",
       "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
       "commands": [
         ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
@@ -55419,38 +55418,51 @@
         "git diff --check (passed)",
         "python3 tests/validate_repo.py (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)"
-      ]
+      ],
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "focused_connection_record_plus9_producer_static_ruleout_pass_full_parity_in_progress",
+      "updatedAt": "2026-06-07T16:53:19Z"
     },
     {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "cursor_writer_surface_exhausted_natural_bg_still_unseeded",
-      "updatedAt": "2026-06-08T15:25:00Z",
       "artifact": ".artifacts/rmg_recovery/cursor_f5c_1104_access_summary_20260608.json",
       "commands": [
         "python3 -m py_compile tools/rmg_h3maped_cursor_state_access_summary.py (passed)",
         "python3 tools/rmg_h3maped_cursor_state_access_summary.py (passed: rows=27, writers=004a5e73/004adb72/004add76, entries_4a5e73=6)",
         "python3 tools/rmg_h3maped_recovery_interactive_trace.py --h3maped-runtime .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/runtime --breakpoints 0x0049cd9b 0x004adb72 0x004add76 0x004a5e73 --stop-after 0x004a5e73 (passed: first event is 0x4a5e73, no prior 0x49cd9b/0x4adb72/0x4add76)"
-      ]
+      ],
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "cursor_writer_surface_exhausted_natural_bg_still_unseeded",
+      "updatedAt": "2026-06-08T15:25:00Z"
     },
     {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "natural_bg_first_5e73_cursor_unseeded_against_d8_key_range",
-      "updatedAt": "2026-06-08T16:05:00Z",
       "artifact": ".artifacts/rmg_recovery/medium_seed10_4a61bc_5e73_callsite_summary_20260608.json",
       "commands": [
         "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a61bc_first_5f84_callsite_probe_20260608 --breakpoints 0x004a64ff 0x004a6531 0x004a5e73 0x004a5ed7 0x004a5f84 --stop-after 0x004a5f84 (passed: events=4)",
         "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a5e73_d8_scan_probe_20260608 --breakpoints 0x004a5e73 0x004a5eb4 0x004a5f84 --stop-after 0x004a5f84 (passed: events=10)",
         "python3 -m py_compile tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py (passed)",
         "python3 tools/rmg_h3maped_4a61bc_5e73_callsite_summary.py (passed: callsite=0x004a64ff, args=(33,26,0), d8_keys=0..7, cursor=0x7a1befdf)"
-      ]
+      ],
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "natural_bg_first_5e73_cursor_unseeded_against_d8_key_range",
+      "updatedAt": "2026-06-08T16:05:00Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "commands": [
+        "python3 -m py_compile tools/rmg_h3maped_cursor_lifetime_summary.py",
+        "python3 tools/rmg_h3maped_cursor_lifetime_summary.py"
+      ],
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "updatedAt": "2026-06-08T15:30:32Z"
     }
   ],
   "validationResults": [
     {
+      "currentSliceNotes": "2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "pass",
       "summary": "Recorded live 0x4a7605 control-byte gate skip reason for sampled absent 0x4a746b delegated writer calls; full private-state parity remains incomplete.",
-      "currentSliceNotes": "2026-06-07T11:15:00Z: Recorded live 0x4a7605 control-byte gate skip replay. The sampled endpoint invocation hit both post-commit control-byte compares with [ESI+0x09] == 0, hit skip targets 0x4a7773/0x4a7860, and did not enter 0x4a746b call sites 0x4a7763/0x4a7853. This explains the sampled no-hit delegated writer result; full delegated 0x4a746b/0x4a5e73 generated-cell replay remains blocked pending a nonzero-control-byte or alternate writer path. Native RMG behavior remains unchanged.",
       "updatedAt": "2026-06-07T11:20:00Z",
       "validation": [
         "python3 tools/rmg_h3maped_7605_branch_gate_summary.py (passed: partial_live_recovery_7605_control_byte_gate_skips_746b)",
@@ -57560,11 +57572,18 @@
       "updatedAt": "2026-06-05T09:29:03Z"
     },
     {
+      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
+      "at": "2026-06-07T17:55:00Z",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "pass",
-      "at": "2026-06-07T17:55:00Z",
-      "artifact": ".artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json",
       "summary": "Focused runtime boundary checkpoint passed; full H3MapEd private-state parity still in progress and native behavior unchanged."
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "Cursor lifetime summary tool compiled and generated a passing report.",
+      "updatedAt": "2026-06-08T15:30:32Z"
     }
   ]
 }
