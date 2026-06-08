@@ -443,52 +443,46 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Projection-to-payload recovery frontier narrowed from pointer-paired selected-object survival to ordinary-record materialization: static evidence shows 0x4a79a3 is reached through 0x4adfe1 -> 0x4ac552 -> 0x4a8c15, while selected 0x540b14 projection creation reaches 0x4a9f1c through separate selected-create drivers and stamps generated cells via 0x49abd6. Sampled 0x4a79a3 payload traces contain only ordinary 0x540a88/0x540a9c records. Native RMG behavior unchanged.",
-    "currentSliceUpdatedAt": "2026-06-08T19:35:00Z",
+    "currentSliceNotes": "Same-run 0x4a93a2 materialization link recovered for the sampled run: a clean WineDbg trace captured seven 0x4a93a2 producer cycles through 0x4a9524/0x4a9536/0x4a9583 and later 0x4a79a3/0x4a7d36/0x4a7d99. The seven 0x540a9c records ready at 0x4a9536 are the first non-null payload records consumed by 0x4a79a3; index args match field +0x20 and enabled args match the low byte of +0x24. Native RMG behavior unchanged.",
+    "currentSliceUpdatedAt": "2026-06-08T19:50:00Z",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/projection_materialization_frontier_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_projection_materialization_frontier_summary.py (passed)",
-        "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_materialization_frontier_summary.py (passed: projection_materialization_frontier_recovered)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/same_run_4a93a2_payload_link_trace_lite_20260608 --lite --breakpoints 0x004a93a2 0x004a9524 0x004a9536 0x004a9583 0x004a95a4 0x004a95e6 0x004a79a3 0x004a7d36 0x004a7d99 --max-events 160 --stop-after 0x004a7d99 ... (passed: 63 events)",
+        "python3 -m py_compile tools/rmg_h3maped_4a93a2_payload_same_run_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_4a93a2_payload_same_run_summary.py (passed: same_run_4a93a2_payload_link_recovered)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_projection_materialization_frontier": {
-          "materialization_calls_named": [
-            "0x4a4913",
-            "0x4a5767",
-            "0x4a4fc5"
-          ],
+        "h3maped_4a93a2_payload_same_run": {
           "native_behavior_changed": false,
-          "ordinary_record_producers_named": [
-            "0x4a5c07",
-            "0x4a901a",
-            "0x4a93a2"
-          ],
           "overall_goal_complete": false,
-          "status": "projection_materialization_frontier_recovered"
+          "payload_records": 18,
+          "producer_cycles": 7,
+          "producer_ready_records_are_first_non_null_payload_records": true,
+          "status": "same_run_4a93a2_payload_link_recovered"
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-08T19:35:00Z",
-      "updatedAt": "2026-06-08T19:35:00Z"
+      "timestamp": "2026-06-08T19:50:00Z",
+      "updatedAt": "2026-06-08T19:50:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/projection_materialization_frontier_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
       "native_behavior_changed": false,
-      "remaining_blocker": "Recover ordered pre/post private state for ordinary record producers 0x4a5c07, 0x4a901a, 0x4a93a2 and the 0x4a8c15 materialization calls 0x4a4913/0x4a5767/0x4a4fc5. Required evidence is generated-cell/vector before/after snapshots that show how selected 0x540b14 projection stamps become ordinary 0x540a88/0x540a9c payload records, or prove a fully separate selected-create surface for one-level land generation. Then continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Projection-to-payload recovery frontier narrowed from pointer-paired selected-object survival to ordinary-record materialization: static evidence shows 0x4a79a3 is reached through 0x4adfe1 -> 0x4ac552 -> 0x4a8c15, while selected 0x540b14 projection creation reaches 0x4a9f1c through separate selected-create drivers and stamps generated cells via 0x49abd6. Sampled 0x4a79a3 payload traces contain only ordinary 0x540a88/0x540a9c records. Native RMG behavior unchanged.",
-      "source_basis": "tools/rmg_h3maped_projection_materialization_frontier_summary.py over existing same-run projection/payload link summary, relation-builder runtime summary, 0x4a79a3 payload summaries, and Ghidra static dumps for 0x4adfe1/0x4ac552/0x4a8c15/0x4a79a3/0x4a9f1c/0x4aa1db/0x4adef7/0x4a5c07/0x4a901a/0x4a93a2.",
-      "validatedAt": "2026-06-08T19:35:00Z"
+      "remaining_blocker": "Recover the exact mutation between 0x4a9536 and 0x4a7d36 that fills the created 0x540a9c record coordinate/payload fields, likely through the 0x4a9583 relation vslot path and 0x4a54a7. Then recover the analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "result": "Same-run 0x4a93a2 materialization link recovered for the sampled run: a clean WineDbg trace captured seven 0x4a93a2 producer cycles through 0x4a9524/0x4a9536/0x4a9583 and later 0x4a79a3/0x4a7d36/0x4a7d99. The seven 0x540a9c records ready at 0x4a9536 are the first non-null payload records consumed by 0x4a79a3; index args match field +0x20 and enabled args match the low byte of +0x24. Native RMG behavior unchanged.",
+      "source_basis": "Clean same-run WineDbg trace .artifacts/rmg_recovery/same_run_4a93a2_payload_link_trace_lite_20260608 and tools/rmg_h3maped_4a93a2_payload_same_run_summary.py, backed by the static 0x4a93a2 writes in the Ghidra dump.",
+      "validatedAt": "2026-06-08T19:50:00Z"
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -499,7 +493,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover ordered pre/post private state for ordinary record producers 0x4a5c07, 0x4a901a, 0x4a93a2 and the 0x4a8c15 materialization calls 0x4a4913/0x4a5767/0x4a4fc5. Required evidence is generated-cell/vector before/after snapshots that show how selected 0x540b14 projection stamps become ordinary 0x540a88/0x540a9c payload records, or prove a fully separate selected-create surface for one-level land generation. Then continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "remainingWork": "Recover the exact mutation between 0x4a9536 and 0x4a7d36 that fills the created 0x540a9c record coordinate/payload fields, likely through the 0x4a9583 relation vslot path and 0x4a54a7. Then recover the analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -509,7 +503,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-08T19:35:00Z",
+    "updatedAt": "2026-06-08T19:50:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9150,10 +9144,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Projection-to-payload recovery frontier narrowed from pointer-paired selected-object survival to ordinary-record materialization: static evidence shows 0x4a79a3 is reached through 0x4adfe1 -> 0x4ac552 -> 0x4a8c15, while selected 0x540b14 projection creation reaches 0x4a9f1c through separate selected-create drivers and stamps generated cells via 0x49abd6. Sampled 0x4a79a3 payload traces contain only ordinary 0x540a88/0x540a9c records. Native RMG behavior unchanged.",
+  "currentSliceNotes": "Same-run 0x4a93a2 materialization link recovered for the sampled run: a clean WineDbg trace captured seven 0x4a93a2 producer cycles through 0x4a9524/0x4a9536/0x4a9583 and later 0x4a79a3/0x4a7d36/0x4a7d99. The seven 0x540a9c records ready at 0x4a9536 are the first non-null payload records consumed by 0x4a79a3; index args match field +0x20 and enabled args match the low byte of +0x24. Native RMG behavior unchanged.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T19:35:00Z",
+  "currentSliceUpdatedAt": "2026-06-08T19:50:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10150,46 +10144,40 @@
     }
   },
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/projection_materialization_frontier_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_projection_materialization_frontier_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_materialization_frontier_summary.py (passed: projection_materialization_frontier_recovered)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/same_run_4a93a2_payload_link_trace_lite_20260608 --lite --breakpoints 0x004a93a2 0x004a9524 0x004a9536 0x004a9583 0x004a95a4 0x004a95e6 0x004a79a3 0x004a7d36 0x004a7d99 --max-events 160 --stop-after 0x004a7d99 ... (passed: 63 events)",
+      "python3 -m py_compile tools/rmg_h3maped_4a93a2_payload_same_run_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a93a2_payload_same_run_summary.py (passed: same_run_4a93a2_payload_link_recovered)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "h3maped_projection_materialization_frontier": {
-        "materialization_calls_named": [
-          "0x4a4913",
-          "0x4a5767",
-          "0x4a4fc5"
-        ],
+      "h3maped_4a93a2_payload_same_run": {
         "native_behavior_changed": false,
-        "ordinary_record_producers_named": [
-          "0x4a5c07",
-          "0x4a901a",
-          "0x4a93a2"
-        ],
         "overall_goal_complete": false,
-        "status": "projection_materialization_frontier_recovered"
+        "payload_records": 18,
+        "producer_cycles": 7,
+        "producer_ready_records_are_first_non_null_payload_records": true,
+        "status": "same_run_4a93a2_payload_link_recovered"
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-08T19:35:00Z",
-    "updatedAt": "2026-06-08T19:35:00Z"
+    "timestamp": "2026-06-08T19:50:00Z",
+    "updatedAt": "2026-06-08T19:50:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/projection_materialization_frontier_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "native_behavior_changed": false,
-    "remaining_blocker": "Recover ordered pre/post private state for ordinary record producers 0x4a5c07, 0x4a901a, 0x4a93a2 and the 0x4a8c15 materialization calls 0x4a4913/0x4a5767/0x4a4fc5. Required evidence is generated-cell/vector before/after snapshots that show how selected 0x540b14 projection stamps become ordinary 0x540a88/0x540a9c payload records, or prove a fully separate selected-create surface for one-level land generation. Then continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Projection-to-payload recovery frontier narrowed from pointer-paired selected-object survival to ordinary-record materialization: static evidence shows 0x4a79a3 is reached through 0x4adfe1 -> 0x4ac552 -> 0x4a8c15, while selected 0x540b14 projection creation reaches 0x4a9f1c through separate selected-create drivers and stamps generated cells via 0x49abd6. Sampled 0x4a79a3 payload traces contain only ordinary 0x540a88/0x540a9c records. Native RMG behavior unchanged.",
-    "source_basis": "tools/rmg_h3maped_projection_materialization_frontier_summary.py over existing same-run projection/payload link summary, relation-builder runtime summary, 0x4a79a3 payload summaries, and Ghidra static dumps for 0x4adfe1/0x4ac552/0x4a8c15/0x4a79a3/0x4a9f1c/0x4aa1db/0x4adef7/0x4a5c07/0x4a901a/0x4a93a2.",
-    "validatedAt": "2026-06-08T19:35:00Z"
+    "remaining_blocker": "Recover the exact mutation between 0x4a9536 and 0x4a7d36 that fills the created 0x540a9c record coordinate/payload fields, likely through the 0x4a9583 relation vslot path and 0x4a54a7. Then recover the analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Same-run 0x4a93a2 materialization link recovered for the sampled run: a clean WineDbg trace captured seven 0x4a93a2 producer cycles through 0x4a9524/0x4a9536/0x4a9583 and later 0x4a79a3/0x4a7d36/0x4a7d99. The seven 0x540a9c records ready at 0x4a9536 are the first non-null payload records consumed by 0x4a79a3; index args match field +0x20 and enabled args match the low byte of +0x24. Native RMG behavior unchanged.",
+    "source_basis": "Clean same-run WineDbg trace .artifacts/rmg_recovery/same_run_4a93a2_payload_link_trace_lite_20260608 and tools/rmg_h3maped_4a93a2_payload_same_run_summary.py, backed by the static 0x4a93a2 writes in the Ghidra dump.",
+    "validatedAt": "2026-06-08T19:50:00Z"
   },
-  "nextActionGuardrailNote": "Recover ordered pre/post private state for ordinary record producers 0x4a5c07, 0x4a901a, 0x4a93a2 and the 0x4a8c15 materialization calls 0x4a4913/0x4a5767/0x4a4fc5. Required evidence is generated-cell/vector before/after snapshots that show how selected 0x540b14 projection stamps become ordinary 0x540a88/0x540a9c payload records, or prove a fully separate selected-create surface for one-level land generation. Then continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recover the exact mutation between 0x4a9536 and 0x4a7d36 that fills the created 0x540a9c record coordinate/payload fields, likely through the 0x4a9583 relation vslot path and 0x4a54a7. Then recover the analogous 0x4a5c07/0x540a88 and 0x4a901a/0x540a9c producer paths plus generated-cell/vector before/after deltas. Continue 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
   "plannedSlices": [
     {
@@ -50438,19 +50426,20 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, live sampled 0x4a9f1c post-counter branch reasons, live 0x4a9f1c selected-create replay, and selected candidate vtable create/scorer contracts are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor type/category semantic names, 0x4add76 cleanup replay, downstream projection-object consumer linkage, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T19:35:00Z",
+  "updatedAt": "2026-06-08T19:50:00Z",
   "validation": {
-    "artifact": ".artifacts/rmg_recovery/projection_materialization_frontier_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
-      "python3 -m py_compile tools/rmg_h3maped_projection_materialization_frontier_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_materialization_frontier_summary.py (passed: projection_materialization_frontier_recovered)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/same_run_4a93a2_payload_link_trace_lite_20260608 --lite --breakpoints 0x004a93a2 0x004a9524 0x004a9536 0x004a9583 0x004a95a4 0x004a95e6 0x004a79a3 0x004a7d36 0x004a7d99 --max-events 160 --stop-after 0x004a7d99 ... (passed: 63 events)",
+      "python3 -m py_compile tools/rmg_h3maped_4a93a2_payload_same_run_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a93a2_payload_same_run_summary.py (passed: same_run_4a93a2_payload_link_recovered)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
     "status": "passed",
-    "timestamp": "2026-06-08T19:35:00Z"
+    "timestamp": "2026-06-08T19:50:00Z"
   },
   "validationHistory": [
     {
