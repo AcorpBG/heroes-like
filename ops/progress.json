@@ -465,7 +465,13 @@
       ],
       "metrics": {
         "h3maped_pre_4a8db2_score_order": {
-          "status": "pre_4a8db2_score_projection_order_recovered",
+          "invariants": {
+            "no_4a79a3_before_4a8c15": true,
+            "pre_4a8db2_commits_return_through_4a93a2_slot": true,
+            "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
+            "same_run_4a8db2_repeats_before_4a8c15": true,
+            "value_gate_low_range_matches_recovered_projection_score_shape": true
+          },
           "native_behavior_changed": false,
           "pre_scheduler_projection_order": {
             "4a54a7_commit_count_before_first_4a8db2": 16,
@@ -474,17 +480,11 @@
           },
           "scheduler_to_materialization_order": {
             "4a8db2_entries_before_first_4a8c15": 48,
-            "4a8ffd_weighted_calls": 8,
             "4a8f96_weighted_calls": 8,
+            "4a8ffd_weighted_calls": 8,
             "no_4a79a3_before_4a8c15": true
           },
-          "invariants": {
-            "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
-            "pre_4a8db2_commits_return_through_4a93a2_slot": true,
-            "same_run_4a8db2_repeats_before_4a8c15": true,
-            "no_4a79a3_before_4a8c15": true,
-            "value_gate_low_range_matches_recovered_projection_score_shape": true
-          }
+          "status": "pre_4a8db2_score_projection_order_recovered"
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -519,13 +519,41 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-08T23:45:00Z",
+    "updatedAt": "2026-06-08T23:55:00Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
       "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --controlled-reference-manifest small_3p_seed_11_controlled --controlled-reference-manifest medium_4p_seed_10_controlled --emit-phase-snapshot --print-manifest (pass_exported_2_failed_0)",
       "package_surface_comparison": "stable checkpoint exact match: Small 399 objects 1047 body/block; Medium 1330 objects 3631 body/block",
       "rejected_probe": "0x4a54a7 primary-anchor-only behavior rejected after Small 634 objects / Medium 2501 objects reward overproduction"
+    },
+    "metrics": {
+      "h3maped_4a901a_same_run_precheck": {
+        "status": "same_run_4a901a_direct_success_then_weighted_value_floor_rejection",
+        "native_behavior_changed": false,
+        "pre_scheduler_projection_order": {
+          "4a54a7_commit_count_before_first_4a8db2": 6,
+          "projection_done_count_before_first_4a8db2": 6,
+          "all_pre_scheduler_commits_return_through_4a9586": true
+        },
+        "4a901a_sequences": {
+          "entry_count": 2,
+          "first_sequence_returns_true_without_weighted_body": true,
+          "first_sequence_reaches_4a54a7_projection_commit": true,
+          "second_sequence_enters_weighted_body": true
+        },
+        "weighted_candidate_precheck": {
+          "required_value_arg_0x18": 83,
+          "owner_precheck_count": 399,
+          "owner_precheck_match_count": 330,
+          "owner_precheck_mismatch_count": 69,
+          "value_floor_count": 330,
+          "value_floor_low16_min": 0,
+          "value_floor_low16_max": 33,
+          "all_value_floor_samples_fail_required_value": true,
+          "reaches_49aa93_or_append_sites": false
+        }
+      }
     }
   },
   "completedImplementationEvidence": [
@@ -9160,10 +9188,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered the pre-0x4a8db2 score/order surface without changing native behavior: a bounded Large no-water trace proves sixteen completed 0x4a54a7 object-footprint/local-score projection commits before the first 0x4a8db2 scheduler entry, all returning through 0x4a9586 and paired with 0x4a5756 projection completion. A second bounded trace proves forty-eight 0x4a8db2 scheduler entries, eight 0x4a8ffd weighted calls, eight 0x4a8f96 weighted calls, then 0x4a8c15, with no 0x4a79a3 before materialization. The prior Large 0x4a901a value-gate low-word range 0..40 is now consistent with the recovered 0x4a54a7 projection-distance field, not an unknown threshold formula.",
+  "currentSliceNotes": "Recovered the same-run 0x4a901a precheck surface without changing native behavior: a parsed Large no-water partial trace proves six completed 0x4a54a7 projection commits before the first 0x4a8db2 scheduler entry, then one 0x4a901a call returns true without entering the weighted body and reaches another 0x4a54a7 projection commit. The next 0x4a8f96 -> 0x4a901a call enters the weighted body, hits 399 owner/selector prechecks, advances 330 owner-matching candidates to the value-floor check, and all 330 have GeneratedCell+0x20 low words 0..33 against required value 0x53/83, so none reach 0x49aa93 or append/materialization sites.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T23:45:00Z",
+  "currentSliceUpdatedAt": "2026-06-08T23:55:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10173,7 +10201,13 @@
     ],
     "metrics": {
       "h3maped_pre_4a8db2_score_order": {
-        "status": "pre_4a8db2_score_projection_order_recovered",
+        "invariants": {
+          "no_4a79a3_before_4a8c15": true,
+          "pre_4a8db2_commits_return_through_4a93a2_slot": true,
+          "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
+          "same_run_4a8db2_repeats_before_4a8c15": true,
+          "value_gate_low_range_matches_recovered_projection_score_shape": true
+        },
         "native_behavior_changed": false,
         "pre_scheduler_projection_order": {
           "4a54a7_commit_count_before_first_4a8db2": 16,
@@ -10182,17 +10216,11 @@
         },
         "scheduler_to_materialization_order": {
           "4a8db2_entries_before_first_4a8c15": 48,
-          "4a8ffd_weighted_calls": 8,
           "4a8f96_weighted_calls": 8,
+          "4a8ffd_weighted_calls": 8,
           "no_4a79a3_before_4a8c15": true
         },
-        "invariants": {
-          "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
-          "pre_4a8db2_commits_return_through_4a93a2_slot": true,
-          "same_run_4a8db2_repeats_before_4a8c15": true,
-          "no_4a79a3_before_4a8c15": true,
-          "value_gate_low_range_matches_recovered_projection_score_shape": true
-        }
+        "status": "pre_4a8db2_score_projection_order_recovered"
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
@@ -10201,14 +10229,14 @@
     "updatedAt": "2026-06-08T23:45:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/pre_4a8db2_score_order_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/4a901a_same_run_precheck_summary_20260609.json",
     "native_behavior_changed": false,
-    "remaining_blocker": "Capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility and appends through 0x4ae52a/0x4ae1fd, then record successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Recovered the pre-0x4a8db2 score/order surface without changing native behavior: a bounded Large no-water trace proves sixteen completed 0x4a54a7 object-footprint/local-score projection commits before the first 0x4a8db2 scheduler entry, all returning through 0x4a9586 and paired with 0x4a5756 projection completion. A second bounded trace proves forty-eight 0x4a8db2 scheduler entries, eight 0x4a8ffd weighted calls, eight 0x4a8f96 weighted calls, then 0x4a8c15, with no 0x4a79a3 before materialization. The prior Large 0x4a901a value-gate low-word range 0..40 is now consistent with the recovered 0x4a54a7 projection-distance field, not an unknown threshold formula.",
-    "source_basis": "Two bounded H3MapEd WineDbg Large no-water traces under .artifacts/rmg_recovery/4a54a7_before_4a8db2_order_trace_20260608/ and .artifacts/rmg_recovery/4a8db2_to_4a8c15_order_trace_20260608/, summarized with prior 0x4a54a7 projection-write and 0x4a8db2 threshold artifacts.",
-    "validatedAt": "2026-06-08T23:45:00Z"
+    "remaining_blocker": "Recover a weighted 0x4a901a scan whose owner-matching cells pass the 0x4a9150 value floor, then capture 0x49aa93 eligibility, candidate append through 0x4ae52a/0x4ae1fd, selected descriptor, successful 0x540a9c materialization, 0x4a54a7 projection dispatch, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Recovered the same-run 0x4a901a precheck surface without changing native behavior: a parsed Large no-water partial trace proves six completed 0x4a54a7 projection commits before the first 0x4a8db2 scheduler entry, then one 0x4a901a call returns true without entering the weighted body and reaches another 0x4a54a7 projection commit. The next 0x4a8f96 -> 0x4a901a call enters the weighted body, hits 399 owner/selector prechecks, advances 330 owner-matching candidates to the value-floor check, and all 330 have GeneratedCell+0x20 low words 0..33 against required value 0x53/83, so none reach 0x49aa93 or append/materialization sites.",
+    "source_basis": "Parsed same-run H3MapEd WineDbg partial trace under .artifacts/rmg_recovery/4a54a7_to_4a901a_same_run_value_trace_20260609/ using tools/rmg_h3maped_4a901a_same_run_precheck_summary.py.",
+    "validatedAt": "2026-06-08T23:55:00Z"
   },
-  "nextActionGuardrailNote": "Recover the pre-0x4a8db2 phase that raises or preserves GeneratedCell+0x20 low-word score values for owner-matching cells, then capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility, appends through 0x4ae52a/0x4ae1fd, successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue full 0x4a54a7 projection-loop write set and descriptor +0x29/+0x2c/+0x30 semantic-name recovery, 0x4a696b nonzero candidate/direct mutation recovery, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation recovery, and actual 0x4add76 cleanup/uncommit runtime path recovery before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recover a weighted 0x4a901a scan whose owner-matching cells pass the 0x4a9150 value floor, then capture 0x49aa93 eligibility, candidate append through 0x4ae52a/0x4ae1fd, selected descriptor, successful 0x540a9c materialization, 0x4a54a7 projection dispatch, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
   "plannedSlices": [
     {
@@ -43673,12 +43701,12 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, a focused same-run trace pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects, a branch trace classifies five sampled rejects by exact internal branch site, and a follow-up fallthrough trace proves the non-54/9 0x49a6f9 true-return rejection class at 0x49d3e2. 2026-06-07 0x4aa3e9 checkpoints: selected-coordinate writes and selected-member vector boundary shape are runtime-proven for 12 paired calls; focused inner-call traces prove member dispatch targets 0x4a54a7/0x49baf5 plus sampled source/destination bit26/bit27 mutation call sites; source-set-after trace proves sampled source bit26 after-call state; ordered single-call trace proves one complete non-source-mutating entry-to-return projection with 256 destination mirror pairs; static leaf recovery verifies 0x49baf5 is a no-write always-true callback. 2026-06-07 0x49d69d checkpoint: static/Ghidra-backed recovery verifies the selected-member stamp helper appends the member pointer to wrapper+0x28 and stamps (selected_x, selected_y, 0) through 0x49abd6 after 0x49cf34 chooses the coordinate. 2026-06-07 0x49d6e0 checkpoint: static/Ghidra-backed recovery verifies wrapper bounds refresh over invalid, bit22-set, or bit27-clear cells with exclusive max bounds. 2026-06-07 0x49d7c3 checkpoint: static/Ghidra-backed recovery verifies candidate-vector contour rebuild starts from a boundary/control cell after advancing across passable bit27 cells, appending contour coordinates through 0x40bb15. Full generated/wrapper before/after replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete. 2026-06-08 Border Guard follow-through checkpoint: natural seed-10 tries three endpoint pairs, all six 0x4a5e73 calls fail on stale +0xf5c, then execution continues into two 0x4a7605-owned 0x4a5e03 calls. Remaining named blocker is 0x4a5e03 generated-cell/object-vector side-effect replay.",
+      "notes": "Recovered the same-run 0x4a901a precheck surface without changing native behavior: a parsed Large no-water partial trace proves six completed 0x4a54a7 projection commits before the first 0x4a8db2 scheduler entry, then one 0x4a901a call returns true without entering the weighted body and reaches another 0x4a54a7 projection commit. The next 0x4a8f96 -> 0x4a901a call enters the weighted body, hits 399 owner/selector prechecks, advances 330 owner-matching candidates to the value-floor check, and all 330 have GeneratedCell+0x20 low words 0..33 against required value 0x53/83, so none reach 0x49aa93 or append/materialization sites.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "Recover the object/storage transformation between stamped 0x540b14 projection objects and later ordinary 0x540a88/0x540a9c 0x4a79a3 payload records, or prove they are separate selected-create surfaces in the sampled run; recover a live 0x4a696b candidate path where [EBP-0x54] is nonzero and reaches 0x4a6b2e/0x4a6b9b/0x4a6c13, or prove the direct mutation block is unreachable for one-level land generation; recover natural 0x4a7605/0x4a746b/0x4a5e73 success state that reaches 0x4a5fd8/0x4a5ff1, or prove those mutation sites are unreachable; recover actual 0x4add76 cleanup/uncommit runtime path before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "remainingWork": "Recover the object/storage transformation between stamped 0x540b14 projection objects and later ordinary 0x540a88/0x540a9c 0x4a79a3 payload records, or prove they are separate selected-create surfaces in the sampled run; recover a live 0x4a696b candidate path where [EBP-0x54] is nonzero and reaches 0x4a6b2e/0x4a6b9b/0x4a6c13, or prove the direct mutation block is unreachable for one-level land generation; recover natural 0x4a7605/0x4a746b/0x4a5e73 success state that reaches 0x4a5fd8/0x4a5ff1, or prove those mutation sites are unreachable; recover actual 0x4add76 cleanup/uncommit runtime path before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "remainingWork": "Recover a weighted 0x4a901a scan whose owner-matching cells pass the 0x4a9150 value floor, then capture 0x49aa93 eligibility, candidate append through 0x4ae52a/0x4ae1fd, selected descriptor, successful 0x540a9c materialization, 0x4a54a7 projection dispatch, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "result": "Downstream recovery frontier narrowed: sampled evidence proves projection-producing candidates and one 0x540b14 projection-object return/stamp, but sampled projection objects do not survive into the later 0x4a79a3 payload; that payload contains ordinary 0x540a88/0x540a9c records and dispatches through 0x4a79a3-owned 0x4a696b/0x4a7605. The live next recovery target is callee-side generated-cell mutation or proof of unreachable mutation, not speculative 0x49c019/0x49c0a6 dispatch.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -43689,7 +43717,7 @@
       "status": "in_progress",
       "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x540b14 constructor return/adoption and 0x49abd6 stamping are recovered; projection consumer storage is narrowed to 0x4a54a7, while sampled 0x49eb8d/0x49ec51 is ruled out as the 49c projection-object method dispatch; broader reward/guard/native parity remains incomplete.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-08T19:25:00Z",
+      "updatedAt": "2026-06-08T23:55:00Z",
       "validation": {
         "artifact": ".artifacts/rmg_recovery/downstream_recovery_frontier_summary_20260608.json",
         "checks": [
@@ -43724,6 +43752,34 @@
         "status": "passed",
         "timestamp": "2026-06-08T19:15:00Z",
         "updatedAt": "2026-06-08T19:15:00Z"
+      },
+      "metrics": {
+        "h3maped_4a901a_same_run_precheck": {
+          "status": "same_run_4a901a_direct_success_then_weighted_value_floor_rejection",
+          "native_behavior_changed": false,
+          "pre_scheduler_projection_order": {
+            "4a54a7_commit_count_before_first_4a8db2": 6,
+            "projection_done_count_before_first_4a8db2": 6,
+            "all_pre_scheduler_commits_return_through_4a9586": true
+          },
+          "4a901a_sequences": {
+            "entry_count": 2,
+            "first_sequence_returns_true_without_weighted_body": true,
+            "first_sequence_reaches_4a54a7_projection_commit": true,
+            "second_sequence_enters_weighted_body": true
+          },
+          "weighted_candidate_precheck": {
+            "required_value_arg_0x18": 83,
+            "owner_precheck_count": 399,
+            "owner_precheck_match_count": 330,
+            "owner_precheck_mismatch_count": 69,
+            "value_floor_count": 330,
+            "value_floor_low16_min": 0,
+            "value_floor_low16_max": 33,
+            "all_value_floor_samples_fail_required_value": true,
+            "reaches_49aa93_or_append_sites": false
+          }
+        }
       }
     },
     {
@@ -50097,7 +50153,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Capture a 0x4a901a weighted scan that reaches 0x49aa93 eligibility and appends through 0x4ae52a/0x4ae1fd, then record successful 0x540a9c materialization, selected descriptor, 0x4a54a7 projection, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover a weighted 0x4a901a scan whose owner-matching cells pass the 0x4a9150 value floor, then capture 0x49aa93 eligibility, candidate append through 0x4ae52a/0x4ae1fd, selected descriptor, successful 0x540a9c materialization, 0x4a54a7 projection dispatch, generated-cell before/after, and generator vector deltas. Continue complete ordered replay of all pre-scheduler 0x4a54a7 projection seeds, 0x4a696b direct mutation replay, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation replay, and actual 0x4add76 cleanup/uncommit runtime replay before porting behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50457,7 +50513,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, live sampled 0x4a9f1c post-counter branch reasons, live 0x4a9f1c selected-create replay, and selected candidate vtable create/scorer contracts are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor type/category semantic names, 0x4add76 cleanup replay, downstream projection-object consumer linkage, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T23:45:00Z",
+  "updatedAt": "2026-06-08T23:55:00Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
