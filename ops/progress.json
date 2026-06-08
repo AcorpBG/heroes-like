@@ -443,8 +443,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
-    "currentSliceUpdatedAt": "2026-06-08T17:50:31Z",
+    "currentSliceNotes": "Projection-object survival narrowed: sampled 0x540b14 projection objects are selected and stamped, but the later live 0x4a79a3 object-vector payload has 19 records with vtables 0x540a88/0x540a9c and zero 0x540b00/0x540b14 projection records or 0x540b28 bases. The sampled downstream path reaches one 0x4a696b and one 0x4a7605 call from 0x4a79a3, so the next live recovery target is those callee-side generated-cell mutations, not a guessed 49c projection-method dispatch.",
+    "currentSliceUpdatedAt": "2026-06-08T17:56:59Z",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
@@ -452,10 +452,10 @@
     ],
     "lastValidation": {
       "status": "passed",
-      "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
-        "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
+        "python3 -m py_compile tools/rmg_h3maped_projection_object_survival_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_object_survival_summary.py (passed: projection_objects_do_not_survive_into_sampled_4a79a3_vector, payload_records=19, projection_payload_records=0, dispatch_4a696b=1, dispatch_4a7605=1)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
@@ -463,11 +463,11 @@
       ]
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
       "native_behavior_changed": false,
-      "result": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
-      "remaining_blocker": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "source_basis": "Aggregates existing same-run H3MapEd 0x4a9f1c counter/post-counter/selected-create traces, seed-10 0x4a54a7 descriptor relation summary, and three natural Medium selected candidate-container relation summaries."
+      "result": "Projection-object survival narrowed: sampled 0x540b14 projection objects are selected and stamped, but the later live 0x4a79a3 object-vector payload has 19 records with vtables 0x540a88/0x540a9c and zero 0x540b00/0x540b14 projection records or 0x540b28 bases. The sampled downstream path reaches one 0x4a696b and one 0x4a7605 call from 0x4a79a3, so the next live recovery target is those callee-side generated-cell mutations, not a guessed 49c projection-method dispatch.",
+      "remaining_blocker": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations and record-pair semantics from the 0x4a79a3 dispatch sample; keep 0x540b00/0x540b14 slot +0x08 methods as real but unhit static paths until a pointer-paired runtime trace reaches 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "source_basis": "Aggregates existing 49c constructor-return/stamp traces, projection pointer/no-hit traces, 0x4add76 bounded no-hit trace, 0x4a79a3 payload trace, and 0x4a79a3 filter/dispatch trace."
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -9129,10 +9129,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
+  "currentSliceNotes": "Projection-object survival narrowed: sampled 0x540b14 projection objects are selected and stamped, but the later live 0x4a79a3 object-vector payload has 19 records with vtables 0x540a88/0x540a9c and zero 0x540b00/0x540b14 projection records or 0x540b28 bases. The sampled downstream path reaches one 0x4a696b and one 0x4a7605 call from 0x4a79a3, so the next live recovery target is those callee-side generated-cell mutations, not a guessed 49c projection-method dispatch.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T17:50:31Z",
+  "currentSliceUpdatedAt": "2026-06-08T17:56:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10117,30 +10117,39 @@
       "native_behavior_changed": false,
       "summary": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
       "remaining_blocker": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes."
+    },
+    "h3maped-projection-object-survival-summary-20260608": {
+      "timestamp": "2026-06-08T17:56:59Z",
+      "slice": "rmg-small-generalization-hardening-10184",
+      "kind": "source_recovery_checkpoint",
+      "artifact": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
+      "native_behavior_changed": false,
+      "summary": "Projection-object survival narrowed: sampled 0x540b14 projection objects are selected and stamped, but the later live 0x4a79a3 object-vector payload has 19 records with vtables 0x540a88/0x540a9c and zero 0x540b00/0x540b14 projection records or 0x540b28 bases. The sampled downstream path reaches one 0x4a696b and one 0x4a7605 call from 0x4a79a3, so the next live recovery target is those callee-side generated-cell mutations, not a guessed 49c projection-method dispatch.",
+      "remaining_blocker": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations and record-pair semantics from the 0x4a79a3 dispatch sample; keep 0x540b00/0x540b14 slot +0x08 methods as real but unhit static paths until a pointer-paired runtime trace reaches 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes."
     }
   },
   "lastValidation": {
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "evidence": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
-    "currentSliceNotes": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
+    "evidence": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
+    "currentSliceNotes": "Projection-object survival narrowed: sampled 0x540b14 projection objects are selected and stamped, but the later live 0x4a79a3 object-vector payload has 19 records with vtables 0x540a88/0x540a9c and zero 0x540b00/0x540b14 projection records or 0x540b28 bases. The sampled downstream path reaches one 0x4a696b and one 0x4a7605 call from 0x4a79a3, so the next live recovery target is those callee-side generated-cell mutations, not a guessed 49c projection-method dispatch.",
     "lastValidationCommands": [
-      "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
+      "python3 -m py_compile tools/rmg_h3maped_projection_object_survival_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_object_survival_summary.py (passed: projection_objects_do_not_survive_into_sampled_4a79a3_vector, payload_records=19, projection_payload_records=0, dispatch_4a696b=1, dispatch_4a7605=1)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "summary": "Descriptor/category surface separation summary validated; native behavior unchanged and full end-to-end recovery remains incomplete.",
-    "updatedAt": "2026-06-08T17:50:31Z"
+    "summary": "Projection-object survival summary validated; native behavior unchanged and full end-to-end recovery remains incomplete.",
+    "updatedAt": "2026-06-08T17:56:59Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
     "native_behavior_changed": false,
-    "result": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
-    "remaining_blocker": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "source_basis": "Aggregates existing same-run H3MapEd 0x4a9f1c counter/post-counter/selected-create traces, seed-10 0x4a54a7 descriptor relation summary, and three natural Medium selected candidate-container relation summaries."
+    "result": "Projection-object survival narrowed: sampled 0x540b14 projection objects are selected and stamped, but the later live 0x4a79a3 object-vector payload has 19 records with vtables 0x540a88/0x540a9c and zero 0x540b00/0x540b14 projection records or 0x540b28 bases. The sampled downstream path reaches one 0x4a696b and one 0x4a7605 call from 0x4a79a3, so the next live recovery target is those callee-side generated-cell mutations, not a guessed 49c projection-method dispatch.",
+    "remaining_blocker": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations and record-pair semantics from the 0x4a79a3 dispatch sample; keep 0x540b00/0x540b14 slot +0x08 methods as real but unhit static paths until a pointer-paired runtime trace reaches 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "source_basis": "Aggregates existing 49c constructor-return/stamp traces, projection pointer/no-hit traces, 0x4add76 bounded no-hit trace, 0x4a79a3 payload trace, and 0x4a79a3 filter/dispatch trace."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -50024,7 +50033,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover 0x4a696b/0x4a7605 callee-side generated-cell mutations and record-pair semantics from the 0x4a79a3 dispatch sample; keep 0x540b00/0x540b14 slot +0x08 methods as real but unhit static paths until a pointer-paired runtime trace reaches 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50373,20 +50382,20 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, live sampled 0x4a9f1c post-counter branch reasons, live 0x4a9f1c selected-create replay, and selected candidate vtable create/scorer contracts are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor type/category semantic names, 0x4add76 cleanup replay, downstream projection-object consumer linkage, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T17:50:31Z",
+  "updatedAt": "2026-06-08T17:56:59Z",
   "validation": {
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
+      "python3 -m py_compile tools/rmg_h3maped_projection_object_survival_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_object_survival_summary.py (passed: projection_objects_do_not_survive_into_sampled_4a79a3_vector, payload_records=19, projection_payload_records=0, dispatch_4a696b=1, dispatch_4a7605=1)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "updatedAt": "2026-06-08T17:50:31Z"
+    "updatedAt": "2026-06-08T17:56:59Z"
   },
   "validationHistory": [
     {
@@ -55613,6 +55622,20 @@
       "commands": [
         "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
         "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
+    {
+      "timestamp": "2026-06-08T17:56:59Z",
+      "slice": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "artifact": ".artifacts/rmg_recovery/projection_object_survival_summary_20260608.json",
+      "commands": [
+        "python3 -m py_compile tools/rmg_h3maped_projection_object_survival_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_projection_object_survival_summary.py (passed: projection_objects_do_not_survive_into_sampled_4a79a3_vector, payload_records=19, projection_payload_records=0, dispatch_4a696b=1, dispatch_4a7605=1)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
