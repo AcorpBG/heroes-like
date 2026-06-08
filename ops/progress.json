@@ -9125,10 +9125,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
+  "currentSliceNotes": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T15:30:32Z",
+  "currentSliceUpdatedAt": "2026-06-08T15:39:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10115,11 +10115,11 @@
     "status": "passed"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_border_guard_followthrough_summary_20260608.json",
     "native_behavior_changed": false,
-    "remaining_blocker": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
-    "result": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
-    "source_basis": "H3MapEd static 0x49ecf2 dump, parsed Medium cursor lifecycle trace, and seed-10 natural Border Guard 0x4a61bc -> 0x4a5e73 callsite summary."
+    "result": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
+    "source_basis": "Parsed WineDbg natural Medium seed-10 Border Guard follow-through trace summarized by tools/rmg_h3maped_border_guard_followthrough_summary.py.",
+    "remaining_blocker": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -43569,22 +43569,22 @@
         "status": "passed"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+        "artifact": ".artifacts/rmg_recovery/medium_seed10_border_guard_followthrough_summary_20260608.json",
         "native_behavior_changed": false,
-        "remaining_blocker": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
-        "result": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
-        "source_basis": "H3MapEd static 0x49ecf2 dump, parsed Medium cursor lifecycle trace, and seed-10 natural Border Guard 0x4a61bc -> 0x4a5e73 callsite summary."
+        "result": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
+        "source_basis": "Parsed WineDbg natural Medium seed-10 Border Guard follow-through trace summarized by tools/rmg_h3maped_border_guard_followthrough_summary.py.",
+        "remaining_blocker": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning."
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, a focused same-run trace pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects, a branch trace classifies five sampled rejects by exact internal branch site, and a follow-up fallthrough trace proves the non-54/9 0x49a6f9 true-return rejection class at 0x49d3e2. 2026-06-07 0x4aa3e9 checkpoints: selected-coordinate writes and selected-member vector boundary shape are runtime-proven for 12 paired calls; focused inner-call traces prove member dispatch targets 0x4a54a7/0x49baf5 plus sampled source/destination bit26/bit27 mutation call sites; source-set-after trace proves sampled source bit26 after-call state; ordered single-call trace proves one complete non-source-mutating entry-to-return projection with 256 destination mirror pairs; static leaf recovery verifies 0x49baf5 is a no-write always-true callback. 2026-06-07 0x49d69d checkpoint: static/Ghidra-backed recovery verifies the selected-member stamp helper appends the member pointer to wrapper+0x28 and stamps (selected_x, selected_y, 0) through 0x49abd6 after 0x49cf34 chooses the coordinate. 2026-06-07 0x49d6e0 checkpoint: static/Ghidra-backed recovery verifies wrapper bounds refresh over invalid, bit22-set, or bit27-clear cells with exclusive max bounds. 2026-06-07 0x49d7c3 checkpoint: static/Ghidra-backed recovery verifies candidate-vector contour rebuild starts from a boundary/control cell after advancing across passable bit27 cells, appending contour coordinates through 0x40bb15. Full generated/wrapper before/after replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete.",
+      "notes": "2026-06-07 recovery checkpoint: 0x49abd6/0x49ac8e is now the named and runtime-proven source of pre-0x4a8260 GeneratedCell bit25 clears. This explains the 0x49a1d8 bit25 skips inside 0x4a8260 but does not complete native parity. 2026-06-07 0x49d2e0 checkpoint: static reward/guard candidate acceptance contract is strengthened, a later 0x4ac552-span trace exercises the reward/guard chain after 0x4a8c15, a focused same-run trace pairs sampled 0x49d2e0 candidate entries to 124 accepts and 16 rejects, a branch trace classifies five sampled rejects by exact internal branch site, and a follow-up fallthrough trace proves the non-54/9 0x49a6f9 true-return rejection class at 0x49d3e2. 2026-06-07 0x4aa3e9 checkpoints: selected-coordinate writes and selected-member vector boundary shape are runtime-proven for 12 paired calls; focused inner-call traces prove member dispatch targets 0x4a54a7/0x49baf5 plus sampled source/destination bit26/bit27 mutation call sites; source-set-after trace proves sampled source bit26 after-call state; ordered single-call trace proves one complete non-source-mutating entry-to-return projection with 256 destination mirror pairs; static leaf recovery verifies 0x49baf5 is a no-write always-true callback. 2026-06-07 0x49d69d checkpoint: static/Ghidra-backed recovery verifies the selected-member stamp helper appends the member pointer to wrapper+0x28 and stamps (selected_x, selected_y, 0) through 0x49abd6 after 0x49cf34 chooses the coordinate. 2026-06-07 0x49d6e0 checkpoint: static/Ghidra-backed recovery verifies wrapper bounds refresh over invalid, bit22-set, or bit27-clear cells with exclusive max bounds. 2026-06-07 0x49d7c3 checkpoint: static/Ghidra-backed recovery verifies candidate-vector contour rebuild starts from a boundary/control cell after advancing across passable bit27 cells, appending contour coordinates through 0x40bb15. Full generated/wrapper before/after replay remains pending. 2026-06-05 town post-append mutation checkpoint kept; roads and density remain incomplete. 2026-06-08 Border Guard follow-through checkpoint: natural seed-10 tries three endpoint pairs, all six 0x4a5e73 calls fail on stale +0xf5c, then execution continues into two 0x4a7605-owned 0x4a5e03 calls. Remaining named blocker is 0x4a5e03 generated-cell/object-vector side-effect replay.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+      "remainingWork": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
         "project.md",
@@ -50003,7 +50003,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
+  "remainingWork": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50182,6 +50182,17 @@
       "status": "report_only_recovery_evidence",
       "summary": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
       "updatedAt": "2026-06-08T15:30:32Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_border_guard_followthrough_summary_20260608.json",
+      "id": "h3maped-border-guard-followthrough-summary-20260608",
+      "native_behavior_changed": false,
+      "remainingWork": "Recover 0x4a5e03 callee-side generated-cell and object/vector side effects for the two post-Border-Guard 0x4a7605 materialization calls, then connect those writes back to relation/control records and GeneratedCell+0x20/+0x24/+0x28/+0x2c before/after state. Do not replace this with density scalars, brute-force retries, or final-map delta tuning.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "report_only_recovery_evidence",
+      "summary": "Source-backed Border Guard follow-through checkpoint: natural Medium seed-10 attempts three Border Guard endpoint pairs through 0x4a64ff/0x4a6531; all six 0x4a5e73 calls fail at 0x4a5f84 on stale generator+0xf5c=0x7a1befdf after scanning eight +0xd8 entries, then execution continues into two post-Border-Guard 0x4a7605 calls to 0x4a5e03.",
+      "tool": "tools/rmg_h3maped_border_guard_followthrough_summary.py",
+      "updatedAt": "2026-06-08T15:39:25Z"
     }
   ],
   "status": "in_progress",
@@ -50286,7 +50297,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: 0x49d7c3 contour append replay, 0x49d69d selected-coordinate/member stamp replay, sampled 0x4aa3e9 source bit26 after-set state, one complete non-source-mutating 0x4aa3e9 ordered invocation, completed-call 0x4aa3e9 source-site replay, sampled 0x4aa9b7 ordered commit replay, the corrected 0x49c projection-object vtable/static lifecycle boundary, broad 0x4aa3e9 final slot +0x08 no-projection-dispatch evidence, and 0x49be93/0x49c273 writer-helper no-hit classification are recovered; broader reward/guard/native parity remains incomplete.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T15:30:32Z",
+  "updatedAt": "2026-06-08T15:39:25Z",
   "validation": {
     "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
     "evidence": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
@@ -57584,6 +57595,13 @@
       "status": "passed",
       "summary": "Cursor lifetime summary tool compiled and generated a passing report.",
       "updatedAt": "2026-06-08T15:30:32Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_border_guard_followthrough_summary_20260608.json",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "Border Guard follow-through summary tool compiled and generated a passing report; native behavior unchanged.",
+      "updatedAt": "2026-06-08T15:39:25Z"
     }
   ]
 }
