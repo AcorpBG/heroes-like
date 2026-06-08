@@ -443,27 +443,31 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
-    "currentSliceUpdatedAt": "2026-06-08T15:30:32Z",
+    "currentSliceNotes": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
+    "currentSliceUpdatedAt": "2026-06-08T17:50:31Z",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "status": "passed",
+      "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_cursor_lifetime_summary.py",
-        "python3 tools/rmg_h3maped_cursor_lifetime_summary.py"
-      ],
-      "status": "passed"
+        "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/medium_cursor_lifetime_summary_20260608.json",
+      "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
       "native_behavior_changed": false,
-      "remaining_blocker": "Replay the full Border Guard materialization sequence after the first natural 0x4a5e73 failures. New cursor lifetime evidence proves 0x49ecf2 zeroes generator+0xf58, not generator+0xf5c, and 0x49f95a allocates/sizes +0x1104 without changing the stale +0xf5c value. The next missing state is whether H3MapEd intentionally lets optional endpoint-helper attempts miss and falls back through 0x4a5e03/0x4a7605 connection materialization, or whether an unreplayed prior successful endpoint consumer advances +0xf5c before later Border Guard endpoint materialization.",
-      "result": "Source-backed cursor lifetime checkpoint: parsed static/lifecycle evidence shows setup writes +0xf58, not +0xf5c; +0xf58 is zero after 0x49ee6b, +0x1104/+0x1108 are allocated by 0x49f95a, and +0xf5c remains the stale 0x7a1befdf through the first relation pass and first natural Border Guard 0x4a5e73 failure against compact +0xd8 keys 0..7.",
-      "source_basis": "H3MapEd static 0x49ecf2 dump, parsed Medium cursor lifecycle trace, and seed-10 natural Border Guard 0x4a61bc -> 0x4a5e73 callsite summary."
+      "result": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
+      "remaining_blocker": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "source_basis": "Aggregates existing same-run H3MapEd 0x4a9f1c counter/post-counter/selected-create traces, seed-10 0x4a54a7 descriptor relation summary, and three natural Medium selected candidate-container relation summaries."
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -9125,10 +9129,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Source-backed 0x4a9f1c candidate vtable contract checkpoint: canonical h3maped.exe vtable bytes plus the live Medium selected-create trace resolve all 17 selected-create returns to known candidate contracts. Sampled selected candidate vtables are 0x540ba0, 0x540bb0, 0x540c10, 0x540c40, 0x540c60, and 0x540c90; adjacent projection candidates 0x540c70/0x540c80/0x540ca0 are recorded from the same static table. All selected object vtables match the candidate create contracts, simple 0x49c54d scorer returns match candidate+0x0c, and the one sampled projection return is 0x540c60 -> 0x49cac2 -> 0x540b14. Candidate record fields are now recovered as +0x00 vtable, +0x04 descriptor type/category counter index, +0x08 cursor/source discriminator for gated scorers, and +0x0c direct value. Native unchanged. Remaining blockers: name descriptor type/category semantics beyond numeric counter index, recover 0x4add76 cleanup/uncommit, and recover pointer-paired downstream consumer linkage for returned projection objects.",
+  "currentSliceNotes": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-08T17:43:08Z",
+  "currentSliceUpdatedAt": "2026-06-08T17:50:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10104,30 +10108,39 @@
       "scope": "Small 36x36 one-level land template-selection authority only",
       "status": "focused_regression_gate_passed",
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
+    },
+    "h3maped-descriptor-category-surface-summary-20260608": {
+      "timestamp": "2026-06-08T17:50:31Z",
+      "slice": "rmg-small-generalization-hardening-10184",
+      "kind": "source_recovery_checkpoint",
+      "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+      "native_behavior_changed": false,
+      "summary": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
+      "remaining_blocker": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes."
     }
   },
   "lastValidation": {
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "evidence": ".artifacts/rmg_recovery/medium_4a9f1c_candidate_vtable_contract_summary_20260608.json",
-    "currentSliceNotes": "Source-backed 0x4a9f1c candidate vtable contract checkpoint: canonical h3maped.exe vtable bytes plus the live Medium selected-create trace resolve all 17 selected-create returns to known candidate contracts. Sampled selected candidate vtables are 0x540ba0, 0x540bb0, 0x540c10, 0x540c40, 0x540c60, and 0x540c90; adjacent projection candidates 0x540c70/0x540c80/0x540ca0 are recorded from the same static table. All selected object vtables match the candidate create contracts, simple 0x49c54d scorer returns match candidate+0x0c, and the one sampled projection return is 0x540c60 -> 0x49cac2 -> 0x540b14. Candidate record fields are now recovered as +0x00 vtable, +0x04 descriptor type/category counter index, +0x08 cursor/source discriminator for gated scorers, and +0x0c direct value. Native unchanged. Remaining blockers: name descriptor type/category semantics beyond numeric counter index, recover 0x4add76 cleanup/uncommit, and recover pointer-paired downstream consumer linkage for returned projection objects.",
+    "evidence": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+    "currentSliceNotes": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
     "lastValidationCommands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py (passed: passed_selected_candidate_vtable_contracts, selected_returns=17, projection_returns=1)",
+      "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "summary": "Selected-create candidate vtable contract summary validated; native behavior unchanged and full end-to-end recovery remains incomplete.",
-    "updatedAt": "2026-06-08T17:43:08Z"
+    "summary": "Descriptor/category surface separation summary validated; native behavior unchanged and full end-to-end recovery remains incomplete.",
+    "updatedAt": "2026-06-08T17:50:31Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_4a9f1c_candidate_vtable_contract_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
     "native_behavior_changed": false,
-    "result": "Canonical binary vtable bytes plus live selected-create replay resolve all 17 selected-create returns to known candidate create/scorer contracts; selected object vtables match contracts, simple 0x49c54d values match candidate+0x0c, and the sampled projection path is 0x540c60 -> 0x49cac2 -> 0x540b14.",
-    "source_basis": "Raw vtable reads from canonical h3maped.exe and focused winedbg selected-create trace parsed by tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py.",
-    "remaining_blocker": "Descriptor type/category semantic names, live 0x4add76 cleanup/uncommit, and pointer-paired downstream projection-object consumer linkage remain unrecovered."
+    "result": "Descriptor/category surfaces separated: 0x4a9f1c candidate+0x04 numeric type/category indices, 0x4a54a7 committed descriptor+0x1c type/class counters, and selected candidate-container relation/control bytes are now explicitly distinct. Sampled evidence covers 13 selected-create candidate types, descriptor commit types 45/54/98, and 4 Border Guard relation records across 3 Medium selected-container runs.",
+    "remaining_blocker": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "source_basis": "Aggregates existing same-run H3MapEd 0x4a9f1c counter/post-counter/selected-create traces, seed-10 0x4a54a7 descriptor relation summary, and three natural Medium selected candidate-container relation summaries."
   },
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap.",
@@ -50011,7 +50024,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Name descriptor type/category semantics beyond the recovered numeric counter index, recover a generation path that actually hits 0x4add76 cleanup/uncommit, and recover pointer-paired downstream consumer linkage for returned projection objects, especially 0x540b00/0x540b14 slot +0x08 dispatch into 0x49c019/0x49c0a6 and related wrapper/placement consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover human semantic names for descriptor/candidate numeric type indices only where source object/template mapping proves them; recover pointer-paired downstream consumer linkage for 0x540b00/0x540b14 projection objects into 0x49c019/0x49c0a6; recover a generation path that actually hits 0x4add76 cleanup/uncommit; and recover relation/control linkage from committed 0x4a54a7 projection records into later consumers. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50360,22 +50373,20 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 target-cell/object-vector after-state, two complete sampled 0x4a54a7 projection-write streams, sampled 0x4a54a7 descriptor/relation-counter mechanics, static descriptor-type counter init/check/decrement lifecycle, live 0x4a9f1c counter-decision replay, live sampled 0x4a9f1c post-counter branch reasons, live 0x4a9f1c selected-create replay, and selected candidate vtable create/scorer contracts are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; descriptor type/category semantic names, 0x4add76 cleanup replay, downstream projection-object consumer linkage, reward/guard attachment ordering, and remaining coordinate reconciliation are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-08T17:43:08Z",
+  "updatedAt": "2026-06-08T17:50:31Z",
   "validation": {
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "evidence": ".artifacts/rmg_recovery/medium_4a9f1c_candidate_vtable_contract_summary_20260608.json",
-    "currentSliceNotes": "Source-backed 0x4a9f1c candidate vtable contract checkpoint: canonical h3maped.exe vtable bytes plus the live Medium selected-create trace resolve all 17 selected-create returns to known candidate contracts. Sampled selected candidate vtables are 0x540ba0, 0x540bb0, 0x540c10, 0x540c40, 0x540c60, and 0x540c90; adjacent projection candidates 0x540c70/0x540c80/0x540ca0 are recorded from the same static table. All selected object vtables match the candidate create contracts, simple 0x49c54d scorer returns match candidate+0x0c, and the one sampled projection return is 0x540c60 -> 0x49cac2 -> 0x540b14. Candidate record fields are now recovered as +0x00 vtable, +0x04 descriptor type/category counter index, +0x08 cursor/source discriminator for gated scorers, and +0x0c direct value. Native unchanged. Remaining blockers: name descriptor type/category semantics beyond numeric counter index, recover 0x4add76 cleanup/uncommit, and recover pointer-paired downstream consumer linkage for returned projection objects.",
-    "lastValidationCommands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py (passed)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py (passed: passed_selected_candidate_vtable_contracts, selected_returns=17, projection_returns=1)",
+    "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+    "commands": [
+      "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
+      "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "summary": "Selected-create candidate vtable contract summary validated; native behavior unchanged and full end-to-end recovery remains incomplete.",
-    "updatedAt": "2026-06-08T17:43:08Z"
+    "updatedAt": "2026-06-08T17:50:31Z"
   },
   "validationHistory": [
     {
@@ -55588,6 +55599,20 @@
       "validation": [
         "python3 -m py_compile tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py (passed)",
         "PYTHONPATH=tools python3 tools/rmg_h3maped_4a9f1c_candidate_vtable_contract_summary.py (passed: passed_selected_candidate_vtable_contracts, selected_returns=17, projection_returns=1)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
+    {
+      "timestamp": "2026-06-08T17:50:31Z",
+      "slice": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+      "commands": [
+        "python3 -m py_compile tools/rmg_h3maped_descriptor_category_surface_summary.py (passed)",
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_descriptor_category_surface_summary.py (passed: descriptor_category_surfaces_separated, candidate_types=13, descriptor_types=3, relation_runs=3, border_guard_records=4)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
