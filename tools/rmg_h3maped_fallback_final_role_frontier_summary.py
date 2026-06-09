@@ -28,7 +28,7 @@ DEFAULT_DESCRIPTOR_RELATION = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json"
 )
 DEFAULT_PROJECTION_WRITES = Path(
-    ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json"
+    ".artifacts/rmg_recovery/medium_seed10_exact_fallback_projection_write_summary_20260609.json"
 )
 DEFAULT_VECTOR_MEMBERSHIP = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
@@ -244,7 +244,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         for record in records
         if not record["exact_evidence"]["exact_projection_write_stream_recovered"]
     ]
-    non_exact_projection_targets = [
+    projection_write_targets = [
         {
             "name": target.get("name"),
             "object_record_pointer": target.get("object_record_pointer"),
@@ -256,6 +256,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             else False,
         }
         for target in projection_writes.get("targets", [])
+    ]
+    exact_projection_targets = [target for target in projection_write_targets if target["object_record_pointer"] in fallback_records]
+    non_exact_projection_targets = [
+        target for target in projection_write_targets if target["object_record_pointer"] not in fallback_records
     ]
 
     invariants = {
@@ -301,9 +305,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and record["coordinates"]["all_exact_coordinates_match"]
             for record in records
         ),
-        "exact_projection_write_stream_missing_for_fallback_records": bool(exact_projection_missing),
-        "older_projection_targets_are_not_exact_fallback_records": not (
-            set(fallback_records) & projection_pointers
+        "exact_projection_write_stream_recovered_for_all_fallback_records": not exact_projection_missing,
+        "projection_write_targets_match_fallback_records": (
+            set(fallback_records) == projection_pointers
+            and all(target.get("seed_control_present") for target in projection_write_targets)
         ),
     }
 
@@ -322,11 +327,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "same_run_49eb8d_count_dispatch_return_recovered",
             "exact_coordinates_match_for_all_fallback_records",
             "exact_commit_frontier_recovered_for_all_fallback_records",
-            "older_projection_targets_are_not_exact_fallback_records",
+            "exact_projection_write_stream_recovered_for_all_fallback_records",
+            "projection_write_targets_match_fallback_records",
         )
     )
     if exact_frontier_recovered and invariants["exact_descriptor_relation_recovered_for_all_fallback_records"]:
-        status = "fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing"
+        status = "fallback_final_role_frontier_exact_projection_descriptor_relation_49eb8d_recovered_downstream_missing"
     elif exact_frontier_recovered:
         status = "fallback_final_role_frontier_exact_commit_recovered_descriptor_relation_and_later_consumer_missing"
     else:
@@ -335,19 +341,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     if invariants["exact_descriptor_relation_recovered_for_all_fallback_records"]:
         remaining_gap = (
             "The exact fallback records now have recovered construction, commit, cell object-reference adoption, "
-            "descriptor/relation-counter replay, object-vector survival to the 0x49eb8d handoff, and same-run "
+            "descriptor/relation-counter replay, exact projection-loop write streams, object-vector survival to the 0x49eb8d handoff, and same-run "
             "0x49eb8d count/budget/first-dispatch/return replay. The remaining final-role gap is complete 0x49e700 "
-            "decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844. If exact "
-            "per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream for "
-            "0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime "
+            "decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime "
             "blockers before any native RMG behavior port."
         )
     else:
         remaining_gap = (
-            "The exact fallback records still need descriptor/relation-counter replay, either a later-consumer trace "
+            "The exact fallback records still need descriptor/relation-counter replay and exact projection-loop write streams, either a later-consumer trace "
             "after their 0x4a54a7 commit or a static phase-order proof that committed object-vector/cell adoption is "
-            "their terminal role for this phase. If exact per-record projection-loop parity is required, capture a clean "
-            "seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b "
+            "their terminal role for this phase. Continue the 0x4a696b "
             "direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port."
         )
 
@@ -365,18 +368,17 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "replay_49eb8d": str(args.replay_49eb8d),
         },
         "records": records,
+        "exact_projection_write_targets": exact_projection_targets,
         "non_exact_projection_write_targets": non_exact_projection_targets,
         "invariants": invariants,
         "source_backed_conclusion": (
             "For the two exact deterministic Medium seed-10 post-Border-Guard fallback records, construction, "
-            "immediate 0x4a5c07 state chain, and 0x4a54a7 object-vector/cell adoption are recovered. "
+            "immediate 0x4a5c07 state chain, 0x4a54a7 object-vector/cell adoption, and exact projection-loop write "
+            "streams are recovered. "
             "The sampled 0x4a79a3 payload pass is earlier and does not consume these records. "
             "A later clean seed-pinned replay proves both records remain in the generator object vector at 0x4a8d27 "
             "and again at the 0x49eb8d handoff. A combined same-run 0x49eb8d trace proves bit26 count, budget, first "
-            "0x49e700 dispatch, 0x49eced exit, and 0x4ac844 caller continuation while preserving both fallback records. "
-            "The older projection-write streams are useful 0x4a54a7 write-set evidence, but they are not exact evidence "
-            "for these two fallback records because their object pointers/coordinates differ and those traces have no "
-            "seed-control metadata."
+            "0x49e700 dispatch, 0x49eced exit, and 0x4ac844 caller continuation while preserving both fallback records."
         ),
         "remaining_gap": remaining_gap,
     }
