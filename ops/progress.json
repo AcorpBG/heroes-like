@@ -43762,7 +43762,7 @@
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
       "currentNotes": "Recovered all sampled weighted 0x4a901a materialization return/vector/counter replay without changing native behavior. The dynamic count trace proves the first weighted dispatch has exactly 705 score-write stops before 0x4a5756/0x4a9325. The all-dispatch replay proves three sampled weighted records return and advance generator object-vector/counter index 98: 0x036b6d40 at (107,6,0) changes 4->5, 0x036b68e0 at (107,106,0) changes 6->7, and 0x036b67e0 at (18,6,0) changes 7->8. The intervening 5->6 state change occurs through a non-weighted 0x4a5756 return between the first and second weighted dispatch.",
       "currentSliceNotes": "Recovered the static 0x49aa93 branch contract and weighted 0x4a901a post-helper caller contract without changing native behavior. The helper rejects via 0x49a6f9/0x49a09c or descriptor-offset source-cell policy, accepts immediately after successful contour validation when descriptor +0x29 is clear, and otherwise returns from the final terrain/relation comparison. The 0x4a901a caller tests AL at 0x4a916c, continues accepted candidates at 0x4a9174, appends through 0x4a9248/0x4a9254, and requires the local vector gate at 0x4a9273 before materialization. New live attempts did not capture the runtime helper return or append/materialization: sampled low-word ranges were 12..57 and 0..36, with five empty-vector exits at 0x4a9273/0x4a9391.",
-      "currentSliceUpdatedAt": "2026-06-09T00:25:00Z",
+      "currentSliceUpdatedAt": "2026-06-09T17:47:44Z",
       "guardrailNote": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
@@ -43783,58 +43783,30 @@
         "status": "passed"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/weighted_4a901a_materialization_summary_20260609.json",
+        "artifact": ".artifacts/rmg_recovery/4a79a3_internal_growth_summary_20260609.json",
         "metrics": {
-          "append_calls": 23,
-          "first_dispatch_score_write_count_complete": 705,
-          "helper_accept_continuations": 12,
-          "intervening_non_weighted_counter_vector_delta": "5->6 before second weighted dispatch",
-          "materialization_dispatches": 3,
-          "sampled_weighted_dispatches_replayed": 3,
-          "sampled_weighted_records": [
-            {
-              "coordinate": [
-                107,
-                6,
-                0
-              ],
-              "counter98_after": 5,
-              "counter98_before": 4,
-              "record_pointer_hex": "0x036b6d40",
-              "vector_count_after": 5,
-              "vector_count_before": 4
-            },
-            {
-              "coordinate": [
-                107,
-                106,
-                0
-              ],
-              "counter98_after": 7,
-              "counter98_before": 6,
-              "record_pointer_hex": "0x036b68e0",
-              "vector_count_after": 7,
-              "vector_count_before": 6
-            },
-            {
-              "coordinate": [
-                18,
-                6,
-                0
-              ],
-              "counter98_after": 8,
-              "counter98_before": 7,
-              "record_pointer_hex": "0x036b67e0",
-              "vector_count_after": 8,
-              "vector_count_before": 7
-            }
-          ]
+          "appended_entries": [
+            "0x0361ea10",
+            "0x0361e990",
+            "0x0361e9d0",
+            "0x0361e8a0",
+            "0x0361e860",
+            "0x0361e7f0"
+          ],
+          "capacity_change": "8->16",
+          "entry_count": 7,
+          "final_sampled_count": 13,
+          "positive_0x4a61bc_appends": 6,
+          "reached_payload_loop": false,
+          "reallocations": 1,
+          "trace_events": 17,
+          "zero_return_no_append_samples": 1
         },
         "native_behavior_changed": false,
-        "remaining_blocker": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-        "result": "Recovered all sampled weighted materialization return/vector/counter replay; first sampled dispatch also has complete 705 score-write count.",
-        "source_basis": "H3MapEd WineDbg ledgers including .artifacts/rmg_recovery/4a9322_seed58_cpu0_weighted_score_stream_dynamic_count_trace_20260609/ and .artifacts/rmg_recovery/4a9322_seed58_cpu0_all_weighted_return_vector_counter_trace_20260609/, summarized by tools/rmg_h3maped_weighted_materialization_summary.py.",
-        "validatedAt": "2026-06-09T16:41:53Z"
+        "remaining_blocker": "Recover 0x4a61bc callee-side object construction/commit semantics and generated-cell mutations for appended records, then connect this ordered growth to the later 0x4a7d2c payload loop and downstream 0x4a696b/0x4a7605 paths. Do not port native behavior from this partial boundary alone.",
+        "result": "Recovered the first internal 0x4a79a3 object-vector growth boundary: sampled positive 0x4a61bc returns append one object-record pointer each to generator+0xec8/+0xecc.",
+        "source_basis": "H3MapEd WineDbg ledger .artifacts/rmg_recovery/4a79a3_internal_growth_entries_trace_20260609/winedbg_interactive_trace_ledger.json summarized by tools/rmg_h3maped_4a79a3_internal_growth_summary.py.",
+        "validatedAt": "2026-06-09T17:47:44Z"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
@@ -43869,11 +43841,11 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Recovered the same-run 0x4a901a precheck surface without changing native behavior: a parsed Large no-water partial trace proves six completed 0x4a54a7 projection commits before the first 0x4a8db2 scheduler entry, then one 0x4a901a call returns true without entering the weighted body and reaches another 0x4a54a7 projection commit. The next 0x4a8f96 -> 0x4a901a call enters the weighted body, hits 399 owner/selector prechecks, advances 330 owner-matching candidates to the value-floor check, and all 330 have GeneratedCell+0x20 low words 0..33 against required value 0x53/83, so none reach 0x49aa93 or append/materialization sites. 2026-06-09 0x4a901a post-gate checkpoint: generated by tools/rmg_h3maped_4a901a_postgate_frontier_summary.py. A Large one-level no-water four-player weighted 0x4a8f96 -> 0x4a901a sample has GeneratedCell+0x20 low word 0x58/88 against required 0x53/83 and reaches 0x4a9167 with candidate (0x61,0x06), projected coordinate (0x5f,0x06), descriptor offset (0x02,0x00), and source wrapper 0x017e0380 on the stack. Focused post-gate traces then reach 0x4a9273 fourteen times with empty local candidate vectors and return false at 0x4a9391, with no hits at append 0x4a9248/0x4a9254, allocation 0x4a9290, constructor 0x4a92bb, ready 0x4a92d5, or projection dispatch 0x4a9322. The value-floor pass is no longer the named blocker; the remaining blocker is 0x49aa93 helper-return / append-acceptance / successful materialization replay. 2026-06-09 0x49aa93 branch-contract checkpoint: generated by tools/rmg_h3maped_49aa93_branch_contract_summary.py. Static markers recover the 0x49aa93 helper contract and the weighted 0x4a901a post-helper caller flow: 0x4a916c tests AL, true continues at 0x4a9174, append is 0x4a9248/0x4a9254, and materialization requires the local vector gate at 0x4a9273. Follow-up live attempts still did not capture 0x4a9167 returning at 0x4a916c: one sampled 526 value-floor checks with low words 12..57, and the light attempt sampled 835 value-floor checks with low words 0..36 plus five empty-vector exits at 0x4a9273/0x4a9391. No append, allocation, constructor, ready, or projection-dispatch hits were captured. Native RMG behavior unchanged.",
+      "notes": "Recovered the same-run 0x4a901a precheck surface without changing native behavior: a parsed Large no-water partial trace proves six completed 0x4a54a7 projection commits before the first 0x4a8db2 scheduler entry, then one 0x4a901a call returns true without entering the weighted body and reaches another 0x4a54a7 projection commit. The next 0x4a8f96 -> 0x4a901a call enters the weighted body, hits 399 owner/selector prechecks, advances 330 owner-matching candidates to the value-floor check, and all 330 have GeneratedCell+0x20 low words 0..33 against required value 0x53/83, so none reach 0x49aa93 or append/materialization sites. 2026-06-09 0x4a901a post-gate checkpoint: generated by tools/rmg_h3maped_4a901a_postgate_frontier_summary.py. A Large one-level no-water four-player weighted 0x4a8f96 -> 0x4a901a sample has GeneratedCell+0x20 low word 0x58/88 against required 0x53/83 and reaches 0x4a9167 with candidate (0x61,0x06), projected coordinate (0x5f,0x06), descriptor offset (0x02,0x00), and source wrapper 0x017e0380 on the stack. Focused post-gate traces then reach 0x4a9273 fourteen times with empty local candidate vectors and return false at 0x4a9391, with no hits at append 0x4a9248/0x4a9254, allocation 0x4a9290, constructor 0x4a92bb, ready 0x4a92d5, or projection dispatch 0x4a9322. The value-floor pass is no longer the named blocker; the remaining blocker is 0x49aa93 helper-return / append-acceptance / successful materialization replay. 2026-06-09 0x49aa93 branch-contract checkpoint: generated by tools/rmg_h3maped_49aa93_branch_contract_summary.py. Static markers recover the 0x49aa93 helper contract and the weighted 0x4a901a post-helper caller flow: 0x4a916c tests AL, true continues at 0x4a9174, append is 0x4a9248/0x4a9254, and materialization requires the local vector gate at 0x4a9273. Follow-up live attempts still did not capture 0x4a9167 returning at 0x4a916c: one sampled 526 value-floor checks with low words 12..57, and the light attempt sampled 835 value-floor checks with low words 0..36 plus five empty-vector exits at 0x4a9273/0x4a9391. No append, allocation, constructor, ready, or projection-dispatch hits were captured. Native RMG behavior unchanged. 2026-06-09T17:47:44Z 0x4a79a3 internal growth checkpoint: Recovered the first internal 0x4a79a3 object-vector growth boundary: sampled positive 0x4a61bc returns append one object-record pointer each to generator+0xec8/+0xecc. The sampled vector grows 7->13, reallocates once at capacity 8->16, and appends six record pointers after positive 0x4a61bc returns. The trace does not reach the later payload loop, so the named next blocker is 0x4a61bc callee-side object construction/commit and generated-cell mutation semantics before any native port.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingGap": "Recover the object/storage transformation between stamped 0x540b14 projection objects and later ordinary 0x540a88/0x540a9c 0x4a79a3 payload records, or prove they are separate selected-create surfaces in the sampled run; recover a live 0x4a696b candidate path where [EBP-0x54] is nonzero and reaches 0x4a6b2e/0x4a6b9b/0x4a6c13, or prove the direct mutation block is unreachable for one-level land generation; recover natural 0x4a7605/0x4a746b/0x4a5e73 success state that reaches 0x4a5fd8/0x4a5ff1, or prove those mutation sites are unreachable; recover actual 0x4add76 cleanup/uncommit runtime path before porting replacement/uncommit behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "remainingGap": "Recover 0x4a61bc callee-side object construction/commit semantics and generated-cell mutations for appended records, then connect this ordered growth to the later 0x4a7d2c payload loop and downstream 0x4a696b/0x4a7605 paths. Do not port native behavior from this partial boundary alone.",
       "remainingWork": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "result": "Downstream recovery frontier narrowed: sampled evidence proves projection-producing candidates and one 0x540b14 projection-object return/stamp, but sampled projection objects do not survive into the later 0x4a79a3 payload; that payload contains ordinary 0x540a88/0x540a9c records and dispatches through 0x4a79a3-owned 0x4a696b/0x4a7605. The live next recovery target is callee-side generated-cell mutation or proof of unreachable mutation, not speculative 0x49c019/0x49c0a6 dispatch.",
       "source": "PLAN.md Selectable Near-Term Work",
@@ -43885,7 +43857,7 @@
       "status": "in_progress",
       "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, and all sampled weighted dispatch return/vector/counter deltas are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and 0x4add76 cleanup replay are still explicit blockers.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-09T16:41:53Z",
+      "updatedAt": "2026-06-09T17:47:44Z",
       "validation": {
         "artifact": ".artifacts/rmg_recovery/downstream_recovery_frontier_summary_20260608.json",
         "checks": [
