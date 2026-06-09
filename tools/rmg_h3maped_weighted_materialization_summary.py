@@ -46,6 +46,11 @@ DEFAULT_VECTOR_CONTENTS_TRACE = (
     / "4a9322_seed58_cpu0_weighted_materialization_vector_contents_trace_20260609"
     / "winedbg_interactive_trace_ledger.json"
 )
+DEFAULT_DESCRIPTOR_COUNTER_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_weighted_descriptor_pointer_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
 DEFAULT_OUT = ROOT / "weighted_4a901a_materialization_summary_20260609.json"
 
 
@@ -393,6 +398,52 @@ def summarize_vector_contents(path: Path) -> dict[str, Any]:
     }
 
 
+def summarize_descriptor_counter(path: Path) -> dict[str, Any]:
+    data = load_json(path)
+    events = data.get("events", [])
+    counts = collections.Counter(event.get("address") for event in events)
+    before = next((event for event in events if event.get("address") == "0x004a9322"), None)
+    after = next((event for event in events if event.get("address") == "0x004a9325"), None)
+
+    def counter_base(event: dict[str, Any] | None, register: str) -> int | None:
+        if event is None:
+            return None
+        generator = event.get("registers", {}).get(register)
+        return generator + 0x1110 if isinstance(generator, int) else None
+
+    before_base = counter_base(before, "ecx")
+    after_base = counter_base(after, "ebx")
+    changed_counters = []
+    if before and after and isinstance(before_base, int) and isinstance(after_base, int):
+        before_map = memory_map(before)
+        after_map = memory_map(after)
+        for index in range(128):
+            before_value = before_map.get(before_base + index * 4)
+            after_value = after_map.get(after_base + index * 4)
+            if before_value != after_value:
+                changed_counters.append(
+                    {
+                        "index": index,
+                        "before": before_value,
+                        "after": after_value,
+                        "before_address": before_base + index * 4,
+                        "after_address": after_base + index * 4,
+                    }
+                )
+    return {
+        "path": str(path),
+        "event_count": len(events),
+        "child_returncode": data.get("child_returncode"),
+        "counts": dict(sorted(counts.items())),
+        "counter_base_offset": "+0x1110",
+        "changed_counters": changed_counters,
+        "weighted_descriptor_counter_increment_recovered": changed_counters
+        == [{"index": 98, "before": 4, "after": 5, "before_address": before_base + 98 * 4, "after_address": after_base + 98 * 4}]
+        if isinstance(before_base, int) and isinstance(after_base, int)
+        else False,
+    }
+
+
 def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     reject = summarize_reject(args.reject_trace)
     follow = summarize_follow(args.follow_trace)
@@ -401,6 +452,7 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     return_trace = summarize_return_trace(args.return_trace)
     generator_delta = summarize_vector_contents(args.generator_delta_trace)
     vector_contents = summarize_vector_contents(args.vector_contents_trace)
+    descriptor_counter = summarize_descriptor_counter(args.descriptor_counter_trace)
     conditions = {
         "rejecting_helper_return_captured": reject["reaches_helper_return"],
         "reject_reason_decoded_as_relation_mismatch": reject.get("first_recovered_reject", {}).get("reason")
@@ -415,9 +467,12 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "generator_delta_object_vector_header_recovered": generator_delta["object_vector_header_delta_recovered"],
         "vector_contents_object_vector_append_recovered": vector_contents["object_vector_append_recovered"],
         "record_coordinate_fill_recovered": vector_contents["record_coordinate_fill_recovered"],
+        "weighted_descriptor_counter_increment_recovered": descriptor_counter[
+            "weighted_descriptor_counter_increment_recovered"
+        ],
     }
     status = (
-        "weighted_first_materialization_return_and_vector_delta_recovered"
+        "weighted_first_materialization_return_vector_counter_recovered"
         if all(conditions.values())
         else "weighted_materialization_frontier_incomplete"
     )
@@ -432,10 +487,10 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "return_trace": return_trace,
         "generator_delta_trace": generator_delta,
         "vector_contents_trace": vector_contents,
+        "descriptor_counter_trace": descriptor_counter,
         "not_recovered": [
             "The high-cap score-write trace captures 254 complete generated-cell write pairs and still hits the event cap before return, so the complete 0x4a54a7 score-write stream length remains pending.",
             "Only the first weighted materialization's return/caller/vector delta is recovered; full ordered replay of every weighted materialization remains pending.",
-            "The actual descriptor-type counter write around generator+0x1110 + descriptor_type*4 still needs a focused same-run dump for the weighted record type.",
             "0x4a696b, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation, and 0x4add76 cleanup/uncommit runtime paths remain unrecovered.",
         ],
     }
@@ -450,6 +505,7 @@ def main() -> int:
     parser.add_argument("--return-trace", type=Path, default=DEFAULT_RETURN_TRACE)
     parser.add_argument("--generator-delta-trace", type=Path, default=DEFAULT_GENERATOR_DELTA_TRACE)
     parser.add_argument("--vector-contents-trace", type=Path, default=DEFAULT_VECTOR_CONTENTS_TRACE)
+    parser.add_argument("--descriptor-counter-trace", type=Path, default=DEFAULT_DESCRIPTOR_COUNTER_TRACE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
