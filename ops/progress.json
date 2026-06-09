@@ -9233,10 +9233,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered deterministic natural Border Guard failure/fallback follow-through under clean PE seed control. Medium seed 10 with explicit human/computer down=1, computer-only down=1, and water none records 67 captured events before breakpoint timeout: 3 natural Border Guard endpoint pairs, 6 0x4a5e73 entries, 6 0x4a5f84 failures, all using stale generator+0xf5c=0x7a1befdf, then exactly 2 post-Border-Guard 0x4a7605 downstream materialization calls into 0x4a5e03 at returns 0x4a77ad and 0x4a789a. No post-failure 0x4a61bc -> 0x4a6578 retry callsite appears. Existing follow-up evidence already recovers the two 0x4a5e03 constructors, target-cell/object-vector after-state through 0x4a54a7, and focused projection-loop write streams; the sampled profile now proves failed endpoint stamping followed by fallback materialization, not an unrecovered successful 0x4a5e73 mutation in that same sequence.",
+  "currentSliceNotes": "Recovered deterministic fallback-to-payload linkage boundary for Medium seed 10 controlled profile. A seed-pinned trace captured 96 events: sampled 0x4a79a3 payload window at events 26..35 with 9 non-null payload records, then post-Border-Guard fallback construction at events 38 and 41. The two pre-Border-Guard 0x4a61bc -> 0x4a5e03 materialization records 0x036262e0 and 0x03626220 both appear in the sampled 0x4a79a3 payload loop. The two fallback records 0x036260c0 and 0x03626060 are constructed after that payload window via 0x4a7605 returns 0x4a77ad/0x4a789a and do not appear in the sampled payload records. This narrows relation/control linkage: the sampled 0x4a79a3 payload pass is an earlier consumer of pre-Border-Guard objects, not the later consumer of fallback objects; remaining target is later consumer/final-role proof for fallback records after 0x4a54a7 commit.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T21:18:00Z",
+  "currentSliceUpdatedAt": "2026-06-09T21:54:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10232,43 +10232,52 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, and deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover relation/control record linkage from the deterministic Border Guard fallback materialization into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, and deterministic fallback-to-payload ordering are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_summary_20260609.json",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_summary_20260609.json",
     "commands": [
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none --display-number 143 --breakpoints 0x004a64e7 0x004a64ff 0x004a5e73 0x004a5ed7 0x004a5f84 0x004a651f 0x004a6531 0x004a6551 0x004a6578 0x004a5e03 --max-events 90 --debugger-timeout 180 --breakpoint-timeout 180 --lite ... (produced failed_with_events ledger: 67 events before breakpoint timeout)",
-      "python3 tools/rmg_h3maped_border_guard_followthrough_summary.py --trace-log .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609/winedbg_interactive_trace.log --ledger .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_summary_20260609.json (passed: border_guard_endpoint_failures_followed_by_7605_5e03_materialization)",
-      "python3 -m py_compile tools/rmg_h3maped_border_guard_followthrough_summary.py (pending final validation)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none --display-number 144 --breakpoints 0x004a64ff 0x004a6531 0x004a5e73 0x004a5f84 0x004a5e03 0x004a5e55 0x004a5e6c 0x004a79a3 0x004a7d36 0x004a7d99 --max-events 260 --debugger-timeout 180 --breakpoint-timeout 240 --lite ... (produced failed_with_events ledger: 96 events before breakpoint timeout)",
+      "python3 tools/rmg_h3maped_fallback_payload_link_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_trace_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_summary_20260609.json (passed: fallback_records_constructed_after_payload_not_consumed_by_sampled_4a79a3)",
+      "python3 -m py_compile tools/rmg_h3maped_fallback_payload_link_summary.py (pending final validation)",
       "jq empty ops/progress.json (passed during update)"
     ],
     "metrics": {
-      "h3maped_medium_seed10_border_guard_followthrough_seed_pinned": {
-        "border_guard_endpoint_pairs": 3,
+      "h3maped_medium_seed10_fallback_payload_link": {
         "computer_only_down": 1,
-        "entries_4a5e73": 6,
-        "event_count": 67,
-        "failure_cursor_plus_f5c": "0x7a1befdf",
-        "failures_4a5f84": 6,
+        "event_count": 96,
+        "fallback_constructed_after_payload_loop": true,
+        "fallback_payload_matches": [],
         "human_computer_down": 1,
         "invariants": {
-          "all_border_guard_4a5e73_calls_failed_at_4a5f84": true,
-          "all_border_guard_failures_scanned_eight_d8_entries": true,
-          "all_border_guard_failures_used_stale_f5c": true,
+          "fallback_constructed_after_payload_loop": true,
+          "fallback_records_absent_from_sampled_payload": true,
           "native_behavior_changed": false,
-          "post_border_guard_4a6578_callsite_not_observed": true,
-          "post_border_guard_7605_4a5e03_calls_observed": true,
-          "six_4a5e73_calls_observed": true,
-          "three_natural_border_guard_endpoint_pairs_observed": true
+          "payload_count_site_observed": true,
+          "payload_loop_observed": true,
+          "pre_border_guard_records_present_in_sampled_payload": true,
+          "two_post_border_guard_fallback_records_constructed": true,
+          "two_pre_border_guard_records_constructed": true
         },
         "map_size": "medium",
-        "post_border_guard_4a6578_callsite_observed": false,
-        "post_border_guard_7605_4a5e03_calls": 2,
-        "pre_border_guard_4a6578_4a5e03_calls": 2,
+        "payload_non_null_count": 9,
+        "payload_window_end_event": 35,
+        "payload_window_start_event": 26,
+        "post_border_guard_fallback_records": [
+          "0x036260c0",
+          "0x03626060"
+        ],
+        "pre_border_guard_payload_matches": [
+          "0x03626220",
+          "0x036262e0"
+        ],
+        "pre_border_guard_records": [
+          "0x036262e0",
+          "0x03626220"
+        ],
         "requested_seed": "10",
         "seed_control_status": "prepared",
         "seed_patch_status": "patched",
-        "source_backed_conclusion": "For this deterministic Medium seed-10 profile, the natural +0x09 Border Guard branch fails endpoint stamping through six stale-cursor 0x4a5e73 attempts and then falls back into two 0x4a7605-owned 0x4a5e03 materializations.",
-        "total_4a5e03_events": 22,
+        "source_backed_conclusion": "Sampled 0x4a79a3 payload consumes pre-Border-Guard records and ends before fallback records 0x036260c0/0x03626060 are constructed; fallback records are not consumed by that payload pass.",
         "trace_child_returncode": 1,
         "trace_result": "failed_with_events_due_breakpoint_timeout",
         "water": "none"
@@ -10276,47 +10285,56 @@
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-09T21:18:00Z",
-    "updatedAt": "2026-06-09T21:18:00Z"
+    "timestamp": "2026-06-09T21:54:00Z",
+    "updatedAt": "2026-06-09T21:54:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_summary_20260609.json",
-    "ledger": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609/winedbg_interactive_trace_ledger.json",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_summary_20260609.json",
+    "ledger": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_trace_20260609/winedbg_interactive_trace_ledger.json",
     "metrics": {
-      "border_guard_endpoint_pairs": 3,
       "computer_only_down": 1,
-      "entries_4a5e73": 6,
-      "event_count": 67,
-      "failure_cursor_plus_f5c": "0x7a1befdf",
-      "failures_4a5f84": 6,
+      "event_count": 96,
+      "fallback_constructed_after_payload_loop": true,
+      "fallback_payload_matches": [],
       "human_computer_down": 1,
       "invariants": {
-        "all_border_guard_4a5e73_calls_failed_at_4a5f84": true,
-        "all_border_guard_failures_scanned_eight_d8_entries": true,
-        "all_border_guard_failures_used_stale_f5c": true,
+        "fallback_constructed_after_payload_loop": true,
+        "fallback_records_absent_from_sampled_payload": true,
         "native_behavior_changed": false,
-        "post_border_guard_4a6578_callsite_not_observed": true,
-        "post_border_guard_7605_4a5e03_calls_observed": true,
-        "six_4a5e73_calls_observed": true,
-        "three_natural_border_guard_endpoint_pairs_observed": true
+        "payload_count_site_observed": true,
+        "payload_loop_observed": true,
+        "pre_border_guard_records_present_in_sampled_payload": true,
+        "two_post_border_guard_fallback_records_constructed": true,
+        "two_pre_border_guard_records_constructed": true
       },
       "map_size": "medium",
-      "post_border_guard_4a6578_callsite_observed": false,
-      "post_border_guard_7605_4a5e03_calls": 2,
-      "pre_border_guard_4a6578_4a5e03_calls": 2,
+      "payload_non_null_count": 9,
+      "payload_window_end_event": 35,
+      "payload_window_start_event": 26,
+      "post_border_guard_fallback_records": [
+        "0x036260c0",
+        "0x03626060"
+      ],
+      "pre_border_guard_payload_matches": [
+        "0x03626220",
+        "0x036262e0"
+      ],
+      "pre_border_guard_records": [
+        "0x036262e0",
+        "0x03626220"
+      ],
       "requested_seed": "10",
       "seed_control_status": "prepared",
       "seed_patch_status": "patched",
-      "source_backed_conclusion": "For this deterministic Medium seed-10 profile, the natural +0x09 Border Guard branch fails endpoint stamping through six stale-cursor 0x4a5e73 attempts and then falls back into two 0x4a7605-owned 0x4a5e03 materializations.",
-      "total_4a5e03_events": 22,
+      "source_backed_conclusion": "Sampled 0x4a79a3 payload consumes pre-Border-Guard records and ends before fallback records 0x036260c0/0x03626060 are constructed; fallback records are not consumed by that payload pass.",
       "trace_child_returncode": 1,
       "trace_result": "failed_with_events_due_breakpoint_timeout",
       "water": "none"
     },
-    "result": "deterministic natural Border Guard failure/fallback replay proves failed endpoint stamping followed by 0x7605-owned 0x5e03 materialization for the sampled profile",
-    "updatedAt": "2026-06-09T21:18:00Z"
+    "result": "deterministic fallback-to-payload ordering proves fallback records are constructed after the sampled 0x4a79a3 payload pass and are not consumed there",
+    "updatedAt": "2026-06-09T21:54:00Z"
   },
-  "nextActionGuardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, and deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover relation/control record linkage from the deterministic Border Guard fallback materialization into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, and deterministic fallback-to-payload ordering are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap. 2026-06-09 0x49aa93 branch-contract checkpoint: generated by tools/rmg_h3maped_49aa93_branch_contract_summary.py. Static markers recover the 0x49aa93 helper contract and the weighted 0x4a901a post-helper caller flow: 0x4a916c tests AL, true continues at 0x4a9174, append is 0x4a9248/0x4a9254, and materialization requires the local vector gate at 0x4a9273. Follow-up live attempts still did not capture 0x4a9167 returning at 0x4a916c: one sampled 526 value-floor checks with low words 12..57, and the light attempt sampled 835 value-floor checks with low words 0..36 plus five empty-vector exits at 0x4a9273/0x4a9391. No append, allocation, constructor, ready, or projection-dispatch hits were captured. Native RMG behavior unchanged.",
   "plannedSlices": [
     {
@@ -43748,51 +43766,60 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Recovered deterministic natural Border Guard failure/fallback follow-through under clean PE seed control. Medium seed 10 with explicit human/computer down=1, computer-only down=1, and water none records 67 captured events before breakpoint timeout: 3 natural Border Guard endpoint pairs, 6 0x4a5e73 entries, 6 0x4a5f84 failures, all using stale generator+0xf5c=0x7a1befdf, then exactly 2 post-Border-Guard 0x4a7605 downstream materialization calls into 0x4a5e03 at returns 0x4a77ad and 0x4a789a. No post-failure 0x4a61bc -> 0x4a6578 retry callsite appears. Existing follow-up evidence already recovers the two 0x4a5e03 constructors, target-cell/object-vector after-state through 0x4a54a7, and focused projection-loop write streams; the sampled profile now proves failed endpoint stamping followed by fallback materialization, not an unrecovered successful 0x4a5e73 mutation in that same sequence.",
-      "currentSliceNotes": "Recovered deterministic natural Border Guard failure/fallback follow-through under clean PE seed control. Medium seed 10 with explicit human/computer down=1, computer-only down=1, and water none records 67 captured events before breakpoint timeout: 3 natural Border Guard endpoint pairs, 6 0x4a5e73 entries, 6 0x4a5f84 failures, all using stale generator+0xf5c=0x7a1befdf, then exactly 2 post-Border-Guard 0x4a7605 downstream materialization calls into 0x4a5e03 at returns 0x4a77ad and 0x4a789a. No post-failure 0x4a61bc -> 0x4a6578 retry callsite appears. Existing follow-up evidence already recovers the two 0x4a5e03 constructors, target-cell/object-vector after-state through 0x4a54a7, and focused projection-loop write streams; the sampled profile now proves failed endpoint stamping followed by fallback materialization, not an unrecovered successful 0x4a5e73 mutation in that same sequence.",
-      "currentSliceUpdatedAt": "2026-06-09T21:18:00Z",
-      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, and deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover relation/control record linkage from the deterministic Border Guard fallback materialization into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentNotes": "Recovered deterministic fallback-to-payload linkage boundary for Medium seed 10 controlled profile. A seed-pinned trace captured 96 events: sampled 0x4a79a3 payload window at events 26..35 with 9 non-null payload records, then post-Border-Guard fallback construction at events 38 and 41. The two pre-Border-Guard 0x4a61bc -> 0x4a5e03 materialization records 0x036262e0 and 0x03626220 both appear in the sampled 0x4a79a3 payload loop. The two fallback records 0x036260c0 and 0x03626060 are constructed after that payload window via 0x4a7605 returns 0x4a77ad/0x4a789a and do not appear in the sampled payload records. This narrows relation/control linkage: the sampled 0x4a79a3 payload pass is an earlier consumer of pre-Border-Guard objects, not the later consumer of fallback objects; remaining target is later consumer/final-role proof for fallback records after 0x4a54a7 commit.",
+      "currentSliceNotes": "Recovered deterministic fallback-to-payload linkage boundary for Medium seed 10 controlled profile. A seed-pinned trace captured 96 events: sampled 0x4a79a3 payload window at events 26..35 with 9 non-null payload records, then post-Border-Guard fallback construction at events 38 and 41. The two pre-Border-Guard 0x4a61bc -> 0x4a5e03 materialization records 0x036262e0 and 0x03626220 both appear in the sampled 0x4a79a3 payload loop. The two fallback records 0x036260c0 and 0x03626060 are constructed after that payload window via 0x4a7605 returns 0x4a77ad/0x4a789a and do not appear in the sampled payload records. This narrows relation/control linkage: the sampled 0x4a79a3 payload pass is an earlier consumer of pre-Border-Guard objects, not the later consumer of fallback objects; remaining target is later consumer/final-role proof for fallback records after 0x4a54a7 commit.",
+      "currentSliceUpdatedAt": "2026-06-09T21:54:00Z",
+      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, and deterministic fallback-to-payload ordering are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_summary_20260609.json",
+        "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_summary_20260609.json",
         "commands": [
-          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none --display-number 143 --breakpoints 0x004a64e7 0x004a64ff 0x004a5e73 0x004a5ed7 0x004a5f84 0x004a651f 0x004a6531 0x004a6551 0x004a6578 0x004a5e03 --max-events 90 --debugger-timeout 180 --breakpoint-timeout 180 --lite ... (produced failed_with_events ledger: 67 events before breakpoint timeout)",
-          "python3 tools/rmg_h3maped_border_guard_followthrough_summary.py --trace-log .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609/winedbg_interactive_trace.log --ledger .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_summary_20260609.json (passed: border_guard_endpoint_failures_followed_by_7605_5e03_materialization)",
-          "python3 -m py_compile tools/rmg_h3maped_border_guard_followthrough_summary.py (pending final validation)",
+          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none --display-number 144 --breakpoints 0x004a64ff 0x004a6531 0x004a5e73 0x004a5f84 0x004a5e03 0x004a5e55 0x004a5e6c 0x004a79a3 0x004a7d36 0x004a7d99 --max-events 260 --debugger-timeout 180 --breakpoint-timeout 240 --lite ... (produced failed_with_events ledger: 96 events before breakpoint timeout)",
+          "python3 tools/rmg_h3maped_fallback_payload_link_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_trace_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_summary_20260609.json (passed: fallback_records_constructed_after_payload_not_consumed_by_sampled_4a79a3)",
+          "python3 -m py_compile tools/rmg_h3maped_fallback_payload_link_summary.py (pending final validation)",
           "jq empty ops/progress.json (passed during update)"
         ],
         "metrics": {
-          "h3maped_medium_seed10_border_guard_followthrough_seed_pinned": {
-            "border_guard_endpoint_pairs": 3,
+          "h3maped_medium_seed10_fallback_payload_link": {
             "computer_only_down": 1,
-            "entries_4a5e73": 6,
-            "event_count": 67,
-            "failure_cursor_plus_f5c": "0x7a1befdf",
-            "failures_4a5f84": 6,
+            "event_count": 96,
+            "fallback_constructed_after_payload_loop": true,
+            "fallback_payload_matches": [],
             "human_computer_down": 1,
             "invariants": {
-              "all_border_guard_4a5e73_calls_failed_at_4a5f84": true,
-              "all_border_guard_failures_scanned_eight_d8_entries": true,
-              "all_border_guard_failures_used_stale_f5c": true,
+              "fallback_constructed_after_payload_loop": true,
+              "fallback_records_absent_from_sampled_payload": true,
               "native_behavior_changed": false,
-              "post_border_guard_4a6578_callsite_not_observed": true,
-              "post_border_guard_7605_4a5e03_calls_observed": true,
-              "six_4a5e73_calls_observed": true,
-              "three_natural_border_guard_endpoint_pairs_observed": true
+              "payload_count_site_observed": true,
+              "payload_loop_observed": true,
+              "pre_border_guard_records_present_in_sampled_payload": true,
+              "two_post_border_guard_fallback_records_constructed": true,
+              "two_pre_border_guard_records_constructed": true
             },
             "map_size": "medium",
-            "post_border_guard_4a6578_callsite_observed": false,
-            "post_border_guard_7605_4a5e03_calls": 2,
-            "pre_border_guard_4a6578_4a5e03_calls": 2,
+            "payload_non_null_count": 9,
+            "payload_window_end_event": 35,
+            "payload_window_start_event": 26,
+            "post_border_guard_fallback_records": [
+              "0x036260c0",
+              "0x03626060"
+            ],
+            "pre_border_guard_payload_matches": [
+              "0x03626220",
+              "0x036262e0"
+            ],
+            "pre_border_guard_records": [
+              "0x036262e0",
+              "0x03626220"
+            ],
             "requested_seed": "10",
             "seed_control_status": "prepared",
             "seed_patch_status": "patched",
-            "source_backed_conclusion": "For this deterministic Medium seed-10 profile, the natural +0x09 Border Guard branch fails endpoint stamping through six stale-cursor 0x4a5e73 attempts and then falls back into two 0x4a7605-owned 0x4a5e03 materializations.",
-            "total_4a5e03_events": 22,
+            "source_backed_conclusion": "Sampled 0x4a79a3 payload consumes pre-Border-Guard records and ends before fallback records 0x036260c0/0x03626060 are constructed; fallback records are not consumed by that payload pass.",
             "trace_child_returncode": 1,
             "trace_result": "failed_with_events_due_breakpoint_timeout",
             "water": "none"
@@ -43800,45 +43827,54 @@
         },
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-09T21:18:00Z",
-        "updatedAt": "2026-06-09T21:18:00Z"
+        "timestamp": "2026-06-09T21:54:00Z",
+        "updatedAt": "2026-06-09T21:54:00Z"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_summary_20260609.json",
-        "ledger": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_border_guard_followthrough_seed_pinned_20260609/winedbg_interactive_trace_ledger.json",
+        "artifact": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_summary_20260609.json",
+        "ledger": ".artifacts/rmg_recovery/medium_seed10_hc1_co1_fallback_payload_link_trace_20260609/winedbg_interactive_trace_ledger.json",
         "metrics": {
-          "border_guard_endpoint_pairs": 3,
           "computer_only_down": 1,
-          "entries_4a5e73": 6,
-          "event_count": 67,
-          "failure_cursor_plus_f5c": "0x7a1befdf",
-          "failures_4a5f84": 6,
+          "event_count": 96,
+          "fallback_constructed_after_payload_loop": true,
+          "fallback_payload_matches": [],
           "human_computer_down": 1,
           "invariants": {
-            "all_border_guard_4a5e73_calls_failed_at_4a5f84": true,
-            "all_border_guard_failures_scanned_eight_d8_entries": true,
-            "all_border_guard_failures_used_stale_f5c": true,
+            "fallback_constructed_after_payload_loop": true,
+            "fallback_records_absent_from_sampled_payload": true,
             "native_behavior_changed": false,
-            "post_border_guard_4a6578_callsite_not_observed": true,
-            "post_border_guard_7605_4a5e03_calls_observed": true,
-            "six_4a5e73_calls_observed": true,
-            "three_natural_border_guard_endpoint_pairs_observed": true
+            "payload_count_site_observed": true,
+            "payload_loop_observed": true,
+            "pre_border_guard_records_present_in_sampled_payload": true,
+            "two_post_border_guard_fallback_records_constructed": true,
+            "two_pre_border_guard_records_constructed": true
           },
           "map_size": "medium",
-          "post_border_guard_4a6578_callsite_observed": false,
-          "post_border_guard_7605_4a5e03_calls": 2,
-          "pre_border_guard_4a6578_4a5e03_calls": 2,
+          "payload_non_null_count": 9,
+          "payload_window_end_event": 35,
+          "payload_window_start_event": 26,
+          "post_border_guard_fallback_records": [
+            "0x036260c0",
+            "0x03626060"
+          ],
+          "pre_border_guard_payload_matches": [
+            "0x03626220",
+            "0x036262e0"
+          ],
+          "pre_border_guard_records": [
+            "0x036262e0",
+            "0x03626220"
+          ],
           "requested_seed": "10",
           "seed_control_status": "prepared",
           "seed_patch_status": "patched",
-          "source_backed_conclusion": "For this deterministic Medium seed-10 profile, the natural +0x09 Border Guard branch fails endpoint stamping through six stale-cursor 0x4a5e73 attempts and then falls back into two 0x4a7605-owned 0x4a5e03 materializations.",
-          "total_4a5e03_events": 22,
+          "source_backed_conclusion": "Sampled 0x4a79a3 payload consumes pre-Border-Guard records and ends before fallback records 0x036260c0/0x03626060 are constructed; fallback records are not consumed by that payload pass.",
           "trace_child_returncode": 1,
           "trace_result": "failed_with_events_due_breakpoint_timeout",
           "water": "none"
         },
-        "result": "deterministic natural Border Guard failure/fallback replay proves failed endpoint stamping followed by 0x7605-owned 0x5e03 materialization for the sampled profile",
-        "updatedAt": "2026-06-09T21:18:00Z"
+        "result": "deterministic fallback-to-payload ordering proves fallback records are constructed after the sampled 0x4a79a3 payload pass and are not consumed there",
+        "updatedAt": "2026-06-09T21:54:00Z"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
