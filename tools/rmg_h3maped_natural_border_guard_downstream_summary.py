@@ -58,8 +58,14 @@ def vector_summary(begin: int, end: int, capacity: int) -> dict[str, Any]:
     }
 
 
-def summarize(log_path: Path) -> dict[str, Any]:
-    ledger = parse_winedbg_log(log_path)
+def load_ledger(trace_log: Path, ledger_path: Path | None) -> tuple[dict[str, Any], str]:
+    if ledger_path is not None:
+        return json.loads(ledger_path.read_text(encoding="utf-8")), str(ledger_path)
+    return parse_winedbg_log(trace_log), str(trace_log)
+
+
+def summarize(log_path: Path, ledger_path: Path | None = None) -> dict[str, Any]:
+    ledger, source = load_ledger(log_path, ledger_path)
     events = ledger.get("events", [])
     counts = Counter(str(event.get("address", "")).lower() for event in events)
 
@@ -143,6 +149,9 @@ def summarize(log_path: Path) -> dict[str, Any]:
         "schema_id": "h3maped_natural_border_guard_downstream_summary_v1",
         "status": status,
         "source_log": str(log_path),
+        "source_ledger": source if ledger_path is not None else None,
+        "seed_control": ledger.get("seed_control"),
+        "child_returncode": ledger.get("child_returncode"),
         "event_count": len(events),
         "event_counts": dict(sorted(counts.items())),
         "branch_checks": branch_checks,
@@ -175,13 +184,14 @@ def summarize(log_path: Path) -> dict[str, Any]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trace-log", type=Path, default=DEFAULT_TRACE_LOG)
+    parser.add_argument("--ledger", type=Path, default=None)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    summary = summarize(args.trace_log)
+    summary = summarize(args.trace_log, args.ledger)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
