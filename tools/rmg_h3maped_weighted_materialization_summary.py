@@ -31,6 +31,11 @@ DEFAULT_SCORE_STREAM_TRACE = (
     / "4a9322_seed58_cpu0_weighted_materialization_4a54a7_return_trace_20260609"
     / "winedbg_interactive_trace_ledger.json"
 )
+DEFAULT_SCORE_COUNT_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_weighted_score_stream_dynamic_count_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
 DEFAULT_RETURN_TRACE = (
     ROOT
     / "4a9322_seed58_cpu0_weighted_materialization_return_only_trace_20260609"
@@ -272,6 +277,42 @@ def summarize_materialization(path: Path) -> dict[str, Any]:
     }
 
 
+def summarize_score_count(path: Path) -> dict[str, Any]:
+    data = load_json(path)
+    events = data.get("events", [])
+    counts = collections.Counter(event.get("address") for event in events)
+    in_first_dispatch = False
+    complete_count = 0
+    reached_return = False
+    reached_caller_after = False
+    for event in events:
+        address = event.get("address")
+        if address == "0x004a9322" and not in_first_dispatch:
+            in_first_dispatch = True
+            continue
+        if not in_first_dispatch:
+            continue
+        if address == "0x004a56b6":
+            complete_count += 1
+        elif address == "0x004a5756":
+            reached_return = True
+        elif address == "0x004a9325":
+            reached_caller_after = True
+            break
+    return {
+        "path": str(path),
+        "event_count": len(events),
+        "child_returncode": data.get("child_returncode"),
+        "counts": dict(sorted(counts.items())),
+        "first_dispatch_score_write_count": complete_count,
+        "first_dispatch_return_captured_after_count": reached_return,
+        "caller_after_state_captured_after_count": reached_caller_after,
+        "complete_first_dispatch_score_write_count_recovered": complete_count == 705
+        and reached_return
+        and reached_caller_after,
+    }
+
+
 def summarize_return_trace(path: Path) -> dict[str, Any]:
     data = load_json(path)
     events = data.get("events", [])
@@ -449,6 +490,7 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     follow = summarize_follow(args.follow_trace)
     materialization = summarize_materialization(args.materialization_trace)
     score_stream = summarize_materialization(args.score_stream_trace)
+    score_count = summarize_score_count(args.score_count_trace)
     return_trace = summarize_return_trace(args.return_trace)
     generator_delta = summarize_vector_contents(args.generator_delta_trace)
     vector_contents = summarize_vector_contents(args.vector_contents_trace)
@@ -462,6 +504,9 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "materialization_enters_4a54a7": materialization["enters_4a54a7"],
         "materialization_score_write_stream_captured": materialization["score_write_pair_count"] > 0,
         "high_cap_score_write_stream_sampled": score_stream["score_write_pair_count"] > materialization["score_write_pair_count"],
+        "complete_first_dispatch_score_write_count_recovered": score_count[
+            "complete_first_dispatch_score_write_count_recovered"
+        ],
         "first_materialization_return_captured": return_trace["return_site_captured"],
         "caller_after_state_captured": return_trace["caller_after_state_captured"],
         "generator_delta_object_vector_header_recovered": generator_delta["object_vector_header_delta_recovered"],
@@ -472,7 +517,7 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         ],
     }
     status = (
-        "weighted_first_materialization_return_vector_counter_recovered"
+        "weighted_first_materialization_write_count_vector_counter_recovered"
         if all(conditions.values())
         else "weighted_materialization_frontier_incomplete"
     )
@@ -484,12 +529,12 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "followthrough_trace": follow,
         "materialization_trace": materialization,
         "score_stream_high_cap_trace": score_stream,
+        "score_stream_count_trace": score_count,
         "return_trace": return_trace,
         "generator_delta_trace": generator_delta,
         "vector_contents_trace": vector_contents,
         "descriptor_counter_trace": descriptor_counter,
         "not_recovered": [
-            "The high-cap score-write trace captures 254 complete generated-cell write pairs and still hits the event cap before return, so the complete 0x4a54a7 score-write stream length remains pending.",
             "Only the first weighted materialization's return/caller/vector delta is recovered; full ordered replay of every weighted materialization remains pending.",
             "0x4a696b, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation, and 0x4add76 cleanup/uncommit runtime paths remain unrecovered.",
         ],
@@ -502,6 +547,7 @@ def main() -> int:
     parser.add_argument("--follow-trace", type=Path, default=DEFAULT_FOLLOW_TRACE)
     parser.add_argument("--materialization-trace", type=Path, default=DEFAULT_MATERIALIZATION_TRACE)
     parser.add_argument("--score-stream-trace", type=Path, default=DEFAULT_SCORE_STREAM_TRACE)
+    parser.add_argument("--score-count-trace", type=Path, default=DEFAULT_SCORE_COUNT_TRACE)
     parser.add_argument("--return-trace", type=Path, default=DEFAULT_RETURN_TRACE)
     parser.add_argument("--generator-delta-trace", type=Path, default=DEFAULT_GENERATOR_DELTA_TRACE)
     parser.add_argument("--vector-contents-trace", type=Path, default=DEFAULT_VECTOR_CONTENTS_TRACE)
