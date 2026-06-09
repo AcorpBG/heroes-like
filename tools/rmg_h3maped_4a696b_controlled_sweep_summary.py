@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Aggregate controlled ``0x4a696b`` payload-branch sweep evidence.
 
-The input ledgers are clean PE seed-pinned Medium one-level no-water runs from
-``rmg_h3maped_4a61bc_payload_link_dynamic_trace.py``.  This report does not
-claim global unreachability.  It records how much controlled evidence currently
-supports the live one-level land path exiting before the direct mutation block.
+The primary inputs are clean PE seed-pinned Medium one-level no-water ledgers
+from ``rmg_h3maped_4a61bc_payload_link_dynamic_trace.py``.  The report can also
+salvage raw logs from runs that stopped after useful branch evidence but before
+the driver wrote a JSON ledger.  This report does not claim global
+unreachability.  It records how much controlled evidence currently supports the
+live one-level land path exiting before the direct mutation block.
 """
 
 from __future__ import annotations
@@ -14,6 +16,8 @@ import json
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+from rmg_h3maped_recovery_trace import parse_winedbg_log
 
 
 DEFAULT_LEDGERS = [
@@ -29,6 +33,19 @@ DEFAULT_LEDGERS = [
         ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/"
         "winedbg_4a61bc_payload_link_dynamic_trace_ledger.json"
     ),
+]
+DEFAULT_RAW_LOGS = [
+    {
+        "seed": "3",
+        "log": Path(
+            ".artifacts/rmg_recovery/medium_seed3_4a696b_payload_sweep_20260609/"
+            "winedbg_4a61bc_payload_link_dynamic_trace.log"
+        ),
+        "runtime_exe": Path(
+            ".artifacts/rmg_recovery/medium_seed3_4a696b_payload_sweep_20260609/"
+            "runtime_seed_patched/h3maped.exe"
+        ),
+    }
 ]
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/medium_controlled_4a696b_sweep_summary_20260609.json")
 
@@ -93,6 +110,19 @@ def seed_control_clean(ledger: dict[str, Any]) -> bool:
     )
 
 
+def seed_patch_verified(runtime_exe: Path, requested_seed: str) -> bool:
+    if not runtime_exe.exists():
+        return False
+    try:
+        seed = int(requested_seed, 0)
+    except ValueError:
+        return False
+    if seed < 0 or seed > 0xFFFFFFFF:
+        return False
+    needle = b"\xc7\x07" + seed.to_bytes(4, "little") + b"\xff\x37"
+    return needle in runtime_exe.read_bytes()
+
+
 def grouped_calls(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     calls: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
@@ -127,14 +157,63 @@ def grouped_calls(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return calls
 
 
-def summarize_ledgers(ledger_paths: list[Path]) -> dict[str, Any]:
+def ledger_record(path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    ledger = load_json(path)
+    seed_control = seed_control_clean(ledger)
+    meta = ledger.get("dynamic_trace_meta", {})
+    record = {
+        "source_kind": "ledger",
+        "ledger": str(path),
+        "requested_seed": ledger.get("seed_control", {}).get("requested_seed"),
+        "seed_control_clean": seed_control,
+        "seed_patch_verified": None,
+        "event_count": ledger.get("event_count", len(ledger.get("events", []))),
+        "payload_record_events": meta.get("payload_record_events"),
+        "dispatch_events": meta.get("dispatch_events"),
+        "selected_object_record": meta.get("object_record"),
+    }
+    return ledger, record
+
+
+def raw_log_record(raw: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    log_path = raw["log"]
+    ledger = parse_winedbg_log(log_path)
+    requested_seed = raw.get("seed", "")
+    patch_verified = seed_patch_verified(raw["runtime_exe"], requested_seed)
+    counts = Counter(event_address(event) for event in ledger.get("events", []))
+    record = {
+        "source_kind": "raw_log_salvage",
+        "ledger": str(log_path),
+        "requested_seed": requested_seed,
+        "seed_control_clean": None,
+        "seed_patch_verified": patch_verified,
+        "event_count": ledger.get("event_count", len(ledger.get("events", []))),
+        "payload_record_events": counts.get("0x004a7d36", 0),
+        "dispatch_events": sum(
+            counts.get(site, 0)
+            for site in {
+                ENTRY,
+                FALLBACK_COORDINATOR,
+                ENDPOINT_COMMIT,
+                PAIR_MARK_BEFORE,
+                PAIR_MARK_AFTER,
+            }
+        ),
+        "selected_object_record": None,
+    }
+    return ledger, record
+
+
+def summarize_ledgers(ledger_paths: list[Path], raw_logs: list[dict[str, Any]]) -> dict[str, Any]:
     per_ledger: list[dict[str, Any]] = []
     aggregate_counts: Counter[str] = Counter()
     aggregate_classifications: Counter[str] = Counter()
     total_calls = 0
 
-    for path in ledger_paths:
-        ledger = load_json(path)
+    inputs: list[tuple[dict[str, Any], dict[str, Any]]] = [ledger_record(path) for path in ledger_paths]
+    inputs.extend(raw_log_record(raw) for raw in raw_logs)
+
+    for ledger, base_record in inputs:
         events = ledger.get("events", [])
         counts = Counter(event_address(event) for event in events)
         calls = grouped_calls(events)
@@ -142,16 +221,9 @@ def summarize_ledgers(ledger_paths: list[Path]) -> dict[str, Any]:
         aggregate_counts.update({key: counts.get(key, 0) for key in TRACKED})
         aggregate_classifications.update(classifications)
         total_calls += len(calls)
-        meta = ledger.get("dynamic_trace_meta", {})
         per_ledger.append(
             {
-                "ledger": str(path),
-                "requested_seed": ledger.get("seed_control", {}).get("requested_seed"),
-                "seed_control_clean": seed_control_clean(ledger),
-                "event_count": ledger.get("event_count", len(events)),
-                "payload_record_events": meta.get("payload_record_events"),
-                "dispatch_events": meta.get("dispatch_events"),
-                "selected_object_record": meta.get("object_record"),
+                **base_record,
                 "address_counts": {key: counts.get(key, 0) for key in TRACKED if counts.get(key, 0)},
                 "call_classifications": dict(sorted(classifications.items())),
             }
@@ -159,7 +231,10 @@ def summarize_ledgers(ledger_paths: list[Path]) -> dict[str, Any]:
 
     invariants = {
         "native_behavior_changed": False,
-        "all_seed_control_clean": all(item["seed_control_clean"] for item in per_ledger),
+        "all_seed_control_clean_or_patch_verified": all(
+            bool(item.get("seed_control_clean")) or bool(item.get("seed_patch_verified"))
+            for item in per_ledger
+        ),
         "all_ledgers_have_payload_records": all((item.get("payload_record_events") or 0) > 0 for item in per_ledger),
         "all_ledgers_have_dispatch_events": all((item.get("dispatch_events") or 0) > 0 for item in per_ledger),
         "sampled_4a696b_calls": total_calls > 0,
@@ -197,11 +272,12 @@ def summarize_ledgers(ledger_paths: list[Path]) -> dict[str, Any]:
         "per_ledger": per_ledger,
         "invariants": invariants,
         "source_backed_conclusion": (
-            "Across the controlled Medium one-level no-water seed-pinned ledgers, all sampled "
-            "0x4a696b calls reach scan completion and take the no-candidate exit before the "
+            "Across the controlled Medium one-level no-water seed-pinned ledgers plus the "
+            "seed-3 raw-log salvage with verified PE seed patch bytes, all sampled 0x4a696b "
+            "calls reach scan completion and take the no-candidate exit before the "
             "source/relation-match checkpoint. The sweep records zero hits at 0x4a6a81, "
-            "0x4a6ae2, 0x4a6b2e, and 0x4a6c13, while still observing the fallback 0x4a7605 "
-            "endpoint surface."
+            "0x4a6ae2, 0x4a6b2e, and 0x4a6c13, while still observing the fallback "
+            "0x4a7605 endpoint surface."
         ),
         "remaining_gap": (
             "This is broader controlled negative evidence, not a proof of global unreachability. "
@@ -217,11 +293,22 @@ def summarize_ledgers(ledger_paths: list[Path]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, action="append", default=[])
+    parser.add_argument(
+        "--raw-log",
+        type=Path,
+        action="append",
+        default=[],
+        help="Optional raw WineDbg log to parse when the dynamic trace stopped before writing a ledger.",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
     ledgers = args.ledger or DEFAULT_LEDGERS
-    summary = summarize_ledgers(ledgers)
+    raw_logs = [
+        {"seed": "", "log": path, "runtime_exe": Path("")}
+        for path in args.raw_log
+    ] if args.raw_log else DEFAULT_RAW_LOGS
+    summary = summarize_ledgers(ledgers, raw_logs)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"RMG_H3MAPED_4A696B_CONTROLLED_SWEEP_SUMMARY status={summary['status']} out={args.out}")
