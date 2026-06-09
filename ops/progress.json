@@ -58268,6 +58268,18 @@
       ]
     },
     {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_candidate_predicate_trace_summary_20260609.json",
+      "currentSliceNotes": "Seed-pinned Medium one-level no-water 0x4a696b candidate predicate cross-check completed under the profile that previously produced natural Border Guard relation evidence: requested seed 10, PE seed patch status patched, map-size medium, human/computer down 1, computer-only down 1, and water disabled. The trace timed out after useful events with the same boundary as the default direct-generation sample: three sampled 0x4a696b calls reached scan completion/no-candidate/return, zero stops occurred at 0x4a6a81, 0x4a6a8f, 0x4a6ac8, 0x4a6ade, 0x4a6ae2, or 0x4a6c13, and the fallback 0x4a7605 -> 0x4a7312 -> 0x4a7447 endpoint commits still followed. Native RMG behavior unchanged.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Reproduced the 0x4a696b pre-helper source/relation prefilter boundary under seed-controlled Medium seed 10; direct mutation remains unrecovered and native behavior unchanged.",
+      "updatedAt": "2026-06-09T00:20:00Z",
+      "validation": [
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 128 --out-dir .artifacts/rmg_recovery/medium_seed10_4a696b_candidate_predicate_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (timed out after useful events; 19-event seed-controlled ledger emitted)",
+        "python3 tools/rmg_h3maped_4a696b_candidate_predicate_trace_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_4a696b_candidate_predicate_trace_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_4a696b_candidate_predicate_trace_summary_20260609.json (passed: partial_live_recovery_4a696b_prefilter_rejects_sampled_candidate_scans)"
+      ]
+    },
+    {
       "currentSliceNotes": "Forced +0x09 Border Guard route recovered for sampled 0x4a7605 path: debugger-side byte +0x09 flip at 0x4a774a routes execution into two 0x4a746b endpoint-writer calls, each delegating through 0x4a7593 into 0x4a5e73 and returning through failure continuations 0x4a7773/0x4a7860. Generated-cell mutation sites 0x4a5fd8/0x4a5ff1 and 0x4a746b success exit 0x4a75f1 are not reached. Evidence is forced-route control-flow recovery, not natural successful Border Guard materialization. Native RMG behavior unchanged.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "pass",
