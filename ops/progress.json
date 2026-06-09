@@ -9233,10 +9233,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered all sampled weighted 0x4a901a materialization return/vector/counter replay without changing native behavior. The dynamic count trace proves the first weighted dispatch has exactly 705 score-write stops before 0x4a5756/0x4a9325. The all-dispatch replay proves three sampled weighted records return and advance generator object-vector/counter index 98: 0x036b6d40 at (107,6,0) changes 4->5, 0x036b68e0 at (107,106,0) changes 6->7, and 0x036b67e0 at (18,6,0) changes 7->8. The intervening 5->6 state change occurs through a non-weighted 0x4a5756 return between the first and second weighted dispatch.",
+  "currentSliceNotes": "Recovered the same-run pointer bridge from a selected 0x4a61bc-origin object append into the later 0x4a79a3 payload loop without changing native behavior. The dynamic trace captures selected object record 0x0361d290 at 0x4a5e55, reaches the after-selected 0x4a657d boundary, then observes the same pointer as one of 19 non-null 0x4a7d36 payload records. The 0x4a7d99 shifted count is 19, vector entries match the non-null payload pointers, payload vtables are 0x540a88 x11 and 0x540a9c x8, and the same trace reaches downstream dispatch sites including 0x4a696b and 0x4a7df4.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T16:41:53Z",
+  "currentSliceUpdatedAt": "2026-06-09T18:47:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10232,103 +10232,82 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Append-to-payload linkage is now recovered for the sampled 0x4a61bc-origin record. Remaining source-backed blockers before any native RMG behavior port: recover 0x4a696b/0x4a7605 callee-side generated-cell mutation and record-pair semantics, relation/control linkage into later consumers, natural 0x4a7605/0x4a746b/0x4a5e73 endpoint success/mutation, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/pre_4a8db2_score_order_summary_20260608.json",
+    "artifact": ".artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json",
     "commands": [
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/4a54a7_before_4a8db2_order_trace_20260608 ... (passed: 33 events)",
-      "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/4a8db2_to_4a8c15_order_trace_20260608 ... (passed: 65 events)",
-      "python3 tools/rmg_h3maped_pre_4a8db2_score_order_summary.py (passed: pre_4a8db2_score_projection_order_recovered)",
-      "python3 -m py_compile tools/rmg_h3maped_pre_4a8db2_score_order_summary.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
-      "sh /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-      "python3 tests/validate_repo.py (passed)"
+      "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a61bc_payload_link_summary.py (passed)",
+      "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609 --max-events 1800 --debugger-timeout 180 (passed: 122 events, 20 payload stops, 4 dispatch events)",
+      "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)"
     ],
     "metrics": {
-      "h3maped_pre_4a8db2_score_order": {
-        "invariants": {
-          "no_4a79a3_before_4a8c15": true,
-          "pre_4a8db2_commits_return_through_4a93a2_slot": true,
-          "same_run_4a54a7_commits_complete_before_first_4a8db2": true,
-          "same_run_4a8db2_repeats_before_4a8c15": true,
-          "value_gate_low_range_matches_recovered_projection_score_shape": true
+      "h3maped_4a61bc_payload_link": {
+        "dispatch_sites_reached": [
+          "0x004a696b",
+          "0x004a7df4"
+        ],
+        "invariants_true": [
+          "metadata_object_matches_first_selected_record",
+          "selected_object_record_captured",
+          "selected_4a61bc_reached_after_boundary",
+          "same_trace_reaches_payload_loop",
+          "same_trace_reaches_downstream_dispatch_sites",
+          "payload_count_checkpoint_hit",
+          "payload_shifted_count_matches_non_null_payload_records",
+          "payload_vector_entries_match_non_null_payload_pointers",
+          "selected_object_pointer_reappears_in_payload"
+        ],
+        "linked_payload_record": "0x0361d290",
+        "non_null_payload_record_count": 19,
+        "payload_record_stop_count": 20,
+        "payload_vtable_counts": {
+          "0x00540a88": 11,
+          "0x00540a9c": 8
         },
-        "native_behavior_changed": false,
-        "pre_scheduler_projection_order": {
-          "4a54a7_commit_count_before_first_4a8db2": 16,
-          "4a5756_projection_done_count_before_first_4a8db2": 16,
-          "all_4a54a7_returns_are_0x4a9586": true
-        },
-        "scheduler_to_materialization_order": {
-          "4a8db2_entries_before_first_4a8c15": 48,
-          "4a8f96_weighted_calls": 8,
-          "4a8ffd_weighted_calls": 8,
-          "no_4a79a3_before_4a8c15": true
-        },
-        "status": "pre_4a8db2_score_projection_order_recovered"
+        "selected_object_record": "0x0361d290",
+        "shifted_count_at_0x4a7d99": 19
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-08T23:45:00Z",
-    "updatedAt": "2026-06-08T23:45:00Z"
+    "timestamp": "2026-06-09T18:47:21Z",
+    "updatedAt": "2026-06-09T18:47:21Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/weighted_4a901a_materialization_summary_20260609.json",
+    "artifact": ".artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json",
     "metrics": {
-      "append_calls": 23,
-      "first_dispatch_score_write_count_complete": 705,
-      "helper_accept_continuations": 12,
-      "intervening_non_weighted_counter_vector_delta": "5->6 before second weighted dispatch",
-      "materialization_dispatches": 3,
-      "sampled_weighted_dispatches_replayed": 3,
-      "sampled_weighted_records": [
-        {
-          "coordinate": [
-            107,
-            6,
-            0
-          ],
-          "counter98_after": 5,
-          "counter98_before": 4,
-          "record_pointer_hex": "0x036b6d40",
-          "vector_count_after": 5,
-          "vector_count_before": 4
-        },
-        {
-          "coordinate": [
-            107,
-            106,
-            0
-          ],
-          "counter98_after": 7,
-          "counter98_before": 6,
-          "record_pointer_hex": "0x036b68e0",
-          "vector_count_after": 7,
-          "vector_count_before": 6
-        },
-        {
-          "coordinate": [
-            18,
-            6,
-            0
-          ],
-          "counter98_after": 8,
-          "counter98_before": 7,
-          "record_pointer_hex": "0x036b67e0",
-          "vector_count_after": 8,
-          "vector_count_before": 7
-        }
-      ]
+      "dispatch_sites_reached": [
+        "0x004a696b",
+        "0x004a7df4"
+      ],
+      "invariants_true": [
+        "metadata_object_matches_first_selected_record",
+        "selected_object_record_captured",
+        "selected_4a61bc_reached_after_boundary",
+        "same_trace_reaches_payload_loop",
+        "same_trace_reaches_downstream_dispatch_sites",
+        "payload_count_checkpoint_hit",
+        "payload_shifted_count_matches_non_null_payload_records",
+        "payload_vector_entries_match_non_null_payload_pointers",
+        "selected_object_pointer_reappears_in_payload"
+      ],
+      "linked_payload_record": "0x0361d290",
+      "non_null_payload_record_count": 19,
+      "payload_record_stop_count": 20,
+      "payload_vtable_counts": {
+        "0x00540a88": 11,
+        "0x00540a9c": 8
+      },
+      "selected_object_record": "0x0361d290",
+      "shifted_count_at_0x4a7d99": 19
     },
     "native_behavior_changed": false,
-    "remaining_blocker": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Recovered all sampled weighted materialization return/vector/counter replay; first sampled dispatch also has complete 705 score-write count.",
-    "source_basis": "H3MapEd WineDbg ledgers including .artifacts/rmg_recovery/4a9322_seed58_cpu0_weighted_score_stream_dynamic_count_trace_20260609/ and .artifacts/rmg_recovery/4a9322_seed58_cpu0_all_weighted_return_vector_counter_trace_20260609/, summarized by tools/rmg_h3maped_weighted_materialization_summary.py.",
-    "validatedAt": "2026-06-09T16:41:53Z"
+    "remaining_blocker": "Append-to-payload linkage is now recovered for the sampled 0x4a61bc-origin record. Remaining source-backed blockers before any native RMG behavior port: recover 0x4a696b/0x4a7605 callee-side generated-cell mutation and record-pair semantics, relation/control linkage into later consumers, natural 0x4a7605/0x4a746b/0x4a5e73 endpoint success/mutation, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Recovered same-run selected 0x4a61bc append-to-0x4a79a3-payload pointer linkage.",
+    "source_basis": "H3MapEd WineDbg ledger .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json summarized by tools/rmg_h3maped_4a61bc_payload_link_summary.py after capture by tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py.",
+    "validatedAt": "2026-06-09T18:47:21Z"
   },
-  "nextActionGuardrailNote": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Append-to-payload linkage is now recovered for the sampled 0x4a61bc-origin record. Remaining source-backed blockers before any native RMG behavior port: recover 0x4a696b/0x4a7605 callee-side generated-cell mutation and record-pair semantics, relation/control linkage into later consumers, natural 0x4a7605/0x4a746b/0x4a5e73 endpoint success/mutation, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap. 2026-06-09 0x49aa93 branch-contract checkpoint: generated by tools/rmg_h3maped_49aa93_branch_contract_summary.py. Static markers recover the 0x49aa93 helper contract and the weighted 0x4a901a post-helper caller flow: 0x4a916c tests AL, true continues at 0x4a9174, append is 0x4a9248/0x4a9254, and materialization requires the local vector gate at 0x4a9273. Follow-up live attempts still did not capture 0x4a9167 returning at 0x4a916c: one sampled 526 value-floor checks with low words 12..57, and the light attempt sampled 835 value-floor checks with low words 0..36 plus five empty-vector exits at 0x4a9273/0x4a9391. No append, allocation, constructor, ready, or projection-dispatch hits were captured. Native RMG behavior unchanged.",
   "plannedSlices": [
     {
@@ -43760,56 +43739,88 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Recovered all sampled weighted 0x4a901a materialization return/vector/counter replay without changing native behavior. The dynamic count trace proves the first weighted dispatch has exactly 705 score-write stops before 0x4a5756/0x4a9325. The all-dispatch replay proves three sampled weighted records return and advance generator object-vector/counter index 98: 0x036b6d40 at (107,6,0) changes 4->5, 0x036b68e0 at (107,106,0) changes 6->7, and 0x036b67e0 at (18,6,0) changes 7->8. The intervening 5->6 state change occurs through a non-weighted 0x4a5756 return between the first and second weighted dispatch.",
-      "currentSliceNotes": "Recovered the static 0x49aa93 branch contract and weighted 0x4a901a post-helper caller contract without changing native behavior. The helper rejects via 0x49a6f9/0x49a09c or descriptor-offset source-cell policy, accepts immediately after successful contour validation when descriptor +0x29 is clear, and otherwise returns from the final terrain/relation comparison. The 0x4a901a caller tests AL at 0x4a916c, continues accepted candidates at 0x4a9174, appends through 0x4a9248/0x4a9254, and requires the local vector gate at 0x4a9273 before materialization. New live attempts did not capture the runtime helper return or append/materialization: sampled low-word ranges were 12..57 and 0..36, with five empty-vector exits at 0x4a9273/0x4a9391.",
-      "currentSliceUpdatedAt": "2026-06-09T17:47:44Z",
-      "guardrailNote": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentNotes": "Recovered the same-run pointer bridge from a selected 0x4a61bc-origin object append into the later 0x4a79a3 payload loop without changing native behavior. The dynamic trace captures selected object record 0x0361d290 at 0x4a5e55, reaches the after-selected 0x4a657d boundary, then observes the same pointer as one of 19 non-null 0x4a7d36 payload records. The 0x4a7d99 shifted count is 19, vector entries match the non-null payload pointers, payload vtables are 0x540a88 x11 and 0x540a9c x8, and the same trace reaches downstream dispatch sites including 0x4a696b and 0x4a7df4.",
+      "currentSliceNotes": "Recovered the same-run pointer bridge from a selected 0x4a61bc-origin object append into the later 0x4a79a3 payload loop without changing native behavior. The dynamic trace captures selected object record 0x0361d290 at 0x4a5e55, reaches the after-selected 0x4a657d boundary, then observes the same pointer as one of 19 non-null 0x4a7d36 payload records. The 0x4a7d99 shifted count is 19, vector entries match the non-null payload pointers, payload vtables are 0x540a88 x11 and 0x540a9c x8, and the same trace reaches downstream dispatch sites including 0x4a696b and 0x4a7df4.",
+      "currentSliceUpdatedAt": "2026-06-09T18:47:21Z",
+      "guardrailNote": "Append-to-payload linkage is now recovered for the sampled 0x4a61bc-origin record. Remaining source-backed blockers before any native RMG behavior port: recover 0x4a696b/0x4a7605 callee-side generated-cell mutation and record-pair semantics, relation/control linkage into later consumers, natural 0x4a7605/0x4a746b/0x4a5e73 endpoint success/mutation, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/same_run_projection_payload_link_summary_20260608.json",
+        "artifact": ".artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json",
         "commands": [
-          "python3 -m py_compile tools/rmg_h3maped_same_run_projection_payload_link_summary.py (passed)",
-          "PYTHONPATH=tools python3 tools/rmg_h3maped_same_run_projection_payload_link_summary.py (passed: same_run_link_not_proven_yet)",
-          "PYTHONPATH=tools python3 tools/rmg_h3maped_4a79a3_payload_trace_summary.py --log .artifacts/rmg_recovery/same_run_projection_payload_tight_trace_20260608/winedbg_interactive_trace.log --out .artifacts/rmg_recovery/same_run_projection_payload_tight_trace_20260608/4a79a3_payload_summary.json (passed: 19 records)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)",
-          "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-          "python3 tests/validate_repo.py (passed)"
+          "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a61bc_payload_link_summary.py (passed)",
+          "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609 --max-events 1800 --debugger-timeout 180 (passed: 122 events, 20 payload stops, 4 dispatch events)",
+          "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)"
         ],
-        "status": "passed"
+        "metrics": {
+          "h3maped_4a61bc_payload_link": {
+            "dispatch_sites_reached": [
+              "0x004a696b",
+              "0x004a7df4"
+            ],
+            "invariants_true": [
+              "metadata_object_matches_first_selected_record",
+              "selected_object_record_captured",
+              "selected_4a61bc_reached_after_boundary",
+              "same_trace_reaches_payload_loop",
+              "same_trace_reaches_downstream_dispatch_sites",
+              "payload_count_checkpoint_hit",
+              "payload_shifted_count_matches_non_null_payload_records",
+              "payload_vector_entries_match_non_null_payload_pointers",
+              "selected_object_pointer_reappears_in_payload"
+            ],
+            "linked_payload_record": "0x0361d290",
+            "non_null_payload_record_count": 19,
+            "payload_record_stop_count": 20,
+            "payload_vtable_counts": {
+              "0x00540a88": 11,
+              "0x00540a9c": 8
+            },
+            "selected_object_record": "0x0361d290",
+            "shifted_count_at_0x4a7d99": 19
+          }
+        },
+        "sliceId": "rmg-small-generalization-hardening-10184",
+        "status": "passed",
+        "timestamp": "2026-06-09T18:47:21Z",
+        "updatedAt": "2026-06-09T18:47:21Z"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/4a61bc_4a54a7_dynamic_aggregate_summary_20260609.json",
+        "artifact": ".artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json",
         "metrics": {
-          "all_streams_all_invariants_true": true,
-          "distinct_object_record_count": 3,
-          "distinct_target_cell_count": 3,
-          "object_records": [
-            "0x0361d540",
-            "0x0364ff10",
-            "0x0361d180"
+          "dispatch_sites_reached": [
+            "0x004a696b",
+            "0x004a7df4"
           ],
-          "projection_write_counts": [
-            74,
-            105,
-            82
+          "invariants_true": [
+            "metadata_object_matches_first_selected_record",
+            "selected_object_record_captured",
+            "selected_4a61bc_reached_after_boundary",
+            "same_trace_reaches_payload_loop",
+            "same_trace_reaches_downstream_dispatch_sites",
+            "payload_count_checkpoint_hit",
+            "payload_shifted_count_matches_non_null_payload_records",
+            "payload_vector_entries_match_non_null_payload_pointers",
+            "selected_object_pointer_reappears_in_payload"
           ],
-          "stream_count": 3,
-          "target_cells": [
-            "0x0188f814",
-            "0x01892ba4",
-            "0x01895b44"
-          ]
+          "linked_payload_record": "0x0361d290",
+          "non_null_payload_record_count": 19,
+          "payload_record_stop_count": 20,
+          "payload_vtable_counts": {
+            "0x00540a88": 11,
+            "0x00540a9c": 8
+          },
+          "selected_object_record": "0x0361d290",
+          "shifted_count_at_0x4a7d99": 19
         },
         "native_behavior_changed": false,
-        "remaining_blocker": "Link the recovered 0x4a61bc-origin appended records into the later 0x4a7d2c payload loop and downstream 0x4a696b/0x4a7605 consumers, then recover natural endpoint success and actual cleanup/uncommit behavior before any native port.",
-        "result": "Recovered three complete 0x4a61bc-origin 0x4a54a7 generated-cell write/after-state streams. Caller-frame indices 0, 1, and 2 all append one object to the generator vector, add that object to the target generated-cell object-ref vector, clear the target +0x20 low word with high word preserved, update +0x28, and run unique projection writes that lower low words while preserving high words.",
-        "source_basis": "H3MapEd dynamic WineDbg ledgers .artifacts/rmg_recovery/4a61bc_4a54a7_dynamic_write_trace_20260609/, ..._skip1_20260609/, and ..._skip2_20260609/ summarized by tools/rmg_h3maped_4a61bc_4a54a7_dynamic_summary.py and tools/rmg_h3maped_4a61bc_4a54a7_dynamic_aggregate_summary.py.",
-        "validatedAt": "2026-06-09T18:30:08Z"
+        "remaining_blocker": "Append-to-payload linkage is now recovered for the sampled 0x4a61bc-origin record. Remaining source-backed blockers before any native RMG behavior port: recover 0x4a696b/0x4a7605 callee-side generated-cell mutation and record-pair semantics, relation/control linkage into later consumers, natural 0x4a7605/0x4a746b/0x4a5e73 endpoint success/mutation, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+        "result": "Recovered same-run selected 0x4a61bc append-to-0x4a79a3-payload pointer linkage.",
+        "source_basis": "H3MapEd WineDbg ledger .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json summarized by tools/rmg_h3maped_4a61bc_payload_link_summary.py after capture by tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py.",
+        "validatedAt": "2026-06-09T18:47:21Z"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
@@ -43858,9 +43869,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, and all sampled weighted dispatch return/vector/counter deltas are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and 0x4add76 cleanup replay are still explicit blockers.",
+      "summary": "Recovered the same-run pointer bridge from a selected 0x4a61bc-origin object append into the later 0x4a79a3 payload loop without changing native behavior. The dynamic trace captures selected object record 0x0361d290 at 0x4a5e55, reaches the after-selected 0x4a657d boundary, then observes the same pointer as one of 19 non-null 0x4a7d36 payload records. The 0x4a7d99 shifted count is 19, vector entries match the non-null payload pointers, payload vtables are 0x540a88 x11 and 0x540a9c x8, and the same trace reaches downstream dispatch sites including 0x4a696b and 0x4a7df4.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-09T17:47:44Z",
+      "updatedAt": "2026-06-09T18:47:21Z",
       "validation": {
         "artifact": ".artifacts/rmg_recovery/downstream_recovery_frontier_summary_20260608.json",
         "checks": [
@@ -50628,7 +50639,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, and all sampled weighted dispatch return/vector/counter deltas are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and 0x4add76 cleanup replay are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-09T16:41:53Z",
+  "updatedAt": "2026-06-09T18:47:21Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
@@ -55930,6 +55941,46 @@
       "status": "in_progress",
       "summary": "Same-run projection/payload link remains unrecovered but narrowed: the broad trace has 143 selected-return hits including 4 selected 0x540b14 projection-object returns and reaches 0x4a79a3 entry, but never reaches the 0x4a7d36/0x4a7d99 payload loop. The lite and tight payload traces reach the 0x4a79a3 payload loop and dump 12 and 19 ordinary 0x540a88/0x540a9c records respectively, with zero selected-return hits and no projection records. Native RMG behavior unchanged.",
       "updatedAt": "2026-06-08T19:25:00Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json",
+      "commands": [
+        "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a61bc_payload_link_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609 --max-events 1800 --debugger-timeout 180 (passed: 122 events, 20 payload stops, 4 dispatch events)",
+        "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_link_dynamic_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_link_summary_20260609.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)"
+      ],
+      "metrics": {
+        "h3maped_4a61bc_payload_link": {
+          "dispatch_sites_reached": [
+            "0x004a696b",
+            "0x004a7df4"
+          ],
+          "invariants_true": [
+            "metadata_object_matches_first_selected_record",
+            "selected_object_record_captured",
+            "selected_4a61bc_reached_after_boundary",
+            "same_trace_reaches_payload_loop",
+            "same_trace_reaches_downstream_dispatch_sites",
+            "payload_count_checkpoint_hit",
+            "payload_shifted_count_matches_non_null_payload_records",
+            "payload_vector_entries_match_non_null_payload_pointers",
+            "selected_object_pointer_reappears_in_payload"
+          ],
+          "linked_payload_record": "0x0361d290",
+          "non_null_payload_record_count": 19,
+          "payload_record_stop_count": 20,
+          "payload_vtable_counts": {
+            "0x00540a88": 11,
+            "0x00540a9c": 8
+          },
+          "selected_object_record": "0x0361d290",
+          "shifted_count_at_0x4a7d99": 19
+        }
+      },
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "timestamp": "2026-06-09T18:47:21Z",
+      "updatedAt": "2026-06-09T18:47:21Z"
     }
   ],
   "validationResults": [
