@@ -58251,6 +58251,23 @@
       ]
     },
     {
+      "artifact": ".artifacts/rmg_recovery/4a696b_candidate_predicate_trace_summary_20260609.json",
+      "currentSliceNotes": "0x4a696b candidate predicate boundary narrowed from live Wine/H3MapEd evidence: three sampled calls reached scan completion and no-candidate exit, but zero stops occurred at the first post-source/relation-match checkpoint 0x4a6a81, terrain checkpoint 0x4a6a8f, helper-return tests 0x4a6ac8/0x4a6ade, candidate append 0x4a6ae2, or direct mutation 0x4a6c13. The local candidate vector is now named as byte [EBP-0x58] plus begin/end/capacity dwords [EBP-0x54]/[EBP-0x50]/[EBP-0x4c], populated only by 0x4ae1fd after source/relation match, generated-cell flag and terrain filters, and successful 0x49aa93 and 0x4a6795 predicates. For the sampled calls, empty vectors are caused before helper predicates by no generated cell reaching the source/relation-match checkpoint. Native RMG behavior unchanged.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Recorded source-backed 0x4a696b candidate predicate boundary; sampled empty candidate vectors happen before 0x49aa93/0x4a6795, native behavior unchanged, and full end-to-end recovery remains incomplete.",
+      "updatedAt": "2026-06-09T00:00:00Z",
+      "validation": [
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 127 --out-dir .artifacts/rmg_recovery/direct_generation_4a696b_candidate_predicate_trace_20260609 ... (timed out after useful events; 19-event ledger emitted)",
+        "python3 -m py_compile tools/rmg_h3maped_4a696b_candidate_predicate_trace_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a696b_candidate_predicate_trace_summary.py (passed: partial_live_recovery_4a696b_prefilter_rejects_sampled_candidate_scans)",
+        "jq empty ops/progress.json (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "git diff --check (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
+    {
       "currentSliceNotes": "Forced +0x09 Border Guard route recovered for sampled 0x4a7605 path: debugger-side byte +0x09 flip at 0x4a774a routes execution into two 0x4a746b endpoint-writer calls, each delegating through 0x4a7593 into 0x4a5e73 and returning through failure continuations 0x4a7773/0x4a7860. Generated-cell mutation sites 0x4a5fd8/0x4a5ff1 and 0x4a746b success exit 0x4a75f1 are not reached. Evidence is forced-route control-flow recovery, not natural successful Border Guard materialization. Native RMG behavior unchanged.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "pass",
