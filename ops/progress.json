@@ -443,8 +443,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Projection-method dispatch frontier checkpoint recorded without changing native behavior. Static vtables show projection-object slot +0x08 dispatch is the layer above cleanup: 0x540b00+0x08 -> 0x49c019 -> 0x4adb72/fallback 0x4adef7, and 0x540b14+0x08 -> 0x49c0a6 -> 0x4ad947. The corpus has sampled projection constructors and stamped projection objects, but the 229-ledger/289-log scan records zero live runtime hits at 0x49c019, 0x49c0a6, or their downstream cleanup/projection-driver callees. The next missing state is the owning phase/caller that invokes projection-object slot +0x08 and the object lifetime before/after that dispatch.",
-    "currentSliceUpdatedAt": "2026-06-09T17:17:24Z",
+    "currentSliceNotes": "0x4a8c15 materialization bridge checkpoint recorded without changing native behavior. A bounded live trace reached 0x4a8c15, five paired relation-loop calls through 0x4a4913, 0x4a5767, 0x4a4fc5, 0x4a79a3, nine 0x4a7d36 payload-loop stops, and 0x4a8d27 return before timeout. Generator +0xec4/+0xecc object-vector count stayed 4 through relation calls, 0x4a5767, 0x4a4fc5, and 0x4a79a3 entry; it first grew to 8 before sampled payload iteration and was 10 at return from 0x4a79a3. The next ordered recovery target is inside 0x4a79a3 append/growth internals, not the preceding bridge calls.",
+    "currentSliceUpdatedAt": "2026-06-09T17:30:47Z",
     "guardrailNote": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -493,35 +493,43 @@
       "updatedAt": "2026-06-08T23:45:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/projection_method_dispatch_frontier_summary_20260609.json",
+      "artifact": ".artifacts/rmg_recovery/4a8c15_materialization_bridge_summary_20260609.json",
       "metrics": {
-        "ledger_files_scanned": 229,
-        "ledger_records_with_target_mentions": 7,
-        "log_files_scanned": 289,
-        "log_records_with_target_mentions": 16,
-        "projection_constructor_counts": {
-          "0x0049c0d3": 7,
-          "0x0049cac2": 2,
-          "0x0049cb83": 4,
-          "0x0049cc22": 1
+        "event_count": 25,
+        "object_vector_counts": {
+          "at_4a79a3_entry": 4,
+          "at_4a8c15_entry": 4,
+          "at_return_from_4a79a3": 10,
+          "before_payload_loop": 8,
+          "through_4a4913_4a5767_4a4fc5": 4
         },
-        "runtime_hit_sites_from_ledgers": [],
-        "runtime_hit_sites_from_logs": [],
-        "target_sites": [
-          "0x0049c019",
-          "0x0049c0a6",
-          "0x004adb72",
-          "0x004ad947",
-          "0x004ad7f7",
-          "0x004add76",
-          "0x004adef7"
+        "payload_pointer_sequence": [
+          "0x0361d100",
+          "0x0361e7f0",
+          "0x0361efd0",
+          "0x0361d260",
+          "0x03627f40",
+          "0x03627e90",
+          "0x03627d80",
+          "0x03627d40"
+        ],
+        "sampled_sites": [
+          "0x004a8c15",
+          "0x004a8d05",
+          "0x004a8d0f",
+          "0x004a8d12",
+          "0x004a8d19",
+          "0x004a8d20",
+          "0x004a79a3",
+          "0x004a7d36",
+          "0x004a8d27"
         ]
       },
       "native_behavior_changed": false,
       "remaining_blocker": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Confirmed cleanup/reselection is gated behind unhit projection-object slot +0x08 dispatch; direct cleanup breakpoints alone do not recover the missing path.",
-      "source_basis": "Static projection vtable summaries, projection constructor/stamp/survival summaries, cleanup runtime frontier summary, and H3MapEd WineDbg ledgers/logs under .artifacts/rmg_recovery, summarized by tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py.",
-      "validatedAt": "2026-06-09T17:17:24Z"
+      "result": "Confirmed the sampled object-vector growth to ordinary 0x4a79a3 payload records occurs inside 0x4a79a3, not in 0x4a4913/0x4a5767/0x4a4fc5.",
+      "source_basis": "H3MapEd WineDbg ledger .artifacts/rmg_recovery/4a8c15_materialization_bridge_trace_20260609/winedbg_interactive_trace_ledger.json summarized by tools/rmg_h3maped_4a8c15_materialization_bridge_summary.py.",
+      "validatedAt": "2026-06-09T17:30:47Z"
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -582,9 +590,9 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, all sampled weighted dispatch return/vector/counter deltas, the cleanup/uncommit no-live-hit corpus frontier, and the projection-object slot +0x08 no-live-hit frontier are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, projection-object method dispatch, and live 0x4add76/0x4adef7 cleanup replay are still explicit blockers.",
+    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, all sampled weighted dispatch return/vector/counter deltas, the cleanup/uncommit no-live-hit corpus frontier, the projection-object slot +0x08 no-live-hit frontier, and the 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a696b/0x4a7605 mutations, projection-object method dispatch, and live 0x4add76/0x4adef7 cleanup replay are still explicit blockers.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-09T17:17:24Z",
+    "updatedAt": "2026-06-09T17:30:47Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -58280,6 +58288,20 @@
         "python3 -m py_compile tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py (passed)",
         "python3 tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py (passed: projection_method_dispatch_frontier_no_live_slot08_hit)",
         "jq '{status, corpus, target_event_totals_from_ledgers, target_stop_totals_from_logs, runtime_hit_sites_from_ledgers, runtime_hit_sites_from_logs, projection_constructor_counts, invariants}' .artifacts/rmg_recovery/projection_method_dispatch_frontier_summary_20260609.json (passed: constructors sampled, zero slot +0x08 runtime hits)"
+      ]
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/4a8c15_materialization_bridge_summary_20260609.json",
+      "currentSliceNotes": "0x4a8c15 materialization bridge checkpoint recorded without changing native behavior. The bounded live trace reached the complete bridge into 0x4a79a3 before timeout: 0x4a8c15 entry, five paired 0x4a4913 relation-loop calls at 0x4a8d05/0x4a8d0f, 0x4a5767 boundary 0x4a8d12/0x4a8d19, 0x4a4fc5 return boundary 0x4a8d20, 0x4a79a3 entry, nine 0x4a7d36 payload-loop stops, and 0x4a8d27 return. Generator +0xec4/+0xecc object-vector count stayed 4 through the relation loop, 0x4a5767, 0x4a4fc5, and at 0x4a79a3 entry, then was 8 before payload iteration and 10 at return from 0x4a79a3.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Recorded the 0x4a8c15-to-0x4a79a3 materialization bridge: sampled object-vector growth occurs inside 0x4a79a3, not in the preceding bridge calls.",
+      "updatedAt": "2026-06-09T17:30:47Z",
+      "validation": [
+        "PYTHONPATH=tools python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 129 --out-dir .artifacts/rmg_recovery/4a8c15_materialization_bridge_trace_20260609 --breakpoints 0x004a8c15 0x004a8d05 0x004a8d0f 0x004a8d12 0x004a8d19 0x004a8d20 0x004a79a3 0x004a7d36 0x004a8d27 ... (timed out after useful events; 25-event ledger emitted)",
+        "python3 -m py_compile tools/rmg_h3maped_4a8c15_materialization_bridge_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a8c15_materialization_bridge_summary.py (passed: materialization_bridge_sampled_vector_growth_inside_4a79a3)",
+        "jq '{status, event_count, event_counts, invariants}' .artifacts/rmg_recovery/4a8c15_materialization_bridge_summary_20260609.json (passed: stable count 4 until 0x4a79a3; count 8 before payload loop; count 10 after 0x4a79a3)"
       ]
     },
     {
