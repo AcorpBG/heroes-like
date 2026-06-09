@@ -235,24 +235,42 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         ),
     }
 
-    status = (
-        "fallback_final_role_frontier_exact_commit_recovered_descriptor_relation_and_later_consumer_missing"
-        if all(
-            invariants[key]
-            for key in (
-                "two_fallback_records_identified",
-                "fallback_records_constructed_after_payload",
-                "fallback_records_absent_from_sampled_payload",
-                "exact_state_chain_recovered_for_all_fallback_records",
-                "exact_afterstate_recovered_for_all_fallback_records",
-                "exact_coordinates_match_for_all_fallback_records",
-                "exact_commit_frontier_recovered_for_all_fallback_records",
-                "older_projection_targets_are_not_exact_fallback_records",
-            )
+    exact_frontier_recovered = all(
+        invariants[key]
+        for key in (
+            "two_fallback_records_identified",
+            "fallback_records_constructed_after_payload",
+            "fallback_records_absent_from_sampled_payload",
+            "exact_state_chain_recovered_for_all_fallback_records",
+            "exact_afterstate_recovered_for_all_fallback_records",
+            "exact_coordinates_match_for_all_fallback_records",
+            "exact_commit_frontier_recovered_for_all_fallback_records",
+            "older_projection_targets_are_not_exact_fallback_records",
         )
-        and invariants["exact_projection_write_stream_missing_for_fallback_records"]
-        else "fallback_final_role_frontier_partial"
     )
+    if exact_frontier_recovered and invariants["exact_descriptor_relation_recovered_for_all_fallback_records"]:
+        status = "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+    elif exact_frontier_recovered:
+        status = "fallback_final_role_frontier_exact_commit_recovered_descriptor_relation_and_later_consumer_missing"
+    else:
+        status = "fallback_final_role_frontier_partial"
+
+    if invariants["exact_descriptor_relation_recovered_for_all_fallback_records"]:
+        remaining_gap = (
+            "The exact fallback records still need either a later-consumer trace after their 0x4a54a7 commit or a "
+            "static phase-order proof that committed object-vector/cell adoption is their terminal role for this phase. "
+            "If exact per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream "
+            "for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup "
+            "runtime blockers before any native RMG behavior port."
+        )
+    else:
+        remaining_gap = (
+            "The exact fallback records still need descriptor/relation-counter replay, either a later-consumer trace "
+            "after their 0x4a54a7 commit or a static phase-order proof that committed object-vector/cell adoption is "
+            "their terminal role for this phase. If exact per-record projection-loop parity is required, capture a clean "
+            "seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b "
+            "direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port."
+        )
 
     return {
         "schema_id": "h3maped_fallback_final_role_frontier_summary_v1",
@@ -276,13 +294,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "for these two fallback records because their object pointers/coordinates differ and those traces have no "
             "seed-control metadata."
         ),
-        "remaining_gap": (
-            "The exact fallback records still need descriptor/relation-counter replay, either a later-consumer trace "
-            "after their 0x4a54a7 commit or a static phase-order proof that committed object-vector/cell adoption is "
-            "their terminal role for this phase. If exact per-record projection-loop parity is required, capture a clean "
-            "seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b "
-            "direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port."
-        ),
+        "remaining_gap": remaining_gap,
     }
 
 
@@ -303,7 +315,7 @@ def main() -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"RMG_H3MAPED_FALLBACK_FINAL_ROLE_FRONTIER_SUMMARY status={summary['status']} out={args.out}")
-    return 0 if summary["status"].startswith("fallback_final_role_frontier_exact_commit_recovered") else 1
+    return 0 if summary["status"].startswith("fallback_final_role_frontier_exact_") else 1
 
 
 if __name__ == "__main__":
