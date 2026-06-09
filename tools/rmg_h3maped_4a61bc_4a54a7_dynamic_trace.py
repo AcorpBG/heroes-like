@@ -129,6 +129,9 @@ def run_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -> dict[
         "target_coordinate": None,
         "object_record": None,
         "armed_after_event": None,
+        "skip_caller_boundaries": args.skip_caller_boundaries,
+        "caller_boundary_hits": 0,
+        "skipped_caller_boundaries": [],
         "event_count": 0,
     }
     armed = False
@@ -157,10 +160,22 @@ def run_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -> dict[
                 esp = registers.get("esp")
 
                 if address == INITIAL_BREAKPOINT and not armed:
+                    boundary_index = int(metadata["caller_boundary_hits"])
+                    metadata["caller_boundary_hits"] = boundary_index + 1
                     issue_capture(child, "x/16x $ebx+0xec4", args.debugger_timeout)
+                    if boundary_index < args.skip_caller_boundaries:
+                        metadata["skipped_caller_boundaries"].append(
+                            {
+                                "boundary_index": boundary_index,
+                                "event_index": metadata["event_count"],
+                            }
+                        )
+                        child.send("cont\r")
+                        continue
                     for breakpoint in ARMED_BREAKPOINTS:
                         issue_capture(child, f"break *{breakpoint}", args.debugger_timeout)
                     metadata["armed_after_event"] = metadata["event_count"]
+                    metadata["armed_caller_boundary_index"] = boundary_index
                     armed = True
 
                 elif address == "0x004a5e03":
@@ -225,6 +240,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--generate-wait-seconds", type=int, default=2)
     parser.add_argument("--debugger-timeout", type=int, default=180)
     parser.add_argument("--max-events", type=int, default=1200)
+    parser.add_argument(
+        "--skip-caller-boundaries",
+        type=int,
+        default=0,
+        help="Skip this many 0x4a6578 caller-frame hits before arming detailed breakpoints.",
+    )
     parser.add_argument("--map-size", choices=["small", "medium", "large", "xlarge"], default="small")
     parser.add_argument("--human-computer-down", type=int, default=-1)
     parser.add_argument("--computer-only-down", type=int, default=-1)
@@ -285,6 +306,8 @@ def main() -> int:
             str(args.debugger_timeout),
             "--max-events",
             str(args.max_events),
+            "--skip-caller-boundaries",
+            str(args.skip_caller_boundaries),
             "--map-size",
             args.map_size,
             "--human-computer-down",
