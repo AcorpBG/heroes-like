@@ -62,6 +62,20 @@ ARMED_BREAKPOINTS = [
     "0x004a6cd3",
     "0x004a6ce1",
     "0x004a7605",
+    "0x004a7312",
+    "0x004a7447",
+    "0x004a744c",
+    "0x004a774a",
+    "0x004a7763",
+    "0x004a7773",
+    "0x004a783a",
+    "0x004a7853",
+    "0x004a7860",
+    "0x004a746b",
+    "0x004a5e73",
+    "0x004a5fd8",
+    "0x004a5ff1",
+    "0x004a75f1",
     "0x004a7df4",
     "0x004a7e21",
     "0x004a7e25",
@@ -256,6 +270,26 @@ def run_xvfb(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
 
                 elif address in {"0x004a696b", "0x004a7605", "0x004a7df4", "0x004a7e21", "0x004a7e25"}:
                     metadata["dispatch_events"] = int(metadata["dispatch_events"]) + 1
+                    capture_pointer(child, "$esi", args.debugger_timeout)
+                    capture_pointer(child, "$ecx", args.debugger_timeout)
+                    capture_pointer(child, "$edx", args.debugger_timeout)
+
+                elif address in {
+                    "0x004a7312",
+                    "0x004a7447",
+                    "0x004a744c",
+                    "0x004a774a",
+                    "0x004a7763",
+                    "0x004a7773",
+                    "0x004a783a",
+                    "0x004a7853",
+                    "0x004a7860",
+                    "0x004a746b",
+                    "0x004a5e73",
+                    "0x004a5fd8",
+                    "0x004a5ff1",
+                    "0x004a75f1",
+                }:
                     capture_pointer(child, "$esi", args.debugger_timeout)
                     capture_pointer(child, "$ecx", args.debugger_timeout)
                     capture_pointer(child, "$edx", args.debugger_timeout)

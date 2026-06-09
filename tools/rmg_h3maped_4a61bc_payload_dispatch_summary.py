@@ -43,6 +43,20 @@ LATE_FLAG_09 = "0x004a6c78"
 FALSE_RETURN_PREP = "0x004a6cd3"
 RETURN_SITE = "0x004a6ce1"
 FALLBACK_COORDINATOR = "0x004a7605"
+ENDPOINT_COMMIT = "0x004a7312"
+ENDPOINT_VTABLE_COMMIT = "0x004a7447"
+ENDPOINT_RETURN = "0x004a744c"
+FIRST_DELEGATED_COMPARE = "0x004a774a"
+FIRST_DELEGATED_CALL = "0x004a7763"
+FIRST_DELEGATED_SKIP = "0x004a7773"
+SECOND_DELEGATED_COMPARE = "0x004a783a"
+SECOND_DELEGATED_CALL = "0x004a7853"
+SECOND_DELEGATED_SKIP = "0x004a7860"
+DELEGATED_ENDPOINT_WRITER = "0x004a746b"
+ENDPOINT_HELPER = "0x004a5e73"
+ENDPOINT_HELPER_SUCCESS_A = "0x004a5fd8"
+ENDPOINT_HELPER_SUCCESS_B = "0x004a5ff1"
+ENDPOINT_MUTATION_SITE = "0x004a75f1"
 PAIR_FILTER = "0x004a7df4"
 PAIR_MARK_BEFORE = "0x004a7e21"
 PAIR_MARK_AFTER = "0x004a7e25"
@@ -128,6 +142,15 @@ def pointer_block(event: dict[str, Any], register: str, words: int = 16) -> dict
         "pointer": hex32(pointer),
         "words": [hex32(word) for word in memory_words(event, pointer, words)],
     }
+
+
+def byte_from_words(words: list[str | None], offset: int) -> int | None:
+    word_index = offset // 4
+    byte_index = offset % 4
+    if word_index >= len(words) or words[word_index] is None:
+        return None
+    value = int(str(words[word_index]), 16)
+    return (value >> (byte_index * 8)) & 0xFF
 
 
 def selected_object_pointer(events: list[dict[str, Any]], meta: dict[str, Any]) -> str | None:
@@ -240,6 +263,70 @@ def pair_events(events: list[dict[str, Any]], selected_payload_event_index: int 
     return result
 
 
+def endpoint_events(events: list[dict[str, Any]], selected_payload_event_index: int | None) -> list[dict[str, Any]]:
+    sites = {
+        FALLBACK_COORDINATOR,
+        ENDPOINT_COMMIT,
+        ENDPOINT_VTABLE_COMMIT,
+        ENDPOINT_RETURN,
+        FIRST_DELEGATED_COMPARE,
+        FIRST_DELEGATED_CALL,
+        FIRST_DELEGATED_SKIP,
+        SECOND_DELEGATED_COMPARE,
+        SECOND_DELEGATED_CALL,
+        SECOND_DELEGATED_SKIP,
+        DELEGATED_ENDPOINT_WRITER,
+        ENDPOINT_HELPER,
+        ENDPOINT_HELPER_SUCCESS_A,
+        ENDPOINT_HELPER_SUCCESS_B,
+        ENDPOINT_MUTATION_SITE,
+    }
+    result: list[dict[str, Any]] = []
+    for index, event in enumerate(events):
+        if event_address(event) not in sites:
+            continue
+        summarized = summarize_event(event, index)
+        summarized["after_selected_payload_record"] = selected_payload_event_index is not None and index > selected_payload_event_index
+        esi_words = summarized.get("esi_block", {}).get("words", [])
+        summarized["esi_control_bytes"] = {
+            "+0x08": byte_from_words(esi_words, 0x08),
+            "+0x09": byte_from_words(esi_words, 0x09),
+            "+0x0a": byte_from_words(esi_words, 0x0A),
+        }
+        result.append(summarized)
+    return result
+
+
+def summarize_7605_endpoint_path(endpoint: list[dict[str, Any]]) -> dict[str, Any]:
+    after = [event for event in endpoint if event.get("after_selected_payload_record")]
+    counts = Counter(event["address"] for event in after)
+    first_compare = next((event for event in after if event["address"] == FIRST_DELEGATED_COMPARE), None)
+    second_compare = next((event for event in after if event["address"] == SECOND_DELEGATED_COMPARE), None)
+    return {
+        "after_selected_event_count": len(after),
+        "after_selected_address_counts": dict(sorted(counts.items())),
+        "direct_4a7312_commit_count": counts.get(ENDPOINT_COMMIT, 0),
+        "direct_4a7447_vtable_commit_count": counts.get(ENDPOINT_VTABLE_COMMIT, 0),
+        "delegated_4a746b_call_count": counts.get(DELEGATED_ENDPOINT_WRITER, 0),
+        "endpoint_helper_4a5e73_count": counts.get(ENDPOINT_HELPER, 0),
+        "endpoint_mutation_site_count": counts.get(ENDPOINT_MUTATION_SITE, 0),
+        "first_gate": {
+            "compare_hit": counts.get(FIRST_DELEGATED_COMPARE, 0) > 0,
+            "call_hit": counts.get(FIRST_DELEGATED_CALL, 0) > 0,
+            "skip_hit": counts.get(FIRST_DELEGATED_SKIP, 0) > 0,
+            "esi_record": first_compare.get("registers", {}).get("esi") if first_compare else None,
+            "control_bytes": first_compare.get("esi_control_bytes") if first_compare else {},
+        },
+        "second_gate": {
+            "compare_hit": counts.get(SECOND_DELEGATED_COMPARE, 0) > 0,
+            "call_hit": counts.get(SECOND_DELEGATED_CALL, 0) > 0,
+            "skip_hit": counts.get(SECOND_DELEGATED_SKIP, 0) > 0,
+            "esi_record": second_compare.get("registers", {}).get("esi") if second_compare else None,
+            "control_bytes": second_compare.get("esi_control_bytes") if second_compare else {},
+        },
+    }
+
+
 def pair_bookkeeping_mutations(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
     for event in events:
@@ -287,6 +374,8 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
     pairs = pair_events(events, selected_payload)
     after_selected_pairs = [event for event in pairs if event["after_selected_payload_record"]]
     pair_mutations = pair_bookkeeping_mutations(after_selected_pairs)
+    endpoint = endpoint_events(events, selected_payload)
+    endpoint_path = summarize_7605_endpoint_path(endpoint)
     classifications = Counter(call["classification"] for call in calls)
     after_classifications = Counter(call["classification"] for call in after_selected_calls)
 
@@ -297,13 +386,17 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
         "after_selected_payload_4a696b_calls_captured": bool(after_selected_calls),
         "after_selected_payload_pair_bookkeeping_captured": bool(after_selected_pairs),
         "after_selected_payload_pair_bookkeeping_mutation_captured": bool(pair_mutations),
+        "after_selected_7605_endpoint_path_captured": endpoint_path["after_selected_event_count"] > 0,
+        "after_selected_7605_direct_commits_captured": endpoint_path["direct_4a7312_commit_count"] > 0,
+        "after_selected_7605_delegated_endpoint_not_hit": endpoint_path["delegated_4a746b_call_count"] == 0
+        and endpoint_path["endpoint_helper_4a5e73_count"] == 0,
         "no_after_selected_direct_mutation_hits": all(
             call["classification"] != "reached_direct_mutation_block" for call in after_selected_calls
         ),
         "no_native_behavior_change": True,
     }
     status = (
-        "linked_payload_4a696b_branch_replayed"
+        "linked_payload_7605_endpoint_gates_replayed"
         if all(invariants.values())
         else "linked_payload_4a696b_branch_partial"
     )
@@ -323,12 +416,15 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
         "pair_events": pairs,
         "after_selected_payload_pair_events": after_selected_pairs,
         "after_selected_payload_pair_bookkeeping_mutations": pair_mutations,
+        "endpoint_events": endpoint,
+        "after_selected_7605_endpoint_path": endpoint_path,
         "invariants": invariants,
         "source_backed_conclusion": (
-            "The linked payload trace now carries the selected 0x4a61bc object into the payload loop "
-            "and samples subsequent 0x4a696b branch state. The sampled after-selected 0x4a696b calls "
-            "do not reach the direct mutation block in this run; their exact branch classifications "
-            "are recorded above."
+            "The linked payload trace now carries the selected 0x4a61bc object into the payload loop, "
+            "samples subsequent 0x4a696b branch state, and replays the after-selected 0x4a7605 endpoint "
+            "path. The sampled after-selected 0x4a696b call does not reach the direct mutation block; "
+            "the sampled after-selected 0x4a7605 path performs direct 0x4a7312 commits, then both "
+            "delegated 0x4a746b gates skip because control byte +0x09 is zero."
             if after_selected_calls
             else "The selected object reaches payload, but this trace did not capture a later 0x4a696b "
             "call after that selected payload event."
