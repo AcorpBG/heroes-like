@@ -21,6 +21,14 @@ from pathlib import Path
 
 import pexpect
 
+from rmg_h3maped_controlled_reference import (
+    DEFAULT_H3MAPED_EXE,
+    REQUIRED_RESOURCE_LODS,
+    find_lod,
+    parse_requested_seed,
+    patch_h3maped_seed,
+    symlink_or_copy,
+)
 from rmg_h3maped_recovery_trace import (
     DEFAULT_RUNTIME,
     parse_winedbg_log,
@@ -61,6 +69,52 @@ def run_xdotool(args: list[str], *, timeout: float = 10.0) -> None:
 def take_screenshot(screen_dir: Path, name: str) -> None:
     screen_dir.mkdir(parents=True, exist_ok=True)
     subprocess.run(["scrot", str(screen_dir / f"{name}.png")], check=False)
+
+
+def prepare_seed_patched_runtime(args: argparse.Namespace) -> dict[str, object]:
+    if args.seed_control_mode == "none":
+        return {"status": "not_requested", "mode": "none"}
+    if not args.seed:
+        raise ValueError("--seed is required when --seed-control-mode=pe-patch")
+
+    source_runtime = args.h3maped_runtime
+    runtime_dir = args.out_dir / "runtime_seed_patched"
+    data_dir = runtime_dir / "Data"
+    runtime_dir.mkdir(parents=True, exist_ok=True)
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    source_exe = args.h3maped_exe
+    if not source_exe.exists():
+        raise FileNotFoundError(f"missing clean h3maped.exe: {source_exe}")
+    runtime_exe = runtime_dir / "h3maped.exe"
+    runtime_exe.write_bytes(source_exe.read_bytes())
+
+    resource_source_dir = args.resource_dir or source_runtime
+    resources: dict[str, str] = {}
+    missing: list[str] = []
+    for name in REQUIRED_RESOURCE_LODS:
+        source = find_lod(resource_source_dir, name)
+        if source is None:
+            missing.append(name)
+            continue
+        symlink_or_copy(source.resolve(), data_dir / name)
+        resources[name] = str(source.resolve())
+
+    patch = patch_h3maped_seed(runtime_exe, parse_requested_seed(args.seed))
+    if patch.get("status") != "patched":
+        raise RuntimeError(f"failed to seed-patch clean h3maped.exe: {patch}")
+    args.h3maped_runtime = runtime_dir
+    return {
+        "status": "prepared",
+        "mode": args.seed_control_mode,
+        "requested_seed": args.seed,
+        "source_exe": str(source_exe),
+        "runtime_dir": str(runtime_dir),
+        "resource_source_dir": str(resource_source_dir),
+        "resources": resources,
+        "missing": missing,
+        "patch": patch,
+    }
 
 
 def wait_for_main_window() -> None:
@@ -239,11 +293,13 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
             events = 0
             stop_after = normalize_address(args.stop_after) if args.stop_after else ""
             address_commands = parse_address_commands(args.address_command)
+            breakpoint_timeout = args.breakpoint_timeout or args.debugger_timeout
             while events < args.max_events:
-                index = child.expect([STOP_RE, pexpect.EOF, pexpect.TIMEOUT], timeout=args.debugger_timeout)
+                index = child.expect([STOP_RE, pexpect.EOF, pexpect.TIMEOUT], timeout=breakpoint_timeout)
                 if index == 1:
                     break
                 if index == 2:
+                    take_screenshot(args.out_dir / "screenshots", f"timeout_after_{events:04d}_events")
                     raise TimeoutError("timed out waiting for next winedbg breakpoint")
                 address = normalize_address("0x" + child.match.group(1))
                 events += 1
@@ -271,6 +327,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--h3maped-runtime", type=Path, default=DEFAULT_RUNTIME)
+    parser.add_argument("--h3maped-exe", type=Path, default=DEFAULT_H3MAPED_EXE, help="Clean h3maped.exe used as the PE seed-patch source.")
+    parser.add_argument("--resource-dir", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--breakpoints", nargs="+", required=True)
     parser.add_argument("--stop-after", default="")
@@ -283,11 +341,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"))
     parser.add_argument("--generate-wait-seconds", type=int, default=2)
     parser.add_argument("--debugger-timeout", type=int, default=60)
+    parser.add_argument(
+        "--breakpoint-timeout",
+        type=int,
+        default=0,
+        help="Seconds to wait for each breakpoint stop; defaults to --debugger-timeout when 0.",
+    )
     parser.add_argument("--map-size", choices=["small", "medium", "large", "xlarge"], default="small")
     parser.add_argument("--human-computer-down", type=int, default=-1, help="Select the Human/Computer player-count combo by Down-key count; -1 leaves it unchanged.")
     parser.add_argument("--computer-only-down", type=int, default=-1, help="Select the Computer-only player-count combo by Down-key count; -1 leaves it unchanged.")
     parser.add_argument("--monster-strength-down", type=int, default=-1, help="Select the monster-strength combo by Down-key count; -1 leaves it unchanged.")
     parser.add_argument("--water-none", action="store_true", help="Click the Water content None radio button.")
+    parser.add_argument("--seed", default="", help="Random-map seed to force when using --seed-control-mode=pe-patch.")
+    parser.add_argument("--seed-control-mode", choices=["none", "pe-patch"], default="none")
     parser.add_argument("--lite", action="store_true", help="Only dump registers and stack at each breakpoint.")
     parser.add_argument("--lite-extra-command", default="", help="Optional extra winedbg command to run in lite mode.")
     parser.add_argument(
@@ -316,9 +382,12 @@ def main() -> int:
     args = build_parser().parse_args()
     repo_root = args.repo_root.resolve()
     args.h3maped_runtime = (repo_root / args.h3maped_runtime).resolve() if not args.h3maped_runtime.is_absolute() else args.h3maped_runtime.resolve()
+    args.h3maped_exe = (repo_root / args.h3maped_exe).resolve() if not args.h3maped_exe.is_absolute() else args.h3maped_exe.resolve()
     args.out_dir = (repo_root / args.out_dir).resolve() if not args.out_dir.is_absolute() else args.out_dir.resolve()
     args.wineprefix = (repo_root / args.wineprefix).resolve() if not args.wineprefix.is_absolute() else args.wineprefix.resolve()
+    args.resource_dir = (repo_root / args.resource_dir).resolve() if args.resource_dir and not args.resource_dir.is_absolute() else args.resource_dir
     args.out_dir.mkdir(parents=True, exist_ok=True)
+    seed_control = prepare_seed_patched_runtime(args) if not args.inside_xvfb else {"status": "inside_xvfb_inherited"}
 
     log_path = args.out_dir / "winedbg_interactive_trace.log"
     ledger_path = args.out_dir / "winedbg_interactive_trace_ledger.json"
@@ -357,6 +426,8 @@ def main() -> int:
             str(args.generate_wait_seconds),
             "--debugger-timeout",
             str(args.debugger_timeout),
+            "--breakpoint-timeout",
+            str(args.breakpoint_timeout),
             "--map-size",
             args.map_size,
             "--human-computer-down",
@@ -365,9 +436,13 @@ def main() -> int:
             str(args.computer_only_down),
             "--monster-strength-down",
             str(args.monster_strength_down),
+            "--seed-control-mode",
+            "none",
             "--breakpoints",
             *args.breakpoints,
         ]
+        if args.resource_dir:
+            command.extend(["--resource-dir", str(args.resource_dir)])
         if args.water_none:
             command.append("--water-none")
         for extra_command in args.extra_command:
@@ -383,24 +458,32 @@ def main() -> int:
         if args.stop_after:
             command.extend(["--stop-after", args.stop_after])
         completed = subprocess.run(command, cwd=repo_root, text=True)
-        if completed.returncode != 0:
-            return completed.returncode
+        child_returncode = completed.returncode
     else:
         run_inside_xvfb(args, repo_root, log_path)
         return 0
 
+    if not log_path.exists():
+        return child_returncode
     generated_cell_base = int(args.generated_cell_base, 0) if args.generated_cell_base else None
     ledger = parse_winedbg_log(log_path, generated_cell_base=generated_cell_base, generated_cell_stride=args.generated_cell_stride)
     ledger["breakpoints"] = args.breakpoints
     ledger["stop_after"] = args.stop_after
     ledger["max_events"] = args.max_events
+    ledger["child_returncode"] = child_returncode
     ledger["dump_command"] = args.dump_command
     ledger["extra_command"] = args.extra_command
     ledger["pre_cont_command"] = args.pre_cont_command
     ledger["address_command"] = args.address_command
+    ledger["seed_control"] = seed_control
     ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    status = "pass" if ledger["event_count"] else "no_events"
+    if child_returncode != 0:
+        status = "failed_with_events" if ledger["event_count"] else "failed_no_events"
+    else:
+        status = "pass" if ledger["event_count"] else "no_events"
     print(f"RMG_H3MAPED_INTERACTIVE_TRACE status={status} events={ledger['event_count']} ledger={ledger_path}")
+    if child_returncode != 0:
+        return child_returncode
     return 0 if ledger["event_count"] else 1
 
 
