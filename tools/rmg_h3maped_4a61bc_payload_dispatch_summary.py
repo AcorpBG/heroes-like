@@ -405,6 +405,7 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
         "status": status,
         "native_behavior_changed": False,
         "ledger": str(ledger_path),
+        "seed_control": ledger.get("seed_control"),
         "event_count": len(events),
         "address_counts": dict(sorted(counts.items())),
         "selected_object_record": selected,

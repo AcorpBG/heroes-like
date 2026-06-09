@@ -21,11 +21,13 @@ from typing import Any
 import pexpect
 
 from rmg_h3maped_recovery_interactive_trace import (
+    DEFAULT_H3MAPED_EXE,
     DEFAULT_RUNTIME,
     PROMPT_RE,
     STOP_RE,
     drive_h3maped_ui,
     normalize_address,
+    prepare_seed_patched_runtime,
 )
 from rmg_h3maped_recovery_trace import ANSI_RE, DWORD_LINE_RE, REGISTER_RE, parse_winedbg_log
 
@@ -336,6 +338,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--h3maped-runtime", type=Path, default=DEFAULT_RUNTIME)
+    parser.add_argument(
+        "--h3maped-exe",
+        type=Path,
+        default=DEFAULT_H3MAPED_EXE,
+        help="Clean h3maped.exe used as the PE seed-patch source.",
+    )
+    parser.add_argument("--resource-dir", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--display-number", type=int, default=136)
     parser.add_argument("--screen-size", default="1024x768x24")
@@ -350,6 +359,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--computer-only-down", type=int, default=-1)
     parser.add_argument("--monster-strength-down", type=int, default=-1)
     parser.add_argument("--water-none", action="store_true", default=False)
+    parser.add_argument("--seed", default="", help="Random-map seed to force when using --seed-control-mode=pe-patch.")
+    parser.add_argument("--seed-control-mode", choices=["none", "pe-patch"], default="none")
     parser.add_argument("--inside-xvfb", action="store_true")
     return parser
 
@@ -362,6 +373,11 @@ def main() -> int:
         if not args.h3maped_runtime.is_absolute()
         else args.h3maped_runtime.resolve()
     )
+    args.h3maped_exe = (
+        (repo_root / args.h3maped_exe).resolve()
+        if not args.h3maped_exe.is_absolute()
+        else args.h3maped_exe.resolve()
+    )
     args.out_dir = (
         (repo_root / args.out_dir).resolve()
         if not args.out_dir.is_absolute()
@@ -372,7 +388,13 @@ def main() -> int:
         if not args.wineprefix.is_absolute()
         else args.wineprefix.resolve()
     )
+    args.resource_dir = (
+        (repo_root / args.resource_dir).resolve()
+        if args.resource_dir and not args.resource_dir.is_absolute()
+        else args.resource_dir
+    )
     args.out_dir.mkdir(parents=True, exist_ok=True)
+    seed_control = prepare_seed_patched_runtime(args) if not args.inside_xvfb else {"status": "inside_xvfb_inherited"}
     log_path = args.out_dir / "winedbg_4a61bc_payload_link_dynamic_trace.log"
     meta_path = args.out_dir / "dynamic_trace_meta.json"
     ledger_path = args.out_dir / "winedbg_4a61bc_payload_link_dynamic_trace_ledger.json"
@@ -391,6 +413,8 @@ def main() -> int:
             str(repo_root),
             "--h3maped-runtime",
             str(args.h3maped_runtime),
+            "--h3maped-exe",
+            str(args.h3maped_exe),
             "--out-dir",
             str(args.out_dir),
             "--wineprefix",
@@ -417,7 +441,11 @@ def main() -> int:
             str(args.computer_only_down),
             "--monster-strength-down",
             str(args.monster_strength_down),
+            "--seed-control-mode",
+            "none",
         ]
+        if args.resource_dir:
+            command.extend(["--resource-dir", str(args.resource_dir)])
         if args.water_none:
             command.append("--water-none")
         completed = subprocess.run(command, cwd=repo_root, text=True)
@@ -431,6 +459,7 @@ def main() -> int:
     ledger = parse_winedbg_log(log_path)
     metadata = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
     ledger["dynamic_trace_meta"] = metadata
+    ledger["seed_control"] = seed_control
     ledger_path.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if ledger.get("event_count") else "no_events"
     print(
