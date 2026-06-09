@@ -9233,10 +9233,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered linked-payload 0x4a7605 endpoint gate behavior for a selected 0x4a61bc-origin payload path without changing native behavior. Fresh trace captures selected record 0x03623cc0 reaching payload, then after-selected 0x4a696b no-candidate exit and following 0x4a7605 endpoint work. The 0x4a7605 path performs two direct 0x4a7312 -> 0x4a7447 commits: object 0x03623680 at (13,12,0) with source 0x017e07a8, and object 0x03623590 at (19,31,0) with source 0x01786958. Both delegated 0x4a746b gates are reached and skipped: 0x4a774a -> 0x4a7773 and 0x4a783a -> 0x4a7860, with control record 0x0165f3a8 bytes +0x08/+0x09/+0x0a all zero at both compares. Pair bookkeeping later changes word +0x08 from 0x00000000 to 0x00010000, setting byte +0x0a rather than endpoint gate byte +0x09.",
+  "currentSliceNotes": "Added clean PE seed-patch support to the 0x4a61bc payload-link dynamic trace and ran a deterministic Medium one-level no-water seed-10 replay. The selected 0x4a61bc-origin record 0x03627eb0 reaches the 0x4a79a3 payload loop at event index 105. The replay captures 13 total 0x4a696b calls and 3 after-selected payload calls; all exit through the pre-source/relation-match no-candidate path with zero hits at 0x4a6a81, 0x4a6ae2, 0x4a6b2e, or 0x4a6c13. The after-selected 0x4a7605 surface performs 6 direct 0x4a7312 endpoint commits and reaches both delegated gate compares, but both gates skip with control bytes +0x08/+0x09/+0x0a all zero. This broadens deterministic negative evidence for this profile but does not prove direct mutation or delegated Border Guard stamping globally unreachable.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T19:08:09Z",
+  "currentSliceUpdatedAt": "2026-06-09T20:02:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10232,44 +10232,29 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, and one linked-payload 0x4a7605 direct-endpoint/gate-skip path are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, one linked-payload 0x4a7605 direct-endpoint/gate-skip path, and deterministic Medium seed-10 payload negative replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_summary_20260609.json",
+    "artifact": ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_dispatch_summary_20260609.json",
     "commands": [
       "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py (passed)",
-      "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609 --max-events 3200 --debugger-timeout 180 --stop-after-dispatch-events 20 (passed: 280 events, 12 payload stops, 7 dispatch events)",
-      "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/payload_link_summary.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)",
-      "python3 tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_summary_20260609.json (passed: linked_payload_7605_endpoint_gates_replayed)"
+      "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --water-none --max-events 3200 --debugger-timeout 180 --stop-after-dispatch-events 24 (passed: 220 events, selected 0x03627eb0, 28 payload stops, 24 dispatch events)",
+      "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/payload_link_summary.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)",
+      "python3 tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_dispatch_summary_20260609.json (passed: linked_payload_7605_endpoint_gates_replayed)"
     ],
     "metrics": {
-      "h3maped_4a61bc_payload_7605_endpoint": {
-        "after_selected_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+      "h3maped_4a61bc_payload_seed10_medium": {
+        "after_selected_4a696b_calls": 3,
+        "after_selected_direct_4a7312_commit_count": 6,
+        "after_selected_direct_4a7447_vtable_commit_count": 5,
+        "all_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+        "candidate_append_4a6ae2_hits": 0,
+        "candidate_path_4a6b2e_hits": 0,
         "delegated_4a746b_call_count": 0,
-        "direct_4a7312_commit_count": 2,
-        "direct_4a7447_vtable_commit_count": 2,
-        "direct_commits": [
-          {
-            "coordinate": [
-              13,
-              12,
-              0
-            ],
-            "object_record": "0x03623680",
-            "source_record": "0x017e07a8"
-          },
-          {
-            "coordinate": [
-              19,
-              31,
-              0
-            ],
-            "object_record": "0x03623590",
-            "source_record": "0x01786958"
-          }
-        ],
+        "direct_mutation_4a6c13_hits": 0,
+        "dispatch_events": 24,
         "endpoint_helper_4a5e73_count": 0,
-        "endpoint_mutation_site_4a75f1_count": 0,
-        "event_count": 280,
+        "endpoint_mutation_4a75f1_count": 0,
+        "event_count": 220,
         "first_delegated_gate": {
           "bytes_08_09_0a": [
             0,
@@ -10278,27 +10263,14 @@
           ],
           "call_hit": false,
           "compare": "0x004a774a",
-          "control_record": "0x0165f3a8",
+          "control_record": "0x03655548",
           "skip": "0x004a7773"
         },
-        "invariants_true": [
-          "selected_object_record_captured",
-          "selected_object_record_reaches_payload",
-          "internal_4a696b_sites_captured",
-          "after_selected_payload_4a696b_calls_captured",
-          "after_selected_payload_pair_bookkeeping_captured",
-          "after_selected_payload_pair_bookkeeping_mutation_captured",
-          "after_selected_7605_endpoint_path_captured",
-          "after_selected_7605_direct_commits_captured",
-          "after_selected_7605_delegated_endpoint_not_hit",
-          "no_after_selected_direct_mutation_hits"
-        ],
-        "pair_control_record_changed_word": {
-          "after": "0x00010000",
-          "before": "0x00000000",
-          "byte_offset": "0x8",
-          "record": "0x0165f3a8"
-        },
+        "inconclusive_attempt": "skip-caller-boundaries 1 trace was manually killed after no bounded result; not used as evidence",
+        "map_size": "medium",
+        "payload_record_events": 28,
+        "payload_records_in_link_summary": 26,
+        "requested_seed": "10",
         "second_delegated_gate": {
           "bytes_08_09_0a": [
             0,
@@ -10307,48 +10279,39 @@
           ],
           "call_hit": false,
           "compare": "0x004a783a",
-          "control_record": "0x0165f3a8",
+          "control_record": "0x03655548",
           "skip": "0x004a7860"
         },
-        "selected_object_record": "0x03623cc0",
-        "selected_payload_event_index": 72
+        "seed_control_status": "prepared",
+        "selected_object_record": "0x03627eb0",
+        "selected_payload_event_index": 105,
+        "source_relation_match_4a6a81_hits": 0,
+        "total_4a696b_calls": 13,
+        "water": "none"
       }
     },
+    "remaining_blocker": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, one linked-payload 0x4a7605 direct-endpoint/gate-skip path, and deterministic Medium seed-10 payload negative replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-09T19:08:09Z",
-    "updatedAt": "2026-06-09T19:08:09Z"
+    "timestamp": "2026-06-09T20:02:00Z",
+    "updatedAt": "2026-06-09T20:02:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_summary_20260609.json",
+    "artifact": ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_dispatch_summary_20260609.json",
+    "ledger": ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
     "metrics": {
-      "after_selected_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+      "after_selected_4a696b_calls": 3,
+      "after_selected_direct_4a7312_commit_count": 6,
+      "after_selected_direct_4a7447_vtable_commit_count": 5,
+      "all_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+      "candidate_append_4a6ae2_hits": 0,
+      "candidate_path_4a6b2e_hits": 0,
       "delegated_4a746b_call_count": 0,
-      "direct_4a7312_commit_count": 2,
-      "direct_4a7447_vtable_commit_count": 2,
-      "direct_commits": [
-        {
-          "coordinate": [
-            13,
-            12,
-            0
-          ],
-          "object_record": "0x03623680",
-          "source_record": "0x017e07a8"
-        },
-        {
-          "coordinate": [
-            19,
-            31,
-            0
-          ],
-          "object_record": "0x03623590",
-          "source_record": "0x01786958"
-        }
-      ],
+      "direct_mutation_4a6c13_hits": 0,
+      "dispatch_events": 24,
       "endpoint_helper_4a5e73_count": 0,
-      "endpoint_mutation_site_4a75f1_count": 0,
-      "event_count": 280,
+      "endpoint_mutation_4a75f1_count": 0,
+      "event_count": 220,
       "first_delegated_gate": {
         "bytes_08_09_0a": [
           0,
@@ -10357,27 +10320,14 @@
         ],
         "call_hit": false,
         "compare": "0x004a774a",
-        "control_record": "0x0165f3a8",
+        "control_record": "0x03655548",
         "skip": "0x004a7773"
       },
-      "invariants_true": [
-        "selected_object_record_captured",
-        "selected_object_record_reaches_payload",
-        "internal_4a696b_sites_captured",
-        "after_selected_payload_4a696b_calls_captured",
-        "after_selected_payload_pair_bookkeeping_captured",
-        "after_selected_payload_pair_bookkeeping_mutation_captured",
-        "after_selected_7605_endpoint_path_captured",
-        "after_selected_7605_direct_commits_captured",
-        "after_selected_7605_delegated_endpoint_not_hit",
-        "no_after_selected_direct_mutation_hits"
-      ],
-      "pair_control_record_changed_word": {
-        "after": "0x00010000",
-        "before": "0x00000000",
-        "byte_offset": "0x8",
-        "record": "0x0165f3a8"
-      },
+      "inconclusive_attempt": "skip-caller-boundaries 1 trace was manually killed after no bounded result; not used as evidence",
+      "map_size": "medium",
+      "payload_record_events": 28,
+      "payload_records_in_link_summary": 26,
+      "requested_seed": "10",
       "second_delegated_gate": {
         "bytes_08_09_0a": [
           0,
@@ -10386,19 +10336,20 @@
         ],
         "call_hit": false,
         "compare": "0x004a783a",
-        "control_record": "0x0165f3a8",
+        "control_record": "0x03655548",
         "skip": "0x004a7860"
       },
-      "selected_object_record": "0x03623cc0",
-      "selected_payload_event_index": 72
+      "seed_control_status": "prepared",
+      "selected_object_record": "0x03627eb0",
+      "selected_payload_event_index": 105,
+      "source_relation_match_4a6a81_hits": 0,
+      "total_4a696b_calls": 13,
+      "water": "none"
     },
-    "native_behavior_changed": false,
-    "remaining_blocker": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, and one linked-payload 0x4a7605 direct-endpoint/gate-skip path are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Recovered linked-payload 0x4a7605 direct endpoint commits and delegated endpoint gate skips for the selected 0x4a61bc-origin payload path.",
-    "source_basis": "H3MapEd WineDbg ledger .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json summarized by tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py; payload linkage cross-checked by tools/rmg_h3maped_4a61bc_payload_link_summary.py.",
-    "validatedAt": "2026-06-09T19:08:09Z"
+    "result": "deterministic Medium seed-10 payload replay broadens negative evidence for 0x4a696b direct mutation and delegated +0x09 endpoint stamping in this profile",
+    "updatedAt": "2026-06-09T20:02:00Z"
   },
-  "nextActionGuardrailNote": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, and one linked-payload 0x4a7605 direct-endpoint/gate-skip path are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, one linked-payload 0x4a7605 direct-endpoint/gate-skip path, and deterministic Medium seed-10 payload negative replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap. 2026-06-09 0x49aa93 branch-contract checkpoint: generated by tools/rmg_h3maped_49aa93_branch_contract_summary.py. Static markers recover the 0x49aa93 helper contract and the weighted 0x4a901a post-helper caller flow: 0x4a916c tests AL, true continues at 0x4a9174, append is 0x4a9248/0x4a9254, and materialization requires the local vector gate at 0x4a9273. Follow-up live attempts still did not capture 0x4a9167 returning at 0x4a916c: one sampled 526 value-floor checks with low words 12..57, and the light attempt sampled 835 value-floor checks with low words 0..36 plus five empty-vector exits at 0x4a9273/0x4a9391. No append, allocation, constructor, ready, or projection-dispatch hits were captured. Native RMG behavior unchanged.",
   "plannedSlices": [
     {
@@ -43830,52 +43781,37 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Recovered linked-payload 0x4a7605 endpoint gate behavior for a selected 0x4a61bc-origin payload path without changing native behavior. Fresh trace captures selected record 0x03623cc0 reaching payload, then after-selected 0x4a696b no-candidate exit and following 0x4a7605 endpoint work. The 0x4a7605 path performs two direct 0x4a7312 -> 0x4a7447 commits: object 0x03623680 at (13,12,0) with source 0x017e07a8, and object 0x03623590 at (19,31,0) with source 0x01786958. Both delegated 0x4a746b gates are reached and skipped: 0x4a774a -> 0x4a7773 and 0x4a783a -> 0x4a7860, with control record 0x0165f3a8 bytes +0x08/+0x09/+0x0a all zero at both compares. Pair bookkeeping later changes word +0x08 from 0x00000000 to 0x00010000, setting byte +0x0a rather than endpoint gate byte +0x09.",
-      "currentSliceNotes": "Recovered linked-payload 0x4a7605 endpoint gate behavior for a selected 0x4a61bc-origin payload path without changing native behavior. Fresh trace captures selected record 0x03623cc0 reaching payload, then after-selected 0x4a696b no-candidate exit and following 0x4a7605 endpoint work. The 0x4a7605 path performs two direct 0x4a7312 -> 0x4a7447 commits: object 0x03623680 at (13,12,0) with source 0x017e07a8, and object 0x03623590 at (19,31,0) with source 0x01786958. Both delegated 0x4a746b gates are reached and skipped: 0x4a774a -> 0x4a7773 and 0x4a783a -> 0x4a7860, with control record 0x0165f3a8 bytes +0x08/+0x09/+0x0a all zero at both compares. Pair bookkeeping later changes word +0x08 from 0x00000000 to 0x00010000, setting byte +0x0a rather than endpoint gate byte +0x09.",
-      "currentSliceUpdatedAt": "2026-06-09T19:08:09Z",
-      "guardrailNote": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, and one linked-payload 0x4a7605 direct-endpoint/gate-skip path are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentNotes": "Added clean PE seed-patch support to the 0x4a61bc payload-link dynamic trace and ran a deterministic Medium one-level no-water seed-10 replay. The selected 0x4a61bc-origin record 0x03627eb0 reaches the 0x4a79a3 payload loop at event index 105. The replay captures 13 total 0x4a696b calls and 3 after-selected payload calls; all exit through the pre-source/relation-match no-candidate path with zero hits at 0x4a6a81, 0x4a6ae2, 0x4a6b2e, or 0x4a6c13. The after-selected 0x4a7605 surface performs 6 direct 0x4a7312 endpoint commits and reaches both delegated gate compares, but both gates skip with control bytes +0x08/+0x09/+0x0a all zero. This broadens deterministic negative evidence for this profile but does not prove direct mutation or delegated Border Guard stamping globally unreachable.",
+      "currentSliceNotes": "Added clean PE seed-patch support to the 0x4a61bc payload-link dynamic trace and ran a deterministic Medium one-level no-water seed-10 replay. The selected 0x4a61bc-origin record 0x03627eb0 reaches the 0x4a79a3 payload loop at event index 105. The replay captures 13 total 0x4a696b calls and 3 after-selected payload calls; all exit through the pre-source/relation-match no-candidate path with zero hits at 0x4a6a81, 0x4a6ae2, 0x4a6b2e, or 0x4a6c13. The after-selected 0x4a7605 surface performs 6 direct 0x4a7312 endpoint commits and reaches both delegated gate compares, but both gates skip with control bytes +0x08/+0x09/+0x0a all zero. This broadens deterministic negative evidence for this profile but does not prove direct mutation or delegated Border Guard stamping globally unreachable.",
+      "currentSliceUpdatedAt": "2026-06-09T20:02:00Z",
+      "guardrailNote": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, one linked-payload 0x4a7605 direct-endpoint/gate-skip path, and deterministic Medium seed-10 payload negative replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_summary_20260609.json",
+        "artifact": ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_dispatch_summary_20260609.json",
         "commands": [
           "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py (passed)",
-          "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609 --max-events 3200 --debugger-timeout 180 --stop-after-dispatch-events 20 (passed: 280 events, 12 payload stops, 7 dispatch events)",
-          "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/payload_link_summary.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)",
-          "python3 tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_summary_20260609.json (passed: linked_payload_7605_endpoint_gates_replayed)"
+          "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --water-none --max-events 3200 --debugger-timeout 180 --stop-after-dispatch-events 24 (passed: 220 events, selected 0x03627eb0, 28 payload stops, 24 dispatch events)",
+          "python3 tools/rmg_h3maped_4a61bc_payload_link_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/payload_link_summary.json (passed: same_run_4a61bc_append_reaches_4a79a3_payload)",
+          "python3 tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py --ledger .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json --out .artifacts/rmg_recovery/4a61bc_payload_seed10_medium_dispatch_summary_20260609.json (passed: linked_payload_7605_endpoint_gates_replayed)"
         ],
         "metrics": {
-          "h3maped_4a61bc_payload_7605_endpoint": {
-            "after_selected_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+          "h3maped_4a61bc_payload_seed10_medium": {
+            "after_selected_4a696b_calls": 3,
+            "after_selected_direct_4a7312_commit_count": 6,
+            "after_selected_direct_4a7447_vtable_commit_count": 5,
+            "all_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+            "candidate_append_4a6ae2_hits": 0,
+            "candidate_path_4a6b2e_hits": 0,
             "delegated_4a746b_call_count": 0,
-            "direct_4a7312_commit_count": 2,
-            "direct_4a7447_vtable_commit_count": 2,
-            "direct_commits": [
-              {
-                "coordinate": [
-                  13,
-                  12,
-                  0
-                ],
-                "object_record": "0x03623680",
-                "source_record": "0x017e07a8"
-              },
-              {
-                "coordinate": [
-                  19,
-                  31,
-                  0
-                ],
-                "object_record": "0x03623590",
-                "source_record": "0x01786958"
-              }
-            ],
+            "direct_mutation_4a6c13_hits": 0,
+            "dispatch_events": 24,
             "endpoint_helper_4a5e73_count": 0,
-            "endpoint_mutation_site_4a75f1_count": 0,
-            "event_count": 280,
+            "endpoint_mutation_4a75f1_count": 0,
+            "event_count": 220,
             "first_delegated_gate": {
               "bytes_08_09_0a": [
                 0,
@@ -43884,27 +43820,14 @@
               ],
               "call_hit": false,
               "compare": "0x004a774a",
-              "control_record": "0x0165f3a8",
+              "control_record": "0x03655548",
               "skip": "0x004a7773"
             },
-            "invariants_true": [
-              "selected_object_record_captured",
-              "selected_object_record_reaches_payload",
-              "internal_4a696b_sites_captured",
-              "after_selected_payload_4a696b_calls_captured",
-              "after_selected_payload_pair_bookkeeping_captured",
-              "after_selected_payload_pair_bookkeeping_mutation_captured",
-              "after_selected_7605_endpoint_path_captured",
-              "after_selected_7605_direct_commits_captured",
-              "after_selected_7605_delegated_endpoint_not_hit",
-              "no_after_selected_direct_mutation_hits"
-            ],
-            "pair_control_record_changed_word": {
-              "after": "0x00010000",
-              "before": "0x00000000",
-              "byte_offset": "0x8",
-              "record": "0x0165f3a8"
-            },
+            "inconclusive_attempt": "skip-caller-boundaries 1 trace was manually killed after no bounded result; not used as evidence",
+            "map_size": "medium",
+            "payload_record_events": 28,
+            "payload_records_in_link_summary": 26,
+            "requested_seed": "10",
             "second_delegated_gate": {
               "bytes_08_09_0a": [
                 0,
@@ -43913,48 +43836,39 @@
               ],
               "call_hit": false,
               "compare": "0x004a783a",
-              "control_record": "0x0165f3a8",
+              "control_record": "0x03655548",
               "skip": "0x004a7860"
             },
-            "selected_object_record": "0x03623cc0",
-            "selected_payload_event_index": 72
+            "seed_control_status": "prepared",
+            "selected_object_record": "0x03627eb0",
+            "selected_payload_event_index": 105,
+            "source_relation_match_4a6a81_hits": 0,
+            "total_4a696b_calls": 13,
+            "water": "none"
           }
         },
+        "remaining_blocker": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, one linked-payload 0x4a7605 direct-endpoint/gate-skip path, and deterministic Medium seed-10 payload negative replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-09T19:08:09Z",
-        "updatedAt": "2026-06-09T19:08:09Z"
+        "timestamp": "2026-06-09T20:02:00Z",
+        "updatedAt": "2026-06-09T20:02:00Z"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_summary_20260609.json",
+        "artifact": ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_dispatch_summary_20260609.json",
+        "ledger": ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
         "metrics": {
-          "after_selected_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+          "after_selected_4a696b_calls": 3,
+          "after_selected_direct_4a7312_commit_count": 6,
+          "after_selected_direct_4a7447_vtable_commit_count": 5,
+          "all_4a696b_classification": "prefilter_rejected_before_source_relation_match",
+          "candidate_append_4a6ae2_hits": 0,
+          "candidate_path_4a6b2e_hits": 0,
           "delegated_4a746b_call_count": 0,
-          "direct_4a7312_commit_count": 2,
-          "direct_4a7447_vtable_commit_count": 2,
-          "direct_commits": [
-            {
-              "coordinate": [
-                13,
-                12,
-                0
-              ],
-              "object_record": "0x03623680",
-              "source_record": "0x017e07a8"
-            },
-            {
-              "coordinate": [
-                19,
-                31,
-                0
-              ],
-              "object_record": "0x03623590",
-              "source_record": "0x01786958"
-            }
-          ],
+          "direct_mutation_4a6c13_hits": 0,
+          "dispatch_events": 24,
           "endpoint_helper_4a5e73_count": 0,
-          "endpoint_mutation_site_4a75f1_count": 0,
-          "event_count": 280,
+          "endpoint_mutation_4a75f1_count": 0,
+          "event_count": 220,
           "first_delegated_gate": {
             "bytes_08_09_0a": [
               0,
@@ -43963,27 +43877,14 @@
             ],
             "call_hit": false,
             "compare": "0x004a774a",
-            "control_record": "0x0165f3a8",
+            "control_record": "0x03655548",
             "skip": "0x004a7773"
           },
-          "invariants_true": [
-            "selected_object_record_captured",
-            "selected_object_record_reaches_payload",
-            "internal_4a696b_sites_captured",
-            "after_selected_payload_4a696b_calls_captured",
-            "after_selected_payload_pair_bookkeeping_captured",
-            "after_selected_payload_pair_bookkeeping_mutation_captured",
-            "after_selected_7605_endpoint_path_captured",
-            "after_selected_7605_direct_commits_captured",
-            "after_selected_7605_delegated_endpoint_not_hit",
-            "no_after_selected_direct_mutation_hits"
-          ],
-          "pair_control_record_changed_word": {
-            "after": "0x00010000",
-            "before": "0x00000000",
-            "byte_offset": "0x8",
-            "record": "0x0165f3a8"
-          },
+          "inconclusive_attempt": "skip-caller-boundaries 1 trace was manually killed after no bounded result; not used as evidence",
+          "map_size": "medium",
+          "payload_record_events": 28,
+          "payload_records_in_link_summary": 26,
+          "requested_seed": "10",
           "second_delegated_gate": {
             "bytes_08_09_0a": [
               0,
@@ -43992,17 +43893,18 @@
             ],
             "call_hit": false,
             "compare": "0x004a783a",
-            "control_record": "0x0165f3a8",
+            "control_record": "0x03655548",
             "skip": "0x004a7860"
           },
-          "selected_object_record": "0x03623cc0",
-          "selected_payload_event_index": 72
+          "seed_control_status": "prepared",
+          "selected_object_record": "0x03627eb0",
+          "selected_payload_event_index": 105,
+          "source_relation_match_4a6a81_hits": 0,
+          "total_4a696b_calls": 13,
+          "water": "none"
         },
-        "native_behavior_changed": false,
-        "remaining_blocker": "Append-to-payload, one linked-payload 0x4a696b no-candidate branch, and one linked-payload 0x4a7605 direct-endpoint/gate-skip path are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; find a natural/linked +0x09 != 0 path through delegated 0x4a746b/0x4a5e73 or prove the relevant mode skips it; recover relation/control record linkage into later consumers; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-        "result": "Recovered linked-payload 0x4a7605 direct endpoint commits and delegated endpoint gate skips for the selected 0x4a61bc-origin payload path.",
-        "source_basis": "H3MapEd WineDbg ledger .artifacts/rmg_recovery/4a61bc_payload_7605_endpoint_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json summarized by tools/rmg_h3maped_4a61bc_payload_dispatch_summary.py; payload linkage cross-checked by tools/rmg_h3maped_4a61bc_payload_link_summary.py.",
-        "validatedAt": "2026-06-09T19:08:09Z"
+        "result": "deterministic Medium seed-10 payload replay broadens negative evidence for 0x4a696b direct mutation and delegated +0x09 endpoint stamping in this profile",
+        "updatedAt": "2026-06-09T20:02:00Z"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
