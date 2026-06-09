@@ -26,6 +26,26 @@ DEFAULT_MATERIALIZATION_TRACE = (
     / "4a9322_seed58_cpu0_weighted_materialization_4a54a7_trace_20260609"
     / "winedbg_interactive_trace_ledger.json"
 )
+DEFAULT_SCORE_STREAM_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_weighted_materialization_4a54a7_return_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
+DEFAULT_RETURN_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_weighted_materialization_return_only_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
+DEFAULT_GENERATOR_DELTA_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_weighted_materialization_generator_delta_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
+DEFAULT_VECTOR_CONTENTS_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_weighted_materialization_vector_contents_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
 DEFAULT_OUT = ROOT / "weighted_4a901a_materialization_summary_20260609.json"
 
 
@@ -41,6 +61,28 @@ def memory_map(event: dict[str, Any]) -> dict[int, int]:
         for index, word in enumerate(line.get("words", [])):
             mapped[address + index * 4] = int(word) & 0xFFFFFFFF
     return mapped
+
+
+def words_at(event: dict[str, Any], address: int, count: int) -> list[int | None]:
+    mapped = memory_map(event)
+    return [mapped.get(address + index * 4) for index in range(count)]
+
+
+def vector_header_from_words(words: list[int | None]) -> dict[str, Any]:
+    begin, end, capacity = words[:3]
+    count = None
+    capacity_count = None
+    if isinstance(begin, int) and isinstance(end, int):
+        count = (end - begin) // 4
+    if isinstance(begin, int) and isinstance(capacity, int):
+        capacity_count = (capacity - begin) // 4
+    return {
+        "begin": begin,
+        "end": end,
+        "capacity_end": capacity,
+        "count": count,
+        "capacity": capacity_count,
+    }
 
 
 def signed_owner_from_word20(word20: int) -> int:
@@ -225,10 +267,140 @@ def summarize_materialization(path: Path) -> dict[str, Any]:
     }
 
 
+def summarize_return_trace(path: Path) -> dict[str, Any]:
+    data = load_json(path)
+    events = data.get("events", [])
+    counts = collections.Counter(event.get("address") for event in events)
+    dispatch = next((event for event in events if event.get("address") == "0x004a9322"), None)
+    return_site = next((event for event in events if event.get("address") == "0x004a5756"), None)
+    caller_after = next((event for event in events if event.get("address") == "0x004a9325"), None)
+    first_dispatch = None
+    if dispatch:
+        mapped = memory_map(dispatch)
+        esp = dispatch.get("registers", {}).get("esp")
+        first_dispatch = {
+            "record_pointer": mapped.get(esp) if isinstance(esp, int) else None,
+            "x": mapped.get(esp + 4) if isinstance(esp, int) else None,
+            "y": mapped.get(esp + 8) if isinstance(esp, int) else None,
+            "z": mapped.get(esp + 12) if isinstance(esp, int) else None,
+            "dispatch_vtable": dispatch.get("registers", {}).get("edx"),
+        }
+    return {
+        "path": str(path),
+        "event_count": len(events),
+        "child_returncode": data.get("child_returncode"),
+        "counts": dict(sorted(counts.items())),
+        "first_dispatch": first_dispatch,
+        "return_site_captured": return_site is not None,
+        "caller_after_state_captured": caller_after is not None,
+    }
+
+
+def summarize_vector_contents(path: Path) -> dict[str, Any]:
+    data = load_json(path)
+    events = data.get("events", [])
+    counts = collections.Counter(event.get("address") for event in events)
+    before = next((event for event in events if event.get("address") == "0x004a9322"), None)
+    after = next((event for event in events if event.get("address") == "0x004a9325"), None)
+    if after is None:
+        after = next((event for event in events if event.get("address") == "0x004a5756"), None)
+
+    before_dispatch = None
+    record_pointer = None
+    if before:
+        mapped = memory_map(before)
+        esp = before.get("registers", {}).get("esp")
+        record_pointer = mapped.get(esp) if isinstance(esp, int) else None
+        before_dispatch = {
+            "record_pointer": record_pointer,
+            "x": mapped.get(esp + 4) if isinstance(esp, int) else None,
+            "y": mapped.get(esp + 8) if isinstance(esp, int) else None,
+            "z": mapped.get(esp + 12) if isinstance(esp, int) else None,
+        }
+
+    before_generator = None
+    if before:
+        registers = before.get("registers", {})
+        before_generator = registers.get("ecx")
+        if not isinstance(before_generator, int):
+            before_generator = registers.get("ebx")
+
+    def event_vector(event: dict[str, Any] | None, generator_override: int | None = None) -> dict[str, Any] | None:
+        if event is None:
+            return None
+        generator = generator_override
+        if not isinstance(generator, int):
+            registers = event.get("registers", {})
+            generator = registers.get("ecx")
+            if not isinstance(generator, int):
+                generator = registers.get("ebx")
+            if not isinstance(generator, int):
+                return None
+        header_address = generator + 0xEC8
+        header = vector_header_from_words(words_at(event, header_address, 3))
+        contents = words_at(event, header["begin"], header["count"]) if isinstance(header.get("begin"), int) and isinstance(header.get("count"), int) else []
+        return {
+            "generator_pointer": generator,
+            "header_address": header_address,
+            "header_offsets": ["+0xec8", "+0xecc", "+0xed0"],
+            "header": header,
+            "contents": contents,
+        }
+
+    before_vector = event_vector(before, before_generator)
+    after_vector = event_vector(after, before_generator)
+    appended_pointer = None
+    object_vector_append_recovered = False
+    object_vector_header_delta_recovered = False
+    if before_vector and after_vector:
+        before_header = before_vector.get("header", {})
+        after_header = after_vector.get("header", {})
+        object_vector_header_delta_recovered = before_header.get("count") == 4 and after_header.get("count") == 5
+        object_vector_header_delta_recovered = object_vector_header_delta_recovered and before_header.get("capacity") == 4
+        object_vector_header_delta_recovered = object_vector_header_delta_recovered and after_header.get("capacity") == 8
+        before_contents = before_vector.get("contents", [])
+        after_contents = after_vector.get("contents", [])
+        if (
+            isinstance(before_contents, list)
+            and isinstance(after_contents, list)
+            and len(after_contents) == len(before_contents) + 1
+            and after_contents[: len(before_contents)] == before_contents
+        ):
+            appended_pointer = after_contents[-1]
+            object_vector_append_recovered = appended_pointer == record_pointer
+
+    record_before_words = words_at(before, record_pointer, 12) if before and isinstance(record_pointer, int) else []
+    record_after_words = words_at(after, record_pointer, 12) if after and isinstance(record_pointer, int) else []
+    record_coordinate_before = record_before_words[2:5] if len(record_before_words) >= 5 else []
+    record_coordinate_after = record_after_words[2:5] if len(record_after_words) >= 5 else []
+    return {
+        "path": str(path),
+        "event_count": len(events),
+        "child_returncode": data.get("child_returncode"),
+        "counts": dict(sorted(counts.items())),
+        "first_dispatch": before_dispatch,
+        "object_vector_before": before_vector,
+        "object_vector_after": after_vector,
+        "object_vector_header_delta_recovered": object_vector_header_delta_recovered,
+        "appended_record_pointer": appended_pointer,
+        "object_vector_append_recovered": object_vector_append_recovered,
+        "record_before_words": record_before_words,
+        "record_after_words": record_after_words,
+        "record_coordinate_before": record_coordinate_before,
+        "record_coordinate_after": record_coordinate_after,
+        "record_coordinate_fill_recovered": record_coordinate_before == [0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF]
+        and record_coordinate_after == [107, 6, 0],
+    }
+
+
 def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     reject = summarize_reject(args.reject_trace)
     follow = summarize_follow(args.follow_trace)
     materialization = summarize_materialization(args.materialization_trace)
+    score_stream = summarize_materialization(args.score_stream_trace)
+    return_trace = summarize_return_trace(args.return_trace)
+    generator_delta = summarize_vector_contents(args.generator_delta_trace)
+    vector_contents = summarize_vector_contents(args.vector_contents_trace)
     conditions = {
         "rejecting_helper_return_captured": reject["reaches_helper_return"],
         "reject_reason_decoded_as_relation_mismatch": reject.get("first_recovered_reject", {}).get("reason")
@@ -237,9 +409,15 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "accepted_path_reaches_materialization_dispatch": follow["materialization_dispatch_count"] > 0,
         "materialization_enters_4a54a7": materialization["enters_4a54a7"],
         "materialization_score_write_stream_captured": materialization["score_write_pair_count"] > 0,
+        "high_cap_score_write_stream_sampled": score_stream["score_write_pair_count"] > materialization["score_write_pair_count"],
+        "first_materialization_return_captured": return_trace["return_site_captured"],
+        "caller_after_state_captured": return_trace["caller_after_state_captured"],
+        "generator_delta_object_vector_header_recovered": generator_delta["object_vector_header_delta_recovered"],
+        "vector_contents_object_vector_append_recovered": vector_contents["object_vector_append_recovered"],
+        "record_coordinate_fill_recovered": vector_contents["record_coordinate_fill_recovered"],
     }
     status = (
-        "weighted_helper_reject_and_accept_materialization_frontier_recovered"
+        "weighted_first_materialization_return_and_vector_delta_recovered"
         if all(conditions.values())
         else "weighted_materialization_frontier_incomplete"
     )
@@ -250,9 +428,14 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "reject_trace": reject,
         "followthrough_trace": follow,
         "materialization_trace": materialization,
+        "score_stream_high_cap_trace": score_stream,
+        "return_trace": return_trace,
+        "generator_delta_trace": generator_delta,
+        "vector_contents_trace": vector_contents,
         "not_recovered": [
-            "The materialization trace hit the event cap before 0x4a5756/0x4a9325 return, so the complete projection-loop return and caller after-state remain pending.",
-            "Only the first weighted materialization's 0x4a54a7 score-write stream is sampled; full ordered replay of every weighted materialization and generator vector delta remains pending.",
+            "The high-cap score-write trace captures 254 complete generated-cell write pairs and still hits the event cap before return, so the complete 0x4a54a7 score-write stream length remains pending.",
+            "Only the first weighted materialization's return/caller/vector delta is recovered; full ordered replay of every weighted materialization remains pending.",
+            "The actual descriptor-type counter write around generator+0x1110 + descriptor_type*4 still needs a focused same-run dump for the weighted record type.",
             "0x4a696b, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation, and 0x4add76 cleanup/uncommit runtime paths remain unrecovered.",
         ],
     }
@@ -263,6 +446,10 @@ def main() -> int:
     parser.add_argument("--reject-trace", type=Path, default=DEFAULT_REJECT_TRACE)
     parser.add_argument("--follow-trace", type=Path, default=DEFAULT_FOLLOW_TRACE)
     parser.add_argument("--materialization-trace", type=Path, default=DEFAULT_MATERIALIZATION_TRACE)
+    parser.add_argument("--score-stream-trace", type=Path, default=DEFAULT_SCORE_STREAM_TRACE)
+    parser.add_argument("--return-trace", type=Path, default=DEFAULT_RETURN_TRACE)
+    parser.add_argument("--generator-delta-trace", type=Path, default=DEFAULT_GENERATOR_DELTA_TRACE)
+    parser.add_argument("--vector-contents-trace", type=Path, default=DEFAULT_VECTOR_CONTENTS_TRACE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
