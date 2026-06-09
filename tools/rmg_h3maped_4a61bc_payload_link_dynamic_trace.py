@@ -44,6 +44,23 @@ ARMED_BREAKPOINTS = [
     "0x004a7d36",
     "0x004a7d99",
     "0x004a696b",
+    "0x004a69bb",
+    "0x004a69c2",
+    "0x004a6a81",
+    "0x004a6a8f",
+    "0x004a6ac8",
+    "0x004a6ade",
+    "0x004a6ae2",
+    "0x004a6b10",
+    "0x004a6b27",
+    "0x004a6b2e",
+    "0x004a6b9b",
+    "0x004a6c13",
+    "0x004a6c2c",
+    "0x004a6c59",
+    "0x004a6c78",
+    "0x004a6cd3",
+    "0x004a6ce1",
     "0x004a7605",
     "0x004a7df4",
     "0x004a7e21",
@@ -243,6 +260,28 @@ def run_xvfb(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
                     capture_pointer(child, "$ecx", args.debugger_timeout)
                     capture_pointer(child, "$edx", args.debugger_timeout)
 
+                elif address in {
+                    "0x004a69bb",
+                    "0x004a69c2",
+                    "0x004a6a81",
+                    "0x004a6a8f",
+                    "0x004a6ac8",
+                    "0x004a6ade",
+                    "0x004a6ae2",
+                    "0x004a6b10",
+                    "0x004a6b27",
+                    "0x004a6b2e",
+                    "0x004a6b9b",
+                    "0x004a6c13",
+                    "0x004a6c2c",
+                    "0x004a6c59",
+                    "0x004a6c78",
+                    "0x004a6cd3",
+                    "0x004a6ce1",
+                }:
+                    issue_capture(child, "x/24x $ebp-0x58", args.debugger_timeout)
+                    capture_pointer(child, "$esi", args.debugger_timeout)
+
                 elif address == "0x0049eb8d":
                     issue_capture(child, "x/16x $ecx+0xec4", args.debugger_timeout)
                     if selected_done and payload_count_seen:
@@ -271,7 +310,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--debugger-timeout", type=int, default=180)
     parser.add_argument("--max-events", type=int, default=1800)
     parser.add_argument("--skip-caller-boundaries", type=int, default=0)
-    parser.add_argument("--stop-after-dispatch-events", type=int, default=4)
+    parser.add_argument("--stop-after-dispatch-events", type=int, default=12)
     parser.add_argument("--map-size", choices=["small", "medium", "large", "xlarge"], default="small")
     parser.add_argument("--human-computer-down", type=int, default=-1)
     parser.add_argument("--computer-only-down", type=int, default=-1)
