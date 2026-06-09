@@ -9328,10 +9328,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered the focused live 0x4a7312 endpoint selection/commit call contract without changing native behavior. The summary joins static 0x4a7312 candidate-vector/RNG/vtable-slot recovery with the old raw trace: object 0x03624e20 selects (62,47,0) and object 0x036262f0 selects (52,20,0), both committed through generator/context vtable slot +0x04 from generator 0x0031e058 / vtable 0x00540cbc. This complements the existing direct_endpoint_afterstate_dynamic after-state artifact for the same two commits; full end-to-end recovery remains incomplete. Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "currentSliceNotes": "Added a focused report-only 0x4a696b source/relation gate checkpoint without changing native behavior. The verifier joins static 0x4a696b gate/mutation sites with controlled runtime evidence: 30 sampled 0x4a696b calls in the controlled Medium one-level land sweep have zero 0x4a6a81 source/relation-match hits, zero candidate append/path hits, and zero direct-mutation hits; three seed-10 argument-surface calls have nonempty scan rectangles and pass the same-level gate; two complete seed-10 grid scans have zero full GeneratedCell+0x20 byte2/byte3 pair matches. This strengthens the sampled frontier to the source/relation byte-pair gate, but it is not global unreachability proof. Remaining source-backed blockers before any native RMG behavior port: either find a natural 0x4a696b source/relation-match sample or produce broader static/data proof that the direct mutation block is unreachable for the target one-level land mode; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T23:12:58Z",
+  "currentSliceUpdatedAt": "2026-06-09T23:21:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10327,12 +10327,12 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, first normal 0x49e700 scorer/selection/allocation/commit/return boundary, first complete 0x49e700 bit26 generated-cell write set, post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary, controlled Medium seeds 1/2/3/10 0x4a696b no-direct-mutation sweep, Medium seed-10 0x4a696b argument-surface owner/relation-match frontier, Medium seed-10 0x4a696b two-grid zero owner/relation pair match evidence, current-corpus cleanup/projection-slot breakpoint-only no-hit classification, and sampled 0x4a79a3 slot +0x08 dispatch target 0x0045e1a6 non-projection classification, and focused 0x4a7312 endpoint selection/commit call contract are recovered. Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Remaining source-backed blockers before any native RMG behavior port: either find a natural 0x4a696b source/relation-match sample or produce broader static/data proof that the direct mutation block is unreachable for the target one-level land mode; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/4a7312_endpoint_commit_summary_20260609.json",
+    "artifact": ".artifacts/rmg_recovery/4a696b_source_relation_gate_summary_20260609.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a7312_endpoint_commit_summary.py (passed)",
-      "python3 tools/rmg_h3maped_4a7312_endpoint_commit_summary.py (passed: partial_live_recovery_4a7312_endpoint_commit_contract; commits=2)",
+      "python3 -m py_compile tools/rmg_h3maped_4a696b_source_relation_gate_summary.py (passed)",
+      "python3 tools/rmg_h3maped_4a696b_source_relation_gate_summary.py (passed: partial_recovery_4a696b_source_relation_gate_frontier)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
@@ -10340,82 +10340,190 @@
     ],
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-09T23:12:58Z",
-    "updatedAt": "2026-06-09T23:12:58Z",
+    "timestamp": "2026-06-09T23:21:26Z",
+    "updatedAt": "2026-06-09T23:21:26Z",
     "metrics": {
-      "h3maped_4a7312_endpoint_commit": {
-        "status": "partial_live_recovery_4a7312_endpoint_commit_contract",
-        "event_count": 11,
-        "entries": 2,
-        "vtable_commits": 2,
-        "selected_coordinates": [
-          {
-            "level": 0,
-            "x": 62,
-            "y": 47
+      "h3maped_4a696b_source_relation_gate": {
+        "status": "partial_recovery_4a696b_source_relation_gate_frontier",
+        "runtime_evidence": {
+          "arg_surface": {
+            "calls_with_arg_dumps": 3,
+            "candidate_append_hits": 0,
+            "classifications": {
+              "nonempty_scan_no_source_relation_match": 3
+            },
+            "direct_mutation_hits": 0,
+            "nonempty_scan_calls": 3,
+            "sampled_4a696b_calls": 3,
+            "source_relation_match_hits": 0
           },
-          {
-            "level": 0,
-            "x": 52,
-            "y": 20
+          "controlled_sweep": {
+            "candidate_append_hits": 0,
+            "candidate_path_hits": 0,
+            "classifications": {
+              "scan_completed_no_candidate_before_source_relation_match": 30
+            },
+            "direct_endpoint_4a7312_hits": 16,
+            "direct_mutation_hits": 0,
+            "fallback_4a7605_hits": 8,
+            "no_candidate_exit_hits": 30,
+            "sampled_4a696b_calls": 30,
+            "scan_done_hits": 30,
+            "source_relation_match_hits": 0
+          },
+          "grid_scan": {
+            "calls": [
+              {
+                "both_match_sample_count": 0,
+                "classification": "grid_scan_zero_owner_relation_matches",
+                "counts": {
+                  "byte2_match": 473,
+                  "byte3_match": 1,
+                  "scanned_cells": 693
+                },
+                "entry_event_index": 8,
+                "expected_generated_cell_0x20_bytes": {
+                  "byte2_owner_relation": 1,
+                  "byte3_owner_relation": 4
+                }
+              },
+              {
+                "both_match_sample_count": 0,
+                "classification": "grid_scan_zero_owner_relation_matches",
+                "counts": {
+                  "byte2_match": 261,
+                  "scanned_cells": 525
+                },
+                "entry_event_index": 26,
+                "expected_generated_cell_0x20_bytes": {
+                  "byte2_owner_relation": 4,
+                  "byte3_owner_relation": 1
+                }
+              }
+            ],
+            "metrics": {
+              "captured_grid_scan_entries": 2,
+              "complete_grid_scans": 2,
+              "sampled_4a696b_calls": 2,
+              "zero_owner_relation_pair_match_scans": 2
+            }
           }
-        ],
-        "invariants": {
-          "all_commits_have_coordinate_triples": true,
-          "all_static_contract_sites_present": true,
-          "commit_generator_matches_entry_generator": true,
-          "committed_objects_match_entry_objects": true,
-          "hit_4a7312_entries": true,
-          "hit_two_vtable_commits": true,
-          "no_native_behavior_change": true,
-          "trace_has_events": true
         },
-        "source_backed_conclusion": "The observed fallback endpoint path enters 0x4a7312 twice and commits two selected object records through the generator/context vtable slot +0x04. Static recovery shows the endpoint builds a 12-byte coordinate candidate vector from GeneratedCell+0x20 byte3 relation/class matches gated by 0x49aa93, selects one candidate with 0x4e7276, and passes the original object record plus selected coordinate triple to the vtable commit.",
-        "remaining_gap": "This artifact recovers the live endpoint selection and commit call contract. The target-cell and object-vector after-state for these same two sampled commits is covered separately by .artifacts/rmg_recovery/direct_endpoint_afterstate_dynamic_summary_20260608.json. Full end-to-end recovery still needs the unreached 0x4a696b source/relation-match/direct-mutation path or a source-backed unreachability proof for the target mode, plus live cleanup/uncommit behavior if 0x4add76/0x4adef7 is ever reached."
+        "invariants": {
+          "all_static_gate_and_mutation_sites_present": true,
+          "arg_surface_calls_have_nonempty_scan_bounds": true,
+          "arg_surface_calls_pass_same_level_gate": true,
+          "arg_surface_zero_source_relation_hits": true,
+          "controlled_sweep_has_sampled_calls": true,
+          "controlled_sweep_observes_fallback_endpoint_surface": true,
+          "controlled_sweep_zero_candidate_append_hits": true,
+          "controlled_sweep_zero_candidate_path_hits": true,
+          "controlled_sweep_zero_direct_mutation_hits": true,
+          "controlled_sweep_zero_source_relation_hits": true,
+          "grid_scan_has_complete_scans": true,
+          "grid_scan_zero_owner_relation_pair_matches": true,
+          "no_native_behavior_change": true
+        },
+        "source_backed_conclusion": "For the current controlled target-mode corpus, every sampled 0x4a696b call exits before the source/relation-match checkpoint at 0x4a6a81. Static recovery places that checkpoint after the two GeneratedCell+0x20 byte-pair compares at 0x4a6a63 and 0x4a6a6f. The seed-10 argument/grid evidence proves the sampled scan rectangles are non-empty and complete grid scans contain zero cells matching both expected byte2/byte3 relation values. Therefore the sampled frontier is the source/relation byte-pair gate, before terrain checks, helper gates, candidate append, vtable commit, or the direct GeneratedCell+0x28 mutation block.",
+        "remaining_gap": "This is stronger sampled frontier evidence, not global unreachability proof. End-to-end recovery still needs either a natural 0x4a696b call that reaches 0x4a6a81 and then the candidate/direct-mutation path, or broader static/data proof that direct mutation is unreachable for the target one-level land mode. Live cleanup/uncommit behavior and the true owning projection-object slot +0x08 dispatch/lifetime also remain unrecovered."
       }
     }
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/4a7312_endpoint_commit_summary_20260609.json",
-    "result": "Recovered focused 0x4a7312 endpoint selection/commit call contract for two live fallback commits; native behavior unchanged.",
-    "source_basis": "Python summary over the existing live WineDbg raw trace plus the Ghidra 0x4a7312 static dump.",
+    "artifact": ".artifacts/rmg_recovery/4a696b_source_relation_gate_summary_20260609.json",
+    "result": "Recovered focused sampled 0x4a696b source/relation gate frontier: current controlled target-mode calls fail before 0x4a6a81 because scanned GeneratedCell+0x20 byte2/byte3 pairs do not match. Native behavior unchanged.",
+    "source_basis": "Python summary over the Ghidra 0x4a696b static dump, controlled Medium 4a696b sweep summary, seed-10 argument-surface summary, and seed-10 two-grid scan summary.",
     "native_behavior_changed": false,
-    "validatedAt": "2026-06-09T23:12:58Z",
-    "remaining_blocker": "Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "validatedAt": "2026-06-09T23:21:26Z",
+    "remaining_blocker": "Remaining source-backed blockers before any native RMG behavior port: either find a natural 0x4a696b source/relation-match sample or produce broader static/data proof that the direct mutation block is unreachable for the target one-level land mode; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "metrics": {
-      "h3maped_4a7312_endpoint_commit": {
-        "status": "partial_live_recovery_4a7312_endpoint_commit_contract",
-        "event_count": 11,
-        "entries": 2,
-        "vtable_commits": 2,
-        "selected_coordinates": [
-          {
-            "level": 0,
-            "x": 62,
-            "y": 47
+      "h3maped_4a696b_source_relation_gate": {
+        "status": "partial_recovery_4a696b_source_relation_gate_frontier",
+        "runtime_evidence": {
+          "arg_surface": {
+            "calls_with_arg_dumps": 3,
+            "candidate_append_hits": 0,
+            "classifications": {
+              "nonempty_scan_no_source_relation_match": 3
+            },
+            "direct_mutation_hits": 0,
+            "nonempty_scan_calls": 3,
+            "sampled_4a696b_calls": 3,
+            "source_relation_match_hits": 0
           },
-          {
-            "level": 0,
-            "x": 52,
-            "y": 20
+          "controlled_sweep": {
+            "candidate_append_hits": 0,
+            "candidate_path_hits": 0,
+            "classifications": {
+              "scan_completed_no_candidate_before_source_relation_match": 30
+            },
+            "direct_endpoint_4a7312_hits": 16,
+            "direct_mutation_hits": 0,
+            "fallback_4a7605_hits": 8,
+            "no_candidate_exit_hits": 30,
+            "sampled_4a696b_calls": 30,
+            "scan_done_hits": 30,
+            "source_relation_match_hits": 0
+          },
+          "grid_scan": {
+            "calls": [
+              {
+                "both_match_sample_count": 0,
+                "classification": "grid_scan_zero_owner_relation_matches",
+                "counts": {
+                  "byte2_match": 473,
+                  "byte3_match": 1,
+                  "scanned_cells": 693
+                },
+                "entry_event_index": 8,
+                "expected_generated_cell_0x20_bytes": {
+                  "byte2_owner_relation": 1,
+                  "byte3_owner_relation": 4
+                }
+              },
+              {
+                "both_match_sample_count": 0,
+                "classification": "grid_scan_zero_owner_relation_matches",
+                "counts": {
+                  "byte2_match": 261,
+                  "scanned_cells": 525
+                },
+                "entry_event_index": 26,
+                "expected_generated_cell_0x20_bytes": {
+                  "byte2_owner_relation": 4,
+                  "byte3_owner_relation": 1
+                }
+              }
+            ],
+            "metrics": {
+              "captured_grid_scan_entries": 2,
+              "complete_grid_scans": 2,
+              "sampled_4a696b_calls": 2,
+              "zero_owner_relation_pair_match_scans": 2
+            }
           }
-        ],
-        "invariants": {
-          "all_commits_have_coordinate_triples": true,
-          "all_static_contract_sites_present": true,
-          "commit_generator_matches_entry_generator": true,
-          "committed_objects_match_entry_objects": true,
-          "hit_4a7312_entries": true,
-          "hit_two_vtable_commits": true,
-          "no_native_behavior_change": true,
-          "trace_has_events": true
         },
-        "source_backed_conclusion": "The observed fallback endpoint path enters 0x4a7312 twice and commits two selected object records through the generator/context vtable slot +0x04. Static recovery shows the endpoint builds a 12-byte coordinate candidate vector from GeneratedCell+0x20 byte3 relation/class matches gated by 0x49aa93, selects one candidate with 0x4e7276, and passes the original object record plus selected coordinate triple to the vtable commit.",
-        "remaining_gap": "This artifact recovers the live endpoint selection and commit call contract. The target-cell and object-vector after-state for these same two sampled commits is covered separately by .artifacts/rmg_recovery/direct_endpoint_afterstate_dynamic_summary_20260608.json. Full end-to-end recovery still needs the unreached 0x4a696b source/relation-match/direct-mutation path or a source-backed unreachability proof for the target mode, plus live cleanup/uncommit behavior if 0x4add76/0x4adef7 is ever reached."
+        "invariants": {
+          "all_static_gate_and_mutation_sites_present": true,
+          "arg_surface_calls_have_nonempty_scan_bounds": true,
+          "arg_surface_calls_pass_same_level_gate": true,
+          "arg_surface_zero_source_relation_hits": true,
+          "controlled_sweep_has_sampled_calls": true,
+          "controlled_sweep_observes_fallback_endpoint_surface": true,
+          "controlled_sweep_zero_candidate_append_hits": true,
+          "controlled_sweep_zero_candidate_path_hits": true,
+          "controlled_sweep_zero_direct_mutation_hits": true,
+          "controlled_sweep_zero_source_relation_hits": true,
+          "grid_scan_has_complete_scans": true,
+          "grid_scan_zero_owner_relation_pair_matches": true,
+          "no_native_behavior_change": true
+        },
+        "source_backed_conclusion": "For the current controlled target-mode corpus, every sampled 0x4a696b call exits before the source/relation-match checkpoint at 0x4a6a81. Static recovery places that checkpoint after the two GeneratedCell+0x20 byte-pair compares at 0x4a6a63 and 0x4a6a6f. The seed-10 argument/grid evidence proves the sampled scan rectangles are non-empty and complete grid scans contain zero cells matching both expected byte2/byte3 relation values. Therefore the sampled frontier is the source/relation byte-pair gate, before terrain checks, helper gates, candidate append, vtable commit, or the direct GeneratedCell+0x28 mutation block.",
+        "remaining_gap": "This is stronger sampled frontier evidence, not global unreachability proof. End-to-end recovery still needs either a natural 0x4a696b call that reaches 0x4a6a81 and then the candidate/direct-mutation path, or broader static/data proof that direct mutation is unreachable for the target one-level land mode. Live cleanup/uncommit behavior and the true owning projection-object slot +0x08 dispatch/lifetime also remain unrecovered."
       }
     }
   },
-  "nextActionGuardrailNote": "Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Remaining source-backed blockers before any native RMG behavior port: either find a natural 0x4a696b source/relation-match sample or produce broader static/data proof that the direct mutation block is unreachable for the target one-level land mode; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "Recovered deterministic Border Guard fallback through 0x49eb8d, first 0x49e700 mutation write set, immediate 0x4ac552 phase completion, broader controlled evidence for 0x4a696b direct-mutation reachability, and the focused 0x4a7312 endpoint selection/commit call contract. The current controlled 0x4a696b sweep covers seeds 1, 2, 3, and 10 with 30 calls, all exiting before source/relation match and zero direct mutation hits. Native behavior remains unchanged. Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "plannedSlices": [
     {
@@ -50740,6 +50848,14 @@
           "id": "rmg-h3maped-4a54a7-descriptor-relation-checkpoint-10184",
           "status": "completed",
           "title": "Recover sampled 0x4a54a7 descriptor and relation counters"
+        },
+        {
+          "evidence": "Report-only recovery checkpoint. Static 0x4a696b gate/mutation sites are present, controlled runtime evidence shows 30 sampled calls with zero 0x4a6a81/candidate/direct-mutation hits, and two complete seed-10 grid scans have zero full GeneratedCell+0x20 byte2/byte3 pair matches. Native RMG behavior remains unchanged; global direct-mutation unreachability and cleanup/slot +0x08 lifetime remain pending.",
+          "id": "rmg-h3maped-4a696b-source-relation-gate-checkpoint-10184",
+          "status": "completed",
+          "title": "Recover sampled 0x4a696b source/relation gate frontier",
+          "artifact": ".artifacts/rmg_recovery/4a696b_source_relation_gate_summary_20260609.json",
+          "completedAt": "2026-06-09T23:20:46Z"
         }
       ],
       "id": "native-rmg-h3maped-recovery-checkpoints",
