@@ -443,8 +443,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentSliceNotes": "Cleanup/uncommit runtime frontier checkpoint recorded without changing native behavior. The new corpus summary scanned 229 ledgers and 289 raw logs for 0x4ad6a8/0x4ad7f7/0x4ad947/0x4adb72/0x4add76/0x4adef7; six ledgers and thirteen logs mention these sites via breakpoints/commands, but zero runtime ledger events or raw-log stops hit any target. Static 0x4add76/0x4adef7 cleanup and counter-decrement contracts remain recovered, but live uncommit/reselection execution is still missing.",
-    "currentSliceUpdatedAt": "2026-06-09T17:11:09Z",
+    "currentSliceNotes": "Projection-method dispatch frontier checkpoint recorded without changing native behavior. Static vtables show projection-object slot +0x08 dispatch is the layer above cleanup: 0x540b00+0x08 -> 0x49c019 -> 0x4adb72/fallback 0x4adef7, and 0x540b14+0x08 -> 0x49c0a6 -> 0x4ad947. The corpus has sampled projection constructors and stamped projection objects, but the 229-ledger/289-log scan records zero live runtime hits at 0x49c019, 0x49c0a6, or their downstream cleanup/projection-driver callees. The next missing state is the owning phase/caller that invokes projection-object slot +0x08 and the object lifetime before/after that dispatch.",
+    "currentSliceUpdatedAt": "2026-06-09T17:17:24Z",
     "guardrailNote": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -493,28 +493,35 @@
       "updatedAt": "2026-06-08T23:45:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/cleanup_runtime_frontier_summary_20260609.json",
+      "artifact": ".artifacts/rmg_recovery/projection_method_dispatch_frontier_summary_20260609.json",
       "metrics": {
         "ledger_files_scanned": 229,
-        "ledger_records_with_target_mentions": 6,
+        "ledger_records_with_target_mentions": 7,
         "log_files_scanned": 289,
-        "log_records_with_target_mentions": 13,
+        "log_records_with_target_mentions": 16,
+        "projection_constructor_counts": {
+          "0x0049c0d3": 7,
+          "0x0049cac2": 2,
+          "0x0049cb83": 4,
+          "0x0049cc22": 1
+        },
         "runtime_hit_sites_from_ledgers": [],
         "runtime_hit_sites_from_logs": [],
         "target_sites": [
-          "0x004ad6a8",
-          "0x004ad7f7",
-          "0x004ad947",
+          "0x0049c019",
+          "0x0049c0a6",
           "0x004adb72",
+          "0x004ad947",
+          "0x004ad7f7",
           "0x004add76",
           "0x004adef7"
         ]
       },
       "native_behavior_changed": false,
       "remaining_blocker": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Confirmed the current recovery corpus has no live cleanup/uncommit or direct reselection execution at the target sites; this is a negative runtime frontier, not a native implementation change.",
-      "source_basis": "H3MapEd WineDbg ledgers and raw logs under .artifacts/rmg_recovery, summarized by tools/rmg_h3maped_cleanup_runtime_frontier_summary.py.",
-      "validatedAt": "2026-06-09T17:11:09Z"
+      "result": "Confirmed cleanup/reselection is gated behind unhit projection-object slot +0x08 dispatch; direct cleanup breakpoints alone do not recover the missing path.",
+      "source_basis": "Static projection vtable summaries, projection constructor/stamp/survival summaries, cleanup runtime frontier summary, and H3MapEd WineDbg ledgers/logs under .artifacts/rmg_recovery, summarized by tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py.",
+      "validatedAt": "2026-06-09T17:17:24Z"
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -575,9 +582,9 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, all sampled weighted dispatch return/vector/counter deltas, and the cleanup/uncommit no-live-hit corpus frontier are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and live 0x4add76/0x4adef7 cleanup replay are still explicit blockers.",
+    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, all sampled weighted dispatch return/vector/counter deltas, the cleanup/uncommit no-live-hit corpus frontier, and the projection-object slot +0x08 no-live-hit frontier are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, projection-object method dispatch, and live 0x4add76/0x4adef7 cleanup replay are still explicit blockers.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-09T17:11:09Z",
+    "updatedAt": "2026-06-09T17:17:24Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -58260,6 +58267,19 @@
         "python3 -m py_compile tools/rmg_h3maped_cleanup_runtime_frontier_summary.py (passed)",
         "python3 tools/rmg_h3maped_cleanup_runtime_frontier_summary.py (passed: cleanup_runtime_frontier_static_only_no_live_uncommit_hit)",
         "jq '{status, corpus, target_event_totals_from_ledgers, target_stop_totals_from_logs, runtime_hit_sites_from_ledgers, runtime_hit_sites_from_logs, invariants}' .artifacts/rmg_recovery/cleanup_runtime_frontier_summary_20260609.json (passed: zero runtime target hits)"
+      ]
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/projection_method_dispatch_frontier_summary_20260609.json",
+      "currentSliceNotes": "Projection-method dispatch frontier checkpoint recorded without changing native behavior. Static vtables show cleanup/projection-driver behavior sits behind projection-object slot +0x08 dispatch: 0x540b00+0x08 calls 0x49c019, which tries 0x4adb72 and falls back to 0x4adef7, while 0x540b14+0x08 calls 0x49c0a6, which calls 0x4ad947. The current corpus proves projection constructors are sampled (0x49cac2 x2, 0x49cb83 x4, 0x49cc22 x1, base initializer 0x49c0d3 x7) and sampled projection objects can reach 0x49abd6 stamping, but the 229-ledger/289-log scan records zero live hits at 0x49c019, 0x49c0a6, or the downstream cleanup/projection-driver sites. The sampled later 0x4a79a3 payload also has no 0x540b00/0x540b14 projection-object vtables.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "summary": "Recorded the projection-object slot +0x08 no-live-hit frontier; native behavior unchanged and the next recovery target is the owning phase/caller that dispatches 0x49c019 or 0x49c0a6.",
+      "updatedAt": "2026-06-09T17:17:24Z",
+      "validation": [
+        "python3 -m py_compile tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py (passed)",
+        "python3 tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py (passed: projection_method_dispatch_frontier_no_live_slot08_hit)",
+        "jq '{status, corpus, target_event_totals_from_ledgers, target_stop_totals_from_logs, runtime_hit_sites_from_ledgers, runtime_hit_sites_from_logs, projection_constructor_counts, invariants}' .artifacts/rmg_recovery/projection_method_dispatch_frontier_summary_20260609.json (passed: constructors sampled, zero slot +0x08 runtime hits)"
       ]
     },
     {
