@@ -275,6 +275,13 @@ def run_xvfb(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
                     capture_pointer(child, "$esi", args.debugger_timeout)
                     capture_pointer(child, "$ecx", args.debugger_timeout)
                     capture_pointer(child, "$edx", args.debugger_timeout)
+                    if address in {"0x004a696b", "0x004a7605"} and esp is not None:
+                        first_arg = memory_word(stack_memory, esp + 4)
+                        second_arg = memory_word(stack_memory, esp + 8)
+                        if first_arg:
+                            capture_pointer(child, qhex(first_arg) or "0", args.debugger_timeout, words=32)
+                        if second_arg:
+                            capture_pointer(child, qhex(second_arg) or "0", args.debugger_timeout, words=32)
 
                 elif address in {
                     "0x004a7312",
