@@ -56,6 +56,11 @@ DEFAULT_DESCRIPTOR_COUNTER_TRACE = (
     / "4a9322_seed58_cpu0_weighted_descriptor_pointer_trace_20260609"
     / "winedbg_interactive_trace_ledger.json"
 )
+DEFAULT_ALL_RETURN_VECTOR_COUNTER_TRACE = (
+    ROOT
+    / "4a9322_seed58_cpu0_all_weighted_return_vector_counter_trace_20260609"
+    / "winedbg_interactive_trace_ledger.json"
+)
 DEFAULT_OUT = ROOT / "weighted_4a901a_materialization_summary_20260609.json"
 
 
@@ -485,6 +490,74 @@ def summarize_descriptor_counter(path: Path) -> dict[str, Any]:
     }
 
 
+def vector_count_at(event: dict[str, Any], generator: int) -> int | None:
+    header = vector_header_from_words(words_at(event, generator + 0xEC8, 3))
+    return header.get("count")
+
+
+def counter98_at(event: dict[str, Any], generator: int) -> int | None:
+    return memory_map(event).get(generator + 0x1110 + 98 * 4)
+
+
+def summarize_all_return_vector_counter(path: Path) -> dict[str, Any]:
+    data = load_json(path)
+    events = data.get("events", [])
+    counts = collections.Counter(event.get("address") for event in events)
+    dispatches = []
+    active: dict[str, Any] | None = None
+    for event in events:
+        address = event.get("address")
+        if address == "0x004a9322":
+            registers = event.get("registers", {})
+            generator = registers.get("ecx")
+            mapped = memory_map(event)
+            esp = registers.get("esp")
+            record_pointer = mapped.get(esp) if isinstance(esp, int) else None
+            active = {
+                "dispatch_event_index": len(dispatches),
+                "record_pointer": record_pointer,
+                "x": mapped.get(esp + 4) if isinstance(esp, int) else None,
+                "y": mapped.get(esp + 8) if isinstance(esp, int) else None,
+                "z": mapped.get(esp + 12) if isinstance(esp, int) else None,
+                "generator_pointer": generator,
+                "vector_count_before": vector_count_at(event, generator) if isinstance(generator, int) else None,
+                "counter98_before": counter98_at(event, generator) if isinstance(generator, int) else None,
+                "return_captured": False,
+                "caller_after_captured": False,
+            }
+            dispatches.append(active)
+        elif address == "0x004a5756" and active is not None and not active["return_captured"]:
+            active["return_captured"] = True
+        elif address == "0x004a9325" and active is not None and not active["caller_after_captured"]:
+            registers = event.get("registers", {})
+            generator = active.get("generator_pointer")
+            active["caller_after_captured"] = True
+            active["vector_count_after"] = vector_count_at(event, generator) if isinstance(generator, int) else None
+            active["counter98_after"] = counter98_at(event, generator) if isinstance(generator, int) else None
+            active["caller_after_esi"] = registers.get("esi")
+            active = None
+    expected = [
+        {"record_pointer": 0x036B6D40, "x": 107, "y": 6, "z": 0, "vector_count_before": 4, "vector_count_after": 5, "counter98_before": 4, "counter98_after": 5},
+        {"record_pointer": 0x036B68E0, "x": 107, "y": 106, "z": 0, "vector_count_before": 6, "vector_count_after": 7, "counter98_before": 6, "counter98_after": 7},
+        {"record_pointer": 0x036B67E0, "x": 18, "y": 6, "z": 0, "vector_count_before": 7, "vector_count_after": 8, "counter98_before": 7, "counter98_after": 8},
+    ]
+    recovered = len(dispatches) == len(expected)
+    if recovered:
+        for dispatch, expected_dispatch in zip(dispatches, expected):
+            recovered = recovered and dispatch["return_captured"] and dispatch["caller_after_captured"]
+            for key, value in expected_dispatch.items():
+                recovered = recovered and dispatch.get(key) == value
+    return {
+        "path": str(path),
+        "event_count": len(events),
+        "child_returncode": data.get("child_returncode"),
+        "counts": dict(sorted(counts.items())),
+        "dispatches": dispatches,
+        "all_sampled_weighted_return_vector_counter_recovered": recovered,
+        "intervening_non_weighted_return_count": counts.get("0x004a5756", 0) - len(dispatches),
+    }
+
+
 def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     reject = summarize_reject(args.reject_trace)
     follow = summarize_follow(args.follow_trace)
@@ -495,6 +568,7 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     generator_delta = summarize_vector_contents(args.generator_delta_trace)
     vector_contents = summarize_vector_contents(args.vector_contents_trace)
     descriptor_counter = summarize_descriptor_counter(args.descriptor_counter_trace)
+    all_return_vector_counter = summarize_all_return_vector_counter(args.all_return_vector_counter_trace)
     conditions = {
         "rejecting_helper_return_captured": reject["reaches_helper_return"],
         "reject_reason_decoded_as_relation_mismatch": reject.get("first_recovered_reject", {}).get("reason")
@@ -515,9 +589,12 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "weighted_descriptor_counter_increment_recovered": descriptor_counter[
             "weighted_descriptor_counter_increment_recovered"
         ],
+        "all_sampled_weighted_return_vector_counter_recovered": all_return_vector_counter[
+            "all_sampled_weighted_return_vector_counter_recovered"
+        ],
     }
     status = (
-        "weighted_first_materialization_write_count_vector_counter_recovered"
+        "weighted_sampled_materializations_return_vector_counter_recovered"
         if all(conditions.values())
         else "weighted_materialization_frontier_incomplete"
     )
@@ -534,8 +611,9 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         "generator_delta_trace": generator_delta,
         "vector_contents_trace": vector_contents,
         "descriptor_counter_trace": descriptor_counter,
+        "all_return_vector_counter_trace": all_return_vector_counter,
         "not_recovered": [
-            "Only the first weighted materialization's return/caller/vector delta is recovered; full ordered replay of every weighted materialization remains pending.",
+            "All sampled weighted materializations have return/caller/vector/counter replay, but only the first has a complete score-write count.",
             "0x4a696b, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation, and 0x4add76 cleanup/uncommit runtime paths remain unrecovered.",
         ],
     }
@@ -552,6 +630,11 @@ def main() -> int:
     parser.add_argument("--generator-delta-trace", type=Path, default=DEFAULT_GENERATOR_DELTA_TRACE)
     parser.add_argument("--vector-contents-trace", type=Path, default=DEFAULT_VECTOR_CONTENTS_TRACE)
     parser.add_argument("--descriptor-counter-trace", type=Path, default=DEFAULT_DESCRIPTOR_COUNTER_TRACE)
+    parser.add_argument(
+        "--all-return-vector-counter-trace",
+        type=Path,
+        default=DEFAULT_ALL_RETURN_VECTOR_COUNTER_TRACE,
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
