@@ -236,9 +236,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "for the local coordinate, and is appended to the post-commit coordinate vector."
         ),
         "remaining_gap": (
-            "This recovers the 0x49e700 bit26 write set through the dispatch return. Downstream "
-            "phase-completion proof beyond 0x4ac844, linked-payload 0x4a696b direct mutation or "
-            "unreachable proof, and actual 0x4add76 cleanup/uncommit runtime behavior remain pending."
+            "This recovers the 0x49e700 bit26 write set through the dispatch return. The immediate "
+            "0x4ac552 phase tail is covered by the paired phase-completion summary. Linked-payload "
+            "0x4a696b direct mutation or unreachable proof, and actual 0x4add76 cleanup/uncommit "
+            "runtime behavior remain pending."
         ),
     }
 

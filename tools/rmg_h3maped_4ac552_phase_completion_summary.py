@@ -197,8 +197,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "remaining_gap": (
             "This closes the immediate downstream phase-completion proof after 0x49eb8d/0x4ac844. "
             "It does not recover linked-payload 0x4a696b direct mutation, live 0x4add76/0x4adef7 "
-            "cleanup/uncommit behavior, optional per-record projection-loop streams for 0x036260c0/"
-            "0x03626060, or the older coordinate/projection reconciliation."
+            "cleanup/uncommit behavior, downstream final-role semantic names, or the older "
+            "coordinate/projection reconciliation."
         ),
     }
 
