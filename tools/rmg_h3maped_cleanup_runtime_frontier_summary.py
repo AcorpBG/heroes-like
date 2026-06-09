@@ -166,6 +166,25 @@ def summarize(root: Path) -> dict[str, Any]:
     relation_counter = load_optional_json(root / "relation_counter_lifecycle_summary_20260608.json")
     runtime_hit_sites = {site for site, count in event_totals.items() if count}
     log_runtime_hit_sites = {site for site, count in log_stop_totals.items() if count}
+    breakpoint_only_ledgers = [
+        record["path"]
+        for record in ledger_records
+        if record.get("classification") == "breakpoint_or_command_only_no_hit"
+    ]
+    breakpoint_only_logs = [
+        record["path"]
+        for record in log_records
+        if record.get("classification") == "breakpoint_only_no_hit"
+    ]
+    target_named_nohit_artifacts = sorted(
+        path
+        for path in set(breakpoint_only_ledgers + breakpoint_only_logs)
+        if "hit_trace" in path
+        or "4add76" in path
+        or "4adef7" in path
+        or "4adb72" in path
+        or "4ad947" in path
+    )
 
     invariants = {
         "static_4add76_surface_recovered": bool(
@@ -208,6 +227,11 @@ def summarize(root: Path) -> dict[str, Any]:
         "target_stop_totals_from_logs": log_stop_totals,
         "runtime_hit_sites_from_ledgers": sorted(runtime_hit_sites),
         "runtime_hit_sites_from_logs": sorted(log_runtime_hit_sites),
+        "breakpoint_only_evidence": {
+            "ledger_records": len(breakpoint_only_ledgers),
+            "log_records": len(breakpoint_only_logs),
+            "target_named_nohit_artifacts": target_named_nohit_artifacts,
+        },
         "ledger_records": ledger_records,
         "log_records": log_records,
         "source_artifacts": {
@@ -223,7 +247,8 @@ def summarize(root: Path) -> dict[str, Any]:
             "0x4adef7, while 0x4adb72 is recovered as the wrapper attachment path that can seed "
             "generator+0xf5c/+0x1104. The current debugger corpus contains breakpoint-only/no-hit "
             "evidence for 0x4add76 and 0x4adef7; no ledger event or raw-log stop in this corpus "
-            "proves a live uncommit execution."
+            "proves a live uncommit execution. Target-named trace directories in "
+            "breakpoint_only_evidence are breakpoint-armed no-hit artifacts, not live hits."
         ),
         "remaining_gap": (
             "End-to-end recovery still needs a natural runtime path that actually enters 0x4add76/"

@@ -189,6 +189,21 @@ def summarize(root: Path) -> dict[str, Any]:
     constructor_counts = constructor_summary.get("constructor_counts", {})
     runtime_hit_sites = {site for site, count in event_totals.items() if count}
     log_runtime_hit_sites = {site for site, count in log_stop_totals.items() if count}
+    breakpoint_only_ledgers = [
+        record["path"]
+        for record in ledger_records
+        if record.get("classification") == "breakpoint_or_command_only_no_hit"
+    ]
+    breakpoint_only_logs = [
+        record["path"]
+        for record in log_records
+        if record.get("classification") == "breakpoint_only_no_hit"
+    ]
+    target_named_nohit_artifacts = sorted(
+        path
+        for path in set(breakpoint_only_ledgers + breakpoint_only_logs)
+        if "hit_trace" in path or "4add76" in path or "49c019" in path or "49c0a6" in path
+    )
 
     invariants = {
         "projection_slot_static_contract_recovered": bool(
@@ -242,6 +257,11 @@ def summarize(root: Path) -> dict[str, Any]:
         "target_stop_totals_from_logs": log_stop_totals,
         "runtime_hit_sites_from_ledgers": sorted(runtime_hit_sites),
         "runtime_hit_sites_from_logs": sorted(log_runtime_hit_sites),
+        "breakpoint_only_evidence": {
+            "ledger_records": len(breakpoint_only_ledgers),
+            "log_records": len(breakpoint_only_logs),
+            "target_named_nohit_artifacts": target_named_nohit_artifacts,
+        },
         "projection_constructor_counts": constructor_counts,
         "projection_method_static_contract": {
             "0x540b00+0x08": "0x0049c019 -> 0x4adb72, fallback 0x4adef7",
@@ -264,7 +284,8 @@ def summarize(root: Path) -> dict[str, Any]:
             "and then 0x4adef7, and 0x540b14+0x08 to 0x49c0a6, which calls 0x4ad947. "
             "The current corpus proves projection constructors are sampled and sampled "
             "projection objects can reach 0x49abd6 stamping, but it does not prove any "
-            "runtime call to those slot +0x08 methods."
+            "runtime call to those slot +0x08 methods. Target-named trace directories in "
+            "breakpoint_only_evidence are breakpoint-armed no-hit artifacts, not live hits."
         ),
         "remaining_gap": (
             "End-to-end recovery still needs the owning phase or caller that dispatches "
