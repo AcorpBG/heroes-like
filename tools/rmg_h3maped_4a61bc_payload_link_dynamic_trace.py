@@ -158,6 +158,8 @@ def run_xvfb(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     metadata: dict[str, Any] = {
         "initial_breakpoint": INITIAL_BREAKPOINT,
         "armed_breakpoints": ARMED_BREAKPOINTS,
+        "dump_696b_grid_entry_count": args.dump_696b_grid_entry_count,
+        "dumped_696b_grid_entries": [],
         "skip_caller_boundaries": args.skip_caller_boundaries,
         "caller_boundary_hits": 0,
         "skipped_caller_boundaries": [],
@@ -273,7 +275,7 @@ def run_xvfb(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
                 elif address in {"0x004a696b", "0x004a7605", "0x004a7df4", "0x004a7e21", "0x004a7e25"}:
                     metadata["dispatch_events"] = int(metadata["dispatch_events"]) + 1
                     capture_pointer(child, "$esi", args.debugger_timeout)
-                    capture_pointer(child, "$ecx", args.debugger_timeout)
+                    generator_dump = issue_capture(child, "x/16x $ecx", args.debugger_timeout)
                     capture_pointer(child, "$edx", args.debugger_timeout)
                     if address in {"0x004a696b", "0x004a7605"} and esp is not None:
                         first_arg = memory_word(stack_memory, esp + 4)
@@ -282,6 +284,34 @@ def run_xvfb(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
                             capture_pointer(child, qhex(first_arg) or "0", args.debugger_timeout, words=32)
                         if second_arg:
                             capture_pointer(child, qhex(second_arg) or "0", args.debugger_timeout, words=32)
+                    if (
+                        address == "0x004a696b"
+                        and args.dump_696b_grid_entry_count > len(metadata["dumped_696b_grid_entries"])
+                    ):
+                        generator = registers.get("ecx")
+                        generator_memory = parse_memory_words(generator_dump)
+                        if generator is not None:
+                            grid_base = memory_word(generator_memory, generator + 0x14)
+                            width = memory_word(generator_memory, generator + 0x18)
+                            height = memory_word(generator_memory, generator + 0x1C)
+                            levels = memory_word(generator_memory, generator + 0x20)
+                            if None not in {grid_base, width, height, levels}:
+                                grid_words = int(width) * int(height) * int(levels) * 12
+                                metadata["dumped_696b_grid_entries"].append(
+                                    {
+                                        "event_index": metadata["event_count"],
+                                        "grid_base": qhex(grid_base),
+                                        "width": width,
+                                        "height": height,
+                                        "levels": levels,
+                                        "grid_words": grid_words,
+                                    }
+                                )
+                                issue_capture(
+                                    child,
+                                    f"x/{grid_words}x {qhex(grid_base)}",
+                                    args.debugger_timeout,
+                                )
 
                 elif address in {
                     "0x004a7312",
@@ -361,6 +391,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-events", type=int, default=1800)
     parser.add_argument("--skip-caller-boundaries", type=int, default=0)
     parser.add_argument("--stop-after-dispatch-events", type=int, default=12)
+    parser.add_argument(
+        "--dump-696b-grid-entry-count",
+        type=int,
+        default=0,
+        help="Dump the full generated-cell grid for the first N 0x4a696b entries.",
+    )
     parser.add_argument("--map-size", choices=["small", "medium", "large", "xlarge"], default="small")
     parser.add_argument("--human-computer-down", type=int, default=-1)
     parser.add_argument("--computer-only-down", type=int, default=-1)
@@ -440,6 +476,8 @@ def main() -> int:
             str(args.skip_caller_boundaries),
             "--stop-after-dispatch-events",
             str(args.stop_after_dispatch_events),
+            "--dump-696b-grid-entry-count",
+            str(args.dump_696b_grid_entry_count),
             "--map-size",
             args.map_size,
             "--human-computer-down",
