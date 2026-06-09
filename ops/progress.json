@@ -443,10 +443,10 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Recovered exact descriptor/relation-counter replay for deterministic Border Guard fallback records without changing native behavior. A clean seed-pinned exact trace now joins fallback records 0x036260c0 and 0x03626060 across construction, absence from sampled 0x4a79a3 payload, 0x4a5c07 state chain, 0x4a54a7 object-vector/cell adoption, matching commit coordinates, descriptor type 54, source-cell low-word clear, and per-relation descriptor-type counter increments. The fallback final-role frontier now only lacks later-consumer trace or static terminal phase-order proof after 0x4a54a7 commit; exact per-record projection-loop parity is still missing if needed for native port.",
-    "currentSliceNotes": "Recovered exact descriptor/relation-counter replay for deterministic Border Guard fallback records without changing native behavior. A clean seed-pinned exact trace now joins fallback records 0x036260c0 and 0x03626060 across construction, absence from sampled 0x4a79a3 payload, 0x4a5c07 state chain, 0x4a54a7 object-vector/cell adoption, matching commit coordinates, descriptor type 54, source-cell low-word clear, and per-relation descriptor-type counter increments. The fallback final-role frontier now only lacks later-consumer trace or static terminal phase-order proof after 0x4a54a7 commit; exact per-record projection-loop parity is still missing if needed for native port.",
-    "currentSliceUpdatedAt": "2026-06-09T20:20:39Z",
-    "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentNotes": "Recovered stronger deterministic Border Guard fallback final-role frontier without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, and remain present at the 0x49eb8d handoff. The remaining final-role gap is now 0x49eb8d consumer semantics and phase-completion proof beyond that handoff; 0x4a696b direct-mutation reachability/proof, 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection streams, and older coordinate/projection reconciliation remain blockers before any native RMG port.",
+    "currentSliceNotes": "Recovered stronger deterministic Border Guard fallback final-role frontier without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, and remain present at the 0x49eb8d handoff. The remaining final-role gap is now 0x49eb8d consumer semantics and phase-completion proof beyond that handoff; 0x4a696b direct-mutation reachability/proof, 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection streams, and older coordinate/projection reconciliation remain blockers before any native RMG port.",
+    "currentSliceUpdatedAt": "2026-06-09T20:45:06Z",
+    "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
@@ -455,113 +455,116 @@
     "lastValidation": {
       "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
       "commands": [
-        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 121 events)",
-        "python3 tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json (produced exact fallback descriptor/relation entries; generic status incomplete only due later non-target cap invocation)",
-        "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py --descriptor-relation .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json --out .artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
-        "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py (passed)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_later_phase_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (bounded trace: 0x4a789a -> 0x4a8d27 -> 0x49eb8d; no armed likely payload/direct/cleanup/endpoint consumers observed before timeout)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 3 events, stopped at 0x49eb8d)",
+        "python3 tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py (passed: fallback_post_commit_vector_membership_survives_to_49eb8d)",
+        "python3 tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed: fallback_post_commit_likely_consumers_not_observed_in_bounded_trace)",
+        "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
+        "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed)",
+        "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
-        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-        "python3 tests/validate_repo.py (passed)"
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
       ],
       "metrics": {
         "h3maped_medium_seed10_fallback_final_role_frontier": {
-          "fallback_records": {
-            "0x03626060": {
-              "coordinate": {
-                "level": 0,
-                "x": 39,
-                "y": 31
-              },
-              "descriptor_type": 54,
-              "relation_counter": "1->2",
-              "relation_counter_address": "0x0178a56c",
-              "source_owner_byte": 4
-            },
-            "0x036260c0": {
-              "coordinate": {
-                "level": 0,
-                "x": 59,
-                "y": 47
-              },
-              "descriptor_type": 54,
-              "relation_counter": "0->1",
-              "relation_counter_address": "0x0175da04",
-              "source_owner_byte": 1
-            }
-          },
           "invariants": {
+            "cell_object_ref_vector_contains_all_fallback_records": true,
             "exact_afterstate_recovered_for_all_fallback_records": true,
-            "exact_coordinates_match_for_all_fallback_records": true,
             "exact_descriptor_relation_recovered_for_all_fallback_records": true,
             "exact_projection_write_stream_missing_for_fallback_records": true,
             "exact_state_chain_recovered_for_all_fallback_records": true,
             "fallback_records_absent_from_sampled_payload": true,
             "fallback_records_constructed_after_payload": true,
-            "older_projection_targets_are_not_exact_fallback_records": true,
+            "fallback_records_survive_to_49eb8d_object_vector": true,
+            "fallback_records_survive_to_4a8d27_object_vector": true,
+            "native_behavior_changed": false,
             "two_fallback_records_identified": true
           },
-          "native_behavior_changed": false,
-          "remaining_gap": "Later-consumer trace or terminal phase-order proof after 0x4a54a7 commit; exact fallback projection-loop write streams only if required; 0x4a696b direct mutation and 0x4add76 cleanup runtime blockers remain.",
-          "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing",
-          "trace_event_count": 121
+          "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
+          "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+        },
+        "h3maped_medium_seed10_fallback_vector_membership": {
+          "invariants": {
+            "fallback_records_in_49eb8d_object_vector": true,
+            "fallback_records_in_4a8d27_object_vector": true,
+            "likely_payload_direct_cleanup_consumers_absent": true,
+            "native_behavior_changed": false
+          },
+          "object_vector_counts": {
+            "0x49eb8d": 389,
+            "0x4a8d27": 13
+          },
+          "positions": {
+            "0x03626060": {
+              "0x49eb8d_index": 12,
+              "0x4a8d27_index": 12
+            },
+            "0x036260c0": {
+              "0x49eb8d_index": 10,
+              "0x4a8d27_index": 10
+            }
+          },
+          "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-09T20:20:39Z",
-      "updatedAt": "2026-06-09T20:20:39Z"
+      "timestamp": "2026-06-09T20:46:15Z",
+      "updatedAt": "2026-06-09T20:46:15Z"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-      "descriptor_relation_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json",
+      "consumer_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_consumer_summary_20260609.json",
       "metrics": {
-        "fallback_records": {
-          "0x03626060": {
-            "coordinate": {
-              "level": 0,
-              "x": 39,
-              "y": 31
-            },
-            "descriptor_type": 54,
-            "relation_counter": "1->2",
-            "relation_counter_address": "0x0178a56c",
-            "source_owner_byte": 4
+        "h3maped_medium_seed10_fallback_final_role_frontier": {
+          "invariants": {
+            "cell_object_ref_vector_contains_all_fallback_records": true,
+            "exact_afterstate_recovered_for_all_fallback_records": true,
+            "exact_descriptor_relation_recovered_for_all_fallback_records": true,
+            "exact_projection_write_stream_missing_for_fallback_records": true,
+            "exact_state_chain_recovered_for_all_fallback_records": true,
+            "fallback_records_absent_from_sampled_payload": true,
+            "fallback_records_constructed_after_payload": true,
+            "fallback_records_survive_to_49eb8d_object_vector": true,
+            "fallback_records_survive_to_4a8d27_object_vector": true,
+            "native_behavior_changed": false,
+            "two_fallback_records_identified": true
           },
-          "0x036260c0": {
-            "coordinate": {
-              "level": 0,
-              "x": 59,
-              "y": 47
+          "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
+          "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+        },
+        "h3maped_medium_seed10_fallback_vector_membership": {
+          "invariants": {
+            "fallback_records_in_49eb8d_object_vector": true,
+            "fallback_records_in_4a8d27_object_vector": true,
+            "likely_payload_direct_cleanup_consumers_absent": true,
+            "native_behavior_changed": false
+          },
+          "object_vector_counts": {
+            "0x49eb8d": 389,
+            "0x4a8d27": 13
+          },
+          "positions": {
+            "0x03626060": {
+              "0x49eb8d_index": 12,
+              "0x4a8d27_index": 12
             },
-            "descriptor_type": 54,
-            "relation_counter": "0->1",
-            "relation_counter_address": "0x0175da04",
-            "source_owner_byte": 1
-          }
-        },
-        "invariants": {
-          "exact_afterstate_recovered_for_all_fallback_records": true,
-          "exact_coordinates_match_for_all_fallback_records": true,
-          "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-          "exact_projection_write_stream_missing_for_fallback_records": true,
-          "exact_state_chain_recovered_for_all_fallback_records": true,
-          "fallback_records_absent_from_sampled_payload": true,
-          "fallback_records_constructed_after_payload": true,
-          "older_projection_targets_are_not_exact_fallback_records": true,
-          "two_fallback_records_identified": true
-        },
-        "native_behavior_changed": false,
-        "remaining_gap": "Later-consumer trace or terminal phase-order proof after 0x4a54a7 commit; exact fallback projection-loop write streams only if required; 0x4a696b direct mutation and 0x4add76 cleanup runtime blockers remain.",
-        "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing",
-        "trace_event_count": 121
+            "0x036260c0": {
+              "0x49eb8d_index": 10,
+              "0x4a8d27_index": 10
+            }
+          },
+          "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
+        }
       },
       "native_behavior_changed": false,
-      "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "result": "Exact deterministic Border Guard fallback descriptor/relation-counter replay recovered; final role remains unrecovered beyond immediate commit.",
-      "source_basis": "Clean seed-pinned H3MapEd WineDbg exact descriptor/relation trace summarized by tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py and joined by tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
-      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609/winedbg_interactive_trace_ledger.json",
-      "validatedAt": "2026-06-09T20:20:39Z"
+      "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "result": "Exact deterministic Border Guard fallback records now survive from construction and commit through the 0x49eb8d handoff; final consumer semantics beyond that handoff remain unrecovered.",
+      "source_basis": "Clean PE seed-pinned H3MapEd WineDbg later-phase and vector-membership traces summarized by tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py and joined into tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
+      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609/winedbg_interactive_trace_ledger.json",
+      "validatedAt": "2026-06-09T20:45:06Z",
+      "vector_membership_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -9265,10 +9268,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered exact descriptor/relation-counter replay for deterministic Border Guard fallback records without changing native behavior. A clean seed-pinned exact trace now joins fallback records 0x036260c0 and 0x03626060 across construction, absence from sampled 0x4a79a3 payload, 0x4a5c07 state chain, 0x4a54a7 object-vector/cell adoption, matching commit coordinates, descriptor type 54, source-cell low-word clear, and per-relation descriptor-type counter increments. The fallback final-role frontier now only lacks later-consumer trace or static terminal phase-order proof after 0x4a54a7 commit; exact per-record projection-loop parity is still missing if needed for native port.",
+  "currentSliceNotes": "Recovered stronger deterministic Border Guard fallback final-role frontier without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, and remain present at the 0x49eb8d handoff. The remaining final-role gap is now 0x49eb8d consumer semantics and phase-completion proof beyond that handoff; 0x4a696b direct-mutation reachability/proof, 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection streams, and older coordinate/projection reconciliation remain blockers before any native RMG port.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T20:20:39Z",
+  "currentSliceUpdatedAt": "2026-06-09T20:45:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10264,119 +10267,122 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
     "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
     "commands": [
-      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 121 events)",
-      "python3 tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json (produced exact fallback descriptor/relation entries; generic status incomplete only due later non-target cap invocation)",
-      "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py --descriptor-relation .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json --out .artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
-      "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py (passed)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_later_phase_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (bounded trace: 0x4a789a -> 0x4a8d27 -> 0x49eb8d; no armed likely payload/direct/cleanup/endpoint consumers observed before timeout)",
+      "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 3 events, stopped at 0x49eb8d)",
+      "python3 tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py (passed: fallback_post_commit_vector_membership_survives_to_49eb8d)",
+      "python3 tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed: fallback_post_commit_likely_consumers_not_observed_in_bounded_trace)",
+      "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
+      "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed)",
+      "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-      "python3 tests/validate_repo.py (passed)"
+      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
     ],
     "metrics": {
       "h3maped_medium_seed10_fallback_final_role_frontier": {
-        "fallback_records": {
-          "0x03626060": {
-            "coordinate": {
-              "level": 0,
-              "x": 39,
-              "y": 31
-            },
-            "descriptor_type": 54,
-            "relation_counter": "1->2",
-            "relation_counter_address": "0x0178a56c",
-            "source_owner_byte": 4
-          },
-          "0x036260c0": {
-            "coordinate": {
-              "level": 0,
-              "x": 59,
-              "y": 47
-            },
-            "descriptor_type": 54,
-            "relation_counter": "0->1",
-            "relation_counter_address": "0x0175da04",
-            "source_owner_byte": 1
-          }
-        },
         "invariants": {
+          "cell_object_ref_vector_contains_all_fallback_records": true,
           "exact_afterstate_recovered_for_all_fallback_records": true,
-          "exact_coordinates_match_for_all_fallback_records": true,
           "exact_descriptor_relation_recovered_for_all_fallback_records": true,
           "exact_projection_write_stream_missing_for_fallback_records": true,
           "exact_state_chain_recovered_for_all_fallback_records": true,
           "fallback_records_absent_from_sampled_payload": true,
           "fallback_records_constructed_after_payload": true,
-          "older_projection_targets_are_not_exact_fallback_records": true,
+          "fallback_records_survive_to_49eb8d_object_vector": true,
+          "fallback_records_survive_to_4a8d27_object_vector": true,
+          "native_behavior_changed": false,
           "two_fallback_records_identified": true
         },
-        "native_behavior_changed": false,
-        "remaining_gap": "Later-consumer trace or terminal phase-order proof after 0x4a54a7 commit; exact fallback projection-loop write streams only if required; 0x4a696b direct mutation and 0x4add76 cleanup runtime blockers remain.",
-        "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing",
-        "trace_event_count": 121
+        "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
+        "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+      },
+      "h3maped_medium_seed10_fallback_vector_membership": {
+        "invariants": {
+          "fallback_records_in_49eb8d_object_vector": true,
+          "fallback_records_in_4a8d27_object_vector": true,
+          "likely_payload_direct_cleanup_consumers_absent": true,
+          "native_behavior_changed": false
+        },
+        "object_vector_counts": {
+          "0x49eb8d": 389,
+          "0x4a8d27": 13
+        },
+        "positions": {
+          "0x03626060": {
+            "0x49eb8d_index": 12,
+            "0x4a8d27_index": 12
+          },
+          "0x036260c0": {
+            "0x49eb8d_index": 10,
+            "0x4a8d27_index": 10
+          }
+        },
+        "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-09T20:20:39Z",
-    "updatedAt": "2026-06-09T20:20:39Z"
+    "timestamp": "2026-06-09T20:46:15Z",
+    "updatedAt": "2026-06-09T20:46:15Z"
   },
   "latestEvidence": {
     "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-    "descriptor_relation_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json",
+    "consumer_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_consumer_summary_20260609.json",
     "metrics": {
-      "fallback_records": {
-        "0x03626060": {
-          "coordinate": {
-            "level": 0,
-            "x": 39,
-            "y": 31
-          },
-          "descriptor_type": 54,
-          "relation_counter": "1->2",
-          "relation_counter_address": "0x0178a56c",
-          "source_owner_byte": 4
+      "h3maped_medium_seed10_fallback_final_role_frontier": {
+        "invariants": {
+          "cell_object_ref_vector_contains_all_fallback_records": true,
+          "exact_afterstate_recovered_for_all_fallback_records": true,
+          "exact_descriptor_relation_recovered_for_all_fallback_records": true,
+          "exact_projection_write_stream_missing_for_fallback_records": true,
+          "exact_state_chain_recovered_for_all_fallback_records": true,
+          "fallback_records_absent_from_sampled_payload": true,
+          "fallback_records_constructed_after_payload": true,
+          "fallback_records_survive_to_49eb8d_object_vector": true,
+          "fallback_records_survive_to_4a8d27_object_vector": true,
+          "native_behavior_changed": false,
+          "two_fallback_records_identified": true
         },
-        "0x036260c0": {
-          "coordinate": {
-            "level": 0,
-            "x": 59,
-            "y": 47
+        "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
+        "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+      },
+      "h3maped_medium_seed10_fallback_vector_membership": {
+        "invariants": {
+          "fallback_records_in_49eb8d_object_vector": true,
+          "fallback_records_in_4a8d27_object_vector": true,
+          "likely_payload_direct_cleanup_consumers_absent": true,
+          "native_behavior_changed": false
+        },
+        "object_vector_counts": {
+          "0x49eb8d": 389,
+          "0x4a8d27": 13
+        },
+        "positions": {
+          "0x03626060": {
+            "0x49eb8d_index": 12,
+            "0x4a8d27_index": 12
           },
-          "descriptor_type": 54,
-          "relation_counter": "0->1",
-          "relation_counter_address": "0x0175da04",
-          "source_owner_byte": 1
-        }
-      },
-      "invariants": {
-        "exact_afterstate_recovered_for_all_fallback_records": true,
-        "exact_coordinates_match_for_all_fallback_records": true,
-        "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-        "exact_projection_write_stream_missing_for_fallback_records": true,
-        "exact_state_chain_recovered_for_all_fallback_records": true,
-        "fallback_records_absent_from_sampled_payload": true,
-        "fallback_records_constructed_after_payload": true,
-        "older_projection_targets_are_not_exact_fallback_records": true,
-        "two_fallback_records_identified": true
-      },
-      "native_behavior_changed": false,
-      "remaining_gap": "Later-consumer trace or terminal phase-order proof after 0x4a54a7 commit; exact fallback projection-loop write streams only if required; 0x4a696b direct mutation and 0x4add76 cleanup runtime blockers remain.",
-      "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing",
-      "trace_event_count": 121
+          "0x036260c0": {
+            "0x49eb8d_index": 10,
+            "0x4a8d27_index": 10
+          }
+        },
+        "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
+      }
     },
     "native_behavior_changed": false,
-    "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Exact deterministic Border Guard fallback descriptor/relation-counter replay recovered; final role remains unrecovered beyond immediate commit.",
-    "source_basis": "Clean seed-pinned H3MapEd WineDbg exact descriptor/relation trace summarized by tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py and joined by tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
-    "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609/winedbg_interactive_trace_ledger.json",
-    "validatedAt": "2026-06-09T20:20:39Z"
+    "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Exact deterministic Border Guard fallback records now survive from construction and commit through the 0x49eb8d handoff; final consumer semantics beyond that handoff remain unrecovered.",
+    "source_basis": "Clean PE seed-pinned H3MapEd WineDbg later-phase and vector-membership traces summarized by tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py and joined into tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
+    "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609/winedbg_interactive_trace_ledger.json",
+    "validatedAt": "2026-06-09T20:45:06Z",
+    "vector_membership_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
   },
-  "nextActionGuardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "2026-06-05 Medium native RMG reward scheduler implementation update: h3maped_small_rmg now uses the 0x640 reward scheduling dividend for strict Medium one-level surface scope while preserving Small land at 0x320 and water at 0x640. Focused Python export .artifacts/rmg_native_medium_reward_budget_20260605 passed for Small seed11 and Medium seed10; Small stayed unchanged at 365 objects / 61 rewards / 42 reward-coordinate records, Medium moved from 1015 objects / 83 rewards / 70 reward-coordinate records to 1067 objects / 112 rewards / 98 reward-coordinate records. rmg_fast_validation passed with no policy/topology/density gaps. Remaining parity gaps are still real: controlled H3MapEd Medium is 1256 objects / 144 rewards, roads remain overdrawn, and exact town/endpoint/private object-vector parity is not complete. 2026-06-07 0x4aa3e9 source-site ordered checkpoint: completed-call trace proves 23 source bit27-clear before/after pairs and 8 source bit26 set-before sites; caller reward/object-vector commit ordering remains pending. 2026-06-07 0x4aa9b7 ordered checkpoint: sampled runtime trace proves local candidate-vector selection and handoff into 0x4aa3e9 for 6 successful commits; 0x4ad7f7/0x4adb72 projection ordering remains pending. 2026-06-07 0x4a9f1c selected-lifetime checkpoint: sampled runtime trace proves selected-object returns feed 0x4aa1db initial/secondary consumers, 0x49d471 validation, and 0x49abd6 stamping; this sampled path did not dispatch 0x540b00/0x540b14 projection-object methods, so that storage/consumer path remains the named recovery gap. 2026-06-09 0x49aa93 branch-contract checkpoint: generated by tools/rmg_h3maped_49aa93_branch_contract_summary.py. Static markers recover the 0x49aa93 helper contract and the weighted 0x4a901a post-helper caller flow: 0x4a916c tests AL, true continues at 0x4a9174, append is 0x4a9248/0x4a9254, and materialization requires the local vector gate at 0x4a9273. Follow-up live attempts still did not capture 0x4a9167 returning at 0x4a916c: one sampled 526 value-floor checks with low words 12..57, and the light attempt sampled 835 value-floor checks with low words 0..36 plus five empty-vector exits at 0x4a9273/0x4a9391. No append, allocation, constructor, ready, or projection-dispatch hits were captured. Native RMG behavior unchanged.",
   "plannedSlices": [
     {
@@ -43808,10 +43814,10 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Recovered exact descriptor/relation-counter replay for deterministic Border Guard fallback records without changing native behavior. A clean seed-pinned exact trace now joins fallback records 0x036260c0 and 0x03626060 across construction, absence from sampled 0x4a79a3 payload, 0x4a5c07 state chain, 0x4a54a7 object-vector/cell adoption, matching commit coordinates, descriptor type 54, source-cell low-word clear, and per-relation descriptor-type counter increments. The fallback final-role frontier now only lacks later-consumer trace or static terminal phase-order proof after 0x4a54a7 commit; exact per-record projection-loop parity is still missing if needed for native port.",
-      "currentSliceNotes": "Recovered exact descriptor/relation-counter replay for deterministic Border Guard fallback records without changing native behavior. A clean seed-pinned exact trace now joins fallback records 0x036260c0 and 0x03626060 across construction, absence from sampled 0x4a79a3 payload, 0x4a5c07 state chain, 0x4a54a7 object-vector/cell adoption, matching commit coordinates, descriptor type 54, source-cell low-word clear, and per-relation descriptor-type counter increments. The fallback final-role frontier now only lacks later-consumer trace or static terminal phase-order proof after 0x4a54a7 commit; exact per-record projection-loop parity is still missing if needed for native port.",
-      "currentSliceUpdatedAt": "2026-06-09T20:20:39Z",
-      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentNotes": "Recovered stronger deterministic Border Guard fallback final-role frontier without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, and remain present at the 0x49eb8d handoff. The remaining final-role gap is now 0x49eb8d consumer semantics and phase-completion proof beyond that handoff; 0x4a696b direct-mutation reachability/proof, 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection streams, and older coordinate/projection reconciliation remain blockers before any native RMG port.",
+      "currentSliceNotes": "Recovered stronger deterministic Border Guard fallback final-role frontier without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, and remain present at the 0x49eb8d handoff. The remaining final-role gap is now 0x49eb8d consumer semantics and phase-completion proof beyond that handoff; 0x4a696b direct-mutation reachability/proof, 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection streams, and older coordinate/projection reconciliation remain blockers before any native RMG port.",
+      "currentSliceUpdatedAt": "2026-06-09T20:45:06Z",
+      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
@@ -43820,113 +43826,116 @@
       "lastValidation": {
         "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
         "commands": [
-          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 121 events)",
-          "python3 tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py --ledger .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json (produced exact fallback descriptor/relation entries; generic status incomplete only due later non-target cap invocation)",
-          "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py --descriptor-relation .artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json --out .artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
-          "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py (passed)",
+          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_later_phase_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (bounded trace: 0x4a789a -> 0x4a8d27 -> 0x49eb8d; no armed likely payload/direct/cleanup/endpoint consumers observed before timeout)",
+          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 3 events, stopped at 0x49eb8d)",
+          "python3 tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py (passed: fallback_post_commit_vector_membership_survives_to_49eb8d)",
+          "python3 tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed: fallback_post_commit_likely_consumers_not_observed_in_bounded_trace)",
+          "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
+          "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed)",
+          "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)",
-          "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-          "python3 tests/validate_repo.py (passed)"
+          "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
         ],
         "metrics": {
           "h3maped_medium_seed10_fallback_final_role_frontier": {
-            "fallback_records": {
-              "0x03626060": {
-                "coordinate": {
-                  "level": 0,
-                  "x": 39,
-                  "y": 31
-                },
-                "descriptor_type": 54,
-                "relation_counter": "1->2",
-                "relation_counter_address": "0x0178a56c",
-                "source_owner_byte": 4
-              },
-              "0x036260c0": {
-                "coordinate": {
-                  "level": 0,
-                  "x": 59,
-                  "y": 47
-                },
-                "descriptor_type": 54,
-                "relation_counter": "0->1",
-                "relation_counter_address": "0x0175da04",
-                "source_owner_byte": 1
-              }
-            },
             "invariants": {
+              "cell_object_ref_vector_contains_all_fallback_records": true,
               "exact_afterstate_recovered_for_all_fallback_records": true,
-              "exact_coordinates_match_for_all_fallback_records": true,
               "exact_descriptor_relation_recovered_for_all_fallback_records": true,
               "exact_projection_write_stream_missing_for_fallback_records": true,
               "exact_state_chain_recovered_for_all_fallback_records": true,
               "fallback_records_absent_from_sampled_payload": true,
               "fallback_records_constructed_after_payload": true,
-              "older_projection_targets_are_not_exact_fallback_records": true,
+              "fallback_records_survive_to_49eb8d_object_vector": true,
+              "fallback_records_survive_to_4a8d27_object_vector": true,
+              "native_behavior_changed": false,
               "two_fallback_records_identified": true
             },
-            "native_behavior_changed": false,
-            "remaining_gap": "Later-consumer trace or terminal phase-order proof after 0x4a54a7 commit; exact fallback projection-loop write streams only if required; 0x4a696b direct mutation and 0x4add76 cleanup runtime blockers remain.",
-            "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing",
-            "trace_event_count": 121
+            "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
+            "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+          },
+          "h3maped_medium_seed10_fallback_vector_membership": {
+            "invariants": {
+              "fallback_records_in_49eb8d_object_vector": true,
+              "fallback_records_in_4a8d27_object_vector": true,
+              "likely_payload_direct_cleanup_consumers_absent": true,
+              "native_behavior_changed": false
+            },
+            "object_vector_counts": {
+              "0x49eb8d": 389,
+              "0x4a8d27": 13
+            },
+            "positions": {
+              "0x03626060": {
+                "0x49eb8d_index": 12,
+                "0x4a8d27_index": 12
+              },
+              "0x036260c0": {
+                "0x49eb8d_index": 10,
+                "0x4a8d27_index": 10
+              }
+            },
+            "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
           }
         },
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-09T20:20:39Z",
-        "updatedAt": "2026-06-09T20:20:39Z"
+        "timestamp": "2026-06-09T20:46:15Z",
+        "updatedAt": "2026-06-09T20:46:15Z"
       },
       "latestEvidence": {
         "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-        "descriptor_relation_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json",
+        "consumer_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_consumer_summary_20260609.json",
         "metrics": {
-          "fallback_records": {
-            "0x03626060": {
-              "coordinate": {
-                "level": 0,
-                "x": 39,
-                "y": 31
-              },
-              "descriptor_type": 54,
-              "relation_counter": "1->2",
-              "relation_counter_address": "0x0178a56c",
-              "source_owner_byte": 4
+          "h3maped_medium_seed10_fallback_final_role_frontier": {
+            "invariants": {
+              "cell_object_ref_vector_contains_all_fallback_records": true,
+              "exact_afterstate_recovered_for_all_fallback_records": true,
+              "exact_descriptor_relation_recovered_for_all_fallback_records": true,
+              "exact_projection_write_stream_missing_for_fallback_records": true,
+              "exact_state_chain_recovered_for_all_fallback_records": true,
+              "fallback_records_absent_from_sampled_payload": true,
+              "fallback_records_constructed_after_payload": true,
+              "fallback_records_survive_to_49eb8d_object_vector": true,
+              "fallback_records_survive_to_4a8d27_object_vector": true,
+              "native_behavior_changed": false,
+              "two_fallback_records_identified": true
             },
-            "0x036260c0": {
-              "coordinate": {
-                "level": 0,
-                "x": 59,
-                "y": 47
+            "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
+            "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
+          },
+          "h3maped_medium_seed10_fallback_vector_membership": {
+            "invariants": {
+              "fallback_records_in_49eb8d_object_vector": true,
+              "fallback_records_in_4a8d27_object_vector": true,
+              "likely_payload_direct_cleanup_consumers_absent": true,
+              "native_behavior_changed": false
+            },
+            "object_vector_counts": {
+              "0x49eb8d": 389,
+              "0x4a8d27": 13
+            },
+            "positions": {
+              "0x03626060": {
+                "0x49eb8d_index": 12,
+                "0x4a8d27_index": 12
               },
-              "descriptor_type": 54,
-              "relation_counter": "0->1",
-              "relation_counter_address": "0x0175da04",
-              "source_owner_byte": 1
-            }
-          },
-          "invariants": {
-            "exact_afterstate_recovered_for_all_fallback_records": true,
-            "exact_coordinates_match_for_all_fallback_records": true,
-            "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-            "exact_projection_write_stream_missing_for_fallback_records": true,
-            "exact_state_chain_recovered_for_all_fallback_records": true,
-            "fallback_records_absent_from_sampled_payload": true,
-            "fallback_records_constructed_after_payload": true,
-            "older_projection_targets_are_not_exact_fallback_records": true,
-            "two_fallback_records_identified": true
-          },
-          "native_behavior_changed": false,
-          "remaining_gap": "Later-consumer trace or terminal phase-order proof after 0x4a54a7 commit; exact fallback projection-loop write streams only if required; 0x4a696b direct mutation and 0x4add76 cleanup runtime blockers remain.",
-          "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing",
-          "trace_event_count": 121
+              "0x036260c0": {
+                "0x49eb8d_index": 10,
+                "0x4a8d27_index": 10
+              }
+            },
+            "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
+          }
         },
         "native_behavior_changed": false,
-        "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, and exact fallback descriptor/relation-counter replay are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; recover later-consumer/final-role proof for deterministic Border Guard fallback records after their 0x4a54a7 commit; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-        "result": "Exact deterministic Border Guard fallback descriptor/relation-counter replay recovered; final role remains unrecovered beyond immediate commit.",
-        "source_basis": "Clean seed-pinned H3MapEd WineDbg exact descriptor/relation trace summarized by tools/rmg_h3maped_4a54a7_descriptor_relation_summary.py and joined by tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
-        "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_trace_20260609/winedbg_interactive_trace_ledger.json",
-        "validatedAt": "2026-06-09T20:20:39Z"
+        "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+        "result": "Exact deterministic Border Guard fallback records now survive from construction and commit through the 0x49eb8d handoff; final consumer semantics beyond that handoff remain unrecovered.",
+        "source_basis": "Clean PE seed-pinned H3MapEd WineDbg later-phase and vector-membership traces summarized by tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py and joined into tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
+        "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609/winedbg_interactive_trace_ledger.json",
+        "validatedAt": "2026-06-09T20:45:06Z",
+        "vector_membership_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
@@ -50745,7 +50754,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, and all sampled weighted dispatch return/vector/counter deltas are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and 0x4add76 cleanup replay are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-09T19:08:09Z",
+  "updatedAt": "2026-06-09T20:46:15Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [

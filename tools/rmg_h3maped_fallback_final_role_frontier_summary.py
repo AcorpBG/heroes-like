@@ -25,10 +25,13 @@ DEFAULT_AFTERSTATE = Path(
     ".artifacts/rmg_recovery/medium_seed10_4a54a7_afterstate_summary_20260608.json"
 )
 DEFAULT_DESCRIPTOR_RELATION = Path(
-    ".artifacts/rmg_recovery/medium_seed10_4a54a7_descriptor_relation_summary_20260608.json"
+    ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json"
 )
 DEFAULT_PROJECTION_WRITES = Path(
     ".artifacts/rmg_recovery/medium_seed10_4a54a7_projection_write_summary_20260608.json"
+)
+DEFAULT_VECTOR_MEMBERSHIP = Path(
+    ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
 )
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json"
@@ -67,6 +70,16 @@ def projection_record_keys(summary: dict[str, Any]) -> set[str]:
     return keys
 
 
+def fallback_positions(summary: dict[str, Any], snapshot_key: str, pointer: str) -> list[int]:
+    positions = (
+        summary.get("object_vector_snapshots", {})
+        .get(snapshot_key, {})
+        .get("fallback_positions", {})
+        .get(pointer, [])
+    )
+    return positions if isinstance(positions, list) else []
+
+
 def fallback_record_summary(
     pointer: str,
     fallback: dict[str, Any],
@@ -74,6 +87,7 @@ def fallback_record_summary(
     afterstate: dict[str, Any] | None,
     descriptor_relation: dict[str, Any] | None,
     projection_write_pointers: set[str],
+    vector_membership: dict[str, Any],
 ) -> dict[str, Any]:
     after_coord = (
         afterstate.get("vtable_callback", {}).get("coordinate")
@@ -90,6 +104,19 @@ def fallback_record_summary(
         if descriptor_relation
         else None
     )
+    cell_object_ref_vector = (
+        afterstate.get("post_return_cell", {}).get("object_ref_vector")
+        if afterstate
+        else None
+    )
+    cell_ref_words = (
+        cell_object_ref_vector.get("first_words", [])
+        if isinstance(cell_object_ref_vector, dict)
+        else []
+    )
+    cell_ref_contains_object = pointer in cell_ref_words
+    phase_positions = fallback_positions(vector_membership, "phase_return_0x4a8d27", pointer)
+    handoff_positions = fallback_positions(vector_membership, "final_handoff_0x49eb8d", pointer)
     return {
         "object_record": pointer,
         "fallback_constructor": {
@@ -104,6 +131,9 @@ def fallback_record_summary(
             "afterstate_recovered": afterstate is not None,
             "descriptor_relation_recovered": descriptor_relation is not None,
             "exact_projection_write_stream_recovered": pointer in projection_write_pointers,
+            "cell_object_ref_vector_contains_object": cell_ref_contains_object,
+            "object_vector_survives_to_4a8d27": bool(phase_positions),
+            "object_vector_survives_to_49eb8d": bool(handoff_positions),
         },
         "coordinates": {
             "state_chain_commit": state_coord,
@@ -127,10 +157,13 @@ def fallback_record_summary(
                 else None
             ),
             "target_cell_ref_vector_contains_object": (
-                afterstate.get("target_cell_ref_vector_contains_object")
-                if afterstate
-                else None
+                cell_ref_contains_object if afterstate else None
             ),
+            "target_cell_ref_vector": cell_object_ref_vector,
+        },
+        "post_commit_vector_membership": {
+            "phase_return_0x4a8d27_positions": phase_positions,
+            "final_handoff_0x49eb8d_positions": handoff_positions,
         },
         "descriptor_relation": {
             "descriptor_type": (
@@ -150,6 +183,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     afterstate = read_json(args.afterstate)
     descriptor_relation = read_json(args.descriptor_relation)
     projection_writes = read_json(args.projection_writes)
+    vector_membership = read_json(args.vector_membership) if args.vector_membership.exists() else {}
 
     fallback_records = by_object(
         fallback_payload.get("post_border_guard_fallback_records", []),
@@ -177,6 +211,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             afterstate_records.get(pointer),
             descriptor_records.get(pointer),
             projection_pointers,
+            vector_membership,
         )
         for pointer, fallback in sorted(fallback_records.items())
     ]
@@ -220,6 +255,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "exact_descriptor_relation_recovered_for_all_fallback_records": all(
             record["exact_evidence"]["descriptor_relation_recovered"] for record in records
         ),
+        "cell_object_ref_vector_contains_all_fallback_records": all(
+            record["exact_evidence"]["cell_object_ref_vector_contains_object"] for record in records
+        ),
+        "fallback_records_survive_to_4a8d27_object_vector": all(
+            record["exact_evidence"]["object_vector_survives_to_4a8d27"] for record in records
+        ),
+        "fallback_records_survive_to_49eb8d_object_vector": all(
+            record["exact_evidence"]["object_vector_survives_to_49eb8d"] for record in records
+        ),
         "exact_coordinates_match_for_all_fallback_records": all(
             record["coordinates"]["all_exact_coordinates_match"] for record in records
         ),
@@ -243,6 +287,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "fallback_records_absent_from_sampled_payload",
             "exact_state_chain_recovered_for_all_fallback_records",
             "exact_afterstate_recovered_for_all_fallback_records",
+            "cell_object_ref_vector_contains_all_fallback_records",
+            "fallback_records_survive_to_4a8d27_object_vector",
+            "fallback_records_survive_to_49eb8d_object_vector",
             "exact_coordinates_match_for_all_fallback_records",
             "exact_commit_frontier_recovered_for_all_fallback_records",
             "older_projection_targets_are_not_exact_fallback_records",
@@ -257,11 +304,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
 
     if invariants["exact_descriptor_relation_recovered_for_all_fallback_records"]:
         remaining_gap = (
-            "The exact fallback records still need either a later-consumer trace after their 0x4a54a7 commit or a "
-            "static phase-order proof that committed object-vector/cell adoption is their terminal role for this phase. "
-            "If exact per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream "
-            "for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup "
-            "runtime blockers before any native RMG behavior port."
+            "The exact fallback records now have recovered construction, commit, cell object-reference adoption, "
+            "descriptor/relation-counter replay, and object-vector survival to the 0x49eb8d handoff. The remaining "
+            "final-role gap is the 0x49eb8d consumer semantics and phase-completion proof beyond that handoff. If exact "
+            "per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream for "
+            "0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime "
+            "blockers before any native RMG behavior port."
         )
     else:
         remaining_gap = (
@@ -282,6 +330,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "afterstate": str(args.afterstate),
             "descriptor_relation": str(args.descriptor_relation),
             "projection_writes": str(args.projection_writes),
+            "vector_membership": str(args.vector_membership),
         },
         "records": records,
         "non_exact_projection_write_targets": non_exact_projection_targets,
@@ -290,6 +339,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "For the two exact deterministic Medium seed-10 post-Border-Guard fallback records, construction, "
             "immediate 0x4a5c07 state chain, and 0x4a54a7 object-vector/cell adoption are recovered. "
             "The sampled 0x4a79a3 payload pass is earlier and does not consume these records. "
+            "A later clean seed-pinned replay proves both records remain in the generator object vector at 0x4a8d27 "
+            "and again at the 0x49eb8d handoff. "
             "The older projection-write streams are useful 0x4a54a7 write-set evidence, but they are not exact evidence "
             "for these two fallback records because their object pointers/coordinates differ and those traces have no "
             "seed-control metadata."
@@ -305,6 +356,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--afterstate", type=Path, default=DEFAULT_AFTERSTATE)
     parser.add_argument("--descriptor-relation", type=Path, default=DEFAULT_DESCRIPTOR_RELATION)
     parser.add_argument("--projection-writes", type=Path, default=DEFAULT_PROJECTION_WRITES)
+    parser.add_argument("--vector-membership", type=Path, default=DEFAULT_VECTOR_MEMBERSHIP)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
