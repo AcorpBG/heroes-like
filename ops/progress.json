@@ -444,172 +444,190 @@
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
     "currentNotes": "Recovered deterministic Border Guard fallback through the 0x49eb8d handoff and return without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, remain present at the 0x49eb8d handoff, and survive the same-run 0x49eb8d -> 0x49eced -> 0x4ac844 continuation. The recovered 0x49eb8d replay counts 2284 bit26 cells, computes budget 120 from 0x4374c/count, and dispatches the first normal 0x49e700 call at x=1, y=0, level=0, budget=120. Remaining blockers before any native RMG behavior port: complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
-    "currentSliceNotes": "Recovered deterministic Border Guard fallback through the 0x49eb8d handoff and return without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, remain present at the 0x49eb8d handoff, and survive the same-run 0x49eb8d -> 0x49eced -> 0x4ac844 continuation. The recovered 0x49eb8d replay counts 2284 bit26 cells, computes budget 120 from 0x4374c/count, and dispatches the first normal 0x49e700 call at x=1, y=0, level=0, budget=120. Remaining blockers before any native RMG behavior port: complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
-    "currentSliceUpdatedAt": "2026-06-09T21:00:40Z",
-    "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, and same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844 are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceNotes": "Recovered the first normal 0x49e700 decorative dispatch boundary without changing native behavior. Clean PE seed-pinned Medium seed-10 traces now prove the dispatch reaches 0x49e1bf scorer calls, accepted weight and candidate-record appends, RNG selection, object allocation, vtable commit callback dispatch, post-commit coordinate appends, and the 0x49eb50 cleanup/return boundary. This extends the prior 0x49eb8d count/budget/first-dispatch/return recovery, but it is not full mutation parity: exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, and the full 0x49e700 emitted decorative-object stream remain unrecovered. Remaining blockers before any native RMG behavior port: capture the complete 0x49e700 generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
+    "currentSliceUpdatedAt": "2026-06-09T21:16:47Z",
+    "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-      "commands": [
-        "python3 tools/rmg_h3maped_fallback_49eb8d_replay_summary.py (passed: fallback_49eb8d_same_run_count_dispatch_return_recovered)",
-        "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing)",
-        "python3 tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py (passed: fallback_post_commit_vector_membership_survives_to_49eb8d)",
-        "python3 tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed: fallback_post_commit_likely_consumers_not_observed_in_bounded_trace)",
-        "python3 -m py_compile tools/rmg_h3maped_fallback_49eb8d_replay_summary.py tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed)",
-        "jq empty ops/progress.json (passed)",
-        "git diff --check (passed)",
-        "python3 tests/validate_repo.py (passed)",
-        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
-      ],
-      "metrics": {
-        "h3maped_medium_seed10_fallback_49eb8d_replay": {
-          "bit26_count": 2284,
-          "computed_budget": 120,
-          "first_49e700_dispatch": {
-            "budget": 120,
-            "level": 0,
-            "return_address": "0x0049ec6b",
-            "x": 1,
-            "y": 0
-          },
-          "invariants": {
-            "all_expected_events_observed_once": true,
-            "bit26_count_positive": true,
-            "budget_matches_formula": true,
-            "entry_returns_to_0x4ac844": true,
-            "exit_keeps_budget_local": true,
-            "fallback_records_present_after_caller_return": true,
-            "fallback_records_present_at_entry": true,
-            "fallback_records_present_at_exit": true,
-            "first_dispatch_returns_to_0x49ec6b": true,
-            "native_behavior_changed": false,
-            "seed_control_clean": true
-          },
-          "status": "fallback_49eb8d_same_run_count_dispatch_return_recovered"
-        },
-        "h3maped_medium_seed10_fallback_final_role_frontier": {
-          "invariants": {
-            "cell_object_ref_vector_contains_all_fallback_records": true,
-            "exact_afterstate_recovered_for_all_fallback_records": true,
-            "exact_commit_frontier_recovered_for_all_fallback_records": true,
-            "exact_coordinates_match_for_all_fallback_records": true,
-            "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-            "exact_projection_write_stream_missing_for_fallback_records": true,
-            "exact_state_chain_recovered_for_all_fallback_records": true,
-            "fallback_records_absent_from_sampled_payload": true,
-            "fallback_records_constructed_after_payload": true,
-            "fallback_records_survive_49eb8d_return_to_4ac844": true,
-            "fallback_records_survive_to_49eb8d_object_vector": true,
-            "fallback_records_survive_to_4a8d27_object_vector": true,
-            "native_behavior_changed": false,
-            "older_projection_targets_are_not_exact_fallback_records": true,
-            "same_run_49eb8d_count_dispatch_return_recovered": true,
-            "two_fallback_records_identified": true
-          },
-          "remaining_gap": "The exact fallback records now have recovered construction, commit, cell object-reference adoption, descriptor/relation-counter replay, object-vector survival to the 0x49eb8d handoff, and same-run 0x49eb8d count/budget/first-dispatch/return replay. The remaining final-role gap is complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844. If exact per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port.",
-          "status": "fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing"
-        }
-      },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-09T21:01:46Z",
-      "updatedAt": "2026-06-09T21:01:46Z"
-    },
-    "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-      "consumer_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_consumer_summary_20260609.json",
+      "timestamp": "2026-06-09T21:16:47Z",
+      "updatedAt": "2026-06-09T21:16:47Z",
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_summary_20260609.json",
+      "commands": [
+        "python3 tools/rmg_h3maped_49e700_first_dispatch_summary.py (passed: 49e700_first_dispatch_selection_commit_return_boundary_recovered)",
+        "python3 tools/rmg_h3maped_fallback_49eb8d_replay_summary.py (passed: fallback_49eb8d_same_run_count_dispatch_return_recovered)",
+        "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing)",
+        "python3 -m py_compile tools/rmg_h3maped_49e700_first_dispatch_summary.py tools/rmg_h3maped_fallback_49eb8d_replay_summary.py tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ],
       "metrics": {
-        "h3maped_medium_seed10_fallback_49eb8d_replay": {
-          "bit26_count": 2284,
-          "computed_budget": 120,
-          "fallback_positions": {
-            "caller_after_0x4ac844": {
-              "0x03626060": [
-                12
-              ],
-              "0x036260c0": [
-                10
-              ]
+        "h3maped_medium_seed10_49e700_first_dispatch": {
+          "status": "49e700_first_dispatch_selection_commit_return_boundary_recovered",
+          "invariants": {
+            "candidate_trace_reaches_accepted_candidate_appends": true,
+            "candidate_trace_reaches_scorer": true,
+            "native_behavior_changed": false,
+            "return_trace_entry_returns_to_49ec6b": true,
+            "return_trace_observes_ordered_boundary_once": true,
+            "return_trace_reaches_cleanup_return_boundary": true,
+            "seed_control_clean_for_all_traces": true,
+            "selection_trace_reaches_post_commit_coordinate_appends": true,
+            "selection_trace_reaches_rng_allocation_commit": true
+          },
+          "event_counts": {
+            "candidate_trace": {
+              "0x0049e700": 1,
+              "0x0049e8eb": 80,
+              "0x0049e904": 69,
+              "0x0049e91f": 69,
+              "0x0049eb8d": 1,
+              "0x004a789a": 1
             },
-            "entry_0x49eb8d": {
-              "0x03626060": [
-                12
-              ],
-              "0x036260c0": [
-                10
-              ]
+            "return_trace": {
+              "0x0049e700": 1,
+              "0x0049e8eb": 1,
+              "0x0049e904": 1,
+              "0x0049e91f": 1,
+              "0x0049e9ad": 1,
+              "0x0049ea07": 1,
+              "0x0049ea25": 1,
+              "0x0049eb01": 1,
+              "0x0049eb50": 1,
+              "0x0049eb8d": 1,
+              "0x004a789a": 1
             },
-            "exit_0x49eced": {
-              "0x03626060": [
-                12
-              ],
-              "0x036260c0": [
-                10
-              ]
+            "selection_trace": {
+              "0x0049e700": 1,
+              "0x0049e8eb": 1,
+              "0x0049e904": 1,
+              "0x0049e91f": 1,
+              "0x0049e9ad": 19,
+              "0x0049ea07": 19,
+              "0x0049ea25": 19,
+              "0x0049eb01": 58,
+              "0x0049eb8d": 1,
+              "0x004a789a": 1
             }
           },
-          "first_49e700_dispatch": {
-            "budget": 120,
+          "first_dispatch": {
+            "budget": 122,
             "level": 0,
             "return_address": "0x0049ec6b",
             "x": 1,
             "y": 0
           },
-          "invariants": {
-            "all_expected_events_observed_once": true,
-            "bit26_count_positive": true,
-            "budget_matches_formula": true,
-            "entry_returns_to_0x4ac844": true,
-            "exit_keeps_budget_local": true,
-            "fallback_records_present_after_caller_return": true,
-            "fallback_records_present_at_entry": true,
-            "fallback_records_present_at_exit": true,
-            "first_dispatch_returns_to_0x49ec6b": true,
-            "native_behavior_changed": false,
-            "seed_control_clean": true
+          "static_contract_flags": {
+            "allocates_object_record": true,
+            "appends_candidate_record": true,
+            "appends_post_commit_coordinate": true,
+            "appends_weight": true,
+            "calls_commit_callback": true,
+            "calls_descriptor_mask": true,
+            "calls_scorer": true,
+            "cleans_local_vectors": true,
+            "entry_initializes_coordinate_worklist": true,
+            "maps_generated_cell": true,
+            "pops_coordinate_worklist": true,
+            "selects_with_rng": true
           },
-          "object_vector_counts": {
-            "caller_after_0x4ac844": 1327,
-            "entry_0x49eb8d": 373,
-            "exit_0x49eced": 1327
-          },
-          "status": "fallback_49eb8d_same_run_count_dispatch_return_recovered"
-        },
-        "h3maped_medium_seed10_fallback_final_role_frontier": {
-          "invariants": {
-            "cell_object_ref_vector_contains_all_fallback_records": true,
-            "exact_afterstate_recovered_for_all_fallback_records": true,
-            "exact_commit_frontier_recovered_for_all_fallback_records": true,
-            "exact_coordinates_match_for_all_fallback_records": true,
-            "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-            "exact_projection_write_stream_missing_for_fallback_records": true,
-            "exact_state_chain_recovered_for_all_fallback_records": true,
-            "fallback_records_absent_from_sampled_payload": true,
-            "fallback_records_constructed_after_payload": true,
-            "fallback_records_survive_49eb8d_return_to_4ac844": true,
-            "fallback_records_survive_to_49eb8d_object_vector": true,
-            "fallback_records_survive_to_4a8d27_object_vector": true,
-            "native_behavior_changed": false,
-            "older_projection_targets_are_not_exact_fallback_records": true,
-            "same_run_49eb8d_count_dispatch_return_recovered": true,
-            "two_fallback_records_identified": true
-          },
-          "remaining_gap": "The exact fallback records now have recovered construction, commit, cell object-reference adoption, descriptor/relation-counter replay, object-vector survival to the 0x49eb8d handoff, and same-run 0x49eb8d count/budget/first-dispatch/return replay. The remaining final-role gap is complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844. If exact per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port.",
-          "status": "fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing"
+          "remaining_gap": "Exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, the full emitted decorative-object stream, and downstream phase completion beyond 0x4ac844 remain pending."
         }
+      }
+    },
+    "latestEvidence": {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_summary_20260609.json",
+      "trace_artifacts": {
+        "candidate_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_trace_20260609/winedbg_interactive_trace_ledger.json",
+        "return_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_return_trace_20260609/winedbg_interactive_trace_ledger.json",
+        "selection_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_selection_commit_trace_20260609/winedbg_interactive_trace_ledger.json",
+        "static_dump": ".artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_0049e700_FUN_0049e700.txt"
       },
+      "result": "First normal 0x49e700 decorative dispatch boundary recovered; exact generated-cell mutation replay remains unrecovered.",
+      "source_basis": "Clean PE seed-pinned H3MapEd WineDbg candidate, selection/commit, and return traces joined by tools/rmg_h3maped_49e700_first_dispatch_summary.py.",
       "native_behavior_changed": false,
-      "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, and same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844 are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "replay_49eb8d_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_49eb8d_replay_summary_20260609.json",
-      "result": "Exact deterministic Border Guard fallback records now survive from construction and commit through the 0x49eb8d same-run return to 0x4ac844; complete 0x49e700 allocation/mutation and downstream phase completion remain unrecovered.",
-      "source_basis": "Clean PE seed-pinned H3MapEd WineDbg combined 0x49eb8d trace summarized by tools/rmg_h3maped_fallback_49eb8d_replay_summary.py and joined into tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
-      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_49eb8d_combined_trace_20260609/winedbg_interactive_trace_ledger.json",
-      "validatedAt": "2026-06-09T21:00:40Z",
-      "vector_membership_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
+      "validatedAt": "2026-06-09T21:16:47Z",
+      "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "metrics": {
+        "h3maped_medium_seed10_49e700_first_dispatch": {
+          "status": "49e700_first_dispatch_selection_commit_return_boundary_recovered",
+          "invariants": {
+            "candidate_trace_reaches_accepted_candidate_appends": true,
+            "candidate_trace_reaches_scorer": true,
+            "native_behavior_changed": false,
+            "return_trace_entry_returns_to_49ec6b": true,
+            "return_trace_observes_ordered_boundary_once": true,
+            "return_trace_reaches_cleanup_return_boundary": true,
+            "seed_control_clean_for_all_traces": true,
+            "selection_trace_reaches_post_commit_coordinate_appends": true,
+            "selection_trace_reaches_rng_allocation_commit": true
+          },
+          "event_counts": {
+            "candidate_trace": {
+              "0x0049e700": 1,
+              "0x0049e8eb": 80,
+              "0x0049e904": 69,
+              "0x0049e91f": 69,
+              "0x0049eb8d": 1,
+              "0x004a789a": 1
+            },
+            "return_trace": {
+              "0x0049e700": 1,
+              "0x0049e8eb": 1,
+              "0x0049e904": 1,
+              "0x0049e91f": 1,
+              "0x0049e9ad": 1,
+              "0x0049ea07": 1,
+              "0x0049ea25": 1,
+              "0x0049eb01": 1,
+              "0x0049eb50": 1,
+              "0x0049eb8d": 1,
+              "0x004a789a": 1
+            },
+            "selection_trace": {
+              "0x0049e700": 1,
+              "0x0049e8eb": 1,
+              "0x0049e904": 1,
+              "0x0049e91f": 1,
+              "0x0049e9ad": 19,
+              "0x0049ea07": 19,
+              "0x0049ea25": 19,
+              "0x0049eb01": 58,
+              "0x0049eb8d": 1,
+              "0x004a789a": 1
+            }
+          },
+          "first_dispatch": {
+            "budget": 122,
+            "level": 0,
+            "return_address": "0x0049ec6b",
+            "x": 1,
+            "y": 0
+          },
+          "static_contract_flags": {
+            "allocates_object_record": true,
+            "appends_candidate_record": true,
+            "appends_post_commit_coordinate": true,
+            "appends_weight": true,
+            "calls_commit_callback": true,
+            "calls_descriptor_mask": true,
+            "calls_scorer": true,
+            "cleans_local_vectors": true,
+            "entry_initializes_coordinate_worklist": true,
+            "maps_generated_cell": true,
+            "pops_coordinate_worklist": true,
+            "selects_with_rng": true
+          },
+          "remaining_gap": "Exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, the full emitted decorative-object stream, and downstream phase completion beyond 0x4ac844 remain pending."
+        }
+      }
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -740,7 +758,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "remainingWork": "Recover exact 0x49e700 generated-cell before/after mutation sets, downstream phase-completion proof beyond 0x4ac844, linked-payload 0x4a696b direct-mutation proof or unreachable proof, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate/projection reconciliation before porting native RMG behavior.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -750,7 +768,7 @@
     "status": "in_progress",
     "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, all sampled weighted dispatch return/vector/counter deltas, the cleanup/uncommit no-live-hit corpus frontier, the projection-object slot +0x08 no-live-hit frontier, and the 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a696b/0x4a7605 mutations, projection-object method dispatch, and live 0x4add76/0x4adef7 cleanup replay are still explicit blockers.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-09T17:30:47Z",
+    "updatedAt": "2026-06-09T21:16:47Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9391,10 +9409,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered deterministic Border Guard fallback through the 0x49eb8d handoff and return without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, remain present at the 0x49eb8d handoff, and survive the same-run 0x49eb8d -> 0x49eced -> 0x4ac844 continuation. The recovered 0x49eb8d replay counts 2284 bit26 cells, computes budget 120 from 0x4374c/count, and dispatches the first normal 0x49e700 call at x=1, y=0, level=0, budget=120. Remaining blockers before any native RMG behavior port: complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
+  "currentSliceNotes": "Recovered the first normal 0x49e700 decorative dispatch boundary without changing native behavior. Clean PE seed-pinned Medium seed-10 traces now prove the dispatch reaches 0x49e1bf scorer calls, accepted weight and candidate-record appends, RNG selection, object allocation, vtable commit callback dispatch, post-commit coordinate appends, and the 0x49eb50 cleanup/return boundary. This extends the prior 0x49eb8d count/budget/first-dispatch/return recovery, but it is not full mutation parity: exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, and the full 0x49e700 emitted decorative-object stream remain unrecovered. Remaining blockers before any native RMG behavior port: capture the complete 0x49e700 generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T21:00:40Z",
+  "currentSliceUpdatedAt": "2026-06-09T21:17:22Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10390,167 +10408,185 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, and same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844 are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-    "commands": [
-      "python3 tools/rmg_h3maped_fallback_49eb8d_replay_summary.py (passed: fallback_49eb8d_same_run_count_dispatch_return_recovered)",
-      "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing)",
-      "python3 tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py (passed: fallback_post_commit_vector_membership_survives_to_49eb8d)",
-      "python3 tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed: fallback_post_commit_likely_consumers_not_observed_in_bounded_trace)",
-      "python3 -m py_compile tools/rmg_h3maped_fallback_49eb8d_replay_summary.py tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
-      "python3 tests/validate_repo.py (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
-    ],
-    "metrics": {
-      "h3maped_medium_seed10_fallback_49eb8d_replay": {
-        "bit26_count": 2284,
-        "computed_budget": 120,
-        "first_49e700_dispatch": {
-          "budget": 120,
-          "level": 0,
-          "return_address": "0x0049ec6b",
-          "x": 1,
-          "y": 0
-        },
-        "invariants": {
-          "all_expected_events_observed_once": true,
-          "bit26_count_positive": true,
-          "budget_matches_formula": true,
-          "entry_returns_to_0x4ac844": true,
-          "exit_keeps_budget_local": true,
-          "fallback_records_present_after_caller_return": true,
-          "fallback_records_present_at_entry": true,
-          "fallback_records_present_at_exit": true,
-          "first_dispatch_returns_to_0x49ec6b": true,
-          "native_behavior_changed": false,
-          "seed_control_clean": true
-        },
-        "status": "fallback_49eb8d_same_run_count_dispatch_return_recovered"
-      },
-      "h3maped_medium_seed10_fallback_final_role_frontier": {
-        "invariants": {
-          "cell_object_ref_vector_contains_all_fallback_records": true,
-          "exact_afterstate_recovered_for_all_fallback_records": true,
-          "exact_commit_frontier_recovered_for_all_fallback_records": true,
-          "exact_coordinates_match_for_all_fallback_records": true,
-          "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-          "exact_projection_write_stream_missing_for_fallback_records": true,
-          "exact_state_chain_recovered_for_all_fallback_records": true,
-          "fallback_records_absent_from_sampled_payload": true,
-          "fallback_records_constructed_after_payload": true,
-          "fallback_records_survive_49eb8d_return_to_4ac844": true,
-          "fallback_records_survive_to_49eb8d_object_vector": true,
-          "fallback_records_survive_to_4a8d27_object_vector": true,
-          "native_behavior_changed": false,
-          "older_projection_targets_are_not_exact_fallback_records": true,
-          "same_run_49eb8d_count_dispatch_return_recovered": true,
-          "two_fallback_records_identified": true
-        },
-        "remaining_gap": "The exact fallback records now have recovered construction, commit, cell object-reference adoption, descriptor/relation-counter replay, object-vector survival to the 0x49eb8d handoff, and same-run 0x49eb8d count/budget/first-dispatch/return replay. The remaining final-role gap is complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844. If exact per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port.",
-        "status": "fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing"
-      }
-    },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-09T21:01:46Z",
-    "updatedAt": "2026-06-09T21:01:46Z"
-  },
-  "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-    "consumer_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_consumer_summary_20260609.json",
+    "timestamp": "2026-06-09T21:16:47Z",
+    "updatedAt": "2026-06-09T21:16:47Z",
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_summary_20260609.json",
+    "commands": [
+      "python3 tools/rmg_h3maped_49e700_first_dispatch_summary.py (passed: 49e700_first_dispatch_selection_commit_return_boundary_recovered)",
+      "python3 tools/rmg_h3maped_fallback_49eb8d_replay_summary.py (passed: fallback_49eb8d_same_run_count_dispatch_return_recovered)",
+      "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing)",
+      "python3 -m py_compile tools/rmg_h3maped_49e700_first_dispatch_summary.py tools/rmg_h3maped_fallback_49eb8d_replay_summary.py tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)",
+      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+      "python3 tests/validate_repo.py (passed)"
+    ],
     "metrics": {
-      "h3maped_medium_seed10_fallback_49eb8d_replay": {
-        "bit26_count": 2284,
-        "computed_budget": 120,
-        "fallback_positions": {
-          "caller_after_0x4ac844": {
-            "0x03626060": [
-              12
-            ],
-            "0x036260c0": [
-              10
-            ]
+      "h3maped_medium_seed10_49e700_first_dispatch": {
+        "status": "49e700_first_dispatch_selection_commit_return_boundary_recovered",
+        "invariants": {
+          "candidate_trace_reaches_accepted_candidate_appends": true,
+          "candidate_trace_reaches_scorer": true,
+          "native_behavior_changed": false,
+          "return_trace_entry_returns_to_49ec6b": true,
+          "return_trace_observes_ordered_boundary_once": true,
+          "return_trace_reaches_cleanup_return_boundary": true,
+          "seed_control_clean_for_all_traces": true,
+          "selection_trace_reaches_post_commit_coordinate_appends": true,
+          "selection_trace_reaches_rng_allocation_commit": true
+        },
+        "event_counts": {
+          "candidate_trace": {
+            "0x0049e700": 1,
+            "0x0049e8eb": 80,
+            "0x0049e904": 69,
+            "0x0049e91f": 69,
+            "0x0049eb8d": 1,
+            "0x004a789a": 1
           },
-          "entry_0x49eb8d": {
-            "0x03626060": [
-              12
-            ],
-            "0x036260c0": [
-              10
-            ]
+          "return_trace": {
+            "0x0049e700": 1,
+            "0x0049e8eb": 1,
+            "0x0049e904": 1,
+            "0x0049e91f": 1,
+            "0x0049e9ad": 1,
+            "0x0049ea07": 1,
+            "0x0049ea25": 1,
+            "0x0049eb01": 1,
+            "0x0049eb50": 1,
+            "0x0049eb8d": 1,
+            "0x004a789a": 1
           },
-          "exit_0x49eced": {
-            "0x03626060": [
-              12
-            ],
-            "0x036260c0": [
-              10
-            ]
+          "selection_trace": {
+            "0x0049e700": 1,
+            "0x0049e8eb": 1,
+            "0x0049e904": 1,
+            "0x0049e91f": 1,
+            "0x0049e9ad": 19,
+            "0x0049ea07": 19,
+            "0x0049ea25": 19,
+            "0x0049eb01": 58,
+            "0x0049eb8d": 1,
+            "0x004a789a": 1
           }
         },
-        "first_49e700_dispatch": {
-          "budget": 120,
+        "first_dispatch": {
+          "budget": 122,
           "level": 0,
           "return_address": "0x0049ec6b",
           "x": 1,
           "y": 0
         },
-        "invariants": {
-          "all_expected_events_observed_once": true,
-          "bit26_count_positive": true,
-          "budget_matches_formula": true,
-          "entry_returns_to_0x4ac844": true,
-          "exit_keeps_budget_local": true,
-          "fallback_records_present_after_caller_return": true,
-          "fallback_records_present_at_entry": true,
-          "fallback_records_present_at_exit": true,
-          "first_dispatch_returns_to_0x49ec6b": true,
-          "native_behavior_changed": false,
-          "seed_control_clean": true
+        "static_contract_flags": {
+          "allocates_object_record": true,
+          "appends_candidate_record": true,
+          "appends_post_commit_coordinate": true,
+          "appends_weight": true,
+          "calls_commit_callback": true,
+          "calls_descriptor_mask": true,
+          "calls_scorer": true,
+          "cleans_local_vectors": true,
+          "entry_initializes_coordinate_worklist": true,
+          "maps_generated_cell": true,
+          "pops_coordinate_worklist": true,
+          "selects_with_rng": true
         },
-        "object_vector_counts": {
-          "caller_after_0x4ac844": 1327,
-          "entry_0x49eb8d": 373,
-          "exit_0x49eced": 1327
-        },
-        "status": "fallback_49eb8d_same_run_count_dispatch_return_recovered"
-      },
-      "h3maped_medium_seed10_fallback_final_role_frontier": {
-        "invariants": {
-          "cell_object_ref_vector_contains_all_fallback_records": true,
-          "exact_afterstate_recovered_for_all_fallback_records": true,
-          "exact_commit_frontier_recovered_for_all_fallback_records": true,
-          "exact_coordinates_match_for_all_fallback_records": true,
-          "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-          "exact_projection_write_stream_missing_for_fallback_records": true,
-          "exact_state_chain_recovered_for_all_fallback_records": true,
-          "fallback_records_absent_from_sampled_payload": true,
-          "fallback_records_constructed_after_payload": true,
-          "fallback_records_survive_49eb8d_return_to_4ac844": true,
-          "fallback_records_survive_to_49eb8d_object_vector": true,
-          "fallback_records_survive_to_4a8d27_object_vector": true,
-          "native_behavior_changed": false,
-          "older_projection_targets_are_not_exact_fallback_records": true,
-          "same_run_49eb8d_count_dispatch_return_recovered": true,
-          "two_fallback_records_identified": true
-        },
-        "remaining_gap": "The exact fallback records now have recovered construction, commit, cell object-reference adoption, descriptor/relation-counter replay, object-vector survival to the 0x49eb8d handoff, and same-run 0x49eb8d count/budget/first-dispatch/return replay. The remaining final-role gap is complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844. If exact per-record projection-loop parity is required, capture a clean seed-pinned projection-write stream for 0x036260c0 and 0x03626060 specifically. Continue the 0x4a696b direct-mutation and 0x4add76 cleanup runtime blockers before any native RMG behavior port.",
-        "status": "fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing"
+        "remaining_gap": "Exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, the full emitted decorative-object stream, and downstream phase completion beyond 0x4ac844 remain pending."
       }
-    },
-    "native_behavior_changed": false,
-    "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, and same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844 are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "replay_49eb8d_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_49eb8d_replay_summary_20260609.json",
-    "result": "Exact deterministic Border Guard fallback records now survive from construction and commit through the 0x49eb8d same-run return to 0x4ac844; complete 0x49e700 allocation/mutation and downstream phase completion remain unrecovered.",
-    "source_basis": "Clean PE seed-pinned H3MapEd WineDbg combined 0x49eb8d trace summarized by tools/rmg_h3maped_fallback_49eb8d_replay_summary.py and joined into tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
-    "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_49eb8d_combined_trace_20260609/winedbg_interactive_trace_ledger.json",
-    "validatedAt": "2026-06-09T21:00:40Z",
-    "vector_membership_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
+    }
   },
-  "nextActionGuardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, and same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844 are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "latestEvidence": {
+    "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_summary_20260609.json",
+    "trace_artifacts": {
+      "candidate_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_trace_20260609/winedbg_interactive_trace_ledger.json",
+      "return_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_return_trace_20260609/winedbg_interactive_trace_ledger.json",
+      "selection_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_selection_commit_trace_20260609/winedbg_interactive_trace_ledger.json",
+      "static_dump": ".artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_0049e700_FUN_0049e700.txt"
+    },
+    "result": "First normal 0x49e700 decorative dispatch boundary recovered; exact generated-cell mutation replay remains unrecovered.",
+    "source_basis": "Clean PE seed-pinned H3MapEd WineDbg candidate, selection/commit, and return traces joined by tools/rmg_h3maped_49e700_first_dispatch_summary.py.",
+    "native_behavior_changed": false,
+    "validatedAt": "2026-06-09T21:16:47Z",
+    "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "metrics": {
+      "h3maped_medium_seed10_49e700_first_dispatch": {
+        "status": "49e700_first_dispatch_selection_commit_return_boundary_recovered",
+        "invariants": {
+          "candidate_trace_reaches_accepted_candidate_appends": true,
+          "candidate_trace_reaches_scorer": true,
+          "native_behavior_changed": false,
+          "return_trace_entry_returns_to_49ec6b": true,
+          "return_trace_observes_ordered_boundary_once": true,
+          "return_trace_reaches_cleanup_return_boundary": true,
+          "seed_control_clean_for_all_traces": true,
+          "selection_trace_reaches_post_commit_coordinate_appends": true,
+          "selection_trace_reaches_rng_allocation_commit": true
+        },
+        "event_counts": {
+          "candidate_trace": {
+            "0x0049e700": 1,
+            "0x0049e8eb": 80,
+            "0x0049e904": 69,
+            "0x0049e91f": 69,
+            "0x0049eb8d": 1,
+            "0x004a789a": 1
+          },
+          "return_trace": {
+            "0x0049e700": 1,
+            "0x0049e8eb": 1,
+            "0x0049e904": 1,
+            "0x0049e91f": 1,
+            "0x0049e9ad": 1,
+            "0x0049ea07": 1,
+            "0x0049ea25": 1,
+            "0x0049eb01": 1,
+            "0x0049eb50": 1,
+            "0x0049eb8d": 1,
+            "0x004a789a": 1
+          },
+          "selection_trace": {
+            "0x0049e700": 1,
+            "0x0049e8eb": 1,
+            "0x0049e904": 1,
+            "0x0049e91f": 1,
+            "0x0049e9ad": 19,
+            "0x0049ea07": 19,
+            "0x0049ea25": 19,
+            "0x0049eb01": 58,
+            "0x0049eb8d": 1,
+            "0x004a789a": 1
+          }
+        },
+        "first_dispatch": {
+          "budget": 122,
+          "level": 0,
+          "return_address": "0x0049ec6b",
+          "x": 1,
+          "y": 0
+        },
+        "static_contract_flags": {
+          "allocates_object_record": true,
+          "appends_candidate_record": true,
+          "appends_post_commit_coordinate": true,
+          "appends_weight": true,
+          "calls_commit_callback": true,
+          "calls_descriptor_mask": true,
+          "calls_scorer": true,
+          "cleans_local_vectors": true,
+          "entry_initializes_coordinate_worklist": true,
+          "maps_generated_cell": true,
+          "pops_coordinate_worklist": true,
+          "selects_with_rng": true
+        },
+        "remaining_gap": "Exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, the full emitted decorative-object stream, and downstream phase completion beyond 0x4ac844 remain pending."
+      }
+    }
+  },
+  "nextActionGuardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "notes": "Recovered deterministic Border Guard fallback through the 0x49eb8d handoff and return without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, remain present at the 0x49eb8d handoff, and survive the same-run 0x49eb8d -> 0x49eced -> 0x4ac844 continuation. The recovered 0x49eb8d replay counts 2284 bit26 cells, computes budget 120 from 0x4374c/count, and dispatches the first normal 0x49e700 call at x=1, y=0, level=0, budget=120. Remaining blockers before any native RMG behavior port: complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
   "plannedSlices": [
     {
@@ -43983,127 +44019,190 @@
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
       "currentNotes": "Recovered deterministic Border Guard fallback through the 0x49eb8d handoff and return without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, remain present at the 0x49eb8d handoff, and survive the same-run 0x49eb8d -> 0x49eced -> 0x4ac844 continuation. The recovered 0x49eb8d replay counts 2284 bit26 cells, computes budget 120 from 0x4374c/count, and dispatches the first normal 0x49e700 call at x=1, y=0, level=0, budget=120. Remaining blockers before any native RMG behavior port: complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
-      "currentSliceNotes": "Recovered deterministic Border Guard fallback through the 0x49eb8d handoff and return without changing native behavior. Clean seed-pinned Medium seed-10 traces now prove fallback records 0x036260c0 and 0x03626060 are constructed after the sampled payload pass, committed through 0x4a54a7, adopted into target generated-cell object-reference vectors, replay exact descriptor/relation-counter mechanics, survive in the generator object vector at 0x4a8d27, remain present at the 0x49eb8d handoff, and survive the same-run 0x49eb8d -> 0x49eced -> 0x4ac844 continuation. The recovered 0x49eb8d replay counts 2284 bit26 cells, computes budget 120 from 0x4374c/count, and dispatches the first normal 0x49e700 call at x=1, y=0, level=0, budget=120. Remaining blockers before any native RMG behavior port: complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
-      "currentSliceUpdatedAt": "2026-06-09T20:45:06Z",
-      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, and same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844 are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 decorative allocation/generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentSliceNotes": "Recovered the first normal 0x49e700 decorative dispatch boundary without changing native behavior. Clean PE seed-pinned Medium seed-10 traces now prove the dispatch reaches 0x49e1bf scorer calls, accepted weight and candidate-record appends, RNG selection, object allocation, vtable commit callback dispatch, post-commit coordinate appends, and the 0x49eb50 cleanup/return boundary. This extends the prior 0x49eb8d count/budget/first-dispatch/return recovery, but it is not full mutation parity: exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, and the full 0x49e700 emitted decorative-object stream remain unrecovered. Remaining blockers before any native RMG behavior port: capture the complete 0x49e700 generated-cell mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b source/relation-match direct-mutation sample or prove direct mutation unreachable for this generation mode; recover actual 0x4add76 cleanup/uncommit runtime behavior; capture exact per-record projection-loop streams for 0x036260c0/0x03626060 if needed; resolve older coordinate/projection reconciliation.",
+      "currentSliceUpdatedAt": "2026-06-09T21:16:47Z",
+      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-        "commands": [
-          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_later_phase_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (bounded trace: 0x4a789a -> 0x4a8d27 -> 0x49eb8d; no armed likely payload/direct/cleanup/endpoint consumers observed before timeout)",
-          "python3 tools/rmg_h3maped_recovery_interactive_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none ... (passed: 3 events, stopped at 0x49eb8d)",
-          "python3 tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py (passed: fallback_post_commit_vector_membership_survives_to_49eb8d)",
-          "python3 tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed: fallback_post_commit_likely_consumers_not_observed_in_bounded_trace)",
-          "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing)",
-          "python3 -m py_compile tools/rmg_h3maped_fallback_final_role_frontier_summary.py tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py tools/rmg_h3maped_fallback_post_commit_consumer_summary.py (passed)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)",
-          "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)"
-        ],
-        "metrics": {
-          "h3maped_medium_seed10_fallback_final_role_frontier": {
-            "invariants": {
-              "cell_object_ref_vector_contains_all_fallback_records": true,
-              "exact_afterstate_recovered_for_all_fallback_records": true,
-              "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-              "exact_projection_write_stream_missing_for_fallback_records": true,
-              "exact_state_chain_recovered_for_all_fallback_records": true,
-              "fallback_records_absent_from_sampled_payload": true,
-              "fallback_records_constructed_after_payload": true,
-              "fallback_records_survive_to_49eb8d_object_vector": true,
-              "fallback_records_survive_to_4a8d27_object_vector": true,
-              "native_behavior_changed": false,
-              "two_fallback_records_identified": true
-            },
-            "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
-            "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
-          },
-          "h3maped_medium_seed10_fallback_vector_membership": {
-            "invariants": {
-              "fallback_records_in_49eb8d_object_vector": true,
-              "fallback_records_in_4a8d27_object_vector": true,
-              "likely_payload_direct_cleanup_consumers_absent": true,
-              "native_behavior_changed": false
-            },
-            "object_vector_counts": {
-              "0x49eb8d": 389,
-              "0x4a8d27": 13
-            },
-            "positions": {
-              "0x03626060": {
-                "0x49eb8d_index": 12,
-                "0x4a8d27_index": 12
-              },
-              "0x036260c0": {
-                "0x49eb8d_index": 10,
-                "0x4a8d27_index": 10
-              }
-            },
-            "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
-          }
-        },
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-09T20:46:15Z",
-        "updatedAt": "2026-06-09T20:46:15Z"
-      },
-      "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-        "consumer_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_consumer_summary_20260609.json",
+        "timestamp": "2026-06-09T21:16:47Z",
+        "updatedAt": "2026-06-09T21:16:47Z",
+        "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_summary_20260609.json",
+        "commands": [
+          "python3 tools/rmg_h3maped_49e700_first_dispatch_summary.py (passed: 49e700_first_dispatch_selection_commit_return_boundary_recovered)",
+          "python3 tools/rmg_h3maped_fallback_49eb8d_replay_summary.py (passed: fallback_49eb8d_same_run_count_dispatch_return_recovered)",
+          "python3 tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed: fallback_final_role_frontier_exact_descriptor_relation_49eb8d_recovered_downstream_missing)",
+          "python3 -m py_compile tools/rmg_h3maped_49e700_first_dispatch_summary.py tools/rmg_h3maped_fallback_49eb8d_replay_summary.py tools/rmg_h3maped_fallback_final_role_frontier_summary.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)",
+          "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+          "python3 tests/validate_repo.py (passed)"
+        ],
         "metrics": {
-          "h3maped_medium_seed10_fallback_final_role_frontier": {
+          "h3maped_medium_seed10_49e700_first_dispatch": {
+            "status": "49e700_first_dispatch_selection_commit_return_boundary_recovered",
             "invariants": {
-              "cell_object_ref_vector_contains_all_fallback_records": true,
-              "exact_afterstate_recovered_for_all_fallback_records": true,
-              "exact_descriptor_relation_recovered_for_all_fallback_records": true,
-              "exact_projection_write_stream_missing_for_fallback_records": true,
-              "exact_state_chain_recovered_for_all_fallback_records": true,
-              "fallback_records_absent_from_sampled_payload": true,
-              "fallback_records_constructed_after_payload": true,
-              "fallback_records_survive_to_49eb8d_object_vector": true,
-              "fallback_records_survive_to_4a8d27_object_vector": true,
+              "candidate_trace_reaches_accepted_candidate_appends": true,
+              "candidate_trace_reaches_scorer": true,
               "native_behavior_changed": false,
-              "two_fallback_records_identified": true
+              "return_trace_entry_returns_to_49ec6b": true,
+              "return_trace_observes_ordered_boundary_once": true,
+              "return_trace_reaches_cleanup_return_boundary": true,
+              "seed_control_clean_for_all_traces": true,
+              "selection_trace_reaches_post_commit_coordinate_appends": true,
+              "selection_trace_reaches_rng_allocation_commit": true
             },
-            "remaining_gap": "0x49eb8d consumer semantics and phase-completion proof beyond handoff; 0x4a696b direct mutation proof; 0x4add76 cleanup runtime behavior; optional exact fallback projection streams; older coordinate/projection reconciliation.",
-            "status": "fallback_final_role_frontier_exact_descriptor_relation_recovered_later_consumer_missing"
-          },
-          "h3maped_medium_seed10_fallback_vector_membership": {
-            "invariants": {
-              "fallback_records_in_49eb8d_object_vector": true,
-              "fallback_records_in_4a8d27_object_vector": true,
-              "likely_payload_direct_cleanup_consumers_absent": true,
-              "native_behavior_changed": false
-            },
-            "object_vector_counts": {
-              "0x49eb8d": 389,
-              "0x4a8d27": 13
-            },
-            "positions": {
-              "0x03626060": {
-                "0x49eb8d_index": 12,
-                "0x4a8d27_index": 12
+            "event_counts": {
+              "candidate_trace": {
+                "0x0049e700": 1,
+                "0x0049e8eb": 80,
+                "0x0049e904": 69,
+                "0x0049e91f": 69,
+                "0x0049eb8d": 1,
+                "0x004a789a": 1
               },
-              "0x036260c0": {
-                "0x49eb8d_index": 10,
-                "0x4a8d27_index": 10
+              "return_trace": {
+                "0x0049e700": 1,
+                "0x0049e8eb": 1,
+                "0x0049e904": 1,
+                "0x0049e91f": 1,
+                "0x0049e9ad": 1,
+                "0x0049ea07": 1,
+                "0x0049ea25": 1,
+                "0x0049eb01": 1,
+                "0x0049eb50": 1,
+                "0x0049eb8d": 1,
+                "0x004a789a": 1
+              },
+              "selection_trace": {
+                "0x0049e700": 1,
+                "0x0049e8eb": 1,
+                "0x0049e904": 1,
+                "0x0049e91f": 1,
+                "0x0049e9ad": 19,
+                "0x0049ea07": 19,
+                "0x0049ea25": 19,
+                "0x0049eb01": 58,
+                "0x0049eb8d": 1,
+                "0x004a789a": 1
               }
             },
-            "status": "fallback_post_commit_vector_membership_survives_to_49eb8d"
+            "first_dispatch": {
+              "budget": 122,
+              "level": 0,
+              "return_address": "0x0049ec6b",
+              "x": 1,
+              "y": 0
+            },
+            "static_contract_flags": {
+              "allocates_object_record": true,
+              "appends_candidate_record": true,
+              "appends_post_commit_coordinate": true,
+              "appends_weight": true,
+              "calls_commit_callback": true,
+              "calls_descriptor_mask": true,
+              "calls_scorer": true,
+              "cleans_local_vectors": true,
+              "entry_initializes_coordinate_worklist": true,
+              "maps_generated_cell": true,
+              "pops_coordinate_worklist": true,
+              "selects_with_rng": true
+            },
+            "remaining_gap": "Exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, the full emitted decorative-object stream, and downstream phase completion beyond 0x4ac844 remain pending."
           }
+        }
+      },
+      "latestEvidence": {
+        "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_summary_20260609.json",
+        "trace_artifacts": {
+          "candidate_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_first_dispatch_trace_20260609/winedbg_interactive_trace_ledger.json",
+          "return_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_return_trace_20260609/winedbg_interactive_trace_ledger.json",
+          "selection_trace": ".artifacts/rmg_recovery/medium_seed10_49e700_selection_commit_trace_20260609/winedbg_interactive_trace_ledger.json",
+          "static_dump": ".artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_0049e700_FUN_0049e700.txt"
         },
+        "result": "First normal 0x49e700 decorative dispatch boundary recovered; exact generated-cell mutation replay remains unrecovered.",
+        "source_basis": "Clean PE seed-pinned H3MapEd WineDbg candidate, selection/commit, and return traces joined by tools/rmg_h3maped_49e700_first_dispatch_summary.py.",
         "native_behavior_changed": false,
-        "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, and fallback object-vector survival to 0x49eb8d are recovered. Remaining source-backed blockers before any native RMG behavior port: recover 0x49eb8d consumer semantics and phase-completion proof beyond the deterministic fallback handoff; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-        "result": "Exact deterministic Border Guard fallback records now survive from construction and commit through the 0x49eb8d handoff; final consumer semantics beyond that handoff remain unrecovered.",
-        "source_basis": "Clean PE seed-pinned H3MapEd WineDbg later-phase and vector-membership traces summarized by tools/rmg_h3maped_fallback_post_commit_vector_membership_summary.py and joined into tools/rmg_h3maped_fallback_final_role_frontier_summary.py.",
-        "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_trace_20260609/winedbg_interactive_trace_ledger.json",
-        "validatedAt": "2026-06-09T20:45:06Z",
-        "vector_membership_artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_post_commit_vector_membership_summary_20260609.json"
+        "validatedAt": "2026-06-09T21:16:47Z",
+        "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, and first normal 0x49e700 scorer/selection/allocation/commit/return boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: recover complete 0x49e700 generated-cell before/after mutation replay and downstream phase-completion proof beyond 0x4ac844; find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+        "metrics": {
+          "h3maped_medium_seed10_49e700_first_dispatch": {
+            "status": "49e700_first_dispatch_selection_commit_return_boundary_recovered",
+            "invariants": {
+              "candidate_trace_reaches_accepted_candidate_appends": true,
+              "candidate_trace_reaches_scorer": true,
+              "native_behavior_changed": false,
+              "return_trace_entry_returns_to_49ec6b": true,
+              "return_trace_observes_ordered_boundary_once": true,
+              "return_trace_reaches_cleanup_return_boundary": true,
+              "seed_control_clean_for_all_traces": true,
+              "selection_trace_reaches_post_commit_coordinate_appends": true,
+              "selection_trace_reaches_rng_allocation_commit": true
+            },
+            "event_counts": {
+              "candidate_trace": {
+                "0x0049e700": 1,
+                "0x0049e8eb": 80,
+                "0x0049e904": 69,
+                "0x0049e91f": 69,
+                "0x0049eb8d": 1,
+                "0x004a789a": 1
+              },
+              "return_trace": {
+                "0x0049e700": 1,
+                "0x0049e8eb": 1,
+                "0x0049e904": 1,
+                "0x0049e91f": 1,
+                "0x0049e9ad": 1,
+                "0x0049ea07": 1,
+                "0x0049ea25": 1,
+                "0x0049eb01": 1,
+                "0x0049eb50": 1,
+                "0x0049eb8d": 1,
+                "0x004a789a": 1
+              },
+              "selection_trace": {
+                "0x0049e700": 1,
+                "0x0049e8eb": 1,
+                "0x0049e904": 1,
+                "0x0049e91f": 1,
+                "0x0049e9ad": 19,
+                "0x0049ea07": 19,
+                "0x0049ea25": 19,
+                "0x0049eb01": 58,
+                "0x0049eb8d": 1,
+                "0x004a789a": 1
+              }
+            },
+            "first_dispatch": {
+              "budget": 122,
+              "level": 0,
+              "return_address": "0x0049ec6b",
+              "x": 1,
+              "y": 0
+            },
+            "static_contract_flags": {
+              "allocates_object_record": true,
+              "appends_candidate_record": true,
+              "appends_post_commit_coordinate": true,
+              "appends_weight": true,
+              "calls_commit_callback": true,
+              "calls_descriptor_mask": true,
+              "calls_scorer": true,
+              "cleans_local_vectors": true,
+              "entry_initializes_coordinate_worklist": true,
+              "maps_generated_cell": true,
+              "pops_coordinate_worklist": true,
+              "selects_with_rng": true
+            },
+            "remaining_gap": "Exact generated-cell before/after mutation sets for 0x49ea25 commit callback, 0x49eb01 post-commit coordinate appends, the full emitted decorative-object stream, and downstream phase completion beyond 0x4ac844 remain pending."
+          }
+        }
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
@@ -44143,7 +44242,7 @@
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "Link recovered 0x4a61bc-origin appended records into the later 0x4a7d2c payload loop and downstream 0x4a696b/0x4a7605 paths, then recover natural endpoint success and cleanup/uncommit paths. Do not port native behavior from this partial boundary alone.",
-      "remainingWork": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "remainingWork": "Recover exact 0x49e700 generated-cell before/after mutation sets, downstream phase-completion proof beyond 0x4ac844, linked-payload 0x4a696b direct-mutation proof or unreachable proof, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate/projection reconciliation before porting native RMG behavior.",
       "result": "Downstream recovery frontier narrowed: sampled evidence proves projection-producing candidates and one 0x540b14 projection-object return/stamp, but sampled projection objects do not survive into the later 0x4a79a3 payload; that payload contains ordinary 0x540a88/0x540a9c records and dispatches through 0x4a79a3-owned 0x4a696b/0x4a7605. The live next recovery target is callee-side generated-cell mutation or proof of unreachable mutation, not speculative 0x49c019/0x49c0a6 dispatch.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -44154,7 +44253,7 @@
       "status": "in_progress",
       "summary": "Recovered linked-payload 0x4a7605 endpoint gate behavior for a selected 0x4a61bc-origin payload path without changing native behavior. Fresh trace captures selected record 0x03623cc0 reaching payload, then after-selected 0x4a696b no-candidate exit and following 0x4a7605 endpoint work. The 0x4a7605 path performs two direct 0x4a7312 -> 0x4a7447 commits: object 0x03623680 at (13,12,0) with source 0x017e07a8, and object 0x03623590 at (19,31,0) with source 0x01786958. Both delegated 0x4a746b gates are reached and skipped: 0x4a774a -> 0x4a7773 and 0x4a783a -> 0x4a7860, with control record 0x0165f3a8 bytes +0x08/+0x09/+0x0a all zero at both compares. Pair bookkeeping later changes word +0x08 from 0x00000000 to 0x00010000, setting byte +0x0a rather than endpoint gate byte +0x09.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-09T21:00:40Z",
+      "updatedAt": "2026-06-09T21:16:47Z",
       "validation": {
         "artifact": ".artifacts/rmg_recovery/downstream_recovery_frontier_summary_20260608.json",
         "checks": [
@@ -50562,7 +50661,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover generated-cell write sets for the second and third sampled weighted dispatches if exact per-dispatch cell mutation parity is required, recover 0x4a696b direct mutation semantics, natural 0x4a7605/0x4a746b/0x4a5e73 success/mutation paths, and actual 0x4add76 cleanup/uncommit runtime behavior before porting native RMG behavior. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "remainingWork": "Recover exact 0x49e700 generated-cell before/after mutation sets, downstream phase-completion proof beyond 0x4ac844, linked-payload 0x4a696b direct-mutation proof or unreachable proof, actual 0x4add76 cleanup/uncommit runtime behavior, and older coordinate/projection reconciliation before porting native RMG behavior.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50922,7 +51021,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, and all sampled weighted dispatch return/vector/counter deltas are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and 0x4add76 cleanup replay are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-09T21:00:40Z",
+  "updatedAt": "2026-06-09T21:17:22Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
