@@ -394,6 +394,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_producer_contexts",
+        "artifact": ".artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json",
+        "status": "descriptor_producer_contexts_named_assignment_paths_pending",
+        "meaning": (
+            "The descriptor+0x00 row/class-word surface is now separated by producer context. "
+            "0x4a5e6c/type54 belongs to fallback/object materialization through 0x4a5e03; "
+            "0x4a744a/type45 belongs to the sampled direct endpoint non-fallback return; "
+            "0x4a9586/type98 belongs to the sampled pre-scheduler projection/weighted "
+            "type-98 commit lane; 0x4a98f0/type53 belongs to the 0x4a9641 selected-object "
+            "callback; and 0x4a9c3f/type79 belongs to the 0x4a9911 selected-object callback. "
+            "The checkpoint names the remaining blocker directly: descriptor+0x00 assignment "
+            "or constructor paths are still pending for the mixed/class-word lanes, so "
+            "descriptor+0x00 remains unsafe as universal final object identity."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",

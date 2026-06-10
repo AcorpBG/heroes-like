@@ -57173,38 +57173,62 @@
         "used_objdump": false,
         "overall_goal_complete": false
       }
+    },
+    {
+      "id": "rmg-small-generalization-hardening-10184",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "timestamp": "2026-06-10T07:37:44Z",
+      "updatedAt": "2026-06-10T07:37:44Z",
+      "artifact": ".artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json",
+      "summary": "Wine/Ghidra/Python recovery now names the sampled descriptor+0x00 producer contexts instead of treating row-like values as final object identity. tools/rmg_h3maped_descriptor_producer_context_summary.py maps 0x4a5e6c/type54 to fallback materialization through 0x4a5e03, 0x4a744a/type45 to sampled direct endpoint non-fallback return, 0x4a9586/type98 to the sampled pre-scheduler projection/weighted type-98 lane, 0x4a98f0/type53 to the 0x4a9641 selected-object callback, and 0x4a9c3f/type79 to the 0x4a9911 selected-object callback. The checkpoint explicitly keeps descriptor+0x00 assignment/constructor paths pending for mixed/class-word lanes; descriptor+0x1c remains the recovered counter/type lane. Native RMG behavior is unchanged; no objdump recovery was used.",
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover descriptor+0x00 assignment/constructor paths for mixed/class-word lanes before using descriptor words as final object identity; recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; recover broader descriptor/candidate labels only from source object/template mapping; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_producer_context_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_descriptor_producer_context_summary.py --out .artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json (passed: descriptor_producer_contexts_named_assignment_paths_pending, contexts=5, row_matches=31, row_mismatches=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
+        "jq empty .artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json && jq empty .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)"
+      ],
+      "metrics": {
+        "descriptor_producer_context_count": 5,
+        "descriptor_sample_count": 43,
+        "descriptor_word_row_match_count": 31,
+        "descriptor_word_row_mismatch_count": 12,
+        "native_behavior_changed": false,
+        "used_objdump": false,
+        "overall_goal_complete": false
+      }
     }
   ],
   "validationResults": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T07:26:47Z",
-    "updatedAt": "2026-06-10T07:26:47Z",
-    "artifact": ".artifacts/rmg_recovery/descriptor_word_row_mode_summary_20260610.json",
-    "summary": "Wine/Ghidra/Python/source-data recovery corrected the descriptor identity boundary. tools/rmg_h3maped_descriptor_word_row_mode_summary.py now consumes exact 0x4a54a7 descriptor/relation Wine summaries plus the extracted object catalog and proves descriptor+0x00 is not a universal zero-based objects.txt row pointer. Across 43 exact descriptor samples, 31 descriptor words are row-like and 12 mismatch the catalog row type. Type 98 remains row-like in the current exact sample, but type 45 word 1145 maps to a Cartographer row while descriptor+0x1c is the Monolith Two Way lane; type 53, 54, and 79 fallback samples also include mismatches. Descriptor+0x1c remains a counter/type lane; descriptor+0x00 producer paths remain unrecovered for mixed row-like/class-word lanes. Native RMG behavior is unchanged; no objdump execution was used.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate, or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; recover descriptor+0x00 producer/constructor paths for the mixed row-like/class-word lanes before using descriptor words as final object identity; recover broader descriptor/candidate labels beyond sampled source-backed crosswalks only from source object/template mapping; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "timestamp": "2026-06-10T07:37:44Z",
+    "updatedAt": "2026-06-10T07:37:44Z",
+    "artifact": ".artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json",
+    "summary": "Wine/Ghidra/Python recovery now names the sampled descriptor+0x00 producer contexts instead of treating row-like values as final object identity. tools/rmg_h3maped_descriptor_producer_context_summary.py maps 0x4a5e6c/type54 to fallback materialization through 0x4a5e03, 0x4a744a/type45 to sampled direct endpoint non-fallback return, 0x4a9586/type98 to the sampled pre-scheduler projection/weighted type-98 lane, 0x4a98f0/type53 to the 0x4a9641 selected-object callback, and 0x4a9c3f/type79 to the 0x4a9911 selected-object callback. The checkpoint explicitly keeps descriptor+0x00 assignment/constructor paths pending for mixed/class-word lanes; descriptor+0x1c remains the recovered counter/type lane. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover descriptor+0x00 assignment/constructor paths for mixed/class-word lanes before using descriptor words as final object identity; recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; recover broader descriptor/candidate labels only from source object/template mapping; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_word_row_mode_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_descriptor_word_row_mode_summary.py --out .artifacts/rmg_recovery/descriptor_word_row_mode_summary_20260610.json (passed: descriptor_word_row_mode_mixed_class_word_recovered, samples=43, row_matches=31, row_mismatches=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_producer_context_summary.py tools/rmg_h3maped_descriptor_word_row_mode_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_descriptor_producer_context_summary.py --out .artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json (passed: descriptor_producer_contexts_named_assignment_paths_pending, contexts=5, row_matches=31, row_mismatches=12)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
-      "jq empty .artifacts/rmg_recovery/descriptor_word_row_mode_summary_20260610.json && jq empty .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
-      "rg -n \"subprocess\\.|Popen\\(|check_output\\(|check_call\\(|os\\.system\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
       "jq empty ops/progress.json (passed)",
+      "jq empty .artifacts/rmg_recovery/descriptor_producer_context_summary_20260610.json && jq empty .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
+      "descriptor_producer_context_count": 5,
       "descriptor_sample_count": 43,
       "descriptor_word_row_match_count": 31,
       "descriptor_word_row_mismatch_count": 12,
-      "descriptor_type_count": 5,
       "native_behavior_changed": false,
       "used_objdump": false,
       "overall_goal_complete": false
     }
   },
-  "currentNotes": "Wine/Ghidra/Python/source-data recovery corrected the descriptor identity boundary. tools/rmg_h3maped_descriptor_word_row_mode_summary.py now consumes exact 0x4a54a7 descriptor/relation Wine summaries plus the extracted object catalog and proves descriptor+0x00 is not a universal zero-based objects.txt row pointer. Across 43 exact descriptor samples, 31 descriptor words are row-like and 12 mismatch the catalog row type. Type 98 remains row-like in the current exact sample, but type 45 word 1145 maps to a Cartographer row while descriptor+0x1c is the Monolith Two Way lane; type 53, 54, and 79 fallback samples also include mismatches. Descriptor+0x1c remains a counter/type lane; descriptor+0x00 producer paths remain unrecovered for mixed row-like/class-word lanes. Native RMG behavior is unchanged; no objdump execution was used.",
-  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate, or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; recover descriptor+0x00 producer/constructor paths for the mixed row-like/class-word lanes before using descriptor words as final object identity; recover broader descriptor/candidate labels beyond sampled source-backed crosswalks only from source object/template mapping; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
+  "currentNotes": "Wine/Ghidra/Python recovery now names the sampled descriptor+0x00 producer contexts instead of treating row-like values as final object identity. tools/rmg_h3maped_descriptor_producer_context_summary.py maps 0x4a5e6c/type54 to fallback materialization through 0x4a5e03, 0x4a744a/type45 to sampled direct endpoint non-fallback return, 0x4a9586/type98 to the sampled pre-scheduler projection/weighted type-98 lane, 0x4a98f0/type53 to the 0x4a9641 selected-object callback, and 0x4a9c3f/type79 to the 0x4a9911 selected-object callback. The checkpoint explicitly keeps descriptor+0x00 assignment/constructor paths pending for mixed/class-word lanes; descriptor+0x1c remains the recovered counter/type lane. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover descriptor+0x00 assignment/constructor paths for mixed/class-word lanes before using descriptor words as final object identity; recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; recover broader descriptor/candidate labels only from source object/template mapping; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
 }
