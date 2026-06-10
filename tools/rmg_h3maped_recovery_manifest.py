@@ -68,7 +68,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
-            "semantic_frontier_working_names_seed10_chain_cursor_owner_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
+            "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
         ),
         "meaning": (
             "Connection record bytes +0x08/+0x09/+0x0a, candidate record fields "
@@ -79,10 +79,11 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "Border Guard downstream chain is recovered through fallback materialization and "
             "phase tail. 0x4a5e73 is recovered as the cursor-keyed endpoint helper with no "
             "current success-path hits, the non-self +0xf5c writers are bound to the unhit "
-            "projection/cleanup slot chain, and 0x4a606b is statically recovered with no live "
-            "hit in the current target corpus. Broader relation/control linkage, global "
-            "descriptor type labels, broader semantic scope, and cleanup/uncommit semantics "
-            "remain pending."
+            "projection/cleanup slot chain, cursor-source setup/lifetime evidence proves "
+            "+0xf58/+0x1104 initialization without +0xf5c seeding, and 0x4a606b is statically "
+            "recovered with no live hit in the current target corpus. Broader relation/control "
+            "linkage, global descriptor type labels, broader semantic scope, and "
+            "cleanup/uncommit semantics remain pending."
         ),
     },
     {
@@ -110,6 +111,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "Current one-level land Wine evidence has zero projection/cleanup slot hits, so the "
             "remaining cursor-source blocker is outside the currently excluded non-self writer "
             "chain unless a broader mode naturally dispatches those projection slots."
+        ),
+    },
+    {
+        "id": "cursor_source_frontier",
+        "artifact": ".artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json",
+        "status": (
+            "cursor_source_frontier_setup_and_writer_surface_recovered_success_path_still_unrecovered"
+        ),
+        "meaning": (
+            "Wine runtime lifetime evidence and Ghidra-derived access summaries prove the setup "
+            "path initializes generator+0xf58 and generator+0x1104, but not generator+0xf5c; "
+            "the first natural Border Guard endpoint attempt uses stale cursor 0x7a1befdf while "
+            "active +0xd8 keys are 0..7; the direct +0xf5c writer surface is exhausted; and the "
+            "known non-self writers are bound to the currently unhit projection/cleanup slot "
+            "chain. Successful 0x4a5e73/0x4a606b endpoint stamping remains unrecovered or "
+            "unexcluded for broader supported one-level land."
         ),
     },
     {
