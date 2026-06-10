@@ -9753,15 +9753,45 @@
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 164
       }
+    },
+    {
+      "id": "rmg-h3maped-object-table-loader-20260610",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "timestamp": "2026-06-10T11:45:00Z",
+      "updatedAt": "2026-06-10T11:45:00Z",
+      "artifact": ".artifacts/rmg_recovery/object_table_loader_summary_20260610.json",
+      "summary": "Wine/Ghidra/Python recovery now verifies the base H3MapEd object table loader surface. tools/rmg_h3maped_object_table_loader_summary.py checks the focused Ghidra dump, PE string addresses, and extracted catalog: 0x49da08 loads objects.txt through 0x490c4c, walks parsed 0x4c rows, consumes row +0x1c as object type id and row +0x20 as a subtype-like guard field, bounds type ids by 0xe8, initializes 0xe8-byte wrappers through 0x49db76, buckets wrappers through 0x57c648[type].+0x08, and then loads rand_trn.txt separately through 0x49dc9e. The checked catalog has 1326 objects.txt rows plus 2 objtmplt.txt rows. Native RMG behavior is unchanged; no objdump recovery was used.",
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_object_table_loader_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_object_table_loader_summary.py --out .artifacts/rmg_recovery/object_table_loader_summary_20260610.json (passed: status=object_table_loader_recovered_catalog_row_identity_surface markers=26/26 rows=1328)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
+        "jq empty ops/progress.json && git diff --check (passed)",
+        "rg -n \"subprocess\\.|Popen\\(|check_output\\(|check_call\\(|os\\.system\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      ],
+      "metrics": {
+        "object_table_loader_marker_count": 26,
+        "object_table_loader_present_marker_count": 26,
+        "object_catalog_row_count": 1328,
+        "objects_txt_row_count": 1326,
+        "objtmplt_txt_row_count": 2,
+        "max_type_id": 231,
+        "objnames_bound": 232,
+        "native_behavior_changed": false,
+        "used_objdump": false,
+        "overall_goal_complete": false
+      }
     }
   ],
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Wine/Ghidra/Python recovery now verifies the source-payload materializer/accessor frontier below the source-handler key lookup chain. tools/rmg_h3maped_source_payload_materializer_summary.py checks the focused Ghidra dumps and proves 0x42a73a reads source object +0x10 and materializes shared payloads through 0x42a75a; 0x42a75a clones/materializes through virtual slot +0x08, allocates a 12-byte holder, initializes it through 0x4370f4, decrements the old holder, stores the replacement at +0x10, and cleans temporary holder state through 0x42bfe6; 0x42a600 releases the same holder family; 0x42a48c confirms the same 20-byte/five-dword slot plus nested holder shape; and 0x42a4d0/0x42bde9 are helper infrastructure, not source identity producers. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "currentSliceNotes": "Wine/Ghidra/Python recovery now verifies the base H3MapEd object table loader surface. tools/rmg_h3maped_object_table_loader_summary.py checks the focused Ghidra dump, PE string addresses, and extracted catalog: 0x49da08 loads objects.txt through 0x490c4c, walks parsed 0x4c rows, consumes row +0x1c as object type id and row +0x20 as a subtype-like guard field, bounds type ids by 0xe8, initializes 0xe8-byte wrappers through 0x49db76, buckets wrappers through 0x57c648[type].+0x08, and then loads rand_trn.txt separately through 0x49dc9e. The checked catalog has 1326 objects.txt rows plus 2 objtmplt.txt rows. Native RMG behavior is unchanged; no objdump recovery was used.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T11:30:00Z",
+  "currentSliceUpdatedAt": "2026-06-10T11:45:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10843,65 +10873,68 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Full end-to-end native RMG recovery remains incomplete. Current percentage-moving blockers are: recover final source catalog/object-template identity from parsed source-input fields, populated 0x4c records, and nested payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "guardrailNote": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "lastValidation": {
-    "id": "rmg-small-generalization-hardening-10184",
+    "id": "rmg-h3maped-object-table-loader-20260610",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T10:34:00Z",
-    "updatedAt": "2026-06-10T10:34:00Z",
-    "artifact": ".artifacts/rmg_recovery/relation_normalization_summary_20260610.json",
-    "summary": "Wine/Ghidra/Python recovery now verifies the relation-normalization static frontier. tools/rmg_h3maped_relation_normalization_summary.py checks the focused Ghidra dumps and proves 0x4a5767 resets generated-cell projection/local fields, scans generator+0x10e4 relation pointers, gates relation-local cells by owner byte2/terrain/object refs/bit27/0x49a1d8, marks fallback cells through 0x49a932, and delegates twice to 0x49a318; 0x49a318 clears source projection state, walks 0x5a2658 direction offsets, applies 0x57c648 descriptor policy gates, and mutates +0x1c/+0x20/+0x28/+0x10/+0x14/+0x18 while maintaining score and coordinate work vectors. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "timestamp": "2026-06-10T11:45:00Z",
+    "updatedAt": "2026-06-10T11:45:00Z",
+    "artifact": ".artifacts/rmg_recovery/object_table_loader_summary_20260610.json",
+    "summary": "Wine/Ghidra/Python recovery now verifies the base H3MapEd object table loader surface. tools/rmg_h3maped_object_table_loader_summary.py checks the focused Ghidra dump, PE string addresses, and extracted catalog: 0x49da08 loads objects.txt through 0x490c4c, walks parsed 0x4c rows, consumes row +0x1c as object type id and row +0x20 as a subtype-like guard field, bounds type ids by 0xe8, initializes 0xe8-byte wrappers through 0x49db76, buckets wrappers through 0x57c648[type].+0x08, and then loads rand_trn.txt separately through 0x49dc9e. The checked catalog has 1326 objects.txt rows plus 2 objtmplt.txt rows. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_relation_normalization_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_relation_normalization_summary.py --out .artifacts/rmg_recovery/relation_normalization_summary_20260610.json (passed: relation_normalization_static_surface_recovered_runtime_replay_pending, markers=50/50)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
-      "jq empty .artifacts/rmg_recovery/relation_normalization_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json ops/progress.json (passed)",
-      "rg -n \"subprocess\\\\.|Popen\\\\(|check_output\\\\(|check_call\\\\(|os\\\\.system\\\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
-      "git diff --check (passed)",
-      "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
-    ],
-    "metrics": {
-      "relation_normalization_marker_count": 50,
-      "relation_normalization_present_marker_count": 50,
-      "relation_normalization_function_count": 2,
-      "native_behavior_changed": false,
-      "used_objdump": false,
-      "overall_goal_complete": false,
-      "recovery_manifest_function_count": 164
-    }
-  },
-  "latestEvidence": {
-    "id": "rmg-h3maped-f5c-candidate-live-gate-20260610",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "passed",
-    "timestamp": "2026-06-10T11:30:00Z",
-    "updatedAt": "2026-06-10T11:30:00Z",
-    "artifact": ".artifacts/rmg_recovery/f5c_candidate_live_gate_summary_20260610.json",
-    "summary": "Wine/Ghidra/Python recovery now verifies the sampled live gate behavior for the 0x540ca0 / 0x49cd97 candidate scorer. Static evidence proves the scorer compares the second 0x4a9f1c score argument at +0xf5c against candidate +0x08, and caller evidence proves 0x4a9f1c passes entry ECX through EBX as that second argument. Twelve Medium one-level no-water seeds plus one deeper seed-1 run record 493 reject-branch stops, zero match-branch stops, and zero 0x49cdb1 constructor hits; observed selector-context +0xf5c stays 0x7a1befdf while candidate keys cover 0..7. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current percentage-moving blockers are: recover final source catalog/object-template identity from parsed source-input fields, populated 0x4c records, and nested payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-    "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_f5c_candidate_live_gate_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_f5c_candidate_live_gate_summary.py --out .artifacts/rmg_recovery/f5c_candidate_live_gate_summary_20260610.json (passed: rejects=493 matches=0 constructors=0)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_object_table_loader_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_object_table_loader_summary.py --out .artifacts/rmg_recovery/object_table_loader_summary_20260610.json (passed: status=object_table_loader_recovered_catalog_row_identity_surface markers=26/26 rows=1328)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
       "jq empty ops/progress.json && git diff --check (passed)",
       "rg -n \"subprocess\\.|Popen\\(|check_output\\(|check_call\\(|os\\.system\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "f5c_candidate_reject_branch_count": 493,
-      "f5c_candidate_match_branch_count": 0,
-      "f5c_candidate_constructor_count": 0,
-      "f5c_candidate_seed_ledger_count": 12,
+      "object_table_loader_marker_count": 26,
+      "object_table_loader_present_marker_count": 26,
+      "object_catalog_row_count": 1328,
+      "objects_txt_row_count": 1326,
+      "objtmplt_txt_row_count": 2,
+      "max_type_id": 231,
+      "objnames_bound": 232,
       "native_behavior_changed": false,
       "used_objdump": false,
-      "overall_goal_complete": false,
-      "recovery_manifest_function_count": 164
+      "overall_goal_complete": false
     }
   },
-  "nextActionGuardrailNote": "Focus only on percentage-moving native RMG blockers: source catalog/object-template identity, mixed descriptor/source evidence, 0x4a696b source/relation-match proof, successful 0x4a5e73 -> 0x4a606b endpoint-stamping proof/exclusion, and global source exclusion only where needed. No native behavior changes from final-map deltas.",
+  "latestEvidence": {
+    "id": "rmg-h3maped-object-table-loader-20260610",
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "passed",
+    "timestamp": "2026-06-10T11:45:00Z",
+    "updatedAt": "2026-06-10T11:45:00Z",
+    "artifact": ".artifacts/rmg_recovery/object_table_loader_summary_20260610.json",
+    "summary": "Wine/Ghidra/Python recovery now verifies the base H3MapEd object table loader surface. tools/rmg_h3maped_object_table_loader_summary.py checks the focused Ghidra dump, PE string addresses, and extracted catalog: 0x49da08 loads objects.txt through 0x490c4c, walks parsed 0x4c rows, consumes row +0x1c as object type id and row +0x20 as a subtype-like guard field, bounds type ids by 0xe8, initializes 0xe8-byte wrappers through 0x49db76, buckets wrappers through 0x57c648[type].+0x08, and then loads rand_trn.txt separately through 0x49dc9e. The checked catalog has 1326 objects.txt rows plus 2 objtmplt.txt rows. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "commands": [
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_object_table_loader_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_object_table_loader_summary.py --out .artifacts/rmg_recovery/object_table_loader_summary_20260610.json (passed: status=object_table_loader_recovered_catalog_row_identity_surface markers=26/26 rows=1328)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
+      "jq empty ops/progress.json && git diff --check (passed)",
+      "rg -n \"subprocess\\.|Popen\\(|check_output\\(|check_call\\(|os\\.system\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+    ],
+    "metrics": {
+      "object_table_loader_marker_count": 26,
+      "object_table_loader_present_marker_count": 26,
+      "object_catalog_row_count": 1328,
+      "objects_txt_row_count": 1326,
+      "objtmplt_txt_row_count": 2,
+      "max_type_id": 231,
+      "objnames_bound": 232,
+      "native_behavior_changed": false,
+      "used_objdump": false,
+      "overall_goal_complete": false
+    }
+  },
+  "nextActionGuardrailNote": "Focus only on percentage-moving native RMG blockers: selected mixed descriptor/source evidence, nested source-handler payload variant mapping, 0x4a696b source/relation-match proof, successful 0x4a5e73 -> 0x4a606b endpoint-stamping proof/exclusion, and global source exclusion only where needed. No native behavior changes from final-map deltas.",
   "notes": "Wine/Ghidra/Python recovery now verifies the source-record copy helper frontier under the 0x4c025c parser and 0x41f350 source payload loader. tools/rmg_h3maped_source_record_copy_helper_summary.py checks the Ghidra helper, callee, and lifecycle dumps and proves the generic refcounted byte-buffer/string-holder family: 0x4019a4 assigns/copies bounded slices, 0x401aa7 erases ranges after unsharing, 0x401b0e ensures capacity or shrinks/clears, 0x4016fd releases/resets holder state, 0x401caa unshares shared buffers, 0x401a72 copies into a holder, and 0x401bed/0x401c51 allocate rounded capacity and commit growth. Native RMG behavior is unchanged; no objdump recovery was used.",
   "plannedSlices": [
     {
@@ -50876,7 +50909,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current percentage-moving blockers are: recover final source catalog/object-template identity from parsed source-input fields, populated 0x4c records, and nested payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -51362,9 +51395,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Wine/Ghidra/Python recovery now verifies the source-payload materializer/accessor frontier below the source-handler key lookup chain. tools/rmg_h3maped_source_payload_materializer_summary.py checks the focused Ghidra dumps and proves 0x42a73a reads source object +0x10 and materializes shared payloads through 0x42a75a; 0x42a75a clones/materializes through virtual slot +0x08, allocates a 12-byte holder, initializes it through 0x4370f4, decrements the old holder, stores the replacement at +0x10, and cleans temporary holder state through 0x42bfe6; 0x42a600 releases the same holder family; 0x42a48c confirms the same 20-byte/five-dword slot plus nested holder shape; and 0x42a4d0/0x42bde9 are helper infrastructure, not source identity producers. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "summary": "Wine/Ghidra/Python recovery now verifies the base H3MapEd object table loader surface. tools/rmg_h3maped_object_table_loader_summary.py checks the focused Ghidra dump, PE string addresses, and extracted catalog: 0x49da08 loads objects.txt through 0x490c4c, walks parsed 0x4c rows, consumes row +0x1c as object type id and row +0x20 as a subtype-like guard field, bounds type ids by 0xe8, initializes 0xe8-byte wrappers through 0x49db76, buckets wrappers through 0x57c648[type].+0x08, and then loads rand_trn.txt separately through 0x49dc9e. The checked catalog has 1326 objects.txt rows plus 2 objtmplt.txt rows. Native RMG behavior is unchanged; no objdump recovery was used.",
   "taskId": "10184",
-  "updatedAt": "2026-06-10T11:30:00Z",
+  "updatedAt": "2026-06-10T11:45:00Z",
   "validation": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
