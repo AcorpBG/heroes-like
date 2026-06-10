@@ -443,119 +443,179 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-    "currentSliceNotes": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-    "currentSliceUpdatedAt": "2026-06-10T22:08:27Z",
-    "guardrailNote": "0x49cf34 cell mutation recovery is evidence only. Continue with ordered private-state replay or named unrecovered caller/data structures; do not tune native RMG from final-map deltas or this local mutation checkpoint.",
+    "currentNotes": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+    "currentSliceNotes": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+    "currentSliceUpdatedAt": "2026-06-10T22:27:28Z",
+    "guardrailNote": "Reward attach-order recovery is evidence only. Continue with ordered private-state replay or named source-backed exclusions; do not tune native RMG from final-map deltas or this local attach-order checkpoint.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
       "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
-      "date": "2026-06-10T22:08:27Z",
+      "date": "2026-06-10T22:27:28Z",
       "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
-        "changed_write_pair_count": 15,
-        "clears_bit26_count": 5,
-        "descriptor_direction_probe_counts": [
-          5,
-          8
+        "event_count": 12,
+        "event_sequence": [
+          "0x004aa354",
+          "0x004aa38a",
+          "0x004aa38f",
+          "0x004aa3a8",
+          "0x004aa3b6",
+          "0x0049cf34",
+          "0x0049d2be",
+          "0x004aa3bb",
+          "0x004aa3e0",
+          "0x004aa9b7",
+          "0x004aab12",
+          "0x004aab6f"
         ],
-        "descriptor_policy_sample_count": 3,
+        "invariants": {
+          "49cf34_returns_to_4aa3bb": true,
+          "expected_order_reached": true,
+          "object_record_coordinate_stamped_after_49cf34": true,
+          "object_record_starts_unplaced": true,
+          "post_attach_4aa9b7_candidate_vector_empty": true,
+          "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+          "post_attach_4aa9b7_returns_false": true,
+          "single_member_joined_into_49cf34": true,
+          "single_wrapper_joined_across_attach_and_post_scheduler": true,
+          "wrapper_attached_flag_set_by_49cf34": true,
+          "wrapper_relative_coordinate_populated_by_49cf34": true
+        },
+        "joined_member": "0x0362c010",
+        "joined_wrapper": "0x0031df5c",
         "native_behavior_changed": false,
-        "neighbor_write_pair_count": 9,
+        "object_record_after_coordinate": {
+          "level": 0,
+          "x": 9,
+          "y": 10
+        },
+        "object_record_before_coordinate": {
+          "level": -1,
+          "x": -1,
+          "y": -1
+        },
         "ordered_private_state_mutation_replay_complete": false,
         "overall_goal_complete": false,
-        "primary_write_pair_count": 8,
-        "selected_coordinate": {
+        "post_attach_4aa9b7_aa3e9_event_count": 0,
+        "post_attach_4aa9b7_candidate_count": 0,
+        "post_attach_4aa9b7_return_success_flag_bl": 0,
+        "used_objdump": false,
+        "wrapper_attached_flag": 1,
+        "wrapper_relative_coordinate": {
           "x": 8,
-          "y": 11
-        },
-        "selected_member_record": "0x036225e0",
-        "sets_bit27_from_clear_count": 15,
-        "success_attached_flag": 1,
-        "success_relative_coordinate": {
-          "x": 8,
-          "y": 11
-        },
-        "unique_cell_count": 17,
-        "used_objdump": false
+          "y": 10
+        }
       },
-      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-      "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+      "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+      "status": "passed",
+      "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+      "timestamp": "2026-06-10T22:27:28Z",
+      "updatedAt": "2026-06-10T22:27:28Z",
       "validationStatus": "passed"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
       "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
-      "date": "2026-06-10T22:08:27Z",
+      "date": "2026-06-10T22:27:28Z",
       "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
-        "changed_write_pair_count": 15,
-        "clears_bit26_count": 5,
-        "descriptor_direction_probe_counts": [
-          5,
-          8
+        "event_count": 12,
+        "event_sequence": [
+          "0x004aa354",
+          "0x004aa38a",
+          "0x004aa38f",
+          "0x004aa3a8",
+          "0x004aa3b6",
+          "0x0049cf34",
+          "0x0049d2be",
+          "0x004aa3bb",
+          "0x004aa3e0",
+          "0x004aa9b7",
+          "0x004aab12",
+          "0x004aab6f"
         ],
-        "descriptor_policy_sample_count": 3,
+        "invariants": {
+          "49cf34_returns_to_4aa3bb": true,
+          "expected_order_reached": true,
+          "object_record_coordinate_stamped_after_49cf34": true,
+          "object_record_starts_unplaced": true,
+          "post_attach_4aa9b7_candidate_vector_empty": true,
+          "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+          "post_attach_4aa9b7_returns_false": true,
+          "single_member_joined_into_49cf34": true,
+          "single_wrapper_joined_across_attach_and_post_scheduler": true,
+          "wrapper_attached_flag_set_by_49cf34": true,
+          "wrapper_relative_coordinate_populated_by_49cf34": true
+        },
+        "joined_member": "0x0362c010",
+        "joined_wrapper": "0x0031df5c",
         "native_behavior_changed": false,
-        "neighbor_write_pair_count": 9,
+        "object_record_after_coordinate": {
+          "level": 0,
+          "x": 9,
+          "y": 10
+        },
+        "object_record_before_coordinate": {
+          "level": -1,
+          "x": -1,
+          "y": -1
+        },
         "ordered_private_state_mutation_replay_complete": false,
         "overall_goal_complete": false,
-        "primary_write_pair_count": 8,
-        "selected_coordinate": {
+        "post_attach_4aa9b7_aa3e9_event_count": 0,
+        "post_attach_4aa9b7_candidate_count": 0,
+        "post_attach_4aa9b7_return_success_flag_bl": 0,
+        "used_objdump": false,
+        "wrapper_attached_flag": 1,
+        "wrapper_relative_coordinate": {
           "x": 8,
-          "y": 11
-        },
-        "selected_member_record": "0x036225e0",
-        "sets_bit27_from_clear_count": 15,
-        "success_attached_flag": 1,
-        "success_relative_coordinate": {
-          "x": 8,
-          "y": 11
-        },
-        "unique_cell_count": 17,
-        "used_objdump": false
+          "y": 10
+        }
       },
-      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-      "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+      "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+      "status": "passed",
+      "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+      "timestamp": "2026-06-10T22:27:28Z",
+      "updatedAt": "2026-06-10T22:27:28Z",
       "validationStatus": "passed"
     },
     "metrics": {
@@ -904,8 +964,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-    "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+    "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
     "result": "Final stream adapter and wrapped buffered sink recovered; full private-state replay remains incomplete.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -916,114 +976,171 @@
     "status": "in_progress",
     "summary": "Wine/Ghidra/Python recovery now closes same-run final tile/object payload stitching for clean Medium seed-10 one-level/no-water. tools/rmg_h3maped_same_run_final_payload_summary.py consumes the combined H3MapEd trace, reconstructs all 36,288 final tile bytes for 5,184 generated cells (sha256 cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65), and reconstructs 17,057 same-run generated-object payload bytes from 1,212 objects and 7,082 stream writes (sha256 4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c). Header/player/metadata payload replay and ordered private-state mutation replay remain unrecovered; native RMG behavior is unchanged and no objdump recovery was used.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-10T19:17:29Z",
+    "updatedAt": "2026-06-10T22:27:28Z",
     "validation": {
-      "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
       "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
-      "date": "2026-06-10T22:08:27Z",
+      "date": "2026-06-10T22:27:28Z",
       "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
-        "changed_write_pair_count": 15,
-        "clears_bit26_count": 5,
-        "descriptor_direction_probe_counts": [
-          5,
-          8
+        "event_count": 12,
+        "event_sequence": [
+          "0x004aa354",
+          "0x004aa38a",
+          "0x004aa38f",
+          "0x004aa3a8",
+          "0x004aa3b6",
+          "0x0049cf34",
+          "0x0049d2be",
+          "0x004aa3bb",
+          "0x004aa3e0",
+          "0x004aa9b7",
+          "0x004aab12",
+          "0x004aab6f"
         ],
-        "descriptor_policy_sample_count": 3,
+        "invariants": {
+          "49cf34_returns_to_4aa3bb": true,
+          "expected_order_reached": true,
+          "object_record_coordinate_stamped_after_49cf34": true,
+          "object_record_starts_unplaced": true,
+          "post_attach_4aa9b7_candidate_vector_empty": true,
+          "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+          "post_attach_4aa9b7_returns_false": true,
+          "single_member_joined_into_49cf34": true,
+          "single_wrapper_joined_across_attach_and_post_scheduler": true,
+          "wrapper_attached_flag_set_by_49cf34": true,
+          "wrapper_relative_coordinate_populated_by_49cf34": true
+        },
+        "joined_member": "0x0362c010",
+        "joined_wrapper": "0x0031df5c",
         "native_behavior_changed": false,
-        "neighbor_write_pair_count": 9,
+        "object_record_after_coordinate": {
+          "level": 0,
+          "x": 9,
+          "y": 10
+        },
+        "object_record_before_coordinate": {
+          "level": -1,
+          "x": -1,
+          "y": -1
+        },
         "ordered_private_state_mutation_replay_complete": false,
         "overall_goal_complete": false,
-        "primary_write_pair_count": 8,
-        "selected_coordinate": {
+        "post_attach_4aa9b7_aa3e9_event_count": 0,
+        "post_attach_4aa9b7_candidate_count": 0,
+        "post_attach_4aa9b7_return_success_flag_bl": 0,
+        "used_objdump": false,
+        "wrapper_attached_flag": 1,
+        "wrapper_relative_coordinate": {
           "x": 8,
-          "y": 11
-        },
-        "selected_member_record": "0x036225e0",
-        "sets_bit27_from_clear_count": 15,
-        "success_attached_flag": 1,
-        "success_relative_coordinate": {
-          "x": 8,
-          "y": 11
-        },
-        "unique_cell_count": 17,
-        "used_objdump": false
+          "y": 10
+        }
       },
-      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-      "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+      "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-      "timestamp": "2026-06-10T22:08:27Z",
-      "updatedAt": "2026-06-10T22:08:27Z",
+      "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+      "timestamp": "2026-06-10T22:27:28Z",
+      "updatedAt": "2026-06-10T22:27:28Z",
       "validationStatus": "passed"
     },
     "validationResults": {
-      "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
       "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-        "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+        "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
         "git diff --check (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
       ],
-      "date": "2026-06-10T22:08:27Z",
+      "date": "2026-06-10T22:27:28Z",
       "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
-        "changed_write_pair_count": 15,
-        "clears_bit26_count": 5,
-        "descriptor_direction_probe_counts": [
-          5,
-          8
+        "event_count": 12,
+        "event_sequence": [
+          "0x004aa354",
+          "0x004aa38a",
+          "0x004aa38f",
+          "0x004aa3a8",
+          "0x004aa3b6",
+          "0x0049cf34",
+          "0x0049d2be",
+          "0x004aa3bb",
+          "0x004aa3e0",
+          "0x004aa9b7",
+          "0x004aab12",
+          "0x004aab6f"
         ],
-        "descriptor_policy_sample_count": 3,
+        "invariants": {
+          "49cf34_returns_to_4aa3bb": true,
+          "expected_order_reached": true,
+          "object_record_coordinate_stamped_after_49cf34": true,
+          "object_record_starts_unplaced": true,
+          "post_attach_4aa9b7_candidate_vector_empty": true,
+          "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+          "post_attach_4aa9b7_returns_false": true,
+          "single_member_joined_into_49cf34": true,
+          "single_wrapper_joined_across_attach_and_post_scheduler": true,
+          "wrapper_attached_flag_set_by_49cf34": true,
+          "wrapper_relative_coordinate_populated_by_49cf34": true
+        },
+        "joined_member": "0x0362c010",
+        "joined_wrapper": "0x0031df5c",
         "native_behavior_changed": false,
-        "neighbor_write_pair_count": 9,
+        "object_record_after_coordinate": {
+          "level": 0,
+          "x": 9,
+          "y": 10
+        },
+        "object_record_before_coordinate": {
+          "level": -1,
+          "x": -1,
+          "y": -1
+        },
         "ordered_private_state_mutation_replay_complete": false,
         "overall_goal_complete": false,
-        "primary_write_pair_count": 8,
-        "selected_coordinate": {
+        "post_attach_4aa9b7_aa3e9_event_count": 0,
+        "post_attach_4aa9b7_candidate_count": 0,
+        "post_attach_4aa9b7_return_success_flag_bl": 0,
+        "used_objdump": false,
+        "wrapper_attached_flag": 1,
+        "wrapper_relative_coordinate": {
           "x": 8,
-          "y": 11
-        },
-        "selected_member_record": "0x036225e0",
-        "sets_bit27_from_clear_count": 15,
-        "success_attached_flag": 1,
-        "success_relative_coordinate": {
-          "x": 8,
-          "y": 11
-        },
-        "unique_cell_count": 17,
-        "used_objdump": false
+          "y": 10
+        }
       },
-      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-      "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+      "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+      "status": "passed",
+      "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+      "timestamp": "2026-06-10T22:27:28Z",
+      "updatedAt": "2026-06-10T22:27:28Z",
       "validationStatus": "passed"
     }
   },
@@ -10246,14 +10363,14 @@
       "updatedAt": "2026-06-10T15:15:50Z"
     }
   ],
-  "currentNotes": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+  "currentNotes": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+  "currentSliceNotes": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T22:08:27Z",
+  "currentSliceUpdatedAt": "2026-06-10T22:27:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -11493,111 +11610,171 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "0x49cf34 cell mutation recovery is evidence only. Continue with ordered private-state replay or named unrecovered caller/data structures; do not tune native RMG from final-map deltas or this local mutation checkpoint.",
+  "guardrailNote": "Reward attach-order recovery is evidence only. Continue with ordered private-state replay or named source-backed exclusions; do not tune native RMG from final-map deltas or this local attach-order checkpoint.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
-    "date": "2026-06-10T22:08:27Z",
+    "date": "2026-06-10T22:27:28Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "changed_write_pair_count": 15,
-      "clears_bit26_count": 5,
-      "descriptor_direction_probe_counts": [
-        5,
-        8
+      "event_count": 12,
+      "event_sequence": [
+        "0x004aa354",
+        "0x004aa38a",
+        "0x004aa38f",
+        "0x004aa3a8",
+        "0x004aa3b6",
+        "0x0049cf34",
+        "0x0049d2be",
+        "0x004aa3bb",
+        "0x004aa3e0",
+        "0x004aa9b7",
+        "0x004aab12",
+        "0x004aab6f"
       ],
-      "descriptor_policy_sample_count": 3,
+      "invariants": {
+        "49cf34_returns_to_4aa3bb": true,
+        "expected_order_reached": true,
+        "object_record_coordinate_stamped_after_49cf34": true,
+        "object_record_starts_unplaced": true,
+        "post_attach_4aa9b7_candidate_vector_empty": true,
+        "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+        "post_attach_4aa9b7_returns_false": true,
+        "single_member_joined_into_49cf34": true,
+        "single_wrapper_joined_across_attach_and_post_scheduler": true,
+        "wrapper_attached_flag_set_by_49cf34": true,
+        "wrapper_relative_coordinate_populated_by_49cf34": true
+      },
+      "joined_member": "0x0362c010",
+      "joined_wrapper": "0x0031df5c",
       "native_behavior_changed": false,
-      "neighbor_write_pair_count": 9,
+      "object_record_after_coordinate": {
+        "level": 0,
+        "x": 9,
+        "y": 10
+      },
+      "object_record_before_coordinate": {
+        "level": -1,
+        "x": -1,
+        "y": -1
+      },
       "ordered_private_state_mutation_replay_complete": false,
       "overall_goal_complete": false,
-      "primary_write_pair_count": 8,
-      "selected_coordinate": {
+      "post_attach_4aa9b7_aa3e9_event_count": 0,
+      "post_attach_4aa9b7_candidate_count": 0,
+      "post_attach_4aa9b7_return_success_flag_bl": 0,
+      "used_objdump": false,
+      "wrapper_attached_flag": 1,
+      "wrapper_relative_coordinate": {
         "x": 8,
-        "y": 11
-      },
-      "selected_member_record": "0x036225e0",
-      "sets_bit27_from_clear_count": 15,
-      "success_attached_flag": 1,
-      "success_relative_coordinate": {
-        "x": 8,
-        "y": 11
-      },
-      "unique_cell_count": 17,
-      "used_objdump": false
+        "y": 10
+      }
     },
-    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-    "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+    "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+    "status": "passed",
+    "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+    "timestamp": "2026-06-10T22:27:28Z",
+    "updatedAt": "2026-06-10T22:27:28Z",
     "validationStatus": "passed"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
-    "date": "2026-06-10T22:08:27Z",
+    "date": "2026-06-10T22:27:28Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "changed_write_pair_count": 15,
-      "clears_bit26_count": 5,
-      "descriptor_direction_probe_counts": [
-        5,
-        8
+      "event_count": 12,
+      "event_sequence": [
+        "0x004aa354",
+        "0x004aa38a",
+        "0x004aa38f",
+        "0x004aa3a8",
+        "0x004aa3b6",
+        "0x0049cf34",
+        "0x0049d2be",
+        "0x004aa3bb",
+        "0x004aa3e0",
+        "0x004aa9b7",
+        "0x004aab12",
+        "0x004aab6f"
       ],
-      "descriptor_policy_sample_count": 3,
+      "invariants": {
+        "49cf34_returns_to_4aa3bb": true,
+        "expected_order_reached": true,
+        "object_record_coordinate_stamped_after_49cf34": true,
+        "object_record_starts_unplaced": true,
+        "post_attach_4aa9b7_candidate_vector_empty": true,
+        "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+        "post_attach_4aa9b7_returns_false": true,
+        "single_member_joined_into_49cf34": true,
+        "single_wrapper_joined_across_attach_and_post_scheduler": true,
+        "wrapper_attached_flag_set_by_49cf34": true,
+        "wrapper_relative_coordinate_populated_by_49cf34": true
+      },
+      "joined_member": "0x0362c010",
+      "joined_wrapper": "0x0031df5c",
       "native_behavior_changed": false,
-      "neighbor_write_pair_count": 9,
+      "object_record_after_coordinate": {
+        "level": 0,
+        "x": 9,
+        "y": 10
+      },
+      "object_record_before_coordinate": {
+        "level": -1,
+        "x": -1,
+        "y": -1
+      },
       "ordered_private_state_mutation_replay_complete": false,
       "overall_goal_complete": false,
-      "primary_write_pair_count": 8,
-      "selected_coordinate": {
+      "post_attach_4aa9b7_aa3e9_event_count": 0,
+      "post_attach_4aa9b7_candidate_count": 0,
+      "post_attach_4aa9b7_return_success_flag_bl": 0,
+      "used_objdump": false,
+      "wrapper_attached_flag": 1,
+      "wrapper_relative_coordinate": {
         "x": 8,
-        "y": 11
-      },
-      "selected_member_record": "0x036225e0",
-      "sets_bit27_from_clear_count": 15,
-      "success_attached_flag": 1,
-      "success_relative_coordinate": {
-        "x": 8,
-        "y": 11
-      },
-      "unique_cell_count": 17,
-      "used_objdump": false
+        "y": 10
+      }
     },
-    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-    "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+    "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+    "status": "passed",
+    "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+    "timestamp": "2026-06-10T22:27:28Z",
+    "updatedAt": "2026-06-10T22:27:28Z",
     "validationStatus": "passed"
   },
   "nextActionGuardrailNote": "Header/player/metadata payload bytes are recovered for the observed Medium seed-10 path, but full H3MapEd RMG private-state parity is still incomplete. Continue only with ordered private-state mutation replay or named unrecovered functions/data structures; do not tune native RMG from final-map deltas.",
@@ -45032,119 +45209,179 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-      "currentSliceNotes": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-      "currentSliceUpdatedAt": "2026-06-10T22:08:27Z",
-      "guardrailNote": "0x49cf34 cell mutation recovery is evidence only. Continue with ordered private-state replay or named unrecovered caller/data structures; do not tune native RMG from final-map deltas or this local mutation checkpoint.",
+      "currentNotes": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+      "currentSliceNotes": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+      "currentSliceUpdatedAt": "2026-06-10T22:27:28Z",
+      "guardrailNote": "Reward attach-order recovery is evidence only. Continue with ordered private-state replay or named source-backed exclusions; do not tune native RMG from final-map deltas or this local attach-order checkpoint.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
         "checks": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
         "commands": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
-        "date": "2026-06-10T22:08:27Z",
+        "date": "2026-06-10T22:27:28Z",
         "id": "rmg-small-generalization-hardening-10184",
         "metrics": {
-          "changed_write_pair_count": 15,
-          "clears_bit26_count": 5,
-          "descriptor_direction_probe_counts": [
-            5,
-            8
+          "event_count": 12,
+          "event_sequence": [
+            "0x004aa354",
+            "0x004aa38a",
+            "0x004aa38f",
+            "0x004aa3a8",
+            "0x004aa3b6",
+            "0x0049cf34",
+            "0x0049d2be",
+            "0x004aa3bb",
+            "0x004aa3e0",
+            "0x004aa9b7",
+            "0x004aab12",
+            "0x004aab6f"
           ],
-          "descriptor_policy_sample_count": 3,
+          "invariants": {
+            "49cf34_returns_to_4aa3bb": true,
+            "expected_order_reached": true,
+            "object_record_coordinate_stamped_after_49cf34": true,
+            "object_record_starts_unplaced": true,
+            "post_attach_4aa9b7_candidate_vector_empty": true,
+            "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+            "post_attach_4aa9b7_returns_false": true,
+            "single_member_joined_into_49cf34": true,
+            "single_wrapper_joined_across_attach_and_post_scheduler": true,
+            "wrapper_attached_flag_set_by_49cf34": true,
+            "wrapper_relative_coordinate_populated_by_49cf34": true
+          },
+          "joined_member": "0x0362c010",
+          "joined_wrapper": "0x0031df5c",
           "native_behavior_changed": false,
-          "neighbor_write_pair_count": 9,
+          "object_record_after_coordinate": {
+            "level": 0,
+            "x": 9,
+            "y": 10
+          },
+          "object_record_before_coordinate": {
+            "level": -1,
+            "x": -1,
+            "y": -1
+          },
           "ordered_private_state_mutation_replay_complete": false,
           "overall_goal_complete": false,
-          "primary_write_pair_count": 8,
-          "selected_coordinate": {
+          "post_attach_4aa9b7_aa3e9_event_count": 0,
+          "post_attach_4aa9b7_candidate_count": 0,
+          "post_attach_4aa9b7_return_success_flag_bl": 0,
+          "used_objdump": false,
+          "wrapper_attached_flag": 1,
+          "wrapper_relative_coordinate": {
             "x": 8,
-            "y": 11
-          },
-          "selected_member_record": "0x036225e0",
-          "sets_bit27_from_clear_count": 15,
-          "success_attached_flag": 1,
-          "success_relative_coordinate": {
-            "x": 8,
-            "y": 11
-          },
-          "unique_cell_count": 17,
-          "used_objdump": false
+            "y": 10
+          }
         },
-        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-        "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+        "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
         "sliceId": "rmg-small-generalization-hardening-10184",
-        "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+        "status": "passed",
+        "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+        "timestamp": "2026-06-10T22:27:28Z",
+        "updatedAt": "2026-06-10T22:27:28Z",
         "validationStatus": "passed"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
         "checks": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
         "commands": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
-        "date": "2026-06-10T22:08:27Z",
+        "date": "2026-06-10T22:27:28Z",
         "id": "rmg-small-generalization-hardening-10184",
         "metrics": {
-          "changed_write_pair_count": 15,
-          "clears_bit26_count": 5,
-          "descriptor_direction_probe_counts": [
-            5,
-            8
+          "event_count": 12,
+          "event_sequence": [
+            "0x004aa354",
+            "0x004aa38a",
+            "0x004aa38f",
+            "0x004aa3a8",
+            "0x004aa3b6",
+            "0x0049cf34",
+            "0x0049d2be",
+            "0x004aa3bb",
+            "0x004aa3e0",
+            "0x004aa9b7",
+            "0x004aab12",
+            "0x004aab6f"
           ],
-          "descriptor_policy_sample_count": 3,
+          "invariants": {
+            "49cf34_returns_to_4aa3bb": true,
+            "expected_order_reached": true,
+            "object_record_coordinate_stamped_after_49cf34": true,
+            "object_record_starts_unplaced": true,
+            "post_attach_4aa9b7_candidate_vector_empty": true,
+            "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+            "post_attach_4aa9b7_returns_false": true,
+            "single_member_joined_into_49cf34": true,
+            "single_wrapper_joined_across_attach_and_post_scheduler": true,
+            "wrapper_attached_flag_set_by_49cf34": true,
+            "wrapper_relative_coordinate_populated_by_49cf34": true
+          },
+          "joined_member": "0x0362c010",
+          "joined_wrapper": "0x0031df5c",
           "native_behavior_changed": false,
-          "neighbor_write_pair_count": 9,
+          "object_record_after_coordinate": {
+            "level": 0,
+            "x": 9,
+            "y": 10
+          },
+          "object_record_before_coordinate": {
+            "level": -1,
+            "x": -1,
+            "y": -1
+          },
           "ordered_private_state_mutation_replay_complete": false,
           "overall_goal_complete": false,
-          "primary_write_pair_count": 8,
-          "selected_coordinate": {
+          "post_attach_4aa9b7_aa3e9_event_count": 0,
+          "post_attach_4aa9b7_candidate_count": 0,
+          "post_attach_4aa9b7_return_success_flag_bl": 0,
+          "used_objdump": false,
+          "wrapper_attached_flag": 1,
+          "wrapper_relative_coordinate": {
             "x": 8,
-            "y": 11
-          },
-          "selected_member_record": "0x036225e0",
-          "sets_bit27_from_clear_count": 15,
-          "success_attached_flag": 1,
-          "success_relative_coordinate": {
-            "x": 8,
-            "y": 11
-          },
-          "unique_cell_count": 17,
-          "used_objdump": false
+            "y": 10
+          }
         },
-        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-        "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+        "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
         "sliceId": "rmg-small-generalization-hardening-10184",
-        "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+        "status": "passed",
+        "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+        "timestamp": "2026-06-10T22:27:28Z",
+        "updatedAt": "2026-06-10T22:27:28Z",
         "validationStatus": "passed"
       },
       "metrics": {
@@ -45279,8 +45516,8 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-      "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+      "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+      "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
       "result": "Source-input stream-helper frontier recorded without native behavior changes.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -45291,114 +45528,171 @@
       "status": "in_progress",
       "summary": "Wine/Ghidra/Python recovery now closes the non-hero source catalog/template producer blocker. tools/rmg_h3maped_source_catalog_template_producer_summary.py verifies 25/25 markers: provider global 0x59e390 is published through vtable 0x53942c, 27 builder/materializer provider slot pairs are recovered, and concrete provider constructors copy/adopt the full 0x4c source record through 0x43d309/0x437751. The compare key includes text/DEF-bearing fields plus raw type +0x1c and subtype-like +0x20, so source catalog identity is preserved from objects.txt/objtmplt.txt-shaped rows rather than descriptor-local ids. Native RMG behavior is unchanged; no objdump recovery was used.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-10T22:08:27Z",
+      "updatedAt": "2026-06-10T22:27:28Z",
       "validation": {
-        "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
         "checks": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
         "commands": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
-        "date": "2026-06-10T22:08:27Z",
+        "date": "2026-06-10T22:27:28Z",
         "id": "rmg-small-generalization-hardening-10184",
         "metrics": {
-          "changed_write_pair_count": 15,
-          "clears_bit26_count": 5,
-          "descriptor_direction_probe_counts": [
-            5,
-            8
+          "event_count": 12,
+          "event_sequence": [
+            "0x004aa354",
+            "0x004aa38a",
+            "0x004aa38f",
+            "0x004aa3a8",
+            "0x004aa3b6",
+            "0x0049cf34",
+            "0x0049d2be",
+            "0x004aa3bb",
+            "0x004aa3e0",
+            "0x004aa9b7",
+            "0x004aab12",
+            "0x004aab6f"
           ],
-          "descriptor_policy_sample_count": 3,
+          "invariants": {
+            "49cf34_returns_to_4aa3bb": true,
+            "expected_order_reached": true,
+            "object_record_coordinate_stamped_after_49cf34": true,
+            "object_record_starts_unplaced": true,
+            "post_attach_4aa9b7_candidate_vector_empty": true,
+            "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+            "post_attach_4aa9b7_returns_false": true,
+            "single_member_joined_into_49cf34": true,
+            "single_wrapper_joined_across_attach_and_post_scheduler": true,
+            "wrapper_attached_flag_set_by_49cf34": true,
+            "wrapper_relative_coordinate_populated_by_49cf34": true
+          },
+          "joined_member": "0x0362c010",
+          "joined_wrapper": "0x0031df5c",
           "native_behavior_changed": false,
-          "neighbor_write_pair_count": 9,
+          "object_record_after_coordinate": {
+            "level": 0,
+            "x": 9,
+            "y": 10
+          },
+          "object_record_before_coordinate": {
+            "level": -1,
+            "x": -1,
+            "y": -1
+          },
           "ordered_private_state_mutation_replay_complete": false,
           "overall_goal_complete": false,
-          "primary_write_pair_count": 8,
-          "selected_coordinate": {
+          "post_attach_4aa9b7_aa3e9_event_count": 0,
+          "post_attach_4aa9b7_candidate_count": 0,
+          "post_attach_4aa9b7_return_success_flag_bl": 0,
+          "used_objdump": false,
+          "wrapper_attached_flag": 1,
+          "wrapper_relative_coordinate": {
             "x": 8,
-            "y": 11
-          },
-          "selected_member_record": "0x036225e0",
-          "sets_bit27_from_clear_count": 15,
-          "success_attached_flag": 1,
-          "success_relative_coordinate": {
-            "x": 8,
-            "y": 11
-          },
-          "unique_cell_count": 17,
-          "used_objdump": false
+            "y": 10
+          }
         },
-        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-        "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+        "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-        "timestamp": "2026-06-10T22:08:27Z",
-        "updatedAt": "2026-06-10T22:08:27Z",
+        "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+        "timestamp": "2026-06-10T22:27:28Z",
+        "updatedAt": "2026-06-10T22:27:28Z",
         "validationStatus": "passed"
       },
       "validationResults": {
-        "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
         "checks": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
         "commands": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-          "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+          "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
-        "date": "2026-06-10T22:08:27Z",
+        "date": "2026-06-10T22:27:28Z",
         "id": "rmg-small-generalization-hardening-10184",
         "metrics": {
-          "changed_write_pair_count": 15,
-          "clears_bit26_count": 5,
-          "descriptor_direction_probe_counts": [
-            5,
-            8
+          "event_count": 12,
+          "event_sequence": [
+            "0x004aa354",
+            "0x004aa38a",
+            "0x004aa38f",
+            "0x004aa3a8",
+            "0x004aa3b6",
+            "0x0049cf34",
+            "0x0049d2be",
+            "0x004aa3bb",
+            "0x004aa3e0",
+            "0x004aa9b7",
+            "0x004aab12",
+            "0x004aab6f"
           ],
-          "descriptor_policy_sample_count": 3,
+          "invariants": {
+            "49cf34_returns_to_4aa3bb": true,
+            "expected_order_reached": true,
+            "object_record_coordinate_stamped_after_49cf34": true,
+            "object_record_starts_unplaced": true,
+            "post_attach_4aa9b7_candidate_vector_empty": true,
+            "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+            "post_attach_4aa9b7_returns_false": true,
+            "single_member_joined_into_49cf34": true,
+            "single_wrapper_joined_across_attach_and_post_scheduler": true,
+            "wrapper_attached_flag_set_by_49cf34": true,
+            "wrapper_relative_coordinate_populated_by_49cf34": true
+          },
+          "joined_member": "0x0362c010",
+          "joined_wrapper": "0x0031df5c",
           "native_behavior_changed": false,
-          "neighbor_write_pair_count": 9,
+          "object_record_after_coordinate": {
+            "level": 0,
+            "x": 9,
+            "y": 10
+          },
+          "object_record_before_coordinate": {
+            "level": -1,
+            "x": -1,
+            "y": -1
+          },
           "ordered_private_state_mutation_replay_complete": false,
           "overall_goal_complete": false,
-          "primary_write_pair_count": 8,
-          "selected_coordinate": {
+          "post_attach_4aa9b7_aa3e9_event_count": 0,
+          "post_attach_4aa9b7_candidate_count": 0,
+          "post_attach_4aa9b7_return_success_flag_bl": 0,
+          "used_objdump": false,
+          "wrapper_attached_flag": 1,
+          "wrapper_relative_coordinate": {
             "x": 8,
-            "y": 11
-          },
-          "selected_member_record": "0x036225e0",
-          "sets_bit27_from_clear_count": 15,
-          "success_attached_flag": 1,
-          "success_relative_coordinate": {
-            "x": 8,
-            "y": 11
-          },
-          "unique_cell_count": 17,
-          "used_objdump": false
+            "y": 10
+          }
         },
-        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-        "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+        "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+        "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
         "sliceId": "rmg-small-generalization-hardening-10184",
-        "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+        "status": "passed",
+        "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+        "timestamp": "2026-06-10T22:27:28Z",
+        "updatedAt": "2026-06-10T22:27:28Z",
         "validationStatus": "passed"
       }
     },
@@ -51773,8 +52067,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-  "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+  "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+  "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -52290,59 +52584,86 @@
   "taskId": "10184",
   "updatedAt": "2026-06-10T22:08:27Z",
   "validation": {
-    "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
-    "date": "2026-06-10T22:08:27Z",
+    "date": "2026-06-10T22:27:28Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "changed_write_pair_count": 15,
-      "clears_bit26_count": 5,
-      "descriptor_direction_probe_counts": [
-        5,
-        8
+      "event_count": 12,
+      "event_sequence": [
+        "0x004aa354",
+        "0x004aa38a",
+        "0x004aa38f",
+        "0x004aa3a8",
+        "0x004aa3b6",
+        "0x0049cf34",
+        "0x0049d2be",
+        "0x004aa3bb",
+        "0x004aa3e0",
+        "0x004aa9b7",
+        "0x004aab12",
+        "0x004aab6f"
       ],
-      "descriptor_policy_sample_count": 3,
+      "invariants": {
+        "49cf34_returns_to_4aa3bb": true,
+        "expected_order_reached": true,
+        "object_record_coordinate_stamped_after_49cf34": true,
+        "object_record_starts_unplaced": true,
+        "post_attach_4aa9b7_candidate_vector_empty": true,
+        "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+        "post_attach_4aa9b7_returns_false": true,
+        "single_member_joined_into_49cf34": true,
+        "single_wrapper_joined_across_attach_and_post_scheduler": true,
+        "wrapper_attached_flag_set_by_49cf34": true,
+        "wrapper_relative_coordinate_populated_by_49cf34": true
+      },
+      "joined_member": "0x0362c010",
+      "joined_wrapper": "0x0031df5c",
       "native_behavior_changed": false,
-      "neighbor_write_pair_count": 9,
+      "object_record_after_coordinate": {
+        "level": 0,
+        "x": 9,
+        "y": 10
+      },
+      "object_record_before_coordinate": {
+        "level": -1,
+        "x": -1,
+        "y": -1
+      },
       "ordered_private_state_mutation_replay_complete": false,
       "overall_goal_complete": false,
-      "primary_write_pair_count": 8,
-      "selected_coordinate": {
+      "post_attach_4aa9b7_aa3e9_event_count": 0,
+      "post_attach_4aa9b7_candidate_count": 0,
+      "post_attach_4aa9b7_return_success_flag_bl": 0,
+      "used_objdump": false,
+      "wrapper_attached_flag": 1,
+      "wrapper_relative_coordinate": {
         "x": 8,
-        "y": 11
-      },
-      "selected_member_record": "0x036225e0",
-      "sets_bit27_from_clear_count": 15,
-      "success_attached_flag": 1,
-      "success_relative_coordinate": {
-        "x": 8,
-        "y": 11
-      },
-      "unique_cell_count": 17,
-      "used_objdump": false
+        "y": 10
+      }
     },
-    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-    "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+    "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
-    "timestamp": "2026-06-10T22:08:27Z",
-    "updatedAt": "2026-06-10T22:08:27Z",
+    "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+    "timestamp": "2026-06-10T22:27:28Z",
+    "updatedAt": "2026-06-10T22:27:28Z",
     "validationStatus": "passed"
   },
   "validationHistory": [
@@ -59208,56 +59529,86 @@
     }
   ],
   "validationResults": {
-    "artifact": ".artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/reward_attach_order_summary_20260610.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 151 --out-dir .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610 ... (passed: events=52)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_49cf34_cell_mutation_summary.py (passed: 49cf34_cell_mutation_replay_recovered)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_final_stream_state_summary.py tools/rmg_h3maped_same_run_full_writeout_payload_summary.py (passed)",
-      "jq empty .artifacts/rmg_recovery/49cf34_cell_mutation_replay_summary_20260610.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 152 --out-dir .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 ... (passed: events=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_attach_order_summary.py (passed: reward_attach_order path recovered; immediate 0x4aa9b7 false boundary)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_attach_order_summary.py tools/rmg_h3maped_49cf34_cell_mutation_summary.py tools/rmg_h3maped_4aa9b7_ordered_commit_summary.py tools/rmg_h3maped_4aa3e9_ordered_summary.py (passed)",
+      "jq empty .artifacts/rmg_recovery/reward_attach_order_summary_20260610.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
-    "date": "2026-06-10T22:08:27Z",
+    "date": "2026-06-10T22:27:28Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "changed_write_pair_count": 15,
-      "clears_bit26_count": 5,
-      "descriptor_direction_probe_counts": [
-        5,
-        8
+      "event_count": 12,
+      "event_sequence": [
+        "0x004aa354",
+        "0x004aa38a",
+        "0x004aa38f",
+        "0x004aa3a8",
+        "0x004aa3b6",
+        "0x0049cf34",
+        "0x0049d2be",
+        "0x004aa3bb",
+        "0x004aa3e0",
+        "0x004aa9b7",
+        "0x004aab12",
+        "0x004aab6f"
       ],
-      "descriptor_policy_sample_count": 3,
+      "invariants": {
+        "49cf34_returns_to_4aa3bb": true,
+        "expected_order_reached": true,
+        "object_record_coordinate_stamped_after_49cf34": true,
+        "object_record_starts_unplaced": true,
+        "post_attach_4aa9b7_candidate_vector_empty": true,
+        "post_attach_4aa9b7_does_not_call_4aa3e9": true,
+        "post_attach_4aa9b7_returns_false": true,
+        "single_member_joined_into_49cf34": true,
+        "single_wrapper_joined_across_attach_and_post_scheduler": true,
+        "wrapper_attached_flag_set_by_49cf34": true,
+        "wrapper_relative_coordinate_populated_by_49cf34": true
+      },
+      "joined_member": "0x0362c010",
+      "joined_wrapper": "0x0031df5c",
       "native_behavior_changed": false,
-      "neighbor_write_pair_count": 9,
+      "object_record_after_coordinate": {
+        "level": 0,
+        "x": 9,
+        "y": 10
+      },
+      "object_record_before_coordinate": {
+        "level": -1,
+        "x": -1,
+        "y": -1
+      },
       "ordered_private_state_mutation_replay_complete": false,
       "overall_goal_complete": false,
-      "primary_write_pair_count": 8,
-      "selected_coordinate": {
+      "post_attach_4aa9b7_aa3e9_event_count": 0,
+      "post_attach_4aa9b7_candidate_count": 0,
+      "post_attach_4aa9b7_return_success_flag_bl": 0,
+      "used_objdump": false,
+      "wrapper_attached_flag": 1,
+      "wrapper_relative_coordinate": {
         "x": 8,
-        "y": 11
-      },
-      "selected_member_record": "0x036225e0",
-      "sets_bit27_from_clear_count": 15,
-      "success_attached_flag": 1,
-      "success_relative_coordinate": {
-        "x": 8,
-        "y": 11
-      },
-      "unique_cell_count": 17,
-      "used_objdump": false
+        "y": 10
+      }
     },
-    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. The sampled 0x49cf34 descriptor-policy and generated-cell before/after mutation mechanics are now recovered, but this does not recover caller-to-generator ordering: how the wrapper/member sequence is selected, how generator object/source vectors reach that state, or how the whole RMG entrypoint-to-writeout private-state chain replays. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
-    "remainingWork": "Next recovery should target ordered caller-to-generator replay around 0x4adb72 / 0x4aa1db / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9, joining wrapper construction, selected object sequence, relation priority, candidate coordinate filtering, and generator vector state into the now-recovered 0x49cf34 cell mutation surface.",
+    "remainingGap": "Full end-to-end H3MapEd RMG recovery remains incomplete. This checkpoint recovers one sampled 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 attach-order path and a negative immediate 0x4aa9b7 boundary, but it does not recover 0x4adb72 / 0x4ad7f7 projection-method dispatch, relation-priority propagation, a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation, or the complete private-state chain from RMG entrypoint to final writeout. Do not change native RMG generation rules, density, gates, retries, or object semantics from this checkpoint.",
+    "remainingWork": "Next recovery should target either a natural/sourced 0x4adb72 / 0x4ad7f7 projection-method dispatch with wrapper, relation-priority, +0xc8/+0x1104/+0xf5c, and object-vector state, or a same-run successful post-attach 0x4aa9b7 -> 0x4aa3e9 continuation if that state is reachable. If neither path is reachable in the sampled one-level land target mode, prove the exclusion with Ghidra/static-data/Wine evidence instead of adding native heuristics.",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Wine/Ghidra/Python recovery now closes the sampled 0x49cf34 generated-cell mutation mechanics for clean Medium seed-10 one-level/no-water without changing native RMG behavior. tools/rmg_h3maped_49cf34_cell_mutation_summary.py pairs descriptor policy samples and 0x49a932 before/after call sites from .artifacts/rmg_recovery/medium_seed10_49cf34_cell_mutation_replay_20260610. The completed attach records descriptor classes 0x33 and 0x4c through policy table 0x00598300 as 5- and 8-direction probe counts, selects member record 0x036225e0 at coordinate (8,11), pairs 8 primary and 9 neighbor generated-cell writes, leaves bit27 set for every pair, changes 15 pairs, sets bit27 from clear in 15 pairs, and clears bit26 in 5 pairs. Final wrapper fields set attached_flag=1 and relative coordinate (8,11), matching the selected member. Full ordered caller-to-generator private-state replay remains incomplete; no objdump recovery was used.",
+    "status": "passed",
+    "summary": "Wine/Ghidra/Python recovery now closes one clean Medium seed-10 same-run reward/guard attach-order path without changing native RMG behavior. tools/rmg_h3maped_reward_attach_order_summary.py consumes .artifacts/rmg_recovery/medium_seed10_reward_attach_order_replay_20260610 and proves ordered execution through 0x4aa354 -> 0x4aa1db -> 0x4a5c07 -> 0x49cf34 -> 0x4aa354 true return -> immediate 0x4aa9b7. The same wrapper 0x0031df5c is joined across 0x4aa354, 0x4aa1db, 0x49cf34, and 0x4aa9b7; the same member 0x0362c010 is joined into 0x49cf34 and back to 0x4aa3bb. 0x49cf34 stamps the member coordinate from (-1,-1,-1) to (9,10,0), sets wrapper attached_flag=1, and sets wrapper relative coordinate (8,10). The immediate post-attach 0x4aa9b7 call has an empty local candidate vector, returns false, and does not call 0x4aa3e9. Full ordered entrypoint-to-writeout private-state replay remains incomplete; no objdump recovery was used.",
+    "timestamp": "2026-06-10T22:27:28Z",
+    "updatedAt": "2026-06-10T22:27:28Z",
     "validationStatus": "passed"
   }
 }
