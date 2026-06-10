@@ -443,9 +443,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Wine/Ghidra/Python recovery added a return-site-driven 0x4a54a7 trace for 0x004a9c3f. The sampled 0x4a9911 -> 0x4a9c3f target-return callback is recovered: object-vector append, target-cell object-reference addition, target +0x20 low-word clear 2->0, and 98 unique 0x4a56b6 projection writes preserving high words while lowering low words. The prior sampled 0x4aa3e9 -> 0x4aa44d and 0x4a9641 -> 0x4a98f0 streams remain recovered. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
-    "currentSliceNotes": "Wine/Ghidra/Python recovery added a return-site-driven 0x4a54a7 trace for 0x004a9c3f. The sampled 0x4a9911 -> 0x4a9c3f target-return callback is recovered: object-vector append, target-cell object-reference addition, target +0x20 low-word clear 2->0, and 98 unique 0x4a56b6 projection writes preserving high words while lowering low words. The prior sampled 0x4aa3e9 -> 0x4aa44d and 0x4a9641 -> 0x4a98f0 streams remain recovered. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
-    "currentSliceUpdatedAt": "2026-06-10T05:00:43Z",
+    "currentNotes": "Wine/Ghidra/Python recovery added a sampled one-level land endpoint reachability checkpoint. It consolidates existing Ghidra/Wine evidence into one scoped result: 50 live 0x4a5e73 entries, zero 0x4a5e73 success-path mutation events, zero live 0x4a606b events, all six 0x4a5e73 callers grouped by gate, and six complete Medium 0x4a696b grid scans over 5,752 cells with zero owner/relation byte-pair matches. This is not a global all-template proof; it names the remaining broader source/mode proof needed before native endpoint-stamping behavior can be ported or excluded. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
+    "currentSliceNotes": "Wine/Ghidra/Python recovery added a sampled one-level land endpoint reachability checkpoint. It consolidates existing Ghidra/Wine evidence into one scoped result: 50 live 0x4a5e73 entries, zero 0x4a5e73 success-path mutation events, zero live 0x4a606b events, all six 0x4a5e73 callers grouped by gate, and six complete Medium 0x4a696b grid scans over 5,752 cells with zero owner/relation byte-pair matches. This is not a global all-template proof; it names the remaining broader source/mode proof needed before native endpoint-stamping behavior can be ported or excluded. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
+    "currentSliceUpdatedAt": "2026-06-10T05:29:03Z",
     "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -453,31 +453,33 @@
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/4a54a7_target_return_004a9c3f_dynamic_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_4a54a7_target_return_dynamic_trace.py tools/rmg_h3maped_4a54a7_target_return_dynamic_summary.py tools/rmg_h3maped_nonfallback_return_owner_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "python3 tools/rmg_h3maped_4a54a7_target_return_dynamic_summary.py --target-return 0x004a9c3f (passed)",
-        "python3 tools/rmg_h3maped_nonfallback_return_owner_summary.py (passed)",
-        "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
-        "python3 tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_supported_land_endpoint_reachability_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 tools/rmg_h3maped_supported_land_endpoint_reachability_summary.py --out .artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
       "metrics": {
-        "4a9911_4a9c3f_sampled_projection_write_count": 98,
+        "medium_land_4a696b_scanned_cell_total": 5752,
+        "medium_land_complete_4a696b_grid_scan_count": 6,
         "native_behavior_changed": false,
         "overall_goal_complete": false,
-        "target_cell_low_word_after": 0,
-        "target_cell_low_word_before": 2,
+        "runtime_4a606b_event_count": 0,
+        "runtime_5e73_entry_count": 50,
+        "runtime_5e73_success_path_event_count": 0,
+        "static_4a5e73_callsite_count": 6,
         "used_objdump": false
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T05:00:43Z",
-      "updatedAt": "2026-06-10T05:00:43Z"
+      "timestamp": "2026-06-10T05:29:03Z",
+      "updatedAt": "2026-06-10T05:29:03Z"
     },
-    "latestEvidence": "Wine/Ghidra/Python recovery added a return-site-driven 0x4a54a7 trace for 0x004a9c3f. The sampled 0x4a9911 -> 0x4a9c3f target-return callback is recovered: object-vector append, target-cell object-reference addition, target +0x20 low-word clear 2->0, and 98 unique 0x4a56b6 projection writes preserving high words while lowering low words. The prior sampled 0x4aa3e9 -> 0x4aa44d and 0x4a9641 -> 0x4a98f0 streams remain recovered. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
+    "latestEvidence": "Wine/Ghidra/Python recovery added a sampled one-level land endpoint reachability checkpoint. It consolidates existing Ghidra/Wine evidence into one scoped result: 50 live 0x4a5e73 entries, zero 0x4a5e73 success-path mutation events, zero live 0x4a606b events, all six 0x4a5e73 callers grouped by gate, and six complete Medium 0x4a696b grid scans over 5,752 cells with zero owner/relation byte-pair matches. This is not a global all-template proof; it names the remaining broader source/mode proof needed before native endpoint-stamping behavior can be ported or excluded. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
         "4a901a_sequences": {
@@ -602,6 +604,15 @@
       "used_objdump": false,
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
+      "sampled_one_level_land_endpoint_reachability": {
+        "medium_land_4a696b_scanned_cell_total": 5752,
+        "medium_land_complete_4a696b_grid_scan_count": 6,
+        "runtime_4a606b_event_count": 0,
+        "runtime_5e73_entry_count": 50,
+        "runtime_5e73_success_path_event_count": 0,
+        "static_4a5e73_callsite_count": 6,
+        "status": "sampled_one_level_land_endpoint_reachability_no_success_path_broader_source_gap_named"
+      },
       "overall_goal_complete": false
     },
     "nonGoals": [
@@ -613,9 +624,9 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-    "remainingWork": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-    "result": "Working semantic name frontier recovered without native behavior changes.",
+    "remainingGap": "The sampled one-level land endpoint reachability checkpoint now consolidates current no-success-path evidence, but it is not a global all-template/source-state proof. Remaining work is either to recover a natural successful 0x4a5e73 -> 0x4a606b path, or prove with broader Ghidra/static-data/Wine evidence that no supported one-level land source can make any recovered caller gate reach a seeded generator+0xf5c success path. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingWork": "The sampled one-level land endpoint reachability checkpoint now consolidates current no-success-path evidence, but it is not a global all-template/source-state proof. Remaining work is either to recover a natural successful 0x4a5e73 -> 0x4a606b path, or prove with broader Ghidra/static-data/Wine evidence that no supported one-level land source can make any recovered caller gate reach a seeded generator+0xf5c success path. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "result": "Sampled one-level land endpoint reachability checkpoint recorded without native behavior changes.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -623,18 +634,15 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "0x4a606b reachability frontier recovered from Wine/Ghidra/Python evidence. tools/rmg_h3maped_4a606b_reachability_summary.py verifies the Ghidra static contract and two 0x4a61bc call sites, separates breakpoint-only corpus mentions from live hits, and records zero live 0x4a606b events/stops in the current target corpus. Natural seed-10 and forced +0x09 traces both fail before 0x4a606b because 0x4a5e73 returns failure. Remaining blocker is broader map-mode/source-state proof: find a natural successful 0x4a606b path or source-backed exclusion for supported one-level land. Native RMG behavior unchanged; Wine/Ghidra/Python only; no objdump.",
+    "summary": "Sampled one-level land endpoint reachability frontier consolidated from Wine/Ghidra/Python evidence. tools/rmg_h3maped_supported_land_endpoint_reachability_summary.py records 50 live 0x4a5e73 entries, zero 0x4a5e73 success-path mutation events, zero live 0x4a606b events, all six static 0x4a5e73 callers grouped by gate, and six complete Medium 0x4a696b grid scans over 5,752 cells with zero owner/relation byte-pair matches. Remaining blocker is broader source/mode proof: find a natural successful 0x4a5e73 -> 0x4a606b path or prove source-backed exclusion for supported one-level land. Native RMG behavior unchanged; Wine/Ghidra/Python only; no objdump.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-10T05:00:43Z",
+    "updatedAt": "2026-06-10T05:29:03Z",
     "validation": {
-      "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_4a606b_reachability_summary.py tools/rmg_h3maped_connection_record_field_summary.py tools/rmg_h3maped_border_guard_downstream_chain_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "python3 tools/rmg_h3maped_connection_record_field_summary.py --out .artifacts/rmg_recovery/connection_record_field_summary.json (passed)",
-        "python3 tools/rmg_h3maped_border_guard_downstream_chain_summary.py --out .artifacts/rmg_recovery/border_guard_downstream_chain_summary_20260610.json (passed)",
-        "python3 tools/rmg_h3maped_4a606b_reachability_summary.py --out .artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_supported_land_endpoint_reachability_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 tools/rmg_h3maped_supported_land_endpoint_reachability_summary.py --out .artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
-        "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
@@ -642,20 +650,20 @@
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "breakpoint_only_ledger_record_count": 3,
-        "breakpoint_only_log_record_count": 4,
+        "medium_land_4a696b_scanned_cell_total": 5752,
+        "medium_land_complete_4a696b_grid_scan_count": 6,
         "native_behavior_changed": false,
         "overall_goal_complete": false,
-        "remaining_blocker_count": 4,
-        "remaining_semantic_blocker_count": 4,
         "runtime_4a606b_event_count": 0,
-        "runtime_4a606b_log_stop_count": 0,
+        "runtime_5e73_entry_count": 50,
+        "runtime_5e73_success_path_event_count": 0,
+        "static_4a5e73_callsite_count": 6,
         "used_objdump": false
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T03:03:21Z",
-      "updatedAt": "2026-06-10T03:03:21Z"
+      "timestamp": "2026-06-10T05:29:03Z",
+      "updatedAt": "2026-06-10T05:29:03Z"
     }
   },
   "completedImplementationEvidence": [

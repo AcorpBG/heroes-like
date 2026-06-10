@@ -21,6 +21,21 @@ DEFAULT_OUT = Path(".artifacts/rmg_recovery/h3maped_recovery_manifest.json")
 
 FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
+        "id": "sampled_one_level_land_endpoint_reachability",
+        "artifact": ".artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json",
+        "status": (
+            "sampled_one_level_land_endpoint_reachability_no_success_path_broader_source_gap_named"
+        ),
+        "meaning": (
+            "Current sampled one-level land evidence has 50 live 0x4a5e73 entries, zero "
+            "0x4a5e73 success-path mutation events, zero live 0x4a606b events, all six "
+            "0x4a5e73 static callers grouped by gate, and six complete Medium 0x4a696b "
+            "grid scans over 5,752 cells with zero owner/relation byte-pair matches. This "
+            "is a sampled scope checkpoint: it names the remaining broader source/mode "
+            "proof needed before native endpoint-stamping behavior can be ported or excluded."
+        ),
+    },
+    {
         "id": "direct_one_level_land_recovery_frontier",
         "artifact": ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json",
         "status": "direct_mode_recovery_frontier_verified_target_mode_exclusions",
