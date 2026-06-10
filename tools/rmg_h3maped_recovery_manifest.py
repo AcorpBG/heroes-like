@@ -427,6 +427,23 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_source_resolver_boundary",
+        "artifact": ".artifacts/rmg_recovery/descriptor_source_resolver_summary_20260610.json",
+        "status": "descriptor_source_resolver_boundary_recovered_source_catalog_identity_pending",
+        "meaning": (
+            "Ghidra-backed marker checks now recover the wrapper/source resolver boundary. "
+            "0x49db76 initializes a 0xe8 wrapper whose +0x00 points at a copied 0x4c "
+            "source record. 0x4af785 reuses a matching wrapper or copies the source record, "
+            "initializes a new wrapper, appends source-pair metadata to generator+0xedc, "
+            "and appends the wrapper into the selected lane bucket. 0x4af89f selects a "
+            "source lane by scanning source-record mask words at +0x18. 0x4a9e40 filters "
+            "bucket wrappers by backing source-record fields +0x20/+0x24 and mask "
+            "compatibility before choosing one passing wrapper by RNG. The remaining "
+            "blocker is source-catalog/object-template mapping for those 0x4c source "
+            "records, not the wrapper initializer."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
