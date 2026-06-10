@@ -459,6 +459,21 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_static_loader_field_writer",
+        "artifact": ".artifacts/rmg_recovery/descriptor_static_loader_summary_20260610.json",
+        "status": "descriptor_static_loader_field_writer_recovered_selected_source_mapping_pending",
+        "meaning": (
+            "Ghidra/Python evidence names 0x4903e8 as the descriptor field builder/writer "
+            "candidate that receives the destination object in ECX/EBX, writes descriptor "
+            "+0x00, writes mask/policy payload words, and writes descriptor fields +0x34, "
+            "+0x38, +0x3c, +0x40, and +0x44. 0x4907c9 reaches it from the objects.txt row "
+            "loader path and 0x490a11 reaches it from the source/objtmplt-style stream path. "
+            "This replaces the unnamed static/data-constructor blocker with a concrete "
+            "field-writer surface, but selected mixed-lane identity for type 45/53/54/79 "
+            "still requires live pointer linkage and input-field/source-row mapping."
+        ),
+    },
+    {
         "id": "descriptor_source_resolver_boundary",
         "artifact": ".artifacts/rmg_recovery/descriptor_source_resolver_summary_20260610.json",
         "status": "descriptor_source_resolver_boundary_recovered_source_catalog_identity_pending",
@@ -3101,6 +3116,48 @@ FUNCTIONS: list[dict[str, Any]] = [
         "status": "recovered_static_ghidra",
         "reads": ["wrapper cell buffer at ecx+0x08", "width at ecx+0x0c", "height at ecx+0x10", "x/y/level args"],
         "returns": ["cell pointer = buffer + (((level * height) + y) * width + x) * 0x30"],
+    },
+    {
+        "address": "0x4903e8",
+        "name": "object_descriptor_static_stream_field_builder",
+        "status": "recovered_field_writer_selected_source_mapping_pending",
+        "callers": ["0x4907c9", "0x490a11"],
+        "calls": ["0x48ffdd", "0x491eed", "0x49060f", "0x4915a6", "0x491472"],
+        "reads": [
+            "destination descriptor/object pointer in ECX copied to EBX",
+            "prepared source/input frame pointer at stack+0x08",
+        ],
+        "writes": [
+            "descriptor +0x00 from 0x491eed result",
+            "mask/policy payload dwords through local/output storage",
+            "descriptor +0x34/+0x38/+0x3c/+0x40/+0x44",
+        ],
+        "unrecovered_semantics": [
+            "exact human meaning of each prepared input field",
+            "per-lane interpretation of descriptor +0x00 as row id, class word, or other source value",
+            "live selected descriptor pointer linkage for mixed type 45/53/54/79 lanes",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/caller_004903e8_FUN_004903e8.txt plus verifier .artifacts/rmg_recovery/descriptor_static_loader_summary_20260610.json recover this field-writer surface.",
+    },
+    {
+        "address": "0x4907c9",
+        "name": "objects_txt_row_descriptor_builder_owner",
+        "status": "recovered_owner_field_semantics_pending",
+        "callers": ["0x490c4c"],
+        "calls": ["0x491fa1", "0x490f3f", "0x491136", "0x42bc12", "0x490e66", "0x4903e8"],
+        "reads": ["parsed row/source fields prepared into a 0x4903e8 input frame"],
+        "writes": ["descriptor object through 0x4903e8"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/caller_004907c9_FUN_004907c9.txt plus verifier .artifacts/rmg_recovery/descriptor_static_loader_summary_20260610.json recover this owner surface.",
+    },
+    {
+        "address": "0x490a11",
+        "name": "objtmplt_or_source_stream_descriptor_builder_owner",
+        "status": "recovered_owner_field_semantics_pending",
+        "callers": ["0x41f350"],
+        "calls": ["0x4190cb", "0x49213a", "0x43bb1b", "0x407675", "0x40763d", "0x438937", "0x4903e8"],
+        "reads": ["source/objtmplt-style stream fields prepared into a 0x4903e8 input frame"],
+        "writes": ["descriptor object through 0x4903e8"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/caller_00490a11_FUN_00490a11.txt plus verifier .artifacts/rmg_recovery/descriptor_static_loader_summary_20260610.json recover this owner surface.",
     },
     {
         "address": "0x49ba89",
