@@ -28,6 +28,7 @@ DEFAULT_FINAL_ROLE_FRONTIER = Path(
 DEFAULT_BORDER_GUARD_CHAIN = Path(
     ".artifacts/rmg_recovery/border_guard_downstream_chain_summary_20260610.json"
 )
+DEFAULT_4A606B = Path(".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 
 
@@ -45,6 +46,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     exact_descriptor = load_json(args.exact_descriptor_relation)
     final_role = load_json(args.final_role_frontier)
     border_guard_chain = load_json(args.border_guard_chain)
+    four_a606b = load_json(args.four_a606b)
 
     connection_fields = connection.get("recovered_fields", {})
     candidate_fields = candidate.get("recovered_contract", {}).get("candidate_record_fields", {})
@@ -76,6 +78,13 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         == "exact_seed10_border_guard_downstream_chain_recovered_broader_linkage_pending"
         and border_guard_chain.get("invariants", {}).get("exact_fallback_final_role_recovered")
         is True,
+        "current_4a606b_static_contract_recovered_no_live_hit": (
+            four_a606b.get("status")
+            == "target_mode_4a606b_static_contract_recovered_no_live_hit"
+            and four_a606b.get("invariants", {}).get("static_contract_recovered") is True
+            and four_a606b.get("invariants", {}).get("current_corpus_has_no_live_4a606b_hit")
+            is True
+        ),
         "connection_record_offsets_named": has_keys(connection_fields, {"+0x08", "+0x09", "+0x0a"}),
         "candidate_record_offsets_named": has_keys(
             candidate_fields, {"+0x00", "+0x04", "+0x08", "+0x0c"}
@@ -176,6 +185,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             },
             "confidence": "exact_seed10_one_level_no_water_record_chain_only",
         },
+        {
+            "domain": "connection_region_generated_cell_writer",
+            "fields": {
+                "0x4a606b": "static generated-cell endpoint/region stamp helper",
+                "0x4a6516/0x4a6548": "only recovered direct callers, both inside 0x4a61bc",
+                "runtime_corpus": "current target corpus has breakpoint-only evidence and zero live hits",
+            },
+            "confidence": "static_contract_recovered_current_target_corpus_no_live_hit_only",
+        },
     ]
 
     remaining_semantic_blockers = [
@@ -183,8 +201,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "id": "connection_relation_control_downstream_linkage",
             "reason": (
                 "The +0x09 producer and exact seed-10 Border Guard fallback chain are recovered, "
-                "but relation/control linkage still needs broader map-mode/source-state proof and "
-                "successful or intentionally-unreachable 0x4a606b endpoint-stamping coverage."
+                "and 0x4a606b has a recovered static contract with no live hit in the current "
+                "target corpus. Relation/control linkage still needs broader map-mode/source-state "
+                "proof that finds a natural successful 0x4a606b path or excludes it for the "
+                "supported one-level land scope."
             ),
         },
         {
@@ -208,7 +228,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     ]
 
     status = (
-        "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+        "semantic_frontier_working_names_seed10_chain_and_4a606b_frontier_recovered_broader_scope_pending"
         if all(invariants.values())
         else "semantic_frontier_inputs_incomplete"
     )
@@ -227,6 +247,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "exact_descriptor_relation": str(args.exact_descriptor_relation),
             "final_role_frontier": str(args.final_role_frontier),
             "border_guard_chain": str(args.border_guard_chain),
+            "4a606b_reachability": str(args.four_a606b),
         },
         "invariants": invariants,
         "metrics": {
@@ -249,10 +270,14 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "Border Guard downstream chain is recovered through stale-cursor endpoint misses, "
             "fallback materialization, 0x4a54a7 commit/projection state, object-vector survival, "
             "first 0x49e700 mutation set, and 0x4ac552 phase tail for two exact records. Broader "
-            "relation/control linkage, global semantic labels, and broader scope remain explicit blockers."
+            "0x4a606b is statically recovered and has no live hit in the current target corpus. "
+            "Broader relation/control linkage, global semantic labels, and broader scope remain "
+            "explicit blockers."
         ),
         "remaining_gap": (
             "Recover broader relation/control downstream linkage outside the exact seed-10 chain, "
+            "including a natural successful 0x4a606b path or source-backed exclusion for the "
+            "supported one-level land scope, "
             "global descriptor type labels, broader map-mode semantic scope, and cleanup/uncommit "
             "semantics before native RMG behavior changes."
         ),
@@ -270,6 +295,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--final-role-frontier", type=Path, default=DEFAULT_FINAL_ROLE_FRONTIER)
     parser.add_argument("--border-guard-chain", type=Path, default=DEFAULT_BORDER_GUARD_CHAIN)
+    parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
@@ -283,7 +309,7 @@ def main() -> int:
     return (
         0
         if summary["status"]
-        == "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+        == "semantic_frontier_working_names_seed10_chain_and_4a606b_frontier_recovered_broader_scope_pending"
         else 1
     )
 
