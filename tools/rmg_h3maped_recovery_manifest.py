@@ -66,8 +66,9 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "Medium seed-1/seed-2 evidence also proves all 31 sampled 0x4a5e6c "
             "fallback-return commits clear the sampled GeneratedCell+0x20 low word while "
             "preserving the high word. Focused non-fallback evidence also recovers the sampled "
-            "0x4a744a direct endpoint afterstate and descriptor/relation contract; unresolved "
-            "non-fallback return contexts remain at 0x4a98f0, 0x4a9c3f, and 0x4aa44d."
+            "0x4a744a direct endpoint afterstate and descriptor/relation contract; sampled "
+            "non-fallback return contexts now have recovered streams at 0x4a98f0, 0x4a9c3f, "
+            "and 0x4aa44d."
         ),
     },
     {
@@ -79,14 +80,13 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "afterstates and two descriptor/relation invocations: object-vector append, target-cell "
             "object reference, GeneratedCell+0x20 low-word clear, +0x28 occupied surface update, "
             "source-coordinate/descriptor-offset match, and relation-counter increment. This does "
-            "not recover the remaining large non-fallback return sites 0x4a98f0, 0x4a9c3f, or "
-            "0x4aa44d, and it does not authorize native RMG behavior changes."
+            "not by itself authorize native RMG behavior changes."
         ),
     },
     {
         "id": "unresolved_nonfallback_4a54a7_return_owner_frontier",
         "artifact": ".artifacts/rmg_recovery/nonfallback_4a54a7_return_owner_summary_20260610.json",
-        "status": "nonfallback_4a54a7_return_owners_recovered_4a98f0_4aa44d_streams_recovered_4a9c3f_pending",
+        "status": "nonfallback_4a54a7_return_owners_sampled_streams_recovered",
         "meaning": (
             "The remaining non-fallback 0x4a54a7 callback return sites are statically owned: "
             "0x4a98f0 is the selected object callback return inside 0x4a9641, 0x4a9c3f is "
@@ -95,9 +95,9 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "runtime summaries also prove ordered wrapper handoff and sampled 0x4aa3e9 slot "
             "+0x04 callbacks into 0x4a54a7. Focused Wine traces recover one sampled "
             "0x4aa44d same-ledger write stream and one sampled 0x4a98f0 same-ledger write "
-            "stream. A guarded 0x4a9911 live trace reached 0x4a9c3f loop continuation but did "
-            "not hit 0x4a9c3c or a 0x4a54a7 return to 0x4a9c3f, so that target remains pending. "
-            "Broader 0x4aa44d/0x4a98f0 coverage remains pending if all instances are needed."
+            "stream, and a return-site-driven Wine trace recovers one sampled 0x4a9c3f "
+            "target-return same-ledger write stream. Broader 0x4aa44d/0x4a98f0/0x4a9c3f "
+            "coverage remains pending if all instances are needed."
         ),
     },
     {
@@ -114,15 +114,16 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
-        "id": "guarded_4a9911_4a9c3f_target_scan",
-        "artifact": ".artifacts/rmg_recovery/mine_owner_4a9911_4a54a7_dynamic_summary_20260610.json",
-        "status": "mine_owner_4a9911_4a54a7_write_stream_incomplete",
+        "id": "sampled_4a9911_4a9c3f_4a54a7_write_stream",
+        "artifact": ".artifacts/rmg_recovery/4a54a7_target_return_004a9c3f_dynamic_summary_20260610.json",
+        "status": "4a54a7_target_return_004a9c3f_write_stream_recovered",
         "meaning": (
-            "A guarded Wine trace for 0x4a9911 reached owner entry and 0x4a9c3f continuation, "
-            "but did not hit the 0x4a9c3c direct callsite or a 0x4a54a7 stack return of "
-            "0x4a9c3f in the sampled one-level land run. The current sampled 0x4a54a7 call "
-            "inside this owner context returned to a nested/non-target site instead, so "
-            "0x4a9c3f remains a named live-target recovery gap."
+            "WineDbg live recovery selected by stack return proves a sampled 0x4a54a7 callback "
+            "returns to 0x4a9c3f, the continuation after the indirect call at 0x4a9c3c inside "
+            "0x4a9911. The callback appends the selected object to the generator object vector, "
+            "adds that object reference to the target generated cell, preserves the target +0x20 "
+            "high word, clears the target low word from 2 to 0, and executes 98 unique 0x4a56b6 "
+            "projection writes that preserve high words while lowering low words."
         ),
     },
     {

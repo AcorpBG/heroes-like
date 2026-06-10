@@ -54,7 +54,7 @@ EXPECTED_STATUSES = {
         "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending"
     ),
     "nonfallback_return_owners": (
-        "nonfallback_4a54a7_return_owners_recovered_4a98f0_4aa44d_streams_recovered_4a9c3f_pending"
+        "nonfallback_4a54a7_return_owners_sampled_streams_recovered"
     ),
     "semantic_frontier": (
         "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
@@ -160,9 +160,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "descriptor/relation contract are also recovered; the sampled 0x4aa3e9 -> "
                 "0x4aa44d write stream is recovered with target low word lowered but not "
                 "cleared; the sampled 0x4a9641 -> 0x4a98f0 stream is also recovered with "
-                "target low word lowered but not cleared. The 0x4a9911 -> 0x4a9c3f target "
-                "remains pending after a guarded live trace reached loop continuation without "
-                "hitting the direct callsite."
+                "target low word lowered but not cleared. The sampled 0x4a9911 -> 0x4a9c3f "
+                "target-return stream is recovered with target low word cleared from 2 to 0."
             ),
         },
         {
@@ -185,8 +184,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "belongs to 0x4aa3e9. Existing runtime evidence also proves sampled 0x4aa3e9 "
                 "slot +0x04 callbacks target 0x4a54a7 after ordered 0x4aa9b7 handoff. Focused "
                 "Wine traces recover one sampled 0x4aa44d stream and one sampled 0x4a98f0 "
-                "stream. The guarded 0x4a9911 trace keeps 0x4a9c3f pending because it did not "
-                "hit 0x4a9c3c or a 0x4a54a7 return to 0x4a9c3f."
+                "stream, and a return-site-driven Wine trace recovers one sampled 0x4a9c3f "
+                "target-return stream."
             ),
         },
         {
@@ -213,10 +212,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "Exact Medium seed-10 fallback records and cross-seed 0x4a5e03/0x4a5e6c "
                 "fallback-return commits and the sampled 0x4a744a non-fallback return-site "
                 "contract are reconciled, the sampled 0x4aa3e9 -> 0x4aa44d and 0x4a9641 -> "
-                "0x4a98f0 write streams are recovered, and the remaining return-site owners "
-                "are known. However, 0x4a9911 -> 0x4a9c3f, broader all-sample 0x4aa44d/"
-                "0x4a98f0 coverage, other map modes, and other source states still need "
-                "coordinate/projection proof before native behavior changes."
+                "0x4a98f0 write streams are recovered, the sampled 0x4a9911 -> 0x4a9c3f "
+                "target-return write stream is recovered, and the remaining return-site owners "
+                "are known. However, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage, "
+                "other map modes, and other source states still need coordinate/projection proof "
+                "before native behavior changes if native-port authority requires all instances."
             ),
         },
         {
@@ -332,10 +332,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "0x4aa3e9 -> 0x4aa44d same-ledger write stream is recovered, with target low word "
             "lowered from 14 to 2 rather than cleared. The sampled 0x4a9641 -> 0x4a98f0 "
             "same-ledger stream is also recovered, with target low word lowered from 27 to 2. "
-            "The still-unrecovered large non-fallback owner loop is 0x4a9911 -> 0x4a9c3f; "
-            "a guarded live trace reached 0x4a9c3f loop continuation without hitting 0x4a9c3c "
-            "or a target-return 0x4a54a7 call. Broader all-sample 0x4aa44d/0x4a98f0 coverage "
-            "remains pending if required. "
+            "The sampled 0x4a9911 -> 0x4a9c3f target-return same-ledger stream is recovered, "
+            "with target low word cleared from 2 to 0. Broader all-sample 0x4aa44d/0x4a98f0/"
+            "0x4a9c3f coverage remains pending if required. "
             "0x4a5e73 now has "
             "a recovered cursor-precondition frontier with current-corpus zero success-path hits, "
             "the non-self cursor writers are bound to the unhit projection/cleanup slot chain, "
@@ -343,9 +342,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
-            "until broader coordinate/projection coverage for the remaining 0x4a9911 -> "
-            "0x4a9c3f target, remaining semantic producers/global labels, and any future "
-            "non-current-mode reachability gaps are recovered from Wine/Ghidra evidence."
+            "until broader sampled-stream coverage if required, remaining semantic producers/"
+            "global labels, and any future non-current-mode reachability gaps are recovered "
+            "from Wine/Ghidra evidence."
         ),
     }
 
