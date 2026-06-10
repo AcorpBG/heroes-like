@@ -177,6 +177,23 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "0x4a5e73_caller_gate_surface",
+        "artifact": ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json",
+        "status": (
+            "4a5e73_all_caller_gate_surface_recovered_current_scope_success_path_still_unrecovered"
+        ),
+        "meaning": (
+            "All six static callers of 0x4a5e73 are now grouped by gate. Current corpus runtime "
+            "hits reach only the 0x4a61bc natural Border Guard caller pair and the forced "
+            "0x4a746b endpoint-normalize route; all observed entries still fail before 0x4a5e73 "
+            "mutation. The 0x4a696b caller is blocked earlier by the recovered GeneratedCell+0x20 "
+            "owner/relation byte-pair gate, and both 0x4a6cf2 endpoint callsites are static-only "
+            "in the current corpus. Successful endpoint stamping remains unrecovered; the gap is "
+            "now a broader source/mode that makes one of these gates live with seeded "
+            "generator+0xf5c, or a source-backed exclusion for supported one-level land."
+        ),
+    },
+    {
         "id": "cursor_writer_owner_frontier",
         "artifact": ".artifacts/rmg_recovery/cursor_writer_owner_exclusion_summary_20260610.json",
         "status": "cursor_writer_owner_frontier_nonself_writers_bound_to_unhit_projection_slots",
