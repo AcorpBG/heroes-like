@@ -45,7 +45,7 @@ EXPECTED_STATUSES = {
         "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
     ),
     "semantic_frontier": (
-        "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+        "semantic_frontier_working_names_seed10_chain_and_4a606b_frontier_recovered_broader_scope_pending"
     ),
 }
 
@@ -150,7 +150,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "fields, relation occupancy counters, and selected GeneratedCell +0x20 roles "
                 "now have source-backed working names. Connection byte +0x09 is recovered as "
                 "the template connection Border Guard flag, and the exact seed-10 Border Guard "
-                "downstream chain is recovered through phase tail. Broader linkage and global "
+                "downstream chain is recovered through phase tail. 0x4a606b is statically "
+                "recovered with no live hit in the current corpus. Broader linkage and global "
                 "human labels remain pending."
             ),
         }
@@ -168,8 +169,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "id": "remaining_downstream_semantics_and_global_labels",
             "reason": (
                 "Working names and the exact seed-10 Border Guard downstream chain are recovered, "
-                "but broader relation/control linkage, global descriptor type labels, and cleanup/"
-                "uncommit semantics remain pending."
+                "and 0x4a606b is statically recovered with no live hit in the current corpus. "
+                "Broader relation/control linkage, 0x4a606b reachability/exclusion in broader "
+                "map/source states, global descriptor type labels, and cleanup/uncommit semantics "
+                "remain pending."
             ),
         },
         {
@@ -256,7 +259,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "state is also reconciled for records 0x036260c0 and 0x03626060. Several "
             "formerly hex-only fields now have source-backed working names, including +0x09 as "
             "the template connection Border Guard flag; the exact seed-10 Border Guard chain now "
-            "has recovered fallback materialization and phase-tail evidence."
+            "has recovered fallback materialization and phase-tail evidence. 0x4a606b now has "
+            "a recovered static contract and current-corpus no-live-hit evidence."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "

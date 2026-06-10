@@ -328,8 +328,9 @@ def summarize(
             "The +0x09 producer and natural branch meaning are recovered for the sampled relation "
             "records. Remaining work is not to guess another producer; it is to complete ordered "
             "relation/control linkage through 0x4a61bc/0x4a696b/0x4a7605, broader map-mode/source-state "
-            "scope, successful or intentionally-unreachable 0x4a606b endpoint stamping, and cleanup/"
-            "uncommit semantics if that path is reached. Native RMG behavior must not change from this "
+            "scope, a natural successful 0x4a606b endpoint-stamping path or source-backed exclusion "
+            "for supported one-level land, and cleanup/uncommit semantics if that path is reached. "
+            "Native RMG behavior must not change from this "
             "checkpoint alone."
         ),
     }

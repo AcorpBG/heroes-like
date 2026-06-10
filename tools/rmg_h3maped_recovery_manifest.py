@@ -68,7 +68,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
-            "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+            "semantic_frontier_working_names_seed10_chain_and_4a606b_frontier_recovered_broader_scope_pending"
         ),
         "meaning": (
             "Connection record bytes +0x08/+0x09/+0x0a, candidate record fields "
@@ -77,8 +77,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "roles now have source-backed working names. Connection byte +0x09 is recovered as "
             "the template connection Border Guard flag produced by 0x49f7c4. The exact seed-10 "
             "Border Guard downstream chain is recovered through fallback materialization and "
-            "phase tail. Broader relation/control linkage, global descriptor type labels, broader "
-            "semantic scope, and cleanup/uncommit semantics remain pending."
+            "phase tail. 0x4a606b is statically recovered with no live hit in the current "
+            "target corpus. Broader relation/control linkage, global descriptor type labels, "
+            "broader semantic scope, and cleanup/uncommit semantics remain pending."
+        ),
+    },
+    {
+        "id": "0x4a606b_reachability_frontier",
+        "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
+        "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
+        "meaning": (
+            "0x4a606b is recovered from Ghidra as the 0x4a61bc connection-region "
+            "generated-cell writer with callers at 0x4a6516 and 0x4a6548. Natural seed-10 "
+            "and forced +0x09 target traces fail before the helper because 0x4a5e73 returns "
+            "failure, and the current corpus has breakpoint-only mentions but zero live "
+            "0x4a606b stops/events. This is current target-corpus evidence, not a global "
+            "unreachable proof."
         ),
     },
     {
@@ -893,7 +907,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records the 0x4a4c8e -> 0x4a79a3 object-vector boundary and later 0x49eb8d handoff. Follow-up payload, filter/dispatch, and endpoint traces prove the sampled payload records, one 0x4a696b return, one 0x4a7605 return, two direct 0x4a7312 endpoint commits, and paired +0xc8 processed marks at 0x4a7e21/0x4a7e25. Field summary .artifacts/rmg_recovery/connection_record_field_summary.json now names +0x09 as connection_recipe.border_guard_endpoint_stamping_enabled and verifies its source producer as 0x49f7c4 copying the template connection Border Guard column from source row +0x140. The sampled +0x09==0 path skips delegated 0x4a746b; clean seed-pinned Medium seed-10 Border Guard traces naturally reach +0x09!=0, all six 0x4a5e73 endpoint attempts fail on stale generator+0xf5c, and generation continues through 0x4a7605 -> 0x4a5e03 fallback materialization. Producer static summary .artifacts/rmg_recovery/connection_record_producer_static_summary.json still rules out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface; corrected runtime boundary summary proves the consumed ESI record is a separate edge/control record and that the rejected watch command was not valid evidence.",
         "ghidra_dump": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json and focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump/caller_004a79a3_FUN_004a79a3.txt prove 0x4a79a3 reads generator +0xec8/+0xecc, computes (end - begin) / 4, and uses the object/vector state after the 0x4a8c15 ordered phase prefix.",
-        "remaining_gap": "0x4a696b and 0x4a7605 now have static callee-side surfaces, the sampled 0x4a7605 direct 0x4a7312 commit path is live-replayed, sampled +0x09==0 skip behavior is explained, and the clean seed-10 +0x09!=0 Border Guard branch/fallback behavior is recovered for the sampled sequence. For the current one-level land target mode, .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json proves 0x4a696b direct mutation is unreached because the source/relation byte-pair gate never matches. Runtime ordered replay still needs broader relation/control linkage, successful or intentionally-unreachable 0x4a606b endpoint stamping, exact +0xc8/+0xd8 record semantic names, and full before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c state before changing native RMG behavior.",
+        "remaining_gap": "0x4a696b and 0x4a7605 now have static callee-side surfaces, the sampled 0x4a7605 direct 0x4a7312 commit path is live-replayed, sampled +0x09==0 skip behavior is explained, and the clean seed-10 +0x09!=0 Border Guard branch/fallback behavior is recovered for the sampled sequence. For the current one-level land target mode, .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json proves 0x4a696b direct mutation is unreached because the source/relation byte-pair gate never matches, and .artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json proves 0x4a606b's static contract plus current-corpus no-live-hit state. Runtime ordered replay still needs broader relation/control linkage, a natural successful 0x4a606b path or source-backed exclusion for the supported one-level land scope, exact +0xc8/+0xd8 record semantic names, and full before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c state before changing native RMG behavior.",
     },
     {
         "address": "0x4a696b",
@@ -934,7 +948,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "runtime_trace": "Prior 0x4a79a3 dispatch summary proves at least one fallback 0x4a7605 call returned from the 0x4a79a3 +0xc8 dispatch path in the sampled run. Follow-up live endpoint trace .artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json proves that sampled 0x4a7605 invocation executes two direct 0x4a7312 commits from return sites 0x4a76f3 and 0x4a77e7. The selected coordinates observed at 0x4a7447 are (12,11,0) with object record 0x0361edd0/source relation 0x017e0380 and (33,30,0) with object record 0x0361ecb0/source relation 0x0178e010. Follow-up branch-gate summary .artifacts/rmg_recovery/7605_branch_gate_summary.json proves why the same sample records zero 0x4a746b/0x4a5e73 endpoint-writer hits: after both direct commits, [ESI+0x09] was 0 at compare sites 0x4a774a and 0x4a783a, execution hit skip targets 0x4a7773 and 0x4a7860, and delegated call sites 0x4a7763 and 0x4a7853 were absent.",
         "ghidra_dump": "Static summary .artifacts/rmg_recovery/696b_7605_static_surface_summary.json checks .artifacts/rmg_recovery/ghidra_downstream_state_dump/caller_004a7605_FUN_004a7605.txt for four 0x4a7312 calls, two 0x4a746b calls, four 0x40bb15 appends, three 0x40bb26 appends/merges, four 0x49ba89 initializers, two 0x4a5e03 calls, and one 0x4a65a5 call.",
-        "remaining_gap": "Runtime ordered replay is still pending for broader 0x4a746b/0x4a5e73 delegated endpoint-writer semantics. The clean seed-10 [ESI+0x09] != 0 branch is recovered for the sampled sequence: it attempts three endpoint pairs, all six 0x4a5e73 calls fail on stale generator+0xf5c, and execution falls back through two 0x4a7605 -> 0x4a5e03 materializations. Remaining work is successful or intentionally-unreachable 0x4a606b endpoint stamping, 0x4a5e03/0x4a54a7 outcomes beyond sampled fallback records, generated-cell before/after state, full candidate-vector contents around 0x4a7312 appends/RNG, and exact source/relation/vector-entry semantic names.",
+        "remaining_gap": "Runtime ordered replay is still pending for broader 0x4a746b/0x4a5e73 delegated endpoint-writer semantics. The clean seed-10 [ESI+0x09] != 0 branch is recovered for the sampled sequence: it attempts three endpoint pairs, all six 0x4a5e73 calls fail on stale generator+0xf5c, and execution falls back through two 0x4a7605 -> 0x4a5e03 materializations. 0x4a606b now has a recovered static contract and current-corpus no-live-hit evidence; remaining work is a natural successful 0x4a606b path or source-backed exclusion for the supported one-level land scope, 0x4a5e03/0x4a54a7 outcomes beyond sampled fallback records, generated-cell before/after state, full candidate-vector contents around 0x4a7312 appends/RNG, and exact source/relation/vector-entry semantic names.",
     },
     {
         "address": "0x49b3fb",
@@ -2074,7 +2088,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a606b",
         "name": "connection_region_generated_cell_writer",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_current_corpus_no_live_hit",
         "calls": ["0x49aa63", "0x49a932"],
         "reads": [
             "generator pointer in ecx",
@@ -2093,7 +2107,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "when that projected x/y is in bounds, clears low five bits of the projected target cell +0x2c and calls 0x49a932(true)",
         ],
         "caller_contract": "Both 0x4a61bc call sites are gated by control byte [arg2+0x09] and a successful 0x4a5e73 return. The first call passes the selected 12-byte temporary candidate coordinate at EBP-0x3c..-0x34 after 0x4a5e73(generator, selected_candidate, true, relation_record_from_generator+0x10e4) returns nonnegative. The second call passes the direction-adjacent coordinate at EBP-0x48..-0x40, computed from the selected candidate plus direction offset 0x5a2658[(selected_cell+0x28 >> 12) & 7], after 0x4a5e73(generator, direction_adjacent, true, stack_arg+0x08) returns nonnegative. In both calls the 0x4a606b low-nibble arg is the 0x4a5e73 return value.",
-        "ghidra_dump": "Called twice by 0x4a61bc. Static recovery shows a clamped connection-region pass around the provided x/y/level coordinate, object-reference-vector emptiness gating, bit26 writes through 0x49aa63(true), private low-bit flag packing in GeneratedCell+0x2c, and a follow-up projected target cell bit27 write through 0x49a932(true). Caller coordinate meanings are statically recovered from 0x4a61bc; runtime ordered replay remains pending.",
+        "ghidra_dump": "Called twice by 0x4a61bc. Static recovery shows a clamped connection-region pass around the provided x/y/level coordinate, object-reference-vector emptiness gating, bit26 writes through 0x49aa63(true), private low-bit flag packing in GeneratedCell+0x2c, and a follow-up projected target cell bit27 write through 0x49a932(true). Caller coordinate meanings are statically recovered from 0x4a61bc. .artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json proves the current target corpus has breakpoint-only mentions and zero live 0x4a606b stops/events; broader reachability or source-backed exclusion remains pending.",
     },
     {
         "address": "0x4a746b",

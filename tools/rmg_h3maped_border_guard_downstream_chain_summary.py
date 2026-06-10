@@ -262,8 +262,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "remaining_gap": (
             "This closes the sampled seed-10 Border Guard downstream chain only. Remaining "
             "work before native RMG behavior changes: broaden relation/control linkage beyond "
-            "these exact records, recover or exclude successful 0x4a606b endpoint stamping in "
-            "other modes/source states, name global descriptor/object families, continue "
+            "these exact records, use the recovered 0x4a606b static/current-corpus frontier to "
+            "find a natural successful endpoint-stamping path or source-backed exclusion for "
+            "supported one-level land, name global descriptor/object families, continue "
             "0x4a696b reachability outside the current target evidence, and recover cleanup/"
             "uncommit runtime state if reached."
         ),
