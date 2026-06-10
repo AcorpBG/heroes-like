@@ -28,6 +28,9 @@ DEFAULT_COMPLETION = Path(
 DEFAULT_OLDER_DESCRIPTOR = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_exact_descriptor_relation_summary_20260609.json"
 )
+DEFAULT_CROSS_SEED_COMMIT_SURFACE = Path(
+    ".artifacts/rmg_recovery/medium_4a54a7_cross_seed_commit_surface_summary_20260610.json"
+)
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json"
 )
@@ -75,6 +78,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     projection_writes = load_json(args.exact_projection_writes)
     completion = load_json(args.completion)
     older_descriptor = load_json(args.older_descriptor)
+    cross_seed_commit_surface = load_json(args.cross_seed_commit_surface)
 
     records = record_map(exact_frontier.get("records", []))
     projection_targets = target_record_set(projection_writes)
@@ -100,9 +104,20 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         in older_descriptor.get("coordinate_reconciliation", {}).get("finding", ""),
         "phase_tail_completion_recovered_for_exact_records": completion.get("status")
         == "fallback_final_role_phase_tail_recovered_for_exact_seed10_records",
+        "cross_seed_fallback_commit_surface_recovered": cross_seed_commit_surface.get("status")
+        == "cross_seed_4a54a7_commit_surface_recovered_projection_writes_still_bounded"
+        and cross_seed_commit_surface.get("invariants", {}).get(
+            "all_fallback_0x4a5e6c_calls_have_complete_cell_transition"
+        )
+        is True
+        and cross_seed_commit_surface.get("invariants", {}).get(
+            "non_fallback_return_contexts_named_pending"
+        )
+        is True
+        and cross_seed_commit_surface.get("metrics", {}).get("used_objdump") is False,
     }
     status = (
-        "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
+        "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
         if all(invariants.values())
         else "exact_fallback_coordinate_projection_reconciliation_incomplete"
     )
@@ -120,6 +135,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "exact_projection_writes": str(args.exact_projection_writes),
             "completion": str(args.completion),
             "older_descriptor": str(args.older_descriptor),
+            "cross_seed_commit_surface": str(args.cross_seed_commit_surface),
         },
         "invariants": invariants,
         "metrics": {
@@ -131,6 +147,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "completion_fallback_record_count": completion.get("metrics", {}).get(
                 "fallback_record_count"
             ),
+            "cross_seed_total_commit_call_count": cross_seed_commit_surface.get("metrics", {}).get(
+                "total_commit_call_count"
+            ),
+            "cross_seed_fallback_0x4a5e6c_commit_call_count": cross_seed_commit_surface.get(
+                "metrics", {}
+            ).get("total_fallback_0x4a5e6c_commit_call_count"),
+            "cross_seed_non_fallback_return_context_commit_count": cross_seed_commit_surface.get(
+                "metrics", {}
+            ).get("total_non_fallback_return_context_commit_count"),
         },
         "exact_records": [
             {
@@ -148,12 +173,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "evidence now reconciles construction, state-chain commit coordinates, after-state "
             "commit coordinates, descriptor/relation coordinates, exact projection write streams, "
             "object-vector survival, and phase-tail completion. These exact records are no longer "
-            "blocked by the older coordinate mismatch."
+            "blocked by the older coordinate mismatch. The cross-seed Medium seed-1/seed-2 commit "
+            "surface additionally proves all 31 sampled 0x4a5e6c fallback-return commits reach "
+            "0x4a5756 and clear the sampled GeneratedCell+0x20 low word while preserving the high "
+            "word. The same cross-seed evidence also names 151 non-fallback 0x4a54a7 return-context "
+            "commits as pending instead of merging them into the exact fallback proof."
         ),
         "remaining_gap": (
-            "Broader coordinate/projection recovery remains pending outside these exact fallback "
-            "records. Do not extrapolate this exact seed-10 reconciliation to other map modes, "
-            "other source states, 0x4a696b direct mutation, or cleanup/uncommit paths."
+            "Broader coordinate/projection recovery remains pending for the non-fallback 0x4a54a7 "
+            "return contexts, other map modes, other source states, 0x4a696b direct mutation, or "
+            "cleanup/uncommit paths. Do not extrapolate the exact fallback proof into those contexts."
         ),
     }
 
@@ -164,6 +193,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--exact-projection-writes", type=Path, default=DEFAULT_EXACT_PROJECTION_WRITES)
     parser.add_argument("--completion", type=Path, default=DEFAULT_COMPLETION)
     parser.add_argument("--older-descriptor", type=Path, default=DEFAULT_OLDER_DESCRIPTOR)
+    parser.add_argument(
+        "--cross-seed-commit-surface",
+        type=Path,
+        default=DEFAULT_CROSS_SEED_COMMIT_SURFACE,
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
@@ -174,7 +208,12 @@ def main() -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"RMG_H3MAPED_COORDINATE_PROJECTION status={summary['status']} out={args.out}")
-    return 0 if summary["status"] == "exact_fallback_coordinate_projection_reconciled_broader_modes_pending" else 1
+    return (
+        0
+        if summary["status"]
+        == "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
+        else 1
+    )
 
 
 if __name__ == "__main__":

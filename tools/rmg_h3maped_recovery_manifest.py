@@ -55,13 +55,18 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
         "id": "exact_fallback_coordinate_projection_reconciliation",
         "artifact": ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json",
-        "status": "exact_fallback_coordinate_projection_reconciled_broader_modes_pending",
+        "status": (
+            "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
+        ),
         "meaning": (
             "The older mixed-trace coordinate mismatch is superseded for exact Medium seed-10 "
             "fallback records 0x036260c0 and 0x03626060: construction, state-chain commit, "
             "after-state commit, descriptor/relation coordinates, exact projection writes, "
             "object-vector survival, and phase-tail completion agree for those records. "
-            "Broader coordinate/projection coverage remains pending."
+            "Medium seed-1/seed-2 evidence also proves all 31 sampled 0x4a5e6c "
+            "fallback-return commits clear the sampled GeneratedCell+0x20 low word while "
+            "preserving the high word. The 151 sampled non-fallback 0x4a54a7 return-context "
+            "commits remain named pending work rather than being folded into the exact fallback proof."
         ),
     },
     {
