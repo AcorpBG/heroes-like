@@ -410,6 +410,23 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_assignment_source_boundary",
+        "artifact": ".artifacts/rmg_recovery/descriptor_assignment_source_summary_20260610.json",
+        "status": (
+            "descriptor_assignment_boundary_recovered_constructor_retains_descriptor_source_paths_pending"
+        ),
+        "meaning": (
+            "Ghidra-backed marker checks verify 0x49ba89 is not the descriptor+0x00 "
+            "assignment site. It reads an existing descriptor pointer from the stack, stores "
+            "it at object-record +0x04, increments descriptor +0x08, and initializes "
+            "object-record coordinate fields. Sampled owners construct or dispatch records "
+            "with existing descriptor pointers, while 0x4a9e40 and 0x4af785 are upstream "
+            "selector/resolver surfaces. The remaining descriptor identity blocker is the "
+            "static/data constructor or loader that populates descriptor records plus selected "
+            "descriptor source proof for mixed type 45/53/54/79 lanes."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
