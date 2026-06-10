@@ -55,6 +55,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "object_table_loader_catalog_row_identity_surface",
+        "artifact": ".artifacts/rmg_recovery/object_table_loader_summary_20260610.json",
+        "status": "object_table_loader_recovered_catalog_row_identity_surface",
+        "meaning": (
+            "The base H3MapEd object catalog loader is recovered as a source-backed surface. "
+            "0x49da08 loads objects.txt through 0x490c4c, walks parsed 0x4c rows, consumes "
+            "row +0x1c as object type id, consumes row +0x20 as a subtype-like guard field, "
+            "bounds types by 0xe8, initializes 0xe8-byte wrappers through 0x49db76, buckets "
+            "wrappers through object metadata at 0x57c648[type].+0x08, and then loads "
+            "rand_trn.txt separately through 0x49dc9e. The extracted catalog has 1326 "
+            "objects.txt rows plus 2 objtmplt.txt rows and type ids below the 232-entry "
+            "objnames bound. This closes the base table loader, not the later selected "
+            "mixed-lane wrapper/source identity or nested payload variant mapping."
+        ),
+    },
+    {
         "id": "direct_one_level_land_recovery_frontier",
         "artifact": ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json",
         "status": "direct_mode_recovery_frontier_verified_target_mode_exclusions",
