@@ -31,6 +31,7 @@ DEFAULT_FALLBACK_FINAL_ROLE = Path(
 DEFAULT_COORDINATE_RECONCILIATION = Path(
     ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json"
 )
+DEFAULT_SEMANTIC_FRONTIER = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json"
 )
@@ -43,6 +44,7 @@ EXPECTED_STATUSES = {
     "coordinate_projection_reconciliation": (
         "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
     ),
+    "semantic_frontier": "semantic_frontier_working_names_recovered_remaining_producers_pending",
 }
 
 
@@ -75,6 +77,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "projection_slot_target_mode": args.projection_slot_target_mode,
         "fallback_final_role": args.fallback_final_role,
         "coordinate_projection_reconciliation": args.coordinate_projection_reconciliation,
+        "semantic_frontier": args.semantic_frontier,
     }
     summaries = {name: load_json(path) for name, path in inputs.items()}
 
@@ -136,6 +139,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "after-state commit, descriptor/relation coordinates, exact projection writes, "
                 "object-vector survival, and phase-tail completion now line up for those records."
             ),
+        },
+        {
+            "id": "working_semantic_name_frontier",
+            "evidence": str(args.semantic_frontier),
+            "scope": (
+                "Connection record bytes, candidate record fields, exact descriptor projection "
+                "fields, relation occupancy counters, and selected GeneratedCell +0x20 roles "
+                "now have source-backed working names. Producer paths and global human labels "
+                "remain pending."
+            ),
         }
     ]
     remaining_blockers = [
@@ -148,10 +161,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             ),
         },
         {
-            "id": "semantic_names_and_broader_final_role_proof",
+            "id": "remaining_semantic_producers_and_global_labels",
             "reason": (
-                "Several recovered fields/functions still have hex-level or provisional names; "
-                "broader final-role evidence is needed beyond exact seed-10 fallback records."
+                "Working names are recovered for several fields, but +0x09 producer, global "
+                "descriptor type labels, and cleanup/uncommit semantics remain pending."
             ),
         },
         {
@@ -196,6 +209,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             summaries["coordinate_projection_reconciliation"],
             EXPECTED_STATUSES["coordinate_projection_reconciliation"],
         ),
+        "working_semantic_name_frontier_recovered": status_matches(
+            summaries["semantic_frontier"], EXPECTED_STATUSES["semantic_frontier"]
+        ),
     }
     status = (
         "direct_mode_recovery_frontier_verified_target_mode_exclusions"
@@ -232,11 +248,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "slot +0x08 cleanup is unreached because sampled projection objects are destroyed/"
             "freed before ordinary final dispatch. These are target-mode exclusions, not global "
             "proofs for every H3MapEd map mode. Exact seed-10 fallback coordinate/projection "
-            "state is also reconciled for records 0x036260c0 and 0x03626060."
+            "state is also reconciled for records 0x036260c0 and 0x03626060. Several "
+            "formerly hex-only fields now have source-backed working names."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
-            "until broader coordinate/projection coverage, broader final-role semantics, and any "
+            "until broader coordinate/projection coverage, remaining semantic producers/global labels, and any "
             "future non-current-mode reachability gaps are recovered from Wine/Ghidra evidence."
         ),
     }
@@ -253,6 +270,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_COORDINATE_RECONCILIATION,
     )
+    parser.add_argument("--semantic-frontier", type=Path, default=DEFAULT_SEMANTIC_FRONTIER)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
