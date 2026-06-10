@@ -45,7 +45,7 @@ EXPECTED_STATUSES = {
         "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
     ),
     "semantic_frontier": (
-        "semantic_frontier_working_names_seed10_chain_cursor_owner_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
+        "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
     ),
 }
 
@@ -153,8 +153,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "downstream chain is recovered through phase tail. 0x4a5e73 is recovered as "
                 "the cursor-keyed endpoint helper with zero current success-path hits, and "
                 "the non-self cursor writers are bound to the unhit projection/cleanup slot "
-                "chain. 0x4a606b is statically recovered with no live hit in the current "
-                "corpus. Broader linkage and global human labels remain pending."
+                "chain whose sampled projection objects are destroyed/freed/reused before "
+                "ordinary final dispatch. 0x4a606b is statically recovered with no live hit "
+                "in the current corpus. Broader linkage and global human labels remain pending."
             ),
         }
     ]
@@ -173,10 +174,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "Working names and the exact seed-10 Border Guard downstream chain are recovered, "
                 "0x4a5e73 is recovered as the cursor-keyed endpoint helper with no current "
                 "success-path hits, the non-self +0xf5c writers are bound to the unhit "
-                "projection/cleanup slot chain, and 0x4a606b is statically recovered with no live "
-                "hit in the current corpus. Broader relation/control linkage, any source path "
-                "that seeds generator+0xf5c outside the currently excluded non-self writer chain, "
-                "a broader natural projection-slot dispatch, or a source-backed endpoint-stamping "
+                "projection/cleanup slot chain whose sampled projection objects are "
+                "destroyed/freed/reused before ordinary final dispatch, and 0x4a606b is "
+                "statically recovered with no live hit in the current corpus. Broader "
+                "relation/control linkage, any source path that seeds generator+0xf5c outside "
+                "the currently excluded non-self writer chain, a broader natural projection-slot "
+                "dispatch before selected-object recycle, or a source-backed endpoint-stamping "
                 "exclusion for broader map/source states, global descriptor type labels, and "
                 "cleanup/uncommit semantics remain pending."
             ),
