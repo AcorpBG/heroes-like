@@ -20,6 +20,10 @@ DEFAULT_LEDGER = Path(
 )
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/4a79a3_internal_growth_summary_20260609.json")
 
+SCHEMA_ID = "h3maped_rmg_4a79a3_internal_growth_summary_v2"
+STATUS_RECOVERED = "4a79a3_internal_growth_4a61bc_append_boundary_recovered"
+STATUS_INCOMPLETE = "4a79a3_internal_growth_partial_or_incomplete"
+
 ADDR_ENTRY = "0x004a79a3"
 ADDR_AFTER_LOOKUP = "0x004a7be4"
 ADDR_AFTER_4A61BC = "0x004a7bfa"
@@ -172,34 +176,69 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
         event_address(event) in {ADDR_PAYLOAD_GATE, ADDR_PAYLOAD, ADDR_PAYLOAD_DONE}
         for event in events
     )
+    sequence = [
+        {
+            "event_index": item["event_index"],
+            "address": item["address"],
+            "count": (item.get("object_vector") or {}).get("count"),
+            "capacity_count": (item.get("object_vector") or {}).get("capacity_count"),
+            "begin": (item.get("object_vector") or {}).get("begin"),
+            "end": (item.get("object_vector") or {}).get("end"),
+            "capacity": (item.get("object_vector") or {}).get("capacity"),
+        }
+        for item in summaries
+        if item.get("object_vector")
+    ]
+    counts_by_address = Counter(event_address(event) for event in events)
+    initial_count = sequence[0]["count"] if sequence else None
+    final_count = sequence[-1]["count"] if sequence else None
+    positive_append_delta = sum(
+        int(pair["post_count"]) - int(pair["pre_count"])
+        for pair in positive_pairs
+        if isinstance(pair.get("pre_count"), int) and isinstance(pair.get("post_count"), int)
+    )
+    appended_entries = [
+        entry
+        for pair in positive_pairs
+        for entry in pair.get("appended_entries", [])
+    ]
+    invariants = {
+        "trace_has_events": len(events) > 0,
+        "single_4a79a3_entry": counts_by_address[ADDR_ENTRY] == 1,
+        "candidate_pairs_observed": counts_by_address[ADDR_AFTER_LOOKUP] == counts_by_address[ADDR_AFTER_4A61BC] == 8,
+        "positive_4a61bc_appends_observed": len(positive_pairs) == 6,
+        "positive_append_delta_matches_entries": positive_append_delta == len(appended_entries) == 6,
+        "zero_return_pair_does_not_append": any(
+            pair.get("return_eax") == "0x00000000" and pair.get("pre_count") == pair.get("post_count")
+            for pair in pairs
+        ),
+        "initial_count_recovered": initial_count == 7,
+        "final_count_recovered": final_count == 13,
+        "final_minus_initial_matches_positive_appends": (
+            isinstance(initial_count, int)
+            and isinstance(final_count, int)
+            and final_count - initial_count == positive_append_delta
+        ),
+        "single_reallocation_at_capacity_boundary": len(reallocation_pairs) == 1,
+        "payload_loop_not_reached_in_this_trace": not reached_payload_loop,
+    }
+    status = STATUS_RECOVERED if all(invariants.values()) else STATUS_INCOMPLETE
     return {
-        "schema": "h3maped_rmg_4a79a3_internal_growth_summary_v1",
+        "schema_id": SCHEMA_ID,
+        "schema": SCHEMA_ID,
+        "status": status,
         "ledger": str(ledger_path),
         "event_count": len(events),
-        "address_counts": dict(sorted(Counter(event_address(event) for event in events).items())),
+        "address_counts": dict(sorted(counts_by_address.items())),
         "child_returncode": ledger.get("child_returncode"),
         "reached_payload_loop": reached_payload_loop,
-        "object_vector_sequence": [
-            {
-                "event_index": item["event_index"],
-                "address": item["address"],
-                "count": (item.get("object_vector") or {}).get("count"),
-                "capacity_count": (item.get("object_vector") or {}).get("capacity_count"),
-                "begin": (item.get("object_vector") or {}).get("begin"),
-                "end": (item.get("object_vector") or {}).get("end"),
-                "capacity": (item.get("object_vector") or {}).get("capacity"),
-            }
-            for item in summaries
-            if item.get("object_vector")
-        ],
+        "object_vector_sequence": sequence,
         "append_pairs_after_0x4a61bc": pairs,
+        "invariants": invariants,
         "positive_append_count": len(positive_pairs),
+        "positive_append_delta": positive_append_delta,
         "reallocation_count": len(reallocation_pairs),
-        "appended_entries": [
-            entry
-            for pair in positive_pairs
-            for entry in pair.get("appended_entries", [])
-        ],
+        "appended_entries": appended_entries,
         "recovered_contract": (
             "In this sampled 0x4a79a3 run, the generator object vector is already "
             "non-empty at entry and grows before the payload loop through repeated "
@@ -208,6 +247,15 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
             "one sampled append reallocates the vector when count advances past "
             "capacity 8. The trace does not reach the later 0x4a7d2c/0x4a7d36 "
             "payload loop, so payload-loop mutation remains separate pending work."
+        ),
+        "source_backed_conclusion": (
+            "The first recovered internal growth surface inside sampled 0x4a79a3 is the "
+            "0x49b3fb -> 0x4a61bc candidate pair at 0x4a7be4/0x4a7bfa. In this Wine trace, "
+            "eight candidate pairs are observed, six successful 0x4a61bc returns append "
+            "one object-record pointer each to generator+0xec8/+0xecc, the object vector "
+            "advances from count 7 to 13, and one append reallocates the vector from "
+            "capacity 8 to 16. This trace does not reach the later payload loop, so it "
+            "recovers the append boundary but not the downstream payload mutation chain."
         ),
         "remaining_gap": (
             "Recover 0x4a61bc callee-side object construction/commit semantics and "
@@ -230,12 +278,13 @@ def main() -> int:
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
         "RMG_H3MAPED_4A79A3_INTERNAL_GROWTH "
+        f"status={summary['status']} "
         f"events={summary['event_count']} "
         f"positive_appends={summary['positive_append_count']} "
         f"reallocations={summary['reallocation_count']} "
         f"out={args.out}"
     )
-    return 0
+    return 0 if summary["status"] == STATUS_RECOVERED else 1
 
 
 if __name__ == "__main__":
