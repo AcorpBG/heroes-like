@@ -84,6 +84,21 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "unresolved_nonfallback_4a54a7_return_owner_frontier",
+        "artifact": ".artifacts/rmg_recovery/nonfallback_4a54a7_return_owner_summary_20260610.json",
+        "status": "nonfallback_4a54a7_return_owners_recovered_unresolved_state_scoped",
+        "meaning": (
+            "The remaining non-fallback 0x4a54a7 callback return sites are statically owned: "
+            "0x4a98f0 is the selected object callback return inside 0x4a9641, 0x4a9c3f is "
+            "the selected object callback return inside 0x4a9911, and 0x4aa44d is the "
+            "selected-member callback return inside 0x4aa3e9. Existing 0x4aa9b7/0x4aa3e9 "
+            "runtime summaries also prove ordered wrapper handoff and sampled 0x4aa3e9 slot "
+            "+0x04 callbacks into 0x4a54a7. The remaining missing state is same-ledger "
+            "target-cell afterstate and 0x4a56b6 projection-write correlation for those "
+            "owner loops."
+        ),
+    },
+    {
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
