@@ -490,9 +490,9 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "as holder payload accessors that copy-on-write when shared and return payload "
             "+0x04. 0x4e6da2 is classified as a generic dynamic lookup/cast helper with "
             "many callers, not the source identity producer. Remaining blockers are the "
-            "exact 0x43b0ff/0x433d7d input parse semantics, the 0x41f350 variant/filter "
-            "builders such as 0x422868/0x428d45/0x420e6b/0x434073, and final mapping "
-            "from populated 0x4c records to objects.txt/objtmplt.txt type/subtype/DEF rows."
+            "exact 0x43b0ff/0x433d7d input parse semantics, human category/provider-slot "
+            "semantics for later variant builders, and final mapping from populated 0x4c "
+            "records to objects.txt/objtmplt.txt type/subtype/DEF rows."
         ),
     },
     {
@@ -512,7 +512,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "+0x34, 0x54-byte nested record stride, and version gates including 0x08, 0x09, "
             "0x0a, 0x0d, 0x10, 0x11, 0x12, 0x14, 0x19, and 0x1a. Remaining blockers are "
             "human field labels, exact stream helper semantics, final 0x4c source-record "
-            "mapping, and later variant/filter builders."
+            "mapping, and human category/provider-slot semantics for later variant/filter builders."
         ),
     },
     {
@@ -532,7 +532,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "selector 2, and delegates to 0x43acf0 for selector 0/1. The 0x43bb* helpers "
             "are bounded as bitset/range-to-container population helpers. Remaining "
             "blockers are parser field names, nested container semantics, exact tag-table "
-            "meanings, final 0x4c source-record mapping, and later variant/filter builders."
+            "meanings, final 0x4c source-record mapping, and human category/provider-slot semantics for later variant/filter builders."
         ),
     },
     {
@@ -567,6 +567,25 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "gated scalar reads, dword payloads, triplet payloads, and no-extra-payload "
             "tags. Remaining blockers are human tag meanings, output field names, and "
             "final 0x4c source-record/catalog mapping."
+        ),
+    },
+    {
+        "id": "source_variant_builder_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_variant_builder_summary_20260610.json",
+        "status": "source_variant_builder_surface_recovered_category_semantics_pending",
+        "meaning": (
+            "Ghidra/Python evidence now recovers the helper surface called later by "
+            "0x41f350 without assigning final object identities. 0x422868 reads copied "
+            "source-record +0x1c as a category/lane selector, dispatches through category "
+            "constants and global provider vtable slots, accumulates provider results, "
+            "requires a non-null result, and writes an output present byte plus pointer. "
+            "0x428d45 bounds source-family ranges through input +0x40/+0x44, global table "
+            "0x535214, and descriptor mask predicate 0x41e915. 0x420e6b selects one of two "
+            "holder families from +0x18, performs copy-on-write when shared, runs dynamic "
+            "lookups through 0x4e6da2, and delegates existing/missing payload paths. 0x434073 "
+            "wraps a dynamic lookup and delegates existing/missing result paths. Remaining "
+            "blockers are human category/lane names, provider slot meanings, and final "
+            "source-catalog/object-template row mapping."
         ),
     },
     {
@@ -814,6 +833,10 @@ FUNCTIONS: list[dict[str, Any]] = [
             "0x42dd3d",
             "0x4e6da2",
             "0x4c025c",
+            "0x422868",
+            "0x428d45",
+            "0x420e6b",
+            "0x434073",
         ],
         "reads": [
             "destination/source object pointer in ecx",
@@ -831,10 +854,10 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "unrecovered_semantics": [
             "human semantic labels for the versioned 0x43b0ff parser output fields",
-            "variant/filter builders called from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073",
+            "human category/lane names and provider-slot meanings for variant/filter builders called from 0x41f350",
             "final objects.txt/objtmplt.txt type/subtype/DEF mapping for populated 0x4c source records",
         ],
-        "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_payload_producer_frontier_dump_20260610 and .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json recover this loader boundary without claiming final catalog identity.",
+        "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_payload_producer_frontier_dump_20260610 and .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json recover this loader boundary without claiming final catalog identity; .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recovers the later builder helper surface.",
     },
     {
         "address": "0x43b0ff",
@@ -1059,6 +1082,99 @@ FUNCTIONS: list[dict[str, Any]] = [
         "returns": ["original wrapper/object pointer in EAX"],
         "guard": "requires virtual reader return value to be at least 0x1f; otherwise emits diagnostic/assertion path through 0x4e633b",
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00433d7d_FUN_00433d7d.txt plus verifier .artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json recover this guard contract.",
+    },
+    {
+        "address": "0x422868",
+        "name": "source_variant_category_dispatch_builder",
+        "status": "recovered_surface_category_semantics_pending",
+        "callers": ["0x41f350 at 0x41f800", "0x41f350 at 0x41f98d", "0x423832"],
+        "calls": [
+            "global provider vtable slots, including +0xac and +0xbc",
+            "0x412041",
+            "0x42bfe6",
+            "0x42c913",
+            "0x4c6488",
+            "0x42c8d9",
+            "0x4e633b",
+        ],
+        "reads": [
+            "source record pointer from stack+0x0c",
+            "source record +0x1c category/lane selector",
+            "global provider object at 0x59e390",
+        ],
+        "writes": [
+            "local candidate/result accumulator",
+            "output present byte at caller output +0x00",
+            "output pointer at caller output +0x04",
+        ],
+        "unrecovered_semantics": [
+            "human names for category/lane constants such as 0x1a, 0x2a, 0x35, 0x45, 0x46, 0x4d, 0x71, and 0xa2",
+            "human meanings for provider vtable slots used by each category path",
+            "final source-catalog/object-template row mapping",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00422868_FUN_00422868.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this dispatcher surface without assigning object identities.",
+    },
+    {
+        "address": "0x428d45",
+        "name": "source_variant_range_mask_predicate",
+        "status": "recovered_surface_field_semantics_pending",
+        "callers": ["0x41f350 at 0x41f818", "0x420406", "0x426e08"],
+        "calls": ["0x41e915"],
+        "reads": [
+            "source/input-derived lower bound at +0x40",
+            "source/input-derived upper bound at +0x44",
+            "global source-family table 0x535214",
+            "descriptor mask surface through 0x41e915",
+        ],
+        "returns": [
+            "AL=1 when range checks and descriptor mask predicate pass",
+            "AL=0 otherwise",
+        ],
+        "unrecovered_semantics": [
+            "human names for the +0x40/+0x44 bounded fields",
+            "final object/category meaning of the accepted range",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00428d45_FUN_00428d45.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this range/mask predicate surface.",
+    },
+    {
+        "address": "0x420e6b",
+        "name": "source_variant_dynamic_lookup_inserter",
+        "status": "recovered_surface_lookup_semantics_pending",
+        "callers": ["0x41f350 at 0x41f9bb", "0x42a058"],
+        "calls": ["0x432d56", "0x42a70f", "0x4e6da2", "0x4c242d", "0x428439", "0x4284d0"],
+        "reads": [
+            "mode byte at stack+0x0c",
+            "two holder families selected from source/payload +0x18",
+            "caller key/payload at stack+0x10",
+            "dynamic lookup metadata constants supplied to 0x4e6da2",
+        ],
+        "writes": [
+            "copy-on-write replacement holder when selected holder is shared",
+            "payload mutation through 0x4c242d and existing/missing delegates",
+        ],
+        "unrecovered_semantics": [
+            "human meaning of the two holder families selected by the mode byte",
+            "dynamic lookup payload identity below 0x4e6da2/0x4c242d where needed for catalog mapping",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00420e6b_FUN_00420e6b.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this dynamic inserter surface.",
+    },
+    {
+        "address": "0x434073",
+        "name": "source_variant_dynamic_lookup_wrapper",
+        "status": "recovered_surface_lookup_semantics_pending",
+        "callers": ["0x41f350 at 0x41f8d4"],
+        "calls": ["0x4e6da2", "0x42825d", "0x4389a7"],
+        "reads": [
+            "caller dynamic object/source argument at stack+0x08",
+            "caller payload arguments at stack+0x0c and stack+0x10",
+            "dynamic lookup metadata constants supplied to 0x4e6da2",
+        ],
+        "returns": ["RET 0x10 after delegating existing-result or missing-result path"],
+        "unrecovered_semantics": [
+            "human identity of the dynamic lookup target",
+            "final catalog mapping of the delegated payload",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00434073_FUN_00434073.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this wrapper surface.",
     },
     {
         "address": "0x4e6da2",
