@@ -80,10 +80,11 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "phase tail. 0x4a5e73 is recovered as the cursor-keyed endpoint helper with no "
             "current success-path hits, the non-self +0xf5c writers are bound to the unhit "
             "projection/cleanup slot chain, cursor-source setup/lifetime evidence proves "
-            "+0xf58/+0x1104 initialization without +0xf5c seeding, and 0x4a606b is statically "
-            "recovered with no live hit in the current target corpus. Broader relation/control "
-            "linkage, global descriptor type labels, broader semantic scope, and "
-            "cleanup/uncommit semantics remain pending."
+            "+0xf58/+0x1104 initialization without +0xf5c seeding, sampled projection objects "
+            "are destroyed/freed/reused before ordinary final dispatch, and 0x4a606b is "
+            "statically recovered with no live hit in the current target corpus. Broader "
+            "relation/control linkage, global descriptor type labels, broader semantic scope, "
+            "and cleanup/uncommit semantics remain pending."
         ),
     },
     {
@@ -125,8 +126,9 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "the first natural Border Guard endpoint attempt uses stale cursor 0x7a1befdf while "
             "active +0xd8 keys are 0..7; the direct +0xf5c writer surface is exhausted; and the "
             "known non-self writers are bound to the currently unhit projection/cleanup slot "
-            "chain. Successful 0x4a5e73/0x4a606b endpoint stamping remains unrecovered or "
-            "unexcluded for broader supported one-level land."
+            "chain whose sampled projection objects are destroyed/freed/reused before ordinary "
+            "final dispatch. Successful 0x4a5e73/0x4a606b endpoint stamping remains "
+            "unrecovered or unexcluded for broader supported one-level land."
         ),
     },
     {

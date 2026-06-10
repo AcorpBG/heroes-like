@@ -21,6 +21,9 @@ DEFAULT_4A5E73 = Path(".artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20
 DEFAULT_CURSOR_OWNER = Path(
     ".artifacts/rmg_recovery/cursor_writer_owner_exclusion_summary_20260610.json"
 )
+DEFAULT_PROJECTION_SLOT_TARGET = Path(
+    ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json"
+)
 DEFAULT_4A606B = Path(".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json")
 
@@ -40,12 +43,14 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     access = load_json(args.access)
     four_a5e73 = load_json(args.four_a5e73)
     cursor_owner = load_json(args.cursor_owner)
+    projection_slot_target = load_json(args.projection_slot_target)
     four_a606b = load_json(args.four_a606b)
 
     lifetime_invariants = lifetime.get("invariants", {})
     access_invariants = access.get("invariants", {})
     four_a5e73_invariants = four_a5e73.get("invariants", {})
     cursor_owner_invariants = cursor_owner.get("invariants", {})
+    projection_slot_invariants = projection_slot_target.get("invariants", {})
     four_a606b_invariants = four_a606b.get("invariants", {})
 
     first_4a61bc = lifetime.get("setup_snapshots", {}).get("at_first_0x4a61bc", {})
@@ -104,6 +109,17 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and cursor_owner_invariants.get("projection_slot_chain_unhit_in_current_target_corpus")
             is True
         ),
+        "sampled_projection_slot_recycle_boundary_recovered": (
+            projection_slot_target.get("status")
+            == "projection_slot_target_mode_unreached_recycle_boundary_explained"
+            and projection_slot_invariants.get("projection_slot_static_contract_recovered") is True
+            and projection_slot_invariants.get("projection_methods_and_cleanup_have_zero_events")
+            is True
+            and projection_slot_invariants.get("sampled_projection_to_ordinary_reuse_recovered")
+            is True
+            and projection_slot_invariants.get("sampled_projection_destructor_contract_recovered")
+            is True
+        ),
         "current_4a606b_no_live_hit_depends_on_4a5e73_failure": (
             four_a606b.get("status") == "target_mode_4a606b_static_contract_recovered_no_live_hit"
             and four_a606b_invariants.get("current_corpus_has_no_live_4a606b_hit") is True
@@ -130,6 +146,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "cursor_f5c_1104_access": str(args.access),
             "4a5e73_cursor_frontier": str(args.four_a5e73),
             "cursor_writer_owner_frontier": str(args.cursor_owner),
+            "projection_slot_target_mode": str(args.projection_slot_target),
             "4a606b_reachability": str(args.four_a606b),
         },
         "invariants": invariants,
@@ -147,6 +164,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "runtime_4a606b_event_count": four_a606b.get("metrics", {}).get(
                 "runtime_4a606b_event_count"
             ),
+            "projection_or_cleanup_target_event_hits_total": projection_slot_target.get(
+                "metrics", {}
+            ).get("cleanup_or_projection_target_event_hits_total"),
+            "projection_or_cleanup_target_log_hits_total": projection_slot_target.get(
+                "metrics", {}
+            ).get("cleanup_or_projection_target_log_hits_total"),
         },
         "proven_cursor_state": {
             "generator_at_first_4a61bc": first_4a61bc.get("generator"),
@@ -165,6 +188,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "0x4adb72 and 0x4add76 are owned by projection/cleanup slot chains that have "
                 "zero live dispatch in the current one-level land corpus."
             ),
+            "selected_projection_recycle_boundary": (
+                "Sampled 0x540b14 projection objects are destroyed through selected-object "
+                "slot0 destructors, freed, and later reused by ordinary constructors before "
+                "final slot +0x08 dispatch."
+            ),
         },
         "current_human_readable_conclusion": (
             "The setup path seen in the current Medium seed-10 trace creates the endpoint "
@@ -172,16 +200,20 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "generator+0xf5c. The first natural Border Guard endpoint attempt therefore enters "
             "0x4a5e73 with stale cursor 0x7a1befdf while the active endpoint keys are 0..7. "
             "The direct +0xf5c writer surface is bounded to 0x4a5e73 plus two non-self writers "
-            "owned by currently unhit projection/cleanup slot paths. The current corpus still "
-            "has no successful 0x4a5e73 mutation and no live 0x4a606b endpoint-region write."
+            "owned by currently unhit projection/cleanup slot paths. The sampled projection "
+            "objects for that chain are destroyed/freed/reused before final dispatch in the "
+            "recovered one-level path, so this is not an unknown mutator anymore. The current "
+            "corpus still has no successful 0x4a5e73 mutation and no live 0x4a606b "
+            "endpoint-region write."
         ),
         "remaining_gap": (
             "Recover either a source path that seeds generator+0xf5c outside the currently "
             "excluded non-self writer chain before successful endpoint stamping, a broader "
             "supported map/source state that naturally dispatches the projection/cleanup slot "
-            "chain, or source-backed proof that successful 0x4a5e73/0x4a606b endpoint stamping "
-            "is irrelevant for supported one-level land. Do not port, tune, density-scale, or "
-            "brute-force native RMG behavior from this checkpoint."
+            "chain before selected-object recycle, or source-backed proof that successful "
+            "0x4a5e73/0x4a606b endpoint stamping is irrelevant for supported one-level land. "
+            "Do not port, tune, density-scale, or brute-force native RMG behavior from this "
+            "checkpoint."
         ),
     }
 
@@ -192,6 +224,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--access", type=Path, default=DEFAULT_ACCESS)
     parser.add_argument("--four-a5e73", type=Path, default=DEFAULT_4A5E73)
     parser.add_argument("--cursor-owner", type=Path, default=DEFAULT_CURSOR_OWNER)
+    parser.add_argument("--projection-slot-target", type=Path, default=DEFAULT_PROJECTION_SLOT_TARGET)
     parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser

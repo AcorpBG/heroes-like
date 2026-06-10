@@ -119,6 +119,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "non_self_f5c_writers_bound_to_unhit_projection_chain"
             )
             is True
+            and cursor_source.get("invariants", {}).get(
+                "sampled_projection_slot_recycle_boundary_recovered"
+            )
+            is True
             and cursor_source.get("metrics", {}).get("used_objdump") is False
         ),
         "current_4a606b_static_contract_recovered_no_live_hit": (
@@ -247,6 +251,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "0x4adb72": "non-self cursor writer owned only by projection slot 0x540b00+0x08 through 0x49c019",
                 "0x4add76": "non-self cursor writer owned only by 0x4adef7 under the projection slot chain",
                 "projection_slot_runtime": "current one-level land corpus has zero projection/cleanup slot events or stops",
+                "selected_projection_recycle": "sampled 0x540b14 projection objects are destroyed/freed/reused before ordinary final slot +0x08 dispatch",
             },
             "confidence": "current_one_level_land_target_mode_projection_slot_exclusion_only",
         },
@@ -346,9 +351,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "success-path mutation hits in the current corpus; the only non-self direct +0xf5c "
             "writers are bound to projection/cleanup slot methods that current one-level land "
             "evidence never dispatches; the cursor-source frontier now consolidates that setup "
-            "initializes +0xf58/+0x1104 but not +0xf5c; 0x4a606b is statically recovered and "
-            "has no live hit in the current target corpus. Broader relation/control linkage, "
-            "global semantic labels, and broader scope remain explicit blockers."
+            "initializes +0xf58/+0x1104 but not +0xf5c and that sampled projection objects "
+            "are destroyed/freed/reused before ordinary final dispatch; 0x4a606b is statically "
+            "recovered and has no live hit in the current target corpus. Broader "
+            "relation/control linkage, global semantic labels, and broader scope remain "
+            "explicit blockers."
         ),
         "remaining_gap": (
             "Recover broader relation/control downstream linkage outside the exact seed-10 chain, "
