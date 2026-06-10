@@ -64,6 +64,18 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "Broader coordinate/projection coverage remains pending."
         ),
     },
+    {
+        "id": "working_semantic_name_frontier",
+        "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
+        "status": "semantic_frontier_working_names_recovered_remaining_producers_pending",
+        "meaning": (
+            "Connection record bytes +0x08/+0x09/+0x0a, candidate record fields "
+            "+0x00/+0x04/+0x08/+0x0c, exact descriptor projection flag/offset fields, "
+            "relation descriptor-type occupancy counters, and selected GeneratedCell +0x20 "
+            "roles now have source-backed working names. The +0x09 producer, global descriptor "
+            "type labels, broader semantic scope, and cleanup/uncommit semantics remain pending."
+        ),
+    },
 ]
 
 FUNCTIONS: list[dict[str, Any]] = [
