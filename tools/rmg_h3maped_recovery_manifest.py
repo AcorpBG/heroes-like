@@ -466,11 +466,32 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "Ghidra/Python evidence names 0x4903e8 as the descriptor field builder/writer "
             "candidate that receives the destination object in ECX/EBX, writes descriptor "
             "+0x00, writes mask/policy payload words, and writes descriptor fields +0x34, "
-            "+0x38, +0x3c, +0x40, and +0x44. 0x4907c9 reaches it from the objects.txt row "
+            "+0x38, +0x3c, +0x40, +0x44, and +0x48. 0x4907c9 reaches it from the objects.txt row "
             "loader path and 0x490a11 reaches it from the source/objtmplt-style stream path. "
             "This replaces the unnamed static/data-constructor blocker with a concrete "
             "field-writer surface, but selected mixed-lane identity for type 45/53/54/79 "
             "still requires live pointer linkage and input-field/source-row mapping."
+        ),
+    },
+    {
+        "id": "descriptor_input_mapping_surface",
+        "artifact": ".artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json",
+        "status": "descriptor_input_mapping_surface_recovered_selected_lane_linkage_pending",
+        "meaning": (
+            "Ghidra/Python evidence now maps the exact field-level inputs prepared by "
+            "0x4907c9 and 0x490a11 around 0x4903e8. 0x4907c9 is the objects.txt parsed-row "
+            "path: it reads a source/name/blob, two 48-slot ASCII 0/1 masks through 0x490f3f, "
+            "two nine-slot ASCII 0/1 policy/container fields through 0x491136, and four "
+            "row scalars. 0x490a11 is the binary/source-stream path: it reads a source/name/blob, "
+            "two six-byte 48-bit masks through 0x49213a, two policy/container fields through "
+            "0x43bb1b, two dwords, two bytes, and an auxiliary 16-byte record. The common "
+            "descriptor outputs are source/name/blob into 0x4903e8 and descriptor +0x00; "
+            "primary 48-slot mask into +0x04/+0x08; secondary 48-slot mask into "
+            "+0x0c/+0x10/+0x29/+0x2c/+0x30; policy/container pair into +0x14/+0x18; "
+            "type/counter index into +0x1c; source/object id into +0x20; class/subtype-like "
+            "selector into +0x24; and boolean policy flag into +0x28. Remaining blockers "
+            "are exact domain names for the compact policy/container fields, the auxiliary "
+            "16-byte stream record consumer, and live selected mixed-lane descriptor linkage."
         ),
     },
     {
@@ -3130,10 +3151,10 @@ FUNCTIONS: list[dict[str, Any]] = [
         "writes": [
             "descriptor +0x00 from 0x491eed result",
             "mask/policy payload dwords through local/output storage",
-            "descriptor +0x34/+0x38/+0x3c/+0x40/+0x44",
+            "descriptor +0x34/+0x38/+0x3c/+0x40/+0x44/+0x48",
         ],
         "unrecovered_semantics": [
-            "exact human meaning of each prepared input field",
+            "exact domain names for compact policy/container fields at +0x14/+0x18",
             "per-lane interpretation of descriptor +0x00 as row id, class word, or other source value",
             "live selected descriptor pointer linkage for mixed type 45/53/54/79 lanes",
         ],
@@ -3145,9 +3166,20 @@ FUNCTIONS: list[dict[str, Any]] = [
         "status": "recovered_owner_field_semantics_pending",
         "callers": ["0x490c4c"],
         "calls": ["0x491fa1", "0x490f3f", "0x491136", "0x42bc12", "0x490e66", "0x4903e8"],
-        "reads": ["parsed row/source fields prepared into a 0x4903e8 input frame"],
-        "writes": ["descriptor object through 0x4903e8"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/caller_004907c9_FUN_004907c9.txt plus verifier .artifacts/rmg_recovery/descriptor_static_loader_summary_20260610.json recover this owner surface.",
+        "reads": [
+            "source/name/blob via 0x491fa1",
+            "two 48-slot ASCII 0/1 masks via 0x490f3f",
+            "two nine-slot ASCII 0/1 policy/container fields via 0x491136",
+            "four row scalars via 0x42bc12",
+        ],
+        "writes": [
+            "descriptor object through 0x4903e8",
+            "descriptor +0x04/+0x08 primary mask",
+            "descriptor +0x0c/+0x10/+0x29/+0x2c/+0x30 secondary mask/anchor",
+            "descriptor +0x14/+0x18 policy/container values",
+            "descriptor +0x1c/+0x20/+0x24/+0x28 scalar/filter fields",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/caller_004907c9_FUN_004907c9.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json recover this owner input mapping surface.",
     },
     {
         "address": "0x490a11",
@@ -3155,9 +3187,55 @@ FUNCTIONS: list[dict[str, Any]] = [
         "status": "recovered_owner_field_semantics_pending",
         "callers": ["0x41f350"],
         "calls": ["0x4190cb", "0x49213a", "0x43bb1b", "0x407675", "0x40763d", "0x438937", "0x4903e8"],
-        "reads": ["source/objtmplt-style stream fields prepared into a 0x4903e8 input frame"],
-        "writes": ["descriptor object through 0x4903e8"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/caller_00490a11_FUN_00490a11.txt plus verifier .artifacts/rmg_recovery/descriptor_static_loader_summary_20260610.json recover this owner surface.",
+        "reads": [
+            "source/name/blob via 0x4190cb",
+            "two six-byte 48-bit masks via 0x49213a",
+            "two policy/container fields via 0x43bb1b",
+            "two dwords via 0x407675",
+            "two bytes via 0x40763d",
+            "auxiliary 16-byte stream record via 0x438937",
+        ],
+        "writes": [
+            "descriptor object through 0x4903e8",
+            "descriptor +0x04/+0x08 primary mask",
+            "descriptor +0x0c/+0x10/+0x29/+0x2c/+0x30 secondary mask/anchor",
+            "descriptor +0x14/+0x18 policy/container values",
+            "descriptor +0x1c/+0x20/+0x24/+0x28 scalar/filter fields",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/caller_00490a11_FUN_00490a11.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json recover this owner input mapping surface.",
+    },
+    {
+        "address": "0x49213a",
+        "name": "stream_48_slot_mask_reader",
+        "status": "recovered_static_ghidra",
+        "callers": ["0x490a11"],
+        "calls": ["0x48f9e3", "0x491472"],
+        "reads": ["six bytes from stream input"],
+        "writes": ["48-slot output bitset through 0x491472"],
+        "meaning": "Reads a six-byte stream mask and expands it into 48 output bit slots.",
+        "ghidra_dump": ".artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/target_0049213a_FUN_0049213a.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json.",
+    },
+    {
+        "address": "0x490f3f",
+        "name": "row_48_slot_text_mask_parser",
+        "status": "recovered_static_ghidra",
+        "callers": ["0x4907c9"],
+        "calls": ["0x42cb17", "0x42cc2e", "0x419372", "0x42cc4c"],
+        "reads": ["up to 48 ASCII 0/1 row characters"],
+        "writes": ["row/text mask output container"],
+        "meaning": "Parses one 48-slot ASCII 0/1 object mask from the objects.txt row path.",
+        "ghidra_dump": ".artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/target_00490f3f_FUN_00490f3f.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json.",
+    },
+    {
+        "address": "0x491136",
+        "name": "row_9_slot_text_policy_parser",
+        "status": "recovered_static_domain_name_pending",
+        "callers": ["0x4907c9"],
+        "calls": ["0x42cb17", "0x42cc2e", "0x419372", "0x42cc4c"],
+        "reads": ["up to nine ASCII 0/1 row characters"],
+        "writes": ["compact policy/container output"],
+        "meaning": "Parses one nine-slot ASCII 0/1 policy/container field from the objects.txt row path; exact domain name remains pending.",
+        "ghidra_dump": ".artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/target_00491136_FUN_00491136.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json.",
     },
     {
         "address": "0x49ba89",
