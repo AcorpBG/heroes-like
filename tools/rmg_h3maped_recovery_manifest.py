@@ -476,6 +476,23 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_payload_materializer_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json",
+        "status": "source_payload_materializer_recovered_catalog_mapping_pending",
+        "meaning": (
+            "Ghidra/Python evidence now recovers the refcounted nested-payload "
+            "access/materialization layer below source-handler key lookup. 0x42a73a reads "
+            "source object +0x10, materializes shared payloads through 0x42a75a, and returns "
+            "holder +0x08. 0x42a75a clones through virtual slot +0x08, allocates a 12-byte "
+            "holder, initializes it through 0x4370f4, decrements the old holder, and stores "
+            "the replacement back at +0x10. 0x4370f4 initializes the holder as refcount 1, "
+            "tag byte +0x04, payload pointer +0x08; 0x42bfe6 destroys temporary flagged "
+            "holders. 0x42a48c confirms the same 20-byte/five-dword slot plus nested "
+            "payload shape. This proves lifecycle/accessor mechanics only; the source "
+            "catalog/object-template mapping remains pending."
+        ),
+    },
+    {
         "id": "source_payload_producer_frontier",
         "artifact": ".artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json",
         "status": "source_payload_loader_boundary_recovered_catalog_semantics_pending",
@@ -1569,6 +1586,95 @@ FUNCTIONS: list[dict[str, Any]] = [
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recovers the key-to-record mapping used below 0x42b62a.",
     },
     {
+        "address": "0x42a73a",
+        "name": "source_payload_accessor_materialize_if_shared",
+        "status": "recovered_lifecycle_contract_catalog_mapping_pending",
+        "calls": ["0x42a75a"],
+        "reads": [
+            "source object pointer in ecx",
+            "refcounted payload holder at source object +0x10",
+            "holder refcount/count at holder +0x00",
+            "nested payload pointer at holder +0x08",
+        ],
+        "writes": [
+            "materializes shared holders through 0x42a75a before returning the payload pointer",
+        ],
+        "returns": [
+            "0 when source object +0x10 is null",
+            "otherwise nested payload pointer at holder +0x08",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_producer_candidate_tail_dump_20260610/target_0042a73a_FUN_0042a73a.txt plus verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover this accessor boundary. Final source catalog identity remains pending.",
+    },
+    {
+        "address": "0x42a75a",
+        "name": "source_payload_copy_on_write_materializer",
+        "status": "recovered_lifecycle_contract_catalog_mapping_pending",
+        "calls": ["vtable+0x08 on nested payload", "0x5044b1", "0x4370f4", "0x42bfe6"],
+        "reads": [
+            "source object pointer in ecx",
+            "current refcounted payload holder at source object +0x10",
+            "nested payload pointer at holder +0x08",
+        ],
+        "writes": [
+            "calls nested payload vtable slot +0x08 to clone/materialize into a temporary holder",
+            "allocates a 12-byte replacement holder",
+            "initializes the replacement through 0x4370f4",
+            "decrements the old holder refcount/count",
+            "stores replacement holder at source object +0x10",
+            "destroys temporary holder state through 0x42bfe6",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_producer_candidate_dump_20260610/target_0042a75a_FUN_0042a75a.txt plus verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover the materializer mechanics. The payload producer-to-catalog mapping remains pending.",
+    },
+    {
+        "address": "0x4370f4",
+        "name": "source_payload_tagged_holder_init",
+        "status": "recovered_lifecycle_contract",
+        "calls": ["0x42bfe6"],
+        "reads": [
+            "destination holder in ecx",
+            "tag/flag byte at stack+0x04",
+            "payload pointer at stack+0x0c",
+        ],
+        "writes": [
+            "sets holder +0x00 refcount/count to 1",
+            "stores tag/flag byte at holder +0x04",
+            "stores payload pointer at holder +0x08",
+            "destroys temporary holder argument through 0x42bfe6 after adoption",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_producer_candidate_tail_dump_20260610/caller_004370f4_FUN_004370f4.txt plus verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover this 12-byte holder initializer.",
+    },
+    {
+        "address": "0x42a600",
+        "name": "source_payload_holder_ref_release",
+        "status": "recovered_lifecycle_contract",
+        "calls": ["0x436cd1", "0x5044da"],
+        "reads": [
+            "source object pointer in ecx",
+            "refcounted payload holder at source object +0x10",
+        ],
+        "writes": [
+            "decrements holder refcount/count",
+            "when count reaches zero, destroys through 0x436cd1 and frees through 0x5044da",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_producer_candidate_tail_dump_20260610/target_0042a600_FUN_0042a600.txt plus verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover the release helper.",
+    },
+    {
+        "address": "0x42a48c",
+        "name": "source_five_dword_slot_payload_presence_check",
+        "status": "recovered_static_contract_catalog_mapping_pending",
+        "reads": [
+            "source collection table through ecx+0x0c",
+            "20-byte/five-dword record slots",
+            "record slot +0x10 holder pointer",
+            "nested payload pointer at holder +0x08",
+        ],
+        "returns": [
+            "true/nonzero when the selected 20-byte slot has a non-null nested payload pointer",
+            "zero otherwise",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_producer_candidate_tail_dump_20260610/target_0042a48c_FUN_0042a48c.txt plus verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json confirm the five-dword slot and nested holder shape also seen at 0x42a83a.",
+    },
+    {
         "address": "0x42b63b",
         "name": "source_key_coordinate_payload_lookup",
         "status": "recovered_static_contract",
@@ -1593,7 +1699,7 @@ FUNCTIONS: list[dict[str, Any]] = [
         "status": "recovered_static_contract",
         "reads": ["tile grid pointer in ecx", "two coordinate args on stack", "grid width at +0x00", "chunk pointer table at +0x08"],
         "returns": ["pointer to a 12-byte per-tile record inside a 6x6 chunk"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recovers the 6x6 chunk lookup. Coordinate argument naming is left semantic-pending; the chunked lookup contract is recovered.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump and verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover the 6x6 chunk lookup. Coordinate argument naming is left semantic-pending; the chunked lookup contract is recovered and this is not a source catalog identity producer.",
     },
     {
         "address": "0x43c5c4",
@@ -1750,7 +1856,24 @@ FUNCTIONS: list[dict[str, Any]] = [
         "status": "recovered_static_contract",
         "reads": ["holder pointer in ecx", "holder flag byte", "holder object pointer"],
         "writes": ["when flag is nonzero and object pointer exists, calls object vtable slot +0x00 with true"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recovers this small holder destroy helper.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump and verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover this small holder destroy helper.",
+    },
+    {
+        "address": "0x42bde9",
+        "name": "source_dword_vector_copy_replace_end",
+        "status": "recovered_generic_helper",
+        "reads": [
+            "vector holder in ecx",
+            "destination pointer at stack+0x08",
+            "source/current pointer at stack+0x0c",
+            "vector end/current limit at holder +0x08",
+        ],
+        "writes": [
+            "copies dwords from the source/current pointer into the destination pointer until the vector end",
+            "updates holder +0x08 to the advanced destination pointer",
+            "stores the previous end/current pointer back to the caller stack slot",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_producer_candidate_dump_20260610/target_0042bde9_FUN_0042bde9.txt plus verifier .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json recover this as a generic vector copy helper, not a source catalog identity producer.",
     },
     {
         "address": "0x4af910",
