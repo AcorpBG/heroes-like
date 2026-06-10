@@ -108,6 +108,11 @@ CHECKS: dict[str, list[dict[str, Any]]] = {
             "marker": "004905f4: MOV dword ptr [EBX + 0x44],EDX",
             "meaning": "Writes descriptor field +0x44.",
         },
+        {
+            "id": "writes_descriptor_plus_0x48",
+            "marker": "004905fe: MOV dword ptr [EBX + 0x48],EAX",
+            "meaning": "Writes descriptor field +0x48, the final recovered late payload field in this builder.",
+        },
     ],
     "objects_txt_row_loader_owner_0x4907c9": [
         {
@@ -343,7 +348,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "0x4903e8 is now source-backed as the descriptor field builder/writer candidate: "
             "it receives the destination object in ECX/EBX, writes descriptor +0x00, writes "
             "mask/policy payload words, and writes descriptor fields +0x34, +0x38, +0x3c, "
-            "+0x40, and +0x44. 0x4907c9 reaches it from the objects.txt row-loader path, "
+            "+0x40, +0x44, and +0x48. 0x4907c9 reaches it from the objects.txt row-loader path, "
             "and 0x490a11 reaches it from the source/objtmplt-style stream path. This moves "
             "the blocker from an unnamed static/data constructor to a concrete field-writer "
             "surface, but final selected mixed-lane identity is still pending."
