@@ -536,6 +536,24 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_input_nested_container_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_input_nested_container_summary_20260610.json",
+        "status": "source_input_nested_container_surface_recovered_type_names_pending",
+        "meaning": (
+            "Ghidra/Python evidence now verifies the next source-input helper layer below "
+            "the stream-helper frontier. 0x40237c and 0x43bf8f are guarded two-byte reads, "
+            "0x43bfc7 is a guarded one-byte read, 0x43bfff is a guarded 0x14-byte read, "
+            "0x438937 is a guarded 0x10-byte read, and 0x41941a is a generic counted read "
+            "through source/input vtable +0x18 with short-read diagnostics. The 0x4193cb/"
+            "0x4192c0/0x419302 byte-buffer helper surface below 0x4190cb is mechanically "
+            "bounded. Bitset families 0x416b09/0x416b35, 0x42d05f, 0x42d83c, and "
+            "0x43beb9/0x43bee8 are mechanically bounded as word-indexed bit tests or "
+            "set/clear helpers using index >> 5 and 1 << (index & 0x1f). Remaining blockers "
+            "are human domain names, capacity-helper internals, parser-output field names, "
+            "and final 0x4c source-record/catalog mapping."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
@@ -879,7 +897,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4190cb",
         "name": "source_input_length_prefixed_blob_reader",
-        "status": "recovered_surface_nested_helpers_pending",
+        "status": "recovered_surface_byte_buffer_type_names_pending",
         "callers": ["many, including 0x43b0ff"],
         "calls": ["0x407675", "0x4193cb", "0x4192c0", "0x419302", "0x41941a"],
         "reads": [
@@ -889,9 +907,10 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "writes": ["copies read bytes through 0x200-byte stack-buffer chunks into caller destination/container"],
         "unrecovered_semantics": [
-            "container type and exact append/write helper names below 0x4193cb/0x4192c0/0x419302/0x41941a",
+            "human container type name and exact parser field name for the destination buffer",
+            "capacity-helper internals below the dynamic byte-buffer helper family",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_004190cb_FUN_004190cb.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json bound this helper surface.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_004190cb_FUN_004190cb.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json bound this helper surface; .artifacts/rmg_recovery/ghidra_source_input_nested_container_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_input_nested_container_summary_20260610.json bounds 0x4193cb/0x4192c0/0x419302/0x41941a mechanically.",
     },
     {
         "address": "0x43acf0",
@@ -935,7 +954,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x43bb1b/0x43bb58/0x43bb95/0x43bbe1/0x43bc24/0x43bc67",
         "name": "source_input_bitset_and_range_container_populators",
-        "status": "recovered_surface_container_semantics_pending",
+        "status": "recovered_surface_container_type_names_pending",
         "callers": ["0x43b0ff and related source/parser callers"],
         "calls": [
             "0x43bf8f",
@@ -956,9 +975,48 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "unrecovered_semantics": [
             "container type names and exact value-domain names",
-            "nested helper semantics below the bitset/range populators",
+            "capacity-helper internals below 0x416bac, 0x42f6f4, 0x430070, and 0x43bf35",
+            "parser-output field names for the bitset/range container consumers",
         ],
-        "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043bb*.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json bound this helper family surface.",
+        "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043bb*.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json bound this helper family surface; .artifacts/rmg_recovery/ghidra_source_input_nested_container_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_input_nested_container_summary_20260610.json proves the nested bitset test/set/clear mechanics.",
+    },
+    {
+        "address": "0x40237c/0x43bf8f/0x43bfc7/0x43bfff/0x438937/0x41941a",
+        "name": "source_input_guarded_block_readers",
+        "status": "recovered_read_width_guards",
+        "callers": ["0x43b0ff helper family and 0x4190cb"],
+        "calls": ["source/input vtable +0x18", "0x4023b4", "0x4e633b"],
+        "guard": (
+            "fixed/count read wrappers require the virtual reader to return the requested "
+            "byte count: 0x40237c and 0x43bf8f request 2 bytes, 0x43bfc7 requests 1 byte, "
+            "0x43bfff requests 0x14 bytes, 0x438937 requests 0x10 bytes, and 0x41941a "
+            "requests the caller-provided count"
+        ),
+        "returns": ["original stream wrapper in EAX"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_nested_container_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_input_nested_container_summary_20260610.json recover these read-width guards.",
+    },
+    {
+        "address": "0x416b09/0x416b35/0x42d05f/0x42d83c/0x43beb9/0x43bee8",
+        "name": "source_input_nested_bitset_helpers",
+        "status": "recovered_bit_operations_type_names_pending",
+        "calls": ["0x416bac", "0x42f6f4", "0x430070", "0x43bf35"],
+        "reads": [
+            "bitset backing word pointer and current index/count fields",
+            "requested bit index from caller or container cursor",
+        ],
+        "writes": [
+            "set helpers OR 1 << (index & 0x1f) into backing word index >> 5",
+            "clear helpers AND the inverse bit mask into backing word index >> 5",
+        ],
+        "returns": [
+            "test helpers return booleanized bit presence",
+            "set/clear helpers return backing pointer/container pointer",
+        ],
+        "unrecovered_semantics": [
+            "human domain names for each bitset family",
+            "capacity-helper internals below 0x416bac, 0x42f6f4, 0x430070, and 0x43bf35",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_nested_container_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_input_nested_container_summary_20260610.json recover these bitset operations mechanically.",
     },
     {
         "address": "0x433d7d",
