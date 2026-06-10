@@ -516,6 +516,26 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_input_stream_helper_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json",
+        "status": "source_input_stream_helper_surface_recovered_nested_semantics_pending",
+        "meaning": (
+            "Ghidra/Python evidence now recovers the stream-helper surface below the "
+            "0x43b0ff parser. 0x40763d and 0x402461 are guarded one-byte reads through "
+            "the source/input virtual reader at vtable +0x18 and require one byte to be "
+            "returned. 0x407675 is the matching guarded four-byte read and requires four "
+            "bytes to be returned. 0x4190cb is bounded as a length-prefixed blob/vector "
+            "copy using a 0x407675 dword length and 0x200-byte chunks. 0x43acf0 reads "
+            "three one-byte values into three dwords and normalizes an all-0xff triplet "
+            "to -1. 0x43ad49 reads a tag byte plus two boolean bytes and dispatches tag "
+            "values 0..10. 0x43aec6 reads a selector byte, uses a word payload for "
+            "selector 2, and delegates to 0x43acf0 for selector 0/1. The 0x43bb* helpers "
+            "are bounded as bitset/range-to-container population helpers. Remaining "
+            "blockers are parser field names, nested container semantics, exact tag-table "
+            "meanings, final 0x4c source-record mapping, and later variant/filter builders."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
@@ -817,10 +837,128 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "unrecovered_semantics": [
             "human semantic labels for individual parser-output and nested-record fields",
-            "exact stream helper semantics for the parser's byte/int/payload helper calls",
+            "nested helper/container semantics below the structured parser helpers",
+            "exact 0x43ad49 tag table meanings for values 0..10",
             "final mapping from parsed fields to populated 0x4c source records and object catalog rows",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_0043b0ff_FUN_0043b0ff.txt plus verifier .artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json recover this versioned layout surface.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_0043b0ff_FUN_0043b0ff.txt plus verifier .artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json recover this versioned layout surface; .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover the primitive stream-read and structured helper surface.",
+    },
+    {
+        "address": "0x40763d",
+        "name": "source_input_guarded_read_byte_a",
+        "status": "recovered_read_width_guard",
+        "callers": ["many, including 0x43b0ff"],
+        "calls": ["source/input vtable +0x18", "0x4023b4", "0x4e633b"],
+        "reads": ["source/input wrapper pointer at ECX +0x00", "destination pointer at stack +0x08"],
+        "guard": "requests one byte through the virtual reader and requires return value >= 1; short reads emit diagnostic path through 0x4e633b",
+        "returns": ["original stream wrapper in EAX"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0040763d_FUN_0040763d.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this primitive guard.",
+    },
+    {
+        "address": "0x402461",
+        "name": "source_input_guarded_read_byte_b",
+        "status": "recovered_read_width_guard",
+        "callers": ["many, including 0x43b0ff and 0x43acf0"],
+        "calls": ["source/input vtable +0x18", "0x4023b4", "0x4e633b"],
+        "reads": ["source/input wrapper pointer at ECX +0x00", "destination pointer at stack +0x08"],
+        "guard": "requests one byte through the virtual reader and requires return value >= 1; short reads emit diagnostic path through 0x4e633b",
+        "returns": ["original stream wrapper in EAX"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_00402461_FUN_00402461.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this primitive guard.",
+    },
+    {
+        "address": "0x407675",
+        "name": "source_input_guarded_read_dword",
+        "status": "recovered_read_width_guard",
+        "callers": ["many, including 0x43b0ff, 0x41f350, and 0x4190cb"],
+        "calls": ["source/input vtable +0x18", "0x4023b4", "0x4e633b"],
+        "reads": ["source/input wrapper pointer at ECX +0x00", "destination pointer at stack +0x08"],
+        "guard": "requests four bytes through the virtual reader and requires return value >= 4; short reads emit diagnostic path through 0x4e633b",
+        "returns": ["original stream wrapper in EAX"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_00407675_FUN_00407675.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this primitive guard.",
+    },
+    {
+        "address": "0x4190cb",
+        "name": "source_input_length_prefixed_blob_reader",
+        "status": "recovered_surface_nested_helpers_pending",
+        "callers": ["many, including 0x43b0ff"],
+        "calls": ["0x407675", "0x4193cb", "0x4192c0", "0x419302", "0x41941a"],
+        "reads": [
+            "destination/container pointer at stack +0x0c",
+            "source/input wrapper at stack +0x08",
+            "dword length read through 0x407675",
+        ],
+        "writes": ["copies read bytes through 0x200-byte stack-buffer chunks into caller destination/container"],
+        "unrecovered_semantics": [
+            "container type and exact append/write helper names below 0x4193cb/0x4192c0/0x419302/0x41941a",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_004190cb_FUN_004190cb.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json bound this helper surface.",
+    },
+    {
+        "address": "0x43acf0",
+        "name": "source_input_three_byte_triplet_reader",
+        "status": "recovered_surface",
+        "callers": ["0x43b0ff", "0x43aec6"],
+        "calls": ["0x402461"],
+        "writes": [
+            "three one-byte values widened into dwords at output +0x00/+0x04/+0x08",
+            "all-0xff triplet normalized to -1/-1/-1",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043acf0_FUN_0043acf0.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this triplet helper.",
+    },
+    {
+        "address": "0x43ad49",
+        "name": "source_input_tagged_record_reader",
+        "status": "recovered_surface_tag_semantics_pending",
+        "callers": ["0x43b0ff"],
+        "calls": ["0x40763d", "tag-table branch helpers"],
+        "writes": [
+            "tag byte widened to output +0x00",
+            "two boolean-like bytes at output +0x04 and +0x05",
+        ],
+        "unrecovered_semantics": ["exact tag meanings for table entries 0..10"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043ad49_FUN_0043ad49.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this tagged-record surface.",
+    },
+    {
+        "address": "0x43aec6",
+        "name": "source_input_selector_record_reader",
+        "status": "recovered_surface_selector_semantics_pending",
+        "callers": ["0x43b0ff"],
+        "calls": ["0x40763d", "0x40237c", "0x43acf0"],
+        "writes": [
+            "selector byte widened to output +0x00",
+            "selector 2 reads a word payload at output +0x04",
+            "selector 0/1 delegates to 0x43acf0 after output +0x04",
+        ],
+        "unrecovered_semantics": ["human meaning of selector values"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043aec6_FUN_0043aec6.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this selector-record surface.",
+    },
+    {
+        "address": "0x43bb1b/0x43bb58/0x43bb95/0x43bbe1/0x43bc24/0x43bc67",
+        "name": "source_input_bitset_and_range_container_populators",
+        "status": "recovered_surface_container_semantics_pending",
+        "callers": ["0x43b0ff and related source/parser callers"],
+        "calls": [
+            "0x43bf8f",
+            "0x43bfc7",
+            "0x416b09",
+            "0x43bfff",
+            "0x438937",
+            "0x43beb9",
+            "0x42d05f",
+            "0x416b35",
+            "0x42d83c",
+            "0x43bee8",
+        ],
+        "writes": [
+            "bitset-selected values into caller-supplied containers",
+            "range-selected values into caller-supplied containers",
+            "fixed-bound population loops with bounds 0x9c and 0x80",
+        ],
+        "unrecovered_semantics": [
+            "container type names and exact value-domain names",
+            "nested helper semantics below the bitset/range populators",
+        ],
+        "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043bb*.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json bound this helper family surface.",
     },
     {
         "address": "0x433d7d",
