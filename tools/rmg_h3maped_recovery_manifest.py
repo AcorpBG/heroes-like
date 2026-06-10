@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -203,7 +202,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "resolves an object descriptor through 0x4af785, constructs a 0x1c object record through 0x49ba89, commits it with 0x49e6cd, and appends an 8-byte (handler key, object record) pair to generator+0xeec",
         ],
         "callers": ["0x4afa99"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and objdump artifact .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump/vtable_53eafc_objdump.txt recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Runtime probe .artifacts/rmg_recovery/seed58_interactive_484d9f_probe drove direct seed-58 random generation to completion without hitting 0x484d9f, so this source-handler chain is not the observed direct Small-generation blocker until a live owning caller/action is identified.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and Ghidra-only verifier .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Runtime probe .artifacts/rmg_recovery/seed58_interactive_484d9f_probe drove direct seed-58 random generation to completion without hitting 0x484d9f, so this source-handler chain is not the observed direct Small-generation blocker until a live owning caller/action is identified.",
     },
     {
         "address": "0x4afa99",
@@ -262,7 +261,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "+0x18": "0x4803ff returns true when 0x43c5c4(secondary, x, y, mode) == 2",
             "+0x20": "0x48047c calls 0x429ea3(source, mode, key)",
         },
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump plus saved objdump disassembly vtable_53eafc_objdump.txt recover the concrete slot table installed by 0x4802ac. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump, .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump, .artifacts/rmg_recovery/ghidra_53eafc_source_handler_erase_helpers_dump, .artifacts/rmg_recovery/ghidra_53eafc_source_handler_erase_callees_dump, and .artifacts/rmg_recovery/ghidra_42b127_source_edge_helper_callees_dump recover the helper chain used by the slots. Same-run pending-entry replay and source-side nested-vector contents remain pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump plus Ghidra-only verifier .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json recover the concrete slot table installed by 0x4802ac. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump, .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump, .artifacts/rmg_recovery/ghidra_53eafc_source_handler_erase_helpers_dump, .artifacts/rmg_recovery/ghidra_53eafc_source_handler_erase_callees_dump, and .artifacts/rmg_recovery/ghidra_42b127_source_edge_helper_callees_dump recover the helper chain used by the slots. Same-run pending-entry replay and source-side nested-vector contents remain pending.",
     },
     {
         "address": "0x42a1ec",
@@ -431,7 +430,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "for secondary-mask accepted positions, finds the removed key in a 4-byte vector and erases it through 0x4cce95",
             "when nested vectors become empty, releases their holder through 0x42b2cc",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_erase_callees_dump first identified this edge-maintenance helper. Focused dump .artifacts/rmg_recovery/ghidra_42b127_source_edge_helper_callees_dump plus objdump disassembly recover the control flow, mask gates, vector erases, and empty-holder release behavior. Exact semantic names for the nested vector families remain pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_53eafc_source_handler_erase_callees_dump first identified this edge-maintenance helper. Focused dump .artifacts/rmg_recovery/ghidra_42b127_source_edge_helper_callees_dump recovers the control flow, mask gates, vector erases, and empty-holder release behavior. Exact semantic names for the nested vector families remain pending.",
     },
     {
         "address": "0x42efb3",
@@ -2345,44 +2344,10 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def objdump_probe(path: Path, addresses: list[str], context_bytes: int) -> dict[str, Any]:
-    result: dict[str, Any] = {"status": "not_run", "functions": {}}
-    try:
-        completed = subprocess.run(
-            ["objdump", "-Mintel", "-D", str(path)],
-            check=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            timeout=90,
-        )
-    except Exception as exc:
-        result["status"] = "failed"
-        result["error"] = str(exc)
-        return result
-    result["status"] = "pass" if completed.returncode == 0 else "objdump_nonzero"
-    text = completed.stdout
-    lines = text.splitlines()
-    for address in addresses:
-        needle = address.lower().replace("0x", "").lstrip("0") or "0"
-        found_index = -1
-        for index, line in enumerate(lines):
-            if line.strip().lower().startswith(needle + ":"):
-                found_index = index
-                break
-        if found_index < 0:
-            result["functions"][address] = {"status": "missing"}
-            continue
-        excerpt = lines[found_index : found_index + context_bytes]
-        result["functions"][address] = {"status": "found", "disassembly_excerpt": excerpt}
-    return result
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h3maped-exe", type=Path, default=DEFAULT_H3MAPED)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--objdump-context-lines", type=int, default=32)
     return parser
 
 
@@ -2391,16 +2356,15 @@ def main() -> int:
     exe = args.h3maped_exe.resolve()
     if not exe.exists():
         raise SystemExit(f"missing h3maped.exe: {exe}")
-    addresses = [str(record["address"]) for record in FUNCTIONS]
     manifest = {
         "schema_id": "h3maped_rmg_end_to_end_recovery_manifest_v1",
         "h3maped_exe": str(exe),
         "h3maped_sha256": sha256(exe),
         "recovery_policy": "no native behavior edits until trace replay matches H3MapEd private state",
+        "tooling_policy": "Wine/Ghidra/Python only for active recovery; no objdump probe is run by this manifest.",
         "functions": FUNCTIONS,
         "structs": STRUCTS,
         "checkpoints": CHECKPOINTS,
-        "objdump_probe": objdump_probe(exe, addresses, args.objdump_context_lines),
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
