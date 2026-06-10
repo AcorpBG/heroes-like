@@ -506,9 +506,24 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "0x4b3419, expands one read byte into an eight-bit bitset at +0x3c, writes "
             "version-gated boolean flags at +0x40/+0x41, writes two signed word-derived "
             "dwords at +0x44/+0x48, and performs a final guarded 0x10-byte local read. "
-            "Remaining blockers are human field names, exact 0x4019a4/0x401aa7 helper "
-            "semantics, and final mapping from populated source records to "
+            "Remaining blockers are human field names and final mapping from populated source records to "
             "objects.txt/objtmplt.txt type/subtype/DEF rows."
+        ),
+    },
+    {
+        "id": "source_record_copy_helper_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json",
+        "status": "source_record_copy_helper_surface_recovered_identity_mapping_pending",
+        "meaning": (
+            "Ghidra/Python marker checks recover the generic byte-buffer/string-holder helper "
+            "family used by the source-record parser and source payload loader. 0x4019a4 "
+            "assigns/copies holder slices, 0x401aa7 erases/shifts ranges after unsharing, "
+            "0x401b0e ensures capacity or shrinks/clears, 0x4016fd releases/resets holder "
+            "+0x04/+0x08/+0x0c, 0x401caa clones shared buffers before mutation, 0x401a72 "
+            "copies bytes into a holder, and 0x401bed/0x401c51 allocate rounded capacity "
+            "and commit growth. These helpers do not provide object identity; remaining "
+            "blockers are human source-record field names and final source catalog/template "
+            "mapping to objects.txt/objtmplt.txt type/subtype/DEF rows."
         ),
     },
     {
@@ -909,10 +924,179 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "unrecovered_semantics": [
             "human field names for the populated source-record offsets",
-            "exact helper semantics for 0x4019a4 and 0x401aa7 below their observed copy/resize role",
             "final objects.txt/objtmplt.txt type/subtype/DEF mapping for populated source records",
         ],
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_004c025c_FUN_004c025c.txt plus verifier .artifacts/rmg_recovery/source_record_parser_summary_20260610.json recover this parser surface without claiming catalog identity.",
+    },
+    {
+        "address": "0x4019a4",
+        "name": "refcounted_byte_buffer_assign_slice",
+        "status": "recovered_generic_helper_identity_mapping_pending",
+        "callers": ["many, including 0x4c025c and 0x41f350"],
+        "calls": ["0x401aa7", "0x4016fd", "0x401b0e", "0x4e6380"],
+        "reads": [
+            "target holder pointer in ecx",
+            "source holder pointer at stack+0x08",
+            "source start offset at stack+0x0c",
+            "requested count at stack+0x10",
+            "source holder data pointer at +0x04, length at +0x08, capacity at +0x0c",
+            "buffer marker/refcount byte at data[-1]",
+        ],
+        "writes": [
+            "target holder data pointer at +0x04",
+            "target holder length at +0x08",
+            "target holder capacity at +0x0c",
+            "increments marker/refcount byte when sharing a full source buffer",
+            "zero terminator at copied data[length]",
+        ],
+        "semantics": (
+            "Assigns a bounded slice from one generic byte-buffer/string holder to another. "
+            "Self-assignment is handled through two erase-range calls; full-buffer copy may "
+            "share the source buffer; partial copy ensures capacity and copies bytes."
+        ),
+        "unrecovered_semantics": [
+            "human field names for caller-specific payloads stored in the holder",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/target_004019a4_FUN_004019a4.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x401aa7",
+        "name": "refcounted_byte_buffer_erase_range",
+        "status": "recovered_generic_helper_identity_mapping_pending",
+        "callers": ["many, including 0x4019a4, 0x4c025c, and 0x41f350"],
+        "calls": ["0x401caa", "0x4e66c0", "0x401b0e"],
+        "reads": [
+            "target holder pointer in ecx",
+            "start index at stack+0x0c",
+            "requested erase count at stack+0x14",
+            "target holder data pointer at +0x04 and length at +0x08",
+        ],
+        "writes": [
+            "moves the tail bytes left over the erased range",
+            "updates target holder length at +0x08",
+            "zero terminator at data[new_length]",
+        ],
+        "semantics": (
+            "Unshares a generic byte-buffer/string holder, erases a bounded range, shifts "
+            "the tail left, shrinks or normalizes capacity, updates length, and zero-terminates."
+        ),
+        "unrecovered_semantics": [
+            "human field names for caller-specific payloads stored in the holder",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/target_00401aa7_FUN_00401aa7.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x401b0e",
+        "name": "refcounted_byte_buffer_ensure_capacity_or_shrink",
+        "status": "recovered_generic_helper",
+        "callers": ["0x4019a4", "0x401aa7", "0x401a72", "many generic holder users"],
+        "calls": ["0x4016fd", "0x401bed"],
+        "reads": [
+            "target holder pointer in ecx",
+            "desired length at stack+0x0c",
+            "mode flag at stack+0x10",
+            "holder data pointer at +0x04, length at +0x08, capacity at +0x0c",
+            "buffer marker/refcount byte at data[-1]",
+        ],
+        "writes": [
+            "may release/reset shared holder state",
+            "may clear holder length at +0x08",
+            "may zero-terminate current data",
+            "delegates allocation/growth when capacity is insufficient",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/target_00401b0e_FUN_00401b0e.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x4016fd",
+        "name": "refcounted_byte_buffer_release_reset",
+        "status": "recovered_generic_helper",
+        "callers": ["many generic holder lifecycle helpers, including 0x4019a4 and 0x401b0e"],
+        "calls": ["0x5044da"],
+        "reads": [
+            "target holder pointer in ecx",
+            "release flag at stack+0x08",
+            "holder data pointer at +0x04",
+            "buffer marker/refcount byte at data[-1]",
+        ],
+        "writes": [
+            "decrements marker/refcount byte for shared buffers",
+            "frees unique buffers",
+            "clears holder data pointer, length, and capacity at +0x04/+0x08/+0x0c",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helpers_dump_20260610/target_004016fd_FUN_004016fd.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x401caa",
+        "name": "refcounted_byte_buffer_unshare",
+        "status": "recovered_generic_helper",
+        "callers": ["0x401aa7", "0x49125b"],
+        "calls": ["0x4016fd", "0x4e62c0", "0x401a72"],
+        "reads": [
+            "target holder pointer in ecx",
+            "holder data pointer at +0x04",
+            "buffer marker/refcount byte at data[-1]",
+        ],
+        "writes": [
+            "clones shared data and stores it back into the same holder before mutation",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helper_callees_dump_20260610/target_00401caa_FUN_00401caa.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x401a72",
+        "name": "refcounted_byte_buffer_copy_into_holder",
+        "status": "recovered_generic_helper",
+        "callers": ["0x401caa"],
+        "calls": ["0x401b0e", "0x4e6380"],
+        "reads": [
+            "target holder pointer in ecx",
+            "source byte pointer and length from stack arguments",
+        ],
+        "writes": [
+            "ensures target capacity",
+            "copies bytes into target holder data",
+            "stores length at +0x08",
+            "zero terminator at data[length]",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helper_lifecycle_dump_20260610/target_00401a72_FUN_00401a72.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x401bed",
+        "name": "refcounted_byte_buffer_allocate_rounded_capacity",
+        "status": "recovered_generic_helper",
+        "callers": ["0x401b0e"],
+        "calls": ["0x5044b1", "0x401c51"],
+        "reads": [
+            "target holder pointer in ecx",
+            "requested capacity at stack+0x08",
+        ],
+        "writes": [
+            "rounds requested capacity with OR 0x1f",
+            "allocates a new buffer",
+            "jumps into the growth commit helper",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helper_callees_dump_20260610/target_00401bed_FUN_00401bed.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
+    },
+    {
+        "address": "0x401c51",
+        "name": "refcounted_byte_buffer_growth_commit",
+        "status": "recovered_generic_helper",
+        "callers": ["0x401bed at 0x401c2a"],
+        "calls": ["0x4e6380", "0x4016fd"],
+        "reads": [
+            "target holder pointer in esi",
+            "new data pointer in eax",
+            "rounded capacity/length in edi",
+            "old holder data pointer and length",
+        ],
+        "writes": [
+            "copies old bytes to new buffer when length is nonzero",
+            "releases the old buffer",
+            "stores new data pointer at +0x04",
+            "stores new length at +0x08",
+            "stores new capacity at +0x0c",
+            "zero terminator at data[length]",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_record_copy_helper_lifecycle_dump_20260610/target_00401c51_FUN_00401c51.txt plus verifier .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json recover this generic helper.",
     },
     {
         "address": "0x4b3419",
