@@ -404,17 +404,6 @@ def summarize(
                     "exact objects.txt/objtmplt.txt type/subtype/DEF rows."
                 ),
             },
-            {
-                "id": "descriptor_policy_field_names",
-                "reason": "Assign exact domain names to descriptor +0x14/+0x18 policy/container fields.",
-            },
-            {
-                "id": "auxiliary_stream_record_domain",
-                "reason": (
-                    "Recover the consumer and human label for the auxiliary 16-byte stream "
-                    "record read by 0x490a11 through 0x438937."
-                ),
-            },
         ],
         "metrics": {
             **counts,

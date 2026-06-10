@@ -25,6 +25,7 @@ PARSER_REFERENCES = HELPER_DUMP_DIR / "target_004c025c_references.txt"
 FIELD20_HELPER_DUMP = STREAM_DUMP_DIR / "caller_004b3419_FUN_004b3419.txt"
 STREAM_HELPER_SUMMARY = ROOT / "source_input_stream_helper_summary_20260610.json"
 NESTED_HELPER_SUMMARY = ROOT / "source_input_nested_container_summary_20260610.json"
+AUX_16_BYTE_SUMMARY = ROOT / "aux_16_byte_record_summary_20260610.json"
 DEFAULT_OUT = ROOT / "source_record_parser_summary_20260610.json"
 
 CALLER_CHECKS = [
@@ -128,6 +129,7 @@ FIELD20_HELPER_CHECKS = [
 REQUIRED_SUMMARY_STATUSES = {
     STREAM_HELPER_SUMMARY: "source_input_stream_helper_surface_recovered_nested_semantics_pending",
     NESTED_HELPER_SUMMARY: "source_input_nested_container_surface_recovered_type_names_pending",
+    AUX_16_BYTE_SUMMARY: "aux_16_byte_stream_record_source_excluded_from_descriptor_fields",
 }
 
 
@@ -186,6 +188,7 @@ def summarize() -> dict[str, Any]:
             "field20_helper_0x4b3419": str(FIELD20_HELPER_DUMP),
             "stream_helper_summary": str(STREAM_HELPER_SUMMARY),
             "nested_helper_summary": str(NESTED_HELPER_SUMMARY),
+            "aux_16_byte_summary": str(AUX_16_BYTE_SUMMARY),
         },
         "marker_count": len(all_checks),
         "present_marker_count": sum(1 for check in all_checks if check["present"]),
@@ -203,7 +206,9 @@ def summarize() -> dict[str, Any]:
                 "seven dwords at record +0x20 through 0x4b3419, expands one read byte into "
                 "an eight-bit bitset at record +0x3c, writes version-gated boolean flags "
                 "at +0x40/+0x41, writes two signed word-derived dwords at +0x44/+0x48, "
-                "and performs a final guarded 0x10-byte read into a local buffer."
+                "and performs a final guarded 0x10-byte read into a local buffer. "
+                "The aux 16-byte checkpoint proves this local is not referenced again "
+                "after the reader call in the 0x4c025c parser frame."
             ),
             "0x4b3419": (
                 "Loops seven times, each time reading a guarded dword with 0x407675 and "
@@ -211,15 +216,15 @@ def summarize() -> dict[str, Any]:
                 "is a seven-dword stream-derived field group."
             ),
             "helper_context": (
-                "Existing stream-helper and nested-container summaries recover the guarded "
-                "reader helpers used by this parser, including guarded byte/word/dword reads, "
-                "length-prefixed blobs, and the 0x416b35 bitset writer family."
+                "Existing stream-helper, nested-container, and aux 16-byte summaries recover "
+                "the guarded reader helpers used by this parser, including guarded byte/word/"
+                "dword reads, length-prefixed blobs, the 0x416b35 bitset writer family, and "
+                "the caller-local final 16-byte read boundary."
             ),
         },
         "remaining_unrecovered": [
             "Human field names for source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48.",
             "Exact helper semantics for 0x4019a4 and 0x401aa7 beyond their observed copy/resize role in this parser.",
-            "Whether the final local 0x10-byte read at 0x4c0388 is stored indirectly or only validates/consumes stream padding in later unwound code paths.",
             "The exact source catalog/template producer that maps parsed source records and nested payloads to objects.txt/objtmplt.txt type, subtype, and DEF rows.",
             "Human category/provider-slot semantics for the later variant/filter builders that consume these populated records.",
         ],

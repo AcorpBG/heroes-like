@@ -227,9 +227,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         ),
         "remaining_gap": (
             "This does not make native RMG 100% recovered. Remaining end-to-end work moves to "
-            "the human/source-catalog labels, descriptor policy/container names, auxiliary "
-            "0x490a11 stream record label/consumer, final source catalog/object-template mapping, "
-            "and any future non-one-level-land or unsupported source state that reaches these "
+            "the non-hero source catalog/object-template producer mapping, human final labels "
+            "for recovered source-category/provider result families where needed, and any "
+            "future non-one-level-land or unsupported source state that reaches these "
             "excluded paths. Do not implement density scalars, brute-force retries, or native "
             "behavior guesses from this exclusion summary."
         ),

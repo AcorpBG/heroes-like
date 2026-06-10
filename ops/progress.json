@@ -443,80 +443,64 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "currentSliceNotes": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "currentSliceUpdatedAt": "2026-06-10T14:12:00Z",
-    "guardrailNote": "Focus only on percentage-moving native RMG blockers: source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows, descriptor +0x14/+0x18 policy/container field names, and the 0x490a11 auxiliary stream-record consumer/domain. Same-run selected descriptor linkage, registry entry +0x1c domain label, current one-level land endpoint exclusions, and the 0x5857d4/0x5857d8/0x5857dc hero runtime-table branch exclusion are recovered. No native behavior changes from final-map deltas.",
+    "currentNotes": "Ghidra/Python recovery narrowed the active native RMG blocker surface. The descriptor terrain-mask fields and 16-byte stream-read ambiguity are closed, and 0x422868 provider dispatch is recovered as 27 category/slot paths. The slice is still in progress because final non-hero source catalog/template producer mapping is not recovered.",
+    "currentSliceNotes": "Ghidra/Python recovery narrowed the active native RMG blocker surface. The descriptor terrain-mask fields and 16-byte stream-read ambiguity are closed, and 0x422868 provider dispatch is recovered as 27 category/slot paths. The slice is still in progress because final non-hero source catalog/template producer mapping is not recovered.",
+    "currentSliceUpdatedAt": "2026-06-10T14:31:34Z",
+    "guardrailNote": "Focus only on percentage-moving native RMG recovery blockers. Current remaining blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Descriptor +0x14/+0x18 terrain masks, 0x490a11/0x4c025c fixed 16-byte stream-read exclusions, 0x422868 provider-slot dispatch, same-run selected descriptor linkage, registry entry +0x1c domain label, current one-level land endpoint exclusions, and the 0x5857d4/0x5857d8/0x5857dc hero runtime-table branch exclusion are recovered or source-excluded. No native behavior changes from final-map deltas.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
-      "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py (passed: hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending, markers=45/45)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=178)",
-        "jq empty ops/progress.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
-        "git diff --check (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      "checks": [
+        "python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py",
+        "python3 tools/rmg_h3maped_descriptor_input_mapping_summary.py",
+        "python3 tools/rmg_h3maped_aux_16_byte_record_summary.py",
+        "python3 tools/rmg_h3maped_source_record_parser_summary.py",
+        "python3 tools/rmg_h3maped_source_variant_builder_summary.py",
+        "python3 tools/rmg_h3maped_source_record_identity_frontier_summary.py",
+        "python3 tools/rmg_h3maped_source_payload_producer_frontier_summary.py",
+        "python3 tools/rmg_h3maped_source_key_registry_identity_summary.py",
+        "python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py",
+        "python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py",
+        "python3 tools/rmg_h3maped_recovery_manifest.py",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_aux_16_byte_record_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_source_variant_builder_summary.py tools/rmg_h3maped_source_payload_producer_frontier_summary.py tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_endpoint_blocker_resolution_summary.py tools/rmg_h3maped_recovery_manifest.py",
+        "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json .artifacts/rmg_recovery/source_record_parser_summary_20260610.json .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/h3maped_recovery_manifest.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
       ],
-      "id": "rmg-small-generalization-hardening-10184",
-      "metrics": {
-        "hero_bios_pointer_table_entry_count": 28,
-        "hero_catalog_marker_count": 45,
-        "hero_catalog_missing_marker_count": 0,
-        "hero_catalog_present_marker_count": 45,
-        "hero_group_table_initializer_entry_count": 19,
-        "hero_group_table_loader_copy_entry_count": 18,
-        "hero_group_table_stride_bytes": 28,
-        "hero_instance_table_entry_count": 156,
-        "hero_instance_table_stride_bytes": 16,
-        "native_behavior_changed": false,
-        "overall_goal_complete": false,
-        "recovery_manifest_function_count": 178,
-        "used_objdump": false
-      },
-      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-      "sliceId": "rmg-small-generalization-hardening-10184",
+      "date": "2026-06-10T14:34:51Z",
+      "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "status": "passed",
-      "summary": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
-      "timestamp": "2026-06-10T14:12:00Z",
-      "updatedAt": "2026-06-10T14:12:00Z"
+      "summary": "Wine/Ghidra/Python recovery closes three previously named native RMG blockers without changing native generation behavior: descriptor +0x14/+0x18 are catalog terrain masks, fixed 16-byte stream reads at 0x490a11 and 0x4c025c are source-excluded from descriptor/source-record identity in those callers, and 0x422868 is recovered as a 27-path source-record +0x1c category to provider-slot dispatch surface. The only current percentage-moving blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows."
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
-      "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py (passed: hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending, markers=45/45)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=178)",
-        "jq empty ops/progress.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
-        "git diff --check (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      "checks": [
+        "python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py",
+        "python3 tools/rmg_h3maped_descriptor_input_mapping_summary.py",
+        "python3 tools/rmg_h3maped_aux_16_byte_record_summary.py",
+        "python3 tools/rmg_h3maped_source_record_parser_summary.py",
+        "python3 tools/rmg_h3maped_source_variant_builder_summary.py",
+        "python3 tools/rmg_h3maped_source_record_identity_frontier_summary.py",
+        "python3 tools/rmg_h3maped_source_payload_producer_frontier_summary.py",
+        "python3 tools/rmg_h3maped_source_key_registry_identity_summary.py",
+        "python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py",
+        "python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py",
+        "python3 tools/rmg_h3maped_recovery_manifest.py",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_aux_16_byte_record_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_source_variant_builder_summary.py tools/rmg_h3maped_source_payload_producer_frontier_summary.py tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_endpoint_blocker_resolution_summary.py tools/rmg_h3maped_recovery_manifest.py",
+        "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json .artifacts/rmg_recovery/source_record_parser_summary_20260610.json .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/h3maped_recovery_manifest.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
       ],
-      "id": "rmg-small-generalization-hardening-10184",
-      "metrics": {
-        "hero_bios_pointer_table_entry_count": 28,
-        "hero_catalog_marker_count": 45,
-        "hero_catalog_missing_marker_count": 0,
-        "hero_catalog_present_marker_count": 45,
-        "hero_group_table_initializer_entry_count": 19,
-        "hero_group_table_loader_copy_entry_count": 18,
-        "hero_group_table_stride_bytes": 28,
-        "hero_instance_table_entry_count": 156,
-        "hero_instance_table_stride_bytes": 16,
-        "native_behavior_changed": false,
-        "overall_goal_complete": false,
-        "recovery_manifest_function_count": 178,
-        "used_objdump": false
-      },
-      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-      "sliceId": "rmg-small-generalization-hardening-10184",
+      "date": "2026-06-10T14:34:51Z",
+      "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "status": "passed",
-      "summary": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
-      "timestamp": "2026-06-10T14:12:00Z",
-      "updatedAt": "2026-06-10T14:12:00Z"
+      "summary": "Wine/Ghidra/Python recovery closes three previously named native RMG blockers without changing native generation behavior: descriptor +0x14/+0x18 are catalog terrain masks, fixed 16-byte stream reads at 0x490a11 and 0x4c025c are source-excluded from descriptor/source-record identity in those callers, and 0x422868 is recovered as a 27-path source-record +0x1c category to provider-slot dispatch surface. The only current percentage-moving blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows."
     },
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
@@ -743,7 +727,25 @@
       "source_variant_builder_helper_count": 4,
       "source_variant_builder_marker_count": 51,
       "source_variant_builder_present_marker_count": 51,
-      "used_objdump": false
+      "used_objdump": false,
+      "aux_16_byte_marker_count": 16,
+      "aux_16_byte_present_marker_count": 16,
+      "descriptor_input_marker_count": 86,
+      "descriptor_input_present_marker_count": 86,
+      "hero_catalog_marker_count": 45,
+      "hero_catalog_present_marker_count": 45,
+      "recovery_manifest_function_count": 178,
+      "source_key_row_mode_mismatch_count": 12,
+      "source_key_target_mixed_joined_descriptor_count": 87,
+      "source_key_target_mixed_selected_descriptor_count": 87,
+      "source_payload_generic_dynamic_lookup_reference_count": 239,
+      "source_payload_marker_count": 27,
+      "source_payload_present_marker_count": 27,
+      "source_record_parser_marker_count": 50,
+      "source_record_parser_present_marker_count": 50,
+      "source_variant_marker_count": 78,
+      "source_variant_present_marker_count": 78,
+      "source_variant_provider_slot_dispatch_count": 27
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -754,8 +756,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "result": "Descriptor input mapping surface recovered without native behavior changes.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -766,7 +768,7 @@
     "status": "in_progress",
     "summary": "Wine/Ghidra/Python recovery now verifies the source variant/filter builder frontier under 0x41f350. tools/rmg_h3maped_source_variant_builder_summary.py checks the existing Ghidra 0x41f350/helper dumps and proves 0x422868 is the source-record +0x1c category-dispatch builder, 0x428d45 is the source-family range/mask predicate, 0x420e6b is a dynamic lookup inserter over the two +0x18 holder families, and 0x434073 is a dynamic lookup wrapper. Native RMG behavior is unchanged; no objdump recovery was used.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-10T13:27:49Z",
+    "updatedAt": "2026-06-10T14:34:51Z",
     "validation": {
       "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
       "commands": [
@@ -11071,9 +11073,27 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Focus only on percentage-moving native RMG blockers: source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows, descriptor +0x14/+0x18 policy/container field names, and the 0x490a11 auxiliary stream-record consumer/domain. Same-run selected descriptor linkage, registry entry +0x1c domain label, current one-level land endpoint exclusions, and the 0x5857d4/0x5857d8/0x5857dc hero runtime-table branch exclusion are recovered. No native behavior changes from final-map deltas.",
+  "guardrailNote": "Focus only on percentage-moving native RMG recovery blockers. Current remaining blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Descriptor +0x14/+0x18 terrain masks, 0x490a11/0x4c025c fixed 16-byte stream-read exclusions, 0x422868 provider-slot dispatch, same-run selected descriptor linkage, registry entry +0x1c domain label, current one-level land endpoint exclusions, and the 0x5857d4/0x5857d8/0x5857dc hero runtime-table branch exclusion are recovered or source-excluded. No native behavior changes from final-map deltas.",
   "lastValidation": {
     "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
+    "checks": [
+      "python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py",
+      "python3 tools/rmg_h3maped_descriptor_input_mapping_summary.py",
+      "python3 tools/rmg_h3maped_aux_16_byte_record_summary.py",
+      "python3 tools/rmg_h3maped_source_record_parser_summary.py",
+      "python3 tools/rmg_h3maped_source_variant_builder_summary.py",
+      "python3 tools/rmg_h3maped_source_record_identity_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_payload_producer_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_key_registry_identity_summary.py",
+      "python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py",
+      "python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_aux_16_byte_record_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_source_variant_builder_summary.py tools/rmg_h3maped_source_payload_producer_frontier_summary.py tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_endpoint_blocker_resolution_summary.py tools/rmg_h3maped_recovery_manifest.py",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json .artifacts/rmg_recovery/source_record_parser_summary_20260610.json .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/h3maped_recovery_manifest.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "git diff --check",
+      "python3 tests/validate_repo.py"
+    ],
     "commands": [
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py (passed: hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending, markers=45/45)",
@@ -11082,6 +11102,7 @@
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
+    "date": "2026-06-10T14:34:51Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
       "hero_bios_pointer_table_entry_count": 28,
@@ -11098,15 +11119,34 @@
       "recovery_manifest_function_count": 178,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "summary": "Wine/Ghidra/Python recovery closes three previously named native RMG blockers without changing native generation behavior: descriptor +0x14/+0x18 are catalog terrain masks, fixed 16-byte stream reads at 0x490a11 and 0x4c025c are source-excluded from descriptor/source-record identity in those callers, and 0x422868 is recovered as a 27-path source-record +0x1c category to provider-slot dispatch surface. The only current percentage-moving blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows.",
     "timestamp": "2026-06-10T14:12:00Z",
     "updatedAt": "2026-06-10T14:12:00Z"
   },
   "latestEvidence": {
     "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
+    "checks": [
+      "python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py",
+      "python3 tools/rmg_h3maped_descriptor_input_mapping_summary.py",
+      "python3 tools/rmg_h3maped_aux_16_byte_record_summary.py",
+      "python3 tools/rmg_h3maped_source_record_parser_summary.py",
+      "python3 tools/rmg_h3maped_source_variant_builder_summary.py",
+      "python3 tools/rmg_h3maped_source_record_identity_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_payload_producer_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_key_registry_identity_summary.py",
+      "python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py",
+      "python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_aux_16_byte_record_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_source_variant_builder_summary.py tools/rmg_h3maped_source_payload_producer_frontier_summary.py tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_endpoint_blocker_resolution_summary.py tools/rmg_h3maped_recovery_manifest.py",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json .artifacts/rmg_recovery/source_record_parser_summary_20260610.json .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/h3maped_recovery_manifest.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "git diff --check",
+      "python3 tests/validate_repo.py"
+    ],
     "commands": [
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py (passed: hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending, markers=45/45)",
@@ -11115,6 +11155,7 @@
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
+    "date": "2026-06-10T14:34:51Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
       "hero_bios_pointer_table_entry_count": 28,
@@ -11131,14 +11172,15 @@
       "recovery_manifest_function_count": 178,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "summary": "Wine/Ghidra/Python recovery closes three previously named native RMG blockers without changing native generation behavior: descriptor +0x14/+0x18 are catalog terrain masks, fixed 16-byte stream reads at 0x490a11 and 0x4c025c are source-excluded from descriptor/source-record identity in those callers, and 0x422868 is recovered as a 27-path source-record +0x1c category to provider-slot dispatch surface. The only current percentage-moving blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows.",
     "timestamp": "2026-06-10T14:12:00Z",
     "updatedAt": "2026-06-10T14:12:00Z"
   },
-  "nextActionGuardrailNote": "Focus only on percentage-moving native RMG blockers: source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows, descriptor +0x14/+0x18 policy/container field names, and the 0x490a11 auxiliary stream-record consumer/domain. Same-run selected descriptor linkage, registry entry +0x1c domain label, current one-level land endpoint exclusions, and the 0x5857d4/0x5857d8/0x5857dc hero runtime-table branch exclusion are recovered. No native behavior changes from final-map deltas.",
+  "nextActionGuardrailNote": "Focus only on percentage-moving native RMG recovery blockers. Current remaining blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Descriptor +0x14/+0x18 terrain masks, 0x490a11/0x4c025c fixed 16-byte stream-read exclusions, 0x422868 provider-slot dispatch, same-run selected descriptor linkage, registry entry +0x1c domain label, current one-level land endpoint exclusions, and the 0x5857d4/0x5857d8/0x5857dc hero runtime-table branch exclusion are recovered or source-excluded. No native behavior changes from final-map deltas.",
   "notes": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
   "plannedSlices": [
     {
@@ -51117,8 +51159,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -51610,6 +51652,24 @@
   "updatedAt": "2026-06-10T14:12:00Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
+    "checks": [
+      "python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py",
+      "python3 tools/rmg_h3maped_descriptor_input_mapping_summary.py",
+      "python3 tools/rmg_h3maped_aux_16_byte_record_summary.py",
+      "python3 tools/rmg_h3maped_source_record_parser_summary.py",
+      "python3 tools/rmg_h3maped_source_variant_builder_summary.py",
+      "python3 tools/rmg_h3maped_source_record_identity_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_payload_producer_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_key_registry_identity_summary.py",
+      "python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py",
+      "python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_aux_16_byte_record_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_source_variant_builder_summary.py tools/rmg_h3maped_source_payload_producer_frontier_summary.py tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_endpoint_blocker_resolution_summary.py tools/rmg_h3maped_recovery_manifest.py",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json .artifacts/rmg_recovery/source_record_parser_summary_20260610.json .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/h3maped_recovery_manifest.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "git diff --check",
+      "python3 tests/validate_repo.py"
+    ],
     "commands": [
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py (passed: hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending, markers=45/45)",
@@ -51618,6 +51678,7 @@
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
+    "date": "2026-06-10T14:34:51Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
       "hero_bios_pointer_table_entry_count": 28,
@@ -51634,10 +51695,11 @@
       "recovery_manifest_function_count": 178,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "summary": "Wine/Ghidra/Python recovery closes three previously named native RMG blockers without changing native generation behavior: descriptor +0x14/+0x18 are catalog terrain masks, fixed 16-byte stream reads at 0x490a11 and 0x4c025c are source-excluded from descriptor/source-record identity in those callers, and 0x422868 is recovered as a 27-path source-record +0x1c category to provider-slot dispatch surface. The only current percentage-moving blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows.",
     "timestamp": "2026-06-10T14:12:00Z",
     "updatedAt": "2026-06-10T14:12:00Z"
   },
@@ -58273,6 +58335,24 @@
   ],
   "validationResults": {
     "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
+    "checks": [
+      "python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py",
+      "python3 tools/rmg_h3maped_descriptor_input_mapping_summary.py",
+      "python3 tools/rmg_h3maped_aux_16_byte_record_summary.py",
+      "python3 tools/rmg_h3maped_source_record_parser_summary.py",
+      "python3 tools/rmg_h3maped_source_variant_builder_summary.py",
+      "python3 tools/rmg_h3maped_source_record_identity_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_payload_producer_frontier_summary.py",
+      "python3 tools/rmg_h3maped_source_key_registry_identity_summary.py",
+      "python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py",
+      "python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py",
+      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_aux_16_byte_record_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_source_variant_builder_summary.py tools/rmg_h3maped_source_payload_producer_frontier_summary.py tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_endpoint_blocker_resolution_summary.py tools/rmg_h3maped_recovery_manifest.py",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json .artifacts/rmg_recovery/source_record_parser_summary_20260610.json .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/h3maped_recovery_manifest.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json",
+      "git diff --check",
+      "python3 tests/validate_repo.py"
+    ],
     "commands": [
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_hero_catalog_runtime_table_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_hero_catalog_runtime_table_summary.py (passed: hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending, markers=45/45)",
@@ -58281,6 +58361,7 @@
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
+    "date": "2026-06-10T14:34:51Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
       "hero_bios_pointer_table_entry_count": 28,
@@ -58297,10 +58378,11 @@
       "recovery_manifest_function_count": 178,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingGap": "source_catalog_template_producer_mapping remains unrecovered; overall end-to-end native RMG recovery is not 100%.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Closed in this pass: descriptor +0x14/+0x18 are recovered as catalog terrain_mask_a/terrain_mask_b; the 0x490a11 fixed 16-byte 0x438937 read is caller-local/source-excluded from descriptor fields; the 0x4c025c final 16-byte local is source-excluded from source-record fields; 0x422868 is recovered as a 27-entry source-record +0x1c category to provider-slot dispatch surface; source-key registry entry +0x1c remains correctly labeled as descriptor_source_selector_key, not final object identity. Remaining named blocker: recover the non-hero source catalog/template producer mapping from parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now closes the 0x5857d4/0x5857d8/0x5857dc global-table branch as hero-domain runtime catalogs, not the generic object-template producer. tools/rmg_h3maped_hero_catalog_runtime_table_summary.py verifies 45/45 Ghidra markers plus PE pointer/string evidence: 0x5857d4 -> 0x59e6a0 hero-instance runtime table (156 entries, 16-byte stride, heroes.txt), 0x5857d8 -> 0x59f060 hero-group runtime table (19 initialized 0x1c-byte slots with 18 loader-copy positions from heroes.txt), and 0x5857dc -> 0x59f274 HeroBios pointer table (28 entries). The dynamic lookup branch through 0x4389a7, 0x43920d, and 0x4c242d is tied to TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "summary": "Wine/Ghidra/Python recovery closes three previously named native RMG blockers without changing native generation behavior: descriptor +0x14/+0x18 are catalog terrain masks, fixed 16-byte stream reads at 0x490a11 and 0x4c025c are source-excluded from descriptor/source-record identity in those callers, and 0x422868 is recovered as a 27-path source-record +0x1c category to provider-slot dispatch surface. The only current percentage-moving blocker is the non-hero source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows.",
     "timestamp": "2026-06-10T14:12:00Z",
     "updatedAt": "2026-06-10T14:12:00Z"
   }

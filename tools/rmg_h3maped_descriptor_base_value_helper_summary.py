@@ -206,7 +206,7 @@ def build_summary(dump_dir: Path, input_mapping_path: Path, row_mode_path: Path)
 
     return {
         "schema_id": "h3maped_descriptor_base_value_helper_summary_v1",
-        "status": "descriptor_plus_0x00_source_key_registry_field_recovered_same_run_pointer_link_pending",
+        "status": "descriptor_plus_0x00_source_key_registry_field_recovered_catalog_mapping_pending",
         "scope": (
             "Ghidra/Python checkpoint for the descriptor +0x00 assignment helper below 0x4903e8. "
             "It recovers the source-key registry lookup/insert chain used by 0x491eed and explains "
@@ -252,23 +252,17 @@ def build_summary(dump_dir: Path, input_mapping_path: Path, row_mode_path: Path)
             "not write a direct objects.txt row number. It calls 0x491eed, which resolves the source/name "
             "blob through a source-key registry/tree and returns entry +0x1c. This explains the mixed "
             "45/53/54/79 row-like/class-word behavior and forbids using descriptor +0x00 alone as final "
-            "object identity. Native RMG behavior is unchanged."
+            "object identity. Same-run selected descriptor linkage and the registry field domain label are "
+            "handled by later checkpoints; the remaining identity blocker is source catalog/template "
+            "producer mapping. Native RMG behavior is unchanged."
         ),
         "remaining_blockers": [
             {
-                "id": "same_run_selected_descriptor_pointer_linkage",
+                "id": "source_catalog_template_producer_mapping",
                 "reason": (
-                    "This checkpoint recovers the descriptor +0x00 source-key helper, but it still does "
-                    "not capture a same-run pointer join from each selected type 45/53/54/79 descriptor "
-                    "back to the exact 0x4903e8 build event that populated it."
-                ),
-            },
-            {
-                "id": "registry_entry_plus_0x1c_domain_name",
-                "reason": (
-                    "The value source is now known mechanically as source-key registry entry +0x1c. Its "
-                    "human domain label still needs source/catalog crosswalk recovery before native RMG "
-                    "can use it as final object identity."
+                    "The descriptor +0x00 value source is known mechanically, but final native object "
+                    "identity still requires the producer that maps selected source records and nested "
+                    "payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows."
                 ),
             },
         ],
