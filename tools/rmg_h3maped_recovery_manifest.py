@@ -496,6 +496,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_record_parser_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_record_parser_summary_20260610.json",
+        "status": "source_record_parser_surface_recovered_catalog_identity_pending",
+        "meaning": (
+            "Ghidra/Python marker checks now recover the 0x4c025c stream-to-source-record "
+            "parser surface called by 0x41f350. The parser writes a length-prefixed blob "
+            "to source-record +0x10, populates a seven-dword field group at +0x20 through "
+            "0x4b3419, expands one read byte into an eight-bit bitset at +0x3c, writes "
+            "version-gated boolean flags at +0x40/+0x41, writes two signed word-derived "
+            "dwords at +0x44/+0x48, and performs a final guarded 0x10-byte local read. "
+            "Remaining blockers are human field names, exact 0x4019a4/0x401aa7 helper "
+            "semantics, and final mapping from populated source records to "
+            "objects.txt/objtmplt.txt type/subtype/DEF rows."
+        ),
+    },
+    {
         "id": "source_input_layout_frontier",
         "artifact": ".artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json",
         "status": "source_input_versioned_layout_recovered_field_semantics_pending",
@@ -858,6 +874,64 @@ FUNCTIONS: list[dict[str, Any]] = [
             "final objects.txt/objtmplt.txt type/subtype/DEF mapping for populated 0x4c source records",
         ],
         "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_payload_producer_frontier_dump_20260610 and .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json recover this loader boundary without claiming final catalog identity; .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recovers the later builder helper surface.",
+    },
+    {
+        "address": "0x4c025c",
+        "name": "source_record_stream_parser",
+        "status": "recovered_parser_surface_catalog_identity_pending",
+        "callers": ["0x41f350 at 0x41fab7", "0x4c1938 at 0x4c1950"],
+        "calls": [
+            "0x4016fd",
+            "0x4190cb",
+            "0x4019a4",
+            "0x401aa7",
+            "0x4b3419",
+            "0x402461",
+            "0x416b35",
+            "0x40763d",
+            "0x40237c",
+            "0x438937",
+        ],
+        "reads": [
+            "destination 0x4c source-record pointer in ecx",
+            "source/input stream wrapper at stack+0x08",
+            "format/version value at stack+0x0c",
+            "one initial mode/default byte at stack+0x0f",
+            "one stream byte expanded into eight bitset entries",
+            "two guarded word values sign-extended into dword fields",
+        ],
+        "writes": [
+            "copies a length-prefixed blob into source-record +0x10",
+            "populates seven guarded dwords at source-record +0x20 through 0x4b3419",
+            "sets/clears eight bitset entries at source-record +0x3c through 0x416b35",
+            "writes version-gated boolean flags at source-record +0x40 and +0x41",
+            "writes signed word-derived dwords at source-record +0x44 and +0x48",
+        ],
+        "unrecovered_semantics": [
+            "human field names for the populated source-record offsets",
+            "exact helper semantics for 0x4019a4 and 0x401aa7 below their observed copy/resize role",
+            "final objects.txt/objtmplt.txt type/subtype/DEF mapping for populated source records",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_004c025c_FUN_004c025c.txt plus verifier .artifacts/rmg_recovery/source_record_parser_summary_20260610.json recover this parser surface without claiming catalog identity.",
+    },
+    {
+        "address": "0x4b3419",
+        "name": "source_record_field20_seven_dword_reader",
+        "status": "recovered_static_contract_field_names_pending",
+        "callers": ["0x4c025c at 0x4c02eb"],
+        "calls": ["0x407675"],
+        "reads": [
+            "source/input stream wrapper at stack+0x08",
+            "destination pointer at stack+0x0c",
+            "seven guarded dwords from the stream through 0x407675",
+        ],
+        "writes": [
+            "writes seven consecutive dwords to the caller destination",
+        ],
+        "unrecovered_semantics": [
+            "human field names for the seven dwords at source-record +0x20 through +0x38",
+        ],
+        "ghidra_dump": "Focused caller dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/caller_004b3419_FUN_004b3419.txt plus verifier .artifacts/rmg_recovery/source_record_parser_summary_20260610.json recover the seven-dword read/write loop.",
     },
     {
         "address": "0x43b0ff",
