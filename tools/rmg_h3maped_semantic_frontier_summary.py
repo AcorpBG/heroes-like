@@ -42,6 +42,9 @@ DEFAULT_4A606B = Path(".artifacts/rmg_recovery/4a606b_reachability_summary_20260
 DEFAULT_SUPPORTED_LAND_ENDPOINT = Path(
     ".artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json"
 )
+DEFAULT_DESCRIPTOR_TYPE98_BRIDGE = Path(
+    ".artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json"
+)
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 
 
@@ -65,6 +68,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     cursor_source = load_json(args.cursor_source)
     four_a606b = load_json(args.four_a606b)
     supported_land_endpoint = load_json(args.supported_land_endpoint)
+    descriptor_type98_bridge = load_json(args.descriptor_type98_bridge)
 
     connection_fields = connection.get("recovered_fields", {})
     candidate_fields = candidate.get("recovered_contract", {}).get("candidate_record_fields", {})
@@ -166,6 +170,19 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             )
             is True
         ),
+        "descriptor_type98_weighted_and_commit_lane_recovered": (
+            descriptor_type98_bridge.get("status")
+            == "descriptor_type98_weighted_and_commit_lane_recovered"
+            and descriptor_type98_bridge.get("invariants", {}).get(
+                "weighted_materializations_all_increment_counter98"
+            )
+            is True
+            and descriptor_type98_bridge.get("invariants", {}).get(
+                "type98_exact_invocations_increment_relation_counters"
+            )
+            is True
+            and descriptor_type98_bridge.get("metrics", {}).get("used_objdump") is False
+        ),
         "connection_record_offsets_named": has_keys(connection_fields, {"+0x08", "+0x09", "+0x0a"}),
         "candidate_record_offsets_named": has_keys(
             candidate_fields, {"+0x00", "+0x04", "+0x08", "+0x0c"}
@@ -224,6 +241,26 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             },
             "descriptor_types_seen": descriptor_types,
             "confidence": "exact_seed10_fallback_records_only",
+        },
+        {
+            "domain": "object_descriptor_type98_counter_lane",
+            "fields": {
+                "descriptor+0x1c == 98": {
+                    "working_name": "sampled_projection_commit_counter_lane_98",
+                    "evidence": [
+                        "Exact sampled 0x4a54a7 descriptor/relation invocations with descriptor type 98 increment relation counters by one.",
+                        "All three sampled weighted 0x4a901a materializations increment generator+0x1110[98] by one while appending one object record.",
+                    ],
+                    "non_claim": "This is not a final human object-kind label for type 98.",
+                },
+                "descriptor+0x29": "projection-enable byte is 1 for sampled type-98 commits",
+                "descriptor+0x2c/+0x30": "sampled type-98 source-cell offsets are (2, 0)",
+                "descriptor+0x34/+0x38": "sampled type-98 masks are 6x6",
+            },
+            "weighted_counter98_dispatches": descriptor_type98_bridge.get(
+                "weighted_counter98_dispatches", []
+            ),
+            "confidence": "sampled_type98_weighted_and_4a54a7_commit_lane_only",
         },
         {
             "domain": "relation_record",
@@ -319,7 +356,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         {
             "id": "descriptor_type_human_labels",
             "reason": (
-                "Numeric descriptor types are usable as counter indices, but their human object "
+                "Numeric descriptor types are usable as counter indices, and sampled type 98 is "
+                "bridged across weighted 0x4a901a and 0x4a54a7 commit surfaces, but human object "
                 "families are not globally named."
             ),
         },
@@ -362,6 +400,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "cursor_source_frontier": str(args.cursor_source),
             "4a606b_reachability": str(args.four_a606b),
             "sampled_one_level_land_endpoint_reachability": str(args.supported_land_endpoint),
+            "descriptor_type98_bridge": str(args.descriptor_type98_bridge),
         },
         "invariants": invariants,
         "metrics": {
@@ -371,6 +410,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "recovered_working_name_domain_count": len(recovered_working_names),
             "remaining_semantic_blocker_count": len(remaining_semantic_blockers),
             "descriptor_types_seen": descriptor_types,
+            "descriptor_type98_weighted_dispatch_count": descriptor_type98_bridge.get(
+                "metrics", {}
+            ).get("weighted_counter98_dispatch_count"),
+            "descriptor_type98_exact_invocation_count": descriptor_type98_bridge.get(
+                "metrics", {}
+            ).get("type98_exact_invocation_count"),
         },
         "recovered_working_names": recovered_working_names,
         "remaining_semantic_blockers": remaining_semantic_blockers,
@@ -378,8 +423,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "The current evidence is no longer purely hex-level for several direct-RMG state "
             "surfaces: connection record bytes +0x08/+0x09/+0x0a, selected candidate record "
             "fields +0x00/+0x04/+0x08/+0x0c, descriptor projection flag/offset fields, "
-            "relation descriptor-type counters, and selected GeneratedCell +0x20 roles now "
-            "have source-backed working names. Connection byte +0x09 is recovered as the "
+            "relation descriptor-type counters, selected type-98 weighted/commit counter-lane "
+            "mechanics, and selected GeneratedCell +0x20 roles now have source-backed working "
+            "names. Connection byte +0x09 is recovered as the "
             "template connection Border Guard flag produced by 0x49f7c4. The exact seed-10 "
             "Border Guard downstream chain is recovered through stale-cursor endpoint misses, "
             "fallback materialization, 0x4a54a7 commit/projection state, object-vector survival, "
@@ -409,8 +455,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "non-self writer chain before a successful 0x4a5e73 call and reaches 0x4a606b, a "
             "natural projection-slot dispatch in a broader supported state, or a source-backed "
             "exclusion for the supported one-level land scope, "
-            "global descriptor type labels, broader map-mode semantic scope, and cleanup/uncommit "
-            "semantics before native RMG behavior changes."
+            "global descriptor type labels beyond sampled counter-lane evidence, broader map-mode "
+            "semantic scope, and cleanup/uncommit semantics before native RMG behavior changes."
         ),
     }
 
@@ -439,6 +485,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--supported-land-endpoint",
         type=Path,
         default=DEFAULT_SUPPORTED_LAND_ENDPOINT,
+    )
+    parser.add_argument(
+        "--descriptor-type98-bridge",
+        type=Path,
+        default=DEFAULT_DESCRIPTOR_TYPE98_BRIDGE,
     )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
