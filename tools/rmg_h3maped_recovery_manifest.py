@@ -39,6 +39,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "f5c_candidate_live_gate",
+        "artifact": ".artifacts/rmg_recovery/f5c_candidate_live_gate_summary_20260610.json",
+        "status": "f5c_candidate_live_scorer_rejects_selector_context_cursor_sampled_scope",
+        "meaning": (
+            "The 0x540ca0 / 0x49cd97 candidate scorer is live in sampled Medium one-level "
+            "runs, but sampled calls reject before object construction. Static Ghidra evidence "
+            "proves the scorer reads the second 0x4a9f1c score argument at +0xf5c and compares "
+            "it to candidate +0x08. Caller evidence proves 0x4a9f1c passes its entry ECX through "
+            "EBX as that second argument. Wine traces across 12 seeds plus one deep seed-1 run "
+            "record 493 reject-branch stops, zero match-branch stops, and zero 0x49cdb1 constructor "
+            "hits; the observed selector-context +0xf5c value stays 0x7a1befdf while candidate "
+            "keys cover 0..7. This narrows the selected-candidate +0xf5c mystery without "
+            "authorizing native behavior changes or globally excluding every map mode/source state."
+        ),
+    },
+    {
         "id": "direct_one_level_land_recovery_frontier",
         "artifact": ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json",
         "status": "direct_mode_recovery_frontier_verified_target_mode_exclusions",
