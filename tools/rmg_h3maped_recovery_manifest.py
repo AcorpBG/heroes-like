@@ -495,6 +495,24 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_base_value_helper_surface",
+        "artifact": ".artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json",
+        "status": "descriptor_plus_0x00_source_key_registry_field_recovered_same_run_pointer_link_pending",
+        "meaning": (
+            "Ghidra/Python evidence now recovers the descriptor +0x00 assignment path below "
+            "0x4903e8. 0x4903e8 calls 0x491eed and stores its return value at descriptor "
+            "+0x00; 0x491eed resolves the source/name blob through 0x4923a1 and 0x49228d, "
+            "then returns source-key registry entry +0x1c. 0x4923a1/0x492564 perform "
+            "lower-bound style lookup with key comparison helper 0x4041d6 over entry +0x0c "
+            "payloads, while 0x49228d can call 0x4923e2 to allocate a 0x24-byte missing "
+            "source-key entry, store the key payload, initialize sentinel links, and increment "
+            "the registry count. Therefore mixed type 45/53/54/79 descriptor +0x00 values are "
+            "mechanically source-key registry entry +0x1c values, not universal objects.txt row "
+            "ids. Same-run selected descriptor pointer linkage to exact 0x4903e8 build events "
+            "and the human domain label for registry entry +0x1c remain pending."
+        ),
+    },
+    {
         "id": "descriptor_source_resolver_boundary",
         "artifact": ".artifacts/rmg_recovery/descriptor_source_resolver_summary_20260610.json",
         "status": "descriptor_source_resolver_boundary_recovered_source_catalog_identity_pending",
