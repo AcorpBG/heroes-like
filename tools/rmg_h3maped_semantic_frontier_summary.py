@@ -25,6 +25,9 @@ DEFAULT_EXACT_DESCRIPTOR_RELATION = Path(
 DEFAULT_FINAL_ROLE_FRONTIER = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json"
 )
+DEFAULT_BORDER_GUARD_CHAIN = Path(
+    ".artifacts/rmg_recovery/border_guard_downstream_chain_summary_20260610.json"
+)
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 
 
@@ -41,6 +44,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     candidate = load_json(args.candidate_vtables)
     exact_descriptor = load_json(args.exact_descriptor_relation)
     final_role = load_json(args.final_role_frontier)
+    border_guard_chain = load_json(args.border_guard_chain)
 
     connection_fields = connection.get("recovered_fields", {})
     candidate_fields = candidate.get("recovered_contract", {}).get("candidate_record_fields", {})
@@ -68,6 +72,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "connection_plus9_source_producer_recovered": connection.get("status")
         == "recovered_connection_record_plus9_border_guard_surface"
         and plus9_field.get("source_producer", {}).get("source_row_name") == "Border Guard",
+        "exact_seed10_border_guard_downstream_chain_recovered": border_guard_chain.get("status")
+        == "exact_seed10_border_guard_downstream_chain_recovered_broader_linkage_pending"
+        and border_guard_chain.get("invariants", {}).get("exact_fallback_final_role_recovered")
+        is True,
         "connection_record_offsets_named": has_keys(connection_fields, {"+0x08", "+0x09", "+0x0a"}),
         "candidate_record_offsets_named": has_keys(
             candidate_fields, {"+0x00", "+0x04", "+0x08", "+0x0c"}
@@ -158,15 +166,25 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             },
             "confidence": "exact_seed10_fallback_and_projection_write_records",
         },
+        {
+            "domain": "border_guard_downstream_chain",
+            "fields": {
+                "connection_record+0x09": "template Border Guard flag",
+                "0x4a5e73": "stale-cursor endpoint attempts fail for exact seed-10 sample",
+                "0x4a7605 -> 0x4a5e03": "fallback materializes exact records 0x036260c0 and 0x03626060",
+                "0x4a54a7/0x49eb8d/0x4ac552": "commit, survival, first 0x49e700 mutation set, and phase tail recovered for exact records",
+            },
+            "confidence": "exact_seed10_one_level_no_water_record_chain_only",
+        },
     ]
 
     remaining_semantic_blockers = [
         {
             "id": "connection_relation_control_downstream_linkage",
             "reason": (
-                "The +0x09 producer is recovered as the template connection Border Guard flag, "
-                "but ordered downstream linkage through 0x4a61bc/0x4a696b/0x4a7605 and endpoint "
-                "stamping/fallback semantics still need broader proof."
+                "The +0x09 producer and exact seed-10 Border Guard fallback chain are recovered, "
+                "but relation/control linkage still needs broader map-mode/source-state proof and "
+                "successful or intentionally-unreachable 0x4a606b endpoint-stamping coverage."
             ),
         },
         {
@@ -190,7 +208,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     ]
 
     status = (
-        "semantic_frontier_working_names_recovered_downstream_linkage_pending"
+        "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
         if all(invariants.values())
         else "semantic_frontier_inputs_incomplete"
     )
@@ -208,6 +226,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "candidate_vtables": str(args.candidate_vtables),
             "exact_descriptor_relation": str(args.exact_descriptor_relation),
             "final_role_frontier": str(args.final_role_frontier),
+            "border_guard_chain": str(args.border_guard_chain),
         },
         "invariants": invariants,
         "metrics": {
@@ -226,13 +245,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "fields +0x00/+0x04/+0x08/+0x0c, descriptor projection flag/offset fields, "
             "relation descriptor-type counters, and selected GeneratedCell +0x20 roles now "
             "have source-backed working names. Connection byte +0x09 is recovered as the "
-            "template connection Border Guard flag produced by 0x49f7c4; downstream linkage, "
-            "global semantic labels, and broader scope remain explicit blockers."
+            "template connection Border Guard flag produced by 0x49f7c4. The exact seed-10 "
+            "Border Guard downstream chain is recovered through stale-cursor endpoint misses, "
+            "fallback materialization, 0x4a54a7 commit/projection state, object-vector survival, "
+            "first 0x49e700 mutation set, and 0x4ac552 phase tail for two exact records. Broader "
+            "relation/control linkage, global semantic labels, and broader scope remain explicit blockers."
         ),
         "remaining_gap": (
-            "Recover ordered relation/control downstream linkage, global descriptor type labels, "
-            "broader map-mode semantic scope, and cleanup/uncommit semantics before native RMG "
-            "behavior changes."
+            "Recover broader relation/control downstream linkage outside the exact seed-10 chain, "
+            "global descriptor type labels, broader map-mode semantic scope, and cleanup/uncommit "
+            "semantics before native RMG behavior changes."
         ),
     }
 
@@ -247,6 +269,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_EXACT_DESCRIPTOR_RELATION,
     )
     parser.add_argument("--final-role-frontier", type=Path, default=DEFAULT_FINAL_ROLE_FRONTIER)
+    parser.add_argument("--border-guard-chain", type=Path, default=DEFAULT_BORDER_GUARD_CHAIN)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
@@ -257,7 +280,12 @@ def main() -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"RMG_H3MAPED_SEMANTIC_FRONTIER status={summary['status']} out={args.out}")
-    return 0 if summary["status"] == "semantic_frontier_working_names_recovered_downstream_linkage_pending" else 1
+    return (
+        0
+        if summary["status"]
+        == "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+        else 1
+    )
 
 
 if __name__ == "__main__":

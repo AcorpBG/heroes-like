@@ -44,7 +44,9 @@ EXPECTED_STATUSES = {
     "coordinate_projection_reconciliation": (
         "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
     ),
-    "semantic_frontier": "semantic_frontier_working_names_recovered_downstream_linkage_pending",
+    "semantic_frontier": (
+        "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+    ),
 }
 
 
@@ -147,8 +149,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "Connection record bytes, candidate record fields, exact descriptor projection "
                 "fields, relation occupancy counters, and selected GeneratedCell +0x20 roles "
                 "now have source-backed working names. Connection byte +0x09 is recovered as "
-                "the template connection Border Guard flag; downstream linkage and global human "
-                "labels remain pending."
+                "the template connection Border Guard flag, and the exact seed-10 Border Guard "
+                "downstream chain is recovered through phase tail. Broader linkage and global "
+                "human labels remain pending."
             ),
         }
     ]
@@ -164,8 +167,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         {
             "id": "remaining_downstream_semantics_and_global_labels",
             "reason": (
-                "Working names are recovered for several fields, but relation/control downstream "
-                "linkage, global descriptor type labels, and cleanup/uncommit semantics remain pending."
+                "Working names and the exact seed-10 Border Guard downstream chain are recovered, "
+                "but broader relation/control linkage, global descriptor type labels, and cleanup/"
+                "uncommit semantics remain pending."
             ),
         },
         {
@@ -251,7 +255,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "proofs for every H3MapEd map mode. Exact seed-10 fallback coordinate/projection "
             "state is also reconciled for records 0x036260c0 and 0x03626060. Several "
             "formerly hex-only fields now have source-backed working names, including +0x09 as "
-            "the template connection Border Guard flag."
+            "the template connection Border Guard flag; the exact seed-10 Border Guard chain now "
+            "has recovered fallback materialization and phase-tail evidence."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
