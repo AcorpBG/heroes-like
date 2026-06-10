@@ -21,6 +21,7 @@ DEFAULT_4A5E73_CALLERS = ROOT / "4a5e73_caller_gate_surface_summary_20260610.jso
 DEFAULT_4A606B = ROOT / "4a606b_reachability_summary_20260610.json"
 DEFAULT_4A696B = ROOT / "4a696b_target_mode_reachability_summary_20260610.json"
 DEFAULT_4A696B_GRID = ROOT / "medium_4a696b_grid_scan_aggregate_summary_20260610.json"
+DEFAULT_4A61BC_CHAIN = ROOT / "4a61bc_chain_frontier_summary_20260610.json"
 DEFAULT_PROJECTION_SLOT = ROOT / "projection_slot_target_mode_reachability_summary_20260610.json"
 DEFAULT_CURSOR_SOURCE = ROOT / "cursor_source_frontier_summary_20260610.json"
 DEFAULT_DIRECT_FRONTIER = ROOT / "direct_mode_recovery_frontier_summary_20260610.json"
@@ -32,6 +33,8 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def no_native_change(summary: dict[str, Any]) -> bool:
+    if summary.get("native_behavior_changed") is False:
+        return True
     invariants = summary.get("invariants", {})
     metrics = summary.get("metrics", {})
     return invariants.get("no_native_behavior_change") is True and metrics.get(
@@ -40,6 +43,8 @@ def no_native_change(summary: dict[str, Any]) -> bool:
 
 
 def no_objdump(summary: dict[str, Any]) -> bool:
+    if summary.get("used_objdump") is False:
+        return True
     invariants = summary.get("invariants", {})
     metrics = summary.get("metrics", {})
     return invariants.get("no_objdump_used") is True or metrics.get("used_objdump") is not True
@@ -51,6 +56,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     four_a606b = load_json(args.four_a606b)
     four_a696b = load_json(args.four_a696b)
     four_a696b_grid = load_json(args.four_a696b_grid)
+    four_a61bc_chain = load_json(args.four_a61bc_chain)
     projection_slot = load_json(args.projection_slot)
     cursor_source = load_json(args.cursor_source)
     direct_frontier = load_json(args.direct_frontier)
@@ -61,6 +67,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "4a606b": four_a606b,
         "4a696b": four_a696b,
         "4a696b_grid": four_a696b_grid,
+        "4a61bc_chain": four_a61bc_chain,
         "projection_slot": projection_slot,
         "cursor_source": cursor_source,
         "direct_frontier": direct_frontier,
@@ -71,6 +78,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     writer_metrics = cursor_source.get("metrics", {})
     grid_metrics = four_a696b_grid.get("metrics", {})
     four_a696b_metrics = four_a696b.get("metrics", {})
+    four_a61bc_metrics = four_a61bc_chain.get("metrics", {})
     four_a606b_metrics = four_a606b.get("metrics", {})
     projection_metrics = projection_slot.get("metrics", {})
 
@@ -104,6 +112,14 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and grid_metrics.get("complete_grid_scan_count", 0) >= 6
             and grid_metrics.get("zero_owner_relation_pair_match_scan_count")
             == grid_metrics.get("complete_grid_scan_count")
+        ),
+        "4a61bc_append_commit_payload_downstream_chain_recovered": (
+            four_a61bc_chain.get("status")
+            == "4a61bc_append_commit_payload_downstream_frontier_recovered"
+            and all(four_a61bc_chain.get("invariants", {}).values())
+            and four_a61bc_metrics.get("payload_dispatch_4a696b_calls", 0) > 0
+            and four_a61bc_metrics.get("payload_dispatch_7605_calls", 0) > 0
+            and four_a61bc_metrics.get("payload_dispatch_direct_7312_commits", 0) > 0
         ),
         "projection_slot_recycle_boundary_explained_for_current_corpus": (
             projection_slot.get("status")
@@ -141,9 +157,14 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "path": "0x4a61bc -> 0x4a5e73",
             "current_evidence": (
                 "Natural Border Guard samples reach the endpoint helper but use stale "
-                "generator+0xf5c, so all observed entries return before mutation."
+                "generator+0xf5c, so all observed entries return before mutation. The sampled "
+                "0x4a61bc append/commit path is separately linked through 0x4a54a7 into the "
+                "later 0x4a79a3 payload and downstream 0x4a696b/0x4a7605 surface."
             ),
             "runtime_callsite_events": caller_metrics.get("current_corpus_4a61bc_callsite_events"),
+            "linked_payload_record": four_a61bc_metrics.get("payload_link_selected_record"),
+            "linked_payload_4a696b_calls": four_a61bc_metrics.get("payload_dispatch_4a696b_calls"),
+            "linked_payload_7605_calls": four_a61bc_metrics.get("payload_dispatch_7605_calls"),
         },
         {
             "path": "0x4a746b -> 0x4a5e73",
@@ -199,6 +220,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "4a606b": str(args.four_a606b),
             "4a696b": str(args.four_a696b),
             "4a696b_grid": str(args.four_a696b_grid),
+            "4a61bc_chain": str(args.four_a61bc_chain),
             "projection_slot": str(args.projection_slot),
             "cursor_source": str(args.cursor_source),
             "direct_frontier": str(args.direct_frontier),
@@ -228,6 +250,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "medium_land_4a696b_zero_pair_match_scan_count": grid_metrics.get(
                 "zero_owner_relation_pair_match_scan_count"
             ),
+            "linked_4a61bc_payload_record": four_a61bc_metrics.get("payload_link_selected_record"),
+            "linked_4a61bc_payload_dispatch_4a696b_calls": four_a61bc_metrics.get(
+                "payload_dispatch_4a696b_calls"
+            ),
+            "linked_4a61bc_payload_dispatch_7605_calls": four_a61bc_metrics.get(
+                "payload_dispatch_7605_calls"
+            ),
+            "linked_4a61bc_payload_direct_7312_commits": four_a61bc_metrics.get(
+                "payload_dispatch_direct_7312_commits"
+            ),
             "native_behavior_changed": False,
             "overall_goal_complete": False,
             "used_objdump": False,
@@ -235,8 +267,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "invariants": invariants,
         "source_backed_conclusion": (
             "For the current sampled one-level land evidence, no successful endpoint-stamping "
-            "path is live. The live 0x4a61bc/0x4a746b paths reach 0x4a5e73 but fail on stale "
-            "generator+0xf5c; the 0x4a696b direct path is blocked before its endpoint callsite "
+            "path is live. The sampled 0x4a61bc append/commit path is linked through "
+            "0x4a54a7 into the same-run 0x4a79a3 payload and downstream 0x4a696b/0x4a7605 "
+            "surface; those live 0x4a61bc/0x4a746b paths reach 0x4a5e73 but fail on stale "
+            "generator+0xf5c. The 0x4a696b direct path is blocked before its endpoint callsite "
             "by the owner/relation byte-pair gate; the 0x4a6cf2 endpoint sites are static-only "
             "in the corpus; and the non-self cursor writers are bound to projection/cleanup "
             "slots that current sampled objects do not dispatch."
@@ -246,9 +280,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "source states can never seed generator+0xf5c. The remaining blocker is either a "
             "natural successful 0x4a5e73 -> 0x4a606b path, or a broader Ghidra/static-data/Wine "
             "proof that no supported one-level land source can make any recovered caller gate "
-            "reach a seeded generator+0xf5c success path. Broader relation/control linkage, "
-            "global descriptor labels, and cleanup/uncommit semantics remain unrecovered if "
-            "future evidence reaches those paths."
+            "reach a seeded generator+0xf5c success path. Global descriptor labels and cleanup/"
+            "uncommit semantics remain unrecovered if future evidence reaches those paths."
         ),
     }
 
@@ -260,6 +293,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
     parser.add_argument("--four-a696b", type=Path, default=DEFAULT_4A696B)
     parser.add_argument("--four-a696b-grid", type=Path, default=DEFAULT_4A696B_GRID)
+    parser.add_argument("--four-a61bc-chain", type=Path, default=DEFAULT_4A61BC_CHAIN)
     parser.add_argument("--projection-slot", type=Path, default=DEFAULT_PROJECTION_SLOT)
     parser.add_argument("--cursor-source", type=Path, default=DEFAULT_CURSOR_SOURCE)
     parser.add_argument("--direct-frontier", type=Path, default=DEFAULT_DIRECT_FRONTIER)
@@ -277,6 +311,7 @@ def main() -> int:
             args.four_a606b,
             args.four_a696b,
             args.four_a696b_grid,
+            args.four_a61bc_chain,
             args.projection_slot,
             args.cursor_source,
             args.direct_frontier,
