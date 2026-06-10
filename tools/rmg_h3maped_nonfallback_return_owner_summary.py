@@ -45,7 +45,7 @@ DEFAULT_4A9641_4A54A7_DYNAMIC = Path(
     ".artifacts/rmg_recovery/mine_owner_4a9641_4a54a7_dynamic_summary_20260610.json"
 )
 DEFAULT_4A9911_4A54A7_DYNAMIC = Path(
-    ".artifacts/rmg_recovery/mine_owner_4a9911_4a54a7_dynamic_summary_20260610.json"
+    ".artifacts/rmg_recovery/4a54a7_target_return_004a9c3f_dynamic_summary_20260610.json"
 )
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/nonfallback_4a54a7_return_owner_summary_20260610.json"
@@ -185,17 +185,22 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         ),
     }
     unresolved_sites["0x004a9c3f"]["recovery_state"] = (
-        "owner_recovered_live_target_callback_not_hit_state_transition_pending"
+        "owner_recovered_sampled_target_return_write_stream_recovered"
     )
-    unresolved_sites["0x004a9c3f"]["live_target_scan_evidence"] = str(
+    unresolved_sites["0x004a9c3f"]["sampled_write_stream_evidence"] = str(
         args.dynamic_4a9911_4a54a7
     )
-    unresolved_sites["0x004a9c3f"]["live_target_scan_contract"] = {
+    unresolved_sites["0x004a9c3f"]["sampled_write_stream_contract"] = {
         "status": dynamic_4a9911.get("status"),
-        "event_counts": dynamic_4a9911.get("event_counts"),
         "projection_write_count": dynamic_4a9911.get("projection_write_count"),
-        "target_commit_return": dynamic_4a9911.get("dynamic_trace_meta", {}).get(
-            "target_commit_return"
+        "target_cell_low_word_before": dynamic_4a9911.get("metrics", {}).get(
+            "target_cell_low_word_before"
+        ),
+        "target_cell_low_word_after": dynamic_4a9911.get("metrics", {}).get(
+            "target_cell_low_word_after"
+        ),
+        "target_cell_low_word_cleared_to_zero": dynamic_4a9911.get("metrics", {}).get(
+            "target_cell_low_word_cleared_to_zero"
         ),
     }
 
@@ -241,17 +246,17 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         and dynamic_4a9641_invariants.get("no_objdump_used") is True
         and dynamic_4a9641_invariants.get("commit_returns_to_owner_after_callback") is True
         and dynamic_4a9641_invariants.get("projection_write_stream_captured") is True,
-        "4a9911_4a9c3f_live_target_still_pending_without_false_recovery": dynamic_4a9911.get(
+        "4a9911_4a9c3f_sampled_target_return_write_stream_recovered": dynamic_4a9911.get(
             "status"
         )
-        == "mine_owner_4a9911_4a54a7_write_stream_incomplete"
+        == "4a54a7_target_return_004a9c3f_write_stream_recovered"
         and dynamic_4a9911_invariants.get("no_native_behavior_change") is True
         and dynamic_4a9911_invariants.get("no_objdump_used") is True
-        and dynamic_4a9911_invariants.get("commit_returns_to_owner_after_callback") is False
-        and dynamic_4a9911_invariants.get("projection_write_stream_captured") is False,
+        and dynamic_4a9911_invariants.get("commit_returns_to_target") is True
+        and dynamic_4a9911_invariants.get("projection_write_stream_captured") is True,
     }
     status = (
-        "nonfallback_4a54a7_return_owners_recovered_4a98f0_4aa44d_streams_recovered_4a9c3f_pending"
+        "nonfallback_4a54a7_return_owners_sampled_streams_recovered"
         if all(invariants.values())
         else "nonfallback_4a54a7_return_owner_recovery_incomplete"
     )
@@ -291,7 +296,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "4a9641_4a98f0_sampled_projection_write_count": dynamic_4a9641.get(
                 "projection_write_count"
             ),
-            "4a9911_4a9c3f_guarded_projection_write_count": dynamic_4a9911.get(
+            "4a9911_4a9c3f_sampled_projection_write_count": dynamic_4a9911.get(
                 "projection_write_count"
             ),
         },
@@ -303,20 +308,19 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "callback return in 0x4aa3e9. Existing 0x4aa9b7/0x4aa3e9 runtime summaries prove the "
             "reward/guard wrapper handoff and sampled 0x4aa3e9 slot +0x04 callbacks into 0x4a54a7. "
             "Focused Wine traces now recover one sampled 0x4aa44d same-ledger write stream "
-            "and one sampled 0x4a98f0 same-ledger write stream. The 0x4aa44d sample lowers "
-            "the target low word from 14 to 2 and performs 90 unique projection writes. The "
-            "0x4a98f0 sample lowers the target low word from 27 to 2 and performs 319 unique "
-            "projection writes. A guarded 0x4a9911 trace reached 0x4a9c3f loop continuation "
-            "without hitting the 0x4a9c3c direct callsite or a 0x4a54a7 return to 0x4a9c3f, "
-            "so that owner remains a live target-state gap rather than recovered behavior."
+            "one sampled 0x4a98f0 same-ledger write stream, and one sampled 0x4a9c3f "
+            "target-return same-ledger write stream. The 0x4aa44d sample lowers the target "
+            "low word from 14 to 2 and performs 90 unique projection writes. The 0x4a98f0 "
+            "sample lowers the target low word from 27 to 2 and performs 319 unique projection "
+            "writes. The 0x4a9c3f sample clears the target low word from 2 to 0 and performs "
+            "98 unique projection writes."
         ),
         "remaining_gap": (
-            "Recover a live 0x4a9911 sample that actually executes the 0x4a9c3c direct callsite "
-            "and returns from 0x4a54a7 to 0x4a9c3f, or correct the return-context classification "
-            "with stronger Ghidra/Wine evidence if that surface is post-loop continuation rather "
-            "than a direct callback return in current one-level land. Broaden the sampled "
-            "0x4aa3e9 -> 0x4aa44d and 0x4a9641 -> 0x4a98f0 write-stream recovery if native port "
-            "authority needs all instances rather than sampled contracts."
+            "Broaden the sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and "
+            "0x4a9911 -> 0x4a9c3f write-stream recovery only if native port authority needs "
+            "all instances rather than sampled contracts. Full end-to-end native-port authority "
+            "still also needs the separate generator+0xf5c, relation/control linkage, global "
+            "label, broader mode/source-state, and reached-cleanup gaps."
         ),
     }
 
@@ -362,7 +366,7 @@ def main() -> int:
     return (
         0
         if summary["status"]
-        == "nonfallback_4a54a7_return_owners_recovered_4a98f0_4aa44d_streams_recovered_4a9c3f_pending"
+        == "nonfallback_4a54a7_return_owners_sampled_streams_recovered"
         else 1
     )
 
