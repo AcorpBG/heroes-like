@@ -460,6 +460,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_record_identity_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_record_identity_frontier_summary_20260610.json",
+        "status": "source_record_identity_frontier_recovered_producer_mapping_pending",
+        "meaning": (
+            "Ghidra/Wine/Python evidence now separates source-handler stream-key payload "
+            "mapping from final object identity. 0x42b690 returns stream keys; 0x42b62a "
+            "unwraps the concrete source pointer and delegates payload lookup to 0x42a83a; "
+            "0x42a83a maps the key into a five-dword source-side slot and returns the "
+            "nested pointer at slot +0x10 -> +0x08; and 0x42b63b copies the two-dword pair "
+            "from the same slot family at +0x08/+0x0c. The sampled copied source-record "
+            "+0x00 values are dense local keys 0..9, not recovered final object identities. "
+            "The remaining blocker is the exact source catalog/template producer that "
+            "populates those nested payloads from objects.txt/objtmplt.txt type/subtype/DEF rows."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
