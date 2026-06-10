@@ -86,17 +86,43 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
         "id": "unresolved_nonfallback_4a54a7_return_owner_frontier",
         "artifact": ".artifacts/rmg_recovery/nonfallback_4a54a7_return_owner_summary_20260610.json",
-        "status": "nonfallback_4a54a7_return_owners_recovered_unresolved_state_scoped",
+        "status": "nonfallback_4a54a7_return_owners_recovered_4a98f0_4aa44d_streams_recovered_4a9c3f_pending",
         "meaning": (
             "The remaining non-fallback 0x4a54a7 callback return sites are statically owned: "
             "0x4a98f0 is the selected object callback return inside 0x4a9641, 0x4a9c3f is "
             "the selected object callback return inside 0x4a9911, and 0x4aa44d is the "
             "selected-member callback return inside 0x4aa3e9. Existing 0x4aa9b7/0x4aa3e9 "
             "runtime summaries also prove ordered wrapper handoff and sampled 0x4aa3e9 slot "
-            "+0x04 callbacks into 0x4a54a7. A focused Wine trace also recovers one sampled "
-            "0x4aa44d same-ledger write stream. The remaining missing state is same-ledger "
-            "target-cell afterstate and 0x4a56b6 projection-write correlation for 0x4a98f0 "
-            "and 0x4a9c3f, plus broader 0x4aa44d coverage if all instances are needed."
+            "+0x04 callbacks into 0x4a54a7. Focused Wine traces recover one sampled "
+            "0x4aa44d same-ledger write stream and one sampled 0x4a98f0 same-ledger write "
+            "stream. A guarded 0x4a9911 live trace reached 0x4a9c3f loop continuation but did "
+            "not hit 0x4a9c3c or a 0x4a54a7 return to 0x4a9c3f, so that target remains pending. "
+            "Broader 0x4aa44d/0x4a98f0 coverage remains pending if all instances are needed."
+        ),
+    },
+    {
+        "id": "sampled_4a9641_4a98f0_4a54a7_write_stream",
+        "artifact": ".artifacts/rmg_recovery/mine_owner_4a9641_4a54a7_dynamic_summary_20260610.json",
+        "status": "mine_owner_4a9641_4a54a7_write_stream_recovered",
+        "meaning": (
+            "WineDbg live recovery for the 0x4a9641 selected-object callback proves the sampled "
+            "path enters 0x4a54a7 and returns to 0x4a98f0. The callback appends the selected "
+            "object to the generator object vector, adds that object reference to the target "
+            "generated cell, preserves the target +0x20 high word, lowers the target low word "
+            "from 27 to 2 without clearing it to zero, and executes 319 unique 0x4a56b6 "
+            "projection writes that preserve high words while lowering low words."
+        ),
+    },
+    {
+        "id": "guarded_4a9911_4a9c3f_target_scan",
+        "artifact": ".artifacts/rmg_recovery/mine_owner_4a9911_4a54a7_dynamic_summary_20260610.json",
+        "status": "mine_owner_4a9911_4a54a7_write_stream_incomplete",
+        "meaning": (
+            "A guarded Wine trace for 0x4a9911 reached owner entry and 0x4a9c3f continuation, "
+            "but did not hit the 0x4a9c3c direct callsite or a 0x4a54a7 stack return of "
+            "0x4a9c3f in the sampled one-level land run. The current sampled 0x4a54a7 call "
+            "inside this owner context returned to a nested/non-target site instead, so "
+            "0x4a9c3f remains a named live-target recovery gap."
         ),
     },
     {
