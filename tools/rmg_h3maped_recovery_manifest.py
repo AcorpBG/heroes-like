@@ -379,6 +379,21 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_word_row_mode",
+        "artifact": ".artifacts/rmg_recovery/descriptor_word_row_mode_summary_20260610.json",
+        "status": "descriptor_word_row_mode_mixed_class_word_recovered",
+        "meaning": (
+            "Exact sampled 0x4a54a7 descriptor/relation summaries prove descriptor+0x00 "
+            "is not a universal zero-based objects.txt row pointer. Across 43 exact samples, "
+            "31 descriptor words are row-like and 12 mismatch the zero-based catalog row type. "
+            "Type 98 remains row-like in the current exact sample, but type 45 word 1145 maps "
+            "to a Cartographer row while descriptor+0x1c is the Monolith Two Way lane; type "
+            "53, 54, and 79 fallback samples also include mismatches. Treat descriptor+0x1c "
+            "as a counter/type lane and recover each descriptor+0x00 producer path before "
+            "using that word as final object identity."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
