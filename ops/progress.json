@@ -10324,37 +10324,38 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers.",
+  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json",
     "commands": [
-      "headless Ghidra H3MapEdRmgOffsetAccessScan -> .artifacts/rmg_recovery/cursor_endpoint_state_offset_access_scan_20260610.txt (passed: rows=835)",
-      "python3 -m py_compile tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+      "python3 tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py --out .artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json (passed)",
+      "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
+      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
       "python3 tools/rmg_h3maped_endpoint_cursor_state_access_summary.py --out .artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_cursor_source_frontier_summary.py --out .artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json (passed)",
-      "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
-      "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
       "jq empty ops/progress.json (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
       "python3 tests/validate_repo.py (passed)",
       "git diff --check (passed)"
     ],
     "metrics": {
-      "widened_endpoint_access_row_count": 835,
-      "widened_endpoint_f5c_writer_row_count": 8,
-      "direct_f5c_writer_entry_count": 3,
+      "static_4a5e73_callsite_count": 6,
+      "current_corpus_4a61bc_callsite_events": 23,
+      "current_corpus_4a746b_callsite_events": 2,
+      "current_corpus_inactive_family_callsite_events": 0,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
       "used_objdump": false
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T05:13:52Z",
-    "updatedAt": "2026-06-10T05:13:52Z"
+    "timestamp": "2026-06-10T05:21:40Z",
+    "updatedAt": "2026-06-10T05:21:40Z"
   },
-  "latestEvidence": "Wine/Ghidra/Python recovery added a widened headless Ghidra endpoint-state access scan for the cursor surface. The scan covers 835 endpoint-adjacent offset accesses and confirms direct generator+0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; only direct +0xf58 write is setup path 0x49ecf2; +0x1104/+0x1108 accesses stay in 0x49f95a and endpoint/projection helpers. No native RMG behavior changed; no objdump.",
-  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers.",
+  "latestEvidence": "Wine/Ghidra/Python recovery added a checked all-caller gate surface for 0x4a5e73. All six static callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls, while 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. No native RMG behavior changed; no objdump.",
+  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus.",
   "notes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
   "plannedSlices": [
     {
@@ -43786,44 +43787,45 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Wine/Ghidra/Python recovery added a widened headless Ghidra endpoint-state access scan for the cursor surface. The scan covers 835 endpoint-adjacent offset accesses and confirms direct generator+0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; only direct +0xf58 write is setup path 0x49ecf2; +0x1104/+0x1108 accesses stay in 0x49f95a and endpoint/projection helpers. No native RMG behavior changed; no objdump.",
-      "currentSliceNotes": "Wine/Ghidra/Python recovery added a widened headless Ghidra endpoint-state access scan for the cursor surface. The scan covers 835 endpoint-adjacent offset accesses and confirms direct generator+0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; only direct +0xf58 write is setup path 0x49ecf2; +0x1104/+0x1108 accesses stay in 0x49f95a and endpoint/projection helpers. No native RMG behavior changed; no objdump.",
-      "currentSliceUpdatedAt": "2026-06-10T05:13:52Z",
-      "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers.",
+      "currentNotes": "Wine/Ghidra/Python recovery added a checked all-caller gate surface for 0x4a5e73. All six static callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls, while 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. No native RMG behavior changed; no objdump.",
+      "currentSliceNotes": "Wine/Ghidra/Python recovery added a checked all-caller gate surface for 0x4a5e73. All six static callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls, while 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. No native RMG behavior changed; no objdump.",
+      "currentSliceUpdatedAt": "2026-06-10T05:21:40Z",
+      "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json",
         "commands": [
-          "headless Ghidra H3MapEdRmgOffsetAccessScan -> .artifacts/rmg_recovery/cursor_endpoint_state_offset_access_scan_20260610.txt (passed: rows=835)",
-          "python3 -m py_compile tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+          "python3 tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py --out .artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json (passed)",
+          "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
+          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
           "python3 tools/rmg_h3maped_endpoint_cursor_state_access_summary.py --out .artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json (passed)",
           "python3 tools/rmg_h3maped_cursor_source_frontier_summary.py --out .artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json (passed)",
-          "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
           "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
-          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
           "jq empty ops/progress.json (passed)",
           "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
           "python3 tests/validate_repo.py (passed)",
           "git diff --check (passed)"
         ],
         "metrics": {
-          "widened_endpoint_access_row_count": 835,
-          "widened_endpoint_f5c_writer_row_count": 8,
-          "direct_f5c_writer_entry_count": 3,
+          "static_4a5e73_callsite_count": 6,
+          "current_corpus_4a61bc_callsite_events": 23,
+          "current_corpus_4a746b_callsite_events": 2,
+          "current_corpus_inactive_family_callsite_events": 0,
           "native_behavior_changed": false,
           "overall_goal_complete": false,
           "used_objdump": false
         },
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-10T05:13:52Z",
-        "updatedAt": "2026-06-10T05:13:52Z"
+        "timestamp": "2026-06-10T05:21:40Z",
+        "updatedAt": "2026-06-10T05:21:40Z"
       },
-      "latestEvidence": "Wine/Ghidra/Python recovery added a widened headless Ghidra endpoint-state access scan for the cursor surface. The scan covers 835 endpoint-adjacent offset accesses and confirms direct generator+0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; only direct +0xf58 write is setup path 0x49ecf2; +0x1104/+0x1108 accesses stay in 0x49f95a and endpoint/projection helpers. No native RMG behavior changed; no objdump.",
+      "latestEvidence": "Wine/Ghidra/Python recovery added a checked all-caller gate surface for 0x4a5e73. All six static callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls, while 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. No native RMG behavior changed; no objdump.",
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
           "4a901a_sequences": {
@@ -43859,7 +43861,11 @@
         "overall_goal_complete": false,
         "widened_endpoint_access_row_count": 835,
         "widened_endpoint_f5c_writer_row_count": 8,
-        "direct_f5c_writer_entry_count": 3
+        "direct_f5c_writer_entry_count": 3,
+        "static_4a5e73_callsite_count": 6,
+        "current_corpus_4a61bc_callsite_events": 23,
+        "current_corpus_4a746b_callsite_events": 2,
+        "current_corpus_inactive_family_callsite_events": 0
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -43870,8 +43876,8 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingGap": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-      "remainingWork": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "remainingGap": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "remainingWork": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "result": "Working semantic name frontier recovered without native behavior changes.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -43882,34 +43888,35 @@
       "status": "in_progress",
       "summary": "Cursor-source frontier tightened with selected-object recycle ownership evidence. tools/rmg_h3maped_cursor_source_frontier_summary.py now consumes projection_slot_target_mode_reachability_summary and verifies setup initializes generator+0xf58/+0x1104 but not +0xf5c, the direct +0xf5c writer surface is bounded to 0x4a5e73/0x4adb72/0x4add76, non-self writers are bound to the projection/cleanup slot chain, and sampled projection objects are destroyed/freed/reused before ordinary final dispatch in the recovered one-level path. Remaining blocker: recover a source path that seeds +0xf5c outside that excluded chain, recover a broader natural projection-slot dispatch before selected-object recycle, or source-exclude successful 0x4a5e73/0x4a606b endpoint stamping for supported one-level land. Native RMG behavior unchanged; Wine/Ghidra/Python only; no objdump.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-10T05:13:52Z",
+      "updatedAt": "2026-06-10T05:21:40Z",
       "validation": {
-        "artifact": ".artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json",
         "commands": [
-          "headless Ghidra H3MapEdRmgOffsetAccessScan -> .artifacts/rmg_recovery/cursor_endpoint_state_offset_access_scan_20260610.txt (passed: rows=835)",
-          "python3 -m py_compile tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+          "python3 tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py --out .artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json (passed)",
+          "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
+          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
           "python3 tools/rmg_h3maped_endpoint_cursor_state_access_summary.py --out .artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json (passed)",
           "python3 tools/rmg_h3maped_cursor_source_frontier_summary.py --out .artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json (passed)",
-          "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
           "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
-          "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
           "jq empty ops/progress.json (passed)",
           "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
           "python3 tests/validate_repo.py (passed)",
           "git diff --check (passed)"
         ],
         "metrics": {
-          "widened_endpoint_access_row_count": 835,
-          "widened_endpoint_f5c_writer_row_count": 8,
-          "direct_f5c_writer_entry_count": 3,
+          "static_4a5e73_callsite_count": 6,
+          "current_corpus_4a61bc_callsite_events": 23,
+          "current_corpus_4a746b_callsite_events": 2,
+          "current_corpus_inactive_family_callsite_events": 0,
           "native_behavior_changed": false,
           "overall_goal_complete": false,
           "used_objdump": false
         },
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-10T05:13:52Z",
-        "updatedAt": "2026-06-10T05:13:52Z"
+        "timestamp": "2026-06-10T05:21:40Z",
+        "updatedAt": "2026-06-10T05:21:40Z"
       }
     },
     {
@@ -50283,7 +50290,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingWork": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -50621,6 +50628,17 @@
       "summary": "Recovered widened endpoint cursor-state access surface: direct +0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; native behavior unchanged.",
       "tool": "tools/rmg_h3maped_endpoint_cursor_state_access_summary.py",
       "updatedAt": "2026-06-10T05:13:12Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json",
+      "id": "rmg-h3maped-4a5e73-caller-gate-surface-20260610",
+      "native_behavior_changed": false,
+      "remainingWork": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "report_only_recovery_evidence",
+      "summary": "Recovered all-caller gate surface for 0x4a5e73; six static callers classified, current success path still unrecovered.",
+      "tool": "tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py",
+      "updatedAt": "2026-06-10T05:20:58Z"
     }
   ],
   "status": "in_progress",
@@ -50725,7 +50743,7 @@
   ],
   "summary": "Cursor-writer owner frontier recovered from Wine/Ghidra/Python evidence. tools/rmg_h3maped_cursor_writer_owner_exclusion_summary.py verifies the direct generator+0xf5c writer surface is exhausted to 0x4a5e73, 0x4adb72, and 0x4add76; the non-self writers 0x4adb72 and 0x4add76 are bound by Ghidra references to the projection/cleanup slot chain; and current one-level land Wine evidence has zero projection/cleanup slot events or stops. Remaining blocker is now narrower: find a source path that seeds generator+0xf5c outside that excluded non-self writer chain, find a broader natural projection-slot dispatch, or source-exclude successful endpoint stamping for supported one-level land. Native RMG behavior unchanged; Wine/Ghidra/Python only; no objdump.",
   "taskId": "10184",
-  "updatedAt": "2026-06-10T05:13:52Z",
+  "updatedAt": "2026-06-10T05:21:40Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/medium_4a54a7_cross_seed_commit_surface_summary_20260610.json",
     "checks": [
@@ -56841,6 +56859,38 @@
       "id": "rmg-small-generalization-hardening-10184",
       "summary": "Wine/Ghidra/Python recovery added a widened headless Ghidra endpoint-state access scan for the cursor surface. The scan covers 835 endpoint-adjacent offset accesses and confirms direct generator+0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; only direct +0xf58 write is setup path 0x49ecf2; +0x1104/+0x1108 accesses stay in 0x49f95a and endpoint/projection helpers. No native RMG behavior changed; no objdump.",
       "remainingWork": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json",
+      "commands": [
+        "python3 -m py_compile tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_endpoint_cursor_state_access_summary.py tools/rmg_h3maped_cursor_source_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+        "python3 tools/rmg_h3maped_4a5e73_caller_gate_surface_summary.py --out .artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
+        "python3 tools/rmg_h3maped_endpoint_cursor_state_access_summary.py --out .artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_cursor_source_frontier_summary.py --out .artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
+        "jq empty ops/progress.json (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "git diff --check (passed)"
+      ],
+      "metrics": {
+        "static_4a5e73_callsite_count": 6,
+        "current_corpus_4a61bc_callsite_events": 23,
+        "current_corpus_4a746b_callsite_events": 2,
+        "current_corpus_inactive_family_callsite_events": 0,
+        "native_behavior_changed": false,
+        "overall_goal_complete": false,
+        "used_objdump": false
+      },
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "timestamp": "2026-06-10T05:21:40Z",
+      "updatedAt": "2026-06-10T05:21:40Z",
+      "id": "rmg-small-generalization-hardening-10184",
+      "summary": "Wine/Ghidra/Python recovery added a checked all-caller gate surface for 0x4a5e73. All six static callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls, while 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. No native RMG behavior changed; no objdump.",
+      "remainingWork": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
     }
   ],
   "validationResults": {
@@ -56874,6 +56924,6 @@
     "timestamp": "2026-06-10T03:24:11Z",
     "updatedAt": "2026-06-10T03:24:11Z"
   },
-  "currentNotes": "Wine/Ghidra/Python recovery added a widened headless Ghidra endpoint-state access scan for the cursor surface. The scan covers 835 endpoint-adjacent offset accesses and confirms direct generator+0xf5c writers remain bounded to 0x4a5e73/0x4adb72/0x4add76; only direct +0xf58 write is setup path 0x49ecf2; +0x1104/+0x1108 accesses stay in 0x49f95a and endpoint/projection helpers. No native RMG behavior changed; no objdump.",
-  "remainingGap": "Recover any source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before a successful 0x4a5e73 endpoint-helper call and downstream 0x4a606b; recover a broader natural projection-slot dispatch before selected-object recycle, or recover a source-backed endpoint-stamping exclusion for supported one-level land; recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain; broaden sampled 0x4aa3e9 -> 0x4aa44d, 0x4a9641 -> 0x4a98f0, and 0x4a9911 -> 0x4a9c3f coverage only if native-port authority requires all instances; recover global descriptor type labels, broader semantic scope, and cleanup/uncommit semantics if reached; prove broader map-mode/source-state reachability outside the current one-level land target evidence before implementing or excluding those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
+  "currentNotes": "Wine/Ghidra/Python recovery added a checked all-caller gate surface for 0x4a5e73. All six static callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls, while 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. No native RMG behavior changed; no objdump.",
+  "remainingGap": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
 }

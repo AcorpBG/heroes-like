@@ -29,6 +29,9 @@ DEFAULT_BORDER_GUARD_CHAIN = Path(
     ".artifacts/rmg_recovery/border_guard_downstream_chain_summary_20260610.json"
 )
 DEFAULT_4A5E73 = Path(".artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20260610.json")
+DEFAULT_4A5E73_CALLER_GATES = Path(
+    ".artifacts/rmg_recovery/4a5e73_caller_gate_surface_summary_20260610.json"
+)
 DEFAULT_CURSOR_OWNER = Path(
     ".artifacts/rmg_recovery/cursor_writer_owner_exclusion_summary_20260610.json"
 )
@@ -54,6 +57,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     final_role = load_json(args.final_role_frontier)
     border_guard_chain = load_json(args.border_guard_chain)
     four_a5e73 = load_json(args.four_a5e73)
+    four_a5e73_caller_gates = load_json(args.four_a5e73_caller_gates)
     cursor_owner = load_json(args.cursor_owner)
     cursor_source = load_json(args.cursor_source)
     four_a606b = load_json(args.four_a606b)
@@ -94,6 +98,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and four_a5e73.get("invariants", {}).get("static_contract_recovered") is True
             and four_a5e73.get("invariants", {}).get(
                 "current_corpus_has_no_5e73_success_path_hit"
+            )
+            is True
+        ),
+        "current_4a5e73_caller_gate_surface_recovered": (
+            four_a5e73_caller_gates.get("status")
+            == "4a5e73_all_caller_gate_surface_recovered_current_scope_success_path_still_unrecovered"
+            and four_a5e73_caller_gates.get("invariants", {}).get("six_static_callers_recovered")
+            is True
+            and four_a5e73_caller_gates.get("invariants", {}).get(
+                "inactive_current_corpus_callsite_family_has_no_runtime_hits"
             )
             is True
         ),
@@ -323,6 +337,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "final_role_frontier": str(args.final_role_frontier),
             "border_guard_chain": str(args.border_guard_chain),
             "4a5e73_cursor_frontier": str(args.four_a5e73),
+            "4a5e73_caller_gate_surface": str(args.four_a5e73_caller_gates),
             "cursor_writer_owner_frontier": str(args.cursor_owner),
             "cursor_source_frontier": str(args.cursor_source),
             "4a606b_reachability": str(args.four_a606b),
@@ -349,7 +364,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "fallback materialization, 0x4a54a7 commit/projection state, object-vector survival, "
             "first 0x49e700 mutation set, and 0x4ac552 phase tail for two exact records. Broader "
             "0x4a5e73 is statically recovered as the cursor-keyed endpoint helper and has zero "
-            "success-path mutation hits in the current corpus; the only non-self direct +0xf5c "
+            "success-path mutation hits in the current corpus; all six static 0x4a5e73 callers "
+            "are grouped by gate, with current runtime hits limited to stale-cursor 0x4a61bc "
+            "entries and forced-failing 0x4a746b entries while 0x4a696b/0x4a6cf2 caller families "
+            "remain unhit in the current corpus; the only non-self direct +0xf5c "
             "writers are bound to projection/cleanup slot methods that current one-level land "
             "evidence never dispatches; the cursor-source frontier now consumes a widened "
             "Ghidra endpoint-state scan that still finds no additional direct +0xf5c writer, "
@@ -384,6 +402,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--final-role-frontier", type=Path, default=DEFAULT_FINAL_ROLE_FRONTIER)
     parser.add_argument("--border-guard-chain", type=Path, default=DEFAULT_BORDER_GUARD_CHAIN)
     parser.add_argument("--four-a5e73", type=Path, default=DEFAULT_4A5E73)
+    parser.add_argument(
+        "--four-a5e73-caller-gates",
+        type=Path,
+        default=DEFAULT_4A5E73_CALLER_GATES,
+    )
     parser.add_argument("--cursor-owner", type=Path, default=DEFAULT_CURSOR_OWNER)
     parser.add_argument("--cursor-source", type=Path, default=DEFAULT_CURSOR_SOURCE)
     parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
