@@ -71,6 +71,23 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "hero_catalog_runtime_table_boundary",
+        "artifact": ".artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json",
+        "status": "hero_catalog_runtime_tables_recovered_object_template_mapping_still_pending",
+        "meaning": (
+            "Ghidra/Python/PE evidence closes the 0x5857d4/0x5857d8/0x5857dc global-table "
+            "branch as hero-domain runtime catalogs. 0x5857d4 points to the 0x59e6a0 "
+            "hero-instance table constructed by 0x44a077 as 156 entries of 16 bytes and "
+            "populated by 0x44a8b5 from heroes.txt. 0x5857d8 points to the 0x59f060 "
+            "hero-group table initialized by 0x44a0db/0x44a882 as 19 entries of 0x1c bytes; "
+            "0x44a8b5 fills 18 source-pointer positions starting at the first slot's +0x08. "
+            "0x5857dc points to the 0x59f274 HeroBios pointer table filled by 0x44af11. "
+            "The dynamic lookup chain through 0x4389a7, 0x43920d, and 0x4c242d is tied to "
+            "TGameObject/THero/TRandomHero/TNonRandomHero RTTI constants. Therefore this path "
+            "is not the generic objects.txt/objtmplt.txt type/subtype/DEF producer mapping."
+        ),
+    },
+    {
         "id": "direct_one_level_land_recovery_frontier",
         "artifact": ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json",
         "status": "direct_mode_recovery_frontier_verified_target_mode_exclusions",
@@ -1535,7 +1552,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x434073",
         "name": "source_variant_dynamic_lookup_wrapper",
-        "status": "recovered_surface_lookup_semantics_pending",
+        "status": "recovered_wrapper_hero_domain_branch_identified_catalog_mapping_pending",
         "callers": ["0x41f350 at 0x41f8d4"],
         "calls": ["0x4e6da2", "0x42825d", "0x4389a7"],
         "reads": [
@@ -1545,10 +1562,120 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "returns": ["RET 0x10 after delegating existing-result or missing-result path"],
         "unrecovered_semantics": [
-            "human identity of the dynamic lookup target",
+            "non-hero source-catalog/object-template producer mapping",
             "final catalog mapping of the delegated payload",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00434073_FUN_00434073.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this wrapper surface.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00434073_FUN_00434073.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this wrapper surface. The follow-up verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json identifies the 0x4389a7 missing-result branch as hero-domain, not generic object-template identity.",
+    },
+    {
+        "address": "0x4389a7",
+        "name": "random_hero_dynamic_lookup_delegate",
+        "status": "recovered_hero_domain_boundary_not_object_template_mapping",
+        "callers": ["0x434073"],
+        "calls": ["0x4e6da2", "0x428439", "0x43920d"],
+        "reads": [
+            "dynamic object/source argument at stack+0x08",
+            "RTTI/type metadata constants 0x583810 TRandomHero and 0x57c8c8 TGameObject",
+        ],
+        "returns": ["RET 0x10 after existing-result or missing-result delegate path"],
+        "meaning": (
+            "Performs a TRandomHero dynamic lookup under TGameObject. This proves the "
+            "0x434073 missing-result branch reaches hero-domain payload adoption, not "
+            "generic object-template row identity."
+        ),
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_catalog_delegate_dump_20260610/target_004389a7_FUN_004389a7.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x43920d",
+        "name": "nonrandom_hero_dynamic_lookup_delegate",
+        "status": "recovered_hero_domain_boundary_not_object_template_mapping",
+        "callers": ["0x4389a7"],
+        "calls": ["0x4e6da2", "0x4284d0", "0x43976f"],
+        "reads": [
+            "dynamic object/source argument at stack+0x08",
+            "RTTI/type metadata constants 0x583b58 TNonRandomHero and 0x57c8c8 TGameObject",
+        ],
+        "returns": ["RET 0x10 after existing-result or missing-result delegate path"],
+        "meaning": (
+            "Performs a TNonRandomHero dynamic lookup under TGameObject. This closes the "
+            "nested hero branch reached by 0x4389a7 without claiming generic object identity."
+        ),
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_catalog_delegate_dump_20260610/caller_0043920d_FUN_0043920d.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x4c242d",
+        "name": "hero_dynamic_payload_cache_adopter",
+        "status": "recovered_hero_domain_boundary_not_object_template_mapping",
+        "callers": ["0x420e6b"],
+        "calls": ["0x4e6da2"],
+        "reads": [
+            "cached hero-domain payload at source/dynamic object +0xb4",
+            "RTTI/type metadata constants 0x582138 THero and 0x57c8c8 TGameObject",
+        ],
+        "writes": [
+            "source/dynamic object +0xb4 hero-domain payload cache",
+        ],
+        "meaning": (
+            "Adopts or refreshes a THero/TGameObject dynamic payload cache. It is a hero "
+            "cache/adoption helper, not an objects.txt/objtmplt.txt row mapping producer."
+        ),
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_catalog_delegate_dump_20260610/target_004c242d_FUN_004c242d.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x44a077",
+        "name": "hero_instance_table_constructor",
+        "status": "recovered_hero_catalog_runtime_table_boundary",
+        "calls": ["0x4e5c75"],
+        "writes": ["constructs 0x59e6a0 as 0x9c entries with 0x10-byte stride"],
+        "meaning": "Constructs the hero-instance runtime table later populated from heroes.txt.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_catalog_runtime_table_targets_dump_20260610/caller_0044a077_FUN_0044a077.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x44a0db",
+        "name": "hero_group_table_initializer",
+        "status": "recovered_hero_catalog_runtime_table_boundary",
+        "calls": ["0x44a882"],
+        "writes": ["initializes 19 0x1c-byte hero-group runtime table entries at 0x59f060..0x59f258"],
+        "meaning": "Builds the static hero-group/class table from 0x59e694-derived source pointers and class keys.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_hero_catalog_helper_dump_20260610/caller_0044a0db_FUN_0044a0db.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x44a882",
+        "name": "hero_group_table_slot_initializer",
+        "status": "recovered_hero_catalog_runtime_table_boundary",
+        "calls": ["0x42d49a"],
+        "reads": ["source pointer argument", "class/key argument"],
+        "writes": [
+            "slot +0x00 source pointer",
+            "slot +0x04 class/key dword",
+            "slot +0x08 cleared dword",
+            "nested key bytes under slot +0x0c",
+        ],
+        "meaning": "Initializes one 0x1c-byte hero-group runtime table entry.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_hero_catalog_helper_dump_20260610/target_0044a882_FUN_0044a882.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x44a8b5",
+        "name": "heroes_txt_runtime_catalog_loader",
+        "status": "recovered_hero_catalog_runtime_table_boundary",
+        "calls": ["0x490c4c", "0x4dca60"],
+        "reads": ["heroes.txt literal at 0x5857f0", "HeroBios.txt literal at 0x5857e0"],
+        "writes": [
+            "copies heroes.txt-derived pointers into 0x59f068..0x59f260 at 0x1c stride",
+            "populates hero-instance table entries under 0x59e6a0",
+            "stores a HeroBios-derived pointer at 0x59f260",
+        ],
+        "meaning": "Loads hero text data into hero runtime tables; not a generic RMG object-template loader.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_hero_catalog_helper_dump_20260610/caller_0044a8b5_FUN_0044a8b5.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
+    },
+    {
+        "address": "0x44af11",
+        "name": "hero_bios_pointer_table_loader",
+        "status": "recovered_hero_catalog_runtime_table_boundary",
+        "calls": ["0x44a8b5", "0x494c27"],
+        "writes": ["fills 0x59f274..0x59f2e4 as 28 four-byte HeroBios pointer entries"],
+        "meaning": "Finalizes the HeroBios pointer table after the hero catalog loader runs.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_catalog_runtime_table_targets_dump_20260610/caller_0044af11_FUN_0044af11.txt plus verifier .artifacts/rmg_recovery/hero_catalog_runtime_table_summary_20260610.json.",
     },
     {
         "address": "0x4e6da2",
