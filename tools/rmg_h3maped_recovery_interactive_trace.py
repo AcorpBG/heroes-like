@@ -304,7 +304,10 @@ def run_inside_xvfb(args: argparse.Namespace, repo_root: Path, log_path: Path) -
                 address = normalize_address("0x" + child.match.group(1))
                 events += 1
                 child.expect(PROMPT_RE, timeout=args.debugger_timeout)
-                commands = ["info reg", "x/8x $esp", *args.extra_command]
+                commands = []
+                if not args.no_info_reg:
+                    commands.append("info reg")
+                commands.extend(["x/8x $esp", *args.extra_command])
                 commands.extend(address_commands.get(address, []))
                 if args.lite and args.lite_extra_command:
                     commands.append(args.lite_extra_command)
@@ -355,6 +358,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--seed", default="", help="Random-map seed to force when using --seed-control-mode=pe-patch.")
     parser.add_argument("--seed-control-mode", choices=["none", "pe-patch"], default="none")
     parser.add_argument("--lite", action="store_true", help="Only dump registers and stack at each breakpoint.")
+    parser.add_argument("--no-info-reg", action="store_true", help="Skip `info reg` at each breakpoint; useful for high-volume stack-only traces.")
     parser.add_argument("--lite-extra-command", default="", help="Optional extra winedbg command to run in lite mode.")
     parser.add_argument(
         "--extra-command",
@@ -453,6 +457,8 @@ def main() -> int:
             command.extend(["--address-command", address_command])
         if args.lite:
             command.append("--lite")
+        if args.no_info_reg:
+            command.append("--no-info-reg")
         if args.lite_extra_command:
             command.extend(["--lite-extra-command", args.lite_extra_command])
         if args.stop_after:
