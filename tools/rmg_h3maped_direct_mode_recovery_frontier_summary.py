@@ -44,7 +44,7 @@ EXPECTED_STATUSES = {
     "coordinate_projection_reconciliation": (
         "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
     ),
-    "semantic_frontier": "semantic_frontier_working_names_recovered_remaining_producers_pending",
+    "semantic_frontier": "semantic_frontier_working_names_recovered_downstream_linkage_pending",
 }
 
 
@@ -146,8 +146,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "scope": (
                 "Connection record bytes, candidate record fields, exact descriptor projection "
                 "fields, relation occupancy counters, and selected GeneratedCell +0x20 roles "
-                "now have source-backed working names. Producer paths and global human labels "
-                "remain pending."
+                "now have source-backed working names. Connection byte +0x09 is recovered as "
+                "the template connection Border Guard flag; downstream linkage and global human "
+                "labels remain pending."
             ),
         }
     ]
@@ -161,10 +162,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             ),
         },
         {
-            "id": "remaining_semantic_producers_and_global_labels",
+            "id": "remaining_downstream_semantics_and_global_labels",
             "reason": (
-                "Working names are recovered for several fields, but +0x09 producer, global "
-                "descriptor type labels, and cleanup/uncommit semantics remain pending."
+                "Working names are recovered for several fields, but relation/control downstream "
+                "linkage, global descriptor type labels, and cleanup/uncommit semantics remain pending."
             ),
         },
         {
@@ -249,7 +250,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "freed before ordinary final dispatch. These are target-mode exclusions, not global "
             "proofs for every H3MapEd map mode. Exact seed-10 fallback coordinate/projection "
             "state is also reconciled for records 0x036260c0 and 0x03626060. Several "
-            "formerly hex-only fields now have source-backed working names."
+            "formerly hex-only fields now have source-backed working names, including +0x09 as "
+            "the template connection Border Guard flag."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "

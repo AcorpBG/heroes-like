@@ -56,6 +56,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         }
     )
 
+    plus9_field = connection_fields.get("+0x09", {})
     invariants = {
         "no_native_behavior_change": (
             connection.get("invariants", {}).get("no_native_behavior_change") is True
@@ -64,6 +65,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and final_role.get("native_behavior_changed") is False
         ),
         "no_objdump_used": True,
+        "connection_plus9_source_producer_recovered": connection.get("status")
+        == "recovered_connection_record_plus9_border_guard_surface"
+        and plus9_field.get("source_producer", {}).get("source_row_name") == "Border Guard",
         "connection_record_offsets_named": has_keys(connection_fields, {"+0x08", "+0x09", "+0x0a"}),
         "candidate_record_offsets_named": has_keys(
             candidate_fields, {"+0x00", "+0x04", "+0x08", "+0x0c"}
@@ -89,7 +93,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         {
             "domain": "connection_record",
             "fields": connection_fields,
-            "confidence": "consumer_side_working_names",
+            "confidence": "source_and_consumer_working_names_for_plus09_consumer_side_for_other_bytes",
         },
         {
             "domain": "candidate_record",
@@ -158,10 +162,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
 
     remaining_semantic_blockers = [
         {
-            "id": "connection_record_plus_09_producer",
+            "id": "connection_relation_control_downstream_linkage",
             "reason": (
-                "The consumer-side meaning of +0x09 is recovered as endpoint_stamping_enabled, "
-                "but its producer or a nonzero live sample is still unrecovered."
+                "The +0x09 producer is recovered as the template connection Border Guard flag, "
+                "but ordered downstream linkage through 0x4a61bc/0x4a696b/0x4a7605 and endpoint "
+                "stamping/fallback semantics still need broader proof."
             ),
         },
         {
@@ -185,7 +190,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     ]
 
     status = (
-        "semantic_frontier_working_names_recovered_remaining_producers_pending"
+        "semantic_frontier_working_names_recovered_downstream_linkage_pending"
         if all(invariants.values())
         else "semantic_frontier_inputs_incomplete"
     )
@@ -220,13 +225,14 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "surfaces: connection record bytes +0x08/+0x09/+0x0a, selected candidate record "
             "fields +0x00/+0x04/+0x08/+0x0c, descriptor projection flag/offset fields, "
             "relation descriptor-type counters, and selected GeneratedCell +0x20 roles now "
-            "have source-backed working names. Producer paths and global semantic labels remain "
-            "explicit blockers."
+            "have source-backed working names. Connection byte +0x09 is recovered as the "
+            "template connection Border Guard flag produced by 0x49f7c4; downstream linkage, "
+            "global semantic labels, and broader scope remain explicit blockers."
         ),
         "remaining_gap": (
-            "Recover the +0x09 producer or a nonzero endpoint-stamping sample, global descriptor "
-            "type labels, broader map-mode semantic scope, and cleanup/uncommit semantics before "
-            "native RMG behavior changes."
+            "Recover ordered relation/control downstream linkage, global descriptor type labels, "
+            "broader map-mode semantic scope, and cleanup/uncommit semantics before native RMG "
+            "behavior changes."
         ),
     }
 
@@ -251,7 +257,7 @@ def main() -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"RMG_H3MAPED_SEMANTIC_FRONTIER status={summary['status']} out={args.out}")
-    return 0 if summary["status"] == "semantic_frontier_working_names_recovered_remaining_producers_pending" else 1
+    return 0 if summary["status"] == "semantic_frontier_working_names_recovered_downstream_linkage_pending" else 1
 
 
 if __name__ == "__main__":
