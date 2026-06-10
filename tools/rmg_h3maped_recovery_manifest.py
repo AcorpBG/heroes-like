@@ -180,7 +180,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4af463",
         "name": "source_handler_generator_phase_initializer",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_direct_owner_excluded",
         "calls": ["0x49d914", "0x49acf6", "0x4af785", "0x49ba89", "0x49e6cd", "0x40bb15"],
         "reads": [
             "generator/context pointer in ecx",
@@ -202,12 +202,12 @@ FUNCTIONS: list[dict[str, Any]] = [
             "resolves an object descriptor through 0x4af785, constructs a 0x1c object record through 0x49ba89, commits it with 0x49e6cd, and appends an 8-byte (handler key, object record) pair to generator+0xeec",
         ],
         "callers": ["0x4afa99"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and Ghidra-only verifier .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Runtime probe .artifacts/rmg_recovery/seed58_interactive_484d9f_probe drove direct seed-58 random generation to completion without hitting 0x484d9f, so this source-handler chain is not the observed direct Small-generation blocker until a live owning caller/action is identified.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump recovers this initializer and proves generator+0xed8 is the stack-supplied source handler consumed later by 0x4af910. Focused dump .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump and Ghidra-only verifier .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json recover the concrete vtable slot functions for this caller. Focused dumps .artifacts/rmg_recovery/ghidra_53eafc_source_handler_helpers_dump and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_nested_helpers_dump recover the lower helper chain. Ownership verifier .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra has zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without a breakpoint stop. This source-handler chain is therefore excluded as the current direct Small/Medium-generation blocker unless a separate live owner/action is later identified.",
     },
     {
         "address": "0x4afa99",
         "name": "source_handler_phase_wrapper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_direct_owner_excluded",
         "calls": ["0x4af463", "0x4af910", "0x4af65e"],
         "reads": [
             "caller argument at stack+0x04 forwarded as the source handler into 0x4af463",
@@ -222,7 +222,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "tears down the stack-local generator through 0x4af65e",
         ],
         "callers": ["0x484d9f at 0x484e65", "0x484d9f at 0x484e9e"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump/target_004afa99_FUN_004afa99.txt recovers this wrapper. The two 0x484d9f call sites construct a stack 0x53eafc handler through 0x4802ac and call 0x4afa99(handler, 1, mode, dimension_or_budget); the second call is gated by 0x42a1f9(source) and a source-size check. Runtime probe .artifacts/rmg_recovery/seed58_interactive_484d9f_probe did not hit 0x484d9f during direct seed-58 random generation, and a pointer scan found 0x00484d9f only in .rdata exception/unwind metadata.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump/target_004afa99_FUN_004afa99.txt recovers this wrapper. The two 0x484d9f call sites construct a stack 0x53eafc handler through 0x4802ac and call 0x4afa99(handler, 1, mode, dimension_or_budget); the second call is gated by 0x42a1f9(source) and a source-size check. Ownership verifier .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json proves the wrapper has exactly those two Ghidra callers, both from 0x484d9f, and 0x484d9f has zero incoming Ghidra references. Existing WineDbg direct-generation probe evidence armed 0x484d9f without a breakpoint stop.",
     },
     {
         "address": "0x4802ac",
@@ -547,7 +547,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "destroys the object record through vtable slot +0x00 with argument true",
             "calls 0x49eb8d after the optional cleanup loop",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump/caller_004af910_FUN_004af910.txt recovers this pending-object cleanup path and its handoff into 0x49eb8d. Focused dumps .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump, .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump, and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump prove generator+0xed8 is the stack-supplied source handler and recover the concrete cleanup slot for the 0x484d9f caller. Same-run ordered replay remains pending.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_499ee8_cell_reference_removal_dump/caller_004af910_FUN_004af910.txt recovers this pending-object cleanup path and its handoff into 0x49eb8d. Focused dumps .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump, .artifacts/rmg_recovery/ghidra_4802ac_source_handler_constructor_dump, and .artifacts/rmg_recovery/ghidra_53eafc_source_handler_vtable_dump prove generator+0xed8 is the stack-supplied source handler and recover the concrete cleanup slot for the 0x484d9f caller. Ownership verifier .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json excludes this closed source-handler chain as the current direct-generation blocker; natural projection, 0x4a696b, and cleanup/reselection blockers remain separate.",
     },
     {
         "address": "0x49d2c7",
