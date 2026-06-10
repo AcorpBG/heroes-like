@@ -30,9 +30,12 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "Current sampled one-level land evidence has 50 live 0x4a5e73 entries, zero "
             "0x4a5e73 success-path mutation events, zero live 0x4a606b events, all six "
             "0x4a5e73 static callers grouped by gate, and six complete Medium 0x4a696b "
-            "grid scans over 5,752 cells with zero owner/relation byte-pair matches. This "
-            "is a sampled scope checkpoint: it names the remaining broader source/mode "
-            "proof needed before native endpoint-stamping behavior can be ported or excluded."
+            "grid scans over 5,752 cells with zero owner/relation byte-pair matches. The "
+            "checkpoint now also consumes the consolidated 0x4a61bc chain frontier, proving "
+            "selected record 0x0361d290 reaches the later 0x4a79a3 payload loop and linked "
+            "downstream 0x4a696b/0x4a7605/direct 0x4a7312 surfaces. This is a sampled scope "
+            "checkpoint: the remaining proof is natural endpoint-stamping success, or a "
+            "broader source/mode exclusion for supported one-level land."
         ),
     },
     {
