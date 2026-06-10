@@ -2,9 +2,9 @@
 """Decode the final H3MapEd generated-cell tile payload at writeout.
 
 This is a payload checkpoint, not a final-map density report. It consumes a
-single `0x4ad251` Wine trace where the generator object and full generated-cell
-grid were dumped, then reconstructs the exact seven one-byte writes performed by
-`0x49b2b6` for every generated cell.
+Wine trace with a `0x4ad251` event where the generator object and full
+generated-cell grid were dumped, then reconstructs the exact seven one-byte
+writes performed by `0x49b2b6` for every generated cell.
 """
 
 from __future__ import annotations
@@ -115,6 +115,43 @@ def find_grid_lines(event: dict[str, Any], grid_base: int, expected_line_count: 
     return []
 
 
+def find_generator_dump(event: dict[str, Any]) -> tuple[int, list[int]]:
+    registers = event.get("registers", {})
+    register_generator = registers.get("esi")
+    lines = event.get("memory_lines", [])
+    if isinstance(register_generator, int):
+        for index, line in enumerate(lines):
+            if line.get("address") != register_generator:
+                continue
+            words = flatten_words(lines[index : index + 6])
+            if len(words) >= 9:
+                return register_generator, words
+
+    # High-volume traces can skip `info reg`; in that case infer the generator
+    # header from the `x/24x $esi` dump. The generator header has width/height/
+    # level fields at +0x18/+0x1c/+0x20 and a grid pointer at +0x14.
+    for index, line in enumerate(lines):
+        address = line.get("address")
+        if not isinstance(address, int):
+            continue
+        if not line.get("words"):
+            continue
+        words = flatten_words(lines[index : index + 6])
+        if len(words) < 9:
+            continue
+        width = words[0x18 // 4]
+        height = words[0x1C // 4]
+        levels = words[0x20 // 4]
+        grid_base = words[0x14 // 4]
+        if width != EXPECTED_WIDTH or height != EXPECTED_HEIGHT or levels != EXPECTED_LEVELS:
+            continue
+        expected_grid_words = width * height * levels * CELL_DWORDS
+        expected_grid_lines = expected_grid_words // 4
+        if find_grid_lines(event, grid_base, expected_grid_lines):
+            return address, words
+    raise ValueError("could not recover generator header words from 0x4ad251 dump")
+
+
 def static_marker_results(path: Path) -> dict[str, Any]:
     text = read_text(path) if path.exists() else ""
     markers = [{"marker": marker, "present": marker in text} for marker in STATIC_TILE_WRITER_MARKERS]
@@ -130,26 +167,11 @@ def static_marker_results(path: Path) -> dict[str, Any]:
 
 def summarize(ledger_path: Path, ghidra_tile_writer: Path) -> tuple[dict[str, Any], bytes]:
     ledger = load_json(ledger_path)
-    events = ledger.get("events", [])
-    if len(events) != 1:
-        raise ValueError(f"expected exactly one trace event, got {len(events)}")
-    event = events[0]
-    if event.get("address") != EXPECTED_ADDRESS:
-        raise ValueError(f"expected {EXPECTED_ADDRESS}, got {event.get('address')}")
-    registers = event.get("registers", {})
-    generator = registers.get("esi")
-    if not isinstance(generator, int):
-        raise ValueError("0x4ad251 event did not preserve generator pointer in ESI")
-
-    lines = event.get("memory_lines", [])
-    generator_words = []
-    for line in lines:
-        if line.get("address") == generator:
-            start = lines.index(line)
-            generator_words = flatten_words(lines[start : start + 6])
-            break
-    if len(generator_words) < 9:
-        raise ValueError("could not recover generator header words from 0x4ad251 dump")
+    matching_events = [event for event in ledger.get("events", []) if event.get("address") == EXPECTED_ADDRESS]
+    if len(matching_events) != 1:
+        raise ValueError(f"expected exactly one {EXPECTED_ADDRESS} trace event, got {len(matching_events)}")
+    event = matching_events[0]
+    generator, generator_words = find_generator_dump(event)
 
     grid_base = generator_words[0x14 // 4]
     width = generator_words[0x18 // 4]

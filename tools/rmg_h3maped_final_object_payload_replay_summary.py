@@ -28,7 +28,7 @@ from typing import Any
 ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_LEDGER = (
     ROOT
-    / "medium_seed10_final_object_stream_write_dwords_20260610"
+    / "medium_seed10_final_object_stream_write_dwords_fast_20260610"
     / "winedbg_interactive_trace_ledger.json"
 )
 DEFAULT_STATIC = ROOT / "final_object_serializer_static_summary_20260610.json"
