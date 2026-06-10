@@ -25,6 +25,9 @@ DEFAULT_4A696B = Path(
 DEFAULT_PROJECTION_SLOT = Path(
     ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json"
 )
+DEFAULT_CLEANUP_DEPENDENCY = Path(
+    ".artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json"
+)
 DEFAULT_FALLBACK_FINAL_ROLE = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_completion_summary_20260610.json"
 )
@@ -46,6 +49,7 @@ EXPECTED_STATUSES = {
     "source_handler_owner": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
     "4a696b_target_mode": "target_mode_4a696b_direct_mutation_unreached_pair_gate_explained",
     "projection_slot_target_mode": "projection_slot_target_mode_unreached_recycle_boundary_explained",
+    "cleanup_dependency": "cleanup_dependency_frontier_downstream_of_unhit_projection_slot",
     "fallback_final_role": "fallback_final_role_phase_tail_recovered_for_exact_seed10_records",
     "coordinate_projection_reconciliation": (
         "coordinate_projection_exact_cross_seed_fallback_and_744a_reconciled_remaining_contexts_pending"
@@ -89,6 +93,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "source_handler_owner": args.source_handler_owner,
         "4a696b_target_mode": args.four_a696b_target_mode,
         "projection_slot_target_mode": args.projection_slot_target_mode,
+        "cleanup_dependency": args.cleanup_dependency,
         "fallback_final_role": args.fallback_final_role,
         "coordinate_projection_reconciliation": args.coordinate_projection_reconciliation,
         "nonfallback_return_contexts": args.nonfallback_return_contexts,
@@ -134,6 +139,18 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "Projection slot methods 0x49c019/0x49c0a6 and cleanup methods remain static "
                 "real code, but current Wine ledgers/logs have zero live hits and sampled "
                 "projection objects are destroyed/freed before ordinary final slot dispatch."
+            ),
+        },
+        {
+            "id": "cleanup_uncommit_dependency_chain",
+            "classification": "downstream_of_unhit_projection_slot_in_current_one_level_land_target_mode",
+            "evidence": str(args.cleanup_dependency),
+            "scope": (
+                "Cleanup/uncommit remains real statically recovered code, but current sampled "
+                "one-level land evidence places it downstream of projection slot +0x08 dispatch. "
+                "The projection slots and 0x4add76/0x4adef7 have zero live hits in the current "
+                "corpus, so cleanup is not an active upstream explanation for the missing endpoint "
+                "cursor in this sampled scope."
             ),
         },
     ]
@@ -201,7 +218,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "the non-self cursor writers are bound to the unhit projection/cleanup slot "
                 "chain whose sampled projection objects are destroyed/freed/reused before "
                 "ordinary final dispatch. 0x4a606b is statically recovered with no live hit "
-                "in the current corpus. Broader linkage and global human labels remain pending."
+                "in the current corpus. Cleanup/uncommit is classified as downstream of the unhit "
+                "projection slot chain for the current sampled scope, so its runtime mutation state "
+                "is deferred until a projection slot becomes live or is source-excluded for the "
+                "selected target mode. Broader linkage and global human labels remain pending."
             ),
         }
     ]
@@ -246,8 +266,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         {
             "id": "runtime_cleanup_uncommit_state_if_reached",
             "reason": (
-                "Cleanup/uncommit state behind 0x49c019/0x49c0a6 remains unavailable if a future "
-                "natural projection-slot path is found; it should not be implemented from guesses."
+                "Cleanup/uncommit is now classified as downstream of the unhit projection slot "
+                "chain in the sampled one-level land scope. Runtime mutation state behind "
+                "0x49c019/0x49c0a6 remains unavailable if a future natural projection-slot path "
+                "is found; it should not be implemented from guesses."
             ),
         },
     ]
@@ -269,6 +291,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "projection_slot_current_target_mode_unreached": status_matches(
             summaries["projection_slot_target_mode"],
             EXPECTED_STATUSES["projection_slot_target_mode"],
+        ),
+        "cleanup_dependency_downstream_of_unhit_projection_slot": status_matches(
+            summaries["cleanup_dependency"], EXPECTED_STATUSES["cleanup_dependency"]
         ),
         "fallback_final_role_exact_seed10_checkpoint_recovered": status_matches(
             summaries["fallback_final_role"], EXPECTED_STATUSES["fallback_final_role"]
@@ -338,7 +363,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "0x4a5e73 now has "
             "a recovered cursor-precondition frontier with current-corpus zero success-path hits, "
             "the non-self cursor writers are bound to the unhit projection/cleanup slot chain, "
-            "and 0x4a606b has a recovered static contract and current-corpus no-live-hit evidence."
+            "cleanup/uncommit is classified as downstream of that unhit projection slot chain "
+            "for the current sampled scope, and 0x4a606b has a recovered static contract and "
+            "current-corpus no-live-hit evidence."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
@@ -354,6 +381,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-handler-owner", type=Path, default=DEFAULT_SOURCE_HANDLER)
     parser.add_argument("--four-a696b-target-mode", type=Path, default=DEFAULT_4A696B)
     parser.add_argument("--projection-slot-target-mode", type=Path, default=DEFAULT_PROJECTION_SLOT)
+    parser.add_argument("--cleanup-dependency", type=Path, default=DEFAULT_CLEANUP_DEPENDENCY)
     parser.add_argument("--fallback-final-role", type=Path, default=DEFAULT_FALLBACK_FINAL_ROLE)
     parser.add_argument(
         "--coordinate-projection-reconciliation",

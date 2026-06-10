@@ -68,6 +68,19 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "cleanup_dependency_frontier",
+        "artifact": ".artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json",
+        "status": "cleanup_dependency_frontier_downstream_of_unhit_projection_slot",
+        "meaning": (
+            "Cleanup/uncommit is classified as downstream of the unhit projection-slot chain "
+            "for current sampled one-level land evidence. Static ownership remains real, but "
+            "0x49c019, 0x49c0a6, 0x4add76, and 0x4adef7 all have zero live hits in the current "
+            "corpus, so cleanup is not an active upstream explanation for the missing endpoint "
+            "cursor in this sampled scope. Runtime cleanup mutation semantics remain unrecovered "
+            "if a projection slot becomes live later."
+        ),
+    },
+    {
         "id": "exact_fallback_coordinate_projection_reconciliation",
         "artifact": ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json",
         "status": (
