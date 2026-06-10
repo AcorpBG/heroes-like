@@ -476,6 +476,26 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_payload_producer_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json",
+        "status": "source_payload_loader_boundary_recovered_catalog_semantics_pending",
+        "meaning": (
+            "Ghidra/Python evidence now names 0x41f350 as the source object and "
+            "source-record loader/constructor boundary for the payload family consumed "
+            "through 0x42a83a and copied as 0x4c source records. 0x41f350 initializes "
+            "source object +0x00/+0x04, resolves a parsed family through 0x535214..0x535224, "
+            "stores the resolved family index at +0x08 and mode byte at +0x0c, writes "
+            "source-record +0x20/+0x24, indexes 0x4c-byte records, and copies populated "
+            "records through 0x4c025c. 0x42df99 and sibling 0x42ddxx helpers are bounded "
+            "as holder payload accessors that copy-on-write when shared and return payload "
+            "+0x04. 0x4e6da2 is classified as a generic dynamic lookup/cast helper with "
+            "many callers, not the source identity producer. Remaining blockers are the "
+            "exact 0x43b0ff/0x433d7d input parse semantics, the 0x41f350 variant/filter "
+            "builders such as 0x422868/0x428d45/0x420e6b/0x434073, and final mapping "
+            "from populated 0x4c records to objects.txt/objtmplt.txt type/subtype/DEF rows."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
@@ -707,6 +727,65 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "callers": ["0x484d9f at 0x484e65", "0x484d9f at 0x484e9e"],
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_4af463_source_handler_init_dump/target_004afa99_FUN_004afa99.txt recovers this wrapper. The two 0x484d9f call sites construct a stack 0x53eafc handler through 0x4802ac and call 0x4afa99(handler, 1, mode, dimension_or_budget); the second call is gated by 0x42a1f9(source) and a source-size check. Ownership verifier .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json proves the wrapper has exactly those two Ghidra callers, both from 0x484d9f, and 0x484d9f has zero incoming Ghidra references. Existing WineDbg direct-generation probe evidence armed 0x484d9f without a breakpoint stop.",
+    },
+    {
+        "address": "0x41f350",
+        "name": "source_payload_record_loader_constructor",
+        "status": "recovered_loader_boundary_catalog_semantics_pending",
+        "calls": [
+            "0x43b0ff",
+            "0x433d7d",
+            "0x42df99",
+            "0x42dd11",
+            "0x42dd3d",
+            "0x4e6da2",
+            "0x4c025c",
+        ],
+        "reads": [
+            "destination/source object pointer in ecx",
+            "caller source/input pointers at stack+0x10 and stack+0x14",
+            "parsed source family token compared with global table 0x535214..0x535224",
+            "parsed mode byte stored at source object +0x0c",
+            "0x4c-byte source-record arrays built from nested helper outputs",
+        ],
+        "writes": [
+            "initializes source object +0x00 and +0x04",
+            "stores resolved family index at source object +0x08",
+            "stores mode byte at source object +0x0c",
+            "writes copied source-record fields +0x20 and +0x24",
+            "indexes and copies populated 0x4c source records through 0x4c025c",
+        ],
+        "unrecovered_semantics": [
+            "exact 0x43b0ff/0x433d7d input parse semantics",
+            "variant/filter builders called from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073",
+            "final objects.txt/objtmplt.txt type/subtype/DEF mapping for populated 0x4c source records",
+        ],
+        "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_payload_producer_frontier_dump_20260610 and .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json recover this loader boundary without claiming final catalog identity.",
+    },
+    {
+        "address": "0x4e6da2",
+        "name": "generic_dynamic_lookup_or_cast_helper",
+        "status": "recovered_generic_helper_not_source_identity_producer",
+        "calls": ["0x4e6eee", "0x4e6f08", "0x4e6f62", "0x4e705b", "0x4e7193"],
+        "reads": [
+            "source/dynamic object pointer at stack+0x04",
+            "type/lookup metadata pointers supplied by callers",
+        ],
+        "returns": [
+            "dynamic lookup/cast result used by many unrelated callers",
+            "not a final H3MapEd object catalog row identity",
+        ],
+        "callers": ["239 Ghidra call references in the current focused dump"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_frontier_dump_20260610/target_004e6da2_* and verifier .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610 classify this as generic dynamic lookup/cast machinery.",
+    },
+    {
+        "address": "0x42df99",
+        "name": "source_holder_payload_accessor",
+        "status": "recovered_static_contract",
+        "calls": ["0x4337d5 when holder refcount/state requires copy-on-write"],
+        "reads": ["holder pointer in ecx", "holder payload through [ecx]"],
+        "returns": ["holder payload pointer plus 0x04"],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610 recovers this as one holder payload accessor used repeatedly by 0x41f350.",
     },
     {
         "address": "0x4802ac",
