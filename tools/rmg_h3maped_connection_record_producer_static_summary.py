@@ -108,8 +108,8 @@ def summarize(dump_dir: Path, field_summary_path: Path) -> dict[str, Any]:
         "writer_copies_local_record_to_output_plus_9": "004b3c37: MOV byte ptr [EAX + 0x9],CH" in writer_dump,
         "writer_references_are_data_vtable_refs": bool(data_refs) and not direct_code_refs,
         "focused_callers_do_not_touch_generator_c8_cc": callers and not callers_touch_compact_stream,
-        "field_summary_names_plus9_consumer_surface": field_summary.get("status")
-        == "partial_recovery_connection_record_plus9_consumer_surface",
+        "field_summary_names_plus9_border_guard_surface": field_summary.get("status")
+        == "recovered_connection_record_plus9_border_guard_surface",
         "no_native_behavior_change": True,
     }
     status = (
@@ -147,14 +147,15 @@ def summarize(dump_dir: Path, field_summary_path: Path) -> dict[str, Any]:
         "human_readable_result": (
             "0x4b3c03 is still relevant as a serialization/copy family for records that contain bytes "
             "+0x08/+0x09, but this static pass does not tie it to the RMG compact connection-record "
-            "stream at generator+0xc8/+0xcc. The semantic producer of connection_recipe."
-            "endpoint_stamping_enabled remains unrecovered."
+            "stream at generator+0xc8/+0xcc. Later relation-builder evidence recovers the sampled "
+            "+0x09 semantic producer as 0x49f7c4 copying the template connection Border Guard column; "
+            "this summary remains only a ruleout for 0x4b3c03."
         ),
         "next_recovery_target": (
             "Use the runtime boundary summary to continue from the actual 0x4a79a3 edge/control-record "
             "iterator. The sampled 0x4a7605 ESI record is not the generator+0xc8 header itself, so the "
-            "next producer recovery must find the allocator or append path that fills edge/control-record "
-            "+0x08 before 0x4a7dcd/0x4a7dd0 selects the pair."
+            "next recovery must link the selected edge/control records back to their relation-owner "
+            "records before 0x4a7dcd/0x4a7dd0 selects the pair."
         ),
         "native_behavior_changed": False,
     }
