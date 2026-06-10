@@ -244,11 +244,44 @@ def build_summary(binary: Path, log_path: Path, ledger_path: Path) -> dict[str, 
         1 for cycle in selected_cycles if cycle.get("selected_object_vtable") in {"0x00540b00", "0x00540b14"}
     )
 
+    invariants = {
+        "all_selected_candidate_vtables_have_contracts": not selected_without_contract,
+        "binary_vtables_match_expected_contracts": not vtable_mismatches,
+        "all_selected_objects_match_create_contracts": not any(
+            record["object_vtable_matches_contract"] is False for record in selected_records
+        ),
+        "simple_value_scorers_match_candidate_value_field": not any(
+            record["field_score_matches_selected_value"] is False for record in selected_records
+        ),
+        "sample_includes_projection_selected_create": projection_selected_count > 0,
+        "no_objdump_used": True,
+        "no_native_behavior_change": True,
+    }
+    status = (
+        "passed_selected_candidate_vtable_contracts"
+        if all(invariants.values()) and not invariant_failures
+        else "failed_selected_candidate_vtable_contracts"
+    )
+
     return {
-        "status": "passed_selected_candidate_vtable_contracts" if not invariant_failures and not vtable_mismatches else "failed_selected_candidate_vtable_contracts",
+        "schema_id": "h3maped_4a9f1c_candidate_vtable_contract_summary_v2",
+        "status": status,
         "native_behavior_changed": False,
         "binary": str(binary),
         "trace": {"log_path": str(log_path), "ledger_path": str(ledger_path)},
+        "invariants": invariants,
+        "metrics": {
+            "native_behavior_changed": False,
+            "overall_goal_complete": False,
+            "used_objdump": False,
+            "selected_create_return_cycles": len(selected_cycles),
+            "complete_selected_create_cycles": len(complete_cycles),
+            "projection_selected_create_return_count": projection_selected_count,
+            "selected_candidate_vtable_count": len(selected_vtables),
+            "selected_candidate_vtables_without_contract_count": len(selected_without_contract),
+            "vtable_mismatch_count": len(vtable_mismatches),
+            "invariant_failure_count": len(invariant_failures),
+        },
         "selected_create_return_cycles": len(selected_cycles),
         "complete_selected_create_cycles": len(complete_cycles),
         "selected_candidate_vtable_counts": count_values(selected_cycles, "selected_candidate_vtable"),

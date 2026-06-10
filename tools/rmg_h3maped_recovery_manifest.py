@@ -334,6 +334,21 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "candidate_cursor_gate_frontier",
+        "artifact": ".artifacts/rmg_recovery/candidate_cursor_gate_frontier_summary_20260610.json",
+        "status": "candidate_cursor_gate_frontier_selected_path_f58_only_f5c_candidate_unselected",
+        "meaning": (
+            "The selected-candidate vtable contract surface now separates projection candidates "
+            "gated by generator+0xf58/generator+0x10b4 from the only recovered candidate scorer "
+            "directly gated by generator+0xf5c. Current 17 selected-create returns include one "
+            "projection selection, but it is the 0x540c60/0x49ca8b path gated by +0xf58; the "
+            "0x540ca0/0x49cd97 adjacent projection path gated by +0xf5c is present in the "
+            "static contract table but unselected in the sampled trace. This narrows the "
+            "endpoint cursor blocker without proving global unreachability or changing native "
+            "RMG behavior."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
