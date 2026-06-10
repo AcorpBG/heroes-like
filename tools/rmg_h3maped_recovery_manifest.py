@@ -57,7 +57,10 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         "meaning": (
             "The current one-level land evidence has sampled 0x4a696b calls and complete "
             "Medium full-grid scans, but zero source/relation byte-pair matches, zero "
-            "candidate appends, and zero direct mutation hits."
+            "candidate appends, and zero direct mutation hits. The canonical source-relation "
+            "gate report now also consumes the candidate-predicate trace proving the sampled "
+            "empty candidate vectors occur before terrain/helper rejection, 0x49aa93/0x4a6795, "
+            "candidate append, selected commit, or direct GeneratedCell+0x28 mutation."
         ),
     },
     {

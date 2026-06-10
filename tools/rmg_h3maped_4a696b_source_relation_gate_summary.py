@@ -28,6 +28,9 @@ DEFAULT_ARG_SURFACE = Path(
 DEFAULT_GRID_SCAN = Path(
     ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan2_summary_20260609.json"
 )
+DEFAULT_CANDIDATE_PREDICATE = Path(
+    ".artifacts/rmg_recovery/4a696b_candidate_predicate_trace_summary_20260609.json"
+)
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/4a696b_source_relation_gate_summary_20260609.json")
 
 
@@ -137,20 +140,33 @@ def grid_metrics(grid_scan: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def candidate_predicate_metrics(candidate_predicate: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "status": candidate_predicate.get("status"),
+        "event_count": candidate_predicate.get("event_count"),
+        "address_counts": candidate_predicate.get("address_counts", {}),
+        "predicate_counts": candidate_predicate.get("predicate_counts", {}),
+        "call_classifications": candidate_predicate.get("call_classifications", {}),
+    }
+
+
 def summarize(
     static_dump: Path,
     controlled_sweep: Path,
     arg_surface: Path,
     grid_scan: Path,
+    candidate_predicate: Path,
 ) -> dict[str, Any]:
     static = static_contract(static_dump.read_text(encoding="utf-8"))
     controlled = load_json(controlled_sweep)
     args = load_json(arg_surface)
     grid = load_json(grid_scan)
+    predicate = load_json(candidate_predicate)
 
     controlled_invariants = controlled.get("invariants", {})
     arg_invariants = args.get("invariants", {})
     grid_invariants = grid.get("invariants", {})
+    predicate_invariants = predicate.get("invariants", {})
     static_sites = static["required_static_sites_present"]
 
     invariants = {
@@ -177,6 +193,17 @@ def summarize(
         "grid_scan_zero_owner_relation_pair_matches": (
             grid_invariants.get("all_complete_grid_scans_have_zero_owner_relation_pair_matches") is True
         ),
+        "candidate_predicate_trace_stops_before_helpers_and_append": (
+            predicate.get("status")
+            == "partial_live_recovery_4a696b_prefilter_rejects_sampled_candidate_scans"
+            and predicate_invariants.get("hit_sampled_4a696b_entries") is True
+            and predicate_invariants.get("all_sampled_4a696b_entries_reached_scan_done") is True
+            and predicate_invariants.get("all_sampled_4a696b_entries_took_no_candidate_exit") is True
+            and predicate_invariants.get("no_source_relation_match_checkpoint_hits") is True
+            and predicate_invariants.get("no_helper_predicate_hits") is True
+            and predicate_invariants.get("no_candidate_appends") is True
+            and predicate_invariants.get("no_direct_mutation_hits") is True
+        ),
     }
     status = (
         "partial_recovery_4a696b_source_relation_gate_frontier"
@@ -192,12 +219,14 @@ def summarize(
             "controlled_sweep": str(controlled_sweep),
             "arg_surface": str(arg_surface),
             "grid_scan": str(grid_scan),
+            "candidate_predicate": str(candidate_predicate),
         },
         "static_contract": static,
         "runtime_evidence": {
             "controlled_sweep": controlled_metrics(controlled),
             "arg_surface": arg_metrics(args),
             "grid_scan": grid_metrics(grid),
+            "candidate_predicate": candidate_predicate_metrics(predicate),
         },
         "invariants": invariants,
         "source_backed_conclusion": (
@@ -206,8 +235,10 @@ def summarize(
             "after the two GeneratedCell+0x20 byte-pair compares at 0x4a6a63 and 0x4a6a6f. The seed-10 "
             "argument/grid evidence proves the sampled scan rectangles are non-empty and complete grid "
             "scans contain zero cells matching both expected byte2/byte3 relation values. Therefore the "
-            "sampled frontier is the source/relation byte-pair gate, before terrain checks, helper gates, "
-            "candidate append, vtable commit, or the direct GeneratedCell+0x28 mutation block."
+            "sampled frontier is the source/relation byte-pair gate. The candidate-predicate trace "
+            "separately proves the empty candidate vector is not caused by terrain checks, "
+            "0x49aa93/0x4a6795 helper rejection, candidate append failure, vtable commit, or the "
+            "direct GeneratedCell+0x28 mutation block."
         ),
         "remaining_gap": (
             "This is stronger sampled frontier evidence, not global unreachability proof. End-to-end "
@@ -225,13 +256,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--controlled-sweep", type=Path, default=DEFAULT_CONTROLLED_SWEEP)
     parser.add_argument("--arg-surface", type=Path, default=DEFAULT_ARG_SURFACE)
     parser.add_argument("--grid-scan", type=Path, default=DEFAULT_GRID_SCAN)
+    parser.add_argument("--candidate-predicate", type=Path, default=DEFAULT_CANDIDATE_PREDICATE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    summary = summarize(args.static_dump, args.controlled_sweep, args.arg_surface, args.grid_scan)
+    summary = summarize(
+        args.static_dump,
+        args.controlled_sweep,
+        args.arg_surface,
+        args.grid_scan,
+        args.candidate_predicate,
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"RMG_H3MAPED_4A696B_SOURCE_RELATION_GATE_SUMMARY status={summary['status']} out={args.out}")
