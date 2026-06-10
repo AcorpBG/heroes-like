@@ -34,6 +34,9 @@ DEFAULT_COORDINATE_RECONCILIATION = Path(
 DEFAULT_NONFALLBACK_RETURN_CONTEXTS = Path(
     ".artifacts/rmg_recovery/nonfallback_4a54a7_return_context_summary_20260610.json"
 )
+DEFAULT_NONFALLBACK_RETURN_OWNERS = Path(
+    ".artifacts/rmg_recovery/nonfallback_4a54a7_return_owner_summary_20260610.json"
+)
 DEFAULT_SEMANTIC_FRONTIER = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json"
@@ -49,6 +52,9 @@ EXPECTED_STATUSES = {
     ),
     "nonfallback_return_contexts": (
         "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending"
+    ),
+    "nonfallback_return_owners": (
+        "nonfallback_4a54a7_return_owners_recovered_unresolved_state_scoped"
     ),
     "semantic_frontier": (
         "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
@@ -86,6 +92,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "fallback_final_role": args.fallback_final_role,
         "coordinate_projection_reconciliation": args.coordinate_projection_reconciliation,
         "nonfallback_return_contexts": args.nonfallback_return_contexts,
+        "nonfallback_return_owners": args.nonfallback_return_owners,
         "semantic_frontier": args.semantic_frontier,
     }
     summaries = {name: load_json(path) for name, path in inputs.items()}
@@ -166,6 +173,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             ),
         },
         {
+            "id": "unresolved_nonfallback_4a54a7_return_owner_frontier",
+            "evidence": str(args.nonfallback_return_owners),
+            "scope": (
+                "The unresolved non-fallback callbacks are statically owned, not anonymous: "
+                "0x4a98f0 belongs to 0x4a9641, 0x4a9c3f belongs to 0x4a9911, and 0x4aa44d "
+                "belongs to 0x4aa3e9. Existing runtime evidence also proves sampled 0x4aa3e9 "
+                "slot +0x04 callbacks target 0x4a54a7 after ordered 0x4aa9b7 handoff."
+            ),
+        },
+        {
             "id": "working_semantic_name_frontier",
             "evidence": str(args.semantic_frontier),
             "scope": (
@@ -188,9 +205,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "reason": (
                 "Exact Medium seed-10 fallback records and cross-seed 0x4a5e03/0x4a5e6c "
                 "fallback-return commits and the sampled 0x4a744a non-fallback return-site "
-                "contract are reconciled, but 0x4a98f0, 0x4a9c3f, 0x4aa44d, other map modes, "
-                "and other source states still need coordinate/projection proof before native "
-                "behavior changes."
+                "contract are reconciled, and the remaining return-site owners are known. "
+                "However, 0x4a9641 -> 0x4a98f0, 0x4a9911 -> 0x4a9c3f, 0x4aa3e9 -> 0x4aa44d, "
+                "other map modes, and other source states still need coordinate/projection proof "
+                "before native behavior changes."
             ),
         },
         {
@@ -255,6 +273,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             summaries["nonfallback_return_contexts"],
             EXPECTED_STATUSES["nonfallback_return_contexts"],
         ),
+        "unresolved_nonfallback_return_owners_recovered": status_matches(
+            summaries["nonfallback_return_owners"],
+            EXPECTED_STATUSES["nonfallback_return_owners"],
+        ),
         "working_semantic_name_frontier_recovered": status_matches(
             summaries["semantic_frontier"], EXPECTED_STATUSES["semantic_frontier"]
         ),
@@ -299,7 +321,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "the template connection Border Guard flag; the exact seed-10 Border Guard chain now "
             "has recovered fallback materialization and phase-tail evidence. The sampled 0x4a744a "
             "non-fallback 0x4a54a7 return-site contract is recovered, leaving 0x4a98f0, "
-            "0x4a9c3f, and 0x4aa44d as the large unresolved non-fallback return contexts. "
+            "0x4a9c3f, and 0x4aa44d as the large unresolved non-fallback return contexts; "
+            "those are now mapped to owner functions 0x4a9641, 0x4a9911, and 0x4aa3e9. "
             "0x4a5e73 now has "
             "a recovered cursor-precondition frontier with current-corpus zero success-path hits, "
             "the non-self cursor writers are bound to the unhit projection/cleanup slot chain, "
@@ -308,8 +331,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
             "until broader coordinate/projection coverage for the remaining non-fallback return "
-            "sites, remaining semantic producers/global labels, and any future non-current-mode "
-            "reachability gaps are recovered from Wine/Ghidra evidence."
+            "owner loops, remaining semantic producers/global labels, and any future "
+            "non-current-mode reachability gaps are recovered from Wine/Ghidra evidence."
         ),
     }
 
@@ -329,6 +352,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--nonfallback-return-contexts",
         type=Path,
         default=DEFAULT_NONFALLBACK_RETURN_CONTEXTS,
+    )
+    parser.add_argument(
+        "--nonfallback-return-owners",
+        type=Path,
+        default=DEFAULT_NONFALLBACK_RETURN_OWNERS,
     )
     parser.add_argument("--semantic-frontier", type=Path, default=DEFAULT_SEMANTIC_FRONTIER)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
