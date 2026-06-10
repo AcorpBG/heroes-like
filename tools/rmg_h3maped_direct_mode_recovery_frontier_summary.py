@@ -42,7 +42,7 @@ EXPECTED_STATUSES = {
     "projection_slot_target_mode": "projection_slot_target_mode_unreached_recycle_boundary_explained",
     "fallback_final_role": "fallback_final_role_phase_tail_recovered_for_exact_seed10_records",
     "coordinate_projection_reconciliation": (
-        "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
+        "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
     ),
     "semantic_frontier": (
         "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
@@ -139,7 +139,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "The old mixed-trace coordinate mismatch is superseded for exact fallback "
                 "records 0x036260c0 and 0x03626060: construction, state-chain commit, "
                 "after-state commit, descriptor/relation coordinates, exact projection writes, "
-                "object-vector survival, and phase-tail completion now line up for those records."
+                "object-vector survival, and phase-tail completion now line up for those records. "
+                "Medium seed-1/seed-2 evidence also proves all 31 sampled 0x4a5e6c fallback-return "
+                "commits clear the sampled GeneratedCell+0x20 low word while preserving the high "
+                "word; 151 non-fallback 0x4a54a7 return-context commits remain explicitly pending."
             ),
         },
         {
@@ -163,9 +166,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         {
             "id": "broader_coordinate_projection_reconciliation_outside_exact_records",
             "reason": (
-                "Exact Medium seed-10 fallback records are reconciled, but other records, "
-                "map modes, and source states still need coordinate/projection proof before "
-                "native behavior changes."
+                "Exact Medium seed-10 fallback records and cross-seed 0x4a5e03/0x4a5e6c "
+                "fallback-return commits are reconciled, but non-fallback 0x4a54a7 return "
+                "contexts, other map modes, and other source states still need coordinate/"
+                "projection proof before native behavior changes."
             ),
         },
         {
