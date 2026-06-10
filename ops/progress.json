@@ -443,31 +443,33 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "0x4a696b target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static Ghidra references place direct 0x4a696b calls only at 0x4a79a3 sites 0x4a7c04 and 0x4a7dfa; static gate order is recovered; the current Wine corpus has 150 0x4a696b entries with zero source/relation-match, candidate, or direct-mutation hits; and controlled Medium one-level/no-water full-grid scans cover 6 complete rectangles, 5,752 cells, 3,639 byte2 matches, 33 byte3 matches, and zero full expected owner/relation byte-pair matches. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: natural projection slot +0x08 dispatch or stronger static/data proof it is unused in the target one-level land path, a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining when the block is reachable, live cleanup/uncommit state if projection dispatch is reached, older coordinate/projection reconciliation, and downstream final-role semantic names/proof.",
-    "currentSliceNotes": "0x4a696b target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static Ghidra references place direct 0x4a696b calls only at 0x4a79a3 sites 0x4a7c04 and 0x4a7dfa; static gate order is recovered; the current Wine corpus has 150 0x4a696b entries with zero source/relation-match, candidate, or direct-mutation hits; and controlled Medium one-level/no-water full-grid scans cover 6 complete rectangles, 5,752 cells, 3,639 byte2 matches, 33 byte3 matches, and zero full expected owner/relation byte-pair matches. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: natural projection slot +0x08 dispatch or stronger static/data proof it is unused in the target one-level land path, a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining when the block is reachable, live cleanup/uncommit state if projection dispatch is reached, older coordinate/projection reconciliation, and downstream final-role semantic names/proof.",
-    "currentSliceUpdatedAt": "2026-06-10T02:15:00Z",
-    "guardrailNote": "Recovered selected-member recycle, static cleanup ownership chain, and target-mode 0x4a696b reachability boundary. For current one-level land evidence, 0x4a696b direct GeneratedCell+0x28 mutation is not active: direct callers are only 0x4a79a3 sites, corpus entries never pass source/relation match, and full-grid scans show zero expected owner/relation byte-pair matches. Cleanup/uncommit remains bounded to projection-object slot +0x08 dispatch with zero live hits in the current corpus. Still unrecovered before native RMG behavior port: natural projection slot dispatch or static/data unused proof, a positive 0x4a696b source/relation-match sample or broader map-mode/source-state proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
+    "currentNotes": "Projection slot +0x08 target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static cleanup ownership is bound to projection-object slots 0x540b00+0x08 -> 0x49c019 and 0x540b14+0x08 -> 0x49c0a6; the current corpus scans 272 ledgers and 339 logs with zero live hits at 0x49c019, 0x49c0a6, 0x4ad947, 0x4adb72, 0x4add76, or 0x4adef7. Sampled 0x540b14 projection objects reach wrapper returns, but sampled projection addresses are destroyed/freed through the selected-object destructor path and later reused by ordinary constructors before final slot +0x08 dispatch, which goes to ordinary 0x49baf5 rather than projection 0x49c0a6. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: a natural final projection slot dispatch or broader static/data proof explaining map-mode/source-state recycling, a natural 0x4a696b source/relation-match sample or broader reachability proof, cleanup runtime state if reached, older coordinate/projection reconciliation, and final-role semantic names/proof.",
+    "currentSliceNotes": "Projection slot +0x08 target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static cleanup ownership is bound to projection-object slots 0x540b00+0x08 -> 0x49c019 and 0x540b14+0x08 -> 0x49c0a6; the current corpus scans 272 ledgers and 339 logs with zero live hits at 0x49c019, 0x49c0a6, 0x4ad947, 0x4adb72, 0x4add76, or 0x4adef7. Sampled 0x540b14 projection objects reach wrapper returns, but sampled projection addresses are destroyed/freed through the selected-object destructor path and later reused by ordinary constructors before final slot +0x08 dispatch, which goes to ordinary 0x49baf5 rather than projection 0x49c0a6. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: a natural final projection slot dispatch or broader static/data proof explaining map-mode/source-state recycling, a natural 0x4a696b source/relation-match sample or broader reachability proof, cleanup runtime state if reached, older coordinate/projection reconciliation, and final-role semantic names/proof.",
+    "currentSliceUpdatedAt": "2026-06-10T02:25:00Z",
+    "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, and projection slot +0x08 target-mode recycle boundary. For current one-level land evidence, 0x4a696b direct mutation is blocked at the owner/relation byte-pair gate, and projection-object cleanup methods are not active final consumers because sampled projection objects are destroyed/freed/reused before ordinary final slot dispatch. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_4a696b_target_mode_reachability_summary.py (passed)",
-        "python3 tools/rmg_h3maped_4a696b_target_mode_reachability_summary.py --out .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json (passed)"
+        "python3 -m py_compile tools/rmg_h3maped_projection_slot_target_mode_reachability_summary.py (passed)",
+        "python3 tools/rmg_h3maped_projection_slot_target_mode_reachability_summary.py --out .artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
+        "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_4a696b_target_mode_reachability": {
-          "status": "target_mode_4a696b_direct_mutation_unreached_pair_gate_explained",
-          "combined_4a696b_entries": 150,
-          "combined_source_relation_match_hits": 0,
-          "combined_candidate_append_hits": 0,
-          "combined_direct_mutation_hits": 0,
-          "complete_grid_scan_count": 6,
-          "scanned_cell_total": 5752,
-          "zero_owner_relation_pair_match_scan_count": 6,
+        "h3maped_projection_slot_target_mode_reachability": {
+          "status": "projection_slot_target_mode_unreached_recycle_boundary_explained",
+          "ledger_files_scanned": 272,
+          "log_files_scanned": 339,
+          "projection_slot_49c019_hits": 0,
+          "projection_slot_49c0a6_hits": 0,
+          "cleanup_or_projection_target_hits_total": 0,
           "native_behavior_changed": false,
           "used_objdump": false,
           "overall_goal_complete": false
@@ -475,29 +477,27 @@
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T02:15:00Z",
-      "updatedAt": "2026-06-10T02:15:00Z"
+      "timestamp": "2026-06-10T02:25:00Z",
+      "updatedAt": "2026-06-10T02:25:00Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json",
       "metrics": {
-        "h3maped_4a696b_target_mode_reachability": {
-          "status": "target_mode_4a696b_direct_mutation_unreached_pair_gate_explained",
-          "combined_4a696b_entries": 150,
-          "combined_source_relation_match_hits": 0,
-          "combined_candidate_append_hits": 0,
-          "combined_direct_mutation_hits": 0,
-          "complete_grid_scan_count": 6,
-          "scanned_cell_total": 5752,
-          "zero_owner_relation_pair_match_scan_count": 6,
+        "h3maped_projection_slot_target_mode_reachability": {
+          "status": "projection_slot_target_mode_unreached_recycle_boundary_explained",
+          "ledger_files_scanned": 272,
+          "log_files_scanned": 339,
+          "projection_slot_49c019_hits": 0,
+          "projection_slot_49c0a6_hits": 0,
+          "cleanup_or_projection_target_hits_total": 0,
           "native_behavior_changed": false
         }
       },
       "native_behavior_changed": false,
-      "remaining_blocker": "Recovered selected-member recycle, static cleanup ownership chain, and target-mode 0x4a696b reachability boundary. For current one-level land evidence, 0x4a696b direct GeneratedCell+0x28 mutation is not active: direct callers are only 0x4a79a3 sites, corpus entries never pass source/relation match, and full-grid scans show zero expected owner/relation byte-pair matches. Cleanup/uncommit remains bounded to projection-object slot +0x08 dispatch with zero live hits in the current corpus. Still unrecovered before native RMG behavior port: natural projection slot dispatch or static/data unused proof, a positive 0x4a696b source/relation-match sample or broader map-mode/source-state proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
-      "result": "0x4a696b direct mutation is target-mode bounded for recovered one-level land evidence: no source/relation-match hits and no expected owner/relation byte-pair in complete sampled grids.",
-      "source_basis": "Ghidra static gate/caller evidence plus Wine corpus and full-grid summaries consolidated by tools/rmg_h3maped_4a696b_target_mode_reachability_summary.py.",
-      "validatedAt": "2026-06-10T02:15:00Z"
+      "remaining_blocker": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, and projection slot +0x08 target-mode recycle boundary. For current one-level land evidence, 0x4a696b direct mutation is blocked at the owner/relation byte-pair gate, and projection-object cleanup methods are not active final consumers because sampled projection objects are destroyed/freed/reused before ordinary final slot dispatch. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
+      "result": "Projection slot +0x08 cleanup path is target-mode bounded for recovered one-level land evidence: sampled projection objects are recycled before final ordinary slot dispatch and 0x49c019/0x49c0a6 remain unhit.",
+      "source_basis": "Ghidra static ownership plus Wine projection frontier, wrapper lifetime, constructor reuse, and recycle-owner summaries consolidated by tools/rmg_h3maped_projection_slot_target_mode_reachability_summary.py.",
+      "validatedAt": "2026-06-10T02:25:00Z"
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -628,7 +628,7 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingWork": "Recover natural projection slot +0x08 dispatch or stronger static/data proof it is unused in the target one-level land path; recover a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining exactly when the direct mutation block is reachable; capture runtime cleanup/uncommit state if projection dispatch is reached; resolve older coordinate/projection reconciliation and downstream final-role semantic names/proof before porting native RMG behavior.",
+    "remainingWork": "Recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining exactly when the direct mutation block is reachable; capture runtime cleanup/uncommit state if projection dispatch is reached; resolve older coordinate/projection reconciliation and downstream final-role semantic names/proof before porting native RMG behavior.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -636,7 +636,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the weighted dispatch vector/counter deltas, cleanup static ownership/no-live-hit frontier, projection-object slot +0x08 no-live-hit frontier, 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary, and target-mode 0x4a696b byte-pair reachability boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a7605 delegated mutation modes, projection-object method dispatch, live 0x4add76/0x4adef7 cleanup replay, and broader 0x4a696b map-mode/source-state reachability proof are still explicit blockers.",
+    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, accepted append/materialization, weighted dispatch vector/counter deltas, cleanup static ownership/no-live-hit frontier, projection slot target-mode recycle boundary, 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary, and target-mode 0x4a696b byte-pair reachability boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a7605 delegated mutation modes, natural projection-object method dispatch or broader recycle proof, live 0x4add76/0x4adef7 cleanup replay if reached, and broader 0x4a696b map-mode/source-state reachability proof are still explicit blockers.",
     "title": "RMG Small Generalization Hardening",
     "updatedAt": "2026-06-10T02:15:00Z",
     "validation": {
@@ -9279,10 +9279,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "0x4a696b target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static Ghidra references place direct 0x4a696b calls only at 0x4a79a3 sites 0x4a7c04 and 0x4a7dfa; static gate order is recovered; the current Wine corpus has 150 0x4a696b entries with zero source/relation-match, candidate, or direct-mutation hits; and controlled Medium one-level/no-water full-grid scans cover 6 complete rectangles, 5,752 cells, 3,639 byte2 matches, 33 byte3 matches, and zero full expected owner/relation byte-pair matches. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: natural projection slot +0x08 dispatch or stronger static/data proof it is unused in the target one-level land path, a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining when the block is reachable, live cleanup/uncommit state if projection dispatch is reached, older coordinate/projection reconciliation, and downstream final-role semantic names/proof.",
+  "currentSliceNotes": "Projection slot +0x08 target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static cleanup ownership is bound to projection-object slots 0x540b00+0x08 -> 0x49c019 and 0x540b14+0x08 -> 0x49c0a6; the current corpus scans 272 ledgers and 339 logs with zero live hits at 0x49c019, 0x49c0a6, 0x4ad947, 0x4adb72, 0x4add76, or 0x4adef7. Sampled 0x540b14 projection objects reach wrapper returns, but sampled projection addresses are destroyed/freed through the selected-object destructor path and later reused by ordinary constructors before final slot +0x08 dispatch, which goes to ordinary 0x49baf5 rather than projection 0x49c0a6. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: a natural final projection slot dispatch or broader static/data proof explaining map-mode/source-state recycling, a natural 0x4a696b source/relation-match sample or broader reachability proof, cleanup runtime state if reached, older coordinate/projection reconciliation, and final-role semantic names/proof.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T02:15:00Z",
+  "currentSliceUpdatedAt": "2026-06-10T02:25:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10278,60 +10278,56 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, and projection slot +0x08 target-mode recycle boundary. For current one-level land evidence, 0x4a696b direct mutation is blocked at the owner/relation byte-pair gate, and projection-object cleanup methods are not active final consumers because sampled projection objects are destroyed/freed/reused before ordinary final slot dispatch. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/4a696b_corpus_reachability_summary_20260609.json",
+    "artifact": ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_4a696b_corpus_reachability_summary.py tools/rmg_h3maped_49e700_mutation_summary.py tools/rmg_h3maped_4ac552_phase_completion_summary.py (passed)",
-      "python3 tools/rmg_h3maped_4a696b_corpus_reachability_summary.py (passed: 4a696b_corpus_no_source_match_or_direct_mutation_hits)",
-      "python3 tools/rmg_h3maped_49e700_mutation_summary.py (passed: 49e700_mutation_bit26_write_set_recovered)",
-      "python3 tools/rmg_h3maped_4ac552_phase_completion_summary.py (passed: 4ac552_post_49eb8d_phase_completion_recovered)",
-      "jq empty ops/progress.json (passed before final validation record update)",
-      "git diff --check (passed before final validation record update)",
+      "python3 -m py_compile tools/rmg_h3maped_projection_slot_target_mode_reachability_summary.py (passed)",
+      "python3 tools/rmg_h3maped_projection_slot_target_mode_reachability_summary.py --out .artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json (passed)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "h3maped_4a696b_corpus_reachability": {
-        "combined_4a696b_entries": 150,
-        "combined_candidate_append_hits": 0,
-        "combined_candidate_path_hits": 0,
-        "combined_direct_mutation_hits": 0,
-        "combined_source_relation_match_hits": 0,
-        "ledger_4a696b_entries": 68,
-        "ledger_files_with_4a696b_sites": 17,
-        "raw_log_4a696b_entries": 82,
-        "raw_logs_with_4a696b_sites": 22
+      "h3maped_projection_slot_target_mode_reachability": {
+        "status": "projection_slot_target_mode_unreached_recycle_boundary_explained",
+        "ledger_files_scanned": 272,
+        "log_files_scanned": 339,
+        "projection_slot_49c019_hits": 0,
+        "projection_slot_49c0a6_hits": 0,
+        "cleanup_or_projection_target_hits_total": 0,
+        "native_behavior_changed": false,
+        "used_objdump": false,
+        "overall_goal_complete": false
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-09T23:43:12Z",
-    "updatedAt": "2026-06-09T23:43:12Z"
+    "timestamp": "2026-06-10T02:25:00Z",
+    "updatedAt": "2026-06-10T02:25:00Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json",
     "metrics": {
-      "h3maped_4a696b_target_mode_reachability": {
-        "status": "target_mode_4a696b_direct_mutation_unreached_pair_gate_explained",
-        "combined_4a696b_entries": 150,
-        "combined_source_relation_match_hits": 0,
-        "combined_candidate_append_hits": 0,
-        "combined_direct_mutation_hits": 0,
-        "complete_grid_scan_count": 6,
-        "scanned_cell_total": 5752,
-        "zero_owner_relation_pair_match_scan_count": 6,
+      "h3maped_projection_slot_target_mode_reachability": {
+        "status": "projection_slot_target_mode_unreached_recycle_boundary_explained",
+        "ledger_files_scanned": 272,
+        "log_files_scanned": 339,
+        "projection_slot_49c019_hits": 0,
+        "projection_slot_49c0a6_hits": 0,
+        "cleanup_or_projection_target_hits_total": 0,
         "native_behavior_changed": false
       }
     },
     "native_behavior_changed": false,
-    "remaining_blocker": "Recovered selected-member recycle, static cleanup ownership chain, and target-mode 0x4a696b reachability boundary. For current one-level land evidence, 0x4a696b direct GeneratedCell+0x28 mutation is not active: direct callers are only 0x4a79a3 sites, corpus entries never pass source/relation match, and full-grid scans show zero expected owner/relation byte-pair matches. Cleanup/uncommit remains bounded to projection-object slot +0x08 dispatch with zero live hits in the current corpus. Still unrecovered before native RMG behavior port: natural projection slot dispatch or static/data unused proof, a positive 0x4a696b source/relation-match sample or broader map-mode/source-state proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
-    "result": "0x4a696b direct mutation is target-mode bounded for recovered one-level land evidence: no source/relation-match hits and no expected owner/relation byte-pair in complete sampled grids.",
-    "source_basis": "Ghidra static gate/caller evidence plus Wine corpus and full-grid summaries consolidated by tools/rmg_h3maped_4a696b_target_mode_reachability_summary.py.",
-    "validatedAt": "2026-06-10T02:15:00Z"
+    "remaining_blocker": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, and projection slot +0x08 target-mode recycle boundary. For current one-level land evidence, 0x4a696b direct mutation is blocked at the owner/relation byte-pair gate, and projection-object cleanup methods are not active final consumers because sampled projection objects are destroyed/freed/reused before ordinary final slot dispatch. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
+    "result": "Projection slot +0x08 cleanup path is target-mode bounded for recovered one-level land evidence: sampled projection objects are recycled before final ordinary slot dispatch and 0x49c019/0x49c0a6 remain unhit.",
+    "source_basis": "Ghidra static ownership plus Wine projection frontier, wrapper lifetime, constructor reuse, and recycle-owner summaries consolidated by tools/rmg_h3maped_projection_slot_target_mode_reachability_summary.py.",
+    "validatedAt": "2026-06-10T02:25:00Z"
   },
-  "nextActionGuardrailNote": "Recovered selected-member recycle, static cleanup ownership chain, and target-mode 0x4a696b reachability boundary. For current one-level land evidence, 0x4a696b direct GeneratedCell+0x28 mutation is not active: direct callers are only 0x4a79a3 sites, corpus entries never pass source/relation match, and full-grid scans show zero expected owner/relation byte-pair matches. Cleanup/uncommit remains bounded to projection-object slot +0x08 dispatch with zero live hits in the current corpus. Still unrecovered before native RMG behavior port: natural projection slot dispatch or static/data unused proof, a positive 0x4a696b source/relation-match sample or broader map-mode/source-state proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
-  "notes": "0x4a696b target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static Ghidra references place direct 0x4a696b calls only at 0x4a79a3 sites 0x4a7c04 and 0x4a7dfa; static gate order is recovered; the current Wine corpus has 150 0x4a696b entries with zero source/relation-match, candidate, or direct-mutation hits; and controlled Medium one-level/no-water full-grid scans cover 6 complete rectangles, 5,752 cells, 3,639 byte2 matches, 33 byte3 matches, and zero full expected owner/relation byte-pair matches. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: natural projection slot +0x08 dispatch or stronger static/data proof it is unused in the target one-level land path, a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining when the block is reachable, live cleanup/uncommit state if projection dispatch is reached, older coordinate/projection reconciliation, and downstream final-role semantic names/proof.",
+  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, and projection slot +0x08 target-mode recycle boundary. For current one-level land evidence, 0x4a696b direct mutation is blocked at the owner/relation byte-pair gate, and projection-object cleanup methods are not active final consumers because sampled projection objects are destroyed/freed/reused before ordinary final slot dispatch. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final-role semantic proof. Use Wine/Ghidra/Python only; no objdump; no native behavior changes.",
+  "notes": "Projection slot +0x08 target-mode reachability narrowed with Ghidra/Wine/Python evidence. Static cleanup ownership is bound to projection-object slots 0x540b00+0x08 -> 0x49c019 and 0x540b14+0x08 -> 0x49c0a6; the current corpus scans 272 ledgers and 339 logs with zero live hits at 0x49c019, 0x49c0a6, 0x4ad947, 0x4adb72, 0x4add76, or 0x4adef7. Sampled 0x540b14 projection objects reach wrapper returns, but sampled projection addresses are destroyed/freed through the selected-object destructor path and later reused by ordinary constructors before final slot +0x08 dispatch, which goes to ordinary 0x49baf5 rather than projection 0x49c0a6. Native RMG behavior remains unchanged; Wine/Ghidra/Python only, no objdump. Still unrecovered before native RMG behavior port: a natural final projection slot dispatch or broader static/data proof explaining map-mode/source-state recycling, a natural 0x4a696b source/relation-match sample or broader reachability proof, cleanup runtime state if reached, older coordinate/projection reconciliation, and final-role semantic names/proof.",
   "plannedSlices": [
     {
       "baselineChecks": [
