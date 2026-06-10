@@ -211,6 +211,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "0x4a61bc_append_commit_payload_frontier",
+        "artifact": ".artifacts/rmg_recovery/4a61bc_chain_frontier_summary_20260610.json",
+        "status": "4a61bc_append_commit_payload_downstream_frontier_recovered",
+        "meaning": (
+            "Existing Wine/Ghidra/Python evidence is now consolidated into one gated sampled "
+            "chain: 0x4a79a3 reaches 0x4a61bc through 0x49b3fb; 0x4a61bc delegates object "
+            "growth through 0x4a5e03; the sampled append occurs inside 0x4a54a7; three "
+            "sampled 0x4a54a7 commits prove object-vector, generated-cell object-ref, +0x20, "
+            "+0x28, and projection low-word mutation contracts; a selected 0x4a61bc-origin "
+            "record reappears in the same run's 0x4a79a3 payload loop; and the linked payload "
+            "reaches 0x4a696b and 0x4a7605. The current 0x4a696b sweep remains a negative "
+            "frontier with 30 sampled calls, zero source/relation matches, and zero direct "
+            "mutation hits."
+        ),
+    },
+    {
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
