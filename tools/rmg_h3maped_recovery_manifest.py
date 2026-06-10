@@ -554,6 +554,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_input_tag_table_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_input_tag_table_summary_20260610.json",
+        "status": "source_input_tag_table_payload_surface_recovered_human_meanings_pending",
+        "meaning": (
+            "Ghidra/Python evidence now recovers the local 0x43ad49 tag dispatch payload "
+            "surface without assigning human tag meanings. The 0x43ae9a table maps tags "
+            "0..10 to branch targets 0x43adaa, 0x43add8, 0x43ae1c, 0x43ae41, shared "
+            "0x43ae73 for tags 4..7, return-only 0x43ae96 for tags 8..9, and 0x43ae78 "
+            "for tag 10. Common header fields are tag dword +0x00 and two boolean bytes "
+            "+0x04/+0x05. Payload shapes are recovered for tags 0..10, including version-"
+            "gated scalar reads, dword payloads, triplet payloads, and no-extra-payload "
+            "tags. Remaining blockers are human tag meanings, output field names, and "
+            "final 0x4c source-record/catalog mapping."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
@@ -927,15 +943,26 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x43ad49",
         "name": "source_input_tagged_record_reader",
-        "status": "recovered_surface_tag_semantics_pending",
+        "status": "recovered_payload_surface_human_meanings_pending",
         "callers": ["0x43b0ff"],
         "calls": ["0x40763d", "tag-table branch helpers"],
         "writes": [
             "tag byte widened to output +0x00",
             "two boolean-like bytes at output +0x04 and +0x05",
+            "tag 0 writes version-gated scalar at +0x08: word for version >= 0x15, signed byte otherwise",
+            "tag 1 writes version-gated scalar at +0x08 and dword at +0x0c; old one-byte 0xff normalizes to -1",
+            "tag 2 writes signed byte at +0x08 and dword at +0x0c",
+            "tag 3 writes a three-byte triplet at +0x08 plus signed bytes at +0x14 and +0x18",
+            "tags 4..7 write a three-byte triplet at +0x08",
+            "tags 8..9 have no extra payload beyond the common header",
+            "tag 10 writes unsigned byte at +0x08 and a three-byte triplet at +0x0c",
         ],
-        "unrecovered_semantics": ["exact tag meanings for table entries 0..10"],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043ad49_FUN_0043ad49.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover this tagged-record surface.",
+        "unrecovered_semantics": [
+            "human meaning of tag values 0..10",
+            "human field names for output offsets +0x08, +0x0c, +0x14, and +0x18",
+            "final mapping from tagged payloads into populated 0x4c source records and catalog rows",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610/target_0043ad49_FUN_0043ad49.txt plus verifier .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json recover the tagged-record header; .artifacts/rmg_recovery/ghidra_source_input_tag_table_dump_20260610 plus verifier .artifacts/rmg_recovery/source_input_tag_table_summary_20260610.json recover the local tag table and payload shapes.",
     },
     {
         "address": "0x43aec6",
