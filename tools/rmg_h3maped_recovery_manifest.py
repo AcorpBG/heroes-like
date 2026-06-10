@@ -52,6 +52,18 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "ordinary final slot dispatch, with zero live cleanup/projection target hits."
         ),
     },
+    {
+        "id": "exact_fallback_coordinate_projection_reconciliation",
+        "artifact": ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json",
+        "status": "exact_fallback_coordinate_projection_reconciled_broader_modes_pending",
+        "meaning": (
+            "The older mixed-trace coordinate mismatch is superseded for exact Medium seed-10 "
+            "fallback records 0x036260c0 and 0x03626060: construction, state-chain commit, "
+            "after-state commit, descriptor/relation coordinates, exact projection writes, "
+            "object-vector survival, and phase-tail completion agree for those records. "
+            "Broader coordinate/projection coverage remains pending."
+        ),
+    },
 ]
 
 FUNCTIONS: list[dict[str, Any]] = [
