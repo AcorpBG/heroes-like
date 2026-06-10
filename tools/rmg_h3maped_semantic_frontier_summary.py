@@ -237,6 +237,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "fields": {
                 "0x4a5e73": "endpoint helper keyed by generator+0xf5c",
                 "generator+0xf5c": "current endpoint/index cursor; stale in all current natural and forced Border Guard samples",
+                "generator+0xf5c writer surface": "widened Ghidra endpoint-state scan still bounds direct writers to 0x4a5e73, 0x4adb72, and 0x4add76",
                 "generator+0xd8/+0xdc": "index-keyed pointer vector searched before endpoint mutation",
                 "generator+0xc8/+0xcc": "second index-keyed pointer vector required for success-path projection",
                 "generator+0x1104/+0x1108": "byte-state vector marked and advanced after success",
@@ -350,9 +351,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "0x4a5e73 is statically recovered as the cursor-keyed endpoint helper and has zero "
             "success-path mutation hits in the current corpus; the only non-self direct +0xf5c "
             "writers are bound to projection/cleanup slot methods that current one-level land "
-            "evidence never dispatches; the cursor-source frontier now consolidates that setup "
-            "initializes +0xf58/+0x1104 but not +0xf5c and that sampled projection objects "
-            "are destroyed/freed/reused before ordinary final dispatch; 0x4a606b is statically "
+            "evidence never dispatches; the cursor-source frontier now consumes a widened "
+            "Ghidra endpoint-state scan that still finds no additional direct +0xf5c writer, "
+            "consolidates that setup initializes +0xf58/+0x1104 but not +0xf5c, and proves "
+            "sampled projection objects are destroyed/freed/reused before ordinary final dispatch; "
+            "0x4a606b is statically "
             "recovered and has no live hit in the current target corpus. Broader "
             "relation/control linkage, global semantic labels, and broader scope remain "
             "explicit blockers."
