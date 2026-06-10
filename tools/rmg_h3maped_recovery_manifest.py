@@ -363,6 +363,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_label_crosswalk",
+        "artifact": ".artifacts/rmg_recovery/descriptor_label_crosswalk_summary_20260610.json",
+        "status": "descriptor_label_crosswalk_partial_descriptor45_row_unresolved",
+        "meaning": (
+            "The sampled 0x4a9f1c candidate+0x04 type ids are now source-labeled through "
+            "the extracted object metadata table, including Campfire, Creature Bank, "
+            "Random Resource, Resource, Seer's Hut, Shrine, Spell Scroll, Treasure Chest, "
+            "and Windmill. Sampled descriptor+0x1c type 54 resolves to Monster with all "
+            "sampled descriptor ids matching zero-based object-catalog rows; type 98 resolves "
+            "to Town with all sampled descriptor ids matching zero-based object-catalog rows. "
+            "Type 45 is labeled Monolith Two Way by type id, but sampled descriptor id/class "
+            "word 1145 maps to a Cartographer row under the same row rule, so that row-level "
+            "descriptor relation remains unrecovered."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
