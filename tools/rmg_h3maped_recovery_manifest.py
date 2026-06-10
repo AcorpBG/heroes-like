@@ -349,6 +349,20 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_category_cursor_gate_surface",
+        "artifact": ".artifacts/rmg_recovery/medium_descriptor_category_surface_summary_20260608.json",
+        "status": "descriptor_category_surfaces_separated_candidate_cursor_gate_named",
+        "meaning": (
+            "The descriptor/category surface now keeps candidate+0x04 type indices, "
+            "descriptor+0x1c type/counter indices, relation control bytes, and candidate "
+            "cursor gates separate. It proves the sampled selected projection candidate has "
+            "type 83 on the 0x540c60/0x49ca8b generator+0xf58 path, while the only recovered "
+            "generator+0xf5c-gated candidate 0x540ca0/0x49cd97 still has no sampled selected "
+            "type index or downstream semantics. Numeric type indices are not human object-kind "
+            "labels until source object/template mapping proves them."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",

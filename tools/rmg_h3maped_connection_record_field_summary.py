@@ -187,7 +187,11 @@ def summarize(
         "sampled_7605_gate_zero_skips_746b": gate.get("status")
         == "partial_live_recovery_7605_control_byte_gate_skips_746b",
         "plus9_source_meaning_recovered_as_border_guard_flag": (
-            descriptor_category.get("status") == "descriptor_category_surfaces_separated"
+            descriptor_category.get("status")
+            in {
+                "descriptor_category_surfaces_separated",
+                "descriptor_category_surfaces_separated_candidate_cursor_gate_named",
+            }
             and border_guard_record_count > 0
             and int(border_guard_counts.get("1", 0)) > 0
             and "Border Guard" in selected_relation_control.get("meaning_recovered", "")
