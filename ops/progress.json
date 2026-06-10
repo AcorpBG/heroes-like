@@ -443,45 +443,47 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used.",
-    "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "currentSliceUpdatedAt": "2026-06-10T00:20:48Z",
-    "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentNotes": "Selected-object recycle owner recovered from Wine/Ghidra evidence. Small 2-player/no-water destructor trace records 701 events, 149 selected returns, 203 selected-object destructor entries, 203 optional free call-site hits, 140 destructor hits on selected-return heap pointers, and 139 frees on selected-return heap pointers. The sampled projection-to-ordinary transition for 0x03620760 is pointer-paired: 0x540b14 selected return -> 0x49c049 projection destructor -> owned 0x540b28 child destroy at 0x49c08b -> shell downgrade to 0x540a74 inside 0x49c065 -> shell free at 0x49c059 -> later 0x49c553 ordinary return as 0x540a74. Generic candidate-container free paths 0x49ef78/0x49f29e/0x49f7aa were checked and do not overlap selected-object heap pointers. Native RMG behavior remains unchanged; Wine/Ghidra only, no objdump. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes.",
+    "currentSliceNotes": "Selected-object recycle owner recovered from Wine/Ghidra evidence. Small 2-player/no-water destructor trace records 701 events, 149 selected returns, 203 selected-object destructor entries, 203 optional free call-site hits, 140 destructor hits on selected-return heap pointers, and 139 frees on selected-return heap pointers. The sampled projection-to-ordinary transition for 0x03620760 is pointer-paired: 0x540b14 selected return -> 0x49c049 projection destructor -> owned 0x540b28 child destroy at 0x49c08b -> shell downgrade to 0x540a74 inside 0x49c065 -> shell free at 0x49c059 -> later 0x49c553 ordinary return as 0x540a74. Generic candidate-container free paths 0x49ef78/0x49f29e/0x49f7aa were checked and do not overlap selected-object heap pointers. Native RMG behavior remains unchanged; Wine/Ghidra only, no objdump. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes.",
+    "currentSliceUpdatedAt": "2026-06-10T00:58:00Z",
+    "guardrailNote": "Recovered selected-member production/dispatch/recycle boundary: 0x4aa1db produces/appends/stamps selected members; 0x4aa3e9 owns final selected-member slot +0x08 dispatch at 0x4aa5f6; sampled 0x540b14 projection selected objects are released through vtable slot0 destructor/free (0x49c049 -> 0x49c065 -> 0x49c059) before allocator-slot reuse as ordinary 0x540a74. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes. Use Wine/Ghidra only; no objdump.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/small2p_selected_recycle_owner_summary_20260610.json",
       "commands": [
-        "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... --map-size small --human-computer-down 2 --computer-only-down 1 --water-none --lite (partial trace preserved; 600 events parsed)",
-        "python3 tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py --out .artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json (passed)",
-        "python3 -m py_compile tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py (passed)",
-        "jq empty ops/progress.json (passed)",
-        "git diff --check (passed)",
-        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-        "python3 tests/validate_repo.py (passed)"
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... selected recycle free sites (passed; 901 events)",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... selected destructor/free sites (passed; 701 events)",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless ... H3MapEdRmgDump.java ... selected destructor/allocation targets (passed)",
+        "python3 tools/rmg_h3maped_selected_recycle_owner_summary.py --out .artifacts/rmg_recovery/small2p_selected_recycle_owner_summary_20260610.json (passed)"
       ],
       "metrics": {
-        "h3maped_540b14_same_wrapper_lifetime": {
-          "event_count": 600,
-          "final_4aa3e9_commits": 10,
-          "final_slot8_callbacks": 13,
+        "h3maped_selected_recycle_owner": {
+          "event_count": 701,
+          "selected_return_count": 149,
+          "selected_pointer_count": 46,
+          "destructor_entry_count": 203,
+          "destructor_free_count": 203,
+          "selected_pointer_destructor_overlap_count": 140,
+          "selected_pointer_free_overlap_count": 139,
+          "projection_to_non_projection_reuse_count": 1,
+          "projection_child_destroy_count": 1,
+          "recovered_projection_reuse_pointer": "0x03620760",
+          "recovered_projection_destructor": "0x0049c049",
+          "recovered_projection_child_destroy_site": "0x0049c08b",
+          "recovered_projection_shell_free_site": "0x0049c059",
           "native_behavior_changed": false,
-          "ordinary_final_slot8_target": "0x49baf5",
-          "overall_goal_complete": false,
-          "previous_projection_address_final_dispatches_as_ordinary_slot8": 1,
-          "projection_method_cleanup_hits": 0,
-          "projection_selected_returns": 4,
           "used_objdump": false,
-          "wrapper_returns_with_projection_members": 11
+          "overall_goal_complete": false
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T00:20:48Z",
-      "updatedAt": "2026-06-10T00:20:48Z"
+      "timestamp": "2026-06-10T00:58:00Z",
+      "updatedAt": "2026-06-10T00:58:00Z"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_recovery/medium_controlled_4a696b_sweep_summary_20260609.json",
@@ -9309,10 +9311,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "currentSliceNotes": "Selected-object recycle owner recovered from Wine/Ghidra evidence. Small 2-player/no-water destructor trace records 701 events, 149 selected returns, 203 selected-object destructor entries, 203 optional free call-site hits, 140 destructor hits on selected-return heap pointers, and 139 frees on selected-return heap pointers. The sampled projection-to-ordinary transition for 0x03620760 is pointer-paired: 0x540b14 selected return -> 0x49c049 projection destructor -> owned 0x540b28 child destroy at 0x49c08b -> shell downgrade to 0x540a74 inside 0x49c065 -> shell free at 0x49c059 -> later 0x49c553 ordinary return as 0x540a74. Generic candidate-container free paths 0x49ef78/0x49f29e/0x49f7aa were checked and do not overlap selected-object heap pointers. Native RMG behavior remains unchanged; Wine/Ghidra only, no objdump. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T00:48:12Z",
+  "currentSliceUpdatedAt": "2026-06-10T00:58:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10359,13 +10361,13 @@
       }
     },
     "native_behavior_changed": false,
-    "remaining_blocker": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "result": "Selected-object constructor/allocator-slot reuse recovered for sampled projection-to-ordinary selected-object boundary; native behavior unchanged.",
-    "source_basis": "WineDbg Small 2-player/no-water trace parsed by tools/rmg_h3maped_selected_constructor_reuse_summary.py plus Ghidra-backed constructor/vtable checkpoints for selected-object create functions.",
-    "validatedAt": "2026-06-10T00:48:12Z"
+    "remaining_blocker": "Recovered selected-member production/dispatch/recycle boundary: 0x4aa1db produces/appends/stamps selected members; 0x4aa3e9 owns final selected-member slot +0x08 dispatch at 0x4aa5f6; sampled 0x540b14 projection selected objects are released through vtable slot0 destructor/free (0x49c049 -> 0x49c065 -> 0x49c059) before allocator-slot reuse as ordinary 0x540a74. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes. Use Wine/Ghidra only; no objdump.",
+    "result": "Selected-object recycle owner recovered: sampled projection selected-object heap slot is destroyed/freed through vtable slot0 before allocator reuse as an ordinary selected object; native behavior unchanged.",
+    "source_basis": "WineDbg Small 2-player/no-water selected destructor/free trace parsed by tools/rmg_h3maped_selected_recycle_owner_summary.py, plus Ghidra/headless exports for selected-object vtables/destructors/allocation helpers.",
+    "validatedAt": "2026-06-10T00:58:00Z"
   },
-  "nextActionGuardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-  "notes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recovered selected-member production/dispatch/recycle boundary: 0x4aa1db produces/appends/stamps selected members; 0x4aa3e9 owns final selected-member slot +0x08 dispatch at 0x4aa5f6; sampled 0x540b14 projection selected objects are released through vtable slot0 destructor/free (0x49c049 -> 0x49c065 -> 0x49c059) before allocator-slot reuse as ordinary 0x540a74. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes. Use Wine/Ghidra only; no objdump.",
+  "notes": "Selected-object recycle owner recovered from Wine/Ghidra evidence. Small 2-player/no-water destructor trace records 701 events, 149 selected returns, 203 selected-object destructor entries, 203 optional free call-site hits, 140 destructor hits on selected-return heap pointers, and 139 frees on selected-return heap pointers. The sampled projection-to-ordinary transition for 0x03620760 is pointer-paired: 0x540b14 selected return -> 0x49c049 projection destructor -> owned 0x540b28 child destroy at 0x49c08b -> shell downgrade to 0x540a74 inside 0x49c065 -> shell free at 0x49c059 -> later 0x49c553 ordinary return as 0x540a74. Generic candidate-container free paths 0x49ef78/0x49f29e/0x49f7aa were checked and do not overlap selected-object heap pointers. Native RMG behavior remains unchanged; Wine/Ghidra only, no objdump. Still unrecovered before any native RMG behavior port: natural final-commit projection-method dispatch through 0x49c019/0x49c0a6 if reachable, live cleanup/uncommit through 0x4add76/0x4adef7, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof. Do not replace these with density scalars, brute-force retries, final-map delta tuning, or native behavior changes.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -50730,9 +50732,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, one rejecting helper return reason, accepted append/materialization, the first weighted dispatch write-count/return/caller/vector/counter delta, and all sampled weighted dispatch return/vector/counter deltas are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a696b/0x4a7605 mutations, and 0x4add76 cleanup replay are still explicit blockers.",
+  "summary": "Source-backed H3MapEd private-state recovery checkpoint: selected-member production/dispatch/recycle boundary is recovered through Wine/Ghidra evidence, including projection selected-object destructor/free before allocator-slot reuse. Full end-to-end H3MapEd private-state recovery remains incomplete; natural projection-method dispatch if reachable, live cleanup/uncommit, 0x4a696b positive source/relation-match or unreachable proof, older coordinate/projection reconciliation, and downstream final-role semantic names/proof are still explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-09T23:12:58Z",
+  "updatedAt": "2026-06-10T00:58:00Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
