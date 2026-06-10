@@ -196,6 +196,21 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "0x4a79a3_internal_growth_frontier",
+        "artifact": ".artifacts/rmg_recovery/4a79a3_internal_growth_summary_20260609.json",
+        "status": "4a79a3_internal_growth_4a61bc_append_boundary_recovered",
+        "meaning": (
+            "A Wine-backed internal 0x4a79a3 growth trace now has explicit invariant gates: "
+            "one 0x4a79a3 entry, eight 0x49b3fb -> 0x4a61bc candidate pairs, six positive "
+            "0x4a61bc returns that append one object-record pointer each, one zero-return "
+            "pair that does not append, object-vector count 7 -> 13, one capacity "
+            "reallocation 8 -> 16, and no later payload-loop reach in that trace. This "
+            "recovers the first internal append boundary as 0x4a61bc reached from 0x4a79a3; "
+            "0x4a61bc callee-side construction/commit semantics and the ordered bridge into "
+            "payload-loop/downstream mutation remain separate blockers."
+        ),
+    },
+    {
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
