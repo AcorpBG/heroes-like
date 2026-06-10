@@ -67,15 +67,31 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
-        "status": "semantic_frontier_working_names_recovered_downstream_linkage_pending",
+        "status": (
+            "semantic_frontier_working_names_and_seed10_chain_recovered_broader_linkage_pending"
+        ),
         "meaning": (
             "Connection record bytes +0x08/+0x09/+0x0a, candidate record fields "
             "+0x00/+0x04/+0x08/+0x0c, exact descriptor projection flag/offset fields, "
             "relation descriptor-type occupancy counters, and selected GeneratedCell +0x20 "
             "roles now have source-backed working names. Connection byte +0x09 is recovered as "
-            "the template connection Border Guard flag produced by 0x49f7c4. Relation/control "
-            "downstream linkage, global descriptor type labels, broader semantic scope, and "
-            "cleanup/uncommit semantics remain pending."
+            "the template connection Border Guard flag produced by 0x49f7c4. The exact seed-10 "
+            "Border Guard downstream chain is recovered through fallback materialization and "
+            "phase tail. Broader relation/control linkage, global descriptor type labels, broader "
+            "semantic scope, and cleanup/uncommit semantics remain pending."
+        ),
+    },
+    {
+        "id": "exact_seed10_border_guard_downstream_chain",
+        "artifact": ".artifacts/rmg_recovery/border_guard_downstream_chain_summary_20260610.json",
+        "status": "exact_seed10_border_guard_downstream_chain_recovered_broader_linkage_pending",
+        "meaning": (
+            "For exact Medium seed-10 one-level/no-water generation, the natural Border Guard "
+            "+0x09 path is recovered from source flag through stale-cursor 0x4a5e73 misses, "
+            "0x4a7605 -> 0x4a5e03 fallback construction of records 0x036260c0/0x03626060, "
+            "0x4a54a7 commit/projection state, object-vector survival, first 0x49e700 "
+            "mutation set, and 0x4ac552 phase tail. This is exact-record evidence only, not "
+            "global native-port authority."
         ),
     },
 ]
