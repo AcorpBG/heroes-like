@@ -443,20 +443,20 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Source-handler 0x53eafc vtable recovery is now Ghidra-only. The verifier proves 0x4802ac installs vtable 0x53eafc and Ghidra data references cover slots +0x00..+0x20, including +0x20 -> 0x48047c queued-key cleanup through 0x429ea3; the recovery manifest no longer imports subprocess or runs an objdump probe. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: live owning caller/action for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if this source-handler chain becomes relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-    "currentSliceNotes": "Source-handler 0x53eafc vtable recovery is now Ghidra-only. The verifier proves 0x4802ac installs vtable 0x53eafc and Ghidra data references cover slots +0x00..+0x20, including +0x20 -> 0x48047c queued-key cleanup through 0x429ea3; the recovery manifest no longer imports subprocess or runs an objdump probe. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: live owning caller/action for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if this source-handler chain becomes relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-    "currentSliceUpdatedAt": "2026-06-10T02:02:49Z",
-    "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, and Ghidra-only 0x53eafc source-handler vtable slot table. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: source-handler same-run ownership if relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
+    "currentNotes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
+    "currentSliceNotes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
+    "currentSliceUpdatedAt": "2026-06-10T02:10:31Z",
+    "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, and source-handler owner-chain static-orphan classification for the current direct-generation path. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "python3 tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py --out .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_source_handler_owner_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "python3 tools/rmg_h3maped_source_handler_owner_summary.py --out .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
@@ -464,36 +464,41 @@
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "h3maped_source_handler_53eafc_vtable_ghidra": {
-          "ghidra_target_count": 11,
-          "manifest_runs_objdump_probe": false,
+        "h3maped_source_handler_owner_chain": {
+          "cleanup_ref_count": 1,
+          "constructor_ref_count": 2,
+          "incoming_refs_to_0x484d9f": 0,
+          "initializer_ref_count": 1,
           "native_behavior_changed": false,
           "overall_goal_complete": false,
-          "slot_count": 9,
-          "status": "source_handler_53eafc_vtable_recovered_from_ghidra_refs",
-          "used_objdump": false
+          "status": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
+          "used_objdump": false,
+          "wrapper_ref_count": 2
         }
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T02:02:49Z",
-      "updatedAt": "2026-06-10T02:02:49Z"
+      "timestamp": "2026-06-10T02:10:31Z",
+      "updatedAt": "2026-06-10T02:10:31Z"
     },
     "latestEvidence": {
-      "artifact": ".artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json",
       "metrics": {
-        "h3maped_source_handler_53eafc_vtable_ghidra": {
-          "ghidra_target_count": 11,
+        "h3maped_source_handler_owner_chain": {
+          "cleanup_ref_count": 1,
+          "constructor_ref_count": 2,
+          "incoming_refs_to_0x484d9f": 0,
+          "initializer_ref_count": 1,
           "native_behavior_changed": false,
-          "slot_count": 9,
-          "status": "source_handler_53eafc_vtable_recovered_from_ghidra_refs"
+          "status": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
+          "wrapper_ref_count": 2
         }
       },
       "native_behavior_changed": false,
-      "remaining_blocker": "0x53eafc vtable slots are statically recovered from Ghidra references, but the 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 source-handler chain still lacks same-run direct-generation ownership evidence. Broader native RMG blockers remain: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-      "result": "Source-handler 0x53eafc vtable recovery no longer depends on objdump; current manifest no longer runs an objdump probe.",
-      "source_basis": "Ghidra constructor/reference dumps consolidated by tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py and manifest cleanup in tools/rmg_h3maped_recovery_manifest.py.",
-      "validatedAt": "2026-06-10T02:02:49Z"
+      "remaining_blocker": "Recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or stronger static/data proof that direct mutation is unreachable for the target one-level land mode; capture runtime cleanup/reselection state if reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
+      "result": "The 0x53eafc source-handler pending-entry chain is now excluded as the current direct-generation blocker by Ghidra-visible call ownership and WineDbg no-hit evidence; remaining blockers are projection-slot, 0x4a696b reachability/unreachability, cleanup/reselection, coordinate reconciliation, and semantic naming proof.",
+      "source_basis": "Ghidra reference dumps and existing WineDbg 0x484d9f breakpoint probe consolidated by tools/rmg_h3maped_source_handler_owner_summary.py.",
+      "validatedAt": "2026-06-10T02:10:31Z"
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -625,7 +630,7 @@
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
     "remainingGap": "0x53eafc vtable slots are statically recovered from Ghidra references, but the 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 source-handler chain still lacks same-run direct-generation ownership evidence. Broader native RMG blockers remain: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-    "remainingWork": "Recover same-run source-handler ownership for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if it becomes relevant; recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining exactly when the direct mutation block is reachable; capture runtime cleanup/uncommit state if projection dispatch is reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
+    "remainingWork": "Recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or stronger static/data proof that direct mutation is unreachable for the target one-level land mode; capture runtime cleanup/reselection state if reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
     "result": "Source-handler 0x53eafc vtable recovery no longer depends on objdump; current manifest no longer runs an objdump probe.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -634,9 +639,9 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, accepted append/materialization, weighted dispatch vector/counter deltas, cleanup static ownership/no-live-hit frontier, projection slot target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slots, 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary, and target-mode 0x4a696b byte-pair reachability boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; source-handler same-run ownership if relevant, later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a7605 delegated mutation modes, natural projection-object method dispatch or broader recycle proof, live 0x4add76/0x4adef7 cleanup replay if reached, broader final-role semantics, and broader 0x4a696b map-mode/source-state reachability proof are still explicit blockers.",
+    "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, accepted append/materialization, weighted dispatch vector/counter deltas, cleanup static ownership/no-live-hit frontier, projection slot target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slots, source-handler owner-chain static-orphan classification for the current direct-generation path, 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary, and target-mode 0x4a696b byte-pair reachability boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a7605 delegated mutation modes, natural projection-object method dispatch or broader recycle proof, live 0x4add76/0x4adef7 cleanup replay if reached, broader final-role semantics, and broader 0x4a696b map-mode/source-state reachability proof are still explicit blockers.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-10T02:02:49Z",
+    "updatedAt": "2026-06-10T02:10:31Z",
     "validation": {
       "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_4a54a7_anchor_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary => known native_rules near_stacked_towns only; density/policy/topology gaps 0",
       "native_builds": "pass_linux_debug_linux_release_windows_debug_windows_release",
@@ -9277,10 +9282,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Source-handler 0x53eafc vtable recovery is now Ghidra-only. The verifier proves 0x4802ac installs vtable 0x53eafc and Ghidra data references cover slots +0x00..+0x20, including +0x20 -> 0x48047c queued-key cleanup through 0x429ea3; the recovery manifest no longer imports subprocess or runs an objdump probe. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: live owning caller/action for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if this source-handler chain becomes relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
+  "currentSliceNotes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T02:02:49Z",
+  "currentSliceUpdatedAt": "2026-06-10T02:10:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10276,12 +10281,12 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, and Ghidra-only 0x53eafc source-handler vtable slot table. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: source-handler same-run ownership if relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
+  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, and source-handler owner-chain static-orphan classification for the current direct-generation path. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "python3 tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py --out .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_source_handler_owner_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "python3 tools/rmg_h3maped_source_handler_owner_summary.py --out .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
@@ -10289,39 +10294,44 @@
       "python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "h3maped_source_handler_53eafc_vtable_ghidra": {
-        "ghidra_target_count": 11,
-        "manifest_runs_objdump_probe": false,
+      "h3maped_source_handler_owner_chain": {
+        "cleanup_ref_count": 1,
+        "constructor_ref_count": 2,
+        "incoming_refs_to_0x484d9f": 0,
+        "initializer_ref_count": 1,
         "native_behavior_changed": false,
         "overall_goal_complete": false,
-        "slot_count": 9,
-        "status": "source_handler_53eafc_vtable_recovered_from_ghidra_refs",
-        "used_objdump": false
+        "status": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
+        "used_objdump": false,
+        "wrapper_ref_count": 2
       }
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T02:02:49Z",
-    "updatedAt": "2026-06-10T02:02:49Z"
+    "timestamp": "2026-06-10T02:10:31Z",
+    "updatedAt": "2026-06-10T02:10:31Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json",
     "metrics": {
-      "h3maped_source_handler_53eafc_vtable_ghidra": {
-        "ghidra_target_count": 11,
+      "h3maped_source_handler_owner_chain": {
+        "cleanup_ref_count": 1,
+        "constructor_ref_count": 2,
+        "incoming_refs_to_0x484d9f": 0,
+        "initializer_ref_count": 1,
         "native_behavior_changed": false,
-        "slot_count": 9,
-        "status": "source_handler_53eafc_vtable_recovered_from_ghidra_refs"
+        "status": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
+        "wrapper_ref_count": 2
       }
     },
     "native_behavior_changed": false,
-    "remaining_blocker": "0x53eafc vtable slots are statically recovered from Ghidra references, but the 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 source-handler chain still lacks same-run direct-generation ownership evidence. Broader native RMG blockers remain: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-    "result": "Source-handler 0x53eafc vtable recovery no longer depends on objdump; current manifest no longer runs an objdump probe.",
-    "source_basis": "Ghidra constructor/reference dumps consolidated by tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py and manifest cleanup in tools/rmg_h3maped_recovery_manifest.py.",
-    "validatedAt": "2026-06-10T02:02:49Z"
+    "remaining_blocker": "Recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or stronger static/data proof that direct mutation is unreachable for the target one-level land mode; capture runtime cleanup/reselection state if reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
+    "result": "The 0x53eafc source-handler pending-entry chain is now excluded as the current direct-generation blocker by Ghidra-visible call ownership and WineDbg no-hit evidence; remaining blockers are projection-slot, 0x4a696b reachability/unreachability, cleanup/reselection, coordinate reconciliation, and semantic naming proof.",
+    "source_basis": "Ghidra reference dumps and existing WineDbg 0x484d9f breakpoint probe consolidated by tools/rmg_h3maped_source_handler_owner_summary.py.",
+    "validatedAt": "2026-06-10T02:10:31Z"
   },
-  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, and Ghidra-only 0x53eafc source-handler vtable slot table. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: source-handler same-run ownership if relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
-  "notes": "Source-handler 0x53eafc vtable recovery is now Ghidra-only. The verifier proves 0x4802ac installs vtable 0x53eafc and Ghidra data references cover slots +0x00..+0x20, including +0x20 -> 0x48047c queued-key cleanup through 0x429ea3; the recovery manifest no longer imports subprocess or runs an objdump probe. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: live owning caller/action for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if this source-handler chain becomes relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
+  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, and source-handler owner-chain static-orphan classification for the current direct-generation path. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
+  "notes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -43752,20 +43762,20 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Source-handler 0x53eafc vtable recovery is now Ghidra-only. The verifier proves 0x4802ac installs vtable 0x53eafc and Ghidra data references cover slots +0x00..+0x20, including +0x20 -> 0x48047c queued-key cleanup through 0x429ea3; the recovery manifest no longer imports subprocess or runs an objdump probe. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: live owning caller/action for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if this source-handler chain becomes relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-      "currentSliceNotes": "Source-handler 0x53eafc vtable recovery is now Ghidra-only. The verifier proves 0x4802ac installs vtable 0x53eafc and Ghidra data references cover slots +0x00..+0x20, including +0x20 -> 0x48047c queued-key cleanup through 0x429ea3; the recovery manifest no longer imports subprocess or runs an objdump probe. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: live owning caller/action for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if this source-handler chain becomes relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-      "currentSliceUpdatedAt": "2026-06-10T02:02:49Z",
-      "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, and Ghidra-only 0x53eafc source-handler vtable slot table. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: source-handler same-run ownership if relevant, natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
+      "currentNotes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
+      "currentSliceNotes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
+      "currentSliceUpdatedAt": "2026-06-10T02:10:31Z",
+      "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, and source-handler owner-chain static-orphan classification for the current direct-generation path. Current recovery tooling is Wine/Ghidra/Python only; the manifest no longer runs objdump. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof. No native behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json",
         "commands": [
-          "python3 -m py_compile tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-          "python3 tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py --out .artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_source_handler_owner_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+          "python3 tools/rmg_h3maped_source_handler_owner_summary.py --out .artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json (passed)",
           "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)",
@@ -43773,36 +43783,41 @@
           "python3 tests/validate_repo.py (passed)"
         ],
         "metrics": {
-          "h3maped_source_handler_53eafc_vtable_ghidra": {
-            "ghidra_target_count": 11,
-            "manifest_runs_objdump_probe": false,
+          "h3maped_source_handler_owner_chain": {
+            "cleanup_ref_count": 1,
+            "constructor_ref_count": 2,
+            "incoming_refs_to_0x484d9f": 0,
+            "initializer_ref_count": 1,
             "native_behavior_changed": false,
             "overall_goal_complete": false,
-            "slot_count": 9,
-            "status": "source_handler_53eafc_vtable_recovered_from_ghidra_refs",
-            "used_objdump": false
+            "status": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
+            "used_objdump": false,
+            "wrapper_ref_count": 2
           }
         },
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "timestamp": "2026-06-10T02:02:49Z",
-        "updatedAt": "2026-06-10T02:02:49Z"
+        "timestamp": "2026-06-10T02:10:31Z",
+        "updatedAt": "2026-06-10T02:10:31Z"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/source_handler_53eafc_vtable_ghidra_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/source_handler_owner_chain_summary_20260610.json",
         "metrics": {
-          "h3maped_source_handler_53eafc_vtable_ghidra": {
-            "ghidra_target_count": 11,
+          "h3maped_source_handler_owner_chain": {
+            "cleanup_ref_count": 1,
+            "constructor_ref_count": 2,
+            "incoming_refs_to_0x484d9f": 0,
+            "initializer_ref_count": 1,
             "native_behavior_changed": false,
-            "slot_count": 9,
-            "status": "source_handler_53eafc_vtable_recovered_from_ghidra_refs"
+            "status": "source_handler_chain_classified_static_orphan_for_direct_rmg_owner",
+            "wrapper_ref_count": 2
           }
         },
         "native_behavior_changed": false,
-        "remaining_blocker": "0x53eafc vtable slots are statically recovered from Ghidra references, but the 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 source-handler chain still lacks same-run direct-generation ownership evidence. Broader native RMG blockers remain: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-        "result": "Source-handler 0x53eafc vtable recovery no longer depends on objdump; current manifest no longer runs an objdump probe.",
-        "source_basis": "Ghidra constructor/reference dumps consolidated by tools/rmg_h3maped_53eafc_vtable_ghidra_summary.py and manifest cleanup in tools/rmg_h3maped_recovery_manifest.py.",
-        "validatedAt": "2026-06-10T02:02:49Z"
+        "remaining_blocker": "Recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or stronger static/data proof that direct mutation is unreachable for the target one-level land mode; capture runtime cleanup/reselection state if reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
+        "result": "The 0x53eafc source-handler pending-entry chain is now excluded as the current direct-generation blocker by Ghidra-visible call ownership and WineDbg no-hit evidence; remaining blockers are projection-slot, 0x4a696b reachability/unreachability, cleanup/reselection, coordinate reconciliation, and semantic naming proof.",
+        "source_basis": "Ghidra reference dumps and existing WineDbg 0x484d9f breakpoint probe consolidated by tools/rmg_h3maped_source_handler_owner_summary.py.",
+        "validatedAt": "2026-06-10T02:10:31Z"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
@@ -43842,7 +43857,7 @@
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "0x53eafc vtable slots are statically recovered from Ghidra references, but the 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 source-handler chain still lacks same-run direct-generation ownership evidence. Broader native RMG blockers remain: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or reachability proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
-      "remainingWork": "Recover same-run source-handler ownership for 0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910 if it becomes relevant; recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or broader map-mode/source-state proof explaining exactly when the direct mutation block is reachable; capture runtime cleanup/uncommit state if projection dispatch is reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
+      "remainingWork": "Recover a natural projection slot +0x08 dispatch or broader static/data proof explaining exactly which map modes/source states recycle projection objects before final dispatch; recover a natural 0x4a696b source/relation-match sample or stronger static/data proof that direct mutation is unreachable for the target one-level land mode; capture runtime cleanup/reselection state if reached; resolve older coordinate/projection reconciliation and human semantic names/broader final-role proof before porting native RMG behavior.",
       "result": "Source-handler 0x53eafc vtable recovery no longer depends on objdump; current manifest no longer runs an objdump probe.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -43851,9 +43866,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, accepted append/materialization, weighted dispatch vector/counter deltas, cleanup static ownership/no-live-hit frontier, projection slot target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slots, 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary, and target-mode 0x4a696b byte-pair reachability boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; source-handler same-run ownership if relevant, later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a7605 delegated mutation modes, natural projection-object method dispatch or broader recycle proof, live 0x4add76/0x4adef7 cleanup replay if reached, broader final-role semantics, and broader 0x4a696b map-mode/source-state reachability proof are still explicit blockers.",
+      "summary": "Source-backed H3MapEd private-state recovery checkpoint: sampled 0x4a54a7 and 0x4a9f1c surfaces, candidate vtable contracts, descriptor/relation counters, the weighted 0x4a901a value-floor frontier, static 0x49aa93 helper contract, accepted append/materialization, weighted dispatch vector/counter deltas, cleanup static ownership/no-live-hit frontier, projection slot target-mode recycle boundary, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slots, source-handler owner-chain static-orphan classification for the current direct-generation path, 0x4a8c15-to-0x4a79a3 materialization bridge vector-growth boundary, and target-mode 0x4a696b byte-pair reachability boundary are recovered. Full end-to-end H3MapEd private-state recovery remains incomplete; later weighted write sets if needed, 0x4a79a3 internal append/growth, 0x4a7605 delegated mutation modes, natural projection-object method dispatch or broader recycle proof, live 0x4add76/0x4adef7 cleanup replay if reached, broader final-role semantics, and broader 0x4a696b map-mode/source-state reachability proof are still explicit blockers.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-10T02:02:49Z",
+      "updatedAt": "2026-06-10T02:10:31Z",
       "validation": {
         "artifact": ".artifacts/rmg_recovery/downstream_recovery_frontier_summary_20260608.json",
         "checks": [
@@ -50659,7 +50674,7 @@
   ],
   "summary": "Source-backed H3MapEd private-state recovery checkpoint: selected-member production/dispatch/recycle boundary is recovered, cleanup/uncommit static ownership is recovered through the projection-object slot +0x08 chain, and 0x4a696b direct mutation is target-mode bounded for recovered one-level land evidence by the GeneratedCell+0x20 owner/relation byte-pair gate. Full end-to-end recovery remains incomplete; natural projection-slot dispatch or unused proof, a positive 0x4a696b source/relation-match sample or broader map-mode/source-state proof, runtime cleanup state if reached, older coordinate/projection reconciliation, and final semantic proof remain explicit blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-10T02:02:49Z",
+  "updatedAt": "2026-06-10T02:10:31Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/same_run_4a93a2_payload_link_summary_20260608.json",
     "checks": [
