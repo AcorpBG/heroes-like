@@ -453,10 +453,6 @@
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "passed",
-      "timestamp": "2026-06-10T00:20:48Z",
-      "updatedAt": "2026-06-10T00:20:48Z",
       "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
       "commands": [
         "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... --map-size small --human-computer-down 2 --computer-only-down 1 --water-none --lite (partial trace preserved; 600 events parsed)",
@@ -470,44 +466,27 @@
       "metrics": {
         "h3maped_540b14_same_wrapper_lifetime": {
           "event_count": 600,
-          "projection_selected_returns": 4,
-          "wrapper_returns_with_projection_members": 11,
           "final_4aa3e9_commits": 10,
           "final_slot8_callbacks": 13,
-          "projection_method_cleanup_hits": 0,
-          "previous_projection_address_final_dispatches_as_ordinary_slot8": 1,
-          "ordinary_final_slot8_target": "0x49baf5",
           "native_behavior_changed": false,
+          "ordinary_final_slot8_target": "0x49baf5",
+          "overall_goal_complete": false,
+          "previous_projection_address_final_dispatches_as_ordinary_slot8": 1,
+          "projection_method_cleanup_hits": 0,
+          "projection_selected_returns": 4,
           "used_objdump": false,
-          "overall_goal_complete": false
+          "wrapper_returns_with_projection_members": 11
         }
-      }
+      },
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "timestamp": "2026-06-10T00:20:48Z",
+      "updatedAt": "2026-06-10T00:20:48Z"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_recovery/medium_controlled_4a696b_sweep_summary_20260609.json",
-      "trace_artifacts": [
-        ".artifacts/rmg_recovery/medium_seed1_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
-        ".artifacts/rmg_recovery/medium_seed2_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
-        ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json"
-      ],
-      "result": "Controlled Medium seeds 1/2/10 sampled 27 0x4a696b calls with zero source/relation-match, candidate, candidate-path, or direct-mutation hits.",
-      "source_basis": "Clean PE seed-pinned H3MapEd WineDbg payload traces summarized by tools/rmg_h3maped_4a696b_controlled_sweep_summary.py.",
-      "native_behavior_changed": false,
-      "validatedAt": "2026-06-09T22:05:22Z",
-      "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, first normal 0x49e700 scorer/selection/allocation/commit/return boundary, first complete 0x49e700 bit26 generated-cell write set, post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary, and controlled Medium seeds 1/2/10 0x4a696b no-direct-mutation sweep are recovered. Remaining source-backed blockers before any native RMG behavior port: prove 0x4a696b direct mutation unreachable for the target one-level land mode or find a natural source/relation-match sample; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "metrics": {
         "h3maped_medium_controlled_4a696b_sweep": {
-          "status": "controlled_medium_4a696b_sweep_no_direct_mutation_hits",
-          "metrics": {
-            "candidate_append_hits": 0,
-            "candidate_path_hits": 0,
-            "direct_endpoint_4a7312_hits": 14,
-            "direct_mutation_hits": 0,
-            "fallback_4a7605_hits": 7,
-            "ledger_count": 3,
-            "sampled_4a696b_calls": 27,
-            "source_relation_match_hits": 0
-          },
           "aggregate_call_classifications": {
             "scan_completed_no_candidate_before_source_relation_match": 27
           },
@@ -525,9 +504,30 @@
             "no_source_relation_match_hits": true,
             "sampled_4a696b_calls": true
           },
-          "remaining_gap": "This is broader controlled negative evidence, not a proof of global unreachability. End-to-end recovery still needs either a natural sample that reaches 0x4a6a81 and then the candidate/direct-mutation path, or stronger static/data proof that the direct mutation block is unreachable for the target one-level land mode. Live 0x4add76/0x4adef7 cleanup/uncommit behavior and older coordinate/projection reconciliation remain unrecovered."
+          "metrics": {
+            "candidate_append_hits": 0,
+            "candidate_path_hits": 0,
+            "direct_endpoint_4a7312_hits": 14,
+            "direct_mutation_hits": 0,
+            "fallback_4a7605_hits": 7,
+            "ledger_count": 3,
+            "sampled_4a696b_calls": 27,
+            "source_relation_match_hits": 0
+          },
+          "remaining_gap": "This is broader controlled negative evidence, not a proof of global unreachability. End-to-end recovery still needs either a natural sample that reaches 0x4a6a81 and then the candidate/direct-mutation path, or stronger static/data proof that the direct mutation block is unreachable for the target one-level land mode. Live 0x4add76/0x4adef7 cleanup/uncommit behavior and older coordinate/projection reconciliation remain unrecovered.",
+          "status": "controlled_medium_4a696b_sweep_no_direct_mutation_hits"
         }
-      }
+      },
+      "native_behavior_changed": false,
+      "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, first normal 0x49e700 scorer/selection/allocation/commit/return boundary, first complete 0x49e700 bit26 generated-cell write set, post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary, and controlled Medium seeds 1/2/10 0x4a696b no-direct-mutation sweep are recovered. Remaining source-backed blockers before any native RMG behavior port: prove 0x4a696b direct mutation unreachable for the target one-level land mode or find a natural source/relation-match sample; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "result": "Controlled Medium seeds 1/2/10 sampled 27 0x4a696b calls with zero source/relation-match, candidate, candidate-path, or direct-mutation hits.",
+      "source_basis": "Clean PE seed-pinned H3MapEd WineDbg payload traces summarized by tools/rmg_h3maped_4a696b_controlled_sweep_summary.py.",
+      "trace_artifacts": [
+        ".artifacts/rmg_recovery/medium_seed1_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+        ".artifacts/rmg_recovery/medium_seed2_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+        ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json"
+      ],
+      "validatedAt": "2026-06-09T22:05:22Z"
     },
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
@@ -9309,10 +9309,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "currentSliceNotes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T00:20:48Z",
+  "currentSliceUpdatedAt": "2026-06-10T00:48:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10308,7 +10308,7 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
     "artifact": ".artifacts/rmg_recovery/4a696b_corpus_reachability_summary_20260609.json",
     "commands": [
@@ -10321,10 +10321,6 @@
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "passed",
-    "timestamp": "2026-06-09T23:43:12Z",
-    "updatedAt": "2026-06-09T23:43:12Z",
     "metrics": {
       "h3maped_4a696b_corpus_reachability": {
         "combined_4a696b_entries": 150,
@@ -10337,33 +10333,39 @@
         "raw_log_4a696b_entries": 82,
         "raw_logs_with_4a696b_sites": 22
       }
-    }
+    },
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "passed",
+    "timestamp": "2026-06-09T23:43:12Z",
+    "updatedAt": "2026-06-09T23:43:12Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
-    "result": "0x540b14 projection selected-member lifetime narrowed to cleanup/free/reuse/overwrite boundary before ordinary reselection; native behavior unchanged.",
-    "source_basis": "WineDbg Small 2-player/no-water trace parsed by tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py plus Ghidra-backed ownership for 0x4aa1db/0x4aa3e9/0x49c0a6.",
-    "native_behavior_changed": false,
-    "validatedAt": "2026-06-10T00:20:48Z",
-    "remaining_blocker": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "artifact": ".artifacts/rmg_recovery/small2p_selected_constructor_reuse_summary_20260610.json",
     "metrics": {
-      "h3maped_540b14_same_wrapper_lifetime": {
-        "event_count": 600,
-        "projection_selected_returns": 4,
-        "wrapper_returns_with_projection_members": 11,
-        "final_4aa3e9_commits": 10,
-        "final_slot8_callbacks": 13,
-        "projection_method_cleanup_hits": 0,
-        "previous_projection_address_final_dispatches_as_ordinary_slot8": 1,
-        "ordinary_final_slot8_target": "0x49baf5",
+      "h3maped_selected_constructor_reuse": {
+        "event_count": 398,
+        "final_dispatch_count": 12,
+        "final_dispatch_slot_targets": {
+          "0x0049baf5": 12
+        },
         "native_behavior_changed": false,
-        "used_objdump": false,
-        "overall_goal_complete": false
+        "overall_goal_complete": false,
+        "projection_method_cleanup_hits": 0,
+        "projection_to_non_projection_reuse_count": 3,
+        "selected_pointer_count": 49,
+        "selected_pointers_with_multiple_vtables": 26,
+        "selected_return_count": 153,
+        "used_objdump": false
       }
-    }
+    },
+    "native_behavior_changed": false,
+    "remaining_blocker": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "result": "Selected-object constructor/allocator-slot reuse recovered for sampled projection-to-ordinary selected-object boundary; native behavior unchanged.",
+    "source_basis": "WineDbg Small 2-player/no-water trace parsed by tools/rmg_h3maped_selected_constructor_reuse_summary.py plus Ghidra-backed constructor/vtable checkpoints for selected-object create functions.",
+    "validatedAt": "2026-06-10T00:48:12Z"
   },
-  "nextActionGuardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-  "notes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "notes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -43794,20 +43796,16 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "Extended the controlled Medium one-level no-water 0x4a696b sweep without changing native behavior. The summary now aggregates clean seed-pinned ledgers for seeds 1, 2, and 10 plus seed-3 raw-log salvage with verified forced seed-3 patch bytes. Across four sources, 30 sampled 0x4a696b calls all reach scan completion, take the pre-source/relation no-candidate exit, and return; zero calls hit 0x4a6a81 source/relation match, candidate append/path, vtable commit, or direct mutation. Fallback endpoint surface remains observed with 8 0x4a7605 hits and 16 0x4a7312 direct endpoint commits. This is stronger controlled negative evidence, not global unreachability proof. Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "currentSliceNotes": "Extended the controlled Medium one-level no-water 0x4a696b sweep without changing native behavior. The summary now aggregates clean seed-pinned ledgers for seeds 1, 2, and 10 plus seed-3 raw-log salvage with verified forced seed-3 patch bytes. Across four sources, 30 sampled 0x4a696b calls all reach scan completion, take the pre-source/relation no-candidate exit, and return; zero calls hit 0x4a6a81 source/relation match, candidate append/path, vtable commit, or direct mutation. Fallback endpoint surface remains observed with 8 0x4a7605 hits and 16 0x4a7312 direct endpoint commits. This is stronger controlled negative evidence, not global unreachability proof. Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-      "currentSliceUpdatedAt": "2026-06-09T23:02:25Z",
-      "guardrailNote": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, first normal 0x49e700 scorer/selection/allocation/commit/return boundary, first complete 0x49e700 bit26 generated-cell write set, post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary, controlled Medium seeds 1/2/3/10 0x4a696b no-direct-mutation sweep, Medium seed-10 0x4a696b argument-surface owner/relation-match frontier, Medium seed-10 0x4a696b two-grid zero owner/relation pair match evidence, current-corpus cleanup/projection-slot breakpoint-only no-hit classification, and sampled 0x4a79a3 slot +0x08 dispatch target 0x0045e1a6 non-projection classification are recovered. Remaining source-backed blockers before any native RMG behavior port: either prove 0x4a696b direct mutation unreachable for the target one-level land mode with stronger static/data proof or find a natural source/relation-match sample; recover the true owning projection-object slot +0x08 dispatch/lifetime if live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup is ever observed; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentNotes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used.",
+      "currentSliceNotes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "currentSliceUpdatedAt": "2026-06-10T00:48:12Z",
+      "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "sliceId": "rmg-small-generalization-hardening-10184",
-        "status": "passed",
-        "timestamp": "2026-06-09T23:03:02Z",
-        "updatedAt": "2026-06-09T23:03:02Z",
         "artifact": ".artifacts/rmg_recovery/medium_controlled_4a696b_sweep_summary_20260609.json",
         "commands": [
           "python3 -m py_compile tools/rmg_h3maped_4a696b_controlled_sweep_summary.py (passed)",
@@ -43819,17 +43817,6 @@
         ],
         "metrics": {
           "h3maped_medium_controlled_4a696b_sweep": {
-            "status": "controlled_medium_4a696b_sweep_no_direct_mutation_hits",
-            "metrics": {
-              "candidate_append_hits": 0,
-              "candidate_path_hits": 0,
-              "direct_endpoint_4a7312_hits": 16,
-              "direct_mutation_hits": 0,
-              "fallback_4a7605_hits": 8,
-              "ledger_count": 4,
-              "sampled_4a696b_calls": 30,
-              "source_relation_match_hits": 0
-            },
             "aggregate_call_classifications": {
               "scan_completed_no_candidate_before_source_relation_match": 30
             },
@@ -43846,173 +43833,49 @@
               "no_direct_mutation_hits": true,
               "no_source_relation_match_hits": true,
               "sampled_4a696b_calls": true
-            }
+            },
+            "metrics": {
+              "candidate_append_hits": 0,
+              "candidate_path_hits": 0,
+              "direct_endpoint_4a7312_hits": 16,
+              "direct_mutation_hits": 0,
+              "fallback_4a7605_hits": 8,
+              "ledger_count": 4,
+              "sampled_4a696b_calls": 30,
+              "source_relation_match_hits": 0
+            },
+            "status": "controlled_medium_4a696b_sweep_no_direct_mutation_hits"
           }
-        }
+        },
+        "sliceId": "rmg-small-generalization-hardening-10184",
+        "status": "passed",
+        "timestamp": "2026-06-09T23:03:02Z",
+        "updatedAt": "2026-06-09T23:03:02Z"
       },
       "latestEvidence": {
-        "artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_mutation_summary_20260609.json",
-        "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_49e700_mutation_return_trace_20260609/winedbg_interactive_trace_ledger.json",
-        "result": "First complete 0x49e700 decorative dispatch bit26 write set and immediate 0x4ac552 phase completion are recovered; linked-payload direct mutation and cleanup/uncommit remain unrecovered.",
-        "source_basis": "Clean PE seed-pinned H3MapEd WineDbg traces summarized by tools/rmg_h3maped_49e700_mutation_summary.py and tools/rmg_h3maped_4ac552_phase_completion_summary.py.",
-        "native_behavior_changed": false,
-        "validatedAt": "2026-06-09T21:35:34Z",
-        "remaining_blocker": "Append-to-payload, linked-payload 0x4a696b no-candidate branches, linked-payload 0x4a7605 direct-endpoint/gate-skip paths, deterministic Medium seed-10 payload negative replay, deterministic natural Border Guard +0x09 branch replay, deterministic natural Border Guard failure/fallback into 0x4a7605 -> 0x4a5e03 materialization, deterministic fallback-to-payload ordering, exact fallback commit-frontier recovery, exact fallback descriptor/relation-counter replay, target-cell object-reference adoption, fallback object-vector survival to 0x49eb8d, same-run 0x49eb8d count/budget/first-dispatch/return through 0x4ac844, first normal 0x49e700 scorer/selection/allocation/commit/return boundary, first complete 0x49e700 bit26 generated-cell write set, and post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary are recovered. Remaining source-backed blockers before any native RMG behavior port: find a linked-payload 0x4a696b sample that reaches source/relation match and direct mutation or prove direct mutation is unreachable for this generation mode; capture exact per-record projection-loop write streams for 0x036260c0/0x03626060 if needed for the native port; recover actual 0x4add76 cleanup/uncommit runtime behavior; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+        "artifact": ".artifacts/rmg_recovery/small2p_selected_constructor_reuse_summary_20260610.json",
         "metrics": {
-          "h3maped_medium_seed10_49e700_mutation": {
-            "status": "49e700_mutation_bit26_write_set_recovered",
-            "metrics": {
-              "bit26_write_count": 67,
-              "commit_callback_count": 42,
-              "object_done_count": 42,
-              "post_commit_append_count": 67,
-              "unique_write_cells": 67,
-              "unique_write_coordinates": 67
+          "h3maped_selected_constructor_reuse": {
+            "event_count": 398,
+            "final_dispatch_count": 12,
+            "final_dispatch_slot_targets": {
+              "0x0049baf5": 12
             },
-            "invariants": {
-              "all_coordinates_match_generated_cell_formula": true,
-              "all_writes_clear_bit26_only": true,
-              "append_coordinates_match_write_coordinates": true,
-              "commit_callbacks_return": true,
-              "entry_observed_once": true,
-              "native_behavior_changed": false,
-              "object_done_matches_commit_returns": true,
-              "post_commit_appends_match_writes": true,
-              "return_boundary_reached": true,
-              "seed_control_clean": true,
-              "write_cells_unique": true,
-              "write_coordinates_unique": true,
-              "write_triplets_complete": true
-            },
-            "write_samples": {
-              "first": [
-                {
-                  "after_0x28": "0x12004000",
-                  "before_0x28": "0x16004000",
-                  "cell": "0x0188b764",
-                  "coordinate": [
-                    3,
-                    0,
-                    0
-                  ],
-                  "event_after": 7,
-                  "event_before": 5
-                },
-                {
-                  "after_0x28": "0x1201d000",
-                  "before_0x28": "0x1601d000",
-                  "cell": "0x0188c4e4",
-                  "coordinate": [
-                    3,
-                    1,
-                    0
-                  ],
-                  "event_after": 11,
-                  "event_before": 9
-                },
-                {
-                  "after_0x28": "0x12008000",
-                  "before_0x28": "0x16008000",
-                  "cell": "0x0188d204",
-                  "coordinate": [
-                    1,
-                    2,
-                    0
-                  ],
-                  "event_after": 15,
-                  "event_before": 13
-                },
-                {
-                  "after_0x28": "0x12012000",
-                  "before_0x28": "0x16012000",
-                  "cell": "0x0188d234",
-                  "coordinate": [
-                    2,
-                    2,
-                    0
-                  ],
-                  "event_after": 19,
-                  "event_before": 17
-                },
-                {
-                  "after_0x28": "0x12007000",
-                  "before_0x28": "0x16007000",
-                  "cell": "0x0188df54",
-                  "coordinate": [
-                    0,
-                    3,
-                    0
-                  ],
-                  "event_after": 26,
-                  "event_before": 24
-                }
-              ],
-              "last": [
-                {
-                  "after_0x28": "0x12005000",
-                  "before_0x28": "0x16005000",
-                  "cell": "0x0189e184",
-                  "coordinate": [
-                    9,
-                    22,
-                    0
-                  ],
-                  "event_after": 321,
-                  "event_before": 319
-                },
-                {
-                  "after_0x28": "0x12005000",
-                  "before_0x28": "0x16005000",
-                  "cell": "0x0189eed4",
-                  "coordinate": [
-                    8,
-                    23,
-                    0
-                  ],
-                  "event_after": 325,
-                  "event_before": 323
-                },
-                {
-                  "after_0x28": "0x12005000",
-                  "before_0x28": "0x16005000",
-                  "cell": "0x0189ef04",
-                  "coordinate": [
-                    9,
-                    23,
-                    0
-                  ],
-                  "event_after": 329,
-                  "event_before": 327
-                },
-                {
-                  "after_0x28": "0x12005000",
-                  "before_0x28": "0x16005000",
-                  "cell": "0x0189d434",
-                  "coordinate": [
-                    10,
-                    21,
-                    0
-                  ],
-                  "event_after": 339,
-                  "event_before": 337
-                },
-                {
-                  "after_0x28": "0x12005000",
-                  "before_0x28": "0x16005000",
-                  "cell": "0x0189d464",
-                  "coordinate": [
-                    11,
-                    21,
-                    0
-                  ],
-                  "event_after": 346,
-                  "event_before": 344
-                }
-              ]
-            },
-            "remaining_gap": "This recovers the 0x49e700 bit26 write set through the dispatch return. The immediate 0x4ac552 phase-completion boundary beyond 0x4ac844 is now recovered separately; linked-payload 0x4a696b direct mutation or unreachable proof and actual 0x4add76 cleanup/uncommit runtime behavior remain pending."
+            "native_behavior_changed": false,
+            "overall_goal_complete": false,
+            "projection_method_cleanup_hits": 0,
+            "projection_to_non_projection_reuse_count": 3,
+            "selected_pointer_count": 49,
+            "selected_pointers_with_multiple_vtables": 26,
+            "selected_return_count": 153,
+            "used_objdump": false
           }
-        }
+        },
+        "native_behavior_changed": false,
+        "remaining_blocker": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small Wine replays prove sampled 0x540b14 projection members return in wrapper vectors, and the later projection-to-ordinary appearance is selected-object constructor/allocator-slot reuse before final ordinary 0x49baf5 dispatch. Still unrecovered before any native RMG behavior port: destructor/free/recycle owner for selected-object heap slots, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+        "result": "Selected-object constructor/allocator-slot reuse recovered for sampled projection-to-ordinary selected-object boundary; native behavior unchanged.",
+        "source_basis": "WineDbg Small 2-player/no-water trace parsed by tools/rmg_h3maped_selected_constructor_reuse_summary.py plus Ghidra-backed constructor/vtable checkpoints for selected-object create functions.",
+        "validatedAt": "2026-06-10T00:48:12Z"
       },
       "metrics": {
         "h3maped_4a901a_same_run_precheck": {
@@ -50689,20 +50552,20 @@
           "title": "Recover sampled 0x4a54a7 descriptor and relation counters"
         },
         {
+          "artifact": ".artifacts/rmg_recovery/4a696b_source_relation_gate_summary_20260609.json",
+          "completedAt": "2026-06-09T23:20:46Z",
           "evidence": "Report-only recovery checkpoint. Static 0x4a696b gate/mutation sites are present, controlled runtime evidence shows 30 sampled calls with zero 0x4a6a81/candidate/direct-mutation hits, and two complete seed-10 grid scans have zero full GeneratedCell+0x20 byte2/byte3 pair matches. Native RMG behavior remains unchanged; global direct-mutation unreachability and cleanup/slot +0x08 lifetime remain pending.",
           "id": "rmg-h3maped-4a696b-source-relation-gate-checkpoint-10184",
           "status": "completed",
-          "title": "Recover sampled 0x4a696b source/relation gate frontier",
-          "artifact": ".artifacts/rmg_recovery/4a696b_source_relation_gate_summary_20260609.json",
-          "completedAt": "2026-06-09T23:20:46Z"
+          "title": "Recover sampled 0x4a696b source/relation gate frontier"
         },
         {
+          "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
+          "completedAt": "2026-06-09T23:36:55Z",
           "evidence": "Report-only recovery checkpoint backed by two new clean seed-pinned traces. Exact fallback records 0x036260c0 and 0x03626060 now have matching 0x4a54a7 projection-loop write streams: 639 and 34 unique GeneratedCell+0x20 writes respectively, with high-word preservation and low-word lowering. Native RMG behavior remains unchanged; 0x4a696b reachability/proof, cleanup/uncommit, and downstream phase completion remain pending.",
           "id": "rmg-h3maped-exact-fallback-projection-write-checkpoint-10184",
           "status": "completed",
-          "title": "Recover exact fallback 0x4a54a7 projection-loop streams",
-          "artifact": ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_frontier_summary_20260609.json",
-          "completedAt": "2026-06-09T23:36:55Z"
+          "title": "Recover exact fallback 0x4a54a7 projection-loop streams"
         }
       ],
       "id": "native-rmg-h3maped-recovery-checkpoints",
@@ -56392,21 +56255,15 @@
       "updatedAt": "2026-06-09T20:20:39Z"
     },
     {
-      "id": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
-      "timestamp": "2026-06-09T21:46:02Z",
-      "updatedAt": "2026-06-09T21:46:02Z",
-      "summary": "Recovered immediate post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary under clean Medium seed-10 H3MapEd trace; native behavior unchanged.",
       "artifact": ".artifacts/rmg_recovery/medium_seed10_4ac552_phase_completion_summary_20260609.json",
-      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4ac552_caller_return_trace_20260609/winedbg_interactive_trace_ledger.json",
+      "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
         "h3maped_medium_seed10_4ac552_phase_completion": {
-          "status": "4ac552_post_49eb8d_phase_completion_recovered",
-          "metrics": {
-            "al_after_success_set": 1,
-            "al_at_caller_continuation": 1,
-            "event_count": 9,
-            "generator": "0x0031e058"
+          "expected_returns": {
+            "0x49eb8d_return_address": "0x004ac844",
+            "0x4ab52a_return_address": "0x004ac84b",
+            "0x4ac4ae_return_address": "0x004ac852",
+            "0x4ac552_entry_return_address": "0x004ae082"
           },
           "invariants": {
             "0x49eb8d_returns_to_0x4ac844": true,
@@ -56423,42 +56280,28 @@
             "same_generator_through_tail_calls": true,
             "seed_control_clean": true
           },
-          "expected_returns": {
-            "0x49eb8d_return_address": "0x004ac844",
-            "0x4ab52a_return_address": "0x004ac84b",
-            "0x4ac4ae_return_address": "0x004ac852",
-            "0x4ac552_entry_return_address": "0x004ae082"
+          "metrics": {
+            "al_after_success_set": 1,
+            "al_at_caller_continuation": 1,
+            "event_count": 9,
+            "generator": "0x0031e058"
           },
-          "remaining_gap": "This closes the immediate downstream phase-completion proof after 0x49eb8d/0x4ac844. It does not recover linked-payload 0x4a696b direct mutation, live 0x4add76/0x4adef7 cleanup/uncommit behavior, optional per-record projection-loop streams for 0x036260c0/0x03626060, or the older coordinate/projection reconciliation."
+          "remaining_gap": "This closes the immediate downstream phase-completion proof after 0x49eb8d/0x4ac844. It does not recover linked-payload 0x4a696b direct mutation, live 0x4add76/0x4adef7 cleanup/uncommit behavior, optional per-record projection-loop streams for 0x036260c0/0x03626060, or the older coordinate/projection reconciliation.",
+          "status": "4ac552_post_49eb8d_phase_completion_recovered"
         }
       },
-      "remainingWork": "Recover linked-payload 0x4a696b direct-mutation proof or unreachable proof, actual 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection-loop streams if required, and older coordinate/projection reconciliation before porting native RMG behavior."
+      "remainingWork": "Recover linked-payload 0x4a696b direct-mutation proof or unreachable proof, actual 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection-loop streams if required, and older coordinate/projection reconciliation before porting native RMG behavior.",
+      "status": "in_progress",
+      "summary": "Recovered immediate post-0x49eb8d 0x4ac552 phase-completion/caller-success boundary under clean Medium seed-10 H3MapEd trace; native behavior unchanged.",
+      "timestamp": "2026-06-09T21:46:02Z",
+      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4ac552_caller_return_trace_20260609/winedbg_interactive_trace_ledger.json",
+      "updatedAt": "2026-06-09T21:46:02Z"
     },
     {
-      "id": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
-      "timestamp": "2026-06-09T22:05:22Z",
-      "updatedAt": "2026-06-09T22:05:22Z",
-      "summary": "Broadened controlled Medium 0x4a696b direct-mutation reachability evidence across seeds 1, 2, and 10; native behavior unchanged.",
       "artifact": ".artifacts/rmg_recovery/medium_controlled_4a696b_sweep_summary_20260609.json",
-      "trace_artifacts": [
-        ".artifacts/rmg_recovery/medium_seed1_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
-        ".artifacts/rmg_recovery/medium_seed2_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
-        ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json"
-      ],
+      "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
         "h3maped_medium_controlled_4a696b_sweep": {
-          "status": "controlled_medium_4a696b_sweep_no_direct_mutation_hits",
-          "metrics": {
-            "candidate_append_hits": 0,
-            "candidate_path_hits": 0,
-            "direct_endpoint_4a7312_hits": 14,
-            "direct_mutation_hits": 0,
-            "fallback_4a7605_hits": 7,
-            "ledger_count": 3,
-            "sampled_4a696b_calls": 27,
-            "source_relation_match_hits": 0
-          },
           "aggregate_call_classifications": {
             "scan_completed_no_candidate_before_source_relation_match": 27
           },
@@ -56476,30 +56319,36 @@
             "no_source_relation_match_hits": true,
             "sampled_4a696b_calls": true
           },
-          "remaining_gap": "This is broader controlled negative evidence, not a proof of global unreachability. End-to-end recovery still needs either a natural sample that reaches 0x4a6a81 and then the candidate/direct-mutation path, or stronger static/data proof that the direct mutation block is unreachable for the target one-level land mode. Live 0x4add76/0x4adef7 cleanup/uncommit behavior and older coordinate/projection reconciliation remain unrecovered."
-        }
-      },
-      "remainingWork": "Recover proof that 0x4a696b direct mutation is unreachable for the target one-level land mode or find a natural source/relation-match sample, actual 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection-loop streams if required, and older coordinate/projection reconciliation before porting native RMG behavior."
-    },
-    {
-      "id": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
-      "timestamp": "2026-06-09T22:20:01Z",
-      "updatedAt": "2026-06-09T22:20:01Z",
-      "summary": "Recovered sampled Medium seed-10 0x4a696b argument-surface frontier; native behavior unchanged.",
-      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_arg_surface_summary_20260609.json",
-      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_arg_surface_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
-      "metrics": {
-        "h3maped_medium_seed10_4a696b_arg_surface": {
-          "status": "partial_recovery_4a696b_arg_surface_owner_match_frontier",
           "metrics": {
-            "calls_with_arg_dumps": 3,
             "candidate_append_hits": 0,
+            "candidate_path_hits": 0,
+            "direct_endpoint_4a7312_hits": 14,
             "direct_mutation_hits": 0,
-            "nonempty_scan_calls": 3,
-            "sampled_4a696b_calls": 3,
+            "fallback_4a7605_hits": 7,
+            "ledger_count": 3,
+            "sampled_4a696b_calls": 27,
             "source_relation_match_hits": 0
           },
+          "remaining_gap": "This is broader controlled negative evidence, not a proof of global unreachability. End-to-end recovery still needs either a natural sample that reaches 0x4a6a81 and then the candidate/direct-mutation path, or stronger static/data proof that the direct mutation block is unreachable for the target one-level land mode. Live 0x4add76/0x4adef7 cleanup/uncommit behavior and older coordinate/projection reconciliation remain unrecovered.",
+          "status": "controlled_medium_4a696b_sweep_no_direct_mutation_hits"
+        }
+      },
+      "remainingWork": "Recover proof that 0x4a696b direct mutation is unreachable for the target one-level land mode or find a natural source/relation-match sample, actual 0x4add76 cleanup/uncommit runtime behavior, optional exact fallback projection-loop streams if required, and older coordinate/projection reconciliation before porting native RMG behavior.",
+      "status": "in_progress",
+      "summary": "Broadened controlled Medium 0x4a696b direct-mutation reachability evidence across seeds 1, 2, and 10; native behavior unchanged.",
+      "timestamp": "2026-06-09T22:05:22Z",
+      "trace_artifacts": [
+        ".artifacts/rmg_recovery/medium_seed1_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+        ".artifacts/rmg_recovery/medium_seed2_4a696b_payload_sweep_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+        ".artifacts/rmg_recovery/4a61bc_payload_seed10_medium_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json"
+      ],
+      "updatedAt": "2026-06-09T22:05:22Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_arg_surface_summary_20260609.json",
+      "id": "rmg-small-generalization-hardening-10184",
+      "metrics": {
+        "h3maped_medium_seed10_4a696b_arg_surface": {
           "call_classifications": {
             "nonempty_scan_no_source_relation_match": 3
           },
@@ -56514,10 +56363,24 @@
             "no_sampled_call_reaches_source_relation_match_checkpoint": true,
             "sampled_4a696b_calls": true
           },
-          "remaining_gap": "This narrows the sampled branch frontier but does not prove global unreachability. End-to-end recovery still needs either a natural sample that reaches 0x4a6a81, or a stronger static/data proof that the owner/relation byte match cannot occur for target one-level land generation. Cleanup/uncommit 0x4add76/0x4adef7 remains unrecovered."
+          "metrics": {
+            "calls_with_arg_dumps": 3,
+            "candidate_append_hits": 0,
+            "direct_mutation_hits": 0,
+            "nonempty_scan_calls": 3,
+            "sampled_4a696b_calls": 3,
+            "source_relation_match_hits": 0
+          },
+          "remaining_gap": "This narrows the sampled branch frontier but does not prove global unreachability. End-to-end recovery still needs either a natural sample that reaches 0x4a6a81, or a stronger static/data proof that the owner/relation byte match cannot occur for target one-level land generation. Cleanup/uncommit 0x4add76/0x4adef7 remains unrecovered.",
+          "status": "partial_recovery_4a696b_arg_surface_owner_match_frontier"
         }
       },
       "remainingWork": "Recover proof that 0x4a696b direct mutation is unreachable for the target one-level land mode or find a natural source/relation-match sample, recover actual 0x4add76 cleanup/uncommit runtime behavior, capture optional exact fallback projection-loop streams if required, and resolve older coordinate/projection reconciliation before porting native RMG behavior.",
+      "status": "in_progress",
+      "summary": "Recovered sampled Medium seed-10 0x4a696b argument-surface frontier; native behavior unchanged.",
+      "timestamp": "2026-06-09T22:20:01Z",
+      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_arg_surface_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+      "updatedAt": "2026-06-09T22:20:01Z",
       "validationCommands": [
         "python3 -m py_compile tools/rmg_h3maped_4a696b_arg_surface_summary.py tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py (passed)",
         "python3 tools/rmg_h3maped_4a696b_arg_surface_summary.py (passed: partial_recovery_4a696b_arg_surface_owner_match_frontier)",
@@ -56528,22 +56391,10 @@
       ]
     },
     {
-      "id": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
-      "timestamp": "2026-06-09T22:28:47Z",
-      "updatedAt": "2026-06-09T22:28:47Z",
-      "summary": "Recovered one complete Medium seed-10 0x4a696b grid-scan owner/relation mismatch proof; native behavior unchanged.",
       "artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan_summary_20260609.json",
-      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+      "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
         "h3maped_medium_seed10_4a696b_grid_scan": {
-          "status": "partial_recovery_4a696b_grid_scan_zero_owner_relation_matches",
-          "metrics": {
-            "captured_grid_scan_entries": 2,
-            "complete_grid_scans": 1,
-            "sampled_4a696b_calls": 2,
-            "zero_owner_relation_pair_match_scans": 1
-          },
           "invariants": {
             "all_complete_grid_scans_have_zero_owner_relation_pair_matches": true,
             "at_least_one_complete_grid_scan_captured": true,
@@ -56551,10 +56402,22 @@
             "no_native_behavior_change": true,
             "sampled_4a696b_calls": true
           },
-          "remaining_gap": "This is still sampled evidence, not global unreachability proof. End-to-end recovery still needs either a natural 0x4a696b source/relation-match sample or a broader static/data proof that the pair match cannot occur for the target one-level land mode. Cleanup/uncommit 0x4add76/0x4adef7 remains unrecovered."
+          "metrics": {
+            "captured_grid_scan_entries": 2,
+            "complete_grid_scans": 1,
+            "sampled_4a696b_calls": 2,
+            "zero_owner_relation_pair_match_scans": 1
+          },
+          "remaining_gap": "This is still sampled evidence, not global unreachability proof. End-to-end recovery still needs either a natural 0x4a696b source/relation-match sample or a broader static/data proof that the pair match cannot occur for the target one-level land mode. Cleanup/uncommit 0x4add76/0x4adef7 remains unrecovered.",
+          "status": "partial_recovery_4a696b_grid_scan_zero_owner_relation_matches"
         }
       },
       "remainingWork": "Recover proof that 0x4a696b direct mutation is unreachable for the target one-level land mode or find a natural source/relation-match sample, recover actual 0x4add76 cleanup/uncommit runtime behavior, capture optional exact fallback projection-loop streams if required, and resolve older coordinate/projection reconciliation before porting native RMG behavior.",
+      "status": "in_progress",
+      "summary": "Recovered one complete Medium seed-10 0x4a696b grid-scan owner/relation mismatch proof; native behavior unchanged.",
+      "timestamp": "2026-06-09T22:28:47Z",
+      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+      "updatedAt": "2026-06-09T22:28:47Z",
       "validationCommands": [
         "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none --display-number 182 --debugger-timeout 300 --max-events 160 --stop-after-dispatch-events 2 --dump-696b-grid-entry-count 1 (passed: events=59 dispatch_events=2)",
         "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a696b_arg_surface_summary.py tools/rmg_h3maped_4a696b_grid_scan_summary.py (passed)",
@@ -56567,22 +56430,10 @@
       ]
     },
     {
-      "id": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
-      "timestamp": "2026-06-09T22:34:32Z",
-      "updatedAt": "2026-06-09T22:34:32Z",
-      "summary": "Recovered two complete Medium seed-10 0x4a696b grid-scan owner/relation mismatch proofs; native behavior unchanged.",
       "artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan2_summary_20260609.json",
-      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan2_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+      "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
         "h3maped_medium_seed10_4a696b_grid_scan2": {
-          "status": "partial_recovery_4a696b_grid_scan_zero_owner_relation_matches",
-          "metrics": {
-            "captured_grid_scan_entries": 2,
-            "complete_grid_scans": 2,
-            "sampled_4a696b_calls": 2,
-            "zero_owner_relation_pair_match_scans": 2
-          },
           "invariants": {
             "all_complete_grid_scans_have_zero_owner_relation_pair_matches": true,
             "at_least_one_complete_grid_scan_captured": true,
@@ -56590,10 +56441,22 @@
             "no_native_behavior_change": true,
             "sampled_4a696b_calls": true
           },
-          "remaining_gap": "This is still sampled evidence, not global unreachability proof. End-to-end recovery still needs either a natural 0x4a696b source/relation-match sample or a broader static/data proof that the pair match cannot occur for the target one-level land mode. Cleanup/uncommit 0x4add76/0x4adef7 remains unrecovered."
+          "metrics": {
+            "captured_grid_scan_entries": 2,
+            "complete_grid_scans": 2,
+            "sampled_4a696b_calls": 2,
+            "zero_owner_relation_pair_match_scans": 2
+          },
+          "remaining_gap": "This is still sampled evidence, not global unreachability proof. End-to-end recovery still needs either a natural 0x4a696b source/relation-match sample or a broader static/data proof that the pair match cannot occur for the target one-level land mode. Cleanup/uncommit 0x4add76/0x4adef7 remains unrecovered.",
+          "status": "partial_recovery_4a696b_grid_scan_zero_owner_relation_matches"
         }
       },
       "remainingWork": "Recover proof that 0x4a696b direct mutation is unreachable for the target one-level land mode or find a natural source/relation-match sample, recover actual 0x4add76 cleanup/uncommit runtime behavior, capture optional exact fallback projection-loop streams if required, and resolve older coordinate/projection reconciliation before porting native RMG behavior.",
+      "status": "in_progress",
+      "summary": "Recovered two complete Medium seed-10 0x4a696b grid-scan owner/relation mismatch proofs; native behavior unchanged.",
+      "timestamp": "2026-06-09T22:34:32Z",
+      "trace_artifact": ".artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan2_trace_20260609/winedbg_4a61bc_payload_link_dynamic_trace_ledger.json",
+      "updatedAt": "2026-06-09T22:34:32Z",
       "validationCommands": [
         "python3 tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py --out-dir .artifacts/rmg_recovery/medium_seed10_4a696b_grid_scan2_trace_20260609 --seed-control-mode pe-patch --seed 10 --map-size medium --human-computer-down 1 --computer-only-down 1 --water-none --display-number 183 --debugger-timeout 300 --max-events 180 --stop-after-dispatch-events 2 --dump-696b-grid-entry-count 2 (passed: events=59 dispatch_events=2)",
         "python3 -m py_compile tools/rmg_h3maped_4a61bc_payload_link_dynamic_trace.py tools/rmg_h3maped_4a696b_arg_surface_summary.py tools/rmg_h3maped_4a696b_grid_scan_summary.py (passed)",
@@ -56605,24 +56468,10 @@
       ]
     },
     {
-      "id": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
-      "timestamp": "2026-06-09T22:42:20Z",
-      "updatedAt": "2026-06-09T22:42:20Z",
-      "summary": "Broadened cleanup/projection-slot frontier scan and explicitly classified target-named traces as breakpoint-only no-hit evidence; native behavior unchanged.",
       "artifact": ".artifacts/rmg_recovery/projection_method_dispatch_frontier_summary_20260609.json",
-      "secondary_artifact": ".artifacts/rmg_recovery/cleanup_runtime_frontier_summary_20260609.json",
+      "id": "rmg-small-generalization-hardening-10184",
       "metrics": {
         "h3maped_cleanup_runtime_frontier": {
-          "status": "cleanup_runtime_frontier_static_only_no_live_uncommit_hit",
-          "corpus": {
-            "ledger_files_scanned": 264,
-            "ledger_records_with_target_mentions": 8,
-            "log_files_scanned": 327,
-            "log_records_with_target_mentions": 15
-          },
-          "runtime_hit_sites_from_ledgers": [],
-          "runtime_hit_sites_from_logs": [],
           "breakpoint_only_evidence": {
             "ledger_records": 8,
             "log_records": 15,
@@ -56632,6 +56481,12 @@
               ".artifacts/rmg_recovery/direct_generation_projection_4add76_consumer_trace/winedbg_interactive_trace.log"
             ]
           },
+          "corpus": {
+            "ledger_files_scanned": 264,
+            "ledger_records_with_target_mentions": 8,
+            "log_files_scanned": 327,
+            "log_records_with_target_mentions": 15
+          },
           "invariants": {
             "no_native_behavior_change": true,
             "no_runtime_4add76_hit_in_current_ledger_corpus": true,
@@ -56639,18 +56494,12 @@
             "projection_4add76_bounded_nohit_recorded": true,
             "relation_counter_lifecycle_static_recovered": true,
             "static_4add76_surface_recovered": true
-          }
-        },
-        "h3maped_projection_method_dispatch_frontier": {
-          "status": "projection_method_dispatch_frontier_no_live_slot08_hit",
-          "corpus": {
-            "ledger_files_scanned": 264,
-            "ledger_records_with_target_mentions": 9,
-            "log_files_scanned": 327,
-            "log_records_with_target_mentions": 18
           },
           "runtime_hit_sites_from_ledgers": [],
           "runtime_hit_sites_from_logs": [],
+          "status": "cleanup_runtime_frontier_static_only_no_live_uncommit_hit"
+        },
+        "h3maped_projection_method_dispatch_frontier": {
           "breakpoint_only_evidence": {
             "ledger_records": 9,
             "log_records": 18,
@@ -56660,11 +56509,11 @@
               ".artifacts/rmg_recovery/direct_generation_projection_4add76_consumer_trace/winedbg_interactive_trace.log"
             ]
           },
-          "projection_constructor_counts": {
-            "0x0049c0d3": 7,
-            "0x0049cac2": 2,
-            "0x0049cb83": 4,
-            "0x0049cc22": 1
+          "corpus": {
+            "ledger_files_scanned": 264,
+            "ledger_records_with_target_mentions": 9,
+            "log_files_scanned": 327,
+            "log_records_with_target_mentions": 18
           },
           "invariants": {
             "cleanup_frontier_has_no_live_uncommit_hit": true,
@@ -56674,10 +56523,24 @@
             "projection_slot_static_contract_recovered": true,
             "sampled_4a79a3_payload_has_no_projection_object_vtables": true,
             "sampled_projection_objects_reach_stamp": true
-          }
+          },
+          "projection_constructor_counts": {
+            "0x0049c0d3": 7,
+            "0x0049cac2": 2,
+            "0x0049cb83": 4,
+            "0x0049cc22": 1
+          },
+          "runtime_hit_sites_from_ledgers": [],
+          "runtime_hit_sites_from_logs": [],
+          "status": "projection_method_dispatch_frontier_no_live_slot08_hit"
         }
       },
       "remainingWork": "Remaining source-backed blockers before any native RMG behavior port: prove 0x4a696b direct mutation unreachable for the target one-level land mode or find a natural source/relation-match sample; recover the owning projection slot +0x08 dispatch/lifetime that reaches live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "secondary_artifact": ".artifacts/rmg_recovery/cleanup_runtime_frontier_summary_20260609.json",
+      "status": "in_progress",
+      "summary": "Broadened cleanup/projection-slot frontier scan and explicitly classified target-named traces as breakpoint-only no-hit evidence; native behavior unchanged.",
+      "timestamp": "2026-06-09T22:42:20Z",
+      "updatedAt": "2026-06-09T22:42:20Z",
       "validationCommands": [
         "python3 -m py_compile tools/rmg_h3maped_cleanup_runtime_frontier_summary.py tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py (passed)",
         "python3 tools/rmg_h3maped_cleanup_runtime_frontier_summary.py (passed: cleanup_runtime_frontier_static_only_no_live_uncommit_hit)",
@@ -56689,9 +56552,6 @@
       ]
     },
     {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "pass",
-      "updatedAt": "2026-06-09T22:56:36Z",
       "commands": [
         "python3 -m py_compile tools/rmg_h3maped_4a79a3_slot8_dispatch_summary.py (passed)",
         "python3 tools/rmg_h3maped_4a79a3_slot8_dispatch_summary.py (passed: sampled_4a79a3_slot8_dispatch_not_projection_method; target 0x0045e1a6)",
@@ -56702,18 +56562,18 @@
       ],
       "evidence": {
         "artifact": ".artifacts/rmg_recovery/medium_seed10_4a79a3_slot8_dispatch_summary_20260609.json",
-        "status": "sampled_4a79a3_slot8_dispatch_not_projection_method",
-        "slot_0x08_target": "0x0045e1a6",
-        "vtable": "0x00539660",
+        "native_behavior_changed": false,
         "receiver": "0x0031f5bc",
         "sampled_dispatch_ruled_out_as_missing_projection_slot08_path": true,
-        "native_behavior_changed": false
-      }
-    },
-    {
+        "slot_0x08_target": "0x0045e1a6",
+        "status": "sampled_4a79a3_slot8_dispatch_not_projection_method",
+        "vtable": "0x00539660"
+      },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "pass",
-      "updatedAt": "2026-06-09T23:03:02Z",
+      "updatedAt": "2026-06-09T22:56:36Z"
+    },
+    {
       "commands": [
         "python3 -m py_compile tools/rmg_h3maped_4a696b_controlled_sweep_summary.py (passed)",
         "python3 tools/rmg_h3maped_4a696b_controlled_sweep_summary.py (passed: controlled_medium_4a696b_sweep_no_direct_mutation_hits; 30 sampled calls)",
@@ -56724,13 +56584,16 @@
       ],
       "evidence": {
         "artifact": ".artifacts/rmg_recovery/medium_controlled_4a696b_sweep_summary_20260609.json",
-        "sampled_4a696b_calls": 30,
-        "source_relation_match_hits": 0,
+        "direct_endpoint_4a7312_hits": 16,
         "direct_mutation_hits": 0,
         "fallback_4a7605_hits": 8,
-        "direct_endpoint_4a7312_hits": 16,
-        "native_behavior_changed": false
-      }
+        "native_behavior_changed": false,
+        "sampled_4a696b_calls": 30,
+        "source_relation_match_hits": 0
+      },
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "pass",
+      "updatedAt": "2026-06-09T23:03:02Z"
     }
   ],
   "validationResults": [
@@ -59164,11 +59027,11 @@
       ]
     },
     {
+      "currentSliceNotes": "Broadened cleanup/projection-slot frontier evidence without changing native behavior. The regenerated cleanup scan now covers 264 ledgers and 327 logs, with 8 cleanup-target ledgers and 15 logs mentioning 0x4ad6a8/0x4ad7f7/0x4ad947/0x4adb72/0x4add76/0x4adef7 only through breakpoint/command evidence and zero runtime target hits. The regenerated projection-slot scan covers the same corpus, with 9 target ledgers and 18 target logs for 0x49c019/0x49c0a6/downstream sites and zero runtime hits. Target-named traces such as direct_generation_49c019_49c0a6_projection_driver_hit_trace and direct_generation_projection_4add76_consumer_trace are now explicitly recorded as breakpoint-armed no-hit artifacts, not live execution evidence. Remaining source-backed blockers before any native RMG behavior port: prove 0x4a696b direct mutation unreachable for the target one-level land mode or find a natural source/relation-match sample; recover the owning projection slot +0x08 dispatch/lifetime that reaches live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "pass",
-      "updatedAt": "2026-06-09T22:42:20Z",
       "summary": "Recorded current-corpus cleanup/projection-slot breakpoint-only no-hit frontier; native RMG behavior remains unchanged and live cleanup/projection-slot execution remains the named blocker.",
-      "currentSliceNotes": "Broadened cleanup/projection-slot frontier evidence without changing native behavior. The regenerated cleanup scan now covers 264 ledgers and 327 logs, with 8 cleanup-target ledgers and 15 logs mentioning 0x4ad6a8/0x4ad7f7/0x4ad947/0x4adb72/0x4add76/0x4adef7 only through breakpoint/command evidence and zero runtime target hits. The regenerated projection-slot scan covers the same corpus, with 9 target ledgers and 18 target logs for 0x49c019/0x49c0a6/downstream sites and zero runtime hits. Target-named traces such as direct_generation_49c019_49c0a6_projection_driver_hit_trace and direct_generation_projection_4add76_consumer_trace are now explicitly recorded as breakpoint-armed no-hit artifacts, not live execution evidence. Remaining source-backed blockers before any native RMG behavior port: prove 0x4a696b direct mutation unreachable for the target one-level land mode or find a natural source/relation-match sample; recover the owning projection slot +0x08 dispatch/lifetime that reaches live 0x49c019/0x49c0a6 or live 0x4add76/0x4adef7 cleanup; capture optional exact fallback projection-loop streams if required; resolve older coordinate/projection reconciliation. Do not replace this with density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+      "updatedAt": "2026-06-09T22:42:20Z",
       "validation": [
         "python3 -m py_compile tools/rmg_h3maped_cleanup_runtime_frontier_summary.py tools/rmg_h3maped_projection_method_dispatch_frontier_summary.py (passed)",
         "python3 tools/rmg_h3maped_cleanup_runtime_frontier_summary.py (passed: cleanup_runtime_frontier_static_only_no_live_uncommit_hit)",
@@ -59180,43 +59043,29 @@
       ]
     },
     {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "passed",
-      "updatedAt": "2026-06-09T23:57:05Z",
-      "summary": "Projection selected-member slot +0x08 owner recovered as 0x4aa3e9; missing state narrowed to same-wrapper 0x540b14 lifetime/rejection before final commit; native behavior unchanged.",
-      "currentSliceNotes": "Recovered the projection selected-member slot +0x08 ownership edge from Ghidra/Wine evidence without native behavior changes. Ghidra shows 0x4aa9b7 calls 0x4aa3e9, and 0x4aa3e9 dispatches each wrapper selected member through [vtable+0x08] at 0x4aa5f6. Ghidra also shows 0x4aa1db is the producer that appends/stamps selected members, while 0x540b14 slot +0x08 is 0x49c0a6 -> 0x4ad947. Existing Wine ledgers prove sampled 0x540b14 objects reach 0x4aa22b and 0x4aa27e -> 0x49abd6 stamping, but sampled 0x4aa3e9 final commits only dispatch ordinary/base vtables to 0x49baf5. The remaining blocker is the same-wrapper lifetime/rejection path between 0x4aa1db producing a 0x540b14 selected member and final 0x4aa3e9 commit, or a live path where that member reaches 0x49c0a6 -> 0x4ad947. No objdump was used.",
       "artifact": "docs/h3maped-rmg-private-state-recovery.md",
-      "validation": [
-        "Ghidra dump review: 0x4aa3e9 owns selected-member slot +0x08 dispatch at 0x4aa5f6",
-        "Wine ledger review: sampled 0x540b14 projection objects reach 0x4aa1db selected-create/stamp path; sampled final 0x4aa3e9 commits dispatch only 0x49baf5",
-        "No native RMG behavior changed",
-        "No objdump used for this recovery update"
-      ],
-      "timestamp": "2026-06-09T23:57:05Z",
       "commands": [
         "Ghidra dump review only; no objdump used",
         "Existing Wine ledger/summaries reviewed for selected-create stamping and 0x4aa3e9 slot callbacks",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
         "python3 tests/validate_repo.py (passed)"
+      ],
+      "currentSliceNotes": "Recovered the projection selected-member slot +0x08 ownership edge from Ghidra/Wine evidence without native behavior changes. Ghidra shows 0x4aa9b7 calls 0x4aa3e9, and 0x4aa3e9 dispatches each wrapper selected member through [vtable+0x08] at 0x4aa5f6. Ghidra also shows 0x4aa1db is the producer that appends/stamps selected members, while 0x540b14 slot +0x08 is 0x49c0a6 -> 0x4ad947. Existing Wine ledgers prove sampled 0x540b14 objects reach 0x4aa22b and 0x4aa27e -> 0x49abd6 stamping, but sampled 0x4aa3e9 final commits only dispatch ordinary/base vtables to 0x49baf5. The remaining blocker is the same-wrapper lifetime/rejection path between 0x4aa1db producing a 0x540b14 selected member and final 0x4aa3e9 commit, or a live path where that member reaches 0x49c0a6 -> 0x4ad947. No objdump was used.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "Projection selected-member slot +0x08 owner recovered as 0x4aa3e9; missing state narrowed to same-wrapper 0x540b14 lifetime/rejection before final commit; native behavior unchanged.",
+      "timestamp": "2026-06-09T23:57:05Z",
+      "updatedAt": "2026-06-09T23:57:05Z",
+      "validation": [
+        "Ghidra dump review: 0x4aa3e9 owns selected-member slot +0x08 dispatch at 0x4aa5f6",
+        "Wine ledger review: sampled 0x540b14 projection objects reach 0x4aa1db selected-create/stamp path; sampled final 0x4aa3e9 commits dispatch only 0x49baf5",
+        "No native RMG behavior changed",
+        "No objdump used for this recovery update"
       ]
     },
     {
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "passed",
-      "updatedAt": "2026-06-10T00:20:48Z",
-      "timestamp": "2026-06-10T00:20:48Z",
-      "summary": "0x540b14 projection selected-member lifetime narrowed to cleanup/free/reuse/overwrite boundary before ordinary reselection; native behavior unchanged.",
-      "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used.",
       "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
-      "validation": [
-        "Small 2-player/no-water Wine trace contains projection-selected returns and final 0x4aa3e9 commits in the same run",
-        "0x540b14 projection members are present in wrapper return vectors",
-        "Projection method/cleanup targets remain unhit in this trace",
-        "A previously projection-backed address is later ordinary-reselected and final-dispatched to 0x49baf5",
-        "No native RMG behavior changed",
-        "No objdump used"
-      ],
       "commands": [
         "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... --map-size small --human-computer-down 2 --computer-only-down 1 --water-none --lite (partial trace preserved; 600 events parsed)",
         "python3 tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py --out .artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json (passed)",
@@ -59225,6 +59074,47 @@
         "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
+      ],
+      "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "0x540b14 projection selected-member lifetime narrowed to cleanup/free/reuse/overwrite boundary before ordinary reselection; native behavior unchanged.",
+      "timestamp": "2026-06-10T00:20:48Z",
+      "updatedAt": "2026-06-10T00:20:48Z",
+      "validation": [
+        "Small 2-player/no-water Wine trace contains projection-selected returns and final 0x4aa3e9 commits in the same run",
+        "0x540b14 projection members are present in wrapper return vectors",
+        "Projection method/cleanup targets remain unhit in this trace",
+        "A previously projection-backed address is later ordinary-reselected and final-dispatched to 0x49baf5",
+        "No native RMG behavior changed",
+        "No objdump used"
+      ]
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/small2p_selected_constructor_reuse_summary_20260610.json",
+      "commands": [
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... --map-size small --human-computer-down 2 --computer-only-down 1 --water-none --lite (manual stop; 398 events parsed)",
+        "python3 tools/rmg_h3maped_selected_constructor_reuse_summary.py --out .artifacts/rmg_recovery/small2p_selected_constructor_reuse_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_selected_constructor_reuse_summary.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ],
+      "currentSliceNotes": "Small 2-player/no-water Wine constructor-reuse trace recovered the sampled 0x540b14 projection-to-ordinary boundary as selected-object constructor/allocator-slot reuse: 398 parsed events, 153 selected returns, 26 selected heap pointers reused across multiple vtables, and 3 projection-to-non-projection reuse transitions. Instrumented constructor checkpoints pair with selected returns, final sampled slot +0x08 dispatches all target 0x49baf5, and 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 remain unhit. Native behavior remains unchanged; no objdump used.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "Selected-object constructor/allocator-slot reuse recovered for sampled projection-to-ordinary selected-object boundary; native behavior unchanged.",
+      "timestamp": "2026-06-10T00:48:12Z",
+      "updatedAt": "2026-06-10T00:48:12Z",
+      "validation": [
+        "Small 2-player/no-water Wine trace contains constructor checkpoints and selected returns in the same run",
+        "Instrumented constructor checkpoints pair with selected-return vtables",
+        "At least one projection-selected heap pointer is later returned by a non-projection selected-object constructor",
+        "Final sampled selected-member slot +0x08 dispatches all target 0x49baf5",
+        "Projection method/cleanup targets remain unhit in this trace",
+        "No native RMG behavior changed",
+        "No objdump used"
       ]
     }
   ]
