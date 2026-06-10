@@ -443,10 +443,10 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Recovered the projection selected-member slot +0x08 ownership edge from Ghidra/Wine evidence without native behavior changes. Ghidra shows 0x4aa9b7 calls 0x4aa3e9, and 0x4aa3e9 dispatches each wrapper selected member through [vtable+0x08] at 0x4aa5f6. Ghidra also shows 0x4aa1db is the producer that appends/stamps selected members, while 0x540b14 slot +0x08 is 0x49c0a6 -> 0x4ad947. Existing Wine ledgers prove sampled 0x540b14 objects reach 0x4aa22b and 0x4aa27e -> 0x49abd6 stamping, but sampled 0x4aa3e9 final commits only dispatch ordinary/base vtables to 0x49baf5. The remaining blocker is the same-wrapper lifetime/rejection path between 0x4aa1db producing a 0x540b14 selected member and final 0x4aa3e9 commit, or a live path where that member reaches 0x49c0a6 -> 0x4ad947. No objdump was used.",
-    "currentSliceNotes": "Recovered the projection selected-member slot +0x08 ownership edge from Ghidra/Wine evidence without native behavior changes. Ghidra shows 0x4aa9b7 calls 0x4aa3e9, and 0x4aa3e9 dispatches each wrapper selected member through [vtable+0x08] at 0x4aa5f6. Ghidra also shows 0x4aa1db is the producer that appends/stamps selected members, while 0x540b14 slot +0x08 is 0x49c0a6 -> 0x4ad947. Existing Wine ledgers prove sampled 0x540b14 objects reach 0x4aa22b and 0x4aa27e -> 0x49abd6 stamping, but sampled 0x4aa3e9 final commits only dispatch ordinary/base vtables to 0x49baf5. The remaining blocker is the same-wrapper lifetime/rejection path between 0x4aa1db producing a 0x540b14 selected member and final 0x4aa3e9 commit, or a live path where that member reaches 0x49c0a6 -> 0x4ad947. No objdump was used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-    "currentSliceUpdatedAt": "2026-06-09T23:57:05Z",
-    "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used.",
+    "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "currentSliceUpdatedAt": "2026-06-10T00:20:48Z",
+    "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
@@ -455,26 +455,28 @@
     "lastValidation": {
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-09T23:57:05Z",
-      "updatedAt": "2026-06-09T23:57:05Z",
-      "artifact": "docs/h3maped-rmg-private-state-recovery.md",
+      "timestamp": "2026-06-10T00:20:48Z",
+      "updatedAt": "2026-06-10T00:20:48Z",
+      "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
       "commands": [
-        "Ghidra dump review only; no objdump used",
-        "Existing Wine ledger/summaries reviewed for selected-create stamping and 0x4aa3e9 slot callbacks",
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... --map-size small --human-computer-down 2 --computer-only-down 1 --water-none --lite (partial trace preserved; 600 events parsed)",
+        "python3 tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py --out .artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "metrics": {
-        "projection_slot_ownership": {
-          "owner_dispatch_function": "0x4aa3e9",
-          "owner_dispatch_site": "0x4aa5f6",
-          "owner_caller": "0x4aa9b7 at 0x4aab58",
-          "producer_function": "0x4aa1db",
-          "projection_vtable": "0x540b14",
-          "projection_slot8_target": "0x49c0a6 -> 0x4ad947",
-          "sampled_inner_slot8_callbacks_to_49baf5": 14,
-          "sampled_broad_slot8_callbacks_to_49baf5": 18,
+        "h3maped_540b14_same_wrapper_lifetime": {
+          "event_count": 600,
+          "projection_selected_returns": 4,
+          "wrapper_returns_with_projection_members": 11,
+          "final_4aa3e9_commits": 10,
+          "final_slot8_callbacks": 13,
+          "projection_method_cleanup_hits": 0,
+          "previous_projection_address_final_dispatches_as_ordinary_slot8": 1,
+          "ordinary_final_slot8_target": "0x49baf5",
           "native_behavior_changed": false,
           "used_objdump": false,
           "overall_goal_complete": false
@@ -9307,10 +9309,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Recovered the projection selected-member slot +0x08 ownership edge from Ghidra/Wine evidence without native behavior changes. Ghidra shows 0x4aa9b7 calls 0x4aa3e9, and 0x4aa3e9 dispatches each wrapper selected member through [vtable+0x08] at 0x4aa5f6. Ghidra also shows 0x4aa1db is the producer that appends/stamps selected members, while 0x540b14 slot +0x08 is 0x49c0a6 -> 0x4ad947. Existing Wine ledgers prove sampled 0x540b14 objects reach 0x4aa22b and 0x4aa27e -> 0x49abd6 stamping, but sampled 0x4aa3e9 final commits only dispatch ordinary/base vtables to 0x49baf5. The remaining blocker is the same-wrapper lifetime/rejection path between 0x4aa1db producing a 0x540b14 selected member and final 0x4aa3e9 commit, or a live path where that member reaches 0x49c0a6 -> 0x4ad947. No objdump was used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-09T23:57:05Z",
+  "currentSliceUpdatedAt": "2026-06-10T00:20:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10306,7 +10308,7 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "guardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "lastValidation": {
     "artifact": ".artifacts/rmg_recovery/4a696b_corpus_reachability_summary_20260609.json",
     "commands": [
@@ -10338,30 +10340,30 @@
     }
   },
   "latestEvidence": {
-    "artifact": "docs/h3maped-rmg-private-state-recovery.md",
-    "result": "Projection selected-member slot +0x08 owner recovered as 0x4aa3e9; missing state narrowed to same-wrapper 0x540b14 lifetime/rejection before final commit; native behavior unchanged.",
-    "source_basis": "Ghidra dumps under .artifacts/rmg_recovery for 0x4aa1db, 0x4aa3e9, 0x4aa9b7, 0x49c0a6, and existing Wine ledgers/summaries for selected-create stamping and 0x4aa3e9 slot callbacks.",
+    "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
+    "result": "0x540b14 projection selected-member lifetime narrowed to cleanup/free/reuse/overwrite boundary before ordinary reselection; native behavior unchanged.",
+    "source_basis": "WineDbg Small 2-player/no-water trace parsed by tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py plus Ghidra-backed ownership for 0x4aa1db/0x4aa3e9/0x49c0a6.",
     "native_behavior_changed": false,
-    "validatedAt": "2026-06-09T23:57:05Z",
-    "remaining_blocker": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+    "validatedAt": "2026-06-10T00:20:48Z",
+    "remaining_blocker": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
     "metrics": {
-      "projection_slot_ownership": {
-        "owner_dispatch_function": "0x4aa3e9",
-        "owner_dispatch_site": "0x4aa5f6",
-        "owner_caller": "0x4aa9b7 at 0x4aab58",
-        "producer_function": "0x4aa1db",
-        "projection_vtable": "0x540b14",
-        "projection_slot8_target": "0x49c0a6 -> 0x4ad947",
-        "sampled_inner_slot8_callbacks_to_49baf5": 14,
-        "sampled_broad_slot8_callbacks_to_49baf5": 18,
+      "h3maped_540b14_same_wrapper_lifetime": {
+        "event_count": 600,
+        "projection_selected_returns": 4,
+        "wrapper_returns_with_projection_members": 11,
+        "final_4aa3e9_commits": 10,
+        "final_slot8_callbacks": 13,
+        "projection_method_cleanup_hits": 0,
+        "previous_projection_address_final_dispatches_as_ordinary_slot8": 1,
+        "ordinary_final_slot8_target": "0x49baf5",
         "native_behavior_changed": false,
         "used_objdump": false,
         "overall_goal_complete": false
       }
     }
   },
-  "nextActionGuardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
-  "notes": "Recovered the projection selected-member slot +0x08 ownership edge from Ghidra/Wine evidence without native behavior changes. Ghidra shows 0x4aa9b7 calls 0x4aa3e9, and 0x4aa3e9 dispatches each wrapper selected member through [vtable+0x08] at 0x4aa5f6. Ghidra also shows 0x4aa1db is the producer that appends/stamps selected members, while 0x540b14 slot +0x08 is 0x49c0a6 -> 0x4ad947. Existing Wine ledgers prove sampled 0x540b14 objects reach 0x4aa22b and 0x4aa27e -> 0x49abd6 stamping, but sampled 0x4aa3e9 final commits only dispatch ordinary/base vtables to 0x49baf5. The remaining blocker is the same-wrapper lifetime/rejection path between 0x4aa1db producing a 0x540b14 selected member and final 0x4aa3e9 commit, or a live path where that member reaches 0x49c0a6 -> 0x4ad947. No objdump was used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6, called from 0x4aa9b7; 0x4aa1db produces/appends/stamps selected members; 0x540b14 slot +0x08 dispatches 0x49c0a6 -> 0x4ad947. Still unrecovered before any native RMG behavior port: same-wrapper lifetime/rejection from 0x4aa1db-produced 0x540b14 projection member to final 0x4aa3e9, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only for recovery; do not use objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "nextActionGuardrailNote": "Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
+  "notes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used. Recovered: projection selected-member slot +0x08 owner is 0x4aa3e9 at 0x4aa5f6; 0x4aa1db produces/appends/stamps selected members; Small 2-player/no-water Wine replay proves sampled 0x540b14 projection members return in wrapper vectors but do not hit projection method/cleanup targets before final dispatch. One projection-backed heap address is later ordinary-reselected and final-dispatched via 0x49baf5. Still unrecovered before any native RMG behavior port: exact cleanup/free/reuse/overwrite mutator between projection wrapper return and later ordinary reselection, live cleanup/uncommit through 0x49c019/0x49c0a6/0x4add76/0x4adef7 if naturally reached, 0x4a696b positive source/relation-match or stronger unreachable proof, older coordinate/projection reconciliation, and remaining downstream final-role semantic names/proof. Use Wine/Ghidra only; no objdump, density scalars, brute-force retries, final-map delta tuning, or native RMG behavior changes.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -59196,6 +59198,32 @@
         "Existing Wine ledger/summaries reviewed for selected-create stamping and 0x4aa3e9 slot callbacks",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ]
+    },
+    {
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "updatedAt": "2026-06-10T00:20:48Z",
+      "timestamp": "2026-06-10T00:20:48Z",
+      "summary": "0x540b14 projection selected-member lifetime narrowed to cleanup/free/reuse/overwrite boundary before ordinary reselection; native behavior unchanged.",
+      "currentSliceNotes": "Small 2-player/no-water Wine trace recovered the 0x540b14 projection selected-member lifetime boundary: 4 temporally ordered 0x540b14 selected returns, 11 wrapper-return samples with projection members, 10 final 0x4aa3e9 commits, and 13 final slot +0x08 callbacks. No 0x49c019/0x49c0a6/0x4ad947/0x4adb72/0x4adef7/0x4add76 hits occurred. A previously projection-backed heap address is later reselected as ordinary vtable 0x540a74 and final-dispatched through ordinary slot +0x08 target 0x49baf5. Native behavior remains unchanged; no objdump used.",
+      "artifact": ".artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json",
+      "validation": [
+        "Small 2-player/no-water Wine trace contains projection-selected returns and final 0x4aa3e9 commits in the same run",
+        "0x540b14 projection members are present in wrapper return vectors",
+        "Projection method/cleanup targets remain unhit in this trace",
+        "A previously projection-backed address is later ordinary-reselected and final-dispatched to 0x49baf5",
+        "No native RMG behavior changed",
+        "No objdump used"
+      ],
+      "commands": [
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py ... --map-size small --human-computer-down 2 --computer-only-down 1 --water-none --lite (partial trace preserved; 600 events parsed)",
+        "python3 tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py --out .artifacts/rmg_recovery/small2p_540b14_same_wrapper_lifetime_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_540b14_same_wrapper_lifetime_summary.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
         "python3 tests/validate_repo.py (passed)"
       ]
     }
