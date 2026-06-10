@@ -38,6 +38,9 @@ DEFAULT_4AA9B7_ORDERED = Path(
     ".artifacts/rmg_recovery/direct_generation_4aa9b7_ordered_commit_trace/"
     "4aa9b7_ordered_commit_summary.json"
 )
+DEFAULT_4AA3E9_4A54A7_DYNAMIC = Path(
+    ".artifacts/rmg_recovery/4aa3e9_4a54a7_dynamic_summary_20260610.json"
+)
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/nonfallback_4a54a7_return_owner_summary_20260610.json"
 )
@@ -109,6 +112,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     nonfallback = load_json(args.nonfallback_contexts)
     inner_4aa3e9 = load_json(args.inner_4aa3e9)
     ordered_4aa9b7 = load_json(args.ordered_4aa9b7)
+    dynamic_4aa3e9 = load_json(args.dynamic_4aa3e9_4a54a7)
     static_texts = {
         "ghidra_4a9641": read_text(args.ghidra_4a9641),
         "ghidra_4a9911": read_text(args.ghidra_4a9911),
@@ -136,9 +140,28 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "recovery_state": "owner_recovered_state_transition_pending",
             "next_state_needed": owner["next_state_needed"],
         }
+    unresolved_sites["0x004aa44d"]["recovery_state"] = (
+        "owner_recovered_sampled_same_ledger_write_stream_recovered_broader_coverage_pending"
+    )
+    unresolved_sites["0x004aa44d"]["sampled_write_stream_evidence"] = str(
+        args.dynamic_4aa3e9_4a54a7
+    )
+    unresolved_sites["0x004aa44d"]["sampled_write_stream_contract"] = {
+        "projection_write_count": dynamic_4aa3e9.get("projection_write_count"),
+        "target_cell_low_word_before": dynamic_4aa3e9.get("metrics", {}).get(
+            "target_cell_low_word_before"
+        ),
+        "target_cell_low_word_after": dynamic_4aa3e9.get("metrics", {}).get(
+            "target_cell_low_word_after"
+        ),
+        "target_cell_low_word_cleared_to_zero": dynamic_4aa3e9.get("metrics", {}).get(
+            "target_cell_low_word_cleared_to_zero"
+        ),
+    }
 
     inner_slot4_targets = inner_4aa3e9.get("combined_slot4_targets", {})
     ordered_invariants = ordered_4aa9b7.get("invariants", {})
+    dynamic_invariants = dynamic_4aa3e9.get("invariants", {})
     unresolved_count = sum(item["cross_seed_count"] for item in unresolved_sites.values())
     invariants = {
         "no_native_behavior_change": cross_seed.get("metrics", {}).get(
@@ -164,9 +187,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "successful_commits_have_ordered_4aa3e9_handoff"
         )
         is True,
+        "4aa3e9_4aa44d_sampled_write_stream_recovered": dynamic_4aa3e9.get("status")
+        == "4aa3e9_4aa44d_4a54a7_write_stream_recovered"
+        and dynamic_invariants.get("no_native_behavior_change") is True
+        and dynamic_invariants.get("no_objdump_used") is True
+        and dynamic_invariants.get("commit_returns_to_4aa44d") is True
+        and dynamic_invariants.get("projection_write_stream_captured") is True,
     }
     status = (
-        "nonfallback_4a54a7_return_owners_recovered_unresolved_state_scoped"
+        "nonfallback_4a54a7_return_owners_recovered_4aa44d_sampled_write_stream_recovered"
         if all(invariants.values())
         else "nonfallback_4a54a7_return_owner_recovery_incomplete"
     )
@@ -187,6 +216,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "ghidra_4aa3e9": str(args.ghidra_4aa3e9),
             "inner_4aa3e9": str(args.inner_4aa3e9),
             "ordered_4aa9b7": str(args.ordered_4aa9b7),
+            "dynamic_4aa3e9_4a54a7": str(args.dynamic_4aa3e9_4a54a7),
         },
         "invariants": invariants,
         "metrics": {
@@ -197,6 +227,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "unresolved_nonfallback_commit_count": unresolved_count,
             "4aa3e9_slot4_callback_count": inner_slot4_targets.get("0x004a54a7", 0),
             "4aa9b7_success_call_count": ordered_4aa9b7.get("success_call_count"),
+            "4aa3e9_4aa44d_sampled_projection_write_count": dynamic_4aa3e9.get(
+                "projection_write_count"
+            ),
         },
         "unresolved_return_sites": unresolved_sites,
         "source_backed_conclusion": (
@@ -204,15 +237,21 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "loops. 0x4a98f0 is the selected object callback return in 0x4a9641; 0x4a9c3f is "
             "the selected object callback return in 0x4a9911; and 0x4aa44d is the selected-member "
             "callback return in 0x4aa3e9. Existing 0x4aa9b7/0x4aa3e9 runtime summaries prove the "
-            "reward/guard wrapper handoff and sampled 0x4aa3e9 slot +0x04 callbacks into 0x4a54a7, "
-            "but the Medium seed-2 return-site surface still lacks same-ledger target-cell "
-            "afterstate and 0x4a56b6 write-stream correlation for these callbacks."
+            "reward/guard wrapper handoff and sampled 0x4aa3e9 slot +0x04 callbacks into 0x4a54a7. "
+            "A focused Wine trace now recovers one sampled 0x4aa44d same-ledger write stream: "
+            "0x4a54a7 appends the selected member object, adds the target-cell object reference, "
+            "preserves the target +0x20 high word, lowers the target low word from 14 to 2 "
+            "without clearing it to zero, and performs 90 unique projection writes. The Medium "
+            "seed-2 return-site surface still lacks equivalent same-ledger coverage for the "
+            "0x4a98f0 and 0x4a9c3f owner loops and broader all-sample coverage."
         ),
         "remaining_gap": (
-            "Recover same-ledger state for the three owner loops: 0x4a9641 -> 0x4a98f0, "
-            "0x4a9911 -> 0x4a9c3f, and 0x4aa3e9 -> 0x4aa44d. Each needs 0x4a54a7 entry, "
-            "0x4a56b6 projection-write stream, object-vector append, generated-cell object "
-            "reference/low-word clear/+0x28 mutation, and the owner-loop continuation state."
+            "Recover same-ledger state for 0x4a9641 -> 0x4a98f0 and 0x4a9911 -> 0x4a9c3f. "
+            "Broaden the sampled 0x4aa3e9 -> 0x4aa44d write-stream recovery if native port "
+            "authority needs all instances rather than the sampled contract. Remaining owner "
+            "loops need 0x4a54a7 entry, 0x4a56b6 projection-write stream, object-vector append, "
+            "generated-cell object reference/low-word mutation/+0x28 mutation, and owner-loop "
+            "continuation state."
         ),
     }
 
@@ -230,6 +269,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--ghidra-4aa3e9", type=Path, default=DEFAULT_GHIDRA_4AA3E9)
     parser.add_argument("--inner-4aa3e9", type=Path, default=DEFAULT_4AA3E9_INNER)
     parser.add_argument("--ordered-4aa9b7", type=Path, default=DEFAULT_4AA9B7_ORDERED)
+    parser.add_argument(
+        "--dynamic-4aa3e9-4a54a7",
+        type=Path,
+        default=DEFAULT_4AA3E9_4A54A7_DYNAMIC,
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
@@ -243,7 +287,7 @@ def main() -> int:
     return (
         0
         if summary["status"]
-        == "nonfallback_4a54a7_return_owners_recovered_unresolved_state_scoped"
+        == "nonfallback_4a54a7_return_owners_recovered_4aa44d_sampled_write_stream_recovered"
         else 1
     )
 

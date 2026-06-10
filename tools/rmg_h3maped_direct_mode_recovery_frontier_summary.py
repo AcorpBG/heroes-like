@@ -54,7 +54,7 @@ EXPECTED_STATUSES = {
         "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending"
     ),
     "nonfallback_return_owners": (
-        "nonfallback_4a54a7_return_owners_recovered_unresolved_state_scoped"
+        "nonfallback_4a54a7_return_owners_recovered_4aa44d_sampled_write_stream_recovered"
     ),
     "semantic_frontier": (
         "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
@@ -157,8 +157,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "Medium seed-1/seed-2 evidence also proves all 31 sampled 0x4a5e6c fallback-return "
                 "commits clear the sampled GeneratedCell+0x20 low word while preserving the high "
                 "word. The sampled 0x4a744a non-fallback direct endpoint afterstate and "
-                "descriptor/relation contract are also recovered; unresolved non-fallback "
-                "contexts remain at 0x4a98f0, 0x4a9c3f, and 0x4aa44d."
+                "descriptor/relation contract are also recovered; the sampled 0x4aa3e9 -> "
+                "0x4aa44d write stream is recovered with target low word lowered but not "
+                "cleared; unresolved non-fallback contexts remain at 0x4a98f0 and 0x4a9c3f, "
+                "with broader 0x4aa44d coverage still pending if needed."
             ),
         },
         {
@@ -179,7 +181,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "The unresolved non-fallback callbacks are statically owned, not anonymous: "
                 "0x4a98f0 belongs to 0x4a9641, 0x4a9c3f belongs to 0x4a9911, and 0x4aa44d "
                 "belongs to 0x4aa3e9. Existing runtime evidence also proves sampled 0x4aa3e9 "
-                "slot +0x04 callbacks target 0x4a54a7 after ordered 0x4aa9b7 handoff."
+                "slot +0x04 callbacks target 0x4a54a7 after ordered 0x4aa9b7 handoff; the "
+                "new focused Wine trace recovers one sampled 0x4aa44d write stream."
             ),
         },
         {
@@ -205,8 +208,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "reason": (
                 "Exact Medium seed-10 fallback records and cross-seed 0x4a5e03/0x4a5e6c "
                 "fallback-return commits and the sampled 0x4a744a non-fallback return-site "
-                "contract are reconciled, and the remaining return-site owners are known. "
-                "However, 0x4a9641 -> 0x4a98f0, 0x4a9911 -> 0x4a9c3f, 0x4aa3e9 -> 0x4aa44d, "
+                "contract are reconciled, the sampled 0x4aa3e9 -> 0x4aa44d write stream is "
+                "recovered, and the remaining return-site owners are known. However, 0x4a9641 "
+                "-> 0x4a98f0, 0x4a9911 -> 0x4a9c3f, broader all-sample 0x4aa44d coverage, "
                 "other map modes, and other source states still need coordinate/projection proof "
                 "before native behavior changes."
             ),
@@ -320,9 +324,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "formerly hex-only fields now have source-backed working names, including +0x09 as "
             "the template connection Border Guard flag; the exact seed-10 Border Guard chain now "
             "has recovered fallback materialization and phase-tail evidence. The sampled 0x4a744a "
-            "non-fallback 0x4a54a7 return-site contract is recovered, leaving 0x4a98f0, "
-            "0x4a9c3f, and 0x4aa44d as the large unresolved non-fallback return contexts; "
-            "those are now mapped to owner functions 0x4a9641, 0x4a9911, and 0x4aa3e9. "
+            "non-fallback 0x4a54a7 return-site contract is recovered, and one sampled "
+            "0x4aa3e9 -> 0x4aa44d same-ledger write stream is recovered, with target low word "
+            "lowered from 14 to 2 rather than cleared. The still-unrecovered large non-fallback "
+            "owner loops are 0x4a98f0 and 0x4a9c3f, now mapped to owner functions 0x4a9641 "
+            "and 0x4a9911; broader all-sample 0x4aa44d coverage remains pending if required. "
             "0x4a5e73 now has "
             "a recovered cursor-precondition frontier with current-corpus zero success-path hits, "
             "the non-self cursor writers are bound to the unhit projection/cleanup slot chain, "

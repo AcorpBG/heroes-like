@@ -93,9 +93,24 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "the selected object callback return inside 0x4a9911, and 0x4aa44d is the "
             "selected-member callback return inside 0x4aa3e9. Existing 0x4aa9b7/0x4aa3e9 "
             "runtime summaries also prove ordered wrapper handoff and sampled 0x4aa3e9 slot "
-            "+0x04 callbacks into 0x4a54a7. The remaining missing state is same-ledger "
-            "target-cell afterstate and 0x4a56b6 projection-write correlation for those "
-            "owner loops."
+            "+0x04 callbacks into 0x4a54a7. A focused Wine trace also recovers one sampled "
+            "0x4aa44d same-ledger write stream. The remaining missing state is same-ledger "
+            "target-cell afterstate and 0x4a56b6 projection-write correlation for 0x4a98f0 "
+            "and 0x4a9c3f, plus broader 0x4aa44d coverage if all instances are needed."
+        ),
+    },
+    {
+        "id": "sampled_4aa3e9_4aa44d_4a54a7_write_stream",
+        "artifact": ".artifacts/rmg_recovery/4aa3e9_4a54a7_dynamic_summary_20260610.json",
+        "status": "4aa3e9_4aa44d_4a54a7_write_stream_recovered",
+        "meaning": (
+            "WineDbg live recovery for the 0x4aa3e9 selected-member slot +0x04 callback "
+            "proves the sampled path enters 0x4a54a7 and returns to 0x4aa44d. The callback "
+            "appends the selected-member object to the generator object vector, adds that "
+            "object reference to the target generated cell, preserves the target +0x20 high "
+            "word, lowers the target low word from 14 to 2 without clearing it to zero, and "
+            "executes 90 unique 0x4a56b6 projection writes that preserve high words while "
+            "lowering low words."
         ),
     },
     {
