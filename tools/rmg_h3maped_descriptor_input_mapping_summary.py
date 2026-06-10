@@ -10,6 +10,7 @@ records 45/53/54/79.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,10 @@ ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_STATIC_LOADER = ROOT / "descriptor_static_loader_summary_20260610.json"
 DEFAULT_OUT = ROOT / "descriptor_input_mapping_summary_20260610.json"
 DEFAULT_GHIDRA_ROOT = ROOT / "ghidra_descriptor_input_helper_dump_20260610"
+DEFAULT_OBJECT_CATALOG = Path(
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.csv"
+)
+TERRAIN_ORDER = ["dirt", "sand", "grass", "snow", "swamp", "rough", "cave", "lava", "water"]
 
 DEFAULT_GHIDRA_FILES = {
     "descriptor_field_builder_0x4903e8": DEFAULT_GHIDRA_ROOT
@@ -30,7 +35,7 @@ DEFAULT_GHIDRA_FILES = {
     "bitset_setter_0x491472": DEFAULT_GHIDRA_ROOT / "target_00491472_FUN_00491472.txt",
     "row_48_slot_text_mask_parser_0x490f3f": DEFAULT_GHIDRA_ROOT
     / "target_00490f3f_FUN_00490f3f.txt",
-    "row_9_slot_text_policy_parser_0x491136": DEFAULT_GHIDRA_ROOT
+    "row_9_slot_text_terrain_parser_0x491136": DEFAULT_GHIDRA_ROOT
     / "target_00491136_FUN_00491136.txt",
     "secondary_mask_anchor_deriver_0x4906fb": DEFAULT_GHIDRA_ROOT
     / "target_004906fb_FUN_004906fb.txt",
@@ -169,7 +174,7 @@ CHECKS: dict[str, list[dict[str, str]]] = {
             "meaning": "Advances the parsed row/source cursor after accepted characters.",
         },
     ],
-    "row_9_slot_text_policy_parser_0x491136": [
+    "row_9_slot_text_terrain_parser_0x491136": [
         {
             "id": "loop_bound_9",
             "marker": "00491188: PUSH 0x9",
@@ -188,7 +193,7 @@ CHECKS: dict[str, list[dict[str, str]]] = {
         {
             "id": "appends_valid_char",
             "marker": "004911b6: CALL 0x00419372",
-            "meaning": "Appends accepted 0/1 policy characters to the output container.",
+            "meaning": "Appends accepted 0/1 terrain-mask characters to the output container.",
         },
         {
             "id": "advances_source_cursor",
@@ -230,12 +235,12 @@ CHECKS: dict[str, list[dict[str, str]]] = {
         {
             "id": "parses_first_9_text_policy",
             "marker": "0049084a: CALL 0x00491136",
-            "meaning": "Parses the first nine-slot row text policy/container field.",
+            "meaning": "Parses the first nine-slot row text terrain mask field.",
         },
         {
             "id": "parses_second_9_text_policy",
             "marker": "00490852: CALL 0x00491136",
-            "meaning": "Parses the second nine-slot row text policy/container field.",
+            "meaning": "Parses the second nine-slot row text terrain mask field.",
         },
         {
             "id": "reads_four_row_scalars",
@@ -268,14 +273,14 @@ CHECKS: dict[str, list[dict[str, str]]] = {
             "meaning": "Derives descriptor +0x0c/+0x10/+0x29/+0x2c/+0x30 from the second 48-slot mask.",
         },
         {
-            "id": "writes_policy_plus_0x14",
+            "id": "writes_terrain_mask_a_plus_0x14",
             "marker": "00490903: MOV dword ptr [ESI + 0x14],EAX",
-            "meaning": "Writes one recovered policy/container value to descriptor +0x14.",
+            "meaning": "Writes the first recovered nine-slot terrain mask value to descriptor +0x14.",
         },
         {
-            "id": "writes_policy_plus_0x18",
+            "id": "writes_terrain_mask_b_plus_0x18",
             "marker": "00490909: MOV dword ptr [EDI],EAX",
-            "meaning": "Writes one recovered policy/container value to descriptor +0x18.",
+            "meaning": "Writes the second recovered nine-slot terrain mask value to descriptor +0x18.",
         },
         {
             "id": "writes_scalar_plus_0x1c",
@@ -320,14 +325,14 @@ CHECKS: dict[str, list[dict[str, str]]] = {
             "meaning": "Reads the second 48-slot stream bit mask.",
         },
         {
-            "id": "reads_first_policy_container",
+            "id": "reads_first_terrain_mask_container",
             "marker": "00490a7f: CALL 0x0043bb1b",
-            "meaning": "Reads the first policy/container stream field.",
+            "meaning": "Reads the first nine-slot terrain mask stream field.",
         },
         {
-            "id": "reads_second_policy_container",
+            "id": "reads_second_terrain_mask_container",
             "marker": "00490a89: CALL 0x0043bb1b",
-            "meaning": "Reads the second policy/container stream field.",
+            "meaning": "Reads the second nine-slot terrain mask stream field.",
         },
         {
             "id": "reads_first_dword",
@@ -352,7 +357,7 @@ CHECKS: dict[str, list[dict[str, str]]] = {
         {
             "id": "reads_auxiliary_16_byte_record",
             "marker": "00490ac3: CALL 0x00438937",
-            "meaning": "Reads an auxiliary 16-byte stream record; final human domain remains pending.",
+            "meaning": "Reads a fixed 16-byte stream payload. The companion aux checkpoint proves this caller does not store that local into descriptor fields.",
         },
         {
             "id": "calls_descriptor_builder_with_blob",
@@ -385,9 +390,9 @@ CHECKS: dict[str, list[dict[str, str]]] = {
             "meaning": "Initializes descriptor +0x14 and vector/container storage at +0x18.",
         },
         {
-            "id": "writes_policy_plus_0x18",
+            "id": "writes_terrain_mask_b_plus_0x18",
             "marker": "00490b3b: MOV dword ptr [EAX + 0x18],ECX",
-            "meaning": "Writes one recovered policy/container value to descriptor +0x18.",
+            "meaning": "Writes the second recovered nine-slot terrain mask value to descriptor +0x18.",
         },
         {
             "id": "writes_dword_plus_0x1c",
@@ -451,7 +456,7 @@ CHECKS: dict[str, list[dict[str, str]]] = {
         {
             "id": "writes_plus_0x14",
             "marker": "004906f2: MOV dword ptr [ESI + 0x14],EAX",
-            "meaning": "Writes descriptor +0x14 from the supplied policy/container value.",
+            "meaning": "Writes descriptor +0x14 from the supplied first nine-slot terrain mask value.",
         },
     ],
     "mask_combiner_0x490f10": [
@@ -530,6 +535,45 @@ def evaluate_file(name: str, path: Path) -> dict[str, Any]:
     }
 
 
+def object_catalog_evidence(path: Path) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    with path.open(newline="", encoding="utf-8", errors="replace") as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = reader.fieldnames or []
+        required = {"terrain_mask_a", "terrain_mask_b", "terrain_a_names", "terrain_b_names"}
+        for row in reader:
+            rows.append(row)
+
+    valid_mask_rows = [
+        row
+        for row in rows
+        if len(row.get("terrain_mask_a", "")) == 9
+        and len(row.get("terrain_mask_b", "")) == 9
+        and set(row.get("terrain_mask_a", "")) <= {"0", "1"}
+        and set(row.get("terrain_mask_b", "")) <= {"0", "1"}
+    ]
+    return {
+        "path": str(path),
+        "fieldnames": fieldnames,
+        "terrain_order": TERRAIN_ORDER,
+        "has_terrain_mask_fields": required.issubset(fieldnames),
+        "row_count": len(rows),
+        "valid_9_slot_terrain_mask_rows": len(valid_mask_rows),
+        "sample_rows": [
+            {
+                "source": row.get("source"),
+                "source_row": row.get("source_row"),
+                "def_name": row.get("def_name"),
+                "terrain_mask_a": row.get("terrain_mask_a"),
+                "terrain_mask_b": row.get("terrain_mask_b"),
+                "terrain_a_names": row.get("terrain_a_names"),
+                "terrain_b_names": row.get("terrain_b_names"),
+            }
+            for row in valid_mask_rows[:5]
+        ],
+    }
+
+
 def field_mapping() -> dict[str, Any]:
     return {
         "row_owner_0x4907c9": [
@@ -552,10 +596,22 @@ def field_mapping() -> dict[str, Any]:
                 "human_meaning": "secondary 48-slot mask plus non-empty flag and first live anchor/offset",
             },
             {
-                "field": "policy_container_pair",
-                "source": "two nine-slot row text policy/container fields via 0x491136",
-                "descriptor_destination": "normalized values written to descriptor +0x14/+0x18",
-                "human_meaning": "two compact policy/container fields; exact domain label still pending",
+                "field": "terrain_mask_a",
+                "source": (
+                    "objects.txt/objtmplt.txt fourth row field; first nine-slot ASCII 0/1 "
+                    "terrain mask parsed through 0x491136"
+                ),
+                "descriptor_destination": "normalized first terrain mask value written to descriptor +0x14",
+                "human_meaning": "catalog terrain mask A over dirt/sand/grass/snow/swamp/rough/cave/lava/water",
+            },
+            {
+                "field": "terrain_mask_b",
+                "source": (
+                    "objects.txt/objtmplt.txt fifth row field; second nine-slot ASCII 0/1 "
+                    "terrain mask parsed through 0x491136"
+                ),
+                "descriptor_destination": "normalized second terrain mask value written to descriptor +0x18",
+                "human_meaning": "catalog terrain mask B over dirt/sand/grass/snow/swamp/rough/cave/lava/water",
             },
             {
                 "field": "descriptor_type_counter_index",
@@ -602,10 +658,16 @@ def field_mapping() -> dict[str, Any]:
                 "human_meaning": "secondary 48-slot mask plus non-empty flag and first live anchor/offset",
             },
             {
-                "field": "policy_container_pair",
-                "source": "two stream policy/container fields via 0x43bb1b into locals -0x18/-0x14",
-                "descriptor_destination": "normalized values written to descriptor +0x14/+0x18",
-                "human_meaning": "two compact policy/container fields; exact domain label still pending",
+                "field": "terrain_mask_a",
+                "source": "first nine-slot stream terrain bitset via 0x43bb1b into local -0x18",
+                "descriptor_destination": "normalized first terrain mask value written to descriptor +0x14",
+                "human_meaning": "catalog terrain mask A over dirt/sand/grass/snow/swamp/rough/cave/lava/water",
+            },
+            {
+                "field": "terrain_mask_b",
+                "source": "second nine-slot stream terrain bitset via 0x43bb1b into local -0x14",
+                "descriptor_destination": "normalized second terrain mask value written to descriptor +0x18",
+                "human_meaning": "catalog terrain mask B over dirt/sand/grass/snow/swamp/rough/cave/lava/water",
             },
             {
                 "field": "descriptor_type_counter_index",
@@ -632,10 +694,10 @@ def field_mapping() -> dict[str, Any]:
                 "human_meaning": "nonzero stream byte becomes descriptor boolean policy flag",
             },
             {
-                "field": "auxiliary_16_byte_record",
+                "field": "reserved_16_byte_stream_payload",
                 "source": "stream record via 0x438937 into local -0x64",
-                "descriptor_destination": "read in the same owner frame; no final descriptor field assignment proven in this checkpoint",
-                "human_meaning": "auxiliary stream record; exact domain label and final consumer remain pending",
+                "descriptor_destination": "caller-local payload only; the companion aux checkpoint proves no descriptor field assignment from this local in the 0x490a11 owner path",
+                "human_meaning": "reserved/alignment stream payload validated by the source reader and not used as descriptor identity or mask data in this caller",
             },
         ],
     }
@@ -643,6 +705,7 @@ def field_mapping() -> dict[str, Any]:
 
 def summarize(args: argparse.Namespace) -> dict[str, Any]:
     static_loader = load_json(args.static_loader)
+    catalog = object_catalog_evidence(args.object_catalog)
     files = DEFAULT_GHIDRA_FILES.copy()
     files.update(args.ghidra_file_overrides)
     ghidra_checks = {name: evaluate_file(name, path) for name, path in files.items()}
@@ -669,11 +732,14 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "derives_secondary_mask_and_anchor",
             ]
         ),
+        "object_catalog_has_two_9_slot_terrain_masks": catalog["has_terrain_mask_fields"]
+        and catalog["valid_9_slot_terrain_mask_rows"] == catalog["row_count"]
+        and catalog["terrain_order"] == TERRAIN_ORDER,
         "native_behavior_unchanged": True,
         "no_objdump_used": True,
     }
     status = (
-        "descriptor_input_mapping_surface_recovered_selected_lane_linkage_pending"
+        "descriptor_input_mapping_terrain_fields_recovered_catalog_mapping_pending"
         if all(invariants.values())
         else "descriptor_input_mapping_surface_incomplete"
     )
@@ -688,9 +754,11 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         ),
         "inputs": {
             "static_loader": str(args.static_loader),
+            "object_catalog": str(args.object_catalog),
             "ghidra_files": {name: str(path) for name, path in files.items()},
         },
         "input_statuses": {"static_loader": static_loader.get("status")},
+        "object_catalog_evidence": catalog,
         "invariants": invariants,
         "metrics": {
             "ghidra_file_count": len(ghidra_checks),
@@ -704,39 +772,39 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         },
         "ghidra_checks": ghidra_checks,
         "field_mapping": field_mapping(),
+        "descriptor_terrain_mask_mapping": {
+            "terrain_order": TERRAIN_ORDER,
+            "descriptor_plus_0x14": "terrain_mask_a",
+            "descriptor_plus_0x18": "terrain_mask_b",
+            "row_source_fields": {
+                "terrain_mask_a": "objects.txt/objtmplt.txt field 4 after DEF/passability/action masks",
+                "terrain_mask_b": "objects.txt/objtmplt.txt field 5 after DEF/passability/action masks",
+            },
+            "stream_source_fields": {
+                "terrain_mask_a": "first 0x43bb1b nine-slot stream bitset",
+                "terrain_mask_b": "second 0x43bb1b nine-slot stream bitset",
+            },
+        },
         "source_backed_conclusion": (
             "0x4907c9 is the objects.txt parsed-row descriptor-owner path and 0x490a11 "
             "is the binary/source-stream descriptor-owner path. Their exact recovered "
             "input surface is equivalent at descriptor field level: source/name/blob into "
             "0x4903e8; primary 48-slot mask into +0x04/+0x08; secondary 48-slot mask into "
-            "+0x0c/+0x10/+0x29/+0x2c/+0x30; policy/container pair into +0x14/+0x18; "
+            "+0x0c/+0x10/+0x29/+0x2c/+0x30; catalog terrain_mask_a into +0x14; "
+            "catalog terrain_mask_b into +0x18; "
             "type/counter index into +0x1c; source/object id into +0x20; class/subtype-like "
-            "selector into +0x24; and a boolean policy flag into +0x28."
+            "selector into +0x24; and a boolean policy flag into +0x28. The fixed "
+            "16-byte stream payload read through 0x438937 is handled by the separate "
+            "auxiliary-record checkpoint because it is not stored into descriptor fields "
+            "in this owner path."
         ),
         "remaining_blockers": [
             {
-                "id": "policy_container_domain_names",
+                "id": "source_catalog_template_producer_mapping",
                 "reason": (
-                    "The two compact policy/container fields are mapped to descriptor "
-                    "+0x14/+0x18, but their exact domain names remain pending. The row path "
-                    "parses two nine-slot 0/1 text fields; the stream path reads two matching "
-                    "container fields through 0x43bb1b."
-                ),
-            },
-            {
-                "id": "auxiliary_16_byte_record_consumer",
-                "reason": (
-                    "0x490a11 reads a 16-byte auxiliary record through 0x438937, but this "
-                    "checkpoint does not prove a final descriptor field assignment or human "
-                    "domain label for that record."
-                ),
-            },
-            {
-                "id": "mixed_lane_selected_descriptor_sources",
-                "reason": (
-                    "Generated-object mixed type lanes 45/53/54/79 still need live pointer "
-                    "linkage to specific 0x4903e8-built descriptors and proof of descriptor "
-                    "+0x00 interpretation per lane."
+                    "The non-hero producer that maps parsed source-input records and nested "
+                    "payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows "
+                    "still needs recovery or source-backed exclusion before claiming full end-to-end recovery."
                 ),
             },
         ],
@@ -746,6 +814,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--static-loader", type=Path, default=DEFAULT_STATIC_LOADER)
+    parser.add_argument("--object-catalog", type=Path, default=DEFAULT_OBJECT_CATALOG)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
     args.ghidra_file_overrides = {}

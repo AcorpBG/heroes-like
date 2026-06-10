@@ -62,6 +62,78 @@ DISPATCH_BUILDER_CHECKS = [
     {"id": "dispatch_final_accumulator_cleanup", "marker": "004235ca: CALL 0x0042bfe6"},
 ]
 
+PROVIDER_SLOT_DISPATCH = [
+    {
+        "slot": "0x04",
+        "dump_slot": "0x4",
+        "call_site": "0042335e",
+        "cleanup_marker": "0x1c",
+        "source_record_plus_0x1c_values": ["default/unmatched category path"],
+    },
+    {
+        "slot": "0x0c",
+        "dump_slot": "0xc",
+        "call_site": "004231ed",
+        "cleanup_marker": "0x02",
+        "source_record_plus_0x1c_values": ["0xd6"],
+    },
+    {"slot": "0x14", "call_site": "00422ab6", "cleanup_marker": "0x03", "source_record_plus_0x1c_values": ["0x22"]},
+    {"slot": "0x1c", "call_site": "00422c4c", "cleanup_marker": "0x04", "source_record_plus_0x1c_values": ["0x46"]},
+    {"slot": "0x24", "call_site": "00422b53", "cleanup_marker": "0x05", "source_record_plus_0x1c_values": ["0x3e"]},
+    {"slot": "0x2c", "call_site": "00422f38", "cleanup_marker": "0x06", "source_record_plus_0x1c_values": ["0x4d", "0x62"]},
+    {
+        "slot": "0x3c",
+        "call_site": "0042325d",
+        "cleanup_marker": "0x07",
+        "source_record_plus_0x1c_values": ["0x36", "0x47..0x4b", "0xa2..0xa4"],
+    },
+    {"slot": "0x34", "call_site": "004229cb", "cleanup_marker": "0x08", "source_record_plus_0x1c_values": ["0x1a"]},
+    {"slot": "0x44", "call_site": "00423003", "cleanup_marker": "0x09", "source_record_plus_0x1c_values": ["0x3b", "0x5b"]},
+    {"slot": "0x4c", "call_site": "00422cfe", "cleanup_marker": "0x0a", "source_record_plus_0x1c_values": ["0x57"]},
+    {
+        "slot": "0x54",
+        "call_site": "004233e1",
+        "cleanup_marker": "0x0b",
+        "source_record_plus_0x1c_values": [
+            "0x2a",
+            "0x35 when source_record+0x20 < 7",
+            "0xdc when source_record+0x20 < 7",
+        ],
+    },
+    {
+        "slot": "0x5c",
+        "call_site": "00423451",
+        "cleanup_marker": "0x0c",
+        "source_record_plus_0x1c_values": [
+            "0x35 when source_record+0x20 >= 7",
+            "0xdc when source_record+0x20 >= 7",
+        ],
+    },
+    {"slot": "0x64", "call_site": "004234c1", "cleanup_marker": "0x0d", "source_record_plus_0x1c_values": ["0x21", "0xdb"]},
+    {"slot": "0x6c", "call_site": "00422bc6", "cleanup_marker": "0x0e", "source_record_plus_0x1c_values": ["0x05", "0x41..0x45"]},
+    {"slot": "0x74", "call_site": "00422f9f", "cleanup_marker": "0x0f", "source_record_plus_0x1c_values": ["0x5d"]},
+    {"slot": "0x7c", "call_site": "00422e3f", "cleanup_marker": "0x10", "source_record_plus_0x1c_values": ["0x4c", "0x4f"]},
+    {"slot": "0x84", "call_site": "00422958", "cleanup_marker": "0x11", "source_record_plus_0x1c_values": ["0x06"]},
+    {"slot": "0x8c", "call_site": "00422dd8", "cleanup_marker": "0x12", "source_record_plus_0x1c_values": ["0x51"]},
+    {"slot": "0x94", "call_site": "00422d62", "cleanup_marker": "0x13", "source_record_plus_0x1c_values": ["0x53"]},
+    {"slot": "0x9c", "call_site": "00422a43", "cleanup_marker": "0x14", "source_record_plus_0x1c_values": ["0x24"]},
+    {"slot": "0xa4", "call_site": "00422eaf", "cleanup_marker": "0x15", "source_record_plus_0x1c_values": ["0x58..0x5a"]},
+    {"slot": "0xac", "call_site": "004228f1", "cleanup_marker": "0x16", "source_record_plus_0x1c_values": ["0x11", "0x14"]},
+    {"slot": "0xb4", "call_site": "004232d0", "cleanup_marker": "0x17", "source_record_plus_0x1c_values": ["0xd9"]},
+    {"slot": "0xbc", "call_site": "0042352e", "cleanup_marker": "0x18", "source_record_plus_0x1c_values": ["0xda"]},
+    {"slot": "0xc4", "call_site": "00423119", "cleanup_marker": "0x19", "source_record_plus_0x1c_values": ["0xd8"]},
+    {"slot": "0xcc", "call_site": "00423183", "cleanup_marker": "0x1a", "source_record_plus_0x1c_values": ["0xd7"]},
+    {"slot": "0xd4", "call_site": "00423067", "cleanup_marker": "0x1b", "source_record_plus_0x1c_values": ["0x71"]},
+]
+
+PROVIDER_SLOT_CHECKS = [
+    {
+        "id": f"dispatch_provider_slot_{entry['slot'][2:]}_call_site",
+        "marker": f"{entry['call_site']}: CALL dword ptr [EDX + {entry.get('dump_slot', entry['slot'])}]",
+    }
+    for entry in PROVIDER_SLOT_DISPATCH
+]
+
 RANGE_PREDICATE_CHECKS = [
     {"id": "range_reads_lower_bound_40", "marker": "00428d59: MOV ECX,dword ptr [EAX + 0x40]"},
     {"id": "range_reads_upper_bound_44", "marker": "00428d72: MOV EDX,dword ptr [EAX + 0x44]"},
@@ -103,7 +175,9 @@ def check_markers(path: Path, checks: list[dict[str, str]]) -> list[dict[str, An
 
 def summarize() -> dict[str, Any]:
     caller_checks = check_markers(CALLER_DUMP, CALLER_CHECKS)
-    dispatch_builder_checks = check_markers(DISPATCH_BUILDER_DUMP, DISPATCH_BUILDER_CHECKS)
+    dispatch_builder_checks = check_markers(
+        DISPATCH_BUILDER_DUMP, DISPATCH_BUILDER_CHECKS + PROVIDER_SLOT_CHECKS
+    )
     range_predicate_checks = check_markers(RANGE_PREDICATE_DUMP, RANGE_PREDICATE_CHECKS)
     dynamic_inserter_checks = check_markers(DYNAMIC_INSERTER_DUMP, DYNAMIC_INSERTER_CHECKS)
     dynamic_wrapper_checks = check_markers(DYNAMIC_WRAPPER_DUMP, DYNAMIC_WRAPPER_CHECKS)
@@ -118,7 +192,7 @@ def summarize() -> dict[str, Any]:
     recovered = not missing
     return {
         "schema_id": "h3maped_rmg_source_variant_builder_frontier_v1",
-        "status": "source_variant_builder_surface_recovered_category_semantics_pending"
+        "status": "source_variant_builder_provider_slot_dispatch_recovered_catalog_mapping_pending"
         if recovered
         else "source_variant_builder_surface_incomplete",
         "dumps": {
@@ -133,6 +207,7 @@ def summarize() -> dict[str, Any]:
         "missing_marker_ids": missing,
         "caller_checks": caller_checks,
         "dispatch_builder_checks": dispatch_builder_checks,
+        "provider_slot_dispatch": PROVIDER_SLOT_DISPATCH,
         "range_predicate_checks": range_predicate_checks,
         "dynamic_inserter_checks": dynamic_inserter_checks,
         "dynamic_wrapper_checks": dynamic_wrapper_checks,
@@ -145,9 +220,11 @@ def summarize() -> dict[str, Any]:
             ],
             "0x422868": (
                 "Reads source record +0x1c as a category/lane selector, dispatches through "
-                "category constants and global provider vtable slots, accumulates provider "
-                "results with 0x412041, requires a non-null accumulated result, and writes "
-                "an output present byte plus pointer."
+                "recovered category constants and global provider vtable slots, accumulates "
+                "provider results with 0x412041, requires a non-null accumulated result, and "
+                "writes an output present byte plus pointer. The recovered dispatch maps "
+                "27 provider slot call sites covering explicit values/ranges plus the default "
+                "unmatched category path."
             ),
             "0x428d45": (
                 "Reads source-family bounds from input +0x40/+0x44, checks them against "
@@ -166,11 +243,16 @@ def summarize() -> dict[str, Any]:
             ),
         },
         "remaining_unrecovered": [
-            "Human names for source record +0x1c category/lane values used by 0x422868.",
-            "Human meanings of global provider vtable slots used by 0x422868.",
+            "Human final names for the recovered source record +0x1c category/lane values and provider-result families used by 0x422868.",
             "Exact final mapping from parsed source-input fields and populated 0x4c source records into objects.txt/objtmplt.txt type, subtype, and DEF rows.",
             "Dynamic lookup helper internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity.",
         ],
+        "metrics": {
+            "provider_slot_dispatch_count": len(PROVIDER_SLOT_DISPATCH),
+            "used_objdump": False,
+            "native_behavior_changed": False,
+            "overall_goal_complete": False,
+        },
         "native_behavior_changed": False,
         "used_objdump": False,
         "overall_goal_complete": False,

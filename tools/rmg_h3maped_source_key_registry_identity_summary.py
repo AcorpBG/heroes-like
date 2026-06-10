@@ -24,6 +24,8 @@ DEFAULT_BUILD_JOIN = ROOT / "descriptor_build_selected_join_summary_20260610.jso
 DEFAULT_ROW_MODE = ROOT / "descriptor_word_row_mode_summary_20260610.json"
 DEFAULT_SOURCE_RECORD = ROOT / "source_record_identity_frontier_summary_20260610.json"
 DEFAULT_OBJECT_LOADER = ROOT / "object_table_loader_summary_20260610.json"
+DEFAULT_DESCRIPTOR_INPUT = ROOT / "descriptor_input_mapping_summary_20260610.json"
+DEFAULT_AUX_16_BYTE = ROOT / "aux_16_byte_record_summary_20260610.json"
 DEFAULT_OUT = ROOT / "source_key_registry_identity_summary_20260610.json"
 
 TARGET_CONTEXTS = [
@@ -64,12 +66,16 @@ def summarize(
     row_mode_path: Path,
     source_record_path: Path,
     object_loader_path: Path,
+    descriptor_input_path: Path,
+    aux_16_byte_path: Path,
 ) -> dict[str, Any]:
     base_helper = read_json(base_helper_path)
     build_join = read_json(build_join_path)
     row_mode = read_json(row_mode_path)
     source_record = read_json(source_record_path)
     object_loader = read_json(object_loader_path)
+    descriptor_input = read_json(descriptor_input_path)
+    aux_16_byte = read_json(aux_16_byte_path)
 
     contexts = row_mode_contexts(row_mode)
     base_recovered = base_helper.get("invariants", {}).get(
@@ -84,6 +90,14 @@ def summarize(
     object_loader_recovered = (
         object_loader.get("status") == "object_table_loader_recovered_catalog_row_identity_surface"
     )
+    descriptor_input_recovered = (
+        descriptor_input.get("status")
+        == "descriptor_input_mapping_terrain_fields_recovered_catalog_mapping_pending"
+    )
+    aux_16_byte_recovered = (
+        aux_16_byte.get("status")
+        == "aux_16_byte_stream_record_source_excluded_from_descriptor_fields"
+    )
     has_mismatch_evidence = any(context.get("row_mismatch_count", 0) > 0 for context in contexts)
     target_join_count = build_join.get("metrics", {}).get("target_mixed_joined_descriptor_count", 0)
     target_missing_join_count = build_join.get("metrics", {}).get("target_mixed_missing_join_count", 1)
@@ -94,6 +108,8 @@ def summarize(
         "mixed_lane_row_mode_recovered": row_mode_recovered,
         "object_table_loader_row_identity_surface_recovered": object_loader_recovered,
         "source_record_frontier_recovered_but_final_producer_pending": source_frontier_recovered,
+        "descriptor_plus_0x14_0x18_terrain_masks_recovered": descriptor_input_recovered,
+        "aux_16_byte_stream_record_source_excluded": aux_16_byte_recovered,
         "mixed_lane_has_non_row_identity_evidence": has_mismatch_evidence,
         "all_target_mixed_selected_descriptors_joined": (
             join_recovered and target_join_count > 0 and target_missing_join_count == 0
@@ -121,6 +137,8 @@ def summarize(
             "descriptor_word_row_mode": str(row_mode_path),
             "source_record_identity_frontier": str(source_record_path),
             "object_table_loader": str(object_loader_path),
+            "descriptor_input_mapping": str(descriptor_input_path),
+            "aux_16_byte_stream_record_boundary": str(aux_16_byte_path),
         },
         "recovered_domain_label": {
             "0x491eed_return_value": "descriptor_source_selector_key",
@@ -164,6 +182,16 @@ def summarize(
                     "why_not_identity"
                 ),
             },
+            "closed_prior_blockers": {
+                "descriptor_plus_0x14_0x18": (
+                    "Recovered by descriptor input mapping as catalog terrain_mask_a and "
+                    "terrain_mask_b, not unknown compact descriptor fields."
+                ),
+                "0x490a11_0x438937_fixed_read": (
+                    "Recovered by aux 16-byte checkpoint as caller-local/source-excluded "
+                    "from descriptor fields in the 0x490a11 owner frame."
+                ),
+            },
         },
         "invariants": invariants,
         "remaining_blockers": [
@@ -174,20 +202,6 @@ def summarize(
                     "source records, and nested payload holders into exact objects.txt/objtmplt.txt "
                     "type/subtype/DEF rows. This is the next required step before native RMG can "
                     "port selected object identity end-to-end."
-                ),
-            },
-            {
-                "id": "descriptor_policy_field_names",
-                "reason": (
-                    "The compact policy/container fields feeding descriptor +0x14/+0x18 still need "
-                    "human semantic names where they affect selection behavior."
-                ),
-            },
-            {
-                "id": "auxiliary_stream_record_domain",
-                "reason": (
-                    "The auxiliary 16-byte stream record read by 0x490a11 through 0x438937 still "
-                    "needs its consumer and domain label recovered."
                 ),
             },
         ],
@@ -214,6 +228,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--row-mode", type=Path, default=DEFAULT_ROW_MODE)
     parser.add_argument("--source-record", type=Path, default=DEFAULT_SOURCE_RECORD)
     parser.add_argument("--object-loader", type=Path, default=DEFAULT_OBJECT_LOADER)
+    parser.add_argument("--descriptor-input", type=Path, default=DEFAULT_DESCRIPTOR_INPUT)
+    parser.add_argument("--aux-16-byte", type=Path, default=DEFAULT_AUX_16_BYTE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
@@ -226,6 +242,8 @@ def main() -> int:
         args.row_mode,
         args.source_record,
         args.object_loader,
+        args.descriptor_input,
+        args.aux_16_byte,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")

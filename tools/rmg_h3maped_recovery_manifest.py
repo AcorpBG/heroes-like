@@ -493,28 +493,46 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
         "id": "descriptor_input_mapping_surface",
         "artifact": ".artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json",
-        "status": "descriptor_input_mapping_surface_recovered_selected_lane_linkage_pending",
+        "status": "descriptor_input_mapping_terrain_fields_recovered_catalog_mapping_pending",
         "meaning": (
             "Ghidra/Python evidence now maps the exact field-level inputs prepared by "
             "0x4907c9 and 0x490a11 around 0x4903e8. 0x4907c9 is the objects.txt parsed-row "
             "path: it reads a source/name/blob, two 48-slot ASCII 0/1 masks through 0x490f3f, "
-            "two nine-slot ASCII 0/1 policy/container fields through 0x491136, and four "
+            "two nine-slot ASCII 0/1 terrain-mask fields through 0x491136, and four "
             "row scalars. 0x490a11 is the binary/source-stream path: it reads a source/name/blob, "
-            "two six-byte 48-bit masks through 0x49213a, two policy/container fields through "
+            "two six-byte 48-bit masks through 0x49213a, two terrain-mask fields through "
             "0x43bb1b, two dwords, two bytes, and an auxiliary 16-byte record. The common "
             "descriptor outputs are source/name/blob into 0x4903e8 and descriptor +0x00; "
             "primary 48-slot mask into +0x04/+0x08; secondary 48-slot mask into "
-            "+0x0c/+0x10/+0x29/+0x2c/+0x30; policy/container pair into +0x14/+0x18; "
+            "+0x0c/+0x10/+0x29/+0x2c/+0x30; catalog terrain_mask_a into +0x14; "
+            "catalog terrain_mask_b into +0x18; "
             "type/counter index into +0x1c; source/object id into +0x20; class/subtype-like "
-            "selector into +0x24; and boolean policy flag into +0x28. Remaining blockers "
-            "are exact domain names for the compact policy/container fields, the auxiliary "
-            "16-byte stream record consumer, and live selected mixed-lane descriptor linkage."
+            "selector into +0x24; and boolean policy flag into +0x28. The fixed 16-byte "
+            "stream payload is source-excluded from descriptor fields by the aux checkpoint. "
+            "The remaining blocker is the non-hero source catalog/template producer mapping."
+        ),
+    },
+    {
+        "id": "aux_16_byte_stream_record_boundary",
+        "artifact": ".artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json",
+        "status": "aux_16_byte_stream_record_source_excluded_from_descriptor_fields",
+        "meaning": (
+            "Ghidra/Python evidence recovers 0x438937 as a guarded fixed 16-byte source/input "
+            "reader and distinguishes caller-specific use. In the 0x490a11 descriptor-owner "
+            "frame, the payload is read into stack local -0x64 and that local has no references "
+            "after the 0x438937 call before descriptor construction. In the 0x4c025c source-record "
+            "parser frame, the final payload is read into stack local -0x34 and that local has no "
+            "references after the 0x438937 call before cleanup/return. A separate helper, "
+            "0x43bc24, uses the same reader as a live 128-slot bitset source, so this is a "
+            "caller-specific source-backed exclusion, not a blanket claim that 0x438937 is "
+            "padding everywhere. The remaining blocker is the non-hero source catalog/template "
+            "producer mapping."
         ),
     },
     {
         "id": "descriptor_base_value_helper_surface",
         "artifact": ".artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json",
-        "status": "descriptor_plus_0x00_source_key_registry_field_recovered_same_run_pointer_link_pending",
+        "status": "descriptor_plus_0x00_source_key_registry_field_recovered_catalog_mapping_pending",
         "meaning": (
             "Ghidra/Python evidence now recovers the descriptor +0x00 assignment path below "
             "0x4903e8. 0x4903e8 calls 0x491eed and stores its return value at descriptor "
@@ -526,7 +544,9 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "the registry count. Therefore mixed type 45/53/54/79 descriptor +0x00 values are "
             "mechanically source-key registry entry +0x1c values, not universal objects.txt row "
             "ids. Same-run selected descriptor pointer linkage to exact 0x4903e8 build events "
-            "and the human domain label for registry entry +0x1c remain pending."
+            "is handled by the selected-descriptor linkage checkpoint. The remaining "
+            "human-identity blocker is the source catalog/template producer mapping for "
+            "selected source records."
         ),
     },
     {
@@ -598,7 +618,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
         "id": "source_payload_producer_frontier",
         "artifact": ".artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json",
-        "status": "source_payload_loader_boundary_recovered_catalog_semantics_pending",
+        "status": "source_payload_loader_boundary_recovered_provider_dispatch_catalog_mapping_pending",
         "meaning": (
             "Ghidra/Python evidence now names 0x41f350 as the source object and "
             "source-record loader/constructor boundary for the payload family consumed "
@@ -609,10 +629,12 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "records through 0x4c025c. 0x42df99 and sibling 0x42ddxx helpers are bounded "
             "as holder payload accessors that copy-on-write when shared and return payload "
             "+0x04. 0x4e6da2 is classified as a generic dynamic lookup/cast helper with "
-            "many callers, not the source identity producer. Remaining blockers are the "
-            "exact 0x43b0ff/0x433d7d input parse semantics, human category/provider-slot "
-            "semantics for later variant builders, and final mapping from populated 0x4c "
-            "records to objects.txt/objtmplt.txt type/subtype/DEF rows."
+            "many callers, not the source identity producer. 0x422868 provider-slot "
+            "dispatch is recovered as a 27-entry category/slot surface by the variant "
+            "builder checkpoint. Remaining blockers are the exact 0x43b0ff/0x433d7d "
+            "input parse semantics, human final names for recovered category/provider "
+            "result families only where they affect source-catalog identity, and final "
+            "mapping from populated 0x4c records to objects.txt/objtmplt.txt type/subtype/DEF rows."
         ),
     },
     {
@@ -638,7 +660,8 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "to source-record +0x10, populates a seven-dword field group at +0x20 through "
             "0x4b3419, expands one read byte into an eight-bit bitset at +0x3c, writes "
             "version-gated boolean flags at +0x40/+0x41, writes two signed word-derived "
-            "dwords at +0x44/+0x48, and performs a final guarded 0x10-byte local read. "
+            "dwords at +0x44/+0x48, and performs a final guarded 0x10-byte local read that "
+            "is source-excluded from source-record fields by the aux checkpoint. "
             "Remaining blockers are human field names and final mapping from populated source records to "
             "objects.txt/objtmplt.txt type/subtype/DEF rows."
         ),
@@ -736,19 +759,19 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
     {
         "id": "source_variant_builder_frontier",
         "artifact": ".artifacts/rmg_recovery/source_variant_builder_summary_20260610.json",
-        "status": "source_variant_builder_surface_recovered_category_semantics_pending",
+        "status": "source_variant_builder_provider_slot_dispatch_recovered_catalog_mapping_pending",
         "meaning": (
             "Ghidra/Python evidence now recovers the helper surface called later by "
             "0x41f350 without assigning final object identities. 0x422868 reads copied "
-            "source-record +0x1c as a category/lane selector, dispatches through category "
-            "constants and global provider vtable slots, accumulates provider results, "
-            "requires a non-null result, and writes an output present byte plus pointer. "
+            "source-record +0x1c as a category/lane selector, dispatches through recovered "
+            "category constants and 27 global provider vtable slot call sites, accumulates "
+            "provider results, requires a non-null result, and writes an output present byte plus pointer. "
             "0x428d45 bounds source-family ranges through input +0x40/+0x44, global table "
             "0x535214, and descriptor mask predicate 0x41e915. 0x420e6b selects one of two "
             "holder families from +0x18, performs copy-on-write when shared, runs dynamic "
             "lookups through 0x4e6da2, and delegates existing/missing payload paths. 0x434073 "
             "wraps a dynamic lookup and delegates existing/missing result paths. Remaining "
-            "blockers are human category/lane names, provider slot meanings, and final "
+            "blockers are human final names for the recovered category/provider-result families and final "
             "source-catalog/object-template row mapping."
         ),
     },
@@ -1477,10 +1500,10 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x422868",
         "name": "source_variant_category_dispatch_builder",
-        "status": "recovered_surface_category_semantics_pending",
+        "status": "recovered_provider_slot_dispatch_catalog_mapping_pending",
         "callers": ["0x41f350 at 0x41f800", "0x41f350 at 0x41f98d", "0x423832"],
         "calls": [
-            "global provider vtable slots, including +0xac and +0xbc",
+            "27 recovered global provider vtable slot call sites from +0x04 through +0xd4",
             "0x412041",
             "0x42bfe6",
             "0x42c913",
@@ -1499,8 +1522,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "output pointer at caller output +0x04",
         ],
         "unrecovered_semantics": [
-            "human names for category/lane constants such as 0x1a, 0x2a, 0x35, 0x45, 0x46, 0x4d, 0x71, and 0xa2",
-            "human meanings for provider vtable slots used by each category path",
+            "human final names for recovered category/provider-result families such as 0x1a, 0x2a, 0x35, 0x45, 0x46, 0x4d, 0x71, 0xa2, and related ranges",
             "final source-catalog/object-template row mapping",
         ],
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00422868_FUN_00422868.txt plus verifier .artifacts/rmg_recovery/source_variant_builder_summary_20260610.json recover this dispatcher surface without assigning object identities.",
@@ -3299,7 +3321,6 @@ FUNCTIONS: list[dict[str, Any]] = [
             "descriptor +0x34/+0x38/+0x3c/+0x40/+0x44/+0x48",
         ],
         "unrecovered_semantics": [
-            "exact domain names for compact policy/container fields at +0x14/+0x18",
             "per-lane interpretation of descriptor +0x00 as row id, class word, or other source value",
             "live selected descriptor pointer linkage for mixed type 45/53/54/79 lanes",
         ],
@@ -3308,20 +3329,20 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4907c9",
         "name": "objects_txt_row_descriptor_builder_owner",
-        "status": "recovered_owner_field_semantics_pending",
+        "status": "recovered_owner_terrain_field_semantics",
         "callers": ["0x490c4c"],
         "calls": ["0x491fa1", "0x490f3f", "0x491136", "0x42bc12", "0x490e66", "0x4903e8"],
         "reads": [
             "source/name/blob via 0x491fa1",
             "two 48-slot ASCII 0/1 masks via 0x490f3f",
-            "two nine-slot ASCII 0/1 policy/container fields via 0x491136",
+            "two nine-slot ASCII 0/1 terrain-mask fields via 0x491136",
             "four row scalars via 0x42bc12",
         ],
         "writes": [
             "descriptor object through 0x4903e8",
             "descriptor +0x04/+0x08 primary mask",
             "descriptor +0x0c/+0x10/+0x29/+0x2c/+0x30 secondary mask/anchor",
-            "descriptor +0x14/+0x18 policy/container values",
+            "descriptor +0x14 terrain_mask_a and +0x18 terrain_mask_b values",
             "descriptor +0x1c/+0x20/+0x24/+0x28 scalar/filter fields",
         ],
         "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/caller_004907c9_FUN_004907c9.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json recover this owner input mapping surface.",
@@ -3329,25 +3350,25 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x490a11",
         "name": "objtmplt_or_source_stream_descriptor_builder_owner",
-        "status": "recovered_owner_field_semantics_pending",
+        "status": "recovered_owner_terrain_field_semantics_aux_excluded_catalog_mapping_pending",
         "callers": ["0x41f350"],
         "calls": ["0x4190cb", "0x49213a", "0x43bb1b", "0x407675", "0x40763d", "0x438937", "0x4903e8"],
         "reads": [
             "source/name/blob via 0x4190cb",
             "two six-byte 48-bit masks via 0x49213a",
-            "two policy/container fields via 0x43bb1b",
+            "two terrain-mask fields via 0x43bb1b",
             "two dwords via 0x407675",
             "two bytes via 0x40763d",
-            "auxiliary 16-byte stream record via 0x438937",
+            "reserved/alignment 16-byte stream payload via 0x438937",
         ],
         "writes": [
             "descriptor object through 0x4903e8",
             "descriptor +0x04/+0x08 primary mask",
             "descriptor +0x0c/+0x10/+0x29/+0x2c/+0x30 secondary mask/anchor",
-            "descriptor +0x14/+0x18 policy/container values",
+            "descriptor +0x14 terrain_mask_a and +0x18 terrain_mask_b values",
             "descriptor +0x1c/+0x20/+0x24/+0x28 scalar/filter fields",
         ],
-        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/caller_00490a11_FUN_00490a11.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json recover this owner input mapping surface.",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/caller_00490a11_FUN_00490a11.txt plus verifiers .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json and .artifacts/rmg_recovery/aux_16_byte_record_summary_20260610.json recover this owner input mapping surface and source-exclude the 16-byte local from descriptor fields.",
     },
     {
         "address": "0x49213a",
@@ -3373,13 +3394,13 @@ FUNCTIONS: list[dict[str, Any]] = [
     },
     {
         "address": "0x491136",
-        "name": "row_9_slot_text_policy_parser",
-        "status": "recovered_static_domain_name_pending",
+        "name": "row_9_slot_text_terrain_mask_parser",
+        "status": "recovered_static_terrain_mask_parser",
         "callers": ["0x4907c9"],
         "calls": ["0x42cb17", "0x42cc2e", "0x419372", "0x42cc4c"],
         "reads": ["up to nine ASCII 0/1 row characters"],
-        "writes": ["compact policy/container output"],
-        "meaning": "Parses one nine-slot ASCII 0/1 policy/container field from the objects.txt row path; exact domain name remains pending.",
+        "writes": ["compact nine-terrain mask output"],
+        "meaning": "Parses one nine-slot ASCII 0/1 terrain-mask field from the objects.txt row path.",
         "ghidra_dump": ".artifacts/rmg_recovery/ghidra_descriptor_input_helper_dump_20260610/target_00491136_FUN_00491136.txt plus verifier .artifacts/rmg_recovery/descriptor_input_mapping_summary_20260610.json.",
     },
     {

@@ -16,6 +16,7 @@ from typing import Any
 
 ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_OUT = ROOT / "source_payload_producer_frontier_summary_20260610.json"
+DEFAULT_VARIANT_SUMMARY = ROOT / "source_variant_builder_summary_20260610.json"
 
 FILES = {
     "source_loader_0x41f350": ROOT
@@ -191,6 +192,10 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
 
 
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
 def summarize_file(key: str, path: Path) -> dict[str, Any]:
     text = read_text(path)
     checks = []
@@ -210,21 +215,33 @@ def count_ghidra_reference_lines(path: Path) -> int:
     return sum(1 for line in text.splitlines() if "instruction=CALL 0x004e6da2" in line)
 
 
-def summarize() -> dict[str, Any]:
+def summarize(variant_summary_path: Path) -> dict[str, Any]:
     files = {key: summarize_file(key, path) for key, path in FILES.items()}
     all_checks = [check for result in files.values() for check in result["checks"]]
     missing = [check["id"] for check in all_checks if not check["present"]]
     reference_count = count_ghidra_reference_lines(FILES["generic_dynamic_lookup_0x4e6da2_refs"])
-    recovered = not missing and reference_count >= 50
+    variant_summary = read_json(variant_summary_path)
+    variant_dispatch_recovered = (
+        variant_summary.get("status")
+        == "source_variant_builder_provider_slot_dispatch_recovered_catalog_mapping_pending"
+    )
+    recovered = not missing and reference_count >= 50 and variant_dispatch_recovered
 
     return {
         "schema_id": "h3maped_rmg_source_payload_producer_frontier_v1",
         "status": (
-            "source_payload_loader_boundary_recovered_catalog_semantics_pending"
+            "source_payload_loader_boundary_recovered_provider_dispatch_catalog_mapping_pending"
             if recovered
             else "source_payload_loader_boundary_incomplete"
         ),
         "files": files,
+        "variant_summary": {
+            "path": str(variant_summary_path),
+            "status": variant_summary.get("status"),
+            "provider_slot_dispatch_count": variant_summary.get("metrics", {}).get(
+                "provider_slot_dispatch_count"
+            ),
+        },
         "marker_count": len(all_checks),
         "present_marker_count": sum(1 for check in all_checks if check["present"]),
         "missing_marker_ids": missing,
@@ -241,11 +258,12 @@ def summarize() -> dict[str, Any]:
                 "0x41f350 writes source-record fields +0x20 and +0x24 and iterates/copies 0x4c-byte source records.",
                 "0x42df99 and sibling 0x42ddxx helpers are holder payload accessors that copy-on-write when shared and return payload+0x04.",
                 "0x4e6da2 is a generic dynamic lookup/cast helper with many callers, not the source catalog identity producer.",
+                "0x422868 provider-slot dispatch is recovered as a 27-entry slot/category surface by the variant-builder checkpoint.",
             ],
         },
         "remaining_unrecovered": [
             "Exact input/source parse semantics inside 0x43b0ff and 0x433d7d.",
-            "Exact variant/filter semantics of 0x422868, 0x428d45, 0x420e6b, 0x434073, and related calls from 0x41f350.",
+            "Human final names for the recovered 0x422868 category/provider-slot result families and the 0x428d45/0x420e6b/0x434073 helper effects only where needed for final source-catalog identity.",
             "The final mapping from populated 0x4c records and nested payload variants to objects.txt/objtmplt.txt type, subtype, and DEF rows.",
             "Source-backed selected descriptor/source evidence for mixed lanes 45, 53, 54, and 79.",
         ],
@@ -257,13 +275,14 @@ def summarize() -> dict[str, Any]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--variant-summary", type=Path, default=DEFAULT_VARIANT_SUMMARY)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    summary = summarize()
+    summary = summarize(args.variant_summary)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
