@@ -100,6 +100,19 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "post_fallback_phase_tail",
+        "artifact": ".artifacts/rmg_recovery/post_fallback_phase_tail_summary_20260610.json",
+        "status": "post_fallback_49eb8d_49e700_4ac552_phase_tail_recovered",
+        "meaning": (
+            "Exact deterministic Medium seed-10 post-Border-Guard fallback phase tail is "
+            "machine-checked from 0x49eb8d through the first normal 0x49e700 dispatch and "
+            "the immediate 0x4ac552 success return: 0x49eb8d counts 2284 bit26 cells, "
+            "computes budget 120, the first 0x49e700 dispatch performs 42 commit callbacks "
+            "and 67 bit26-only GeneratedCell+0x28 writes, and 0x4ac552 returns to 0x4ae082 "
+            "with AL=1. This is exact-path recovery only, not native behavior authorization."
+        ),
+    },
+    {
         "id": "sampled_nonfallback_4a54a7_744a_contract",
         "artifact": ".artifacts/rmg_recovery/nonfallback_4a54a7_return_context_summary_20260610.json",
         "status": "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending",
