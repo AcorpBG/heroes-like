@@ -28,6 +28,9 @@ DEFAULT_PROJECTION_SLOT = Path(
 DEFAULT_FALLBACK_FINAL_ROLE = Path(
     ".artifacts/rmg_recovery/medium_seed10_fallback_final_role_completion_summary_20260610.json"
 )
+DEFAULT_COORDINATE_RECONCILIATION = Path(
+    ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json"
+)
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json"
 )
@@ -37,6 +40,9 @@ EXPECTED_STATUSES = {
     "4a696b_target_mode": "target_mode_4a696b_direct_mutation_unreached_pair_gate_explained",
     "projection_slot_target_mode": "projection_slot_target_mode_unreached_recycle_boundary_explained",
     "fallback_final_role": "fallback_final_role_phase_tail_recovered_for_exact_seed10_records",
+    "coordinate_projection_reconciliation": (
+        "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
+    ),
 }
 
 
@@ -68,6 +74,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "4a696b_target_mode": args.four_a696b_target_mode,
         "projection_slot_target_mode": args.projection_slot_target_mode,
         "fallback_final_role": args.fallback_final_role,
+        "coordinate_projection_reconciliation": args.coordinate_projection_reconciliation,
     }
     summaries = {name: load_json(path) for name, path in inputs.items()}
 
@@ -119,14 +126,25 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "Exact seed-10 fallback records are identified, adopted, absent from the sampled "
                 "prior payload, and survive to the 0x4ac552 phase tail."
             ),
+        },
+        {
+            "id": "exact_seed10_fallback_coordinate_projection_reconciliation",
+            "evidence": str(args.coordinate_projection_reconciliation),
+            "scope": (
+                "The old mixed-trace coordinate mismatch is superseded for exact fallback "
+                "records 0x036260c0 and 0x03626060: construction, state-chain commit, "
+                "after-state commit, descriptor/relation coordinates, exact projection writes, "
+                "object-vector survival, and phase-tail completion now line up for those records."
+            ),
         }
     ]
     remaining_blockers = [
         {
-            "id": "coordinate_projection_reconciliation",
+            "id": "broader_coordinate_projection_reconciliation_outside_exact_records",
             "reason": (
-                "Older coordinate/projection state still needs end-to-end reconciliation against "
-                "the private generated-cell/object-vector chain before native behavior changes."
+                "Exact Medium seed-10 fallback records are reconciled, but other records, "
+                "map modes, and source states still need coordinate/projection proof before "
+                "native behavior changes."
             ),
         },
         {
@@ -174,6 +192,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "fallback_final_role_exact_seed10_checkpoint_recovered": status_matches(
             summaries["fallback_final_role"], EXPECTED_STATUSES["fallback_final_role"]
         ),
+        "exact_fallback_coordinate_projection_reconciled": status_matches(
+            summaries["coordinate_projection_reconciliation"],
+            EXPECTED_STATUSES["coordinate_projection_reconciliation"],
+        ),
     }
     status = (
         "direct_mode_recovery_frontier_verified_target_mode_exclusions"
@@ -209,11 +231,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "unreached because the source/relation byte-pair gate never matches, and projection "
             "slot +0x08 cleanup is unreached because sampled projection objects are destroyed/"
             "freed before ordinary final dispatch. These are target-mode exclusions, not global "
-            "proofs for every H3MapEd map mode."
+            "proofs for every H3MapEd map mode. Exact seed-10 fallback coordinate/projection "
+            "state is also reconciled for records 0x036260c0 and 0x03626060."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
-            "until coordinate/projection reconciliation, broader final-role semantics, and any "
+            "until broader coordinate/projection coverage, broader final-role semantics, and any "
             "future non-current-mode reachability gaps are recovered from Wine/Ghidra evidence."
         ),
     }
@@ -225,6 +248,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--four-a696b-target-mode", type=Path, default=DEFAULT_4A696B)
     parser.add_argument("--projection-slot-target-mode", type=Path, default=DEFAULT_PROJECTION_SLOT)
     parser.add_argument("--fallback-final-role", type=Path, default=DEFAULT_FALLBACK_FINAL_ROLE)
+    parser.add_argument(
+        "--coordinate-projection-reconciliation",
+        type=Path,
+        default=DEFAULT_COORDINATE_RECONCILIATION,
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
