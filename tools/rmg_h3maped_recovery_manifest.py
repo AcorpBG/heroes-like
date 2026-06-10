@@ -496,6 +496,26 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_input_layout_frontier",
+        "artifact": ".artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json",
+        "status": "source_input_versioned_layout_recovered_field_semantics_pending",
+        "meaning": (
+            "Ghidra/Python evidence now recovers the local source-input parser layout below "
+            "0x41f350 without claiming final field semantics. 0x43b0ff and 0x433d7d each "
+            "have exactly one Ghidra call reference, both from 0x41f350. 0x41f350 parses "
+            "into a local source-input record through 0x43b0ff, runs 0x433d7d against the "
+            "same source/input wrapper, then matches a parsed field against the global "
+            "source-family table 0x535214..0x535224. 0x433d7d unwraps the source/input "
+            "wrapper, calls a virtual reader at vtable +0x18, and requires the returned "
+            "value to be at least 0x1f. 0x43b0ff initializes a versioned parser-output "
+            "record with top-level fields, an eight-entry nested record array anchored at "
+            "+0x34, 0x54-byte nested record stride, and version gates including 0x08, 0x09, "
+            "0x0a, 0x0d, 0x10, 0x11, 0x12, 0x14, 0x19, and 0x1a. Remaining blockers are "
+            "human field labels, exact stream helper semantics, final 0x4c source-record "
+            "mapping, and later variant/filter builders."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
@@ -756,11 +776,66 @@ FUNCTIONS: list[dict[str, Any]] = [
             "indexes and copies populated 0x4c source records through 0x4c025c",
         ],
         "unrecovered_semantics": [
-            "exact 0x43b0ff/0x433d7d input parse semantics",
+            "human semantic labels for the versioned 0x43b0ff parser output fields",
             "variant/filter builders called from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073",
             "final objects.txt/objtmplt.txt type/subtype/DEF mapping for populated 0x4c source records",
         ],
         "ghidra_dump": "Focused dumps .artifacts/rmg_recovery/ghidra_source_payload_producer_frontier_dump_20260610 and .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610 plus verifier .artifacts/rmg_recovery/source_payload_producer_frontier_summary_20260610.json recover this loader boundary without claiming final catalog identity.",
+    },
+    {
+        "address": "0x43b0ff",
+        "name": "source_input_versioned_layout_parser",
+        "status": "recovered_layout_field_semantics_pending",
+        "callers": ["0x41f350"],
+        "calls": [
+            "0x4016fd",
+            "0x40763d",
+            "0x407675",
+            "0x402461",
+            "0x4190cb",
+            "0x43acf0",
+            "0x43ad49",
+            "0x43aec6",
+            "0x43bae0",
+            "0x43bb1b",
+            "0x43bb58",
+            "0x43bb95",
+            "0x43bbe1",
+            "0x43bc24",
+            "0x43bc67",
+        ],
+        "reads": [
+            "caller mode byte at stack +0x0f",
+            "source/input wrapper pointer at stack +0x08",
+            "version/size value at stack +0x0c",
+            "caller-provided source/input pointer passed through stack +0x10/+0x14 from 0x41f350",
+        ],
+        "writes": [
+            "top-level parser-output fields at +0x00, +0x04, +0x08, +0x2c, +0x30, +0x2d4, +0x2f0, +0x300, +0x304, +0x324, and +0x338",
+            "eight nested records anchored at output +0x34 with 0x54-byte stride",
+            "nested record fields/payloads at -0x04, -0x03, +0x00, +0x04, +0x08, +0x0c, +0x0d, +0x0e, +0x10, +0x14, +0x20, +0x24, +0x28, +0x2c, +0x3c, and +0x44",
+        ],
+        "unrecovered_semantics": [
+            "human semantic labels for individual parser-output and nested-record fields",
+            "exact stream helper semantics for the parser's byte/int/payload helper calls",
+            "final mapping from parsed fields to populated 0x4c source records and object catalog rows",
+        ],
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_0043b0ff_FUN_0043b0ff.txt plus verifier .artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json recover this versioned layout surface.",
+    },
+    {
+        "address": "0x433d7d",
+        "name": "source_input_minimum_size_guard",
+        "status": "recovered_guard_contract",
+        "callers": ["0x41f350"],
+        "calls": ["source/input vtable +0x18", "0x4023b4", "0x4e633b"],
+        "reads": [
+            "source/input wrapper pointer at ECX +0x00",
+            "caller-provided diagnostic/context pointer at stack +0x08",
+            "virtual reader return value from source/input vtable +0x18",
+        ],
+        "returns": ["original wrapper/object pointer in EAX"],
+        "guard": "requires virtual reader return value to be at least 0x1f; otherwise emits diagnostic/assertion path through 0x4e633b",
+        "ghidra_dump": "Focused dump .artifacts/rmg_recovery/ghidra_source_payload_producer_helpers_dump_20260610/target_00433d7d_FUN_00433d7d.txt plus verifier .artifacts/rmg_recovery/source_input_layout_frontier_summary_20260610.json recover this guard contract.",
     },
     {
         "address": "0x4e6da2",
