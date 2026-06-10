@@ -191,6 +191,21 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "endpoint_cursor_state_access_surface",
+        "artifact": ".artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json",
+        "status": "endpoint_cursor_state_access_surface_recovered_f5c_writers_bounded",
+        "meaning": (
+            "A widened headless Ghidra offset-access scan over endpoint-adjacent generator "
+            "state covers 835 instructions touching +0xc8/+0xcc, +0xd8/+0xdc, +0xec4/+0xec8/"
+            "+0xecc, +0xf58/+0xf5c, +0x10e4, +0x1104/+0x1108, and +0x1110. The scan still "
+            "bounds direct generator+0xf5c writes to 0x4a5e73, 0x4adb72, and 0x4add76; the "
+            "only direct +0xf58 write in this endpoint surface is setup path 0x49ecf2 at "
+            "0x49ee6b; and +0x1104/+0x1108 accesses stay confined to 0x49f95a plus the "
+            "endpoint/projection cleanup helpers. This strengthens the cursor-source frontier "
+            "but does not recover a successful endpoint-stamping runtime path."
+        ),
+    },
+    {
         "id": "cursor_source_frontier",
         "artifact": ".artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json",
         "status": (
@@ -203,7 +218,8 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "active +0xd8 keys are 0..7; the direct +0xf5c writer surface is exhausted; and the "
             "known non-self writers are bound to the currently unhit projection/cleanup slot "
             "chain whose sampled projection objects are destroyed/freed/reused before ordinary "
-            "final dispatch. Successful 0x4a5e73/0x4a606b endpoint stamping remains "
+            "final dispatch. A widened Ghidra endpoint-state scan confirms there is no additional "
+            "direct +0xf5c writer in that scanned instruction surface. Successful 0x4a5e73/0x4a606b endpoint stamping remains "
             "unrecovered or unexcluded for broader supported one-level land."
         ),
     },

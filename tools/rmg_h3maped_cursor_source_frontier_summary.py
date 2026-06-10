@@ -21,6 +21,9 @@ DEFAULT_4A5E73 = Path(".artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20
 DEFAULT_CURSOR_OWNER = Path(
     ".artifacts/rmg_recovery/cursor_writer_owner_exclusion_summary_20260610.json"
 )
+DEFAULT_ENDPOINT_ACCESS = Path(
+    ".artifacts/rmg_recovery/endpoint_cursor_state_access_summary_20260610.json"
+)
 DEFAULT_PROJECTION_SLOT_TARGET = Path(
     ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json"
 )
@@ -43,6 +46,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     access = load_json(args.access)
     four_a5e73 = load_json(args.four_a5e73)
     cursor_owner = load_json(args.cursor_owner)
+    endpoint_access = load_json(args.endpoint_access)
     projection_slot_target = load_json(args.projection_slot_target)
     four_a606b = load_json(args.four_a606b)
 
@@ -50,6 +54,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     access_invariants = access.get("invariants", {})
     four_a5e73_invariants = four_a5e73.get("invariants", {})
     cursor_owner_invariants = cursor_owner.get("invariants", {})
+    endpoint_access_invariants = endpoint_access.get("invariants", {})
     projection_slot_invariants = projection_slot_target.get("invariants", {})
     four_a606b_invariants = four_a606b.get("invariants", {})
 
@@ -63,6 +68,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and access_invariants.get("native_behavior_changed") is False
             and four_a5e73_invariants.get("no_native_behavior_change") is True
             and cursor_owner_invariants.get("no_native_behavior_change") is True
+            and endpoint_access_invariants.get("no_native_behavior_change") is True
             and four_a606b_invariants.get("no_native_behavior_change") is True
         ),
         "no_objdump_used": True,
@@ -94,6 +100,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and access_invariants.get("known_cursor_writers_only") is True
             and access_invariants.get("cursor_writer_entries_match_expected") is True
             and access_invariants.get("direct_1104_initializer_surface_seen") is True
+        ),
+        "widened_ghidra_endpoint_access_confirms_f5c_writer_surface": (
+            endpoint_access.get("status")
+            == "endpoint_cursor_state_access_surface_recovered_f5c_writers_bounded"
+            and endpoint_access_invariants.get("f5c_writer_entries_match_expected") is True
+            and endpoint_access_invariants.get("prior_narrow_scan_f5c_writers_match_widened_scan")
+            is True
+            and endpoint_access_invariants.get("f58_only_direct_write_is_setup_path") is True
+            and endpoint_access_invariants.get("byte_state_entries_match_endpoint_helpers") is True
         ),
         "current_4a5e73_success_path_unhit": (
             four_a5e73.get("status")
@@ -146,6 +161,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "cursor_f5c_1104_access": str(args.access),
             "4a5e73_cursor_frontier": str(args.four_a5e73),
             "cursor_writer_owner_frontier": str(args.cursor_owner),
+            "endpoint_cursor_state_access": str(args.endpoint_access),
             "projection_slot_target_mode": str(args.projection_slot_target),
             "4a606b_reachability": str(args.four_a606b),
         },
@@ -155,6 +171,12 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "used_objdump": False,
             "overall_goal_complete": False,
             "direct_f5c_writer_entry_count": len(writer_entries),
+            "widened_endpoint_access_row_count": endpoint_access.get("metrics", {}).get(
+                "row_count"
+            ),
+            "widened_endpoint_f5c_writer_row_count": endpoint_access.get("metrics", {}).get(
+                "f5c_writer_row_count"
+            ),
             "runtime_5e73_entry_count": four_a5e73.get("metrics", {}).get(
                 "runtime_5e73_entry_count"
             ),
@@ -180,6 +202,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "first_border_guard_callsite": first_failure.get("callsite"),
             "first_border_guard_cursor": first_failure.get("cursor_plus_f5c"),
             "first_border_guard_active_d8_keys": first_failure.get("d8_keys_plus_20"),
+            "widened_ghidra_f5c_writer_entries": endpoint_access.get(
+                "offset_entry_matrix", {}
+            ).get("0xf5c"),
         },
         "direct_cursor_writer_surface": {
             "writer_entries": writer_entries,
@@ -200,7 +225,8 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "generator+0xf5c. The first natural Border Guard endpoint attempt therefore enters "
             "0x4a5e73 with stale cursor 0x7a1befdf while the active endpoint keys are 0..7. "
             "The direct +0xf5c writer surface is bounded to 0x4a5e73 plus two non-self writers "
-            "owned by currently unhit projection/cleanup slot paths. The sampled projection "
+            "owned by currently unhit projection/cleanup slot paths, and the widened Ghidra "
+            "endpoint-state access scan found no additional direct +0xf5c writer. The sampled projection "
             "objects for that chain are destroyed/freed/reused before final dispatch in the "
             "recovered one-level path, so this is not an unknown mutator anymore. The current "
             "corpus still has no successful 0x4a5e73 mutation and no live 0x4a606b "
@@ -224,6 +250,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--access", type=Path, default=DEFAULT_ACCESS)
     parser.add_argument("--four-a5e73", type=Path, default=DEFAULT_4A5E73)
     parser.add_argument("--cursor-owner", type=Path, default=DEFAULT_CURSOR_OWNER)
+    parser.add_argument("--endpoint-access", type=Path, default=DEFAULT_ENDPOINT_ACCESS)
     parser.add_argument("--projection-slot-target", type=Path, default=DEFAULT_PROJECTION_SLOT_TARGET)
     parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
