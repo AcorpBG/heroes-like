@@ -19,6 +19,41 @@ from typing import Any
 DEFAULT_H3MAPED = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/h3maped_recovery_manifest.json")
 
+FRONTIER_SUMMARIES: list[dict[str, str]] = [
+    {
+        "id": "direct_one_level_land_recovery_frontier",
+        "artifact": ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json",
+        "status": "direct_mode_recovery_frontier_verified_target_mode_exclusions",
+        "meaning": (
+            "Current one-level land target-mode recovery excludes the 0x53eafc source-handler "
+            "chain, the 0x4a696b direct GeneratedCell+0x28 mutation block, and projection-slot "
+            "+0x08 cleanup as active direct-mode blockers. The same artifact keeps full "
+            "end-to-end recovery incomplete and names the remaining blockers before native RMG "
+            "behavior changes."
+        ),
+    },
+    {
+        "id": "0x4a696b_target_mode_reachability",
+        "artifact": ".artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json",
+        "status": "target_mode_4a696b_direct_mutation_unreached_pair_gate_explained",
+        "meaning": (
+            "The current one-level land evidence has sampled 0x4a696b calls and complete "
+            "Medium full-grid scans, but zero source/relation byte-pair matches, zero "
+            "candidate appends, and zero direct mutation hits."
+        ),
+    },
+    {
+        "id": "projection_slot_target_mode_reachability",
+        "artifact": ".artifacts/rmg_recovery/projection_slot_target_mode_reachability_summary_20260610.json",
+        "status": "projection_slot_target_mode_unreached_recycle_boundary_explained",
+        "meaning": (
+            "Projection slot +0x08 methods and cleanup ownership are statically recovered, but "
+            "current Wine evidence shows sampled projection objects are destroyed/freed before "
+            "ordinary final slot dispatch, with zero live cleanup/projection target hits."
+        ),
+    },
+]
+
 FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x499e65",
@@ -816,12 +851,12 @@ FUNCTIONS: list[dict[str, Any]] = [
         ],
         "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records 44 events: one 0x4a4c8e, one 0x4a79a3, twenty 0x4a7d2c begin reads, twenty 0x4a7d36 end reads, one 0x4a7d99 shifted-count checkpoint, and one 0x49eb8d handoff. At 0x4a79a3 entry the sampled +0xec8/+0xecc span was 8 dword entries; inside the later 0x4a7d2c/0x4a7d36 loop the span was 19 dword entries and 0x4a7d99 confirmed EDX=19; the later 0x49eb8d handoff observed a 107-dword span. Follow-up payload trace .artifacts/rmg_recovery/4a79a3_payload_trace_summary.json proves the 19 vector entries exactly match the 19 dumped object-record pointers, captures each 12-word object record and descriptor-wrapper sample, and records vtable counts 0x540a9c x8 plus 0x540a88 x11. Static provenance links 0x540a9c to 0x4a901a/0x4a93a2 constructor sites and 0x540a88 to 0x4a5c07 called by 0x4aa354. Filter/dispatch trace .artifacts/rmg_recovery/4a79a3_filter_dispatch_summary.json proves all 19 payload records reached the nested source +0x1c type check: type counts were 0x00000062 x8 and 0x00000036 x11, so no sampled record passed the 0x57 gate and no 0x4a68e0 call executed. The same checkpoint partially recovers the later +0xc8 dispatch by proving one 0x4a696b call and one fallback 0x4a7605 call returned from 0x4a79a3, followed by pair mark sites 0x4a7e21 and 0x4a7e25. Follow-up static surface summary .artifacts/rmg_recovery/696b_7605_static_surface_summary.json proves 0x4a696b directly mutates GeneratedCell+0x28 and 0x4a7605 coordinates delegated fallback endpoint placement. Live dispatch endpoint trace .artifacts/rmg_recovery/dispatch_endpoint_runtime_summary.json proves the sampled 0x4a79a3-owned +0xc8 path reaches 0x4a7605 and two direct 0x4a7312 candidate commits before the pair mark sites. Follow-up branch-gate summary .artifacts/rmg_recovery/7605_branch_gate_summary.json proves both sampled 0x4a7605 0x4a746b call sites were skipped because [ESI+0x09] was 0: compare sites 0x4a774a and 0x4a783a hit, skip targets 0x4a7773 and 0x4a7860 hit, and call sites 0x4a7763 and 0x4a7853 were absent. Field summary .artifacts/rmg_recovery/connection_record_field_summary.json names +0x09 as the current consumer-side working flag connection_recipe.endpoint_stamping_enabled, +0x0a as processed/pair bookkeeping, and +0x08 as adjacent-relation route-stamp mode. Producer static summary .artifacts/rmg_recovery/connection_record_producer_static_summary.json rules out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface. Corrected runtime boundary summary .artifacts/rmg_recovery/connection_record_runtime_boundary_summary.json proves the fixed UI path reaches the intended direct generation flow, records that the attempted +0x09 watch command was rejected rather than installed, shows the sampled 0x4a7605 ESI record is a separate edge/control record, and corrects the 0x4a8c15 generator+0xc8 sample to an 8-entry pointer-vector header rather than the later relation-object 0x1c-byte record stream. Relation-builder summary .artifacts/rmg_recovery/relation_builder_runtime_summary.json proves eight pre-0x4a8c15 calls through 0x4a8d2c -> 0x4a93a2 -> relation vslot +0x04, resolving that vslot to 0x4a54a7 and reaching 0x4a95a4/0x4a95e6 source-field writes. Delegated 0x4a746b/0x4a5e73 replay and the relation-object +0xc8/+0xcc producer remain pending.",
         "ghidra_dump": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json and focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump/caller_004a79a3_FUN_004a79a3.txt prove 0x4a79a3 reads generator +0xec8/+0xecc, computes (end - begin) / 4, and uses the object/vector state after the 0x4a8c15 ordered phase prefix.",
-        "remaining_gap": "0x4a696b and 0x4a7605 now have static callee-side surfaces, the sampled 0x4a7605 direct 0x4a7312 commit path is live-replayed, and the sampled 0x4a746b absence is explained by [ESI+0x09] == 0 at both live gates. Runtime ordered replay is still missing for 0x4a696b selected-cell mutations, a delegated 0x4a746b/0x4a5e73 generated-cell writer path with [ESI+0x09] != 0 or an alternate caller, the actual producer of edge/control-record +0x08 after 0x4b3c03, 0x4b3c4e, and 0x4b3d3c were ruled out for the sampled fallback consumer, the relation-object +0xc8/+0xcc 0x1c-byte record stream producer, exact +0xc8/+0xd8 record semantic names, and full before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c state before changing native RMG behavior.",
+        "remaining_gap": "0x4a696b and 0x4a7605 now have static callee-side surfaces, the sampled 0x4a7605 direct 0x4a7312 commit path is live-replayed, and the sampled 0x4a746b absence is explained by [ESI+0x09] == 0 at both live gates. For the current one-level land target mode, .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json proves 0x4a696b direct mutation is unreached because the source/relation byte-pair gate never matches. Runtime ordered replay is still missing for a delegated 0x4a746b/0x4a5e73 generated-cell writer path with [ESI+0x09] != 0 or an alternate caller, the actual producer of edge/control-record +0x08 after 0x4b3c03, 0x4b3c4e, and 0x4b3d3c were ruled out for the sampled fallback consumer, the relation-object +0xc8/+0xcc 0x1c-byte record stream producer, exact +0xc8/+0xd8 record semantic names, and full before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c state before changing native RMG behavior.",
     },
     {
         "address": "0x4a696b",
         "name": "connection_dispatch_direct_generated_cell_mutator",
-        "status": "partial_static_direct_generated_cell_mutation_surface_recovered_replay_pending",
+        "status": "target_mode_direct_mutation_unreached_pair_gate_explained_global_reachability_pending",
         "calls": ["0x49aa93", "0x49ba89", "0x40bb15", "0x4a68e0", "0x4a65a5", "0x4a5e73"],
         "reads": [
             "generator pointer in ecx/ebx",
@@ -835,9 +870,9 @@ FUNCTIONS: list[dict[str, Any]] = [
             "when GeneratedCell+0x2c bit0 is clear, writes GeneratedCell+0x28 = (old & 0xfbffffff) | 0x08000000, clearing bit26 and setting bit27",
             "allocates/initializes a 0x1c-byte record through 0x49ba89 and continues through 0x4a68e0/0x4a65a5/0x4a5e73",
         ],
-        "runtime_trace": "Prior 0x4a79a3 dispatch summary proves at least one 0x4a696b call returned from the 0x4a79a3 +0xc8 dispatch path in the sampled run.",
+        "runtime_trace": "Prior 0x4a79a3 dispatch summary proves at least one 0x4a696b call returned from the 0x4a79a3 +0xc8 dispatch path in the sampled run. Target-mode reachability summary .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json aggregates 150 0x4a696b entries and six complete seed-pinned Medium one-level/no-water full-grid scans across seeds 1, 2, and 10. It records zero source/relation-match hits, zero candidate append/path hits, zero direct mutation hits, and zero cells matching both expected owner/relation bytes in 5,752 scanned cells.",
         "ghidra_dump": "Static summary .artifacts/rmg_recovery/696b_7605_static_surface_summary.json checks .artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_004a696b_FUN_004a696b.txt for the direct mutation sites at 0x4a6c13/0x4a6c1c/0x4a6c21/0x4a6c26 and the required helper calls.",
-        "remaining_gap": "Runtime ordered replay is still pending for selected coordinates, before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c, and exact source/relation/+0xc8 semantic names.",
+        "remaining_gap": "For the current one-level land target evidence, the direct mutation block is excluded as active native-port behavior because the source/relation byte-pair gate never matches. This is not a global proof for every H3MapEd mode/source state. Broader reachability still needs either a natural source/relation-match sample outside the current target mode or static/data proof explaining where the block can execute. Exact source/relation/+0xc8 semantic names remain pending.",
     },
     {
         "address": "0x4a7605",
@@ -2365,6 +2400,7 @@ def main() -> int:
         "functions": FUNCTIONS,
         "structs": STRUCTS,
         "checkpoints": CHECKPOINTS,
+        "frontier_summaries": FRONTIER_SUMMARIES,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
