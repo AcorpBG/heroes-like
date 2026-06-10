@@ -444,6 +444,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "source_record_field_surface",
+        "artifact": ".artifacts/rmg_recovery/source_record_field_surface_summary_20260610.json",
+        "status": "source_record_field_surface_recovered_identity_mapping_pending",
+        "meaning": (
+            "Ghidra/Wine marker checks now recover the active field-use surface for copied "
+            "0x4c source records without claiming final object identity. Source record +0x18 "
+            "is the mask-word surface; +0x1c is a resolver/relation lane index and indexes "
+            "generator+0xee4; +0x20 and +0x24 participate in wrapper selection and relation "
+            "branch gating; +0x30 and +0x34 gate additional relation-builder calls with "
+            "index -1; and 0x4a93a2 copies the +0x10 and +0x20 field groups before marking "
+            "+0x3c and mutating a related +0x28 bit-state word. The remaining blocker is "
+            "still the source-catalog/object-template producer mapping tying these records "
+            "to exact type/subtype/DEF rows, especially mixed descriptor lanes 45/53/54/79."
+        ),
+    },
+    {
         "id": "0x4a606b_reachability_frontier",
         "artifact": ".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json",
         "status": "target_mode_4a606b_static_contract_recovered_no_live_hit",
