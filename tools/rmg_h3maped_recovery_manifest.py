@@ -56,7 +56,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         "id": "exact_fallback_coordinate_projection_reconciliation",
         "artifact": ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json",
         "status": (
-            "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
+            "coordinate_projection_exact_cross_seed_fallback_and_744a_reconciled_remaining_contexts_pending"
         ),
         "meaning": (
             "The older mixed-trace coordinate mismatch is superseded for exact Medium seed-10 "
@@ -65,8 +65,22 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "object-vector survival, and phase-tail completion agree for those records. "
             "Medium seed-1/seed-2 evidence also proves all 31 sampled 0x4a5e6c "
             "fallback-return commits clear the sampled GeneratedCell+0x20 low word while "
-            "preserving the high word. The 151 sampled non-fallback 0x4a54a7 return-context "
-            "commits remain named pending work rather than being folded into the exact fallback proof."
+            "preserving the high word. Focused non-fallback evidence also recovers the sampled "
+            "0x4a744a direct endpoint afterstate and descriptor/relation contract; unresolved "
+            "non-fallback return contexts remain at 0x4a98f0, 0x4a9c3f, and 0x4aa44d."
+        ),
+    },
+    {
+        "id": "sampled_nonfallback_4a54a7_744a_contract",
+        "artifact": ".artifacts/rmg_recovery/nonfallback_4a54a7_return_context_summary_20260610.json",
+        "status": "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending",
+        "meaning": (
+            "Existing Wine/Ghidra/Python evidence recovers two sampled 0x4a744a direct endpoint "
+            "afterstates and two descriptor/relation invocations: object-vector append, target-cell "
+            "object reference, GeneratedCell+0x20 low-word clear, +0x28 occupied surface update, "
+            "source-coordinate/descriptor-offset match, and relation-counter increment. This does "
+            "not recover the remaining large non-fallback return sites 0x4a98f0, 0x4a9c3f, or "
+            "0x4aa44d, and it does not authorize native RMG behavior changes."
         ),
     },
     {

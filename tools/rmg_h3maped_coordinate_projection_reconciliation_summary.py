@@ -31,6 +31,9 @@ DEFAULT_OLDER_DESCRIPTOR = Path(
 DEFAULT_CROSS_SEED_COMMIT_SURFACE = Path(
     ".artifacts/rmg_recovery/medium_4a54a7_cross_seed_commit_surface_summary_20260610.json"
 )
+DEFAULT_NONFALLBACK_RETURN_CONTEXTS = Path(
+    ".artifacts/rmg_recovery/nonfallback_4a54a7_return_context_summary_20260610.json"
+)
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json"
 )
@@ -79,6 +82,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     completion = load_json(args.completion)
     older_descriptor = load_json(args.older_descriptor)
     cross_seed_commit_surface = load_json(args.cross_seed_commit_surface)
+    nonfallback_return_contexts = load_json(args.nonfallback_return_contexts)
 
     records = record_map(exact_frontier.get("records", []))
     projection_targets = target_record_set(projection_writes)
@@ -115,9 +119,20 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         )
         is True
         and cross_seed_commit_surface.get("metrics", {}).get("used_objdump") is False,
+        "nonfallback_744a_sampled_contract_recovered": nonfallback_return_contexts.get("status")
+        == "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending"
+        and nonfallback_return_contexts.get("invariants", {}).get(
+            "direct_endpoint_744a_afterstate_recovered"
+        )
+        is True
+        and nonfallback_return_contexts.get("invariants", {}).get(
+            "descriptor_relation_744a_recovered"
+        )
+        is True
+        and nonfallback_return_contexts.get("metrics", {}).get("used_objdump") is False,
     }
     status = (
-        "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
+        "coordinate_projection_exact_cross_seed_fallback_and_744a_reconciled_remaining_contexts_pending"
         if all(invariants.values())
         else "exact_fallback_coordinate_projection_reconciliation_incomplete"
     )
@@ -136,6 +151,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "completion": str(args.completion),
             "older_descriptor": str(args.older_descriptor),
             "cross_seed_commit_surface": str(args.cross_seed_commit_surface),
+            "nonfallback_return_contexts": str(args.nonfallback_return_contexts),
         },
         "invariants": invariants,
         "metrics": {
@@ -156,6 +172,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "cross_seed_non_fallback_return_context_commit_count": cross_seed_commit_surface.get(
                 "metrics", {}
             ).get("total_non_fallback_return_context_commit_count"),
+            "nonfallback_744a_sampled_afterstate_sequence_count": nonfallback_return_contexts.get(
+                "metrics", {}
+            ).get("sampled_744a_afterstate_sequence_count"),
+            "nonfallback_744a_descriptor_relation_count": nonfallback_return_contexts.get(
+                "metrics", {}
+            ).get("sampled_744a_descriptor_relation_count"),
+            "unresolved_nonfallback_return_context_commit_count": nonfallback_return_contexts.get(
+                "metrics", {}
+            ).get("unresolved_nonfallback_commit_count"),
         },
         "exact_records": [
             {
@@ -176,13 +201,15 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "blocked by the older coordinate mismatch. The cross-seed Medium seed-1/seed-2 commit "
             "surface additionally proves all 31 sampled 0x4a5e6c fallback-return commits reach "
             "0x4a5756 and clear the sampled GeneratedCell+0x20 low word while preserving the high "
-            "word. The same cross-seed evidence also names 151 non-fallback 0x4a54a7 return-context "
-            "commits as pending instead of merging them into the exact fallback proof."
+            "word. A focused non-fallback consolidation additionally recovers the sampled "
+            "0x4a744a direct endpoint afterstate plus descriptor/relation contract. The remaining "
+            "large non-fallback return contexts are 0x4a98f0, 0x4a9c3f, and 0x4aa44d."
         ),
         "remaining_gap": (
-            "Broader coordinate/projection recovery remains pending for the non-fallback 0x4a54a7 "
-            "return contexts, other map modes, other source states, 0x4a696b direct mutation, or "
-            "cleanup/uncommit paths. Do not extrapolate the exact fallback proof into those contexts."
+            "Broader coordinate/projection recovery remains pending for the unresolved non-fallback "
+            "0x4a54a7 return contexts 0x4a98f0, 0x4a9c3f, and 0x4aa44d, other map modes, other "
+            "source states, 0x4a696b direct mutation, or cleanup/uncommit paths. Do not extrapolate "
+            "the exact fallback or sampled 0x4a744a proofs into those contexts."
         ),
     }
 
@@ -198,6 +225,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_CROSS_SEED_COMMIT_SURFACE,
     )
+    parser.add_argument(
+        "--nonfallback-return-contexts",
+        type=Path,
+        default=DEFAULT_NONFALLBACK_RETURN_CONTEXTS,
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
@@ -211,7 +243,7 @@ def main() -> int:
     return (
         0
         if summary["status"]
-        == "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
+        == "coordinate_projection_exact_cross_seed_fallback_and_744a_reconciled_remaining_contexts_pending"
         else 1
     )
 

@@ -31,6 +31,9 @@ DEFAULT_FALLBACK_FINAL_ROLE = Path(
 DEFAULT_COORDINATE_RECONCILIATION = Path(
     ".artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json"
 )
+DEFAULT_NONFALLBACK_RETURN_CONTEXTS = Path(
+    ".artifacts/rmg_recovery/nonfallback_4a54a7_return_context_summary_20260610.json"
+)
 DEFAULT_SEMANTIC_FRONTIER = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 DEFAULT_OUT = Path(
     ".artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json"
@@ -42,7 +45,10 @@ EXPECTED_STATUSES = {
     "projection_slot_target_mode": "projection_slot_target_mode_unreached_recycle_boundary_explained",
     "fallback_final_role": "fallback_final_role_phase_tail_recovered_for_exact_seed10_records",
     "coordinate_projection_reconciliation": (
-        "coordinate_projection_exact_and_cross_seed_fallback_reconciled_broader_contexts_pending"
+        "coordinate_projection_exact_cross_seed_fallback_and_744a_reconciled_remaining_contexts_pending"
+    ),
+    "nonfallback_return_contexts": (
+        "nonfallback_4a54a7_744a_sampled_contract_recovered_remaining_contexts_pending"
     ),
     "semantic_frontier": (
         "semantic_frontier_working_names_seed10_chain_cursor_source_and_4a606b_frontiers_recovered_broader_scope_pending"
@@ -79,6 +85,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
         "projection_slot_target_mode": args.projection_slot_target_mode,
         "fallback_final_role": args.fallback_final_role,
         "coordinate_projection_reconciliation": args.coordinate_projection_reconciliation,
+        "nonfallback_return_contexts": args.nonfallback_return_contexts,
         "semantic_frontier": args.semantic_frontier,
     }
     summaries = {name: load_json(path) for name, path in inputs.items()}
@@ -142,7 +149,20 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "object-vector survival, and phase-tail completion now line up for those records. "
                 "Medium seed-1/seed-2 evidence also proves all 31 sampled 0x4a5e6c fallback-return "
                 "commits clear the sampled GeneratedCell+0x20 low word while preserving the high "
-                "word; 151 non-fallback 0x4a54a7 return-context commits remain explicitly pending."
+                "word. The sampled 0x4a744a non-fallback direct endpoint afterstate and "
+                "descriptor/relation contract are also recovered; unresolved non-fallback "
+                "contexts remain at 0x4a98f0, 0x4a9c3f, and 0x4aa44d."
+            ),
+        },
+        {
+            "id": "sampled_nonfallback_4a54a7_744a_contract",
+            "evidence": str(args.nonfallback_return_contexts),
+            "scope": (
+                "Existing Wine/Ghidra evidence recovers two sampled 0x4a744a direct endpoint "
+                "afterstates and two descriptor/relation invocations: object-vector append, "
+                "target-cell object reference, GeneratedCell+0x20 low-word clear, +0x28 occupied "
+                "surface update, source-coordinate/descriptor-offset match, and relation-counter "
+                "increment are covered for that sampled return site."
             ),
         },
         {
@@ -167,9 +187,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "id": "broader_coordinate_projection_reconciliation_outside_exact_records",
             "reason": (
                 "Exact Medium seed-10 fallback records and cross-seed 0x4a5e03/0x4a5e6c "
-                "fallback-return commits are reconciled, but non-fallback 0x4a54a7 return "
-                "contexts, other map modes, and other source states still need coordinate/"
-                "projection proof before native behavior changes."
+                "fallback-return commits and the sampled 0x4a744a non-fallback return-site "
+                "contract are reconciled, but 0x4a98f0, 0x4a9c3f, 0x4aa44d, other map modes, "
+                "and other source states still need coordinate/projection proof before native "
+                "behavior changes."
             ),
         },
         {
@@ -230,6 +251,10 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             summaries["coordinate_projection_reconciliation"],
             EXPECTED_STATUSES["coordinate_projection_reconciliation"],
         ),
+        "sampled_nonfallback_744a_contract_recovered": status_matches(
+            summaries["nonfallback_return_contexts"],
+            EXPECTED_STATUSES["nonfallback_return_contexts"],
+        ),
         "working_semantic_name_frontier_recovered": status_matches(
             summaries["semantic_frontier"], EXPECTED_STATUSES["semantic_frontier"]
         ),
@@ -272,15 +297,19 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "state is also reconciled for records 0x036260c0 and 0x03626060. Several "
             "formerly hex-only fields now have source-backed working names, including +0x09 as "
             "the template connection Border Guard flag; the exact seed-10 Border Guard chain now "
-            "has recovered fallback materialization and phase-tail evidence. 0x4a5e73 now has "
+            "has recovered fallback materialization and phase-tail evidence. The sampled 0x4a744a "
+            "non-fallback 0x4a54a7 return-site contract is recovered, leaving 0x4a98f0, "
+            "0x4a9c3f, and 0x4aa44d as the large unresolved non-fallback return contexts. "
+            "0x4a5e73 now has "
             "a recovered cursor-precondition frontier with current-corpus zero success-path hits, "
             "the non-self cursor writers are bound to the unhit projection/cleanup slot chain, "
             "and 0x4a606b has a recovered static contract and current-corpus no-live-hit evidence."
         ),
         "remaining_gap": (
             "End-to-end recovery remains incomplete. Do not port or compensate native RMG behavior "
-            "until broader coordinate/projection coverage, remaining semantic producers/global labels, and any "
-            "future non-current-mode reachability gaps are recovered from Wine/Ghidra evidence."
+            "until broader coordinate/projection coverage for the remaining non-fallback return "
+            "sites, remaining semantic producers/global labels, and any future non-current-mode "
+            "reachability gaps are recovered from Wine/Ghidra evidence."
         ),
     }
 
@@ -295,6 +324,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--coordinate-projection-reconciliation",
         type=Path,
         default=DEFAULT_COORDINATE_RECONCILIATION,
+    )
+    parser.add_argument(
+        "--nonfallback-return-contexts",
+        type=Path,
+        default=DEFAULT_NONFALLBACK_RETURN_CONTEXTS,
     )
     parser.add_argument("--semantic-frontier", type=Path, default=DEFAULT_SEMANTIC_FRONTIER)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
