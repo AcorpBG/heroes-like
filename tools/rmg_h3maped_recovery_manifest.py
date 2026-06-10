@@ -68,7 +68,7 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
-            "semantic_frontier_working_names_seed10_chain_and_4a606b_frontier_recovered_broader_scope_pending"
+            "semantic_frontier_working_names_seed10_chain_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
         ),
         "meaning": (
             "Connection record bytes +0x08/+0x09/+0x0a, candidate record fields "
@@ -77,9 +77,23 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "roles now have source-backed working names. Connection byte +0x09 is recovered as "
             "the template connection Border Guard flag produced by 0x49f7c4. The exact seed-10 "
             "Border Guard downstream chain is recovered through fallback materialization and "
-            "phase tail. 0x4a606b is statically recovered with no live hit in the current "
-            "target corpus. Broader relation/control linkage, global descriptor type labels, "
-            "broader semantic scope, and cleanup/uncommit semantics remain pending."
+            "phase tail. 0x4a5e73 is recovered as the cursor-keyed endpoint helper with no "
+            "current success-path hits, and 0x4a606b is statically recovered with no live hit "
+            "in the current target corpus. Broader relation/control linkage, global descriptor "
+            "type labels, broader semantic scope, and cleanup/uncommit semantics remain pending."
+        ),
+    },
+    {
+        "id": "0x4a5e73_cursor_frontier",
+        "artifact": ".artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20260610.json",
+        "status": "target_mode_4a5e73_cursor_precondition_recovered_success_path_unhit",
+        "meaning": (
+            "0x4a5e73 is recovered from Ghidra as the endpoint helper keyed by "
+            "generator+0xf5c. It searches generator+0xd8/+0xdc and +0xc8/+0xcc, mutates "
+            "GeneratedCell+0x2c/+0x28 only on the success path, marks generator+0x1104, "
+            "and advances generator+0xf5c. Current Wine corpus scanning finds 50 live "
+            "entries and zero success-path mutation hits; natural and forced Border Guard "
+            "samples fail with stale generator+0xf5c before endpoint stamping."
         ),
     },
     {
@@ -905,9 +919,9 @@ FUNCTIONS: list[dict[str, Any]] = [
             "connection/blocker/guard post-processing state remains payload-replay pending",
             "paired +0xc8 records are marked through byte +0x0a at 0x4a7e21 and 0x4a7e25 in the sampled dispatch path",
         ],
-        "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records the 0x4a4c8e -> 0x4a79a3 object-vector boundary and later 0x49eb8d handoff. Follow-up payload, filter/dispatch, and endpoint traces prove the sampled payload records, one 0x4a696b return, one 0x4a7605 return, two direct 0x4a7312 endpoint commits, and paired +0xc8 processed marks at 0x4a7e21/0x4a7e25. Field summary .artifacts/rmg_recovery/connection_record_field_summary.json now names +0x09 as connection_recipe.border_guard_endpoint_stamping_enabled and verifies its source producer as 0x49f7c4 copying the template connection Border Guard column from source row +0x140. The sampled +0x09==0 path skips delegated 0x4a746b; clean seed-pinned Medium seed-10 Border Guard traces naturally reach +0x09!=0, all six 0x4a5e73 endpoint attempts fail on stale generator+0xf5c, and generation continues through 0x4a7605 -> 0x4a5e03 fallback materialization. Producer static summary .artifacts/rmg_recovery/connection_record_producer_static_summary.json still rules out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface; corrected runtime boundary summary proves the consumed ESI record is a separate edge/control record and that the rejected watch command was not valid evidence.",
+        "runtime_trace": "Focused trace .artifacts/rmg_recovery/direct_generation_4a79a3_object_vector_trace/winedbg_interactive_trace.log summarized by .artifacts/rmg_recovery/4a79a3_object_vector_trace_summary.json records the 0x4a4c8e -> 0x4a79a3 object-vector boundary and later 0x49eb8d handoff. Follow-up payload, filter/dispatch, and endpoint traces prove the sampled payload records, one 0x4a696b return, one 0x4a7605 return, two direct 0x4a7312 endpoint commits, and paired +0xc8 processed marks at 0x4a7e21/0x4a7e25. Field summary .artifacts/rmg_recovery/connection_record_field_summary.json now names +0x09 as connection_recipe.border_guard_endpoint_stamping_enabled and verifies its source producer as 0x49f7c4 copying the template connection Border Guard column from source row +0x140. The sampled +0x09==0 path skips delegated 0x4a746b; clean seed-pinned Medium seed-10 Border Guard traces naturally reach +0x09!=0, all six 0x4a5e73 endpoint attempts fail on stale generator+0xf5c, and generation continues through 0x4a7605 -> 0x4a5e03 fallback materialization. Corpus-wide 0x4a5e73 cursor-frontier scanning records 50 live entries, zero success-path mutation hits, and no current 0x4a606b live hit dependent on a successful 0x4a5e73 return. Producer static summary .artifacts/rmg_recovery/connection_record_producer_static_summary.json still rules out 0x4b3c03 as the direct generator+0xc8/+0xcc semantic producer in the checked static surface; corrected runtime boundary summary proves the consumed ESI record is a separate edge/control record and that the rejected watch command was not valid evidence.",
         "ghidra_dump": "Static classification .artifacts/rmg_recovery/object_vector_surface_summary.json and focused dump .artifacts/rmg_recovery/ghidra_coord12_candidate_vector_helper_dump/caller_004a79a3_FUN_004a79a3.txt prove 0x4a79a3 reads generator +0xec8/+0xecc, computes (end - begin) / 4, and uses the object/vector state after the 0x4a8c15 ordered phase prefix.",
-        "remaining_gap": "0x4a696b and 0x4a7605 now have static callee-side surfaces, the sampled 0x4a7605 direct 0x4a7312 commit path is live-replayed, sampled +0x09==0 skip behavior is explained, and the clean seed-10 +0x09!=0 Border Guard branch/fallback behavior is recovered for the sampled sequence. For the current one-level land target mode, .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json proves 0x4a696b direct mutation is unreached because the source/relation byte-pair gate never matches, and .artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json proves 0x4a606b's static contract plus current-corpus no-live-hit state. Runtime ordered replay still needs broader relation/control linkage, a natural successful 0x4a606b path or source-backed exclusion for the supported one-level land scope, exact +0xc8/+0xd8 record semantic names, and full before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c state before changing native RMG behavior.",
+        "remaining_gap": "0x4a696b and 0x4a7605 now have static callee-side surfaces, the sampled 0x4a7605 direct 0x4a7312 commit path is live-replayed, sampled +0x09==0 skip behavior is explained, and the clean seed-10 +0x09!=0 Border Guard branch/fallback behavior is recovered for the sampled sequence. For the current one-level land target mode, .artifacts/rmg_recovery/4a696b_target_mode_reachability_summary_20260610.json proves 0x4a696b direct mutation is unreached because the source/relation byte-pair gate never matches, .artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20260610.json proves 0x4a5e73's cursor-precondition frontier plus current-corpus no-success-path-hit state, and .artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json proves 0x4a606b's static contract plus current-corpus no-live-hit state. Runtime ordered replay still needs broader relation/control linkage, the source path that seeds generator+0xf5c before successful endpoint stamping or a source-backed exclusion for the supported one-level land scope, exact +0xc8/+0xd8 record semantic names, and full before/after GeneratedCell+0x20/+0x24/+0x28/+0x2c state before changing native RMG behavior.",
     },
     {
         "address": "0x4a696b",
@@ -2149,7 +2163,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a5e73",
         "name": "connection_endpoint_selection_helper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "recovered_static_contract_current_corpus_success_path_unhit",
         "calls": ["0x5044b1", "0x49ba89", "0x4a7312"],
         "reads": [
             "generator pointer in ecx",
@@ -2179,9 +2193,10 @@ FUNCTIONS: list[dict[str, Any]] = [
             "resets generator+0xf5c to zero and advances it while generator+0x1104[index] is nonzero within the +0x1104/+0x1108 byte-vector range",
             "returns the original generator+0xf5c index after successful validation/projection",
         ],
-        "ghidra_dump": "Called by 0x4a61bc, 0x4a696b, 0x4a6cf2, and 0x4a746b. Static recovery shows an endpoint helper keyed by generator+0xf5c: it matches entries in generator+0xd8/+0xdc and +0xc8/+0xcc pointer vectors, validates an allocated +0xd8-derived object through 0x4a7312, optionally projects a repeated run of +0xc8-derived records across generated cells while forcing bit27 and clearing bit26, updates the byte-state vector at +0x1104/+0x1108, advances +0xf5c, and returns the original index or a failure sentinel. Checked chain summary .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json verifies the exact instruction sites for +0xf5c cursor reads/writes, +0xd8/+0xdc and +0xc8/+0xcc vector scans, +0x2c/+0x28 generated-cell mutation, generator vtable slot +0x04 calls, and +0x1104/+0x1108 byte-state cursor advancement. Exact vector-entry semantic names and runtime ordered replay remain pending.",
+        "ghidra_dump": "Called by 0x4a61bc, 0x4a696b, 0x4a6cf2, and 0x4a746b. Static recovery shows an endpoint helper keyed by generator+0xf5c: it matches entries in generator+0xd8/+0xdc and +0xc8/+0xcc pointer vectors, validates an allocated +0xd8-derived object through 0x4a7312, optionally projects a repeated run of +0xc8-derived records across generated cells while forcing bit27 and clearing bit26, updates the byte-state vector at +0x1104/+0x1108, advances +0xf5c, and returns the original index or a failure sentinel. Checked chain summary .artifacts/rmg_recovery/connection_endpoint_chain_static_summary.json verifies the exact instruction sites for +0xf5c cursor reads/writes, +0xd8/+0xdc and +0xc8/+0xcc vector scans, +0x2c/+0x28 generated-cell mutation, generator vtable slot +0x04 calls, and +0x1104/+0x1108 byte-state cursor advancement. Cursor-frontier summary .artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20260610.json verifies 50 current-corpus entries, 20 observed early failures at 0x4a5f84, and zero success-path mutation hits. Exact vector-entry semantic names and the source path that seeds generator+0xf5c before success remain pending.",
         "next_runtime_replay": [
-            "capture 0x4a5e73 entry/return generator+0xf5c, +0xd8/+0xdc, +0xc8/+0xcc, +0x1104/+0x1108, stack coordinate triple, repeat/count, and return value",
+            "find or source-exclude a path that seeds generator+0xf5c to a live +0xd8/+0xc8 key before 0x4a5e73",
+            "capture successful 0x4a5e73 entry/return generator+0xf5c, +0xd8/+0xdc, +0xc8/+0xcc, +0x1104/+0x1108, stack coordinate triple, repeat/count, and return value",
             "capture generated-cell address plus +0x20/+0x24/+0x28/+0x2c before and after the 0x4a5fd8/0x4a5ff1 repeat projection mutation",
         ],
     },
