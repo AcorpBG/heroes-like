@@ -45,7 +45,7 @@ EXPECTED_STATUSES = {
         "exact_fallback_coordinate_projection_reconciled_broader_modes_pending"
     ),
     "semantic_frontier": (
-        "semantic_frontier_working_names_seed10_chain_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
+        "semantic_frontier_working_names_seed10_chain_cursor_owner_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
     ),
 }
 
@@ -152,8 +152,9 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
                 "the template connection Border Guard flag, and the exact seed-10 Border Guard "
                 "downstream chain is recovered through phase tail. 0x4a5e73 is recovered as "
                 "the cursor-keyed endpoint helper with zero current success-path hits, and "
-                "0x4a606b is statically recovered with no live hit in the current corpus. "
-                "Broader linkage and global human labels remain pending."
+                "the non-self cursor writers are bound to the unhit projection/cleanup slot "
+                "chain. 0x4a606b is statically recovered with no live hit in the current "
+                "corpus. Broader linkage and global human labels remain pending."
             ),
         }
     ]
@@ -171,11 +172,13 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "reason": (
                 "Working names and the exact seed-10 Border Guard downstream chain are recovered, "
                 "0x4a5e73 is recovered as the cursor-keyed endpoint helper with no current "
-                "success-path hits, and 0x4a606b is statically recovered with no live hit in the "
-                "current corpus. Broader relation/control linkage, the source path that seeds "
-                "generator+0xf5c before successful endpoint stamping or excludes that path in "
-                "broader map/source states, global descriptor type labels, and cleanup/uncommit "
-                "semantics remain pending."
+                "success-path hits, the non-self +0xf5c writers are bound to the unhit "
+                "projection/cleanup slot chain, and 0x4a606b is statically recovered with no live "
+                "hit in the current corpus. Broader relation/control linkage, any source path "
+                "that seeds generator+0xf5c outside the currently excluded non-self writer chain, "
+                "a broader natural projection-slot dispatch, or a source-backed endpoint-stamping "
+                "exclusion for broader map/source states, global descriptor type labels, and "
+                "cleanup/uncommit semantics remain pending."
             ),
         },
         {
@@ -264,6 +267,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "the template connection Border Guard flag; the exact seed-10 Border Guard chain now "
             "has recovered fallback materialization and phase-tail evidence. 0x4a5e73 now has "
             "a recovered cursor-precondition frontier with current-corpus zero success-path hits, "
+            "the non-self cursor writers are bound to the unhit projection/cleanup slot chain, "
             "and 0x4a606b has a recovered static contract and current-corpus no-live-hit evidence."
         ),
         "remaining_gap": (

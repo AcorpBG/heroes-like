@@ -29,6 +29,9 @@ DEFAULT_BORDER_GUARD_CHAIN = Path(
     ".artifacts/rmg_recovery/border_guard_downstream_chain_summary_20260610.json"
 )
 DEFAULT_4A5E73 = Path(".artifacts/rmg_recovery/4a5e73_cursor_frontier_summary_20260610.json")
+DEFAULT_CURSOR_OWNER = Path(
+    ".artifacts/rmg_recovery/cursor_writer_owner_exclusion_summary_20260610.json"
+)
 DEFAULT_4A606B = Path(".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 
@@ -48,6 +51,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     final_role = load_json(args.final_role_frontier)
     border_guard_chain = load_json(args.border_guard_chain)
     four_a5e73 = load_json(args.four_a5e73)
+    cursor_owner = load_json(args.cursor_owner)
     four_a606b = load_json(args.four_a606b)
 
     connection_fields = connection.get("recovered_fields", {})
@@ -86,6 +90,18 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             and four_a5e73.get("invariants", {}).get("static_contract_recovered") is True
             and four_a5e73.get("invariants", {}).get(
                 "current_corpus_has_no_5e73_success_path_hit"
+            )
+            is True
+        ),
+        "cursor_writer_owner_frontier_recovered": (
+            cursor_owner.get("status")
+            == "cursor_writer_owner_frontier_nonself_writers_bound_to_unhit_projection_slots"
+            and cursor_owner.get("invariants", {}).get(
+                "non_self_cursor_writers_are_projection_chain_entries"
+            )
+            is True
+            and cursor_owner.get("invariants", {}).get(
+                "projection_slot_chain_unhit_in_current_target_corpus"
             )
             is True
         ),
@@ -209,6 +225,16 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "confidence": "static_contract_recovered_current_target_corpus_success_path_unhit_only",
         },
         {
+            "domain": "cursor_writer_owner_frontier",
+            "fields": {
+                "0x4a5e73": "self cursor writer and endpoint helper; success path unhit in current corpus",
+                "0x4adb72": "non-self cursor writer owned only by projection slot 0x540b00+0x08 through 0x49c019",
+                "0x4add76": "non-self cursor writer owned only by 0x4adef7 under the projection slot chain",
+                "projection_slot_runtime": "current one-level land corpus has zero projection/cleanup slot events or stops",
+            },
+            "confidence": "current_one_level_land_target_mode_projection_slot_exclusion_only",
+        },
+        {
             "domain": "connection_region_generated_cell_writer",
             "fields": {
                 "0x4a606b": "static generated-cell endpoint/region stamp helper",
@@ -225,11 +251,13 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "reason": (
                 "The +0x09 producer and exact seed-10 Border Guard fallback chain are recovered, "
                 "0x4a5e73 is recovered as the cursor-keyed endpoint helper with no current "
-                "success-path hits, and 0x4a606b has a recovered static contract with no live hit "
-                "in the current target corpus. Relation/control linkage still needs broader "
-                "map-mode/source-state proof that finds the source path that seeds generator+0xf5c "
-                "before a successful 0x4a5e73 call, or excludes that path for the supported "
-                "one-level land scope."
+                "success-path hits, the non-self +0xf5c writers are bound to the unhit "
+                "projection/cleanup slot chain, and 0x4a606b has a recovered static contract "
+                "with no live hit in the current target corpus. Relation/control linkage still "
+                "needs broader map-mode/source-state proof that finds a source path that seeds "
+                "generator+0xf5c outside those excluded writers before a successful 0x4a5e73 "
+                "call, naturally reaches projection-slot dispatch, or excludes endpoint stamping "
+                "for the supported one-level land scope."
             ),
         },
         {
@@ -253,7 +281,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     ]
 
     status = (
-        "semantic_frontier_working_names_seed10_chain_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
+        "semantic_frontier_working_names_seed10_chain_cursor_owner_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
         if all(invariants.values())
         else "semantic_frontier_inputs_incomplete"
     )
@@ -273,6 +301,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "final_role_frontier": str(args.final_role_frontier),
             "border_guard_chain": str(args.border_guard_chain),
             "4a5e73_cursor_frontier": str(args.four_a5e73),
+            "cursor_writer_owner_frontier": str(args.cursor_owner),
             "4a606b_reachability": str(args.four_a606b),
         },
         "invariants": invariants,
@@ -297,15 +326,18 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "fallback materialization, 0x4a54a7 commit/projection state, object-vector survival, "
             "first 0x49e700 mutation set, and 0x4ac552 phase tail for two exact records. Broader "
             "0x4a5e73 is statically recovered as the cursor-keyed endpoint helper and has zero "
-            "success-path mutation hits in the current corpus; 0x4a606b is statically recovered "
-            "and has no live hit in the current target corpus. Broader relation/control linkage, "
-            "global semantic labels, and broader scope remain explicit blockers."
+            "success-path mutation hits in the current corpus; the only non-self direct +0xf5c "
+            "writers are bound to projection/cleanup slot methods that current one-level land "
+            "evidence never dispatches; 0x4a606b is statically recovered and has no live hit in "
+            "the current target corpus. Broader relation/control linkage, global semantic labels, "
+            "and broader scope remain explicit blockers."
         ),
         "remaining_gap": (
             "Recover broader relation/control downstream linkage outside the exact seed-10 chain, "
-            "including the source path that seeds generator+0xf5c before a successful 0x4a5e73 "
-            "call and reaches 0x4a606b, or a source-backed exclusion for the supported one-level "
-            "land scope, "
+            "including any source path that seeds generator+0xf5c outside the currently excluded "
+            "non-self writer chain before a successful 0x4a5e73 call and reaches 0x4a606b, a "
+            "natural projection-slot dispatch in a broader supported state, or a source-backed "
+            "exclusion for the supported one-level land scope, "
             "global descriptor type labels, broader map-mode semantic scope, and cleanup/uncommit "
             "semantics before native RMG behavior changes."
         ),
@@ -324,6 +356,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--final-role-frontier", type=Path, default=DEFAULT_FINAL_ROLE_FRONTIER)
     parser.add_argument("--border-guard-chain", type=Path, default=DEFAULT_BORDER_GUARD_CHAIN)
     parser.add_argument("--four-a5e73", type=Path, default=DEFAULT_4A5E73)
+    parser.add_argument("--cursor-owner", type=Path, default=DEFAULT_CURSOR_OWNER)
     parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
@@ -338,7 +371,7 @@ def main() -> int:
     return (
         0
         if summary["status"]
-        == "semantic_frontier_working_names_seed10_chain_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
+        == "semantic_frontier_working_names_seed10_chain_cursor_owner_4a5e73_and_4a606b_frontiers_recovered_broader_scope_pending"
         else 1
     )
 
