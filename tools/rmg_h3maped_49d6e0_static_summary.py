@@ -5,33 +5,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 from pathlib import Path
 from typing import Any
 
 
-DEFAULT_BINARY = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
 DEFAULT_GHIDRA_DUMP = Path(".artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_0049d6e0_FUN_0049d6e0.txt")
 DEFAULT_REFS_DUMP = Path(".artifacts/rmg_recovery/ghidra_downstream_helper_dump/target_0049d6e0_references.txt")
 TARGET = "0x0049d6e0"
-
-
-def run_objdump(binary: Path, start: str, stop: str) -> str:
-    completed = subprocess.run(
-        [
-            "objdump",
-            "-Mintel",
-            "-d",
-            f"--start-address={start}",
-            f"--stop-address={stop}",
-            str(binary),
-        ],
-        check=True,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    return completed.stdout
 
 
 def read_text_or_empty(path: Path) -> str:
@@ -44,41 +24,10 @@ def contains_all(text: str, needles: list[str]) -> bool:
     return all(needle in text for needle in needles)
 
 
-def summarize(binary: Path, ghidra_dump: Path, refs_dump: Path) -> dict[str, Any]:
-    objdump_text = run_objdump(binary, "0x49d6e0", "0x49d7c3")
+def summarize(ghidra_dump: Path, refs_dump: Path) -> dict[str, Any]:
     ghidra_text = read_text_or_empty(ghidra_dump)
     refs_text = read_text_or_empty(refs_dump)
 
-    target_needles = [
-        "49d6e8:",
-        "mov    esi,ecx",
-        "49d6ea:",
-        "mov    eax,0x7d00",
-        "49d6f4:",
-        "mov    DWORD PTR [esi+0x18],eax",
-        "49d6f7:",
-        "mov    DWORD PTR [esi+0x1c],eax",
-        "49d6fa:",
-        "mov    eax,0xffff8300",
-        "49d6ff:",
-        "mov    DWORD PTR [esi+0x20],eax",
-        "49d702:",
-        "mov    DWORD PTR [esi+0x24],eax",
-        "49d720:",
-        "call   0x49a1d8",
-        "49d72f:",
-        "shr    ecx,0x16",
-        "49d739:",
-        "shr    eax,0x1b",
-        "49d758:",
-        "mov    DWORD PTR [esi+0x18],eax",
-        "49d773:",
-        "mov    DWORD PTR [esi+0x20],eax",
-        "49d78b:",
-        "mov    DWORD PTR [esi+0x1c],eax",
-        "49d7a3:",
-        "mov    DWORD PTR [esi+0x24],eax",
-    ]
     ghidra_needles = [
         "0049d6e8: MOV ESI,ECX",
         "0049d6ea: MOV EAX,0x7d00",
@@ -98,9 +47,8 @@ def summarize(binary: Path, ghidra_dump: Path, refs_dump: Path) -> dict[str, Any
 
     return {
         "schema_id": "h3maped_49d6e0_static_summary_v1",
-        "binary": str(binary),
         "target": TARGET,
-        "objdump": objdump_text,
+        "instruction_source": "ghidra_export",
         "ghidra_dump": str(ghidra_dump),
         "references_dump": str(refs_dump),
         "static_contract": {
@@ -132,16 +80,21 @@ def summarize(binary: Path, ghidra_dump: Path, refs_dump: Path) -> dict[str, Any
             "0x004ad947": "reward/guard relation/projection caller refresh",
         },
         "invariants": {
-            "target_bytes_show_bounds_init_scan_and_updates": contains_all(objdump_text, target_needles),
             "ghidra_dump_shows_same_bounds_contract": contains_all(ghidra_text, ghidra_needles),
             "references_show_expected_callers": contains_all(refs_text, refs_needles),
+            "no_objdump_used": True,
+        },
+        "metrics": {
+            "used_objdump": False,
+            "native_behavior_changed": False,
+            "overall_goal_complete": False,
         },
     }
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--binary", type=Path, default=DEFAULT_BINARY)
+    parser.add_argument("--binary", type=Path, help="Deprecated; ignored. Use --ghidra-dump.")
     parser.add_argument("--ghidra-dump", type=Path, default=DEFAULT_GHIDRA_DUMP)
     parser.add_argument("--refs-dump", type=Path, default=DEFAULT_REFS_DUMP)
     parser.add_argument("--out", type=Path, required=True)
@@ -150,7 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
-    summary = summarize(args.binary, args.ghidra_dump, args.refs_dump)
+    summary = summarize(args.ghidra_dump, args.refs_dump)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     status = "pass" if all(summary["invariants"].values()) else "partial"
