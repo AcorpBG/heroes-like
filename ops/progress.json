@@ -443,43 +443,42 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Wine/Ghidra/Python recovery added a cleanup dependency frontier. It classifies cleanup/uncommit as downstream of the unhit projection-slot chain for current sampled one-level land evidence: 0x49c019, 0x49c0a6, 0x4add76, and 0x4adef7 all have zero live hits, while 0x4a5e73 still has zero success-path events and 0x4a606b has zero live events. Cleanup remains real code, but it is not an active upstream explanation for the stale endpoint cursor in this sampled scope. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
-    "currentSliceNotes": "Wine/Ghidra/Python recovery added a cleanup dependency frontier. It classifies cleanup/uncommit as downstream of the unhit projection-slot chain for current sampled one-level land evidence: 0x49c019, 0x49c0a6, 0x4add76, and 0x4adef7 all have zero live hits, while 0x4a5e73 still has zero success-path events and 0x4a606b has zero live events. Cleanup remains real code, but it is not an active upstream explanation for the stale endpoint cursor in this sampled scope. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
-    "currentSliceUpdatedAt": "2026-06-10T05:37:17Z",
-    "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, cleanup/uncommit dependency as downstream of the unhit projection-slot chain for sampled one-level land, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit mutation state only if a future natural projection-slot path is reached. No native behavior changes.",
+    "currentNotes": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
+    "currentSliceNotes": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
+    "currentSliceUpdatedAt": "2026-06-10T05:59:10Z",
+    "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, cleanup/uncommit dependency as downstream of the unhit projection-slot chain for sampled one-level land, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit mutation state only if a future natural projection-slot path is reached. No native behavior changes. Sampled descriptor type/counter index 98 is now bridged across exact 0x4a54a7 descriptor/relation commits and all three sampled weighted 0x4a901a materializations as generator+0x1110[98] projection commit lane evidence; it is not a final human object-kind label.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native package/session adoption code",
       "RMG strict Small reports"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_cleanup_dependency_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "python3 tools/rmg_h3maped_cleanup_dependency_frontier_summary.py --out .artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_descriptor_type98_bridge_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+        "python3 tools/rmg_h3maped_descriptor_type98_bridge_summary.py --out .artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
-        "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
+        "python3 tests/validate_repo.py (passed)",
         "git diff --check (passed)"
       ],
       "metrics": {
+        "descriptor_type98_exact_invocation_count": 6,
+        "weighted_counter98_dispatch_count": 3,
+        "weighted_counter98_total_delta": 3,
         "native_behavior_changed": false,
         "overall_goal_complete": false,
-        "projection_slot_49c019_event_hits": 0,
-        "projection_slot_49c0a6_event_hits": 0,
-        "runtime_4a606b_event_count": 0,
-        "runtime_4add76_event_count": 0,
-        "runtime_4adef7_event_count": 0,
-        "runtime_5e73_success_path_event_count": 0,
         "used_objdump": false
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T05:37:17Z",
-      "updatedAt": "2026-06-10T05:37:17Z"
+      "timestamp": "2026-06-10T05:59:10Z",
+      "updatedAt": "2026-06-10T05:59:10Z"
     },
-    "latestEvidence": "Wine/Ghidra/Python recovery added a cleanup dependency frontier. It classifies cleanup/uncommit as downstream of the unhit projection-slot chain for current sampled one-level land evidence: 0x49c019, 0x49c0a6, 0x4add76, and 0x4adef7 all have zero live hits, while 0x4a5e73 still has zero success-path events and 0x4a606b has zero live events. Cleanup remains real code, but it is not an active upstream explanation for the stale endpoint cursor in this sampled scope. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
+    "latestEvidence": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
     "metrics": {
       "h3maped_4a901a_same_run_precheck": {
         "4a901a_sequences": {
@@ -620,7 +619,15 @@
         "runtime_4adef7_event_count": 0,
         "status": "cleanup_dependency_frontier_downstream_of_unhit_projection_slot"
       },
-      "overall_goal_complete": false
+      "overall_goal_complete": false,
+      "descriptor_type98_bridge": {
+        "status": "descriptor_type98_weighted_and_commit_lane_recovered",
+        "weighted_counter98_dispatch_count": 3,
+        "type98_exact_invocation_count": 6,
+        "weighted_counter98_total_delta": 3,
+        "native_behavior_changed": false,
+        "used_objdump": false
+      }
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -641,36 +648,34 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Cleanup dependency frontier consolidated from Wine/Ghidra/Python evidence. tools/rmg_h3maped_cleanup_dependency_frontier_summary.py classifies cleanup/uncommit as downstream of the unhit projection-slot chain for current sampled one-level land evidence, with zero live 0x49c019, 0x49c0a6, 0x4add76, or 0x4adef7 hits. Cleanup remains real code, but it is not an active upstream explanation for the stale endpoint cursor in this sampled scope. Native RMG behavior unchanged; Wine/Ghidra/Python only; no objdump.",
+    "summary": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
     "title": "RMG Small Generalization Hardening",
     "updatedAt": "2026-06-10T05:37:17Z",
     "validation": {
-      "artifact": ".artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json",
+      "artifact": ".artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json",
       "commands": [
-        "python3 -m py_compile tools/rmg_h3maped_cleanup_dependency_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-        "python3 tools/rmg_h3maped_cleanup_dependency_frontier_summary.py --out .artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_descriptor_type98_bridge_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+        "python3 tools/rmg_h3maped_descriptor_type98_bridge_summary.py --out .artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json (passed)",
+        "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
         "jq empty ops/progress.json (passed)",
-        "git diff --check (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-        "python3 tests/validate_repo.py (passed)"
+        "python3 tests/validate_repo.py (passed)",
+        "git diff --check (passed)"
       ],
       "metrics": {
+        "descriptor_type98_exact_invocation_count": 6,
+        "weighted_counter98_dispatch_count": 3,
+        "weighted_counter98_total_delta": 3,
         "native_behavior_changed": false,
         "overall_goal_complete": false,
-        "projection_slot_49c019_event_hits": 0,
-        "projection_slot_49c0a6_event_hits": 0,
-        "runtime_4a606b_event_count": 0,
-        "runtime_4add76_event_count": 0,
-        "runtime_4adef7_event_count": 0,
-        "runtime_5e73_success_path_event_count": 0,
         "used_objdump": false
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "timestamp": "2026-06-10T05:37:17Z",
-      "updatedAt": "2026-06-10T05:37:17Z"
+      "timestamp": "2026-06-10T05:59:10Z",
+      "updatedAt": "2026-06-10T05:59:10Z"
     }
   },
   "completedImplementationEvidence": [
@@ -9340,10 +9345,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Wine/Ghidra/Python recovery added a return-site-driven 0x4a54a7 trace for 0x004a9c3f. The sampled 0x4a9911 -> 0x4a9c3f target-return callback is recovered: object-vector append, target-cell object-reference addition, target +0x20 low-word clear 2->0, and 98 unique 0x4a56b6 projection writes preserving high words while lowering low words. The prior sampled 0x4aa3e9 -> 0x4aa44d and 0x4a9641 -> 0x4a98f0 streams remain recovered. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
+  "currentSliceNotes": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T05:00:43Z",
+  "currentSliceUpdatedAt": "2026-06-10T05:59:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -10339,12 +10344,13 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, cleanup/uncommit dependency as downstream of the unhit projection-slot chain for sampled one-level land, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit mutation state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus.",
+  "guardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, cleanup/uncommit dependency as downstream of the unhit projection-slot chain for sampled one-level land, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit mutation state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. Sampled descriptor type/counter index 98 is now bridged across exact 0x4a54a7 descriptor/relation commits and all three sampled weighted 0x4a901a materializations as generator+0x1110[98] projection commit lane evidence; it is not a final human object-kind label.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json",
     "commands": [
-      "python3 -m py_compile tools/rmg_h3maped_cleanup_dependency_frontier_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "python3 tools/rmg_h3maped_cleanup_dependency_frontier_summary.py --out .artifacts/rmg_recovery/cleanup_dependency_frontier_summary_20260610.json (passed)",
+      "python3 -m py_compile tools/rmg_h3maped_descriptor_type98_bridge_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+      "python3 tools/rmg_h3maped_descriptor_type98_bridge_summary.py --out .artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json (passed)",
+      "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
       "jq empty ops/progress.json (passed)",
@@ -10353,23 +10359,20 @@
       "git diff --check (passed)"
     ],
     "metrics": {
-      "projection_slot_49c019_event_hits": 0,
-      "projection_slot_49c0a6_event_hits": 0,
-      "runtime_4a606b_event_count": 0,
-      "runtime_4add76_event_count": 0,
-      "runtime_4adef7_event_count": 0,
-      "runtime_5e73_success_path_event_count": 0,
+      "descriptor_type98_exact_invocation_count": 6,
+      "weighted_counter98_dispatch_count": 3,
+      "weighted_counter98_total_delta": 3,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
       "used_objdump": false
     },
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T05:41:56Z",
-    "updatedAt": "2026-06-10T05:41:56Z"
+    "timestamp": "2026-06-10T05:59:10Z",
+    "updatedAt": "2026-06-10T05:59:10Z"
   },
-  "latestEvidence": "Wine/Ghidra/Python recovery added a cleanup dependency frontier. It classifies cleanup/uncommit as downstream of the unhit projection-slot chain for current sampled one-level land evidence: 0x49c019, 0x49c0a6, 0x4add76, and 0x4adef7 all have zero live hits, while 0x4a5e73 still has zero success-path events and 0x4a606b has zero live events. Cleanup remains real code, but it is not an active upstream explanation for the stale endpoint cursor in this sampled scope. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
-  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, cleanup/uncommit dependency as downstream of the unhit projection-slot chain for sampled one-level land, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit mutation state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus.",
+  "latestEvidence": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
+  "nextActionGuardrailNote": "Recovered selected-member recycle, target-mode 0x4a696b byte-pair reachability boundary, projection slot +0x08 target-mode recycle boundary, cleanup/uncommit dependency as downstream of the unhit projection-slot chain for sampled one-level land, exact Medium seed-10 fallback final-role phase-tail boundary, Ghidra-only 0x53eafc source-handler vtable slot table, source-handler owner-chain static-orphan classification, direct-mode frontier verification, exact Medium seed-10 fallback coordinate/projection reconciliation for records 0x036260c0 and 0x03626060, cross-seed 0x4a5e6c fallback-return commit-surface recovery for 31 sampled commits, sampled non-fallback 0x4a744a direct endpoint afterstate plus descriptor/relation contract recovery, sampled same-ledger 0x4aa3e9 -> 0x4aa44d write-stream recovery with 90 unique 0x4a56b6 writes and target low word 14->2, sampled same-ledger 0x4a9641 -> 0x4a98f0 write-stream recovery with 319 unique 0x4a56b6 writes and target low word 27->2, and sampled same-ledger 0x4a9911 -> 0x4a9c3f target-return write-stream recovery with 98 unique 0x4a56b6 writes and target low word 2->0. Source-backed working semantic names exist for key connection/candidate/descriptor/relation/generated-cell fields; exact seed-10 Border Guard downstream chain recovery reaches fallback materialization and phase tail; 0x4a5e73 cursor-precondition/current-corpus no-success-path, cursor-writer owner frontier, cursor-source setup/lifetime, selected-object recycle, and 0x4a606b static/current-corpus no-live-hit frontiers remain in force. Connection-record +0x09 is the template connection Border Guard flag produced by 0x49f7c4, not map size, water, island, underground, body-mask, or generated-cell bit state. Current recovery tooling is Wine/Ghidra/Python only; the manifest does not run objdump, and old objdump scratch artifacts are superseded. Still unrecovered before native RMG behavior port: any broader source path that seeds generator+0xf5c outside the currently excluded non-self writer chain before successful endpoint stamping, broader natural projection-slot dispatch or source-backed endpoint-stamping exclusion for one-level land, broader relation/control linkage outside exact seed-10 records, broader all-sample 0x4aa44d/0x4a98f0/0x4a9c3f coverage if required, global descriptor labels, broader map-mode/source-state reachability, and cleanup/uncommit mutation state only if a future natural projection-slot path is reached. No native behavior changes. Widened headless Ghidra endpoint-state access scan now confirms direct generator+0xf5c writers remain bounded to 0x4a5e73, 0x4adb72, and 0x4add76; no additional direct +0xf5c writer was found, only direct +0xf58 write is setup path 0x49ecf2, and +0x1104/+0x1108 accesses stay in 0x49f95a plus endpoint/projection helpers. All six static 0x4a5e73 callers are now grouped by gate: current runtime hits reach only stale-cursor 0x4a61bc natural Border Guard calls and forced-failing 0x4a746b calls; 0x4a696b is blocked before its endpoint callsite by the owner/relation byte-pair gate; and both 0x4a6cf2 endpoint callsites are static-only in the current corpus. Sampled descriptor type/counter index 98 is now bridged across exact 0x4a54a7 descriptor/relation commits and all three sampled weighted 0x4a901a materializations as generator+0x1110[98] projection commit lane evidence; it is not a final human object-kind label.",
   "notes": "Source-handler owner-chain checkpoint recovered from Ghidra/Wine/Python evidence. The verifier proves 0x4802ac and 0x4afa99 are called only by 0x484d9f, 0x4af463 and 0x4af910 are called only by 0x4afa99, Ghidra reports zero incoming references to 0x484d9f, and the existing direct-generation WineDbg probe armed 0x484d9f without recording a breakpoint stop. The 0x53eafc pending-entry source-handler chain is now classified as a static orphan for the current direct Small/Medium RMG recovery path, not an active direct-RMG blocker unless a separate live owner/action is later identified. Native RMG behavior remains unchanged; Wine/Ghidra/Python only. Still unrecovered before native RMG behavior port: natural projection slot dispatch or map-mode/source-state proof, positive 0x4a696b source/relation-match or unreachable proof, runtime cleanup/reselection state if reached, older coordinate/projection reconciliation, and human semantic names/broader final-role proof.",
   "plannedSlices": [
     {
@@ -50754,24 +50757,34 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Cursor-writer owner frontier recovered from Wine/Ghidra/Python evidence. tools/rmg_h3maped_cursor_writer_owner_exclusion_summary.py verifies the direct generator+0xf5c writer surface is exhausted to 0x4a5e73, 0x4adb72, and 0x4add76; the non-self writers 0x4adb72 and 0x4add76 are bound by Ghidra references to the projection/cleanup slot chain; and current one-level land Wine evidence has zero projection/cleanup slot events or stops. Remaining blocker is now narrower: find a source path that seeds generator+0xf5c outside that excluded non-self writer chain, find a broader natural projection-slot dispatch, or source-exclude successful endpoint stamping for supported one-level land. Native RMG behavior unchanged; Wine/Ghidra/Python only; no objdump.",
+  "summary": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
   "taskId": "10184",
   "updatedAt": "2026-06-10T05:21:40Z",
   "validation": {
-    "artifact": ".artifacts/rmg_recovery/medium_4a54a7_cross_seed_commit_surface_summary_20260610.json",
-    "checks": [
-      "python3 -m py_compile tools/rmg_h3maped_4a54a7_cross_seed_commit_surface_summary.py tools/rmg_h3maped_coordinate_projection_reconciliation_summary.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "python3 tools/rmg_h3maped_4a54a7_cross_seed_commit_surface_summary.py --out .artifacts/rmg_recovery/medium_4a54a7_cross_seed_commit_surface_summary_20260610.json (passed)",
-      "python3 tools/rmg_h3maped_coordinate_projection_reconciliation_summary.py --out .artifacts/rmg_recovery/coordinate_projection_reconciliation_summary_20260610.json (passed)",
+    "artifact": ".artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json",
+    "commands": [
+      "python3 -m py_compile tools/rmg_h3maped_descriptor_type98_bridge_summary.py tools/rmg_h3maped_semantic_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py (passed)",
+      "python3 tools/rmg_h3maped_descriptor_type98_bridge_summary.py --out .artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json (passed)",
+      "python3 tools/rmg_h3maped_semantic_frontier_summary.py --out .artifacts/rmg_recovery/semantic_frontier_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_direct_mode_recovery_frontier_summary.py --out .artifacts/rmg_recovery/direct_mode_recovery_frontier_summary_20260610.json (passed)",
       "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed)",
       "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed)",
-      "python3 tests/validate_repo.py (passed)"
+      "python3 tests/validate_repo.py (passed)",
+      "git diff --check (passed)"
     ],
+    "metrics": {
+      "descriptor_type98_exact_invocation_count": 6,
+      "weighted_counter98_dispatch_count": 3,
+      "weighted_counter98_total_delta": 3,
+      "native_behavior_changed": false,
+      "overall_goal_complete": false,
+      "used_objdump": false
+    },
+    "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T03:53:10Z"
+    "timestamp": "2026-06-10T05:59:10Z",
+    "updatedAt": "2026-06-10T05:59:10Z"
   },
   "validationHistory": [
     {
@@ -56935,8 +56948,15 @@
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
     "timestamp": "2026-06-10T03:24:11Z",
-    "updatedAt": "2026-06-10T03:24:11Z"
+    "updatedAt": "2026-06-10T03:24:11Z",
+    "descriptor_type98_bridge": {
+      "status": "descriptor_type98_weighted_and_commit_lane_recovered",
+      "weighted_counter98_dispatch_count": 3,
+      "type98_exact_invocation_count": 6,
+      "native_behavior_changed": false,
+      "used_objdump": false
+    }
   },
-  "currentNotes": "Wine/Ghidra/Python recovery added a cleanup dependency frontier. It classifies cleanup/uncommit as downstream of the unhit projection-slot chain for current sampled one-level land evidence: 0x49c019, 0x49c0a6, 0x4add76, and 0x4adef7 all have zero live hits, while 0x4a5e73 still has zero success-path events and 0x4a606b has zero live events. Cleanup remains real code, but it is not an active upstream explanation for the stale endpoint cursor in this sampled scope. No native RMG behavior changed; Wine/Ghidra/Python only; no objdump.",
+  "currentNotes": "Wine/Ghidra/Python recovery added a descriptor type-98 bridge. It proves sampled descriptor/counter index 98 is a shared projection commit lane across existing evidence: exact 0x4a54a7 descriptor/relation invocations with descriptor+0x1c == 98 use projection flag +0x29, source offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all three sampled weighted 0x4a901a materializations return through 0x4a54a7, append one object record, and increment generator+0x1110[98] by one. This is not a final human object-kind label and does not authorize native RMG behavior changes. Wine/Ghidra/Python only; no objdump.",
   "remainingGap": "Recover a natural successful 0x4a5e73 entry, or prove with broader map-mode/source-state evidence that no supported one-level land source can make the recovered caller gates reach a seeded generator+0xf5c success path and downstream 0x4a606b. Still recover broader relation/control downstream linkage outside the exact seed-10 Border Guard chain, broaden sampled 0x4aa44d/0x4a98f0/0x4a9c3f coverage only if native-port authority requires it, recover global descriptor type labels and broader semantic scope, and recover cleanup/uncommit semantics if reached. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas."
 }

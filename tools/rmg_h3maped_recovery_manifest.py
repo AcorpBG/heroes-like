@@ -169,6 +169,20 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "descriptor_type98_weighted_commit_bridge",
+        "artifact": ".artifacts/rmg_recovery/descriptor_type98_bridge_summary_20260610.json",
+        "status": "descriptor_type98_weighted_and_commit_lane_recovered",
+        "meaning": (
+            "Sampled descriptor/counter index 98 is recovered as a shared projection commit "
+            "lane across existing Wine/Ghidra evidence: exact 0x4a54a7 descriptor/relation "
+            "invocations use descriptor+0x1c value 98 with projection flag +0x29, source "
+            "offsets +0x2c/+0x30 = (2,0), 6x6 masks, and relation counter increments; all "
+            "three sampled weighted 0x4a901a materializations also return through 0x4a54a7 "
+            "and increment generator+0x1110[98] by one while appending one object record. "
+            "This is not a final human object-kind label."
+        ),
+    },
+    {
         "id": "working_semantic_name_frontier",
         "artifact": ".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json",
         "status": (
@@ -177,8 +191,9 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         "meaning": (
             "Connection record bytes +0x08/+0x09/+0x0a, candidate record fields "
             "+0x00/+0x04/+0x08/+0x0c, exact descriptor projection flag/offset fields, "
-            "relation descriptor-type occupancy counters, and selected GeneratedCell +0x20 "
-            "roles now have source-backed working names. Connection byte +0x09 is recovered as "
+            "relation descriptor-type occupancy counters, selected type-98 weighted/commit "
+            "counter-lane mechanics, and selected GeneratedCell +0x20 roles now have "
+            "source-backed working names. Connection byte +0x09 is recovered as "
             "the template connection Border Guard flag produced by 0x49f7c4. The exact seed-10 "
             "Border Guard downstream chain is recovered through fallback materialization and "
             "phase tail. 0x4a5e73 is recovered as the cursor-keyed endpoint helper with no "
@@ -187,8 +202,8 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
             "+0xf58/+0x1104 initialization without +0xf5c seeding, sampled projection objects "
             "are destroyed/freed/reused before ordinary final dispatch, and 0x4a606b is "
             "statically recovered with no live hit in the current target corpus. Broader "
-            "relation/control linkage, global descriptor type labels, broader semantic scope, "
-            "and cleanup/uncommit semantics remain pending."
+            "relation/control linkage, global descriptor type labels beyond sampled counter-lane "
+            "evidence, broader semantic scope, and cleanup/uncommit semantics remain pending."
         ),
     },
     {
