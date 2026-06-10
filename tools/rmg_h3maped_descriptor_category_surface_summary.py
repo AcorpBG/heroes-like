@@ -25,6 +25,9 @@ from typing import Any
 DEFAULT_CANDIDATE_VTABLE = Path(
     ".artifacts/rmg_recovery/medium_4a9f1c_candidate_vtable_contract_summary_20260608.json"
 )
+DEFAULT_CANDIDATE_CURSOR_GATE = Path(
+    ".artifacts/rmg_recovery/candidate_cursor_gate_frontier_summary_20260610.json"
+)
 DEFAULT_POST_COUNTER = Path(
     ".artifacts/rmg_recovery/medium_4a9f1c_post_counter_branch_summary_20260608.json"
 )
@@ -116,6 +119,59 @@ def summarize_4a9f1c_candidate_surface(vtable_summary: dict[str, Any]) -> dict[s
             "selected_vtable_contracts", {}
         ),
         "non_claim": "These numeric indices are not yet complete human object-kind names.",
+    }
+
+
+def summarize_candidate_cursor_gate_surface(
+    cursor_gate: dict[str, Any], vtable_summary: dict[str, Any]
+) -> dict[str, Any]:
+    selected_by_gate = cursor_gate.get("selected_records_by_gate", {})
+    contract_by_gate = cursor_gate.get("contract_by_gate", {})
+
+    selected_type_by_vtable: dict[str, list[int]] = defaultdict(list)
+    for record in vtable_summary.get("selected_records", []):
+        vtable = record.get("candidate_vtable")
+        type_index = record.get("candidate_type")
+        if vtable is not None and type_index is not None:
+            selected_type_by_vtable[str(vtable)].append(int(type_index))
+
+    selected_f58 = selected_by_gate.get("generator+0xf58_and_0x10b4_gate", [])
+    selected_f5c = selected_by_gate.get("generator+0xf5c_gate", [])
+    contract_f5c = contract_by_gate.get("generator+0xf5c_gate", [])
+
+    f5c_unselected_contracts = []
+    for contract in contract_f5c:
+        vtable = str(contract.get("candidate_vtable"))
+        f5c_unselected_contracts.append(
+            {
+                **contract,
+                "sampled_candidate_type_indices": sorted(selected_type_by_vtable.get(vtable, [])),
+                "sampled_selected_create_count": len(selected_type_by_vtable.get(vtable, [])),
+            }
+        )
+
+    return {
+        "surface": "0x4a9f1c cursor-gated candidate scorer split",
+        "meaning_recovered": (
+            "selected candidate scorer contracts separate generator+0xf58/generator+0x10b4 "
+            "projection gating from the only currently recovered generator+0xf5c-gated "
+            "candidate scorer"
+        ),
+        "selected_f58_gated_projection_records": selected_f58,
+        "selected_f5c_gated_records": selected_f5c,
+        "f5c_gated_contracts_without_sampled_selected_type": f5c_unselected_contracts,
+        "selected_f58_candidate_type_indices": sorted(
+            {
+                int(record["candidate_type"])
+                for record in selected_f58
+                if record.get("candidate_type") is not None
+            }
+        ),
+        "non_claim": (
+            "The 0x540ca0/0x49cd97 candidate is source-recovered as +0xf5c-gated, "
+            "but no sampled selected-create return gives it a candidate+0x04 type index "
+            "or downstream object semantics."
+        ),
     }
 
 
@@ -303,6 +359,7 @@ def summarize_relation_control_surfaces(paths: list[Path]) -> dict[str, Any]:
 
 def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     vtable_summary = load_json(args.candidate_vtable)
+    candidate_cursor_gate = load_json(args.candidate_cursor_gate)
     post_counter = load_json(args.post_counter)
     counter_decision = load_json(args.counter_decision)
     descriptor_relation = load_json(args.descriptor_relation)
@@ -311,36 +368,107 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
     if not relation_paths:
         raise ValueError(f"no selected relation summaries matched {args.relation_glob}")
 
+    recovered_surfaces = {
+        "candidate_type_surface_4a9f1c": summarize_4a9f1c_candidate_surface(
+            vtable_summary
+        ),
+        "candidate_cursor_gate_surface_4a9f1c": summarize_candidate_cursor_gate_surface(
+            candidate_cursor_gate, vtable_summary
+        ),
+        "candidate_filter_surface_4a9f1c": summarize_4a9f1c_counter_surface(
+            counter_decision, post_counter
+        ),
+        "descriptor_commit_surface_4a54a7": summarize_4a54a7_descriptor_surface(
+            descriptor_relation
+        ),
+        "selected_relation_control_surface": summarize_relation_control_surfaces(
+            relation_paths
+        ),
+    }
+    invariants = {
+        "candidate_vtable_contracts_passed": vtable_summary.get("status")
+        == "passed_selected_candidate_vtable_contracts",
+        "candidate_cursor_gate_frontier_passed": candidate_cursor_gate.get("status")
+        == "candidate_cursor_gate_frontier_selected_path_f58_only_f5c_candidate_unselected",
+        "f5c_gated_candidate_has_no_sampled_selected_type": all(
+            row.get("sampled_selected_create_count") == 0
+            for row in recovered_surfaces["candidate_cursor_gate_surface_4a9f1c"][
+                "f5c_gated_contracts_without_sampled_selected_type"
+            ]
+        ),
+        "sampled_f58_projection_has_type83": recovered_surfaces[
+            "candidate_cursor_gate_surface_4a9f1c"
+        ]["selected_f58_candidate_type_indices"]
+        == [83],
+        "descriptor_relation_surface_has_invariants": bool(
+            recovered_surfaces["descriptor_commit_surface_4a54a7"]["invariants"]
+        ),
+        "relation_control_surface_has_border_guard_records": recovered_surfaces[
+            "selected_relation_control_surface"
+        ]["border_guard_relation_record_count"]
+        > 0,
+        "no_objdump_used": True,
+        "no_native_behavior_change": True,
+    }
+    status = (
+        "descriptor_category_surfaces_separated_candidate_cursor_gate_named"
+        if all(invariants.values())
+        else "descriptor_category_surfaces_incomplete"
+    )
+
     return {
         "schema_id": "h3maped_descriptor_category_surface_summary_v1",
-        "status": "descriptor_category_surfaces_separated",
+        "status": status,
         "native_behavior_changed": False,
         "inputs": {
             "candidate_vtable": str(args.candidate_vtable),
+            "candidate_cursor_gate": str(args.candidate_cursor_gate),
             "post_counter": str(args.post_counter),
             "counter_decision": str(args.counter_decision),
             "descriptor_relation": str(args.descriptor_relation),
             "relation_summaries": [str(path) for path in relation_paths],
         },
-        "recovered_surfaces": {
-            "candidate_type_surface_4a9f1c": summarize_4a9f1c_candidate_surface(
-                vtable_summary
+        "invariants": invariants,
+        "metrics": {
+            "native_behavior_changed": False,
+            "overall_goal_complete": False,
+            "used_objdump": False,
+            "sampled_candidate_type_count": recovered_surfaces[
+                "candidate_type_surface_4a9f1c"
+            ]["candidate_type_count"],
+            "selected_f58_gated_candidate_count": candidate_cursor_gate.get("metrics", {}).get(
+                "selected_f58_gated_candidate_count"
             ),
-            "candidate_filter_surface_4a9f1c": summarize_4a9f1c_counter_surface(
-                counter_decision, post_counter
+            "selected_f5c_gated_candidate_count": candidate_cursor_gate.get("metrics", {}).get(
+                "selected_f5c_gated_candidate_count"
             ),
-            "descriptor_commit_surface_4a54a7": summarize_4a54a7_descriptor_surface(
-                descriptor_relation
+            "f5c_gated_contract_without_sampled_type_count": len(
+                recovered_surfaces["candidate_cursor_gate_surface_4a9f1c"][
+                    "f5c_gated_contracts_without_sampled_selected_type"
+                ]
             ),
-            "selected_relation_control_surface": summarize_relation_control_surfaces(
-                relation_paths
+            "descriptor_commit_type_count": len(
+                recovered_surfaces["descriptor_commit_surface_4a54a7"]["by_type"]
             ),
+            "relation_control_sampled_run_count": recovered_surfaces[
+                "selected_relation_control_surface"
+            ]["sampled_run_count"],
         },
+        "recovered_surfaces": recovered_surfaces,
         "source_backed_human_readable_conclusions": [
             (
                 "0x4a9f1c candidate+0x04 is a candidate type/category counter index "
                 "used by the selector; selected-create vtables and returned object "
                 "families are recovered for sampled and adjacent vtable records."
+            ),
+            (
+                "The sampled projection selected-create path has candidate type 83 and is "
+                "gated by generator+0xf58, not generator+0xf5c."
+            ),
+            (
+                "The only recovered generator+0xf5c-gated candidate contract is "
+                "0x540ca0/0x49cd97, and current selected-create samples give it no "
+                "candidate+0x04 type index or downstream object semantics."
             ),
             (
                 "0x4a54a7 descriptor+0x1c is the committed descriptor type/class "
@@ -360,6 +488,11 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
             (
                 "Recover human semantic names for descriptor/candidate numeric type "
                 "indices only where the source object/template mapping proves them."
+            ),
+            (
+                "Recover a natural selected-create path for 0x540ca0/0x49cd97, or "
+                "source-backed proof that supported one-level land cannot select that "
+                "+0xf5c-gated candidate before endpoint stamping."
             ),
             (
                 "Recover pointer-paired downstream consumer linkage for returned "
@@ -387,6 +520,7 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate-vtable", type=Path, default=DEFAULT_CANDIDATE_VTABLE)
+    parser.add_argument("--candidate-cursor-gate", type=Path, default=DEFAULT_CANDIDATE_CURSOR_GATE)
     parser.add_argument("--post-counter", type=Path, default=DEFAULT_POST_COUNTER)
     parser.add_argument("--counter-decision", type=Path, default=DEFAULT_COUNTER_DECISION)
     parser.add_argument("--descriptor-relation", type=Path, default=DEFAULT_DESCRIPTOR_RELATION)
