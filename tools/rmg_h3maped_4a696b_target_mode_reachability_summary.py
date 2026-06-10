@@ -76,6 +76,10 @@ def summarize(
             "controlled_sweep_zero_direct_mutation_hits"
         )
         is True,
+        "candidate_predicate_trace_confirms_pre_helper_empty_vector": source_invariants.get(
+            "candidate_predicate_trace_stops_before_helpers_and_append"
+        )
+        is True,
         "multi_seed_full_grid_scans_exist": int(
             grid_metrics.get("complete_grid_scan_count", 0) or 0
         )
@@ -134,8 +138,9 @@ def summarize(
             "mutation hits. The seed-pinned Medium one-level/no-water full-grid scans cover 6 "
             "complete rectangles across seeds 1, 2, and 10, with 5,752 scanned cells and zero cells "
             "matching both expected owner/relation bytes. The observed reason is therefore the "
-            "GeneratedCell+0x20 byte-pair gate, not terrain, helper rejection, candidate append, "
-            "or direct mutation behavior."
+            "GeneratedCell+0x20 byte-pair gate. The candidate-predicate trace additionally proves "
+            "the sampled empty candidate vectors occur before terrain/helper rejection, candidate "
+            "append, selected commit, or direct mutation behavior."
         ),
         "remaining_gap": (
             "This is not a global proof that 0x4a696b can never mutate cells. It is a stronger "
