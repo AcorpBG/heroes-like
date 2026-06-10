@@ -39,6 +39,9 @@ DEFAULT_CURSOR_SOURCE = Path(
     ".artifacts/rmg_recovery/cursor_source_frontier_summary_20260610.json"
 )
 DEFAULT_4A606B = Path(".artifacts/rmg_recovery/4a606b_reachability_summary_20260610.json")
+DEFAULT_SUPPORTED_LAND_ENDPOINT = Path(
+    ".artifacts/rmg_recovery/supported_land_endpoint_reachability_summary_20260610.json"
+)
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/semantic_frontier_summary_20260610.json")
 
 
@@ -61,6 +64,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
     cursor_owner = load_json(args.cursor_owner)
     cursor_source = load_json(args.cursor_source)
     four_a606b = load_json(args.four_a606b)
+    supported_land_endpoint = load_json(args.supported_land_endpoint)
 
     connection_fields = connection.get("recovered_fields", {})
     candidate_fields = candidate.get("recovered_contract", {}).get("candidate_record_fields", {})
@@ -144,6 +148,22 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             == "target_mode_4a606b_static_contract_recovered_no_live_hit"
             and four_a606b.get("invariants", {}).get("static_contract_recovered") is True
             and four_a606b.get("invariants", {}).get("current_corpus_has_no_live_4a606b_hit")
+            is True
+        ),
+        "sampled_one_level_land_endpoint_reachability_no_success_path": (
+            supported_land_endpoint.get("status")
+            == "sampled_one_level_land_endpoint_reachability_no_success_path_broader_source_gap_named"
+            and supported_land_endpoint.get("invariants", {}).get(
+                "cursor_contract_recovered_no_success_path"
+            )
+            is True
+            and supported_land_endpoint.get("invariants", {}).get(
+                "4a606b_static_contract_no_live_hit"
+            )
+            is True
+            and supported_land_endpoint.get("invariants", {}).get(
+                "4a696b_pair_gate_explained_for_sampled_medium_land"
+            )
             is True
         ),
         "connection_record_offsets_named": has_keys(connection_fields, {"+0x08", "+0x09", "+0x0a"}),
@@ -341,6 +361,7 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "cursor_writer_owner_frontier": str(args.cursor_owner),
             "cursor_source_frontier": str(args.cursor_source),
             "4a606b_reachability": str(args.four_a606b),
+            "sampled_one_level_land_endpoint_reachability": str(args.supported_land_endpoint),
         },
         "invariants": invariants,
         "metrics": {
@@ -374,9 +395,13 @@ def summarize(args: argparse.Namespace) -> dict[str, Any]:
             "consolidates that setup initializes +0xf58/+0x1104 but not +0xf5c, and proves "
             "sampled projection objects are destroyed/freed/reused before ordinary final dispatch; "
             "0x4a606b is statically "
-            "recovered and has no live hit in the current target corpus. Broader "
-            "relation/control linkage, global semantic labels, and broader scope remain "
-            "explicit blockers."
+            "recovered and has no live hit in the current target corpus. The sampled "
+            "one-level land endpoint checkpoint consolidates this into a no-success-path "
+            "current-scope result: live endpoint attempts fail stale-cursor, 0x4a696b is "
+            "blocked by the owner/relation byte-pair gate, 0x4a6cf2 remains static-only in "
+            "the corpus, and the non-self cursor writers remain projection/cleanup-slot "
+            "bound. Broader relation/control linkage, global semantic labels, and broader "
+            "scope remain explicit blockers."
         ),
         "remaining_gap": (
             "Recover broader relation/control downstream linkage outside the exact seed-10 chain, "
@@ -410,6 +435,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cursor-owner", type=Path, default=DEFAULT_CURSOR_OWNER)
     parser.add_argument("--cursor-source", type=Path, default=DEFAULT_CURSOR_SOURCE)
     parser.add_argument("--four-a606b", type=Path, default=DEFAULT_4A606B)
+    parser.add_argument(
+        "--supported-land-endpoint",
+        type=Path,
+        default=DEFAULT_SUPPORTED_LAND_ENDPOINT,
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     return parser
 
