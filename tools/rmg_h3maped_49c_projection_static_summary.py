@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import struct
-import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -122,17 +121,6 @@ OBJECT_PROJECTION_FILE_NEEDLES = {
 }
 
 
-def run_objdump(binary: Path, start: str, stop: str) -> str:
-    completed = subprocess.run(
-        ["objdump", "-Mintel", "-d", f"--start-address={start}", f"--stop-address={stop}", str(binary)],
-        check=True,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    return completed.stdout
-
-
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8") if path.exists() else ""
 
@@ -181,14 +169,10 @@ def summarize(
     if constructor_summary_path.exists():
         constructor_summary = json.loads(constructor_summary_path.read_text(encoding="utf-8"))
 
-    method_objdump = {
-        "0x0049c019": run_objdump(binary, "0x49c019", "0x49c049"),
-        "0x0049c0a6": run_objdump(binary, "0x49c0a6", "0x49c0d3"),
-    }
-
     return {
         "schema_id": "h3maped_49c_projection_static_summary_v1",
         "binary": str(binary),
+        "instruction_source": "ghidra_exports_plus_python_pe_vtable_read",
         "ghidra_dump_dir": str(dump_dir),
         "driver_dump_dir": str(driver_dump_dir),
         "object_projection_dump_dir": str(object_projection_dump_dir),
@@ -225,7 +209,10 @@ def summarize(
                 "0x4a9f1c": "candidate selector calls slot +0x08 as disabled predicate, slot +0x04 as value scorer, and slot +0x00 as selected create callback",
             },
         },
-        "method_objdump": method_objdump,
+        "method_ghidra_exports": {
+            "0x0049c019": str(dump_dir / "target_0049c019_FUN_0049c019.txt"),
+            "0x0049c0a6": str(dump_dir / "target_0049c0a6_FUN_0049c0a6.txt"),
+        },
         "constructor_trace_counts": {
             "event_count": constructor_summary.get("constructor_event_count"),
             "constructor_counts": constructor_summary.get("constructor_counts"),
@@ -245,6 +232,12 @@ def summarize(
                 and constructor_summary.get("invariants", {}).get("initializer_returns_match_constructor_sites")
             ),
             "wrapper_nohit_summary_still_zero": constructor_summary.get("wrapper_execution_event_count") == 0,
+            "no_objdump_used": True,
+        },
+        "metrics": {
+            "used_objdump": False,
+            "native_behavior_changed": False,
+            "overall_goal_complete": False,
         },
         "file_check_results": {
             "static": static_file_checks,

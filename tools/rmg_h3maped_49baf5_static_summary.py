@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -15,38 +14,14 @@ DEFAULT_INNER_SUMMARY = Path(".artifacts/rmg_recovery/direct_generation_4aa3e9_i
 TARGET = "0x0049baf5"
 EXPECTED_BYTES = ["b0", "01", "c3"]
 EXPECTED_TARGET = "0x0049baf5"
+IMAGE_TEXT_VMA = 0x401000
+IMAGE_TEXT_FILE_OFFSET = 0x1000
 
 
-def run_objdump(binary: Path) -> str:
-    completed = subprocess.run(
-        [
-            "objdump",
-            "-Mintel",
-            "-d",
-            "--start-address=0x49baf5",
-            "--stop-address=0x49baf8",
-            str(binary),
-        ],
-        check=True,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    return completed.stdout
-
-
-def parse_instruction_bytes(objdump_text: str) -> list[str]:
-    bytes_out: list[str] = []
-    for line in objdump_text.splitlines():
-        stripped = line.strip()
-        if not stripped.startswith("49baf"):
-            continue
-        parts = stripped.split("\t")
-        if len(parts) < 2:
-            continue
-        byte_tokens = [token.lower() for token in parts[1].split()]
-        bytes_out.extend(byte_tokens)
-    return bytes_out
+def read_target_bytes(binary: Path) -> list[str]:
+    offset = IMAGE_TEXT_FILE_OFFSET + (int(TARGET, 16) - IMAGE_TEXT_VMA)
+    data = binary.read_bytes()[offset : offset + len(EXPECTED_BYTES)]
+    return [f"{byte:02x}" for byte in data]
 
 
 def load_inner_summary(path: Path) -> dict[str, Any]:
@@ -56,8 +31,7 @@ def load_inner_summary(path: Path) -> dict[str, Any]:
 
 
 def summarize(binary: Path, inner_summary_path: Path) -> dict[str, Any]:
-    objdump_text = run_objdump(binary)
-    instruction_bytes = parse_instruction_bytes(objdump_text)
+    instruction_bytes = read_target_bytes(binary)
     inner_summary = load_inner_summary(inner_summary_path)
     slot8_targets = inner_summary.get("combined_slot8_targets", {})
     slot8_count = int(slot8_targets.get(EXPECTED_TARGET, 0))
@@ -65,7 +39,7 @@ def summarize(binary: Path, inner_summary_path: Path) -> dict[str, Any]:
         "schema_id": "h3maped_49baf5_static_summary_v1",
         "binary": str(binary),
         "target": TARGET,
-        "objdump": objdump_text,
+        "instruction_source": "python_pe_byte_read",
         "instruction_bytes": instruction_bytes,
         "static_contract": {
             "returns_al": 1,
@@ -79,6 +53,12 @@ def summarize(binary: Path, inner_summary_path: Path) -> dict[str, Any]:
             "expected_leaf_bytes": instruction_bytes == EXPECTED_BYTES,
             "linked_from_4aa3e9_slot8_trace": slot8_count > 0,
             "no_memory_write_in_static_leaf": instruction_bytes == EXPECTED_BYTES,
+            "no_objdump_used": True,
+        },
+        "metrics": {
+            "used_objdump": False,
+            "native_behavior_changed": False,
+            "overall_goal_complete": False,
         },
     }
 
