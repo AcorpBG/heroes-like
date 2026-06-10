@@ -10820,54 +10820,54 @@
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T09:54:19Z",
-    "updatedAt": "2026-06-10T09:54:19Z",
-    "artifact": ".artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json",
-    "summary": "Wine/Ghidra/Python recovery now verifies the source-record copy helper frontier under the 0x4c025c parser and 0x41f350 source payload loader. tools/rmg_h3maped_source_record_copy_helper_summary.py checks the Ghidra helper, callee, and lifecycle dumps and proves the generic refcounted byte-buffer/string-holder family: 0x4019a4 assigns/copies bounded slices, 0x401aa7 erases ranges after unsharing, 0x401b0e ensures capacity or shrinks/clears, 0x4016fd releases/resets holder state, 0x401caa unshares shared buffers, 0x401a72 copies into a holder, and 0x401bed/0x401c51 allocate rounded capacity and commit growth. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human field names to the 0x4c025c-populated source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover final mapping from parsed source-input fields and populated 0x4c source records into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "timestamp": "2026-06-10T10:34:00Z",
+    "updatedAt": "2026-06-10T10:34:00Z",
+    "artifact": ".artifacts/rmg_recovery/relation_normalization_summary_20260610.json",
+    "summary": "Wine/Ghidra/Python recovery now verifies the relation-normalization static frontier. tools/rmg_h3maped_relation_normalization_summary.py checks the focused Ghidra dumps and proves 0x4a5767 resets generated-cell projection/local fields, scans generator+0x10e4 relation pointers, gates relation-local cells by owner byte2/terrain/object refs/bit27/0x49a1d8, marks fallback cells through 0x49a932, and delegates twice to 0x49a318; 0x49a318 clears source projection state, walks 0x5a2658 direction offsets, applies 0x57c648 descriptor policy gates, and mutates +0x1c/+0x20/+0x28/+0x10/+0x14/+0x18 while maintaining score and coordinate work vectors. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_record_copy_helper_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_record_copy_helper_summary.py --out .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json (passed: source_record_copy_helper_surface_recovered_identity_mapping_pending, markers=72/72)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=158)",
-      "jq empty .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json && jq empty .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json && jq empty ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_relation_normalization_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_relation_normalization_summary.py --out .artifacts/rmg_recovery/relation_normalization_summary_20260610.json (passed: relation_normalization_static_surface_recovered_runtime_replay_pending, markers=50/50)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
+      "jq empty .artifacts/rmg_recovery/relation_normalization_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json ops/progress.json (passed)",
       "rg -n \"subprocess\\\\.|Popen\\\\(|check_output\\\\(|check_call\\\\(|os\\\\.system\\\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "source_record_copy_helper_marker_count": 72,
-      "source_record_copy_helper_present_marker_count": 72,
-      "source_record_copy_helper_function_count": 8,
+      "relation_normalization_marker_count": 50,
+      "relation_normalization_present_marker_count": 50,
+      "relation_normalization_function_count": 2,
       "native_behavior_changed": false,
       "used_objdump": false,
       "overall_goal_complete": false,
-      "recovery_manifest_function_count": 158
+      "recovery_manifest_function_count": 164
     }
   },
   "latestEvidence": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T10:08:00Z",
-    "updatedAt": "2026-06-10T10:08:00Z",
-    "artifact": ".artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json",
-    "summary": "Wine/Ghidra/Python recovery now verifies the source-payload materializer/accessor frontier below the source-handler key lookup chain. tools/rmg_h3maped_source_payload_materializer_summary.py checks the focused Ghidra dumps and proves 0x42a73a reads source object +0x10 and materializes shared payloads through 0x42a75a; 0x42a75a clones/materializes through virtual slot +0x08, allocates a 12-byte holder, initializes it through 0x4370f4, decrements the old holder, stores the replacement at +0x10, and cleans temporary holder state through 0x42bfe6; 0x42a600 releases the same holder family; 0x42a48c confirms the same 20-byte/five-dword slot plus nested holder shape; and 0x42a4d0/0x42bde9 are helper infrastructure, not source identity producers. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human field names to the 0x4c025c-populated source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover the final producer/mapping from parsed source-input fields, populated 0x4c source records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "timestamp": "2026-06-10T10:34:00Z",
+    "updatedAt": "2026-06-10T10:34:00Z",
+    "artifact": ".artifacts/rmg_recovery/relation_normalization_summary_20260610.json",
+    "summary": "Wine/Ghidra/Python recovery now verifies the relation-normalization static frontier. tools/rmg_h3maped_relation_normalization_summary.py checks the focused Ghidra dumps and proves 0x4a5767 resets generated-cell projection/local fields, scans generator+0x10e4 relation pointers, gates relation-local cells by owner byte2/terrain/object refs/bit27/0x49a1d8, marks fallback cells through 0x49a932, and delegates twice to 0x49a318; 0x49a318 clears source projection state, walks 0x5a2658 direction offsets, applies 0x57c648 descriptor policy gates, and mutates +0x1c/+0x20/+0x28/+0x10/+0x14/+0x18 while maintaining score and coordinate work vectors. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_payload_materializer_summary.py tools/rmg_h3maped_source_record_identity_frontier_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_payload_materializer_summary.py --out .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json (passed: source_payload_materializer_recovered_catalog_mapping_pending, markers=40/40)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_relation_normalization_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_relation_normalization_summary.py --out .artifacts/rmg_recovery/relation_normalization_summary_20260610.json (passed: relation_normalization_static_surface_recovered_runtime_replay_pending, markers=50/50)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
-      "jq empty .artifacts/rmg_recovery/source_payload_materializer_summary_20260610.json && jq empty .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json && jq empty ops/progress.json (passed)",
+      "jq empty .artifacts/rmg_recovery/relation_normalization_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json ops/progress.json (passed)",
       "rg -n \"subprocess\\\\.|Popen\\\\(|check_output\\\\(|check_call\\\\(|os\\\\.system\\\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "source_payload_materializer_marker_count": 40,
-      "source_payload_materializer_present_marker_count": 40,
-      "source_payload_materializer_function_count": 8,
+      "relation_normalization_marker_count": 50,
+      "relation_normalization_present_marker_count": 50,
+      "relation_normalization_function_count": 2,
       "native_behavior_changed": false,
       "used_objdump": false,
       "overall_goal_complete": false,
@@ -50849,7 +50849,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human field names to the 0x4c025c-populated source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover the final producer/mapping from parsed source-input fields, populated 0x4c source records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -57844,38 +57844,67 @@
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 150
       }
+    },
+    {
+      "id": "rmg-small-generalization-hardening-10184",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "timestamp": "2026-06-10T10:34:00Z",
+      "updatedAt": "2026-06-10T10:34:00Z",
+      "artifact": ".artifacts/rmg_recovery/relation_normalization_summary_20260610.json",
+      "summary": "Wine/Ghidra/Python recovery now verifies the relation-normalization static frontier. tools/rmg_h3maped_relation_normalization_summary.py checks the focused Ghidra dumps and proves 0x4a5767 resets generated-cell projection/local fields, scans generator+0x10e4 relation pointers, gates relation-local cells by owner byte2/terrain/object refs/bit27/0x49a1d8, marks fallback cells through 0x49a932, and delegates twice to 0x49a318; 0x49a318 clears source projection state, walks 0x5a2658 direction offsets, applies 0x57c648 descriptor policy gates, and mutates +0x1c/+0x20/+0x28/+0x10/+0x14/+0x18 while maintaining score and coordinate work vectors. Native RMG behavior is unchanged; no objdump recovery was used.",
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_relation_normalization_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_relation_normalization_summary.py --out .artifacts/rmg_recovery/relation_normalization_summary_20260610.json (passed: relation_normalization_static_surface_recovered_runtime_replay_pending, markers=50/50)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
+        "jq empty .artifacts/rmg_recovery/relation_normalization_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json ops/progress.json (passed)",
+        "rg -n \"subprocess\\\\.|Popen\\\\(|check_output\\\\(|check_call\\\\(|os\\\\.system\\\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
+        "git diff --check (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      ],
+      "metrics": {
+        "relation_normalization_marker_count": 50,
+        "relation_normalization_present_marker_count": 50,
+        "relation_normalization_function_count": 2,
+        "native_behavior_changed": false,
+        "used_objdump": false,
+        "overall_goal_complete": false,
+        "recovery_manifest_function_count": 164
+      }
     }
   ],
   "validationResults": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "timestamp": "2026-06-10T09:54:19Z",
-    "updatedAt": "2026-06-10T09:54:19Z",
-    "artifact": ".artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json",
-    "summary": "Wine/Ghidra/Python recovery now verifies the source-record copy helper frontier under the 0x4c025c parser and 0x41f350 source payload loader. tools/rmg_h3maped_source_record_copy_helper_summary.py checks the Ghidra helper, callee, and lifecycle dumps and proves the generic refcounted byte-buffer/string-holder family: 0x4019a4 assigns/copies bounded slices, 0x401aa7 erases ranges after unsharing, 0x401b0e ensures capacity or shrinks/clears, 0x4016fd releases/resets holder state, 0x401caa unshares shared buffers, 0x401a72 copies into a holder, and 0x401bed/0x401c51 allocate rounded capacity and commit growth. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human field names to the 0x4c025c-populated source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover final mapping from parsed source-input fields and populated 0x4c source records into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "timestamp": "2026-06-10T10:34:00Z",
+    "updatedAt": "2026-06-10T10:34:00Z",
+    "artifact": ".artifacts/rmg_recovery/relation_normalization_summary_20260610.json",
+    "summary": "Wine/Ghidra/Python recovery now verifies the relation-normalization static frontier. tools/rmg_h3maped_relation_normalization_summary.py checks the focused Ghidra dumps and proves 0x4a5767 resets generated-cell projection/local fields, scans generator+0x10e4 relation pointers, gates relation-local cells by owner byte2/terrain/object refs/bit27/0x49a1d8, marks fallback cells through 0x49a932, and delegates twice to 0x49a318; 0x49a318 clears source projection state, walks 0x5a2658 direction offsets, applies 0x57c648 descriptor policy gates, and mutates +0x1c/+0x20/+0x28/+0x10/+0x14/+0x18 while maintaining score and coordinate work vectors. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_record_copy_helper_summary.py tools/rmg_h3maped_source_record_parser_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_record_copy_helper_summary.py --out .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json (passed: source_record_copy_helper_surface_recovered_identity_mapping_pending, markers=72/72)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=158)",
-      "jq empty .artifacts/rmg_recovery/source_record_copy_helper_summary_20260610.json && jq empty .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json && jq empty ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_relation_normalization_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_relation_normalization_summary.py --out .artifacts/rmg_recovery/relation_normalization_summary_20260610.json (passed: relation_normalization_static_surface_recovered_runtime_replay_pending, markers=50/50)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=164)",
+      "jq empty .artifacts/rmg_recovery/relation_normalization_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json ops/progress.json (passed)",
       "rg -n \"subprocess\\\\.|Popen\\\\(|check_output\\\\(|check_call\\\\(|os\\\\.system\\\\(\" tools | rg \"objdump\" || true (passed: no executable objdump invocation matches)",
       "git diff --check (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "metrics": {
-      "source_record_copy_helper_marker_count": 72,
-      "source_record_copy_helper_present_marker_count": 72,
-      "source_record_copy_helper_function_count": 8,
+      "relation_normalization_marker_count": 50,
+      "relation_normalization_present_marker_count": 50,
+      "relation_normalization_function_count": 2,
       "native_behavior_changed": false,
       "used_objdump": false,
       "overall_goal_complete": false,
-      "recovery_manifest_function_count": 158
+      "recovery_manifest_function_count": 164
     }
   },
-  "currentNotes": "Wine/Ghidra/Python recovery now verifies the source-payload materializer/accessor frontier below the source-handler key lookup chain. tools/rmg_h3maped_source_payload_materializer_summary.py checks the focused Ghidra dumps and proves 0x42a73a reads source object +0x10 and materializes shared payloads through 0x42a75a; 0x42a75a clones/materializes through virtual slot +0x08, allocates a 12-byte holder, initializes it through 0x4370f4, decrements the old holder, stores the replacement at +0x10, and cleans temporary holder state through 0x42bfe6; 0x42a600 releases the same holder family; 0x42a48c confirms the same 20-byte/five-dword slot plus nested holder shape; and 0x42a4d0/0x42bde9 are helper infrastructure, not source identity producers. Native RMG behavior is unchanged; no objdump recovery was used.",
-  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human field names to the 0x4c025c-populated source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover the final producer/mapping from parsed source-input fields, populated 0x4c source records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "currentNotes": "Wine/Ghidra/Python recovery now verifies the relation-normalization static frontier. tools/rmg_h3maped_relation_normalization_summary.py checks the focused Ghidra dumps and proves 0x4a5767 resets generated-cell projection/local fields, scans generator+0x10e4 relation pointers, gates relation-local cells by owner byte2/terrain/object refs/bit27/0x49a1d8, marks fallback cells through 0x49a932, and delegates twice to 0x49a318; 0x49a318 clears source projection state, walks 0x5a2658 direction offsets, applies 0x57c648 descriptor policy gates, and mutates +0x1c/+0x20/+0x28/+0x10/+0x14/+0x18 while maintaining score and coordinate work vectors. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: runtime ordered replay of 0x4a5767/0x49a318; human semantic names for relation-field roles, propagated scores, owner-byte roles, and descriptor policy bytes; final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; human labels for parser-output/nested-record fields, tag payloads, source-record offsets, and source variant category/provider slots; selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; natural 0x4a696b source/relation-match sample or static/data proof; natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and cleanup/uncommit state only if future evidence reaches those paths. The connection record byte +0x09 is recovered as the template connection Border Guard flag, so it is not the current mystery. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "result": "Source-record parser frontier recorded without native behavior changes."
 }

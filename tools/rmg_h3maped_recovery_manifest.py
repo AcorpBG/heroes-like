@@ -513,6 +513,19 @@ FRONTIER_SUMMARIES: list[dict[str, str]] = [
         ),
     },
     {
+        "id": "relation_normalization_static_frontier",
+        "artifact": ".artifacts/rmg_recovery/relation_normalization_summary_20260610.json",
+        "status": "relation_normalization_static_surface_recovered_runtime_replay_pending",
+        "meaning": (
+            "Ghidra/Python checks prove the 0x4a5767 relation-local generated-cell reset, "
+            "relation-bounds scan, 0x49a932 fallback mark, and two 0x49a318 propagation "
+            "delegations, plus the 0x49a318 owner/projection propagation helper surface. "
+            "Runtime ordered replay and human semantic names for propagated scores, owner-byte "
+            "roles, descriptor policy bytes, and relation-field roles remain pending before "
+            "native behavior changes."
+        ),
+    },
+    {
         "id": "source_record_parser_frontier",
         "artifact": ".artifacts/rmg_recovery/source_record_parser_summary_20260610.json",
         "status": "source_record_parser_surface_recovered_catalog_identity_pending",
@@ -3262,7 +3275,7 @@ FUNCTIONS: list[dict[str, Any]] = [
     {
         "address": "0x4a5767",
         "name": "cell_occupancy_reset_and_object_anchor_normalization",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "relation_normalization_static_surface_recovered_runtime_replay_pending",
         "calls": ["0x4a59e2", "0x49a1d8", "0x49a932", "0x49a318", "0x4a5a23"],
         "reads": [
             "generator pointer in ecx",
@@ -3284,12 +3297,12 @@ FUNCTIONS: list[dict[str, Any]] = [
             "calls 0x49a318 with generator+0x0c grid wrapper, a 12-byte local coordinate triple, and a boolean derived from relation+0x0c == 8",
             "runs a second relation-bounds scan and calls 0x4a5a23(generator, coordinate triple, false) for valid occupied cells, followed by another 0x49a318 call",
         ],
-        "ghidra_dump": "Called by 0x4a8c15, 0x4a746b, and 0x4ac552. Instruction recovery shows the full-grid reset/normalization pass, the relation-vector scan over generator+0x10e4..+0x10e8, generated-cell owner/bit27/terrain/object-ref gates, and the helper calls into 0x49a932/0x49a318/0x4a5a23. Exact relation-record field semantics and runtime ordered replay remain pending.",
+        "ghidra_dump": "Called by 0x4a8c15, 0x4a746b, and 0x4ac552. Instruction recovery plus verifier .artifacts/rmg_recovery/relation_normalization_summary_20260610.json show the full-grid reset/normalization pass, the relation-vector scan over generator+0x10e4..+0x10e8, generated-cell owner/bit27/terrain/object-ref gates, and the helper calls into 0x49a932/0x49a318/0x4a5a23. Exact relation-record field semantics and runtime ordered replay remain pending.",
     },
     {
         "address": "0x49a318",
         "name": "object_anchor_owner_projection_helper",
-        "status": "recovered_static_contract_replay_pending",
+        "status": "relation_normalization_static_surface_recovered_runtime_replay_pending",
         "calls": ["0x4ae20e", "0x42d8d8", "0x4ae23e", "0x4cce95", "0x4ccecb", "0x430b35"],
         "reads": [
             "generated-cell grid wrapper pointer in ecx with buffer/width/height at +0x08/+0x0c/+0x10",
@@ -3317,7 +3330,7 @@ FUNCTIONS: list[dict[str, Any]] = [
             "inserts propagated coordinates into the work vector through 0x430b35",
             "continues until the local coordinate work vector is empty",
         ],
-        "ghidra_dump": "Called by 0x4a5767 and 0x4a89da with generator+0x0c grid wrapper, a coordinate triple, and a boolean policy flag. Static recovery shows a work-vector projection/priority propagation helper: it resets the source cell projection, walks direction neighbors, gates on owner/bit25/bit22/terrain/descriptor-table policy, updates GeneratedCell+0x1c high or low word depending on owner relationship, writes projection triples, packs direction bits into +0x28, writes owner byte3 in +0x20, and maintains sorted score plus coordinate work vectors until exhausted. Exact semantic names for the propagated scores, owner-byte roles, descriptor-table policy bytes, and runtime ordered replay remain pending.",
+        "ghidra_dump": "Called by 0x4a5767 and 0x4a89da with generator+0x0c grid wrapper, a coordinate triple, and a boolean policy flag. Static recovery plus verifier .artifacts/rmg_recovery/relation_normalization_summary_20260610.json show a work-vector projection/priority propagation helper: it resets the source cell projection, walks direction neighbors, gates on owner/bit25/bit22/terrain/descriptor-table policy, updates GeneratedCell+0x1c high or low word depending on owner relationship, writes projection triples, packs direction bits into +0x28, writes owner byte3 in +0x20, and maintains sorted score plus coordinate work vectors until exhausted. Exact semantic names for the propagated scores, owner-byte roles, descriptor-table policy bytes, and runtime ordered replay remain pending.",
     },
     {
         "address": "0x4a5a23",
