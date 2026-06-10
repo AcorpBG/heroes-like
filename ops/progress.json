@@ -9923,16 +9923,46 @@
       "summary": "Wine/Ghidra/Python recovery now resolves the current endpoint/candidate blockers for the supported one-level land target mode. tools/rmg_h3maped_endpoint_blocker_resolution_summary.py consolidates existing static and Wine evidence and proves 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are target-mode exclusions in the recovered one-level land path: the +0xf5c-gated scorer has 493 rejects and zero match/constructor hits; 0x4a696b has 150 entries, six complete grid scans over 5,752 cells, and zero owner/relation pair matches or direct mutation hits; and 0x4a5e73 has 50 entries with zero success-path events plus zero live 0x4a606b hits. Native RMG behavior is unchanged; no objdump recovery was used.",
       "timestamp": "2026-06-10T13:27:49Z",
       "updatedAt": "2026-06-10T13:27:49Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_key_registry_identity_summary.py (passed: source_key_registry_entry_0x1c_domain_label_recovered, joined=87/87, row_mismatches=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=170)",
+        "jq empty ops/progress.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json (passed)",
+        "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      ],
+      "id": "rmg-small-generalization-hardening-10184",
+      "metrics": {
+        "native_behavior_changed": false,
+        "overall_goal_complete": false,
+        "recovery_manifest_function_count": 170,
+        "source_key_registry_row_mode_match_count": 31,
+        "source_key_registry_row_mode_mismatch_count": 12,
+        "source_key_registry_row_mode_sample_count": 43,
+        "source_key_registry_target_mixed_joined_descriptor_count": 87,
+        "source_key_registry_target_mixed_missing_join_count": 0,
+        "source_key_registry_target_mixed_selected_descriptor_count": 87,
+        "used_objdump": false
+      },
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
+      "timestamp": "2026-06-10T13:36:26Z",
+      "updatedAt": "2026-06-10T13:36:26Z"
     }
   ],
-  "currentNotes": "Wine/Ghidra/Python recovery now resolves the current endpoint/candidate blockers for the supported one-level land target mode. tools/rmg_h3maped_endpoint_blocker_resolution_summary.py consolidates existing static and Wine evidence and proves 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are target-mode exclusions in the recovered one-level land path: the +0xf5c-gated scorer has 493 rejects and zero match/constructor hits; 0x4a696b has 150 entries, six complete grid scans over 5,752 cells, and zero owner/relation pair matches or direct mutation hits; and 0x4a5e73 has 50 entries with zero success-path events plus zero live 0x4a606b hits. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "currentNotes": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Wine/Ghidra/Python recovery now resolves the current endpoint/candidate blockers for the supported one-level land target mode. tools/rmg_h3maped_endpoint_blocker_resolution_summary.py consolidates existing static and Wine evidence and proves 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are target-mode exclusions in the recovered one-level land path: the +0xf5c-gated scorer has 493 rejects and zero match/constructor hits; 0x4a696b has 150 entries, six complete grid scans over 5,752 cells, and zero owner/relation pair matches or direct mutation hits; and 0x4a5e73 has 50 entries with zero success-path events plus zero live 0x4a606b hits. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "currentSliceNotes": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-10T13:27:49Z",
+  "currentSliceUpdatedAt": "2026-06-10T13:36:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -11014,72 +11044,69 @@
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
     }
   },
-  "guardrailNote": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "guardrailNote": "Focus only on percentage-moving native RMG blockers: source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows, descriptor +0x14/+0x18 policy/container field names, and the 0x490a11 auxiliary stream-record consumer/domain. Same-run selected descriptor linkage, registry entry +0x1c domain label, and current one-level land endpoint exclusions are recovered. No native behavior changes from final-map deltas.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json",
     "commands": [
-      ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_descriptor_base_value_helper_dump_20260610 0x491eed,0x49228d,0x4923a1,0x4923e2,0x492564,0x4925c7 -readOnly (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_descriptor_static_loader_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py (passed; markers 21/21)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions 170)",
-      "jq empty ops/progress.json .artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_key_registry_identity_summary.py (passed: source_key_registry_entry_0x1c_domain_label_recovered, joined=87/87, row_mismatches=12)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=170)",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "descriptor_base_value_helper_ghidra_file_count": 6,
-      "descriptor_base_value_helper_marker_count": 21,
-      "descriptor_base_value_helper_present_marker_count": 21,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
       "recovery_manifest_function_count": 170,
+      "source_key_registry_row_mode_match_count": 31,
+      "source_key_registry_row_mode_mismatch_count": 12,
+      "source_key_registry_row_mode_sample_count": 43,
+      "source_key_registry_target_mixed_joined_descriptor_count": 87,
+      "source_key_registry_target_mixed_missing_join_count": 0,
+      "source_key_registry_target_mixed_selected_descriptor_count": 87,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The descriptor +0x00 assignment path below 0x4903e8 is now recovered as source-key registry entry +0x1c, so the old generic descriptor +0x00 meaning blocker is narrowed: it is a registry entry field that can coincide with row ids but is not a universal objects.txt row pointer. Current named blockers are: capture same-run selected descriptor pointer linkage from mixed type 45/53/54/79 samples back to exact 0x4903e8 build events; recover the human domain label/source-catalog crosswalk for registry entry +0x1c; assign exact domain names to the compact policy/container fields mapped to descriptor +0x14/+0x18; recover the consumer and human domain label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now verifies the descriptor +0x00 base-value helper below 0x4903e8. tools/rmg_h3maped_descriptor_base_value_helper_summary.py checks the focused Ghidra dump and proves 0x4903e8 stores the return from 0x491eed at descriptor +0x00; 0x491eed resolves the source/name blob through 0x4923a1 and 0x49228d, then returns source-key registry entry +0x1c. 0x4923a1/0x492564 perform lower-bound style lookup using key comparison helper 0x4041d6 over entry +0x0c payloads, and 0x49228d can call 0x4923e2 to allocate a 0x24-byte missing source-key entry, store the key payload, initialize sentinel links, and increment the registry count. Mixed type 45/53/54/79 descriptor +0x00 values are now mechanically recovered as source-key registry entry +0x1c values, not universal objects.txt row ids. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "timestamp": "2026-06-10T12:41:00Z",
-    "updatedAt": "2026-06-10T12:41:00Z"
+    "summary": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "timestamp": "2026-06-10T13:36:26Z",
+    "updatedAt": "2026-06-10T13:36:26Z"
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_endpoint_blocker_resolution_summary.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py (passed: supported_one_level_land_endpoint_blockers_resolved_as_target_mode_exclusions)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_key_registry_identity_summary.py (passed: source_key_registry_entry_0x1c_domain_label_recovered, joined=87/87, row_mismatches=12)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=170)",
-      "jq empty ops/progress.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "endpoint_resolution_4a696b_complete_grid_scan_count": 6,
-      "endpoint_resolution_4a696b_entries": 150,
-      "endpoint_resolution_4a696b_scanned_cell_total": 5752,
-      "endpoint_resolution_4a696b_source_relation_match_hits": 0,
-      "endpoint_resolution_f5c_constructor_count": 0,
-      "endpoint_resolution_f5c_match_branch_count": 0,
-      "endpoint_resolution_f5c_reject_branch_count": 493,
-      "endpoint_resolution_projection_or_cleanup_event_hits_total": 0,
-      "endpoint_resolution_runtime_4a606b_event_count": 0,
-      "endpoint_resolution_runtime_5e73_entry_count": 50,
-      "endpoint_resolution_runtime_5e73_success_path_event_count": 0,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
       "recovery_manifest_function_count": 170,
+      "source_key_registry_row_mode_match_count": 31,
+      "source_key_registry_row_mode_mismatch_count": 12,
+      "source_key_registry_row_mode_sample_count": 43,
+      "source_key_registry_target_mixed_joined_descriptor_count": 87,
+      "source_key_registry_target_mixed_missing_join_count": 0,
+      "source_key_registry_target_mixed_selected_descriptor_count": 87,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now resolves the current endpoint/candidate blockers for the supported one-level land target mode. tools/rmg_h3maped_endpoint_blocker_resolution_summary.py consolidates existing static and Wine evidence and proves 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are target-mode exclusions in the recovered one-level land path: the +0xf5c-gated scorer has 493 rejects and zero match/constructor hits; 0x4a696b has 150 entries, six complete grid scans over 5,752 cells, and zero owner/relation pair matches or direct mutation hits; and 0x4a5e73 has 50 entries with zero success-path events plus zero live 0x4a606b hits. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "timestamp": "2026-06-10T13:27:49Z",
-    "updatedAt": "2026-06-10T13:27:49Z"
+    "summary": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "timestamp": "2026-06-10T13:36:26Z",
+    "updatedAt": "2026-06-10T13:36:26Z"
   },
-  "nextActionGuardrailNote": "Focus only on percentage-moving native RMG blockers: selected mixed descriptor/source evidence, nested source-handler payload variant mapping, 0x4a696b source/relation-match proof, successful 0x4a5e73 -> 0x4a606b endpoint-stamping proof/exclusion, and global source exclusion only where needed. No native behavior changes from final-map deltas.",
-  "notes": "Wine/Ghidra/Python recovery now verifies the source-record copy helper frontier under the 0x4c025c parser and 0x41f350 source payload loader. tools/rmg_h3maped_source_record_copy_helper_summary.py checks the Ghidra helper, callee, and lifecycle dumps and proves the generic refcounted byte-buffer/string-holder family: 0x4019a4 assigns/copies bounded slices, 0x401aa7 erases ranges after unsharing, 0x401b0e ensures capacity or shrinks/clears, 0x4016fd releases/resets holder state, 0x401caa unshares shared buffers, 0x401a72 copies into a holder, and 0x401bed/0x401c51 allocate rounded capacity and commit growth. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "nextActionGuardrailNote": "Focus only on percentage-moving native RMG blockers: source catalog/template producer mapping into exact objects.txt/objtmplt.txt type/subtype/DEF rows, descriptor +0x14/+0x18 policy/container field names, and the 0x490a11 auxiliary stream-record consumer/domain. Same-run selected descriptor linkage, registry entry +0x1c domain label, and current one-level land endpoint exclusions are recovered. No native behavior changes from final-map deltas.",
+  "notes": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -51057,8 +51084,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingGap": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -51545,43 +51572,38 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Wine/Ghidra/Python recovery now verifies the exact field-level descriptor input mapping for 0x4907c9 and 0x490a11 around 0x4903e8. tools/rmg_h3maped_descriptor_input_mapping_summary.py checks the Ghidra helper/owner dumps and proves 0x4907c9 is the objects.txt parsed-row path (source/name/blob, two 48-slot ASCII 0/1 masks, two nine-slot ASCII 0/1 policy/container fields, and four row scalars) while 0x490a11 is the binary/source-stream path (source/name/blob, two six-byte 48-bit masks, two policy/container fields, two dwords, two bytes, and an auxiliary 16-byte stream record). The common descriptor outputs are mapped to +0x00, +0x04/+0x08, +0x0c/+0x10/+0x29/+0x2c/+0x30, +0x14/+0x18, +0x1c, +0x20, +0x24, and +0x28. The static-loader checkpoint was also corrected to include the recovered 0x4903e8 write to +0x48. Native RMG behavior is unchanged; no objdump recovery was used.",
+  "summary": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
   "taskId": "10184",
-  "updatedAt": "2026-06-10T13:27:49Z",
+  "updatedAt": "2026-06-10T13:36:26Z",
   "validation": {
-    "artifact": ".artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json",
+    "artifact": ".artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json",
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_endpoint_blocker_resolution_summary.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_endpoint_blocker_resolution_summary.py (passed: supported_one_level_land_endpoint_blockers_resolved_as_target_mode_exclusions)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_key_registry_identity_summary.py (passed: source_key_registry_entry_0x1c_domain_label_recovered, joined=87/87, row_mismatches=12)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=170)",
-      "jq empty ops/progress.json .artifacts/rmg_recovery/endpoint_blocker_resolution_summary_20260610.json .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed)",
+      "jq empty ops/progress.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "endpoint_resolution_4a696b_complete_grid_scan_count": 6,
-      "endpoint_resolution_4a696b_entries": 150,
-      "endpoint_resolution_4a696b_scanned_cell_total": 5752,
-      "endpoint_resolution_4a696b_source_relation_match_hits": 0,
-      "endpoint_resolution_f5c_constructor_count": 0,
-      "endpoint_resolution_f5c_match_branch_count": 0,
-      "endpoint_resolution_f5c_reject_branch_count": 493,
-      "endpoint_resolution_projection_or_cleanup_event_hits_total": 0,
-      "endpoint_resolution_runtime_4a606b_event_count": 0,
-      "endpoint_resolution_runtime_5e73_entry_count": 50,
-      "endpoint_resolution_runtime_5e73_success_path_event_count": 0,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
       "recovery_manifest_function_count": 170,
+      "source_key_registry_row_mode_match_count": 31,
+      "source_key_registry_row_mode_mismatch_count": 12,
+      "source_key_registry_row_mode_sample_count": 43,
+      "source_key_registry_target_mixed_joined_descriptor_count": 87,
+      "source_key_registry_target_mixed_missing_join_count": 0,
+      "source_key_registry_target_mixed_selected_descriptor_count": 87,
       "used_objdump": false
     },
-    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "Wine/Ghidra/Python recovery now resolves the current endpoint/candidate blockers for the supported one-level land target mode. tools/rmg_h3maped_endpoint_blocker_resolution_summary.py consolidates existing static and Wine evidence and proves 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are target-mode exclusions in the recovered one-level land path: the +0xf5c-gated scorer has 493 rejects and zero match/constructor hits; 0x4a696b has 150 entries, six complete grid scans over 5,752 cells, and zero owner/relation pair matches or direct mutation hits; and 0x4a5e73 has 50 entries with zero success-path events plus zero live 0x4a606b hits. Native RMG behavior is unchanged; no objdump recovery was used.",
-    "timestamp": "2026-06-10T13:27:49Z",
-    "updatedAt": "2026-06-10T13:27:49Z"
+    "summary": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
+    "timestamp": "2026-06-10T13:36:26Z",
+    "updatedAt": "2026-06-10T13:36:26Z"
   },
   "validationHistory": [
     {
@@ -58148,6 +58170,36 @@
       "summary": "Wine/Ghidra/Python recovery now verifies the exact field-level descriptor input mapping for 0x4907c9 and 0x490a11 around 0x4903e8. tools/rmg_h3maped_descriptor_input_mapping_summary.py checks the Ghidra helper/owner dumps and proves 0x4907c9 is the objects.txt parsed-row path (source/name/blob, two 48-slot ASCII 0/1 masks, two nine-slot ASCII 0/1 policy/container fields, and four row scalars) while 0x490a11 is the binary/source-stream path (source/name/blob, two six-byte 48-bit masks, two policy/container fields, two dwords, two bytes, and an auxiliary 16-byte stream record). The common descriptor outputs are mapped to +0x00, +0x04/+0x08, +0x0c/+0x10/+0x29/+0x2c/+0x30, +0x14/+0x18, +0x1c, +0x20, +0x24, and +0x28. The static-loader checkpoint was also corrected to include the recovered 0x4903e8 write to +0x48. Native RMG behavior is unchanged; no objdump recovery was used.",
       "timestamp": "2026-06-10T11:53:20Z",
       "updatedAt": "2026-06-10T11:53:20Z"
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_key_registry_identity_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_key_registry_identity_summary.py (passed: source_key_registry_entry_0x1c_domain_label_recovered, joined=87/87, row_mismatches=12)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions=170)",
+        "jq empty ops/progress.json .artifacts/rmg_recovery/source_key_registry_identity_summary_20260610.json (passed)",
+        "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      ],
+      "id": "rmg-small-generalization-hardening-10184",
+      "metrics": {
+        "native_behavior_changed": false,
+        "overall_goal_complete": false,
+        "recovery_manifest_function_count": 170,
+        "source_key_registry_row_mode_match_count": 31,
+        "source_key_registry_row_mode_mismatch_count": 12,
+        "source_key_registry_row_mode_sample_count": 43,
+        "source_key_registry_target_mixed_joined_descriptor_count": 87,
+        "source_key_registry_target_mixed_missing_join_count": 0,
+        "source_key_registry_target_mixed_selected_descriptor_count": 87,
+        "used_objdump": false
+      },
+      "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "Wine/Ghidra/Python recovery now assigns the source-backed human/domain label for the 0x491eed source-key registry field at entry +0x1c. tools/rmg_h3maped_source_key_registry_identity_summary.py consumes the descriptor base-value helper, same-run descriptor build join, descriptor row-mode, source-record frontier, and object-table loader summaries. It proves descriptor +0x00 is the descriptor source selector key copied from registry entry +0x1c, with 87/87 mixed type 45/53/54/79 selected descriptors joined back to exact 0x4903e8 build events and 12 row-mode mismatches proving the value is not a universal objects.txt/objtmplt.txt row id or final type/subtype/DEF identity. Native RMG behavior is unchanged; no objdump recovery was used.",
+      "timestamp": "2026-06-10T13:36:26Z",
+      "updatedAt": "2026-06-10T13:36:26Z"
     }
   ],
   "validationResults": {
