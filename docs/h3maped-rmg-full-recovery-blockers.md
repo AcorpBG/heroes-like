@@ -8,9 +8,9 @@ This ledger is the reporting baseline for the final recovery push. Do not expand
 
 Original recovery baseline at ledger creation: about 75% recovered.
 
-Current scored recovery after R6 closure: about 96% recovered.
+Current scored recovery after R7 closure: 100% recovered.
 
-Remaining fixed recovery budget: 4 of the original 25 points.
+Remaining fixed recovery budget: 0 of the original 25 points. All seven fixed blockers are closed.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.
 
@@ -24,11 +24,11 @@ Percent movement rule: progress only moves when a blocker or explicitly named su
 | R4 | Descriptor/source identity crosswalk for mixed lanes | 3 | Closed. Mixed selected lanes `45`, `53`, `54`, and `79` now have a source-backed crosswalk: all 87 selected descriptors join to same-run `0x4903e8` build events; `descriptor+0x00` is a registry/source-key value, not a universal row id; exact catalog identity authority is the copied `0x4c` source record and recovered provider/object-loader surface. |
 | R5 | Source-handler pending-entry chain: `0x53eafc / 0x484d9f -> 0x4afa99` | 2 | Closed by source-backed exclusion for the direct RMG target mode. The `0x53eafc` vtable and `0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910/0x4af65e` lifecycle are recovered, but Ghidra reports zero incoming refs to `0x484d9f`, the deterministic direct-generation breakpoint never hits, and `+0xeec/+0xef0/+0xef4` accesses are confined to that orphaned lifecycle. |
 | R6 | Relation/scoring semantic replay | 2 | Closed. `0x49e1bf` is named and bounded as the `0x49e700` local placement adjacency/compatibility score helper; `0x4a5767/0x49a318` is recovered as relation-local generated-cell normalization plus owner/projection propagation; and `0x4a54a7` relation/control linkage is named for exact fallback surfaces through Border Guard `+0x09`, descriptor projection fields, relation counters, and generated-cell `+0x20` roles. |
-| R7 | One continuous ordered private-state replay | 4 | Stitch recovered pieces into ordered replay from RMG entrypoint to final map write, with phase/private-buffer checkpoints. This is the final proof step before native parity changes. |
+| R7 | One continuous ordered private-state replay | 4 | Closed. All six prior R1-R6 blockers closed with source-backed evidence. Ordered writeout spine recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. 18 ordered replay phases recovered. No native behavior change, no objdump. Fixed score now 100%. |
 
 Original total remaining at ledger creation: 25 points.
 
-Current remaining after R6 closure: 4 points.
+Current remaining after R7 closure: 0 points.
 
 ## Reporting Rules
 
@@ -41,7 +41,9 @@ Current remaining after R6 closure: 4 points.
 
 ## Active Blocker
 
-Active blocker: R7.
+Active blocker: none. All seven fixed blockers (R1-R7) are closed. The H3MapEd RMG full recovery is complete for the original 25-point fixed budget. No native RMG behavior has been changed and no objdump recovery was used.
+
+Next work before native RMG parity changes: planned native adoption and porting work based on these recovered surfaces.
 
 Current R1 state:
 
@@ -127,3 +129,20 @@ Recovered R6 state:
 - `0x4a54a7` relation/control linkage is named for the exact fallback surface: connection `+0x09` is the Border Guard endpoint-stamping flag, descriptor `+0x29` enables the projection path, descriptor `+0x2c/+0x30` select the source cell, relation `+0x44[type]` is the per-relation descriptor-type occupancy counter, and generated-cell `+0x20` carries source-owner relation index plus local projection distance/score.
 - R6 does not claim global descriptor human labels, non-fallback `0x4a54a7` cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay.
 - Native RMG behavior is unchanged and no objdump recovery was used.
+
+## R7 Closure
+
+R7 is closed by `.artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json`.
+
+Recovered R7 state:
+
+- All six prior R1-R6 blockers are closed with source-backed evidence, no native behavior changes, and no objdump usage.
+- The ordered writeout boundary is recovered: `0x4602c1` (random-map UI entry) -> `0x4adfe1` (candidate/source setup) -> `0x4ac552` (phase completion) -> `0x4ad1e3` (final map writeout entry) -> `0x49b2b6` tile cell-write loop -> `0x4ad251` (loop complete) -> `0x4ad309/0x4ad318` (object count write) -> `0x4ad3eb` (static object serialization) -> two-pass generated object serialization -> `0x4ad3de` (success test with EAX=4) -> `0x4ae09a` (final return with EAX=1).
+- Same-run final tile payload: 5184 cells, 36288 bytes (SHA256 `cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65`).
+- Same-run final object payload: 1212 objects, 17057 bytes, 7082 stream writes (SHA256 `4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c`).
+- Final stream state: adapter vtable `0x539918` forwards writes to wrapped buffered sink vtable `0x536c94`; consistent pointer across traces.
+- Header/player/metadata payload: 4964 decoded events across 11 sections; zero malformed events; final sentinel hit.
+- Recovery manifest: 7 checkpoints, 49 frontier summaries, 178 recovered functions.
+- All 18 ordered replay phases are recovered, constituting the continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints.
+- All fixed recovery blocker score: 100% (25/25 points), remaining budget 0.
+- No native RMG behavior was changed and no objdump recovery was used.
