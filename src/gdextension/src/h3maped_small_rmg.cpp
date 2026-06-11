@@ -11159,6 +11159,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_generated_cell_score_depletion_mutated_cell_count = 0;
 	int32_t reward_guard_placement_attempt_count = 0;
 	int32_t reward_guard_coordinate_record_count = 0;
+	int32_t reward_guard_attach_source_invocation_count_0x49cf34 = 0;
+	int32_t reward_guard_attach_source_skipped_count_0x49cf34 = 0;
+	int32_t reward_guard_attach_source_failure_count_0x49cf34 = 0;
+	int32_t reward_guard_attach_rng_call_count_0x49cf34 = 0;
 	Array reward_object_lookup_records;
 	Array reward_coordinate_records;
 	Array reward_guard_records;
@@ -12536,8 +12540,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								const int32_t diagnostic_rng_value = diagnostic_guard_stamp_rng.next();
 								const int32_t selected_guard_candidate_index = diagnostic_rng_value % int32_t(guard_descriptor_0x49d2e0_accepted_candidates.size());
 								const H3MaskPoint selected_guard_candidate = guard_descriptor_0x49d2e0_accepted_candidates[size_t(selected_guard_candidate_index)];
+								selected_guard_stamp_shape["selected_guard_candidate_rng_state_before_uint32"] = diagnostic_rng_state_before;
+								selected_guard_stamp_shape["selected_guard_candidate_rng_value"] = diagnostic_rng_value;
+								selected_guard_stamp_shape["selected_guard_candidate_rng_state_after_uint32"] = int32_t(diagnostic_guard_stamp_rng.state);
+								selected_guard_stamp_shape["source_rng_state_source"] = "diagnostic copy of reward_preview_rng.state; active adoption is blocked until exact 0x4aa9b7 wrapper candidate state is recovered";
+								selected_guard_stamp_shape["source_rng_behavioral"] = false;
 								selected_guard_stamp_shape["diagnostic_rng_state_before_uint32"] = diagnostic_rng_state_before;
-								selected_guard_stamp_shape["diagnostic_rng_state_source"] = "reward_preview_rng.state at this object-lookup checkpoint; final behavioral adoption must verify the exact 0x49cf34 call-time RNG state after 0x4aa9b7 coordinate selection";
+								selected_guard_stamp_shape["diagnostic_rng_state_source"] = "reward_preview_rng.state at this object-lookup checkpoint; final behavioral adoption must verify exact 0x49cf34 call-time state with 0x4aa9b7 wrapper candidate parity";
 								selected_guard_stamp_shape["diagnostic_rng_value"] = diagnostic_rng_value;
 								selected_guard_stamp_shape["diagnostic_rng_state_after_uint32"] = int32_t(diagnostic_guard_stamp_rng.state);
 								selected_guard_stamp_shape["selected_candidate_index"] = selected_guard_candidate_index;
@@ -12632,7 +12641,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								selected_guard_stamp_shape["post_stamp_ring_source"] = "0x49cf34 calls 0x49a932(true) on valid neighbor cells around the selected guard member before 0x4ae2d0/0x49d6e0/0x49d7c3";
 								source_wrapper_word_after_guard_attach_0x49cf34 = diagnostic_stamp_word_0x28;
 								source_wrapper_word_after_guard_attach_available_0x49cf34 = true;
-								selected_guard_stamp_shape["exactness_blocker"] = "0x49d69d selected-member stamp and post-stamp ring are diagnostic only. Behavioral adoption still requires verifying exact call-time RNG state and recovering 0x4aa3e9 projection into the final object vector.";
+								selected_guard_stamp_shape["exactness_blocker"] = "0x49d69d selected-member stamp and post-stamp ring are diagnostic for positive-guard wrappers. Behavioral active-RNG adoption is blocked until exact 0x4aa9b7 wrapper candidate state is recovered.";
 							} else {
 								selected_guard_stamp_shape["exactness_blocker"] = "No candidate survives the diagnostic 0x49d2e0 guard-object validation boundary, so 0x49d69d would not stamp a selected guard member in this model";
 							}
@@ -12642,6 +12651,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								probe["source_candidate_filter_helper_address"] = "0x49d2e0";
 								probe["source_stamp_guard_helper_address"] = "0x49d69d";
 							probe["behavioral"] = false;
+							probe["source_invoked"] = true;
 							probe["wrapper_member_count"] = int32_t(source_wrapper_members_0x49d471.size());
 							probe["source_prefill_candidate_vector_probe_0x49d7c3"] = source_prefill_candidate_vector_probe_0x49d7c3;
 							probe["member_direction_probe_count"] = direction_probe_count;
@@ -12661,11 +12671,38 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							probe["source_reverse_candidate_filter_sample_records_0x49cf34"] = reverse_filter_records;
 							probe["source_selected_guard_stamp_shape_0x49d69d"] = selected_guard_stamp_shape;
 							probe["current_native_guard_surface"] = "native_global_single_tile_surrogate_after_reward_coordinate_acceptance";
-							probe["exactness_blocker"] = "0x49cf34 candidate-vector walk, reverse bit26 filter, and diagnostic guard descriptor 0x49d2e0 acceptance are recovered, but 0x49d69d selected guard member stamping and 0x4aa3e9 final writer projection must be recovered before this can drive behavior";
+							probe["exactness_blocker"] = "0x49cf34 candidate-vector walk, reverse bit26 filter, and guard descriptor 0x49d2e0 acceptance are recovered for positive-guard wrappers, but active 0x49d154 RNG adoption is blocked until exact 0x4aa9b7 wrapper candidate state is recovered";
 							return probe;
 							};
-						const Dictionary source_guard_attach_probe_0x49cf34 = source_reward_guard_attach_probe_49cf34();
-						object_lookup["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
+							const int32_t reward_guard_effective_strength_mode = h3maped_effective_monster_strength_mode_4a960a(normalized_config, runtime);
+							const int32_t reward_guard_base_value = composite_total_value;
+							const int32_t reward_guard_value = h3maped_strength_scaled_value_4a65a5(reward_guard_base_value, reward_guard_effective_strength_mode);
+							const bool composite_contains_only_dynamic_monster = composite_object_vector.size() == 1 && object_selection.candidate.dynamic_monster;
+							const bool reward_requires_composite_guard = !composite_contains_only_dynamic_monster && reward_guard_value > 0;
+							Dictionary source_guard_attach_probe_0x49cf34;
+							bool source_guard_attach_success_0x49cf34 = !reward_requires_composite_guard;
+							if (reward_requires_composite_guard) {
+								reward_guard_attach_source_invocation_count_0x49cf34 += 1;
+								source_guard_attach_probe_0x49cf34 = source_reward_guard_attach_probe_49cf34();
+								const int32_t source_guard_attach_candidate_count_0x49cf34 = int32_t(source_guard_attach_probe_0x49cf34.get("source_guard_descriptor_0x49d2e0_accepted_count", 0));
+								source_guard_attach_success_0x49cf34 = source_guard_attach_candidate_count_0x49cf34 > 0;
+								if (!source_guard_attach_success_0x49cf34) {
+									reward_guard_attach_source_failure_count_0x49cf34 += 1;
+								}
+							} else {
+								reward_guard_attach_source_skipped_count_0x49cf34 += 1;
+								source_guard_attach_probe_0x49cf34["source_helper_address"] = "0x49cf34";
+								source_guard_attach_probe_0x49cf34["source_invoked"] = false;
+								source_guard_attach_probe_0x49cf34["behavioral"] = false;
+								source_guard_attach_probe_0x49cf34["skip_source"] = "0x4aa354 branches around 0x4a5c07/0x49cf34 when selected reward is already a dynamic monster or 0x4a960a scaled guard value is nonpositive";
+								source_guard_attach_probe_0x49cf34["status"] = composite_contains_only_dynamic_monster ? String("not_invoked_dynamic_monster_reward_candidate_is_guard_object") : String("not_invoked_scaled_guard_value_nonpositive_0x4aa354");
+							}
+							object_lookup["reward_guard_base_value"] = reward_guard_base_value;
+							object_lookup["reward_guard_effective_strength_mode_0x4a960a"] = reward_guard_effective_strength_mode;
+							object_lookup["reward_guard_scaled_value"] = reward_guard_value;
+							object_lookup["reward_requires_composite_guard"] = reward_requires_composite_guard;
+							object_lookup["source_reward_guard_attach_success_0x49cf34"] = source_guard_attach_success_0x49cf34;
+							object_lookup["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
 						auto find_reward_guard_vector_candidate_49cf34 = [&](int32_t reward_x, int32_t reward_y, int32_t reward_level, int32_t expected_zone_id, bool consume_rng, H3MapedRng &rng, SingleTilePlacementCandidate &out_candidate, int32_t &out_candidate_count) -> bool {
 						out_candidate_count = 0;
 						if (!grid_available || reward_body_points.empty()) {
@@ -12740,12 +12777,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					out_candidate.candidate_count = out_candidate_count;
 					return true;
 				};
-				const int32_t reward_guard_effective_strength_mode = h3maped_effective_monster_strength_mode_4a960a(normalized_config, runtime);
-				const int32_t reward_guard_base_value = composite_total_value;
-				const int32_t reward_guard_value = h3maped_strength_scaled_value_4a65a5(reward_guard_base_value, reward_guard_effective_strength_mode);
-				const bool composite_contains_only_dynamic_monster = composite_object_vector.size() == 1 && object_selection.candidate.dynamic_monster;
-				const bool reward_requires_composite_guard = !composite_contains_only_dynamic_monster && reward_guard_value > 0;
-				std::vector<RewardPlacementCandidate> tied_candidates;
+					std::vector<RewardPlacementCandidate> tied_candidates;
 					int32_t best_score = placement_score_threshold - 1;
 				int32_t owner_match_count = 0;
 				int32_t coordinate_candidate_count = 0;
@@ -12761,10 +12793,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					int32_t rejected_source_boundary_transition_count_0x49a09c = 0;
 					int32_t rejected_guard_composite_count = 0;
 				int32_t guard_composite_candidate_total = 0;
-				reward_coordinate_scan_call_count += 1;
-				if (reward_body_points.empty() || !grid_available) {
-					rejected_filter_count = map_width * map_height * map_level_count;
-					} else {
+					reward_coordinate_scan_call_count += 1;
+					if (reward_body_points.empty() || !grid_available) {
+						rejected_filter_count = map_width * map_height * map_level_count;
+						} else {
 						int32_t zone_scan_min_x = map_width;
 						int32_t zone_scan_min_y = map_height;
 						int32_t zone_scan_max_x_exclusive = 0;
@@ -12958,9 +12990,17 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						placement_record["source_boundary_allow_bit22_without_hard_reject_0x49a09c"] = source_boundary_allow_bit22_without_hard_reject_0x49a09c;
 						placement_record["source_boundary_filter_policy"] = "diagnostic_only_0x4aa603_calls_0x49a09c_on_wrapper_boundary_vector_0x38_after_0x49d7c3_prefill_with_0x49d65c_bit22_policy; behavioral rejection deferred until complete wrapper/member coordinate frame is recovered";
 						placement_record["rejected_guard_composite_count"] = rejected_guard_composite_count;
-					placement_record["guard_composite_candidate_total"] = guard_composite_candidate_total;
-					placement_record["reward_guard_composite_precheck_policy"] = "0x4aa354_builds_guarded_reward_composite_before_0x4aa9b7_coordinate_acceptance";
-					placement_record["best_score_low_word"] = tied_candidates.empty() ? -1 : best_score;
+						placement_record["guard_composite_candidate_total"] = guard_composite_candidate_total;
+						placement_record["reward_guard_composite_precheck_policy"] = "0x4aa354_builds_guarded_reward_composite_before_0x4aa9b7_coordinate_acceptance";
+						placement_record["reward_guard_base_value"] = reward_guard_base_value;
+						placement_record["reward_guard_base_value_source"] = "0x4aa354_0x4aa1db_composite_total_value";
+						placement_record["reward_guard_global_strength_mode"] = global_monster_strength_mode;
+						placement_record["reward_guard_effective_strength_mode_0x4a960a"] = reward_guard_effective_strength_mode;
+						placement_record["reward_guard_scaled_value"] = reward_guard_value;
+						placement_record["reward_requires_composite_guard"] = reward_requires_composite_guard;
+						placement_record["source_reward_guard_attach_success_0x49cf34"] = source_guard_attach_success_0x49cf34;
+						placement_record["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
+						placement_record["best_score_low_word"] = tied_candidates.empty() ? -1 : best_score;
 					placement_record["tied_candidate_count"] = int32_t(tied_candidates.size());
 					placement_record["selected_template_body_cell_count"] = int32_t(reward_body_points.size());
 					placement_record["selected_template_action_cell_count"] = int32_t(reward_action_points.size());
@@ -13575,10 +13615,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["reward_guard_global_strength_mode"] = global_monster_strength_mode;
 					placement_record["reward_guard_effective_strength_mode_0x4a960a"] = reward_guard_effective_strength_mode;
 					placement_record["reward_guard_scaled_value"] = reward_guard_value;
-					placement_record["reward_guard_policy"] = "h3maped_0x4aa354_composite_guard_uses_0x4aa1db_selected_candidate_value_before_coordinate_acceptance";
-					placement_record["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
-					placement_record["source_reward_guard_attach_behavioral"] = false;
-					placement_record["source_reward_guard_attach_exactness_blocker"] = "0x49cf34 local wrapper guard attachment is not yet behavior-driving because package adoption must consume the projected wrapper member and RNG order as one source unit; the rejected partial behavior probe shifted RNG without complete package adoption.";
+						placement_record["reward_guard_policy"] = "h3maped_0x4aa354_composite_guard_uses_0x4aa1db_selected_candidate_value_before_coordinate_acceptance";
+						placement_record["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
+						placement_record["source_reward_guard_attach_behavioral"] = false;
+						placement_record["source_reward_guard_attach_branch_behavioral"] = !reward_requires_composite_guard;
+						placement_record["source_reward_guard_attach_exactness_blocker"] = reward_requires_composite_guard
+								? String("0x49cf34 positive-guard wrapper attachment remains diagnostic until exact 0x4aa9b7 wrapper candidate state and active RNG order are recovered")
+								: String("not_applicable_source_0x4aa354_skips_0x49cf34_when_guard_value_is_nonpositive_or_candidate_is_dynamic_monster");
 						if (object_selection.candidate.dynamic_monster) {
 							placement_record["reward_guard_status"] = "not_applicable_dynamic_monster_candidate_is_guard_object";
 						} else if (reward_guard_value > 0) {
@@ -13758,6 +13801,11 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["reward_guard_records"] = reward_guard_records;
 	reward_scheduler["reward_guard_placement_attempt_count"] = reward_guard_placement_attempt_count;
 	reward_scheduler["reward_guard_coordinate_record_count"] = reward_guard_coordinate_record_count;
+	reward_scheduler["reward_guard_attach_source_invocation_count_0x49cf34"] = reward_guard_attach_source_invocation_count_0x49cf34;
+	reward_scheduler["reward_guard_attach_source_skipped_count_0x49cf34"] = reward_guard_attach_source_skipped_count_0x49cf34;
+	reward_scheduler["reward_guard_attach_source_failure_count_0x49cf34"] = reward_guard_attach_source_failure_count_0x49cf34;
+	reward_scheduler["reward_guard_attach_rng_call_count_0x49cf34"] = reward_guard_attach_rng_call_count_0x49cf34;
+	reward_scheduler["reward_guard_attach_source_policy_0x4aa354"] = "source 0x4aa354 calls 0x4a5c07/0x49cf34 only for positive scaled guard values; active 0x49d154 RNG adoption remains blocked until exact 0x4aa9b7 wrapper candidate state is recovered";
 	reward_scheduler["materializes_private_reward_coordinate_records"] = reward_coordinate_records.size() > 0;
 	reward_scheduler["materializes_public_reward_objects"] = false;
 
