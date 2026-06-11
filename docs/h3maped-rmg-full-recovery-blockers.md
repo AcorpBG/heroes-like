@@ -8,9 +8,9 @@ This ledger is the reporting baseline for the final recovery push. Do not expand
 
 Original recovery baseline at ledger creation: about 75% recovered.
 
-Current scored recovery after R5 closure: about 94% recovered.
+Current scored recovery after R6 closure: about 96% recovered.
 
-Remaining fixed recovery budget: 6 of the original 25 points.
+Remaining fixed recovery budget: 4 of the original 25 points.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.
 
@@ -23,12 +23,12 @@ Percent movement rule: progress only moves when a blocker or explicitly named su
 | R3 | Weighted materialization tail: `0x4a8db2 -> 0x4a901a -> 0x4a54a7` | 3 | Closed. The deterministic seed-58 Large one-level no-water weighted tail is recovered across all three sampled dispatches: return/caller-after, object-vector growth, descriptor counter lane 98, dispatch 0 score-write count, and dispatch 1/2 full matched score-write streams. |
 | R4 | Descriptor/source identity crosswalk for mixed lanes | 3 | Closed. Mixed selected lanes `45`, `53`, `54`, and `79` now have a source-backed crosswalk: all 87 selected descriptors join to same-run `0x4903e8` build events; `descriptor+0x00` is a registry/source-key value, not a universal row id; exact catalog identity authority is the copied `0x4c` source record and recovered provider/object-loader surface. |
 | R5 | Source-handler pending-entry chain: `0x53eafc / 0x484d9f -> 0x4afa99` | 2 | Closed by source-backed exclusion for the direct RMG target mode. The `0x53eafc` vtable and `0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910/0x4af65e` lifecycle are recovered, but Ghidra reports zero incoming refs to `0x484d9f`, the deterministic direct-generation breakpoint never hits, and `+0xeec/+0xef0/+0xef4` accesses are confined to that orphaned lifecycle. |
-| R6 | Relation/scoring semantic replay | 2 | Runtime-name remaining scoring/relation surfaces: `0x49e1bf`, `0x4a5767/0x49a318`, and `0x4a54a7` relation/control linkage. |
+| R6 | Relation/scoring semantic replay | 2 | Closed. `0x49e1bf` is named and bounded as the `0x49e700` local placement adjacency/compatibility score helper; `0x4a5767/0x49a318` is recovered as relation-local generated-cell normalization plus owner/projection propagation; and `0x4a54a7` relation/control linkage is named for exact fallback surfaces through Border Guard `+0x09`, descriptor projection fields, relation counters, and generated-cell `+0x20` roles. |
 | R7 | One continuous ordered private-state replay | 4 | Stitch recovered pieces into ordered replay from RMG entrypoint to final map write, with phase/private-buffer checkpoints. This is the final proof step before native parity changes. |
 
 Original total remaining at ledger creation: 25 points.
 
-Current remaining after R5 closure: 6 points.
+Current remaining after R6 closure: 4 points.
 
 ## Reporting Rules
 
@@ -41,7 +41,7 @@ Current remaining after R5 closure: 6 points.
 
 ## Active Blocker
 
-Active blocker: R6.
+Active blocker: R7.
 
 Current R1 state:
 
@@ -115,3 +115,15 @@ Recovered R5 state:
 - The deterministic seed-58 direct-generation WineDbg probe armed a breakpoint at `0x484d9f` and did not hit it.
 - Generator pending-entry offsets `+0xeec`, `+0xef0`, and `+0xef4` are found in the Ghidra dump corpus, and all instruction-level accesses are within the orphaned `0x4af463` initializer, `0x4af910` cleanup, or `0x4af65e` stack-local teardown lifecycle.
 - R5 closes only the direct RMG target-mode blocker. It does not claim the source-handler chain is dead in every game context or map mode, and it does not authorize native RMG parity changes by itself.
+
+## R6 Closure
+
+R6 is closed by `.artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json`.
+
+Recovered R6 state:
+
+- `0x49e1bf` is bounded to `0x49e700` as a local object/decorative placement adjacency and compatibility score helper. Positive returns are added to the `0x49e700` candidate score accumulator; no-positive and hard-negative paths reject candidates.
+- `0x4a5767/0x49a318` is recovered as relation-local generated-cell normalization and owner/projection propagation. The recovered surface includes generated-cell `+0x10/+0x14/+0x18` projection triples, `+0x1c` projection/local gate state, and `+0x20` owner/score propagation.
+- `0x4a54a7` relation/control linkage is named for the exact fallback surface: connection `+0x09` is the Border Guard endpoint-stamping flag, descriptor `+0x29` enables the projection path, descriptor `+0x2c/+0x30` select the source cell, relation `+0x44[type]` is the per-relation descriptor-type occupancy counter, and generated-cell `+0x20` carries source-owner relation index plus local projection distance/score.
+- R6 does not claim global descriptor human labels, non-fallback `0x4a54a7` cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay.
+- Native RMG behavior is unchanged and no objdump recovery was used.

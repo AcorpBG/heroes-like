@@ -10421,14 +10421,14 @@
       "summary": "R5 H3MapEd source-handler pending-entry chain is closed by source-backed direct-mode exclusion. R6 is now the active fixed blocker."
     }
   ],
-  "currentNotes": "R5 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py consolidates the recovered 0x53eafc vtable, source-handler owner chain, deterministic 0x484d9f WineDbg breakpoint probe, and Ghidra pending-entry offset ownership scan. The source-handler lifecycle is statically closed under 0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e, Ghidra reports zero incoming refs to 0x484d9f, and the direct-generation breakpoint at 0x484d9f was armed but never hit. Instruction-level accesses to generator pending-entry offsets +0xeec, +0xef0, and +0xef4 are confined to the orphaned 0x4af463 initializer, 0x4af910 cleanup, and 0x4af65e stack-local teardown lifecycle. This source-excludes the pending-entry chain from the direct RMG target mode; it is not a global all-context exclusion and it does not authorize native RMG parity changes. Fixed recovery score moves from about 92% to about 94%, remaining fixed budget is 6 points, and the active blocker moves to R6. Native RMG behavior is unchanged and no objdump recovery was used.",
+  "currentNotes": "R6 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py consolidates the recovered relation/scoring semantic surfaces: 0x49e1bf is bounded to 0x49e700 as a local object/decorative placement adjacency and compatibility score helper; 0x4a5767/0x49a318 is recovered as relation-local generated-cell normalization plus owner/projection propagation; and 0x4a54a7 relation/control linkage is named for exact fallback surfaces through Border Guard +0x09, descriptor projection fields, relation counters, and generated-cell +0x20 roles. This closes the working-name/semantic replay blocker only; it does not claim global descriptor human labels, non-fallback 0x4a54a7 cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay. Fixed recovery score moves from about 94% to about 96%, remaining fixed budget is 4 points, and the active blocker moves to R7. Native RMG behavior is unchanged and no objdump recovery was used.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "R5 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py consolidates the recovered 0x53eafc vtable, source-handler owner chain, deterministic 0x484d9f WineDbg breakpoint probe, and Ghidra pending-entry offset ownership scan. The source-handler lifecycle is statically closed under 0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e, Ghidra reports zero incoming refs to 0x484d9f, and the direct-generation breakpoint at 0x484d9f was armed but never hit. Instruction-level accesses to generator pending-entry offsets +0xeec, +0xef0, and +0xef4 are confined to the orphaned 0x4af463 initializer, 0x4af910 cleanup, and 0x4af65e stack-local teardown lifecycle. This source-excludes the pending-entry chain from the direct RMG target mode; it is not a global all-context exclusion and it does not authorize native RMG parity changes. Fixed recovery score moves from about 92% to about 94%, remaining fixed budget is 6 points, and the active blocker moves to R6. Native RMG behavior is unchanged and no objdump recovery was used.",
+  "currentSliceNotes": "R6 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py consolidates the recovered relation/scoring semantic surfaces: 0x49e1bf is bounded to 0x49e700 as a local object/decorative placement adjacency and compatibility score helper; 0x4a5767/0x49a318 is recovered as relation-local generated-cell normalization plus owner/projection propagation; and 0x4a54a7 relation/control linkage is named for exact fallback surfaces through Border Guard +0x09, descriptor projection fields, relation counters, and generated-cell +0x20 roles. This closes the working-name/semantic replay blocker only; it does not claim global descriptor human labels, non-fallback 0x4a54a7 cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay. Fixed recovery score moves from about 94% to about 96%, remaining fixed budget is 4 points, and the active blocker moves to R7. Native RMG behavior is unchanged and no objdump recovery was used.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-11T11:21:00Z",
+  "currentSliceUpdatedAt": "2026-06-11T11:33:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12087,109 +12087,101 @@
       "summary": "R5 H3MapEd source-handler pending-entry chain is closed by source-backed direct-mode exclusion. R6 is now the active fixed blocker."
     }
   },
-  "guardrailNote": "Fixed blocker ledger active: report only against R1-R7. R1, R2, R3, R4, and R5 are closed (+19 total, fixed score about 94%); active recovery blocker is R6. Continue source-backed recovery only; no native RMG heuristic changes.",
+  "guardrailNote": "Fixed blocker ledger active: report only against R1-R7. R1, R2, R3, R4, R5, and R6 are closed (+21 total, fixed score about 96%); active recovery blocker is R7. Continue source-backed recovery only; no native RMG heuristic changes.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json",
+    "artifact": ".artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed: R5 source-handler pending-entry chain source-excluded from direct RMG target mode)",
-      "jq empty .artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+      "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed: R5 source-handler pending-entry chain source-excluded from direct RMG target mode)",
-      "jq empty .artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+      "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
-    "date": "2026-06-11T11:21:00Z",
+    "date": "2026-06-11T11:33:27Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "active_blocker_after": "R6",
-      "fixed_score_after": 94,
-      "fixed_score_before": 92,
+      "active_blocker_after": "R7",
+      "fixed_score_after": 96,
+      "fixed_score_before": 94,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
-      "remaining_fixed_budget_after": 6,
+      "remaining_fixed_budget_after": 4,
       "used_objdump": false,
-      "active_blocker_before": "R5",
-      "closed_blocker": "R5 source-handler pending-entry chain: 0x53eafc / 0x484d9f -> 0x4afa99",
-      "fixed_recovery_percent_before": 92,
-      "fixed_recovery_percent_after": 94,
-      "fixed_remaining_points_before": 8,
-      "fixed_remaining_points_after": 6,
-      "r5_complete": true,
+      "active_blocker_before": "R6",
+      "closed_blocker": "R6 relation/scoring semantic replay: 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage",
+      "fixed_recovery_percent_before": 94,
+      "fixed_recovery_percent_after": 96,
+      "fixed_remaining_points_before": 6,
+      "fixed_remaining_points_after": 4,
+      "r6_complete": true,
       "invariants": {
-        "chain_484d9f_to_4afa99_closed_under_484d9f": true,
-        "generator_offsets_0xeec_0xef0_0xef4_found_in_ghidra": true,
-        "generator_offsets_0xeec_0xef0_0xef4_only_touched_in_orphaned_chain": true,
         "no_native_behavior_change": true,
         "no_objdump_used": true,
-        "runtime_probe_breakpoint_armed_no_hit": true,
-        "source_handler_chain_classified_static_orphan": true,
-        "vtable_53eafc_recovered_from_ghidra": true,
-        "zero_incoming_ghidra_refs_to_484d9f": true
+        "relation_control_0x4a54a7_linkage_named_for_exact_fallback_surface": true,
+        "relation_normalizer_0x4a5767_0x49a318_semantic_surface_recovered": true,
+        "score_helper_0x49e1bf_named_and_bounded_to_0x49e700_scoring": true
       }
     },
-    "remainingWork": "R5 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R6 from docs/h3maped-rmg-full-recovery-blockers.md: relation/scoring semantic replay for 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingWork": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "R5 H3MapEd source-handler pending-entry chain is closed by source-backed direct-mode exclusion. R6 is now the active fixed blocker."
+    "summary": "R6 H3MapEd relation/scoring semantic replay is closed by source-backed working-name recovery. R7 is now the active final fixed blocker."
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json",
+    "artifact": ".artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed: R5 source-handler pending-entry chain source-excluded from direct RMG target mode)",
-      "jq empty .artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+      "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
     "commands": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py (passed: R5 source-handler pending-entry chain source-excluded from direct RMG target mode)",
-      "jq empty .artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json ops/progress.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+      "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
       "git diff --check (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
     ],
-    "date": "2026-06-11T11:21:00Z",
+    "date": "2026-06-11T11:33:27Z",
     "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "active_blocker_after": "R6",
-      "fixed_score_after": 94,
-      "fixed_score_before": 92,
+      "active_blocker_after": "R7",
+      "fixed_score_after": 96,
+      "fixed_score_before": 94,
       "native_behavior_changed": false,
       "overall_goal_complete": false,
-      "remaining_fixed_budget_after": 6,
+      "remaining_fixed_budget_after": 4,
       "used_objdump": false,
-      "active_blocker_before": "R5",
-      "closed_blocker": "R5 source-handler pending-entry chain: 0x53eafc / 0x484d9f -> 0x4afa99",
-      "fixed_recovery_percent_before": 92,
-      "fixed_recovery_percent_after": 94,
-      "fixed_remaining_points_before": 8,
-      "fixed_remaining_points_after": 6,
-      "r5_complete": true,
+      "active_blocker_before": "R6",
+      "closed_blocker": "R6 relation/scoring semantic replay: 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage",
+      "fixed_recovery_percent_before": 94,
+      "fixed_recovery_percent_after": 96,
+      "fixed_remaining_points_before": 6,
+      "fixed_remaining_points_after": 4,
+      "r6_complete": true,
       "invariants": {
-        "chain_484d9f_to_4afa99_closed_under_484d9f": true,
-        "generator_offsets_0xeec_0xef0_0xef4_found_in_ghidra": true,
-        "generator_offsets_0xeec_0xef0_0xef4_only_touched_in_orphaned_chain": true,
         "no_native_behavior_change": true,
         "no_objdump_used": true,
-        "runtime_probe_breakpoint_armed_no_hit": true,
-        "source_handler_chain_classified_static_orphan": true,
-        "vtable_53eafc_recovered_from_ghidra": true,
-        "zero_incoming_ghidra_refs_to_484d9f": true
+        "relation_control_0x4a54a7_linkage_named_for_exact_fallback_surface": true,
+        "relation_normalizer_0x4a5767_0x49a318_semantic_surface_recovered": true,
+        "score_helper_0x49e1bf_named_and_bounded_to_0x49e700_scoring": true
       }
     },
-    "remainingWork": "R5 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R6 from docs/h3maped-rmg-full-recovery-blockers.md: relation/scoring semantic replay for 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+    "remainingWork": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "R5 H3MapEd source-handler pending-entry chain is closed by source-backed direct-mode exclusion. R6 is now the active fixed blocker."
+    "summary": "R6 H3MapEd relation/scoring semantic replay is closed by source-backed working-name recovery. R7 is now the active final fixed blocker."
   },
-  "nextActionGuardrailNote": "Fixed blocker ledger active: report only against R1-R7. R1, R2, R3, R4, and R5 are closed (+19 total, fixed score about 94%); active recovery blocker is R6. Continue source-backed recovery only; no native RMG heuristic changes.",
-  "notes": "R5 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py consolidates the recovered 0x53eafc vtable, source-handler owner chain, deterministic 0x484d9f WineDbg breakpoint probe, and Ghidra pending-entry offset ownership scan. The source-handler lifecycle is statically closed under 0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e, Ghidra reports zero incoming refs to 0x484d9f, and the direct-generation breakpoint at 0x484d9f was armed but never hit. Instruction-level accesses to generator pending-entry offsets +0xeec, +0xef0, and +0xef4 are confined to the orphaned 0x4af463 initializer, 0x4af910 cleanup, and 0x4af65e stack-local teardown lifecycle. This source-excludes the pending-entry chain from the direct RMG target mode; it is not a global all-context exclusion and it does not authorize native RMG parity changes. Fixed recovery score moves from about 92% to about 94%, remaining fixed budget is 6 points, and the active blocker moves to R6. Native RMG behavior is unchanged and no objdump recovery was used.",
+  "nextActionGuardrailNote": "Fixed blocker ledger active: report only against R1-R7. R1, R2, R3, R4, R5, and R6 are closed (+21 total, fixed score about 96%); active recovery blocker is R7. Continue source-backed recovery only; no native RMG heuristic changes.",
+  "notes": "R6 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py consolidates the recovered relation/scoring semantic surfaces: 0x49e1bf is bounded to 0x49e700 as a local object/decorative placement adjacency and compatibility score helper; 0x4a5767/0x49a318 is recovered as relation-local generated-cell normalization plus owner/projection propagation; and 0x4a54a7 relation/control linkage is named for exact fallback surfaces through Border Guard +0x09, descriptor projection fields, relation counters, and generated-cell +0x20 roles. This closes the working-name/semantic replay blocker only; it does not claim global descriptor human labels, non-fallback 0x4a54a7 cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay. Fixed recovery score moves from about 94% to about 96%, remaining fixed budget is 4 points, and the active blocker moves to R7. Native RMG behavior is unchanged and no objdump recovery was used.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -45620,10 +45612,10 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-      "currentNotes": "R5 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py consolidates the recovered 0x53eafc vtable, source-handler owner chain, deterministic 0x484d9f WineDbg breakpoint probe, and Ghidra pending-entry offset ownership scan. The source-handler lifecycle is statically closed under 0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e, Ghidra reports zero incoming refs to 0x484d9f, and the direct-generation breakpoint at 0x484d9f was armed but never hit. Instruction-level accesses to generator pending-entry offsets +0xeec, +0xef0, and +0xef4 are confined to the orphaned 0x4af463 initializer, 0x4af910 cleanup, and 0x4af65e stack-local teardown lifecycle. This source-excludes the pending-entry chain from the direct RMG target mode; it is not a global all-context exclusion and it does not authorize native RMG parity changes. Fixed recovery score moves from about 92% to about 94%, remaining fixed budget is 6 points, and the active blocker moves to R6. Native RMG behavior is unchanged and no objdump recovery was used.",
-      "currentSliceNotes": "R5 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r5_source_handler_pending_entry_closure_summary.py consolidates the recovered 0x53eafc vtable, source-handler owner chain, deterministic 0x484d9f WineDbg breakpoint probe, and Ghidra pending-entry offset ownership scan. The source-handler lifecycle is statically closed under 0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e, Ghidra reports zero incoming refs to 0x484d9f, and the direct-generation breakpoint at 0x484d9f was armed but never hit. Instruction-level accesses to generator pending-entry offsets +0xeec, +0xef0, and +0xef4 are confined to the orphaned 0x4af463 initializer, 0x4af910 cleanup, and 0x4af65e stack-local teardown lifecycle. This source-excludes the pending-entry chain from the direct RMG target mode; it is not a global all-context exclusion and it does not authorize native RMG parity changes. Fixed recovery score moves from about 92% to about 94%, remaining fixed budget is 6 points, and the active blocker moves to R6. Native RMG behavior is unchanged and no objdump recovery was used.",
-      "currentSliceUpdatedAt": "2026-06-11T11:21:00Z",
-      "guardrailNote": "Fixed blocker ledger active: report only against R1-R7. R1, R2, R3, R4, and R5 are closed (+19 total, fixed score about 94%); active recovery blocker is R6. Continue source-backed recovery only; no native RMG heuristic changes.",
+      "currentNotes": "R6 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py consolidates the recovered relation/scoring semantic surfaces: 0x49e1bf is bounded to 0x49e700 as a local object/decorative placement adjacency and compatibility score helper; 0x4a5767/0x49a318 is recovered as relation-local generated-cell normalization plus owner/projection propagation; and 0x4a54a7 relation/control linkage is named for exact fallback surfaces through Border Guard +0x09, descriptor projection fields, relation counters, and generated-cell +0x20 roles. This closes the working-name/semantic replay blocker only; it does not claim global descriptor human labels, non-fallback 0x4a54a7 cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay. Fixed recovery score moves from about 94% to about 96%, remaining fixed budget is 4 points, and the active blocker moves to R7. Native RMG behavior is unchanged and no objdump recovery was used.",
+      "currentSliceNotes": "R6 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py consolidates the recovered relation/scoring semantic surfaces: 0x49e1bf is bounded to 0x49e700 as a local object/decorative placement adjacency and compatibility score helper; 0x4a5767/0x49a318 is recovered as relation-local generated-cell normalization plus owner/projection propagation; and 0x4a54a7 relation/control linkage is named for exact fallback surfaces through Border Guard +0x09, descriptor projection fields, relation counters, and generated-cell +0x20 roles. This closes the working-name/semantic replay blocker only; it does not claim global descriptor human labels, non-fallback 0x4a54a7 cell-transition reconciliation, cleanup/uncommit runtime ordering, native RMG parity, or the final ordered private-state replay. Fixed recovery score moves from about 94% to about 96%, remaining fixed budget is 4 points, and the active blocker moves to R7. Native RMG behavior is unchanged and no objdump recovery was used.",
+      "currentSliceUpdatedAt": "2026-06-11T11:33:27Z",
+      "guardrailNote": "Fixed blocker ledger active: report only against R1-R7. R1, R2, R3, R4, R5, and R6 are closed (+21 total, fixed score about 96%); active recovery blocker is R7. Continue source-backed recovery only; no native RMG heuristic changes.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
@@ -45862,7 +45854,7 @@
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "R1-R5 are closed in the fixed recovery ledger. Remaining full-recovery blockers are R6 relation/scoring semantic replay and R7 continuous ordered private-state replay before native parity changes.",
-      "remainingWork": "R5 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R6 from docs/h3maped-rmg-full-recovery-blockers.md: relation/scoring semantic replay for 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+      "remainingWork": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
       "result": "R5 closed by source-backed direct-mode exclusion of the 0x53eafc / 0x484d9f source-handler pending-entry chain. Slice remains in progress because R6-R7 are still open.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -45873,63 +45865,52 @@
       "status": "in_progress",
       "summary": "Wine/Ghidra/Python recovery now closes the non-hero source catalog/template producer blocker. tools/rmg_h3maped_source_catalog_template_producer_summary.py verifies 25/25 markers: provider global 0x59e390 is published through vtable 0x53942c, 27 builder/materializer provider slot pairs are recovered, and concrete provider constructors copy/adopt the full 0x4c source record through 0x43d309/0x437751. The compare key includes text/DEF-bearing fields plus raw type +0x1c and subtype-like +0x20, so source catalog identity is preserved from objects.txt/objtmplt.txt-shaped rows rather than descriptor-local ids. Native RMG behavior is unchanged; no objdump recovery was used.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-11T11:21:00Z",
+      "updatedAt": "2026-06-11T11:33:27Z",
       "validation": {
-        "artifact": ".artifacts/rmg_recovery/r2_endpoint_cursor_closure_summary_20260610.json",
+        "artifact": ".artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json",
         "checks": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r2_endpoint_cursor_closure_summary.py (passed)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r2_endpoint_cursor_closure_summary.py (passed: R2 endpoint/cursor chain closed for supported one-level land)",
-          "jq empty .artifacts/rmg_recovery/r2_endpoint_cursor_closure_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+          "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
         "commands": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r2_endpoint_cursor_closure_summary.py (passed)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r2_endpoint_cursor_closure_summary.py (passed: R2 endpoint/cursor chain closed for supported one-level land)",
-          "jq empty .artifacts/rmg_recovery/r2_endpoint_cursor_closure_summary_20260610.json ops/progress.json (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+          "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
           "git diff --check (passed)",
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
         ],
-        "date": "2026-06-10T23:47:30Z",
+        "date": "2026-06-11T11:33:27Z",
         "id": "rmg-small-generalization-hardening-10184",
         "metrics": {
-          "4a696b_combined_entries": 150,
-          "4a696b_complete_grid_scan_count": 6,
-          "4a696b_scanned_cell_total": 5752,
-          "4a696b_source_relation_match_hits": 0,
-          "active_blocker_after": "R3",
-          "active_blocker_before": "R2",
-          "closed_blocker": "R2 endpoint/cursor chain: 0x4a5e73 / 0x4a606b / 0x4a746b / 0x4a7605 / 0x4a696b / 0x4a7312",
-          "f5c_candidate_match_branch_count": 0,
-          "f5c_candidate_reject_branch_count": 493,
-          "fixed_recovery_percent_after": 86,
-          "fixed_recovery_percent_before": 82,
-          "fixed_remaining_points_after": 14,
-          "fixed_remaining_points_before": 18,
+          "active_blocker_after": "R7",
+          "fixed_score_after": 96,
+          "fixed_score_before": 94,
+          "native_behavior_changed": false,
+          "overall_goal_complete": false,
+          "remaining_fixed_budget_after": 4,
+          "used_objdump": false,
+          "active_blocker_before": "R6",
+          "closed_blocker": "R6 relation/scoring semantic replay: 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage",
+          "fixed_recovery_percent_before": 94,
+          "fixed_recovery_percent_after": 96,
+          "fixed_remaining_points_before": 6,
+          "fixed_remaining_points_after": 4,
+          "r6_complete": true,
           "invariants": {
-            "4a696b_source_relation_gate_explained": true,
-            "all_5e73_callers_and_4a606b_surface_recovered": true,
-            "border_guard_fallback_followthrough_recovered": true,
-            "cursor_writer_surface_bounded_with_r1_branch_split": true,
-            "f5c_candidate_scorer_rejects_sampled_scope": true,
             "no_native_behavior_change": true,
             "no_objdump_used": true,
-            "prior_endpoint_resolution_agrees_after_r1_correction": true,
-            "r1_branch_split_replaces_prior_zero_projection_assumption": true,
-            "stale_generator_f5c_explained": true
-          },
-          "native_behavior_changed": false,
-          "overall_end_to_end_goal_complete": false,
-          "r2_complete": true,
-          "runtime_4a606b_event_count": 0,
-          "runtime_5e73_entry_count": 50,
-          "runtime_5e73_success_path_event_count": 0,
-          "used_objdump": false
+            "relation_control_0x4a54a7_linkage_named_for_exact_fallback_surface": true,
+            "relation_normalizer_0x4a5767_0x49a318_semantic_surface_recovered": true,
+            "score_helper_0x49e1bf_named_and_bounded_to_0x49e700_scoring": true
+          }
         },
-        "remainingWork": "R2 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R3 from docs/h3maped-rmg-full-recovery-blockers.md: weighted materialization tail 0x4a8db2 -> 0x4a901a -> 0x4a54a7, including remaining sampled dispatch write sets, intervening vector/counter mutation, and final per-dispatch generated-cell parity if native-port authority needs it. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+        "remainingWork": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
-        "summary": "R2 H3MapEd endpoint/cursor chain is closed for supported one-level land as a source-backed target-mode exclusion. R3 is now the active fixed blocker."
+        "summary": "R6 H3MapEd relation/scoring semantic replay is closed by source-backed working-name recovery. R7 is now the active final fixed blocker."
       },
       "validationResults": {
         "artifact": ".artifacts/rmg_recovery/r2_endpoint_cursor_closure_summary_20260610.json",
@@ -52360,8 +52341,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "R3 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R4 from docs/h3maped-rmg-full-recovery-blockers.md: descriptor/source identity crosswalk for mixed lanes such as 45, 53, 54, and 79, source records, and template/catalog identity. Do not row-id guess, port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
-  "remainingWork": "R3 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R4 from docs/h3maped-rmg-full-recovery-blockers.md: descriptor/source identity crosswalk for mixed lanes such as 45, 53, 54, and 79, source records, and template/catalog identity. Do not row-id guess, port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
+  "remainingGap": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
+  "remainingWork": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -52875,7 +52856,7 @@
   ],
   "summary": "Wine/Ghidra/Python recovery now recovers the final write stream adapter and the next wrapped buffered sink for clean Medium seed-10 one-level/no-water without changing native RMG behavior. The stream object passed into 0x4ad1e3 is a stack-local 0x539918 adapter at 0x0031f73c; its write slot 0x45df8f forwards (buffer, length) to the wrapped stream at adapter+0x04. The wrapped stream is 0x0031f608 with vtable 0x536c94 and write slot 0x449cfc, a buffered writer that bulk-copies through 0x4e6380 and falls back to byte writes through slot +0x04. The wrapped sink mutates offsets +0x18, +0x28, and +0x44 between first post-header write and final zero sentinel. This rules out the stack adapter as an accumulated-output buffer shortcut; downstream buffered/file sink recovery and ordered private-state replay remain incomplete. No objdump recovery was used.",
   "taskId": "10184",
-  "updatedAt": "2026-06-10T22:08:27Z",
+  "updatedAt": "2026-06-11T11:33:27Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/small2p_seed58_4aa9b7_success_handoff_summary_20260610.json",
     "checks": [
@@ -60012,6 +59993,52 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
       "summary": "R2 H3MapEd endpoint/cursor chain is closed for supported one-level land as a source-backed target-mode exclusion. R3 is now the active fixed blocker."
+    },
+    {
+      "artifact": ".artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json",
+      "checks": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+        "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      ],
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r6_relation_scoring_semantic_closure_summary.py (passed: R6 relation/scoring semantic replay closed; R7 active)",
+        "jq empty .artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+      ],
+      "date": "2026-06-11T11:33:27Z",
+      "id": "rmg-small-generalization-hardening-10184",
+      "metrics": {
+        "active_blocker_after": "R7",
+        "fixed_score_after": 96,
+        "fixed_score_before": 94,
+        "native_behavior_changed": false,
+        "overall_goal_complete": false,
+        "remaining_fixed_budget_after": 4,
+        "used_objdump": false,
+        "active_blocker_before": "R6",
+        "closed_blocker": "R6 relation/scoring semantic replay: 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage",
+        "fixed_recovery_percent_before": 94,
+        "fixed_recovery_percent_after": 96,
+        "fixed_remaining_points_before": 6,
+        "fixed_remaining_points_after": 4,
+        "r6_complete": true,
+        "invariants": {
+          "no_native_behavior_change": true,
+          "no_objdump_used": true,
+          "relation_control_0x4a54a7_linkage_named_for_exact_fallback_surface": true,
+          "relation_normalizer_0x4a5767_0x49a318_semantic_surface_recovered": true,
+          "score_helper_0x49e1bf_named_and_bounded_to_0x49e700_scoring": true
+        }
+      },
+      "remainingWork": "R6 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R7 from docs/h3maped-rmg-full-recovery-blockers.md: build one continuous ordered private-state replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. Do not port, compensate, density-scale, brute-force, add heuristic gates, or tune native RMG behavior from final-map deltas.",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "R6 H3MapEd relation/scoring semantic replay is closed by source-backed working-name recovery. R7 is now the active final fixed blocker."
     }
   ],
   "validationResults": {
