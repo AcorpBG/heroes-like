@@ -16429,9 +16429,9 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["materializes_generated_cell_bit_26"] = final_bit_26_count > 0;
 	phase["materializes_generated_cell_bit_27"] = final_bit_27_count > 0;
 	phase["exact_upstream_bit_source_claim"] = false;
-	phase["exact_upstream_bit_source_blocker"] = "0x4a8260 route-list coordinate vector and route-stamp/0x49a962 stream are not yet replayed from same-run source state";
+	phase["exact_upstream_bit_source_blocker"] = "0x4a8260 route-list coordinate vector, route RNG entry state, 0x49a85d stamp stream, and dependent final 0x49a962 sweep are not yet replayed from same-run source state";
 	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = pre_0x4a4c8e_checkpoint;
-	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_before_unreplayed_0x4a8260_route_list_and_native_0x4a4c8e_land_edge_pass";
+	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_before_unreplayed_0x4a8260_route_list_dependent_final_sweep_and_native_0x4a4c8e_land_edge_pass";
 	if (out_live_cell_word_0x2c != nullptr) {
 		*out_live_cell_word_0x2c = live_cell_word_0x2c;
 	}
