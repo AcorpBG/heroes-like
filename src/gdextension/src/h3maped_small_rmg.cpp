@@ -654,6 +654,10 @@ struct ClipResult {
 struct SourceCycleNode {
 	int32_t x = 0;
 	int32_t y = 0;
+	bool has_payload = false;
+	int32_t payload = 0;
+	bool next_pair_has_payload = false;
+	int32_t next_pair_payload = 0;
 	bool finalized = false;
 	int32_t finalized_x = 0;
 	int32_t finalized_y = 0;
@@ -5335,7 +5339,20 @@ PolygonSourceResult build_polygon_source_walks_4ccb64(const Array &runtime_zones
 			bool guard_exhausted = false;
 			for (int32_t guard = 0; guard < 96; ++guard) {
 				const PolygonModelNode &node = model.nodes[size_t(current)];
-				walk.cycle_nodes.push_back(SourceCycleNode { node.x, node.y, node.finalized, node.finalized_x, node.finalized_y });
+				const int32_t next = node.next;
+				const int32_t next_pair = next >= 0 && next < int32_t(model.nodes.size()) ? model.nodes[size_t(next)].pair : -1;
+				const PolygonModelNode *next_pair_node = next_pair >= 0 && next_pair < int32_t(model.nodes.size()) ? &model.nodes[size_t(next_pair)] : nullptr;
+				SourceCycleNode source_node;
+				source_node.x = node.x;
+				source_node.y = node.y;
+				source_node.has_payload = node.has_payload;
+				source_node.payload = node.payload;
+				source_node.next_pair_has_payload = next_pair_node != nullptr && next_pair_node->has_payload;
+				source_node.next_pair_payload = next_pair_node != nullptr ? next_pair_node->payload : 0;
+				source_node.finalized = node.finalized;
+				source_node.finalized_x = node.finalized_x;
+				source_node.finalized_y = node.finalized_y;
+				walk.cycle_nodes.push_back(source_node);
 				current = node.next;
 				if (current == located) {
 					break;
@@ -5423,6 +5440,10 @@ Dictionary zone_footprint_source_nodes_phase(const Dictionary &normalized_config
 			Dictionary node_report;
 			node_report["x"] = node.x;
 			node_report["y"] = node.y;
+			node_report["has_payload"] = node.has_payload;
+			node_report["payload"] = node.payload;
+			node_report["next_pair_has_payload"] = node.next_pair_has_payload;
+			node_report["next_pair_payload"] = node.next_pair_payload;
 			node_report["finalized"] = node.finalized;
 			node_report["finalized_x"] = node.finalized_x;
 			node_report["finalized_y"] = node.finalized_y;
@@ -5465,6 +5486,7 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	int32_t randomized_inserted_midpoint_count = 0;
 	int32_t randomized_max_pending_point_count = 0;
 	int32_t skipped_unfinalized_node_count = 0;
+	int32_t owner_gate_skipped_segment_count = 0;
 	bool loop_guard_exhausted = false;
 	H3MapedRng rng { rng_state_after_coordinate_seed };
 
@@ -5502,6 +5524,51 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 		}
 		merge_line(line);
 	};
+	auto append_border_connection = [&](int32_t &current_x, int32_t &current_y, int32_t target_x, int32_t target_y, int32_t zone_word, int32_t level, int32_t random_span_limit) {
+		if (current_x == target_x && current_y == target_y) {
+			return;
+		}
+		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
+		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
+		int32_t wrap_guard = 0;
+		while (current_x != target_x && current_y != target_y && point_on_clip_border(current_x, current_y) && point_on_clip_border(target_x, target_y) && wrap_guard < 8) {
+			int32_t border_x = current_x;
+			int32_t border_y = current_y;
+			if (current_x == bounds.min_x) {
+				if (current_y == bounds.min_y) {
+					border_x = right_x;
+					border_y = bounds.min_y;
+				} else {
+					border_x = bounds.min_x;
+					border_y = bounds.min_y;
+				}
+			} else if (current_y == bounds.min_y) {
+				border_x = right_x;
+				border_y = bounds.min_y;
+			} else if (current_x == right_x && current_y != bottom_y) {
+				border_x = right_x;
+				border_y = bottom_y;
+			} else {
+				border_x = bounds.min_x;
+				border_y = bottom_y;
+			}
+			append_segment(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
+			current_x = border_x;
+			current_y = border_y;
+			wrap_segment_count += 1;
+			wrap_guard += 1;
+		}
+		if (wrap_guard >= 8 && current_x != target_x && current_y != target_y) {
+			loop_guard_exhausted = true;
+			return;
+		}
+		if (current_x != target_x || current_y != target_y) {
+			append_segment(current_x, current_y, target_x, target_y, zone_word, level, false, random_span_limit);
+			current_x = target_x;
+			current_y = target_y;
+			final_segment_count += 1;
+		}
+	};
 
 	for (const SourceWalk &walk : source.walks) {
 		Dictionary runtime_zone = runtime_zone_by_index(walk.runtime_zone_index);
@@ -5513,24 +5580,30 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 		const int32_t level = int32_t(runtime_zone.get("level", 0));
 		const bool flagged_branch = !(map_level_count == 2 && level != 1);
 		const int32_t random_span_limit = std::max<int32_t>(1, int32_t(runtime_zone.get("runtime_size_after_bbox_rescale", runtime_zone.get("source_base_size", 1))));
-		std::vector<PolygonPoint> source_points;
+		std::vector<SourceCycleNode> source_nodes;
 		for (const SourceCycleNode &node : walk.cycle_nodes) {
 			if (!node.finalized) {
 				skipped_unfinalized_node_count += 1;
 				continue;
 			}
-			source_points.push_back(PolygonPoint { node.finalized_x, node.finalized_y });
+			source_nodes.push_back(node);
 		}
-		if (source_points.size() < 2) {
+		if (source_nodes.size() < 2) {
 			blocked_zone_count += 1;
 			continue;
 		}
+		auto node_point = [](const SourceCycleNode &node) {
+			return PolygonPoint { node.finalized_x, node.finalized_y };
+		};
+		auto source_edge_writer_allowed = [&](const SourceCycleNode &from_node) {
+			return !(from_node.next_pair_has_payload && from_node.next_pair_payload <= zone_word);
+		};
 		int32_t selected_segment_index = -1;
 		ClipResult clipped_current;
 		ClipResult clipped_target;
-		for (int32_t index = 0; index < int32_t(source_points.size()); ++index) {
-			const PolygonPoint from = source_points[size_t(index)];
-			const PolygonPoint to = source_points[size_t((index + 1) % int32_t(source_points.size()))];
+		for (int32_t index = 0; index < int32_t(source_nodes.size()); ++index) {
+			const PolygonPoint from = node_point(source_nodes[size_t(index)]);
+			const PolygonPoint to = node_point(source_nodes[size_t((index + 1) % int32_t(source_nodes.size()))]);
 			if (from.x == to.x && from.y == to.y) {
 				continue;
 			}
@@ -5551,65 +5624,46 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 			fallback_zone_count += 1;
 			continue;
 		}
-		append_segment(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
-		connector_segment_count += 1;
+		if (source_edge_writer_allowed(source_nodes[size_t(selected_segment_index)])) {
+			append_segment(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
+			connector_segment_count += 1;
+		} else {
+			owner_gate_skipped_segment_count += 1;
+		}
 		int32_t current_x = clipped_target.x;
 		int32_t current_y = clipped_target.y;
-		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
-		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
-		int32_t source_index = (selected_segment_index + 1) % int32_t(source_points.size());
-		for (int32_t guard = 0; guard < int32_t(source_points.size()) + 4; ++guard) {
-			const int32_t next_source_index = (source_index + 1) % int32_t(source_points.size());
+		int32_t source_index = (selected_segment_index + 1) % int32_t(source_nodes.size());
+		for (int32_t guard = 0; guard < int32_t(source_nodes.size()) + 4; ++guard) {
+			const int32_t next_source_index = (source_index + 1) % int32_t(source_nodes.size());
 			if (source_index == selected_segment_index) {
 				break;
 			}
-			const PolygonPoint from = source_points[size_t(source_index)];
-			const PolygonPoint to = source_points[size_t(next_source_index)];
+			const SourceCycleNode &from_node = source_nodes[size_t(source_index)];
+			const PolygonPoint from = node_point(from_node);
+			const PolygonPoint to = node_point(source_nodes[size_t(next_source_index)]);
 			source_index = next_source_index;
 			if (from.x == to.x && from.y == to.y) {
 				continue;
 			}
-			const ClipResult next_clip = clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
-			if (!point_inside_bounds_4a2777(next_clip, bounds)) {
+			const ClipResult from_clip = clip_point_4a2b33(from.x, from.y, to.x, to.y, bounds);
+			const ClipResult to_clip = clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
+			if (!point_inside_bounds_4a2777(from_clip, bounds) || !point_inside_bounds_4a2777(to_clip, bounds)) {
 				continue;
 			}
-			int32_t wrap_guard = 0;
-			while (current_x != next_clip.x && current_y != next_clip.y && point_on_clip_border(current_x, current_y) && point_on_clip_border(next_clip.x, next_clip.y) && wrap_guard < 8) {
-				int32_t border_x = current_x;
-				int32_t border_y = current_y;
-				if (current_x == bounds.min_x) {
-					if (current_y == bounds.min_y) {
-						border_x = right_x;
-						border_y = bounds.min_y;
-					} else {
-						border_x = bounds.min_x;
-						border_y = bounds.min_y;
-					}
-				} else if (current_y == bounds.min_y) {
-					border_x = right_x;
-					border_y = bounds.min_y;
-				} else if (current_x == right_x && current_y != bottom_y) {
-					border_x = right_x;
-					border_y = bottom_y;
-				} else {
-					border_x = bounds.min_x;
-					border_y = bottom_y;
-				}
-				append_segment(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
-				current_x = border_x;
-				current_y = border_y;
-				wrap_segment_count += 1;
-				wrap_guard += 1;
-			}
-			if (wrap_guard >= 8 && current_x != next_clip.x && current_y != next_clip.y) {
+			append_border_connection(current_x, current_y, from_clip.x, from_clip.y, zone_word, level, random_span_limit);
+			if (loop_guard_exhausted) {
 				loop_guard_exhausted = true;
 				break;
 			}
-			if (current_x != next_clip.x || current_y != next_clip.y) {
-				append_segment(current_x, current_y, next_clip.x, next_clip.y, zone_word, level, false, random_span_limit);
-				current_x = next_clip.x;
-				current_y = next_clip.y;
-				final_segment_count += 1;
+			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
+				if (source_edge_writer_allowed(from_node)) {
+					append_segment(from_clip.x, from_clip.y, to_clip.x, to_clip.y, zone_word, level, false, random_span_limit);
+					connector_segment_count += 1;
+				} else {
+					owner_gate_skipped_segment_count += 1;
+				}
+				current_x = to_clip.x;
+				current_y = to_clip.y;
 			}
 			if (source_index == selected_segment_index) {
 				break;
@@ -5713,6 +5767,7 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	report["randomized_inserted_midpoint_count"] = randomized_inserted_midpoint_count;
 	report["randomized_max_pending_point_count"] = randomized_max_pending_point_count;
 	report["skipped_unfinalized_node_count"] = skipped_unfinalized_node_count;
+	report["owner_gate_skipped_segment_count"] = owner_gate_skipped_segment_count;
 	report["rng_state_after_0x4a2777_uint32"] = int64_t(rng.state);
 	report["trace_write_count"] = trace_write_count;
 	report["unique_boundary_cell_count"] = int32_t(boundary_unique_cells.size());
@@ -5794,6 +5849,7 @@ Dictionary zone_boundary_and_span_fill_phase(const Dictionary &normalized_config
 	phase["boundary_randomized_inserted_midpoint_count"] = fill.get("randomized_inserted_midpoint_count", 0);
 	phase["boundary_randomized_max_pending_point_count"] = fill.get("randomized_max_pending_point_count", 0);
 	phase["boundary_skipped_unfinalized_node_count"] = fill.get("skipped_unfinalized_node_count", 0);
+	phase["boundary_owner_gate_skipped_segment_count"] = fill.get("owner_gate_skipped_segment_count", 0);
 	phase["boundary_rng_state_after_0x4a2777_uint32"] = fill.get("rng_state_after_0x4a2777_uint32", 0);
 	phase["boundary_trace_write_count"] = fill.get("trace_write_count", 0);
 	phase["boundary_unique_cell_count"] = fill.get("unique_boundary_cell_count", 0);
