@@ -19072,6 +19072,7 @@ Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_confi
 	PackedInt32Array road_byte_4 = road_serialization.get("tile_byte_4_road_type_u8", PackedInt32Array());
 	PackedInt32Array road_byte_5 = road_serialization.get("tile_byte_5_road_art_u8", PackedInt32Array());
 	PackedInt32Array road_byte_6 = road_serialization.get("tile_byte_6_road_flags_u8", PackedInt32Array());
+	const bool river_overlay_materialized = bool(road_serialization.get("materializes_serialized_river_overlay", false));
 	phase["expected_tile_byte_array_size"] = expected_cell_count;
 	phase["terrain_byte_0_size"] = terrain_byte_0.size();
 	phase["terrain_byte_1_size"] = terrain_byte_1.size();
@@ -19146,10 +19147,19 @@ Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_confi
 	structural_validation["final_flag_byte_count"] = final_byte_6.size();
 	structural_validation["package_object_count"] = package_adoption_phase.get("package_object_count", 0);
 	structural_validation["authorizes_public_runtime"] = false;
+	structural_validation["river_overlay_materialized"] = river_overlay_materialized;
+	structural_validation["river_overlay_placeholder_zero_bytes"] = !river_overlay_materialized;
+	structural_validation["native_rmg_end_to_end_parity_complete"] = false;
+	structural_validation["final_tile_payload_compare_required"] = true;
 
 	phase["status"] = draft_complete ? String("strict_final_0x49b2b6_writeout_draft_runtime_blocked") : String("strict_final_0x49b2b6_writeout_draft_incomplete_runtime_blocked");
-	phase["source"] = "strict final 0x49b2b6 tile-byte draft assembled from private terrain byte candidates, private road overlay bytes, zero river bytes for the current small-land scope, and the non-authoritative package draft object payload";
+	phase["source"] = "strict final 0x49b2b6 tile-byte draft assembled from private terrain byte candidates, private road overlay bytes, placeholder zero river bytes until 0x4b4243 river overlay writeback is ported, and the non-authoritative package draft object payload";
 	phase["materializes_final_serializer_draft"] = true;
+	phase["native_rmg_end_to_end_parity_complete"] = false;
+	phase["final_tile_payload_compare_required"] = true;
+	phase["final_tile_payload_compare_tool"] = "tools/rmg_h3maped_final_tile_payload_compare.py";
+	phase["river_overlay_materialized"] = river_overlay_materialized;
+	phase["river_overlay_placeholder_zero_bytes"] = !river_overlay_materialized;
 	phase["tile_byte_array_count"] = 7;
 	phase["tile_byte_array_size"] = expected_cell_count;
 	phase["terrain_tile_count"] = terrain_byte_0.size();
@@ -19165,6 +19175,9 @@ Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_confi
 	phase["tile_bytes"] = tile_bytes;
 	phase["structural_validation"] = structural_validation;
 	phase["remaining_blockers"] = Array::make(
+			"native_vs_h3maped_final_tile_payload_compare",
+			"terrain_generated_cell_word_0x24_private_state_parity",
+			"river_overlay_writeback_0x4b4243_0x49b2b6",
 			"fast_structural_validator_authority",
 			"public_generate_random_map_authority_after_package_validation",
 			"editor_runtime_adoption_audit");
