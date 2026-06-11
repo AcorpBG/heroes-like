@@ -4696,10 +4696,6 @@ uint32_t zone_word_4a325d(uint32_t existing_word, int32_t zone_id) {
 
 int32_t zone_word_id_for_runtime_zone(const Dictionary &runtime_zone) {
 	const int32_t runtime_index = int32_t(runtime_zone.get("runtime_zone_index", runtime_zone.get("runtime_index", -1)));
-	const int32_t source_zone_id = int32_t(runtime_zone.get("source_zone_id", -1));
-	if (source_zone_id >= 0) {
-		return source_zone_id;
-	}
 	return runtime_index;
 }
 
@@ -5015,6 +5011,39 @@ LineWriteResult randomized_line_writer_4a2413(int32_t map_width, int32_t map_hei
 
 bool point_inside_bounds_4a2777(const ClipResult &point, const ClipBounds &bounds) {
 	return point.x >= bounds.min_x && point.x < bounds.max_x && point.y >= bounds.min_y && point.y < bounds.max_y;
+}
+
+SpanRecord relocated_seed_4a325d(const SourceWalk &walk, const SpanRecord &seed, int32_t map_width, int32_t map_height, int32_t map_level_count, int32_t &relocation_count) {
+	if (seed.x >= 0 && seed.x < map_width && seed.y >= 0 && seed.y < map_height && seed.level >= 0 && seed.level < map_level_count) {
+		return seed;
+	}
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	int32_t best_clearance = -1;
+	for (const SourceCycleNode &node : walk.cycle_nodes) {
+		const int32_t x = node.x;
+		const int32_t y = node.y;
+		if (x < 1 || x >= map_width - 1 || y < 1 || y >= map_height - 1) {
+			continue;
+		}
+		const int32_t clearance = std::min<int32_t>(std::min<int32_t>(x, map_width - x - 1), std::min<int32_t>(y, map_height - y - 1));
+		if (clearance > best_clearance) {
+			best_clearance = clearance;
+			best_x = x;
+			best_y = y;
+		}
+	}
+	if (best_x < 0 || best_y < 0) {
+		return seed;
+	}
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = map_width;
+	bounds.max_y = map_height;
+	ClipResult clipped = clip_point_4a2b33(seed.x, seed.y, best_x, best_y, bounds);
+	relocation_count += 1;
+	return SpanRecord { clipped.x, clipped.y, seed.level };
 }
 
 void apply_line_trace_to_zone_buffer_4a2777(const LineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint8_t> &cell_flags, int32_t map_width, int32_t map_height, int32_t map_level_count) {
@@ -5405,6 +5434,7 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	int32_t randomized_rng_call_count = 0;
 	int32_t randomized_inserted_midpoint_count = 0;
 	int32_t randomized_max_pending_point_count = 0;
+	int32_t skipped_unfinalized_node_count = 0;
 	bool loop_guard_exhausted = false;
 	H3MapedRng rng { rng_state_after_coordinate_seed };
 
@@ -5455,6 +5485,10 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 		const int32_t random_span_limit = std::max<int32_t>(1, int32_t(runtime_zone.get("runtime_size_after_bbox_rescale", runtime_zone.get("source_base_size", 1))));
 		std::vector<PolygonPoint> source_points;
 		for (const SourceCycleNode &node : walk.cycle_nodes) {
+			if (!node.finalized) {
+				skipped_unfinalized_node_count += 1;
+				continue;
+			}
 			source_points.push_back(PolygonPoint { node.finalized_x, node.finalized_y });
 		}
 		if (source_points.size() < 2) {
@@ -5562,6 +5596,7 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	int32_t popped_span_count = 0;
 	int32_t max_pending_span_count = 0;
 	int32_t blocked_initial_span_count = 0;
+	int32_t seed_relocation_count = 0;
 	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
 		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -5572,6 +5607,19 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 		seed.x = int32_t(runtime.get("x_after_bbox_rescale", 0));
 		seed.y = int32_t(runtime.get("y_after_bbox_rescale", 0));
 		seed.level = int32_t(runtime.get("level", 0));
+		SourceWalk matching_walk;
+		bool found_walk = false;
+		const int32_t runtime_zone_index = int32_t(runtime.get("runtime_zone_index", runtime.get("runtime_index", runtime_index)));
+		for (const SourceWalk &walk : source.walks) {
+			if (walk.runtime_zone_index == runtime_zone_index) {
+				matching_walk = walk;
+				found_walk = true;
+				break;
+			}
+		}
+		if (found_walk) {
+			seed = relocated_seed_4a325d(matching_walk, seed, map_width, map_height, map_level_count, seed_relocation_count);
+		}
 		if (!span_cell_in_bounds_4a325d(map_width, map_height, map_level_count, seed)) {
 			seed_blocked_count += 1;
 			continue;
@@ -5634,6 +5682,7 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	report["randomized_rng_call_count"] = randomized_rng_call_count;
 	report["randomized_inserted_midpoint_count"] = randomized_inserted_midpoint_count;
 	report["randomized_max_pending_point_count"] = randomized_max_pending_point_count;
+	report["skipped_unfinalized_node_count"] = skipped_unfinalized_node_count;
 	report["rng_state_after_0x4a2777_uint32"] = int64_t(rng.state);
 	report["trace_write_count"] = trace_write_count;
 	report["unique_boundary_cell_count"] = int32_t(boundary_unique_cells.size());
@@ -5651,6 +5700,7 @@ Dictionary boundary_and_span_fill_4a2777_4a325d(const Dictionary &normalized_con
 	report["max_pending_span_count"] = max_pending_span_count;
 	report["out_of_bounds_span_count"] = out_of_bounds_span_count;
 	report["blocked_initial_span_count"] = blocked_initial_span_count;
+	report["seed_relocation_count"] = seed_relocation_count;
 	report["cells_by_zone_word"] = cells_by_zone_word_report;
 	if (zone_words_out != nullptr) {
 		*zone_words_out = zone_words;
@@ -7027,8 +7077,8 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	std::vector<int32_t> live_terrain_code(size_t(tile_count), 8);
 	std::vector<uint32_t> live_scratch_word(size_t(tile_count), 0);
 	std::vector<uint32_t> live_cell_word_0x20(size_t(tile_count), 0xffff7fbcU);
-	std::vector<uint32_t> live_cell_word_0x24(size_t(tile_count), 0);
-	std::vector<uint32_t> live_cell_word_0x28(size_t(tile_count), 0);
+	std::vector<uint32_t> live_cell_word_0x24(size_t(tile_count), 0x00000548U);
+	std::vector<uint32_t> live_cell_word_0x28(size_t(tile_count), H3MAPED_CELL_DECOR_READY_BIT_25 | H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27);
 	int32_t live_cell_word_0x20_owner_byte_materialized_count = 0;
 	int32_t live_cell_word_0x20_unassigned_sentinel_count = 0;
 	for (int32_t index = 0; index < tile_count; ++index) {
@@ -7119,8 +7169,11 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 			return false;
 		}
 		const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, selected_row, out_flag_a, out_flag_b);
-		const uint32_t generated_cell_word_0x24 = (uint32_t(terrain_id) & 0x3fU) | ((uint32_t(selected_row) & 0xffU) << 6U);
-			const uint32_t generated_cell_word_0x28 = H3MAPED_CELL_DECOR_READY_BIT_25 | h3maped_generated_cell_terrain_flags_0x4a59e2(out_flag_a, out_flag_b);
+		const uint32_t generated_cell_word_0x24 = (live_cell_word_0x24[size_t(index)] & 0xffffc000U)
+				| (uint32_t(terrain_id) & 0x3fU)
+				| ((uint32_t(selected_row) & 0xffU) << 6U);
+			const uint32_t generated_cell_word_0x28 = (live_cell_word_0x28[size_t(index)] & ~H3MAPED_CELL_TERRAIN_FLAG_MASK_0X4A59E2)
+					| h3maped_generated_cell_terrain_flags_0x4a59e2(out_flag_a, out_flag_b);
 			live_scratch_word[size_t(index)] = scratch_word;
 			live_cell_word_0x24[size_t(index)] = generated_cell_word_0x24;
 			live_cell_word_0x28[size_t(index)] = generated_cell_word_0x28;
@@ -14690,10 +14743,8 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 			const int32_t high_owner = owner_high[size_t(flat)];
 			if (high_owner < 0) {
 				high_owner_live_word_sentinel_count += 1;
-				live_cell_word_0x20[size_t(flat)] = (live_cell_word_0x20[size_t(flat)] & 0x00ffffffU) | 0xff000000U;
 				continue;
 			}
-			live_cell_word_0x20[size_t(flat)] = (live_cell_word_0x20[size_t(flat)] & 0x00ffffffU) | ((uint32_t(high_owner) & 0xffU) << 24U);
 			high_owner_live_word_write_count += 1;
 		}
 	}
@@ -15027,8 +15078,10 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	high_owner_report["owner_low_byte_materialized_count"] = owner_low_materialized_count;
 	high_owner_report["cross_owner_high_byte_write_count"] = high_owner_cross_write_count;
 	high_owner_report["cross_owner_direction_write_count"] = high_owner_direction_write_count;
-	high_owner_report["live_cell_word_0x20_high_owner_write_count"] = high_owner_live_word_write_count;
+	high_owner_report["live_cell_word_0x20_high_owner_write_count"] = 0;
+	high_owner_report["diagnostic_high_owner_candidate_count"] = high_owner_live_word_write_count;
 	high_owner_report["live_cell_word_0x20_high_owner_sentinel_count"] = high_owner_live_word_sentinel_count;
+	high_owner_report["live_cell_word_0x20_high_owner_adoption_status"] = "not_adopted_relation_local_work_vector_until_sparse_0x49a318_mutations_are_replayed";
 	high_owner_report["same_owner_relax_count"] = high_owner_same_owner_relax_count;
 	high_owner_report["popped_cell_count"] = high_owner_popped_cell_count;
 	high_owner_report["max_queue_size"] = max_high_owner_queue_size;
@@ -15457,7 +15510,6 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	}
 
 	Dictionary relation_vectors_0x49b3fb = connections_phase.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
-	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = private_state_checkpoint_0x4a4c8e_generated_cells(map_width, map_height, map_level_count, live_cell_word_0x20, live_cell_word_0x24, live_cell_word_0x28, live_terrain_code, "pre_0x4a4c8e", "0x4a4c8e");
 	phase["private_state_checkpoint_0x49b3fb_relations"] = private_state_checkpoint_0x49b3fb_relations(relation_vectors_0x49b3fb);
 	auto lookup_relation_0x49b3fb = [&](int32_t runtime_zone, int32_t neighbor_runtime_zone, bool &wide_byte_plus_8) {
 		wide_byte_plus_8 = false;
@@ -15993,6 +16045,7 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["materializes_generated_cell_bit_26"] = final_bit_26_count > 0;
 	phase["materializes_generated_cell_bit_27"] = final_bit_27_count > 0;
 	phase["exact_upstream_bit_source_claim"] = owner_transition_diagnostic_new_gap_count == 0;
+	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = private_state_checkpoint_0x4a4c8e_generated_cells(map_width, map_height, map_level_count, live_cell_word_0x20, live_cell_word_0x24, live_cell_word_0x28, live_terrain_code, "pre_0x4a4c8e", "0x4a4c8e");
 	if (out_live_cell_word_0x2c != nullptr) {
 		*out_live_cell_word_0x2c = live_cell_word_0x2c;
 	}
