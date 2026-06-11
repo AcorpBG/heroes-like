@@ -3365,6 +3365,72 @@ bool player_filter_allows(const Dictionary &filter, int32_t humans, int32_t play
 			&& players <= int32_t(filter.get("max_total", 8));
 }
 
+Dictionary runtime_zone_relation_lookup_0x49b3fb_phase(const Array &link_seeds) {
+	Dictionary phase;
+	phase["phase_id"] = "runtime_zone_relation_lookup_0x49b3fb";
+	phase["status"] = "active_strict_relation_vectors_0x49b3fb";
+	phase["h3maped_anchor"] = "0x49b3fb";
+	phase["source"] = "reciprocal runtime-zone relation records built from recovered 0x4a1f3b link seeds before 0x4a8c15 relation consumers";
+	phase["materializes_connection_guards"] = false;
+	phase["materializes_blockers"] = false;
+	phase["materializes_public_output"] = false;
+	Dictionary relation_vectors;
+	int32_t relation_record_count = 0;
+	int32_t relation_wide_byte_8_count = 0;
+	auto append_relation = [&](int32_t owner_relation_key, int32_t neighbor_relation_key, int32_t owner_zone_word_id, int32_t neighbor_zone_word_id, int32_t runtime_zone, int32_t neighbor_runtime_zone, const Dictionary &seed) {
+		if (owner_relation_key < 0 || neighbor_relation_key < 0) {
+			return;
+		}
+		const String key = String::num_int64(owner_relation_key);
+		Array records = relation_vectors.get(key, Array());
+		Dictionary relation;
+		relation["relation_owner_key"] = owner_relation_key;
+		relation["relation_neighbor_key"] = neighbor_relation_key;
+		relation["owner_zone_word_id"] = owner_zone_word_id;
+		relation["neighbor_zone_word_id"] = neighbor_zone_word_id;
+		relation["first_dword_zone_word_id"] = neighbor_zone_word_id;
+		relation["owner_runtime_zone"] = runtime_zone;
+		relation["neighbor_runtime_zone"] = neighbor_runtime_zone;
+		relation["first_dword_runtime_zone"] = neighbor_runtime_zone;
+		relation["byte_plus_8_wide"] = bool(seed.get("wide", false)) ? 1 : 0;
+		relation["wide"] = bool(seed.get("wide", false));
+		relation["border_guard"] = bool(seed.get("border_guard", false));
+		relation["guard_value"] = seed.get("guard_value", 0);
+		relation["link_index"] = seed.get("link_index", -1);
+		relation["source_row"] = seed.get("source_row", -1);
+		relation["h3maped_lookup_anchor"] = "0x49b3fb";
+		records.append(relation);
+		relation_vectors[key] = records;
+		relation_record_count += 1;
+		if (bool(seed.get("wide", false))) {
+			relation_wide_byte_8_count += 1;
+		}
+	};
+	auto append_relation_aliases = [&](int32_t source_a, int32_t source_b, int32_t runtime_a, int32_t runtime_b, const Dictionary &seed) {
+		append_relation(source_a, source_b, source_a, source_b, runtime_a, runtime_b, seed);
+		if (runtime_a != source_a || runtime_b != source_b) {
+			append_relation(runtime_a, runtime_b, source_a, source_b, runtime_a, runtime_b, seed);
+		}
+	};
+	for (int64_t relation_index = 0; relation_index < link_seeds.size(); ++relation_index) {
+		if (Variant(link_seeds[relation_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary seed = link_seeds[relation_index];
+		const int32_t runtime_a = int32_t(seed.get("runtime_zone_a", -1));
+		const int32_t runtime_b = int32_t(seed.get("runtime_zone_b", -1));
+		const int32_t source_a = int32_t(seed.get("source_zone_a", runtime_a));
+		const int32_t source_b = int32_t(seed.get("source_zone_b", runtime_b));
+		append_relation_aliases(source_a, source_b, runtime_a, runtime_b, seed);
+		append_relation_aliases(source_b, source_a, runtime_b, runtime_a, seed);
+	}
+	phase["link_seed_count"] = link_seeds.size();
+	phase["runtime_zone_relation_vectors_0x49b3fb"] = relation_vectors;
+	phase["runtime_zone_relation_record_count_0x49b3fb"] = relation_record_count;
+	phase["runtime_zone_relation_wide_byte_8_count_0x49b3fb"] = relation_wide_byte_8_count;
+	return phase;
+}
+
 Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary &selection, const Dictionary &runtime_zone_phase) {
 	Dictionary phase;
 	phase["phase_id"] = "link_seed_setup";
@@ -3446,6 +3512,11 @@ Dictionary link_seed_phase(const Dictionary &normalized_config, const Dictionary
 	phase["original_template_name"] = original_template.get("name", "");
 	phase["link_seed_count"] = seeds.size();
 	phase["link_seeds"] = seeds;
+	Dictionary relation_lookup = runtime_zone_relation_lookup_0x49b3fb_phase(seeds);
+	phase["runtime_zone_relation_lookup_0x49b3fb"] = relation_lookup;
+	phase["runtime_zone_relation_vectors_0x49b3fb"] = relation_lookup.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
+	phase["runtime_zone_relation_record_count_0x49b3fb"] = relation_lookup.get("runtime_zone_relation_record_count_0x49b3fb", 0);
+	phase["runtime_zone_relation_wide_byte_8_count_0x49b3fb"] = relation_lookup.get("runtime_zone_relation_wide_byte_8_count_0x49b3fb", 0);
 	return phase;
 }
 
@@ -9220,6 +9291,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	std::array<int32_t, 9> h3maped_generator_0xf64_town_choice_counts = {};
 	int32_t h3maped_generator_0xf60_town_choice_total = 0;
 	int32_t h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count = 0;
+	Array reward_scheduler_active_runtime_records_0x10e4;
+	int32_t reward_scheduler_active_relation_vector_count_0x10e4 = 0;
 	for (int64_t index = 0; index < runtime_records.size(); ++index) {
 		if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -9229,6 +9302,11 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count += 1;
 			continue;
 		}
+		Dictionary active_runtime = runtime.duplicate(true);
+		active_runtime["active_relation_vector_index_0x10e4"] = reward_scheduler_active_relation_vector_count_0x10e4;
+		active_runtime["active_relation_vector_source_0x10e4"] = "0x4ac552 iterates generator+0x10e4..+0x10e8 after 0x4aadd2 counts records with runtime byte+0x3c set";
+		reward_scheduler_active_runtime_records_0x10e4.append(active_runtime);
+		reward_scheduler_active_relation_vector_count_0x10e4 += 1;
 		const int32_t town_choice_index = int32_t(runtime.get("town_choice_index", runtime.get("town_choice_index_49b3c1", -1)));
 		if (town_choice_index >= 0 && town_choice_index < int32_t(h3maped_generator_0xf64_town_choice_counts.size())) {
 			h3maped_generator_0xf64_town_choice_counts[size_t(town_choice_index)] += 1;
@@ -9407,6 +9485,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		reward_zone["treasure_band_count"] = bands.size();
 		reward_zone["eligible_reward_band_count"] = zone_eligible_count;
 		reward_zone["eligible_reward_density_sum"] = zone_density_sum;
+		reward_zone["active_relation_vector_member_0x10e4"] = bool(runtime.get("runtime_byte_0x3c_inferred", false));
+		reward_zone["active_relation_vector_source_0x10e4"] = "0x4ac552 reward scheduler consumes generator+0x10e4 active records; native projects that vector from recovered 0x4aadd2 runtime byte+0x3c semantics";
 		reward_zone["scheduler_status"] = zone_eligible_count > 0 ? String("0x4aab7e_reward_band_budget_preview_private") : String("0x4aab7e_no_eligible_reward_band");
 		reward_zone["coordinate_commit_materialized"] = false;
 		reward_scheduler_preview.append(reward_zone);
@@ -11077,12 +11157,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		h3maped_increment_type_count(reward_global_type_counts, placed_type_id);
 		h3maped_increment_zone_type_count(reward_zone_type_counts, placed_runtime_zone_index, placed_type_id);
 	}
-	for (int64_t zone_index = 0; zone_index < runtime_records.size(); ++zone_index) {
-		if (Variant(runtime_records[zone_index]).get_type() != Variant::DICTIONARY) {
+	for (int64_t zone_index = 0; zone_index < reward_scheduler_active_runtime_records_0x10e4.size(); ++zone_index) {
+		if (Variant(reward_scheduler_active_runtime_records_0x10e4[zone_index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
-		Dictionary runtime = runtime_records[zone_index];
+		Dictionary runtime = reward_scheduler_active_runtime_records_0x10e4[zone_index];
 		const int32_t runtime_index = int32_t(runtime.get("runtime_zone_index", runtime.get("runtime_index", zone_index)));
+		const int32_t active_relation_vector_index_0x10e4 = int32_t(runtime.get("active_relation_vector_index_0x10e4", zone_index));
 		const int32_t expected_zone_word_id = zone_word_id_for_runtime_zone(runtime);
 		const int32_t runtime_terrain_id = runtime_index >= 0 && runtime_index < selected_terrain_ids.size() ? int32_t(selected_terrain_ids[runtime_index]) : -1;
 		Dictionary scaled = scaled_by_runtime.get(String::num_int64(runtime_index), Dictionary());
@@ -11172,11 +11253,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				selected_value = (value_rng % (selected_band.high - selected_band.low)) + selected_band.low;
 			}
 
-			Dictionary value_record;
-			value_record["phase"] = "0x4aab7e_0x4aa354_reward_value_selection_preview";
-				value_record["runtime_zone_index"] = runtime_index;
-					value_record["source_zone_id"] = runtime.get("source_zone_id", -1);
-					value_record["attempt_index_within_zone"] = attempt;
+				Dictionary value_record;
+				value_record["phase"] = "0x4aab7e_0x4aa354_reward_value_selection_preview";
+					value_record["runtime_zone_index"] = runtime_index;
+					value_record["active_relation_vector_index_0x10e4"] = active_relation_vector_index_0x10e4;
+						value_record["source_zone_id"] = runtime.get("source_zone_id", -1);
+						value_record["attempt_index_within_zone"] = attempt;
 					value_record["band_index"] = selected_band.band_index;
 					value_record["retry_pass_0x4aab7e"] = reward_retry_pass;
 					value_record["retry_index_0x4aab7e"] = reward_retry_index;
@@ -11222,9 +11304,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				reward_object_lookup_rng_call_count += 1;
 			}
 			reward_object_lookup_rng_call_count += object_selection.candidate_template_rng_call_count_0x4a9e40;
-			Dictionary object_lookup;
-			object_lookup["phase"] = "0x4aa1db_reward_object_lookup_private";
-			object_lookup["candidate_scan_helper_address"] = "0x4a9f1c";
+				Dictionary object_lookup;
+				object_lookup["phase"] = "0x4aa1db_reward_object_lookup_private";
+				object_lookup["active_relation_vector_index_0x10e4"] = active_relation_vector_index_0x10e4;
+				object_lookup["candidate_scan_helper_address"] = "0x4a9f1c";
 			object_lookup["candidate_vector_builder_address"] = "0x49f95a";
 			object_lookup["source_0x4a9f1c_template_selector_timing"] = "0x4a9f1c calls 0x4a9e40 while building each candidate-vector entry before weighted selection";
 			object_lookup["source_0x4a9f1c_fallback_flag_filter"] = "0x4aab7e primary retries pass flag 0 to 0x4aa354, fallback retries pass flag 1, and 0x4aa1db forwards that flag to 0x4a9f1c arg+0x20 where 0x4aa195 value-per-footprint filtering is applied";
@@ -11270,9 +11353,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["coordinate_commit_materialized"] = false;
 			object_lookup["runtime_h3maped_terrain_id"] = runtime_terrain_id;
 			Dictionary placement_record;
-			placement_record["phase"] = "0x4aa9b7_reward_coordinate_scan_private";
-			placement_record["runtime_zone_index"] = runtime_index;
-					placement_record["source_zone_id"] = runtime.get("source_zone_id", -1);
+					placement_record["phase"] = "0x4aa9b7_reward_coordinate_scan_private";
+					placement_record["runtime_zone_index"] = runtime_index;
+						placement_record["active_relation_vector_index_0x10e4"] = active_relation_vector_index_0x10e4;
+						placement_record["source_zone_id"] = runtime.get("source_zone_id", -1);
 					placement_record["attempt_index_within_zone"] = attempt;
 						placement_record["placement_score_threshold"] = placement_score_threshold;
 					placement_record["retry_pass_0x4aab7e"] = reward_retry_pass;
@@ -13541,10 +13625,11 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						}
 						reward_scheduler_density_loop_attempt_capacity_total += selected_attempts.size();
 
-				Dictionary scheduler;
-			scheduler["phase"] = "0x4aab7e_weighted_reward_scheduler";
-		scheduler["runtime_zone_index"] = runtime_index;
-		scheduler["source_zone_id"] = runtime.get("source_zone_id", -1);
+					Dictionary scheduler;
+				scheduler["phase"] = "0x4aab7e_weighted_reward_scheduler";
+			scheduler["runtime_zone_index"] = runtime_index;
+			scheduler["active_relation_vector_index_0x10e4"] = active_relation_vector_index_0x10e4;
+			scheduler["source_zone_id"] = runtime.get("source_zone_id", -1);
 		scheduler["eligible_band_count"] = int32_t(eligible_bands.size());
 		scheduler["eligible_density_total"] = total_density;
 					scheduler["eligible_density_product"] = density_product;
@@ -13578,6 +13663,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["h3maped_generator_0xf64_town_choice_counts"] = h3maped_generator_0xf64_town_choice_counts_array;
 	reward_scheduler["h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count"] = h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count;
 	reward_scheduler["h3maped_generator_0xf60_0xf64_source"] = "0x4aadd2_counts_only_runtime_zones_with_runtime_byte_0x3c_set";
+	reward_scheduler["active_relation_vector_count_0x10e4"] = reward_scheduler_active_relation_vector_count_0x10e4;
+	reward_scheduler["active_relation_vector_source_0x10e4"] = "0x4ac552 calls 0x4aab7e once per generator+0x10e4..+0x10e8 active record; native projects that vector from recovered 0x4aadd2 runtime byte+0x3c records instead of scheduling every runtime zone";
+	reward_scheduler["scheduler_runtime_record_count_before_active_filter"] = runtime_records.size();
+	reward_scheduler["scheduler_inactive_runtime_record_count"] = h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count;
 	reward_scheduler["coordinate_commit_anchor"] = "0x4aa9b7";
 	reward_scheduler["coordinate_filter_anchor"] = "0x4aa603";
 	reward_scheduler["final_object_commit_anchor"] = "0x4aa3e9";
@@ -13700,11 +13789,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["reward_scheduler_retired_band_total"] = reward_scheduler_retired_band_total;
 	phase["reward_value_preview_rng_call_count"] = reward_value_preview_rng_call_count;
 	phase["reward_scheduler_budget_argument_total"] = reward_scheduler_budget_total;
-	phase["h3maped_generator_0xf60_town_choice_total"] = h3maped_generator_0xf60_town_choice_total;
-	phase["h3maped_generator_0xf64_town_choice_counts"] = h3maped_generator_0xf64_town_choice_counts_array;
-	phase["h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count"] = h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count;
-	phase["h3maped_generator_0xf60_0xf64_source"] = "0x4aadd2_counts_only_runtime_zones_with_runtime_byte_0x3c_set";
-	phase["reward_object_lookup_count"] = reward_object_lookup_count;
+		phase["h3maped_generator_0xf60_town_choice_total"] = h3maped_generator_0xf60_town_choice_total;
+		phase["h3maped_generator_0xf64_town_choice_counts"] = h3maped_generator_0xf64_town_choice_counts_array;
+		phase["h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count"] = h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count;
+		phase["h3maped_generator_0xf60_0xf64_source"] = "0x4aadd2_counts_only_runtime_zones_with_runtime_byte_0x3c_set";
+		phase["reward_scheduler_active_relation_vector_count_0x10e4"] = reward_scheduler_active_relation_vector_count_0x10e4;
+		phase["reward_scheduler_active_relation_vector_source_0x10e4"] = "0x4ac552 generator+0x10e4..+0x10e8 scheduler vector projected from recovered runtime byte+0x3c records";
+		phase["reward_object_lookup_count"] = reward_object_lookup_count;
 	phase["reward_object_lookup_selected_count"] = reward_object_lookup_selected_count;
 	phase["reward_object_lookup_rng_call_count"] = reward_object_lookup_rng_call_count;
 	phase["reward_candidate_scan_count"] = reward_candidate_scan_count;
@@ -14655,9 +14746,13 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	Array connection_records;
 	Array private_guard_records;
 	Array private_blocker_records;
-	Dictionary runtime_zone_relation_vectors_0x49b3fb;
-	int32_t runtime_zone_relation_record_count_0x49b3fb = 0;
-	int32_t runtime_zone_relation_wide_byte_8_count_0x49b3fb = 0;
+	Dictionary relation_lookup_0x49b3fb = link_phase.get("runtime_zone_relation_lookup_0x49b3fb", Dictionary());
+	if (String(relation_lookup_0x49b3fb.get("status", "")) != "active_strict_relation_vectors_0x49b3fb") {
+		relation_lookup_0x49b3fb = runtime_zone_relation_lookup_0x49b3fb_phase(link_seeds);
+	}
+	Dictionary runtime_zone_relation_vectors_0x49b3fb = relation_lookup_0x49b3fb.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
+	int32_t runtime_zone_relation_record_count_0x49b3fb = int32_t(relation_lookup_0x49b3fb.get("runtime_zone_relation_record_count_0x49b3fb", 0));
+	int32_t runtime_zone_relation_wide_byte_8_count_0x49b3fb = int32_t(relation_lookup_0x49b3fb.get("runtime_zone_relation_wide_byte_8_count_0x49b3fb", 0));
 	int32_t transition_candidate_total = 0;
 	int32_t materialized_connection_count = 0;
 	int32_t materialized_guard_count = 0;
@@ -14677,54 +14772,6 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	int32_t fallback_4a6cf2_selected_count = 0;
 	int32_t fallback_4a6cf2_candidate_total = 0;
 	Array fallback_4a6cf2_records;
-
-	auto append_runtime_zone_relation_0x49b3fb = [&](int32_t owner_relation_key, int32_t neighbor_relation_key, int32_t owner_zone_word_id, int32_t neighbor_zone_word_id, int32_t runtime_zone, int32_t neighbor_runtime_zone, const Dictionary &seed) {
-		if (owner_relation_key < 0 || neighbor_relation_key < 0) {
-			return;
-		}
-		const String key = String::num_int64(owner_relation_key);
-		Array records = runtime_zone_relation_vectors_0x49b3fb.get(key, Array());
-		Dictionary relation;
-		relation["relation_owner_key"] = owner_relation_key;
-		relation["relation_neighbor_key"] = neighbor_relation_key;
-		relation["owner_zone_word_id"] = owner_zone_word_id;
-		relation["neighbor_zone_word_id"] = neighbor_zone_word_id;
-		relation["first_dword_zone_word_id"] = neighbor_zone_word_id;
-		relation["owner_runtime_zone"] = runtime_zone;
-		relation["neighbor_runtime_zone"] = neighbor_runtime_zone;
-		relation["first_dword_runtime_zone"] = neighbor_runtime_zone;
-		relation["byte_plus_8_wide"] = bool(seed.get("wide", false)) ? 1 : 0;
-		relation["wide"] = bool(seed.get("wide", false));
-		relation["border_guard"] = bool(seed.get("border_guard", false));
-		relation["guard_value"] = seed.get("guard_value", 0);
-		relation["link_index"] = seed.get("link_index", -1);
-		relation["source_row"] = seed.get("source_row", -1);
-		relation["h3maped_lookup_anchor"] = "0x49b3fb";
-		records.append(relation);
-		runtime_zone_relation_vectors_0x49b3fb[key] = records;
-		runtime_zone_relation_record_count_0x49b3fb += 1;
-		if (bool(seed.get("wide", false))) {
-			runtime_zone_relation_wide_byte_8_count_0x49b3fb += 1;
-		}
-	};
-	auto append_runtime_zone_relation_aliases_0x49b3fb = [&](int32_t source_a, int32_t source_b, int32_t runtime_a, int32_t runtime_b, const Dictionary &seed) {
-		append_runtime_zone_relation_0x49b3fb(source_a, source_b, source_a, source_b, runtime_a, runtime_b, seed);
-		if (runtime_a != source_a || runtime_b != source_b) {
-			append_runtime_zone_relation_0x49b3fb(runtime_a, runtime_b, source_a, source_b, runtime_a, runtime_b, seed);
-		}
-	};
-	for (int64_t relation_index = 0; relation_index < link_seeds.size(); ++relation_index) {
-		if (Variant(link_seeds[relation_index]).get_type() != Variant::DICTIONARY) {
-			continue;
-		}
-		Dictionary seed = link_seeds[relation_index];
-		const int32_t runtime_a = int32_t(seed.get("runtime_zone_a", -1));
-		const int32_t runtime_b = int32_t(seed.get("runtime_zone_b", -1));
-		const int32_t source_a = int32_t(seed.get("source_zone_a", runtime_a));
-		const int32_t source_b = int32_t(seed.get("source_zone_b", runtime_b));
-		append_runtime_zone_relation_aliases_0x49b3fb(source_a, source_b, runtime_a, runtime_b, seed);
-		append_runtime_zone_relation_aliases_0x49b3fb(source_b, source_a, runtime_b, runtime_a, seed);
-	}
 
 	std::vector<int32_t> owner_low(size_t(std::max(0, expected_cell_count)), -1);
 	std::vector<int32_t> owner_high(size_t(std::max(0, expected_cell_count)), -1);
@@ -15434,6 +15481,7 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	fallback_4a6cf2_report["records"] = fallback_4a6cf2_records;
 	phase["fallback_4a6cf2"] = fallback_4a6cf2_report;
 	phase["transition_candidate_total"] = transition_candidate_total;
+	phase["runtime_zone_relation_lookup_0x49b3fb"] = relation_lookup_0x49b3fb;
 	phase["runtime_zone_relation_vectors_0x49b3fb"] = runtime_zone_relation_vectors_0x49b3fb;
 	phase["runtime_zone_relation_record_count_0x49b3fb"] = runtime_zone_relation_record_count_0x49b3fb;
 	phase["runtime_zone_relation_wide_byte_8_count_0x49b3fb"] = runtime_zone_relation_wide_byte_8_count_0x49b3fb;
@@ -15603,7 +15651,7 @@ Dictionary private_state_checkpoint_0x49b3fb_relations(const Dictionary &relatio
 	return checkpoint;
 }
 
-Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> *out_live_cell_word_0x2c = nullptr) {
+Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &relation_lookup_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> *out_live_cell_word_0x2c = nullptr) {
 	static constexpr std::array<std::array<int32_t, 2>, 8> NEIGHBOR_DELTAS = { {
 		{ 1, 0 },
 		{ 1, 1 },
@@ -15617,7 +15665,7 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 
 	Dictionary phase;
 	phase["phase_id"] = "generated_cell_decoration_bit_state";
-	phase["status"] = "blocked_until_connections";
+	phase["status"] = "blocked_until_relation_lookup_0x49b3fb";
 	phase["h3maped_anchor"] = "0x49aa63/0x49a932/0x4a5a23/0x4a4fc5";
 	phase["decor_candidate_helper_anchor"] = "0x49aa63";
 	phase["occupied_blocked_helper_anchor"] = "0x49a932";
@@ -15629,7 +15677,14 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["water_edge_decor_candidate_writer_anchor"] = "0x4a4fc5";
 	phase["materializes_generated_cell_bit_26"] = false;
 	phase["materializes_generated_cell_bit_27"] = false;
-	if (String(connections_phase.get("status", "")) != "active_strict_private_connection_guards") {
+	Dictionary relation_vectors_0x49b3fb = relation_lookup_phase.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
+	const String relation_status = String(relation_lookup_phase.get("status", ""));
+	if (relation_status != "active_strict_relation_vectors_0x49b3fb") {
+		relation_vectors_0x49b3fb = connections_phase.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
+	}
+	if (relation_status != "active_strict_relation_vectors_0x49b3fb"
+			&& String(connections_phase.get("status", "")) != "active_strict_private_connection_guards"
+			&& String(connections_phase.get("status", "")) != "active_strict_connection_dispatch_no_geometry") {
 		return phase;
 	}
 
@@ -15843,7 +15898,6 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		}
 	}
 
-	Dictionary relation_vectors_0x49b3fb = connections_phase.get("runtime_zone_relation_vectors_0x49b3fb", Dictionary());
 	phase["private_state_checkpoint_0x49b3fb_relations"] = private_state_checkpoint_0x49b3fb_relations(relation_vectors_0x49b3fb);
 	auto lookup_relation_0x49b3fb = [&](int32_t runtime_zone, int32_t neighbor_runtime_zone, bool &wide_byte_plus_8) {
 		wide_byte_plus_8 = false;
@@ -15899,6 +15953,78 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			route_container_0x4a8260_object_vector_nonempty_count += 1;
 			if (mark_occupied_blocked_49a932(flat, true)) {
 				route_container_0x4a8260_bit27_set_count += 1;
+			}
+		}
+	}
+	auto generated_cell_valid_49a1d8_word24 = [&](int64_t flat) {
+		return flat >= 0
+				&& flat < expected_cell_count
+				&& (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U
+				&& (live_cell_word_0x24[size_t(flat)] & 0x3fU) != 9U;
+	};
+	int32_t route_container_0x4a8260_final_sweep_scan_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_call_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_neighbor_scan_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_neighbor_bit22_skip_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count = 0;
+	int32_t route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count = 0;
+	for (int32_t level = 0; level < map_level_count; ++level) {
+		for (int32_t y = 0; y < map_height; ++y) {
+			for (int32_t x = 0; x < map_width; ++x) {
+				const int64_t flat64 = h3maped_cell_index(map_width, map_height, x, y, level);
+				if (flat64 < 0 || flat64 >= expected_cell_count) {
+					continue;
+				}
+				const int32_t flat = int32_t(flat64);
+				route_container_0x4a8260_final_sweep_scan_count += 1;
+				const uint32_t terrain_class_word24 = live_cell_word_0x24[size_t(flat)] & 0x3fU;
+				if (terrain_class_word24 == 8U || terrain_class_word24 == 9U) {
+					if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) == 0U) {
+						const bool was_not_occupied = (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
+						live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+						live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+						if (was_not_occupied) {
+							route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count += 1;
+						}
+					} else {
+						route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count += 1;
+					}
+				}
+				if ((live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) == 0U) {
+					continue;
+				}
+				route_container_0x4a8260_final_sweep_0x49a962_call_count += 1;
+				if (mark_decor_candidate_49aa63(flat, true)) {
+					route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count += 1;
+				}
+				for (int32_t local_y = std::max(0, y - 1); local_y < std::min(map_height, y + 2); ++local_y) {
+					for (int32_t local_x = std::max(0, x - 1); local_x < std::min(map_width, x + 2); ++local_x) {
+						const int64_t neighbor_flat = h3maped_cell_index(map_width, map_height, local_x, local_y, level);
+						if (neighbor_flat < 0 || neighbor_flat >= expected_cell_count) {
+							continue;
+						}
+						route_container_0x4a8260_final_sweep_0x49a962_neighbor_scan_count += 1;
+						if ((live_cell_word_0x28[size_t(neighbor_flat)] & H3MAPED_CELL_ACTION_CONTROL_BIT_22) != 0U) {
+							route_container_0x4a8260_final_sweep_0x49a962_neighbor_bit22_skip_count += 1;
+							continue;
+						}
+						if (!generated_cell_valid_49a1d8_word24(neighbor_flat)) {
+							route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count += 1;
+							continue;
+						}
+						if ((live_cell_word_0x24[size_t(neighbor_flat)] & 0x3fU) == 8U) {
+							route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count += 1;
+							continue;
+						}
+						if (mark_occupied_blocked_49a932(neighbor_flat, false)) {
+							route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count += 1;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -16311,6 +16437,16 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["route_container_0x4a8260_bit26_set_count"] = route_container_0x4a8260_bit26_set_count;
 	upstream_sources["route_container_0x4a8260_bit27_set_count"] = route_container_0x4a8260_bit27_set_count;
 	upstream_sources["route_container_0x4a8260_cell_0x2c_bit0_skip_count"] = route_container_0x4a8260_cell_0x2c_bit0_skip_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_scan_count"] = route_container_0x4a8260_final_sweep_scan_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_call_count"] = route_container_0x4a8260_final_sweep_0x49a962_call_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count"] = route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_scan_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_scan_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_bit22_skip_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_bit22_skip_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count;
+	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count;
 	upstream_sources["route_container_0x4a8260_route_list_replay_complete"] = false;
 	upstream_sources["land_edge_0x4a4c8e_scan_cell_count"] = land_edge_0x4a4c8e_scan_cell_count;
 	upstream_sources["land_edge_0x4a4c8e_owner_high_negative_skip_count"] = land_edge_0x4a4c8e_owner_high_negative_skip_count;
@@ -16383,6 +16519,12 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["route_container_0x4a8260_object_vector_nonempty_count"] = route_container_0x4a8260_object_vector_nonempty_count;
 	phase["route_container_0x4a8260_bit26_set_count"] = route_container_0x4a8260_bit26_set_count;
 	phase["route_container_0x4a8260_bit27_set_count"] = route_container_0x4a8260_bit27_set_count;
+	phase["route_container_0x4a8260_final_sweep_scan_count"] = route_container_0x4a8260_final_sweep_scan_count;
+	phase["route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count;
+	phase["route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count;
+	phase["route_container_0x4a8260_final_sweep_0x49a962_call_count"] = route_container_0x4a8260_final_sweep_0x49a962_call_count;
+	phase["route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count"] = route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count;
+	phase["route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count;
 	phase["junction_0x4a89da_candidate_set_count"] = junction_0x4a89da_candidate_set_count;
 	phase["border_guard_marker_0x4a5a23_record_count"] = border_guard_marker_record_count;
 	phase["decor_candidate_set_count"] = decor_candidate_set_count;
@@ -16392,12 +16534,164 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["materializes_generated_cell_bit_26"] = final_bit_26_count > 0;
 	phase["materializes_generated_cell_bit_27"] = final_bit_27_count > 0;
 	phase["exact_upstream_bit_source_claim"] = false;
-	phase["exact_upstream_bit_source_blocker"] = "0x4a8260 route-list coordinate vector, route RNG entry state, 0x49a85d stamp stream, and dependent final 0x49a962 sweep are not yet replayed from same-run source state";
+	phase["exact_upstream_bit_source_blocker"] = "0x4a8260 route-list coordinate vector, route RNG entry state, and 0x49a85d route stamp stream are not yet replayed from same-run source state";
 	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = pre_0x4a4c8e_checkpoint;
-	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_before_unreplayed_0x4a8260_route_list_dependent_final_sweep_and_native_0x4a4c8e_land_edge_pass";
+	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_plus_final_terrain_8_9_and_0x49a962_sweep_before_unreplayed_0x4a8260_route_list_0x49a85d_stamp_stream_and_native_0x4a4c8e_land_edge_pass";
 	if (out_live_cell_word_0x2c != nullptr) {
 		*out_live_cell_word_0x2c = live_cell_word_0x2c;
 	}
+	return phase;
+}
+
+Dictionary connection_generated_cell_bit_adoption_phase(const Dictionary &normalized_config, const Dictionary &connections_phase, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> &live_cell_word_0x2c) {
+	Dictionary phase;
+	phase["phase_id"] = "connection_generated_cell_bit_adoption";
+	phase["status"] = "blocked_until_connection_dispatch";
+	phase["h3maped_anchor"] = "0x4a79a3/0x4a5a23/0x49a932";
+	phase["source"] = "post-0x4a8c15 connection blocker/guard generated-cell bit adoption split from earlier 0x49b3fb relation lookup";
+	phase["adopts_private_connection_records"] = false;
+	phase["materializes_public_output"] = false;
+	const String connection_status = String(connections_phase.get("status", ""));
+	if (connection_status != "active_strict_private_connection_guards"
+			&& connection_status != "active_strict_connection_dispatch_no_geometry") {
+		return phase;
+	}
+
+	const int32_t map_width = width(normalized_config);
+	const int32_t map_height = height(normalized_config);
+	const int32_t map_level_count = std::max(1, level_count(normalized_config));
+	const int32_t expected_cell_count = map_width * map_height * map_level_count;
+	const bool grid_available = map_width > 0
+			&& map_height > 0
+			&& expected_cell_count == int32_t(live_cell_word_0x28.size())
+			&& expected_cell_count == int32_t(live_cell_word_0x2c.size());
+	if (!grid_available) {
+		phase["status"] = "blocked_missing_generated_cell_grid";
+		return phase;
+	}
+
+	int32_t decor_candidate_set_count = 0;
+	int32_t occupied_blocked_set_count = 0;
+	int32_t occupied_blocked_clear_count = 0;
+	auto mark_decor_candidate_49aa63 = [&](int32_t flat, bool clear_occupied) {
+		if (flat < 0 || flat >= expected_cell_count) {
+			return false;
+		}
+		if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+			return false;
+		}
+		const bool newly_set = (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) == 0U;
+		if (newly_set) {
+			decor_candidate_set_count += 1;
+		}
+		live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+		if (clear_occupied) {
+			live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+		}
+		return newly_set;
+	};
+	auto mark_occupied_blocked_49a932 = [&](int64_t flat, bool occupied_arg) {
+		if (flat < 0 || flat >= expected_cell_count) {
+			return false;
+		}
+		if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+			return false;
+		}
+		if (!occupied_arg) {
+			const bool was_set = (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+			if (was_set) {
+				occupied_blocked_clear_count += 1;
+			}
+			live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+			return was_set;
+		}
+		const bool newly_set = (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
+		if (newly_set) {
+			occupied_blocked_set_count += 1;
+		}
+		live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+		live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+		return newly_set;
+	};
+	auto mark_cell_dictionary_array_occupied = [&](const Array &cells) {
+		int32_t set_count = 0;
+		for (int64_t index = 0; index < cells.size(); ++index) {
+			if (Variant(cells[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = cells[index];
+			if (mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(cell.get("x", -1)), int32_t(cell.get("y", -1)), int32_t(cell.get("level", 0))), true)) {
+				set_count += 1;
+			}
+		}
+		return set_count;
+	};
+
+	Array blocker_records = connections_phase.get("private_blocker_records", Array());
+	Array guard_records = connections_phase.get("private_guard_records", Array());
+	int32_t border_guard_marker_record_count = 0;
+	int32_t border_guard_marker_0x49aa63_candidate_set_count = 0;
+	int32_t border_guard_marker_0x2c_lock_count = 0;
+	int32_t blocker_body_tile_mark_count = 0;
+	int32_t blocker_anchor_mark_count = 0;
+	int32_t guard_anchor_mark_count = 0;
+	for (int64_t index = 0; index < blocker_records.size(); ++index) {
+		if (Variant(blocker_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = blocker_records[index];
+		if (String(record.get("kind", "")) == "border_guard_marker_0x4a5a23") {
+			border_guard_marker_record_count += 1;
+			const int32_t marker_flat = int32_t(record.get("flat_cell_index", -1));
+			if (mark_decor_candidate_49aa63(marker_flat, true)) {
+				border_guard_marker_0x49aa63_candidate_set_count += 1;
+			}
+			if (marker_flat >= 0 && marker_flat < expected_cell_count && (live_cell_word_0x2c[size_t(marker_flat)] & 0x1U) == 0U) {
+				live_cell_word_0x2c[size_t(marker_flat)] |= 0x1U;
+				border_guard_marker_0x2c_lock_count += 1;
+			}
+		}
+		if (Variant(record.get("body_tiles", Variant())).get_type() == Variant::ARRAY) {
+			blocker_body_tile_mark_count += mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
+		} else if (mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true)) {
+			blocker_anchor_mark_count += 1;
+		}
+	}
+	for (int64_t index = 0; index < guard_records.size(); ++index) {
+		if (Variant(guard_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		if (mark_occupied_blocked_49a932(int32_t(Dictionary(guard_records[index]).get("flat_cell_index", -1)), true)) {
+			guard_anchor_mark_count += 1;
+		}
+	}
+
+	int32_t final_bit_26_count = 0;
+	int32_t final_bit_27_count = 0;
+	for (uint32_t word : live_cell_word_0x28) {
+		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+			final_bit_26_count += 1;
+		}
+		if ((word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+			final_bit_27_count += 1;
+		}
+	}
+	phase["status"] = "active_connection_generated_cell_bit_adoption";
+	phase["connection_status"] = connection_status;
+	phase["private_blocker_record_count"] = blocker_records.size();
+	phase["private_guard_record_count"] = guard_records.size();
+	phase["border_guard_marker_0x4a5a23_record_count"] = border_guard_marker_record_count;
+	phase["border_guard_marker_0x49aa63_candidate_set_count"] = border_guard_marker_0x49aa63_candidate_set_count;
+	phase["border_guard_marker_0x2c_lock_count"] = border_guard_marker_0x2c_lock_count;
+	phase["blocker_body_tile_mark_count"] = blocker_body_tile_mark_count;
+	phase["blocker_anchor_mark_count"] = blocker_anchor_mark_count;
+	phase["guard_anchor_mark_count"] = guard_anchor_mark_count;
+	phase["decor_candidate_set_count"] = decor_candidate_set_count;
+	phase["occupied_blocked_set_count"] = occupied_blocked_set_count;
+	phase["occupied_blocked_clear_count"] = occupied_blocked_clear_count;
+	phase["final_decor_candidate_bit_26_count"] = final_bit_26_count;
+	phase["final_occupied_blocked_bit_27_count"] = final_bit_27_count;
+	phase["adopts_private_connection_records"] = true;
 	return phase;
 }
 
@@ -20383,17 +20677,13 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	Dictionary pre_road_phase;
 	pre_road_phase["status"] = "not_yet_run_source_order_after_0x49eb8d";
 	pre_road_phase["source_order_policy"] = "h3maped 0x4a8c15 dispatches 0x4a79a3 before 0x4ab52a roads; native connection dispatch must not consume road RNG or road output";
-	Dictionary connections = connections_blockers_guards_phase(normalized_config, coordinate_after_terrain_geometry, link_seeds, town_castle, pre_road_phase, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code);
-	connections["source_range"] = "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03";
-	connections["binary_byte_prefix_0x4a79a3"] = "b8 eb a9 52 00 e8 23 e7 03 00 83 ec 78 8a 45 f3";
-	connections["binary_byte_prefix_0x4a61bc"] = "b8 24 a9 52 00 e8 0a ff 03 00 83 ec 58 53 8b 55";
-	connections["binary_byte_prefix_0x4a696b"] = "b8 56 a9 52 00 e8 5b f7 03 00 83 ec 5c 8b 55 08";
-	connections["binary_byte_prefix_0x4a6cf2"] = "b8 7c a9 52 00 e8 d4 f3 03 00 83 ec 64 53 8b 55";
-	connections["binary_byte_prefix_0x4a7605"] = "b8 c4 a9 52 00 e8 c1 ea 03 00 83 ec 2c 53 56";
-	connections["binary_byte_prefix_0x4a65a5"] = "8b 44 24 08 56 8b 74 24 08 8b c8 c1 e1 02 57";
-	connections["strict_port_scope"] = "private same-level owner-transition endpoint, blocker cell, and normal guard record materialization only; public runtime/package adoption remains blocked";
-	report["connections_blockers_guards"] = connections;
-	if (inspection_phase_limit_reached(normalized_config, report, "connections_blockers_guards")) {
+	Dictionary relation_lookup = link_seeds.get("runtime_zone_relation_lookup_0x49b3fb", Dictionary());
+	if (String(relation_lookup.get("status", "")) != "active_strict_relation_vectors_0x49b3fb") {
+		relation_lookup = runtime_zone_relation_lookup_0x49b3fb_phase(link_seeds.get("link_seeds", Array()));
+	}
+	relation_lookup["source_order_policy"] = "available before 0x4a8c15 0x4a4c8e relation lookups; does not materialize 0x4a79a3 blockers or guards";
+	report["runtime_zone_relation_lookup_0x49b3fb"] = relation_lookup;
+	if (inspection_phase_limit_reached(normalized_config, report, "runtime_zone_relation_lookup_0x49b3fb")) {
 		return report;
 	}
 	std::vector<uint32_t> object_vector_private_cell_word_0x20;
@@ -20458,7 +20748,10 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	if (inspection_phase_limit_reached(normalized_config, report, "mines_rewards_and_object_vector")) {
 		return report;
 	}
-		Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, pre_road_phase, connections, zone_words, live_cell_word_0x20, live_cell_word_0x24, cell_flags, live_terrain_code, live_cell_word_0x28, &live_cell_word_0x2c);
+	Dictionary pre_connection_phase;
+	pre_connection_phase["status"] = "source_order_pending_0x4a79a3";
+	pre_connection_phase["source_order_policy"] = "0x4a79a3 blockers/guards are materialized after 0x4a8260/0x4a4c8e/0x49a962/0x4a4913/0x4a5767/0x4a4fc5 generated-cell passes";
+		Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, relation_lookup, pre_road_phase, pre_connection_phase, zone_words, live_cell_word_0x20, live_cell_word_0x24, cell_flags, live_terrain_code, live_cell_word_0x28, &live_cell_word_0x2c);
 	generated_cell_bit_state["source_range"] = "0x4a4c8e/0x49aa63/0x49a932/0x4a5a23/0x4a4fc5/0x49eb8d";
 	generated_cell_bit_state["binary_byte_prefix_0x49aa63"] = "generated_cell_decor_candidate_bit_26_helper_recovered_spec_boundary";
 	generated_cell_bit_state["binary_byte_prefix_0x49a932"] = "generated_cell_occupied_blocked_bit_27_helper_recovered_spec_boundary";
@@ -20467,6 +20760,25 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	generated_cell_bit_state["binary_byte_prefix_0x4a4fc5"] = "water_edge_generated_cell_bit_26_writer_recovered_spec_boundary";
 	report["generated_cell_decoration_bit_state"] = generated_cell_bit_state;
 	if (inspection_phase_limit_reached(normalized_config, report, "generated_cell_decoration_bit_state")) {
+		return report;
+	}
+	Dictionary connections = connections_blockers_guards_phase(normalized_config, coordinate_after_terrain_geometry, link_seeds, town_castle, pre_road_phase, zone_words, live_cell_word_0x20, cell_flags, live_terrain_code);
+	connections["source_range"] = "0x4a79a3/0x4a61bc/0x4a696b/0x4a6cf2/0x4a7605/0x4a65a5/0x4a5e03";
+	connections["binary_byte_prefix_0x4a79a3"] = "b8 eb a9 52 00 e8 23 e7 03 00 83 ec 78 8a 45 f3";
+	connections["binary_byte_prefix_0x4a61bc"] = "b8 24 a9 52 00 e8 0a ff 03 00 83 ec 58 53 8b 55";
+	connections["binary_byte_prefix_0x4a696b"] = "b8 56 a9 52 00 e8 5b f7 03 00 83 ec 5c 8b 55 08";
+	connections["binary_byte_prefix_0x4a6cf2"] = "b8 7c a9 52 00 e8 d4 f3 03 00 83 ec 64 53 8b 55";
+	connections["binary_byte_prefix_0x4a7605"] = "b8 c4 a9 52 00 e8 c1 ea 03 00 83 ec 2c 53 56";
+	connections["binary_byte_prefix_0x4a65a5"] = "8b 44 24 08 56 8b 74 24 08 8b c8 c1 e1 02 57";
+	connections["strict_port_scope"] = "private same-level owner-transition endpoint, blocker cell, and normal guard record materialization only; public runtime/package adoption remains blocked";
+	connections["source_order_policy"] = "runs after generated-cell 0x4a8260/0x4a4c8e/0x49a962/0x4a4913/0x4a5767/0x4a4fc5 in the native replay";
+	report["connections_blockers_guards"] = connections;
+	if (inspection_phase_limit_reached(normalized_config, report, "connections_blockers_guards")) {
+		return report;
+	}
+	Dictionary connection_bit_adoption = connection_generated_cell_bit_adoption_phase(normalized_config, connections, live_cell_word_0x28, live_cell_word_0x2c);
+	report["connection_generated_cell_bit_adoption"] = connection_bit_adoption;
+	if (inspection_phase_limit_reached(normalized_config, report, "connection_generated_cell_bit_adoption")) {
 		return report;
 	}
 		Dictionary decorative_filler = decorative_obstacle_filler_phase(normalized_config, town_castle, object_vector, pre_road_phase, connections, generated_cell_bit_state, zone_words, cell_flags, live_cell_word_0x28, live_cell_word_0x2c, live_terrain_code);
