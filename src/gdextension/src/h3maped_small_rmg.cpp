@@ -15744,58 +15744,85 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 				&& flat < expected_cell_count
 				&& private_object_vector_occupied[size_t(flat)] == 0;
 	};
+	auto flat_from_cell_dictionary = [&](const Dictionary &cell, int32_t default_level = 0) -> int64_t {
+		return h3maped_cell_index(
+				map_width,
+				map_height,
+				int32_t(cell.get("x", -1)),
+				int32_t(cell.get("y", -1)),
+				int32_t(cell.get("level", default_level)));
+	};
 
 	Dictionary town_adoption = town_castle_phase.get("project_town_adoption_candidate", Dictionary());
 	Array town_records = town_adoption.get("town_records", Array());
+	int32_t town_object_vector_seed_count_0x49abd6 = 0;
+	int32_t town_object_vector_action_seed_count_0x49abd6 = 0;
+	int32_t town_0x49abd6_action_bit22_count = 0;
+	int32_t town_0x49abd6_body_bit25_clear_count = 0;
+	auto apply_town_0x49abd6_object_reference_vector = [&](const Dictionary &town) {
+		const int32_t level = int32_t(town.get("level", 0));
+		std::set<int32_t> action_flats;
+		Array action_tiles = town.get("action_tiles", town.get("approach_tiles", Array()));
+		for (int64_t action_index = 0; action_index < action_tiles.size(); ++action_index) {
+			if (Variant(action_tiles[action_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			const int64_t flat64 = flat_from_cell_dictionary(Dictionary(action_tiles[action_index]), level);
+			if (flat64 < 0 || flat64 >= expected_cell_count) {
+				continue;
+			}
+			const int32_t flat = int32_t(flat64);
+			action_flats.insert(flat);
+			if (seed_private_object_vector_flat(flat64)) {
+				town_object_vector_seed_count_0x49abd6 += 1;
+				town_object_vector_action_seed_count_0x49abd6 += 1;
+			}
+			const uint32_t before = live_cell_word_0x28[size_t(flat)];
+			live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
+			live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+			live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+			if (before != live_cell_word_0x28[size_t(flat)]) {
+				town_0x49abd6_action_bit22_count += 1;
+			}
+		}
+		Array body_tiles = town.get("body_tiles", Array());
+		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+			if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			const int64_t flat64 = flat_from_cell_dictionary(Dictionary(body_tiles[body_index]), level);
+			if (flat64 < 0 || flat64 >= expected_cell_count) {
+				continue;
+			}
+			const int32_t flat = int32_t(flat64);
+			if (seed_private_object_vector_flat(flat64)) {
+				town_object_vector_seed_count_0x49abd6 += 1;
+			}
+			if (action_flats.count(flat) == 0) {
+				const bool bit25_was_set = (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U;
+				live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_READY_BIT_25;
+				if (bit25_was_set) {
+					town_0x49abd6_body_bit25_clear_count += 1;
+				}
+			}
+			mark_occupied_blocked_49a932(flat64, true);
+		}
+	};
 	for (int64_t index = 0; index < town_records.size(); ++index) {
 		if (Variant(town_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary town = town_records[index];
-			seed_private_object_vector_cells(town.get("body_tiles", Array()));
+			apply_town_0x49abd6_object_reference_vector(Dictionary(town_records[index]));
 		}
 	}
 	Dictionary mine_boundary = object_vector_phase.get("mine_requirements_boundary", Dictionary());
 	Array mine_records = mine_boundary.get("coordinate_records", Array());
 	Array mine_guard_records = mine_boundary.get("mine_guard_records", Array());
 	Array mine_adjacent_resource_records = mine_boundary.get("adjacent_resource_records", Array());
-	for (int64_t index = 0; index < mine_records.size(); ++index) {
-		if (Variant(mine_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_records[index];
-			Array body_tiles = record.get("body_tiles", Array());
-			if (body_tiles.is_empty()) {
-				seed_private_object_vector_flat(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))));
-			} else {
-				seed_private_object_vector_cells(body_tiles);
-			}
-		}
-	}
 	Dictionary reward_boundary = object_vector_phase.get("reward_scheduler_boundary", Dictionary());
 	Array reward_records = reward_boundary.get("coordinate_records", Array());
 	Array reward_guard_records = reward_boundary.get("reward_guard_records", Array());
-	for (int64_t index = 0; index < reward_records.size(); ++index) {
-		if (Variant(reward_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = reward_records[index];
-			Array body_tiles = record.get("body_tiles", Array());
-			if (body_tiles.is_empty()) {
-				seed_private_object_vector_flat(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))));
-			} else {
-				seed_private_object_vector_cells(body_tiles);
-			}
-		}
-	}
 	Dictionary primary_category_boundary = object_vector_phase.get("primary_category_boundary", Dictionary());
 	Array primary_category_records = primary_category_boundary.get("coordinate_records", Array());
 	Array primary_category_guard_records = primary_category_boundary.get("guard_records", Array());
-	for (int64_t index = 0; index < primary_category_records.size(); ++index) {
-		if (Variant(primary_category_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = primary_category_records[index];
-			Array body_tiles = record.get("body_tiles", Array());
-			if (body_tiles.is_empty()) {
-				seed_private_object_vector_flat(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))));
-			} else {
-				seed_private_object_vector_cells(body_tiles);
-			}
-		}
-	}
 	Array blocker_records = connections_phase.get("private_blocker_records", Array());
 	int32_t deferred_connection_object_vector_seed_count_0x4a8c15 = 0;
 	for (int64_t index = 0; index < blocker_records.size(); ++index) {
@@ -15807,26 +15834,6 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			deferred_connection_object_vector_seed_count_0x4a8c15 += int32_t(Array(record.get("body_tiles", Array())).size());
 		} else {
 			deferred_connection_object_vector_seed_count_0x4a8c15 += 1;
-		}
-	}
-	for (int64_t index = 0; index < mine_guard_records.size(); ++index) {
-		if (Variant(mine_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			seed_private_object_vector_flat(int32_t(Dictionary(mine_guard_records[index]).get("flat_cell_index", -1)));
-		}
-	}
-	for (int64_t index = 0; index < mine_adjacent_resource_records.size(); ++index) {
-		if (Variant(mine_adjacent_resource_records[index]).get_type() == Variant::DICTIONARY) {
-			seed_private_object_vector_flat(int32_t(Dictionary(mine_adjacent_resource_records[index]).get("flat_cell_index", -1)));
-		}
-	}
-	for (int64_t index = 0; index < reward_guard_records.size(); ++index) {
-		if (Variant(reward_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			seed_private_object_vector_flat(int32_t(Dictionary(reward_guard_records[index]).get("flat_cell_index", -1)));
-		}
-	}
-	for (int64_t index = 0; index < primary_category_guard_records.size(); ++index) {
-		if (Variant(primary_category_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			seed_private_object_vector_flat(int32_t(Dictionary(primary_category_guard_records[index]).get("flat_cell_index", -1)));
 		}
 	}
 	Array guard_records = connections_phase.get("private_guard_records", Array());
@@ -15861,63 +15868,11 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		return false;
 	};
 
-	// 0x49abd6 object/vector footprint mutation happens before the 0x4a4c8e
-	// entry checkpoint. Connection blocker/guard mutation is intentionally kept
-	// later because H3MapEd reaches 0x4a79a3 after the 0x4a8c15/0x4a4c8e path.
-	for (int64_t index = 0; index < town_records.size(); ++index) {
-		if (Variant(town_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary town = town_records[index];
-			mark_cell_dictionary_array_occupied(town.get("body_tiles", Array()));
-		}
-	}
-	for (int64_t index = 0; index < mine_records.size(); ++index) {
-		if (Variant(mine_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_records[index];
-			mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
-		}
-	}
-	for (int64_t index = 0; index < reward_records.size(); ++index) {
-		if (Variant(reward_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = reward_records[index];
-			const int32_t body_mark_count = mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
-			if (body_mark_count == 0) {
-				mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
-			}
-		}
-	}
-	for (int64_t index = 0; index < primary_category_records.size(); ++index) {
-		if (Variant(primary_category_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = primary_category_records[index];
-			const int32_t body_mark_count = mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
-			if (body_mark_count == 0) {
-				mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
-			}
-		}
-	}
-	for (int64_t index = 0; index < mine_guard_records.size(); ++index) {
-		if (Variant(mine_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_guard_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
-	for (int64_t index = 0; index < mine_adjacent_resource_records.size(); ++index) {
-		if (Variant(mine_adjacent_resource_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_adjacent_resource_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
-	for (int64_t index = 0; index < reward_guard_records.size(); ++index) {
-		if (Variant(reward_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = reward_guard_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
-	for (int64_t index = 0; index < primary_category_guard_records.size(); ++index) {
-		if (Variant(primary_category_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = primary_category_guard_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
+	// 0x49abd6 object-reference mutation before 0x4a8260 is town-only for the
+	// recovered Medium seed-10 one-level boundary: the H3MapEd checkpoint dump
+	// has 78 non-empty object vectors and 6 action-control cells, exactly the
+	// six town footprints. Later mine/reward/primary/guard surfaces must not
+	// feed this pre-0x4a4c8e object-vector scan.
 
 	int32_t route_container_0x4a8260_scan_cell_count = 0;
 	int32_t route_container_0x4a8260_object_vector_empty_count = 0;
@@ -16389,6 +16344,10 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["water_edge_0x4a4fc5_candidate_set_count"] = water_edge_0x4a4fc5_candidate_set_count;
 	upstream_sources["occupancy_0x49a932_set_count"] = occupied_blocked_set_count;
 	upstream_sources["occupancy_0x49a932_clear_count"] = occupied_blocked_clear_count;
+	upstream_sources["town_object_vector_seed_count_0x49abd6"] = town_object_vector_seed_count_0x49abd6;
+	upstream_sources["town_object_vector_action_seed_count_0x49abd6"] = town_object_vector_action_seed_count_0x49abd6;
+	upstream_sources["town_0x49abd6_action_bit22_count"] = town_0x49abd6_action_bit22_count;
+	upstream_sources["town_0x49abd6_body_bit25_clear_count"] = town_0x49abd6_body_bit25_clear_count;
 	upstream_sources["deferred_connection_object_vector_seed_count_0x4a8c15"] = deferred_connection_object_vector_seed_count_0x4a8c15;
 	upstream_sources["temporary_owner_transition_fallback_active"] = false;
 	upstream_sources["temporary_owner_transition_candidate_scan_count"] = owner_transition_diagnostic_scan_count;
@@ -16403,7 +16362,11 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		phase["land_edge_0x4a4c8e_relation_lookup_missing_count"] = land_edge_0x4a4c8e_relation_lookup_missing_count;
 		phase["land_edge_0x4a4c8e_candidate_set_count"] = land_edge_0x4a4c8e_current_0x49aa63_candidate_set_count + land_edge_0x4a4c8e_expansion_0x49aa63_candidate_set_count;
 		phase["private_object_vector_occupied_seed_count"] = private_object_vector_occupied_seed_count;
-		phase["private_object_vector_occupied_source_policy"] = "projected generated-cell object-vector occupancy from towns, mines, rewards, primary-category objects, and adjacent resources before recovered 0x4a4c8e object-vector-empty checks; connection blockers and connection guards are deferred because h3maped.exe calls 0x4a79a3 after 0x4a8c15 candidate writers";
+		phase["town_object_vector_seed_count_0x49abd6"] = town_object_vector_seed_count_0x49abd6;
+		phase["town_object_vector_action_seed_count_0x49abd6"] = town_object_vector_action_seed_count_0x49abd6;
+		phase["town_0x49abd6_action_bit22_count"] = town_0x49abd6_action_bit22_count;
+		phase["town_0x49abd6_body_bit25_clear_count"] = town_0x49abd6_body_bit25_clear_count;
+		phase["private_object_vector_occupied_source_policy"] = "source-backed pre-0x4a8260 object-vector occupancy from town 0x49abd6 footprints only; Medium seed-10 H3MapEd pre-0x4a4c8e dump has 78 non-empty object-reference vectors and 6 action-control cells, while mines, rewards, primary objects, resources, connection blockers, and guards are later materialization surfaces for this boundary";
 		phase["deferred_connection_object_vector_seed_count_0x4a8c15"] = deferred_connection_object_vector_seed_count_0x4a8c15;
 	phase["owner_transition_candidate_scan_count"] = owner_transition_diagnostic_scan_count;
 	phase["temporary_owner_transition_fallback_active"] = false;
