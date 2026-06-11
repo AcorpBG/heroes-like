@@ -8,9 +8,9 @@ This ledger is the reporting baseline for the final recovery push. Do not expand
 
 Original recovery baseline at ledger creation: about 75% recovered.
 
-Current scored recovery after R4 closure: about 92% recovered.
+Current scored recovery after R5 closure: about 94% recovered.
 
-Remaining fixed recovery budget: 8 of the original 25 points.
+Remaining fixed recovery budget: 6 of the original 25 points.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.
 
@@ -22,13 +22,13 @@ Percent movement rule: progress only moves when a blocker or explicitly named su
 | R2 | Endpoint/cursor chain: `0x4a5e73 / 0x4a606b / 0x4a746b / 0x4a7605 / 0x4a696b / 0x4a7312` | 4 | Closed for supported one-level land. The stale `generator+0xf5c` endpoint failures, `0x4a696b` source/relation byte-pair gate, `0x4a606b` no-live-hit surface, and Border Guard fallback chain are source-backed; the fresh R1 branch split replaces the older zero-projection assumption without making `0x4adb72/0x4add76` live. |
 | R3 | Weighted materialization tail: `0x4a8db2 -> 0x4a901a -> 0x4a54a7` | 3 | Closed. The deterministic seed-58 Large one-level no-water weighted tail is recovered across all three sampled dispatches: return/caller-after, object-vector growth, descriptor counter lane 98, dispatch 0 score-write count, and dispatch 1/2 full matched score-write streams. |
 | R4 | Descriptor/source identity crosswalk for mixed lanes | 3 | Closed. Mixed selected lanes `45`, `53`, `54`, and `79` now have a source-backed crosswalk: all 87 selected descriptors join to same-run `0x4903e8` build events; `descriptor+0x00` is a registry/source-key value, not a universal row id; exact catalog identity authority is the copied `0x4c` source record and recovered provider/object-loader surface. |
-| R5 | Source-handler pending-entry chain: `0x53eafc / 0x484d9f -> 0x4afa99` | 2 | Either recover a live owner/action and replay `generator+0xeec/+0xef0/+0xef4`, or source-exclude it from the direct RMG target mode. |
+| R5 | Source-handler pending-entry chain: `0x53eafc / 0x484d9f -> 0x4afa99` | 2 | Closed by source-backed exclusion for the direct RMG target mode. The `0x53eafc` vtable and `0x484d9f -> 0x4afa99 -> 0x4af463/0x4af910/0x4af65e` lifecycle are recovered, but Ghidra reports zero incoming refs to `0x484d9f`, the deterministic direct-generation breakpoint never hits, and `+0xeec/+0xef0/+0xef4` accesses are confined to that orphaned lifecycle. |
 | R6 | Relation/scoring semantic replay | 2 | Runtime-name remaining scoring/relation surfaces: `0x49e1bf`, `0x4a5767/0x49a318`, and `0x4a54a7` relation/control linkage. |
 | R7 | One continuous ordered private-state replay | 4 | Stitch recovered pieces into ordered replay from RMG entrypoint to final map write, with phase/private-buffer checkpoints. This is the final proof step before native parity changes. |
 
 Original total remaining at ledger creation: 25 points.
 
-Current remaining after R4 closure: 8 points.
+Current remaining after R5 closure: 6 points.
 
 ## Reporting Rules
 
@@ -41,7 +41,7 @@ Current remaining after R4 closure: 8 points.
 
 ## Active Blocker
 
-Active blocker: R5.
+Active blocker: R6.
 
 Current R1 state:
 
@@ -101,4 +101,17 @@ Recovered R4 state:
 - The base object loader recovers `objects.txt` row stride `0x4c`, row `+0x1c` as object type id, row `+0x20` as subtype-like field, and the type-45 special case.
 - The source catalog/template producer recovers full `0x4c` source-record preservation, DEF/name-bearing cache-key fields, and provider dispatch for target lanes 53 Mine, 54 Monster, and 79 Resource.
 - Type 45, 54, and 79 sampled type/subtype pairs resolve against the catalog without row guessing. Type 53 mines are intentionally descriptor-only ambiguous because several DEF rows share a mine subtype; the recovered identity rule is to carry the copied source record, not guess among terrain variants.
-- R4 does not close R5 pending-entry behavior, R6 relation/scoring semantic replay, R7 ordered replay, or any native RMG parity changes.
+- R4 did not close pending-entry behavior, relation/scoring semantic replay, ordered replay, or any native RMG parity changes. The pending-entry behavior is closed later by R5 below.
+
+## R5 Closure
+
+R5 is closed by `.artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json`.
+
+Recovered R5 state:
+
+- The `0x53eafc` source-handler vtable is recovered from Ghidra constructor and data-reference evidence, including slot `+0x20 -> 0x48047c` queued-key cleanup.
+- The source-handler wrapper lifecycle is statically closed under `0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e`.
+- Ghidra reports zero incoming references to `0x484d9f` in the recovered reference surface.
+- The deterministic seed-58 direct-generation WineDbg probe armed a breakpoint at `0x484d9f` and did not hit it.
+- Generator pending-entry offsets `+0xeec`, `+0xef0`, and `+0xef4` are found in the Ghidra dump corpus, and all instruction-level accesses are within the orphaned `0x4af463` initializer, `0x4af910` cleanup, or `0x4af65e` stack-local teardown lifecycle.
+- R5 closes only the direct RMG target-mode blocker. It does not claim the source-handler chain is dead in every game context or map mode, and it does not authorize native RMG parity changes by itself.
