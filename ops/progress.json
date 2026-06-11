@@ -443,14 +443,14 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
-    "currentSliceNotes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
+    "currentNotes": "Native RMG true end-to-end parity remains incomplete. The latest recovery evidence provides ordered H3MapEd private-state replay checkpoints, but native behavior has not been ported/adopted from that replay. Current work must implement native replay adoption and Python-owned native-vs-H3MapEd comparison for supported one-level land Small/Medium maps; no density scalars, heuristic gates, or final-map delta tuning.",
+    "currentSliceNotes": "Native RMG true end-to-end parity remains incomplete. The latest recovery evidence provides ordered H3MapEd private-state replay checkpoints, but native behavior has not been ported/adopted from that replay. Current work must implement native replay adoption and Python-owned native-vs-H3MapEd comparison for supported one-level land Small/Medium maps; no density scalars, heuristic gates, or final-map delta tuning.",
     "currentSliceUpdatedAt": "2026-06-11T11:45:19Z",
-    "guardrailNote": "All seven fixed blockers (R1-R7) are closed. Fixed recovery score: 100% (25/25). No active recovery blocker remains. Next work before native RMG parity changes: planned native adoption and porting work based on these recovered surfaces.",
+    "guardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
-      "native package/session adoption code",
-      "RMG strict Small reports"
+      "native Small/Medium one-level land RMG behavior adoption from recovered H3MapEd replay",
+      "Python-owned native-vs-H3MapEd parity comparison"
     ],
     "lastValidation": {
       "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
@@ -472,8 +472,8 @@
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-      "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+      "summary": "H3MapEd ordered private-state replay evidence is available, but native RMG true end-to-end parity is not complete. No native RMG behavior changed in that recovery evidence.",
+      "remainingWork": "Port/adopt recovered H3MapEd private-state behavior into native Small/Medium one-level land generation and validate against H3MapEd executable output with Python-owned comparison tooling. Do not treat recovery-ledger closure as the product goal.",
       "metrics": {
         "active_blocker_before": "R7",
         "active_blocker_after": "none_r_all_closed",
@@ -490,7 +490,7 @@
         "full_private_payload_replay_complete": true,
         "fixed_recovery_goal_complete": true,
         "native_rmg_parity_implementation_complete": false,
-        "overall_goal_complete": true,
+        "overall_goal_complete": false,
         "native_behavior_changed": false,
         "used_objdump": false,
         "ordered_replay_phase_count": 18,
@@ -539,8 +539,8 @@
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
-      "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-      "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+      "summary": "H3MapEd ordered private-state replay evidence is available, but native RMG true end-to-end parity is not complete. No native RMG behavior changed in that recovery evidence.",
+      "remainingWork": "Port/adopt recovered H3MapEd private-state behavior into native Small/Medium one-level land generation and validate against H3MapEd executable output with Python-owned comparison tooling. Do not treat recovery-ledger closure as the product goal.",
       "metrics": {
         "active_blocker_before": "R7",
         "active_blocker_after": "none_r_all_closed",
@@ -557,7 +557,7 @@
         "full_private_payload_replay_complete": true,
         "fixed_recovery_goal_complete": true,
         "native_rmg_parity_implementation_complete": false,
-        "overall_goal_complete": true,
+        "overall_goal_complete": false,
         "native_behavior_changed": false,
         "used_objdump": false,
         "ordered_replay_phase_count": 18,
@@ -932,8 +932,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
-    "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+    "remainingGap": "Native true end-to-end RMG parity is incomplete. Recovery evidence must now be ported/adopted into native generation and validated against H3MapEd executable output for supported one-level land Small/Medium maps.",
+    "remainingWork": "Implement source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison. Do not use density scalars, heuristic gates, brute-force retries, or final-map delta tuning.",
     "result": "Final stream adapter and wrapped buffered sink recovered; full private-state replay remains incomplete.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -942,7 +942,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
+    "summary": "Native RMG true end-to-end parity is incomplete; ordered H3MapEd recovery evidence is available for native adoption, but native behavior has not yet been ported from it.",
     "title": "RMG Small Generalization Hardening",
     "updatedAt": "2026-06-11T11:45:19Z",
     "validation": {
@@ -10463,7 +10463,7 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-      "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+      "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
       "metrics": {
         "active_blocker_before": "R7",
         "active_blocker_after": "none_r_all_closed",
@@ -10480,7 +10480,7 @@
         "full_private_payload_replay_complete": true,
         "fixed_recovery_goal_complete": true,
         "native_rmg_parity_implementation_complete": false,
-        "overall_goal_complete": true,
+        "overall_goal_complete": false,
         "native_behavior_changed": false,
         "used_objdump": false,
         "ordered_replay_phase_count": 18,
@@ -12196,7 +12196,7 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed",
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-      "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+      "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
       "metrics": {
         "active_blocker_before": "R7",
         "active_blocker_after": "none_r_all_closed",
@@ -12213,7 +12213,7 @@
         "full_private_payload_replay_complete": true,
         "fixed_recovery_goal_complete": true,
         "native_rmg_parity_implementation_complete": false,
-        "overall_goal_complete": true,
+        "overall_goal_complete": false,
         "native_behavior_changed": false,
         "used_objdump": false,
         "ordered_replay_phase_count": 18,
@@ -12243,7 +12243,7 @@
       }
     }
   },
-  "guardrailNote": "All seven fixed blockers (R1-R7) are closed. Fixed recovery score: 100% (25/25). No active recovery blocker remains. Next work before native RMG parity changes: planned native adoption and porting work based on these recovered surfaces.",
+  "guardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
   "lastValidation": {
     "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
     "checks": [
@@ -12264,8 +12264,8 @@
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-    "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+    "summary": "H3MapEd ordered private-state replay evidence is available, but native RMG true end-to-end parity is not complete. No native RMG behavior changed in that recovery evidence.",
+    "remainingWork": "Port/adopt recovered H3MapEd private-state behavior into native Small/Medium one-level land generation and validate against H3MapEd executable output with Python-owned comparison tooling. Do not treat recovery-ledger closure as the product goal.",
     "metrics": {
       "active_blocker_before": "R7",
       "active_blocker_after": "none_r_all_closed",
@@ -12282,7 +12282,7 @@
       "full_private_payload_replay_complete": true,
       "fixed_recovery_goal_complete": true,
       "native_rmg_parity_implementation_complete": false,
-      "overall_goal_complete": true,
+      "overall_goal_complete": false,
       "native_behavior_changed": false,
       "used_objdump": false,
       "ordered_replay_phase_count": 18,
@@ -12331,8 +12331,8 @@
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-    "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+    "summary": "H3MapEd ordered private-state replay evidence is available, but native RMG true end-to-end parity is not complete. No native RMG behavior changed in that recovery evidence.",
+    "remainingWork": "Port/adopt recovered H3MapEd private-state behavior into native Small/Medium one-level land generation and validate against H3MapEd executable output with Python-owned comparison tooling. Do not treat recovery-ledger closure as the product goal.",
     "metrics": {
       "active_blocker_before": "R7",
       "active_blocker_after": "none_r_all_closed",
@@ -12349,7 +12349,7 @@
       "full_private_payload_replay_complete": true,
       "fixed_recovery_goal_complete": true,
       "native_rmg_parity_implementation_complete": false,
-      "overall_goal_complete": true,
+      "overall_goal_complete": false,
       "native_behavior_changed": false,
       "used_objdump": false,
       "ordered_replay_phase_count": 18,
@@ -12378,8 +12378,8 @@
       }
     }
   },
-  "nextActionGuardrailNote": "All seven fixed blockers (R1-R7) are closed. Fixed recovery score: 100% (25/25). No active recovery blocker remains. Next work before native RMG parity changes: planned native adoption and porting work based on these recovered surfaces.",
-  "notes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
+  "nextActionGuardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
+  "notes": "Native RMG true end-to-end parity remains incomplete. The latest recovery evidence provides ordered H3MapEd private-state replay checkpoints, but native behavior has not been ported/adopted from that replay. Current work must implement native replay adoption and Python-owned native-vs-H3MapEd comparison for supported one-level land Small/Medium maps; no density scalars, heuristic gates, or final-map delta tuning.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -45813,7 +45813,7 @@
       "currentNotes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
       "currentSliceNotes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
       "currentSliceUpdatedAt": "2026-06-11T11:45:19Z",
-      "guardrailNote": "All seven fixed blockers (R1-R7) are closed. Fixed recovery score: 100% (25/25). No active recovery blocker remains. Next work before native RMG parity changes: planned native adoption and porting work based on these recovered surfaces.",
+      "guardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native package/session adoption code",
@@ -45840,7 +45840,7 @@
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
         "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-        "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+        "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
         "metrics": {
           "active_blocker_before": "R7",
           "active_blocker_after": "none_r_all_closed",
@@ -45857,7 +45857,7 @@
           "full_private_payload_replay_complete": true,
           "fixed_recovery_goal_complete": true,
           "native_rmg_parity_implementation_complete": false,
-          "overall_goal_complete": true,
+          "overall_goal_complete": false,
           "native_behavior_changed": false,
           "used_objdump": false,
           "ordered_replay_phase_count": 18,
@@ -45907,7 +45907,7 @@
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed",
         "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-        "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+        "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
         "metrics": {
           "active_blocker_before": "R7",
           "active_blocker_after": "none_r_all_closed",
@@ -45924,7 +45924,7 @@
           "full_private_payload_replay_complete": true,
           "fixed_recovery_goal_complete": true,
           "native_rmg_parity_implementation_complete": false,
-          "overall_goal_complete": true,
+          "overall_goal_complete": false,
           "native_behavior_changed": false,
           "used_objdump": false,
           "ordered_replay_phase_count": 18,
@@ -46086,7 +46086,7 @@
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "R1-R5 are closed in the fixed recovery ledger. Remaining full-recovery blockers are R6 relation/scoring semantic replay and R7 continuous ordered private-state replay before native parity changes.",
-      "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+      "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
       "result": "R5 closed by source-backed direct-mode exclusion of the 0x53eafc / 0x484d9f source-handler pending-entry chain. Slice remains in progress because R6-R7 are still open.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -52573,8 +52573,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
-  "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+  "remainingGap": "Native true end-to-end RMG parity is incomplete. Recovery evidence must now be ported/adopted into native generation and validated against H3MapEd executable output for supported one-level land Small/Medium maps.",
+  "remainingWork": "Implement source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison. Do not use density scalars, heuristic gates, brute-force retries, or final-map delta tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -53110,7 +53110,7 @@
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
     "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-    "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+    "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
     "metrics": {
       "active_blocker_before": "R7",
       "active_blocker_after": "none_r_all_closed",
@@ -53127,7 +53127,7 @@
       "full_private_payload_replay_complete": true,
       "fixed_recovery_goal_complete": true,
       "native_rmg_parity_implementation_complete": false,
-      "overall_goal_complete": true,
+      "overall_goal_complete": false,
       "native_behavior_changed": false,
       "used_objdump": false,
       "ordered_replay_phase_count": 18,
@@ -60214,8 +60214,8 @@
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-    "remainingWork": "R7 is closed. All seven fixed blockers (R1-R7) are closed. Full H3MapEd RMG recovery is complete for the original 25-point fixed budget. Remaining work before native RMG parity changes is planned native adoption and porting work based on these recovered surfaces, not further recovery.",
+    "summary": "H3MapEd ordered private-state replay evidence is available, but native RMG true end-to-end parity is not complete. No native RMG behavior changed in that recovery evidence.",
+    "remainingWork": "Port/adopt recovered H3MapEd private-state behavior into native Small/Medium one-level land generation and validate against H3MapEd executable output with Python-owned comparison tooling. Do not treat recovery-ledger closure as the product goal.",
     "metrics": {
       "active_blocker_before": "R7",
       "active_blocker_after": "none_r_all_closed",
@@ -60232,7 +60232,7 @@
       "full_private_payload_replay_complete": true,
       "fixed_recovery_goal_complete": true,
       "native_rmg_parity_implementation_complete": false,
-      "overall_goal_complete": true,
+      "overall_goal_complete": false,
       "native_behavior_changed": false,
       "used_objdump": false,
       "ordered_replay_phase_count": 18,

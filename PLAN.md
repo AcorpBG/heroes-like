@@ -465,8 +465,10 @@ Goal: translate HoMM-style random-map structure into original content and system
 
 Current boundary:
 - Strict Small 36x36 one-level land package/session evidence exists.
-- Larger sizes, water, underground, broad template families, final reward ecology, and full parity remain incomplete.
-- Native/generated package adoption evidence must remain scoped and must not be presented as broad RMG production readiness.
+- The H3MapEd recovery ledger is prerequisite evidence only. It does not mean the native generator has achieved true end-to-end RMG parity.
+- Immediate RMG work is native adoption/porting from the recovered private-state replay, followed by Python-owned native-vs-H3MapEd comparison for land-only Small/Medium outputs.
+- Larger sizes, water, underground, broad template families, final reward ecology, and true native end-to-end parity remain incomplete.
+- Native/generated package adoption evidence must remain scoped and must not be presented as broad RMG production readiness or as a recovery-ledger completion proxy.
 
 ### Phase 4 - Headless AI Agent Balance Harness
 

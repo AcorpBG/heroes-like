@@ -1,6 +1,6 @@
 # H3MapEd RMG Full Recovery Blockers
 
-Document role: fixed blocker ledger for the remaining H3MapEd random-map-generation recovery work.
+Document role: fixed blocker ledger for H3MapEd random-map-generation recovery work. This is recovery evidence only; it is not native RMG parity completion.
 
 This ledger is the reporting baseline for the final recovery push. Do not expand subquestions into new top-level blockers unless there is source-backed proof that a newly discovered path feeds final generated output and cannot fit any blocker below.
 
@@ -8,9 +8,11 @@ This ledger is the reporting baseline for the final recovery push. Do not expand
 
 Original recovery baseline at ledger creation: about 75% recovered.
 
-Current scored recovery after R7 closure: 100% recovered.
+Current scored recovery after R7 closure: 100% recovered for this fixed recovery ledger.
 
-Remaining fixed recovery budget: 0 of the original 25 points. All seven fixed blockers are closed.
+Native RMG parity status: not complete. The recovered R1-R7 surfaces still have to be ported/adopted in the native generator and compared against H3MapEd owner executable output before any true end-to-end native RMG parity claim is valid.
+
+Remaining fixed recovery budget: 0 of the original 25 points. The fixed recovery-ledger blockers are closed.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.
 
@@ -41,7 +43,7 @@ Current remaining after R7 closure: 0 points.
 
 ## Active Blocker
 
-Active blocker: none. All seven fixed blockers (R1-R7) are closed. The H3MapEd RMG full recovery is complete for the original 25-point fixed budget. No native RMG behavior has been changed and no objdump recovery was used.
+Active recovery blocker: none in this fixed recovery ledger. This does not complete native RMG parity. No native RMG behavior has been changed and no objdump recovery was used.
 
 Next work before native RMG parity changes: planned native adoption and porting work based on these recovered surfaces.
 

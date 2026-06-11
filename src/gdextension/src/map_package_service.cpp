@@ -24704,6 +24704,9 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	metadata["runtime_generation_allowed"] = true;
 	metadata["production_ready"] = true;
 	metadata["production_ready_scope"] = scope_id;
+	metadata["native_rmg_end_to_end_parity_complete"] = false;
+	metadata["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	metadata["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	metadata["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	metadata["full_parity_claim"] = false;
 	metadata["no_authored_writeback"] = true;
@@ -24892,6 +24895,9 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	session_boundary_record["runtime_call_site_adoption"] = true;
 	session_boundary_record["gdscript_fallback_untouched"] = false;
 	session_boundary_record["native_runtime_authoritative"] = true;
+	session_boundary_record["native_rmg_end_to_end_parity_complete"] = false;
+	session_boundary_record["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	session_boundary_record["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	session_boundary_record["full_parity_claim"] = false;
 
 	Dictionary metrics;
@@ -24924,6 +24930,9 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	report["full_parity_claim"] = false;
 	report["production_ready"] = true;
 	report["production_ready_scope"] = scope_id;
+	report["native_rmg_end_to_end_parity_complete"] = false;
+	report["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	report["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	report["remaining_parity_slices"] = Array::make(
 			"water_islands_scope_blocked",
 			"underground_two_level_scope_blocked",
@@ -24938,6 +24947,9 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	readiness["adoption_gate_status"] = adoption_status;
 	readiness["production_ready"] = true;
 	readiness["production_ready_scope"] = scope_id;
+	readiness["native_rmg_end_to_end_parity_complete"] = false;
+	readiness["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	readiness["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	readiness["full_parity_claim"] = false;
 	readiness["next_required_slices"] = report.get("remaining_parity_slices", Array());
 
@@ -24965,6 +24977,9 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 	result["full_parity_claim"] = false;
 	result["production_ready"] = true;
 	result["production_ready_scope"] = scope_id;
+	result["native_rmg_end_to_end_parity_complete"] = false;
+	result["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	result["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	return result;
 }
 
@@ -25042,6 +25057,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_metadata["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
 	map_metadata["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	map_metadata["full_parity_claim"] = full_parity_claim;
+	map_metadata["native_rmg_end_to_end_parity_complete"] = false;
+	map_metadata["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	map_metadata["native_rmg_end_to_end_parity_blocker"] = "Native output is still a scoped/generated package surface until recovered H3MapEd private-state replay is ported and compared end-to-end.";
 	map_metadata["component_counts"] = package_component_counts;
 	append_extension_profile_phase(conversion_profile_phases, "map_metadata_assembly", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
@@ -25206,6 +25224,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	session_boundary_record["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
 	session_boundary_record["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	session_boundary_record["full_parity_claim"] = full_parity_claim;
+	session_boundary_record["native_rmg_end_to_end_parity_complete"] = false;
+	session_boundary_record["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	session_boundary_record["native_rmg_end_to_end_parity_blocker"] = "Native output is still a scoped/generated package surface until recovered H3MapEd private-state replay is ported and compared end-to-end.";
 
 	Dictionary metrics;
 	metrics["width"] = width;
@@ -25259,6 +25280,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	report["gdscript_source_of_truth"] = !native_runtime_authoritative;
 	report["gdscript_fallback_untouched"] = !native_runtime_authoritative;
 	report["full_parity_claim"] = full_parity_claim;
+	report["native_rmg_end_to_end_parity_complete"] = false;
+	report["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	report["native_rmg_end_to_end_parity_blocker"] = "Native output is still a scoped/generated package surface until recovered H3MapEd private-state replay is ported and compared end-to-end.";
 	report["remaining_parity_slices"] = remaining;
 
 	Dictionary readiness;
@@ -25274,6 +25298,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	}
 	readiness["full_parity_claim"] = full_parity_claim;
 	readiness["full_parity_gate_pending"] = true;
+	readiness["native_rmg_end_to_end_parity_complete"] = false;
+	readiness["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	readiness["native_rmg_end_to_end_parity_blocker"] = "Native output is still a scoped/generated package surface until recovered H3MapEd private-state replay is ported and compared end-to-end.";
 	readiness["next_required_slices"] = remaining;
 	append_extension_profile_phase(conversion_profile_phases, "report_readiness_assembly", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
@@ -25308,6 +25335,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	result["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
 	result["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	result["full_parity_claim"] = full_parity_claim;
+	result["native_rmg_end_to_end_parity_complete"] = false;
+	result["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	result["native_rmg_end_to_end_parity_blocker"] = "Native output is still a scoped/generated package surface until recovered H3MapEd private-state replay is ported and compared end-to-end.";
 	return result;
 }
 
@@ -25619,6 +25649,9 @@ Dictionary MapPackageService::get_api_metadata() const {
 	result["native_rmg_runtime_generation_policy"] = "small_36x36_land_validator_gated; medium_72x72_land_validator_gated";
 	result["native_rmg_production_ready"] = true;
 	result["native_rmg_production_ready_scope"] = "strict_small_36x36_one_level_land_only; strict_medium_72x72_one_level_land_only";
+	result["native_rmg_end_to_end_parity_complete"] = false;
+	result["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	result["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	result["native_rmg_medium_runtime_generation_unblock_scope"] = "strict_medium_72x72_one_level_land_only";
 	result["native_rmg_unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	result["native_rmg_active_reset_slice_id"] = "native-rmg-medium-h3maped-land-runtime-adoption-10184";
