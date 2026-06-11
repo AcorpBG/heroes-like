@@ -48,8 +48,9 @@ constexpr uint32_t H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27 = 1U << 27U;
 constexpr uint32_t H3MAPED_CELL_DECOR_READY_BIT_25 = 1U << 25U;
 constexpr uint32_t H3MAPED_CELL_PREFILL_BOUNDARY_BIT_23 = 1U << 23U;
 constexpr uint32_t H3MAPED_CELL_ACTION_CONTROL_BIT_22 = 1U << 22U;
-constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X4A59E2 = 12U;
-constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_MASK_0X4A59E2 = 0x03U << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X4A59E2;
+constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6 = 15U;
+constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_MASK_0X49ACF6 = 0x03U << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6;
+constexpr uint32_t H3MAPED_CELL_FINAL_TILE_FLAGS_MASK_0X49B2B6 = 0x7fU << 15U;
 constexpr int32_t H3MAPED_OBJECT_MASK_COLUMNS = 8;
 constexpr int32_t H3MAPED_OBJECT_MASK_ROWS = 6;
 constexpr int32_t H3MAPED_DECORATIVE_TERRAIN_SCORE_COUNT_0X49E1BF = 10;
@@ -6351,18 +6352,18 @@ uint32_t h3maped_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, i
 			| ((uint32_t(flag_b) & 0x01U) << 13U);
 }
 
-uint32_t h3maped_generated_cell_terrain_flags_0x4a59e2(int32_t flag_a, int32_t flag_b) {
-	return (((uint32_t(flag_a) & 0x01U) | ((uint32_t(flag_b) & 0x01U) << 1U)) << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X4A59E2);
+uint32_t h3maped_generated_cell_terrain_flags_0x49acf6(int32_t flag_a, int32_t flag_b) {
+	return (((uint32_t(flag_a) & 0x01U) | ((uint32_t(flag_b) & 0x01U) << 1U)) << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6);
 }
 
-int32_t h3maped_generated_cell_terrain_flag_byte_0x4a59e2(uint32_t word_0x28) {
-	return int32_t((word_0x28 & H3MAPED_CELL_TERRAIN_FLAG_MASK_0X4A59E2) >> H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X4A59E2);
+int32_t h3maped_final_tile_flag_byte_0x49b2b6(uint32_t word_0x28) {
+	return int32_t((word_0x28 & H3MAPED_CELL_FINAL_TILE_FLAGS_MASK_0X49B2B6) >> 15U);
 }
 
 Dictionary terrain_scratch_write_sample(const char *id, int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
 	const uint32_t scratch_word = h3maped_scratch_word_4bad0f(terrain_id, selected_row, flag_a, flag_b);
 	const uint32_t generated_cell_word_0x24 = (uint32_t(terrain_id) & 0x3fU) | ((uint32_t(selected_row) & 0xffU) << 6U);
-	const uint32_t generated_cell_word_0x28 = h3maped_generated_cell_terrain_flags_0x4a59e2(flag_a, flag_b);
+	const uint32_t generated_cell_word_0x28 = h3maped_generated_cell_terrain_flags_0x49acf6(flag_a, flag_b);
 	Dictionary sample;
 	sample["id"] = id;
 	sample["terrain_id"] = terrain_id;
@@ -6374,7 +6375,7 @@ Dictionary terrain_scratch_write_sample(const char *id, int32_t terrain_id, int3
 	sample["generated_cell_word_0x28_u32"] = int64_t(generated_cell_word_0x28);
 	sample["tile_byte_0_terrain_id"] = int32_t(generated_cell_word_0x24 & 0x3fU);
 	sample["tile_byte_1_terrain_art"] = int32_t((generated_cell_word_0x24 >> 6U) & 0xffU);
-	sample["tile_byte_6_terrain_flags"] = h3maped_generated_cell_terrain_flag_byte_0x4a59e2(generated_cell_word_0x28);
+	sample["tile_byte_6_terrain_flags"] = h3maped_final_tile_flag_byte_0x49b2b6(generated_cell_word_0x28);
 	return sample;
 }
 
@@ -7172,17 +7173,17 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 		const uint32_t generated_cell_word_0x24 = (live_cell_word_0x24[size_t(index)] & 0xffffc000U)
 				| (uint32_t(terrain_id) & 0x3fU)
 				| ((uint32_t(selected_row) & 0xffU) << 6U);
-			const uint32_t generated_cell_word_0x28 = (live_cell_word_0x28[size_t(index)] & ~H3MAPED_CELL_TERRAIN_FLAG_MASK_0X4A59E2)
-					| h3maped_generated_cell_terrain_flags_0x4a59e2(out_flag_a, out_flag_b);
-			live_scratch_word[size_t(index)] = scratch_word;
-			live_cell_word_0x24[size_t(index)] = generated_cell_word_0x24;
-			live_cell_word_0x28[size_t(index)] = generated_cell_word_0x28;
-			live_cell_word_0x28_bit25_default_write_count += 1;
+		const uint32_t generated_cell_word_0x28 = (live_cell_word_0x28[size_t(index)] & ~H3MAPED_CELL_TERRAIN_FLAG_MASK_0X49ACF6)
+				| h3maped_generated_cell_terrain_flags_0x49acf6(out_flag_a, out_flag_b);
+		live_scratch_word[size_t(index)] = scratch_word;
+		live_cell_word_0x24[size_t(index)] = generated_cell_word_0x24;
+		live_cell_word_0x28[size_t(index)] = generated_cell_word_0x28;
+		live_cell_word_0x28_bit25_default_write_count += 1;
 		live_visual_write_count += 1;
 		if (selected_row != 0) {
 			live_terrain_art_nonzero_cell_count += 1;
 		}
-		if (h3maped_generated_cell_terrain_flag_byte_0x4a59e2(generated_cell_word_0x28) != 0) {
+		if ((generated_cell_word_0x28 & H3MAPED_CELL_TERRAIN_FLAG_MASK_0X49ACF6) != 0U) {
 			live_terrain_flag_cell_count += 1;
 		}
 		if (sample_records.size() < 16 && (classified.shape_class == 0 || neighbor_mask < 4)) {
@@ -7427,8 +7428,9 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 			live_dirty_cell_count += 1;
 		}
 		const uint32_t roundtrip_0x24 = (uint32_t(h3maped_scratch_terrain_id(scratch_word)) & 0x3fU) | ((uint32_t(h3maped_scratch_art_id(scratch_word)) & 0xffU) << 6U);
-		const uint32_t roundtrip_0x28 = h3maped_generated_cell_terrain_flags_0x4a59e2(int32_t((scratch_word >> 12U) & 0x01U), int32_t((scratch_word >> 13U) & 0x01U));
-		if (roundtrip_0x24 != live_cell_word_0x24[size_t(index)] || roundtrip_0x28 != live_cell_word_0x28[size_t(index)]) {
+		const uint32_t roundtrip_0x28_flags = h3maped_generated_cell_terrain_flags_0x49acf6(int32_t((scratch_word >> 12U) & 0x01U), int32_t((scratch_word >> 13U) & 0x01U));
+		if (roundtrip_0x24 != (live_cell_word_0x24[size_t(index)] & 0x00003fffU)
+				|| roundtrip_0x28_flags != (live_cell_word_0x28[size_t(index)] & H3MAPED_CELL_TERRAIN_FLAG_MASK_0X49ACF6)) {
 			live_roundtrip_mismatch_count += 1;
 		}
 		if (int32_t(live_cell_word_0x24[size_t(index)] & 0x3fU) != live_terrain_code[size_t(index)]) {
@@ -7520,7 +7522,7 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 	phase["phase_id"] = "terrain_tile_byte_writeback";
 	phase["h3maped_anchor"] = "0x49b2b6";
 	phase["generated_cell_write_address"] = "0x49acf6";
-	phase["serializer_contract"] = "byte0 = cell+0x24 bits0..5 terrain id; byte1 = cell+0x24 bits6..13 terrain art; byte6 bits0..1 = cell+0x28 bits15..16 terrain flags; river/road bytes remain pending";
+	phase["serializer_contract"] = "byte0 = cell+0x24 bits0..5 terrain id; byte1 = cell+0x24 bits6..13 terrain art; byte6 bits0..6 = cell+0x28 bits15..21 final flags; river/road bytes remain pending";
 	phase["status"] = "blocked_until_terrainplacement_live_feedback";
 	phase["source"] = "h3maped 0x49b2b6 terrain tile-byte projection from live 0x49acf6 generated-cell words; roads/rivers/objects and package/public adoption remain pending";
 	phase["strict_port_scope"] = "private terrain/art/flag tile-byte candidates only; no roads, rivers, objects, map cells, package tiles, or public output";
@@ -7559,7 +7561,7 @@ Dictionary terrain_tile_byte_writeback_phase(const Dictionary &normalized_config
 		const uint32_t word_0x28 = live_cell_word_0x28[size_t(index)];
 		const int32_t byte_0_terrain = int32_t(word_0x24 & 0x3fU);
 		const int32_t byte_1_art = int32_t((word_0x24 >> 6U) & 0xffU);
-		const int32_t byte_6_flags = h3maped_generated_cell_terrain_flag_byte_0x4a59e2(word_0x28);
+		const int32_t byte_6_flags = h3maped_final_tile_flag_byte_0x49b2b6(word_0x28);
 		tile_byte_0_terrain_u8.append(byte_0_terrain);
 		tile_byte_1_terrain_art_u8.append(byte_1_art);
 		tile_byte_6_terrain_flags_u8.append(byte_6_flags);
