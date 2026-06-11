@@ -8,9 +8,9 @@ This ledger is the reporting baseline for the final recovery push. Do not expand
 
 Original recovery baseline at ledger creation: about 75% recovered.
 
-Current scored recovery after R2 closure: about 86% recovered.
+Current scored recovery after R3 closure: about 89% recovered.
 
-Remaining fixed recovery budget: 14 of the original 25 points.
+Remaining fixed recovery budget: 11 of the original 25 points.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.
 
@@ -20,7 +20,7 @@ Percent movement rule: progress only moves when a blocker or explicitly named su
 | --- | ---: | ---: | --- |
 | R1 | Reward/guard projection chain: `0x4adb72 / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9` | 7 | Closed. Live `0x540b14` projection dispatch is recovered through `0x49c0a6 -> 0x4ad947 -> 0x4ad7f7`, tied to successful `0x4aa9b7 -> 0x4aa3e9` by relation pointer `0x017e0380`; sibling `0x4adb72/+0xc8` and `+0xf5c/+0x1104` surfaces are source-bounded and not ported. |
 | R2 | Endpoint/cursor chain: `0x4a5e73 / 0x4a606b / 0x4a746b / 0x4a7605 / 0x4a696b / 0x4a7312` | 4 | Closed for supported one-level land. The stale `generator+0xf5c` endpoint failures, `0x4a696b` source/relation byte-pair gate, `0x4a606b` no-live-hit surface, and Border Guard fallback chain are source-backed; the fresh R1 branch split replaces the older zero-projection assumption without making `0x4adb72/0x4add76` live. |
-| R3 | Weighted materialization tail: `0x4a8db2 -> 0x4a901a -> 0x4a54a7` | 3 | First weighted dispatch is mostly recovered. Need remaining sampled dispatch write sets, intervening vector/counter mutation, and final per-dispatch generated-cell parity if native-port authority needs it. |
+| R3 | Weighted materialization tail: `0x4a8db2 -> 0x4a901a -> 0x4a54a7` | 3 | Closed. The deterministic seed-58 Large one-level no-water weighted tail is recovered across all three sampled dispatches: return/caller-after, object-vector growth, descriptor counter lane 98, dispatch 0 score-write count, and dispatch 1/2 full matched score-write streams. |
 | R4 | Descriptor/source identity crosswalk for mixed lanes | 3 | Finish source-backed mapping for mixed descriptor lanes such as `45`, `53`, `54`, and `79`, source records, and template/catalog identity. No row-id guessing. |
 | R5 | Source-handler pending-entry chain: `0x53eafc / 0x484d9f -> 0x4afa99` | 2 | Either recover a live owner/action and replay `generator+0xeec/+0xef0/+0xef4`, or source-exclude it from the direct RMG target mode. |
 | R6 | Relation/scoring semantic replay | 2 | Runtime-name remaining scoring/relation surfaces: `0x49e1bf`, `0x4a5767/0x49a318`, and `0x4a54a7` relation/control linkage. |
@@ -28,7 +28,7 @@ Percent movement rule: progress only moves when a blocker or explicitly named su
 
 Original total remaining at ledger creation: 25 points.
 
-Current remaining after R2 closure: 14 points.
+Current remaining after R3 closure: 11 points.
 
 ## Reporting Rules
 
@@ -41,7 +41,7 @@ Current remaining after R2 closure: 14 points.
 
 ## Active Blocker
 
-Active blocker: R3.
+Active blocker: R4.
 
 Current R1 state:
 
@@ -74,3 +74,17 @@ Recovered R2 state:
 - The natural Border Guard branch falls through stale endpoint attempts into recovered `0x4a7605 -> 0x4a5e03` fallback materialization.
 - R1 supersedes the older zero-projection assumption safely: the live `0x540b14` branch reaches `0x49c0a6 -> 0x4ad947 -> 0x4ad7f7`, but the sibling `0x49c019/0x4adb72` writer path and `0x4adef7/0x4add76` cleanup writer path remain unhit in the same seed-controlled branch ledger.
 - R2 is a source-backed supported one-level land target-mode exclusion, not a global all-map-mode exclusion and not native implementation authority.
+
+## R3 Closure
+
+R3 is closed by `.artifacts/rmg_recovery/r3_weighted_materialization_tail_closure_summary_20260611.json`.
+
+Recovered R3 state:
+
+- The recovered deterministic profile is seed-58 Large one-level no-water with Human/Computer `3` and Computer-only `0`; this is recovery evidence only, not a native behavior change.
+- The sampled weighted materialization path reaches `0x4a9322`, dispatches through vtable slot `+0x04` into `0x4a54a7`, returns through `0x4a5756`, and reaches caller-after `0x4a9325`.
+- Dispatch 0 appends record `0x036b6d40` at `(107, 6, 0)`, increments the object vector by one, increments `generator+0x1110[98]` from `4` to `5`, and has a complete `705`-stop `0x4a56b6` score-write count.
+- Dispatch 1 appends record `0x036b68e0` at `(107, 106, 0)`, increments the object vector by one, increments `generator+0x1110[98]` from `6` to `7`, and has `517` matched `0x4a56b6/0x4a56b9` before/after score-write pairs.
+- Dispatch 2 appends record `0x036b67e0` at `(18, 6, 0)`, increments the object vector by one, increments `generator+0x1110[98]` from `7` to `8`, and has `1295` matched `0x4a56b6/0x4a56b9` before/after score-write pairs.
+- The descriptor type-98 bridge ties the sampled weighted counter increments to the sampled `0x4a54a7` descriptor/relation commit lane without assigning a final human object-kind label.
+- R3 does not close global descriptor/source identity, source-handler pending-entry behavior, broader relation/scoring semantics, cleanup/uncommit behavior, endpoint success behavior, or the final ordered private-state replay.
