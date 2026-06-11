@@ -10474,10 +10474,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG end-to-end parity is not complete. Medium seed-10 controlled 4-player land input/template identity is corrected and native now ports the recovered 0x4a2ec3/0x4a4082 TerrainPlacement relation-rectangle bit28 eligibility path. Pinned Linux/Python evidence shows native pre_0x4a4c8e bit28 is 4,652 cells vs H3MapEd 5,181, improving word_0x28 mismatch from 5,184 to 4,977, but word_0x20 and word_0x24 still mismatch all 5,184 cells. Final tile payload still mismatches by 14,201 bytes and first drift remains terrain_generated_cell_word_0x24_before_0x49b2b6. True native RMG parity remains blocked at source-backed owner/span/terrain private-state parity around 0x4a2777, 0x4a325d, and 0x4a3f27. Do not patch this with density scalars, gates, brute-force retries, or final-map delta tuning. Inner-loop validation should use the Linux .so plus Python parity compares; Windows .dll builds are deferred until a Linux-verified final boundary.",
+  "currentSliceNotes": "Native RMG end-to-end parity is not complete. Medium seed-10 controlled 4-player land input/template identity is corrected. Native ports recovered 0x4a1ad8 span metric and 0x4a1967 visible-runtime-link filtering, so coordinate replay matches the H3MapEd trace exactly: pre-rescale span 154, runtime size 7, and coordinates (29,42), (26,31), (35,54), (44,64), (25,7), (44,44), (17,18), (39,34), (53,34), (44,21). Native also consumes the recovered 0x49b4e1 monster-town RNG step after 0x49b53d, making selected runtime terrain ids match H3MapEd exactly: [5,0,3,2,2,3,0,0,7,2]. Fresh Linux/Python evidence in .artifacts/rmg_native_medium_seed10_current_linux_only_20260611 still reports 14,892 final tile byte mismatches and first drift terrain_generated_cell_word_0x24_before_0x49b2b6. pre_0x4a4c8e private-state mismatches remain owner_byte2=1,558, word_0x20=5,184, word_0x24=5,176, word_0x28=5,079. Next blocker is the exact 0x4cca55 -> 0x4a325d boundary/span descriptor handoff inside 0x4a3a03, then terrain cell writeout private-state parity around 0x4a3f27; 0x58db78 monster-town table values remain unmaterialized until later object RNG/materialization needs them. Inner-loop validation is Linux .so plus Python parity compares; Windows .dll builds are deferred until a Linux-verified final boundary.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-11T15:03:02Z",
+  "currentSliceUpdatedAt": "2026-06-11T16:35:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12205,101 +12205,221 @@
   },
   "guardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
   "lastValidation": {
-    "artifact": ".artifacts/rmg_native_medium_seed10_relation_bit28_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json",
+    "id": "rmg-small-generalization-hardening-10184",
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "in_progress",
+    "date": "2026-06-11T16:35:00Z",
+    "validatedAt": "2026-06-11T16:35:00Z",
+    "artifact": ".artifacts/rmg_native_medium_seed10_current_linux_only_20260611",
+    "summary": "Native RMG parity is still incomplete. Coordinate replay and runtime terrain-id selection match the controlled Medium seed-10 H3MapEd trace, but generated-cell owner/word private state still diverges before final tile writeout.",
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-      "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_private_state_compare.py (passed)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 (ran; expected mismatch remains: word_0x20=5,184, word_0x24=5,184, word_0x28=4,977; native bit28=4,652 vs H3MapEd bit28=5,181)",
-      "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_relation_bit28_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,201 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json (ran; expected mismatch remains: owner_byte2=1,558, word_0x20=5,184, word_0x24=5,176, word_0x28=5,079)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,892 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
       "Windows .dll builds intentionally not run in this inner loop; defer until Linux/Python parity reaches a final validation boundary"
     ],
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-      "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_private_state_compare.py (passed)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 (ran; expected mismatch remains: word_0x20=5,184, word_0x24=5,184, word_0x28=4,977; native bit28=4,652 vs H3MapEd bit28=5,181)",
-      "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_relation_bit28_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,201 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json (ran; expected mismatch remains: owner_byte2=1,558, word_0x20=5,184, word_0x24=5,176, word_0x28=5,079)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,892 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
       "Windows .dll builds intentionally not run in this inner loop; defer until Linux/Python parity reaches a final validation boundary"
     ],
-    "date": "2026-06-11T15:03:02Z",
-    "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "final_tile_first_drift_phase": "terrain_generated_cell_word_0x24_before_0x49b2b6",
-      "final_tile_payload_byte_mismatch_count": 14201,
+      "input_template_identity_fixed": true,
+      "coordinate_replay_matches_h3maped_trace": true,
+      "coordinate_selected_span_before_rescale": 154,
+      "runtime_size_after_bbox_rescale": 7,
+      "scaled_zone_coordinates": [
+        [
+          29,
+          42
+        ],
+        [
+          26,
+          31
+        ],
+        [
+          35,
+          54
+        ],
+        [
+          44,
+          64
+        ],
+        [
+          25,
+          7
+        ],
+        [
+          44,
+          44
+        ],
+        [
+          17,
+          18
+        ],
+        [
+          39,
+          34
+        ],
+        [
+          53,
+          34
+        ],
+        [
+          44,
+          21
+        ]
+      ],
+      "selected_runtime_terrain_ids_match_h3maped_trace": true,
+      "selected_h3maped_terrain_ids": [
+        5,
+        0,
+        3,
+        2,
+        2,
+        3,
+        0,
+        0,
+        7,
+        2
+      ],
+      "terrain_rng_call_count_0x49b53d": 6,
+      "monster_town_rng_call_count_0x49b4e1": 4,
+      "total_runtime_terrain_rng_call_count": 10,
+      "rng_state_after_0x49b53d_0x49b4e1_uint32": 572769411,
+      "pre_0x4a4c8e_cell_count": 5184,
+      "owner_byte2_signed_mismatch_count": 1558,
+      "word_0x20_mismatch_count": 5184,
+      "word_0x24_mismatch_count": 5176,
+      "word_0x28_mismatch_count": 5079,
+      "native_bit26_count": 913,
+      "native_bit27_count": 3491,
+      "native_bit28_count": 4182,
       "h3maped_bit26_count": 2478,
       "h3maped_bit27_count": 1311,
       "h3maped_bit28_count": 5181,
-      "input_template_identity_fixed": true,
-      "native_bit26_count": 927,
-      "native_bit27_count": 3503,
-      "native_bit28_count": 4652,
-      "native_behavior_changed": true,
+      "final_tile_payload_byte_mismatch_count": 14892,
+      "final_tile_first_drift_phase": "terrain_generated_cell_word_0x24_before_0x49b2b6",
       "native_rmg_parity_implementation_complete": false,
-      "next_named_blocker": "owner_span_terrain_private_state_parity_0x4a2777_0x4a325d_0x4a3f27",
       "overall_goal_complete": false,
-      "pre_0x4a4c8e_cell_count": 5184,
-      "word_0x20_mismatch_count": 5184,
-      "word_0x24_mismatch_count": 5184,
-      "word_0x28_mismatch_count": 4977,
-      "word_0x28_mismatch_count_before_bit28_port": 5184,
+      "next_named_blocker": "exact_0x4cca55_to_0x4a325d_boundary_span_descriptor_handoff_then_0x4a3f27_terrain_cell_writeout",
+      "monster_town_table_0x58db78_materialized": false,
       "windows_builds_deferred_until_linux_verified_final_boundary": true
     },
-    "remainingWork": "Continue source-backed native adoption for owner/span/terrain private-state parity around 0x4a2777, 0x4a325d, and 0x4a3f27, then rerun the pinned Medium seed-10 H3MapEd compare. Do not tune from final-map deltas, density scalars, broad gates, or brute-force retries. Run Windows debug/release builds only after the Linux .so and Python parity evidence show a final boundary worth cross-platform validation.",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. The recovered TerrainPlacement relation bit28 private-state path is now ported and visible in Python compare output, but owner/span/terrain private-state drift remains the first blocker.",
-    "validatedAt": "2026-06-11T15:03:02Z"
+    "remainingWork": "Port the source-backed 0x4cca55 -> 0x4a325d boundary/span descriptor handoff inside 0x4a3a03, then validate terrain cell writeout private-state parity around 0x4a3f27. Do not tune from final-map deltas, density scalars, art remaps, broad gates, Windows rebuild churn, or brute-force retries. Run Windows debug/release builds only after Linux .so and Python parity evidence show a final validation boundary."
   },
   "latestEvidence": {
-    "artifact": ".artifacts/rmg_native_medium_seed10_relation_bit28_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json",
+    "id": "rmg-small-generalization-hardening-10184",
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "in_progress",
+    "date": "2026-06-11T16:35:00Z",
+    "validatedAt": "2026-06-11T16:35:00Z",
+    "artifact": ".artifacts/rmg_native_medium_seed10_current_linux_only_20260611",
+    "summary": "Native RMG parity is still incomplete. Coordinate replay and runtime terrain-id selection match the controlled Medium seed-10 H3MapEd trace, but generated-cell owner/word private state still diverges before final tile writeout.",
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-      "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_private_state_compare.py (passed)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 (ran; expected mismatch remains: word_0x20=5,184, word_0x24=5,184, word_0x28=4,977; native bit28=4,652 vs H3MapEd bit28=5,181)",
-      "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_relation_bit28_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,201 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json (ran; expected mismatch remains: owner_byte2=1,558, word_0x20=5,184, word_0x24=5,176, word_0x28=5,079)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,892 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
       "Windows .dll builds intentionally not run in this inner loop; defer until Linux/Python parity reaches a final validation boundary"
     ],
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-      "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_private_state_compare.py (passed)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 (ran; expected mismatch remains: word_0x20=5,184, word_0x24=5,184, word_0x28=4,977; native bit28=4,652 vs H3MapEd bit28=5,181)",
-      "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_relation_bit28_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,201 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 --out .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json (ran; expected mismatch remains: owner_byte2=1,558, word_0x20=5,184, word_0x24=5,176, word_0x28=5,079)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current_linux_only_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,892 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
       "Windows .dll builds intentionally not run in this inner loop; defer until Linux/Python parity reaches a final validation boundary"
     ],
-    "date": "2026-06-11T15:03:02Z",
-    "id": "rmg-small-generalization-hardening-10184",
     "metrics": {
-      "final_tile_first_drift_phase": "terrain_generated_cell_word_0x24_before_0x49b2b6",
-      "final_tile_payload_byte_mismatch_count": 14201,
+      "input_template_identity_fixed": true,
+      "coordinate_replay_matches_h3maped_trace": true,
+      "coordinate_selected_span_before_rescale": 154,
+      "runtime_size_after_bbox_rescale": 7,
+      "scaled_zone_coordinates": [
+        [
+          29,
+          42
+        ],
+        [
+          26,
+          31
+        ],
+        [
+          35,
+          54
+        ],
+        [
+          44,
+          64
+        ],
+        [
+          25,
+          7
+        ],
+        [
+          44,
+          44
+        ],
+        [
+          17,
+          18
+        ],
+        [
+          39,
+          34
+        ],
+        [
+          53,
+          34
+        ],
+        [
+          44,
+          21
+        ]
+      ],
+      "selected_runtime_terrain_ids_match_h3maped_trace": true,
+      "selected_h3maped_terrain_ids": [
+        5,
+        0,
+        3,
+        2,
+        2,
+        3,
+        0,
+        0,
+        7,
+        2
+      ],
+      "terrain_rng_call_count_0x49b53d": 6,
+      "monster_town_rng_call_count_0x49b4e1": 4,
+      "total_runtime_terrain_rng_call_count": 10,
+      "rng_state_after_0x49b53d_0x49b4e1_uint32": 572769411,
+      "pre_0x4a4c8e_cell_count": 5184,
+      "owner_byte2_signed_mismatch_count": 1558,
+      "word_0x20_mismatch_count": 5184,
+      "word_0x24_mismatch_count": 5176,
+      "word_0x28_mismatch_count": 5079,
+      "native_bit26_count": 913,
+      "native_bit27_count": 3491,
+      "native_bit28_count": 4182,
       "h3maped_bit26_count": 2478,
       "h3maped_bit27_count": 1311,
       "h3maped_bit28_count": 5181,
-      "input_template_identity_fixed": true,
-      "native_bit26_count": 927,
-      "native_bit27_count": 3503,
-      "native_bit28_count": 4652,
-      "native_behavior_changed": true,
+      "final_tile_payload_byte_mismatch_count": 14892,
+      "final_tile_first_drift_phase": "terrain_generated_cell_word_0x24_before_0x49b2b6",
       "native_rmg_parity_implementation_complete": false,
-      "next_named_blocker": "owner_span_terrain_private_state_parity_0x4a2777_0x4a325d_0x4a3f27",
       "overall_goal_complete": false,
-      "pre_0x4a4c8e_cell_count": 5184,
-      "word_0x20_mismatch_count": 5184,
-      "word_0x24_mismatch_count": 5184,
-      "word_0x28_mismatch_count": 4977,
-      "word_0x28_mismatch_count_before_bit28_port": 5184,
+      "next_named_blocker": "exact_0x4cca55_to_0x4a325d_boundary_span_descriptor_handoff_then_0x4a3f27_terrain_cell_writeout",
+      "monster_town_table_0x58db78_materialized": false,
       "windows_builds_deferred_until_linux_verified_final_boundary": true
     },
-    "remainingWork": "Continue source-backed native adoption for owner/span/terrain private-state parity around 0x4a2777, 0x4a325d, and 0x4a3f27, then rerun the pinned Medium seed-10 H3MapEd compare. Do not tune from final-map deltas, density scalars, broad gates, or brute-force retries. Run Windows debug/release builds only after the Linux .so and Python parity evidence show a final boundary worth cross-platform validation.",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. The recovered TerrainPlacement relation bit28 private-state path is now ported and visible in Python compare output, but owner/span/terrain private-state drift remains the first blocker.",
-    "validatedAt": "2026-06-11T15:03:02Z"
+    "remainingWork": "Port the source-backed 0x4cca55 -> 0x4a325d boundary/span descriptor handoff inside 0x4a3a03, then validate terrain cell writeout private-state parity around 0x4a3f27. Do not tune from final-map deltas, density scalars, art remaps, broad gates, Windows rebuild churn, or brute-force retries. Run Windows debug/release builds only after Linux .so and Python parity evidence show a final validation boundary."
   },
   "nextActionGuardrailNote": "True end-to-end native RMG parity is incomplete; the next implementation must reduce the source-backed final payload/private-state mismatch, not report R1-R7 recovery closure.",
-  "notes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
+  "notes": "Native RMG true end-to-end parity remains incomplete. Current Linux-only evidence in .artifacts/rmg_native_medium_seed10_current_linux_only_20260611 shows coordinate replay and selected runtime terrain ids match the controlled Medium seed-10 H3MapEd trace, while pre_0x4a4c8e generated-cell private state still mismatches owner_byte2=1,558, word_0x20=5,184, word_0x24=5,176, word_0x28=5,079 and final tile payload still mismatches 14,892 bytes. Next real implementation target is the exact 0x4cca55 -> 0x4a325d boundary/span descriptor handoff inside 0x4a3a03, followed by 0x4a3f27 terrain cell writeout parity. Windows .dll builds are deferred until Linux .so plus Python parity evidence reaches a final validation boundary.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -52455,8 +52575,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Continue source-backed native adoption for owner/span/terrain private-state parity around 0x4a2777, 0x4a325d, and 0x4a3f27, then rerun the pinned Medium seed-10 H3MapEd compare. Do not tune from final-map deltas, density scalars, broad gates, or brute-force retries. Run Windows debug/release builds only after the Linux .so and Python parity evidence show a final boundary worth cross-platform validation.",
-  "remainingWork": "Continue source-backed native adoption for owner/span/terrain private-state parity around 0x4a2777, 0x4a325d, and 0x4a3f27, then rerun the pinned Medium seed-10 H3MapEd compare. Do not tune from final-map deltas, density scalars, broad gates, or brute-force retries. Run Windows debug/release builds only after the Linux .so and Python parity evidence show a final boundary worth cross-platform validation.",
+  "remainingGap": "Port the source-backed 0x4cca55 -> 0x4a325d boundary/span descriptor handoff inside 0x4a3a03, then validate terrain cell writeout private-state parity around 0x4a3f27. Do not tune from final-map deltas, density scalars, art remaps, broad gates, Windows rebuild churn, or brute-force retries. Run Windows debug/release builds only after Linux .so and Python parity evidence show a final validation boundary.",
+  "remainingWork": "Port the source-backed 0x4cca55 -> 0x4a325d boundary/span descriptor handoff inside 0x4a3a03, then validate terrain cell writeout private-state parity around 0x4a3f27. Do not tune from final-map deltas, density scalars, art remaps, broad gates, Windows rebuild churn, or brute-force retries. Run Windows debug/release builds only after Linux .so and Python parity evidence show a final validation boundary.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -52968,9 +53088,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG parity is still incomplete. The recovered TerrainPlacement relation bit28 private-state path is now ported and visible in Python compare output, but owner/span/terrain private-state drift remains the first blocker.",
+  "summary": "Native RMG parity is still incomplete. Medium seed-10 coordinate replay and runtime terrain-id selection now match recovered H3MapEd evidence, but generated-cell owner/word private state still diverges before final tile writeout.",
   "taskId": "10184",
-  "updatedAt": "2026-06-11T15:03:02Z",
+  "updatedAt": "2026-06-11T16:35:00Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
     "checks": [

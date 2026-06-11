@@ -4297,7 +4297,11 @@ bool zones_connectable_49b6e2(const RuntimeZoneSeed &first, const RuntimeZoneSee
 	return size_sum * 11 >= distance * 10;
 }
 
-int32_t link_acceptance_count_4a1967(const RuntimeZoneSeed &current, const std::vector<RuntimeZoneSeed> &zones, const std::vector<RuntimeLinkSeed> &links) {
+bool runtime_index_visible_4a1967(int32_t runtime_index, const std::vector<int32_t> &visible_runtime_indices) {
+	return std::find(visible_runtime_indices.begin(), visible_runtime_indices.end(), runtime_index) != visible_runtime_indices.end();
+}
+
+int32_t link_acceptance_count_4a1967(const RuntimeZoneSeed &current, const std::vector<RuntimeZoneSeed> &zones, const std::vector<int32_t> &visible_runtime_indices, const std::vector<RuntimeLinkSeed> &links) {
 	int32_t accepted = 0;
 	for (const RuntimeLinkSeed &link : links) {
 		int32_t other_index = -1;
@@ -4307,6 +4311,9 @@ int32_t link_acceptance_count_4a1967(const RuntimeZoneSeed &current, const std::
 			other_index = link.runtime_a;
 		}
 		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		if (!runtime_index_visible_4a1967(other_index, visible_runtime_indices)) {
 			continue;
 		}
 		if (zones_connectable_49b6e2(zones[size_t(other_index)], current)) {
@@ -4359,14 +4366,14 @@ void prune_candidates_4a1ad8_single_level(const RuntimeZoneSeed &current_templat
 		candidate_zone.x = candidate.x;
 		candidate_zone.y = candidate.y;
 		candidate_zone.level = candidate.level;
-		best_link_count = std::max(best_link_count, link_acceptance_count_4a1967(candidate_zone, zones, links));
+		best_link_count = std::max(best_link_count, link_acceptance_count_4a1967(candidate_zone, zones, visible_runtime_indices, links));
 	}
 	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
 		RuntimeZoneSeed candidate_zone = current_template;
 		candidate_zone.x = candidate.x;
 		candidate_zone.y = candidate.y;
 		candidate_zone.level = candidate.level;
-		return link_acceptance_count_4a1967(candidate_zone, zones, links) < best_link_count;
+		return link_acceptance_count_4a1967(candidate_zone, zones, visible_runtime_indices, links) < best_link_count;
 	}), candidates.end());
 	if (candidates.empty()) {
 		return;
@@ -4394,7 +4401,7 @@ void prune_candidates_4a1ad8_single_level(const RuntimeZoneSeed &current_templat
 		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
 		const int32_t height = candidate_max_y - candidate_min_y;
 		const int32_t width = candidate_max_x - candidate_min_x;
-		return std::max(std::min(coordinate_prune_span_budget, height), width);
+		return std::max(coordinate_prune_span_budget, std::max(height, width));
 	};
 
 	int32_t best_metric = 0x7d00;
@@ -5404,6 +5411,27 @@ Dictionary zone_footprint_source_nodes_phase(const Dictionary &normalized_config
 	phase["active_payload_node_count"] = source.active_payload_node_count;
 	phase["source_node_walk_count"] = source.source_node_walk_count;
 	phase["source_node_walk_guard_exhausted_count"] = source.source_node_walk_guard_exhausted_count;
+	Array source_walk_previews;
+	for (const SourceWalk &walk : source.walks) {
+		Dictionary walk_report;
+		walk_report["runtime_zone_index"] = walk.runtime_zone_index;
+		walk_report["source_zone_id"] = walk.source_zone_id;
+		walk_report["start_x"] = walk.start_x;
+		walk_report["start_y"] = walk.start_y;
+		Array node_reports;
+		for (const SourceCycleNode &node : walk.cycle_nodes) {
+			Dictionary node_report;
+			node_report["x"] = node.x;
+			node_report["y"] = node.y;
+			node_report["finalized"] = node.finalized;
+			node_report["finalized_x"] = node.finalized_x;
+			node_report["finalized_y"] = node.finalized_y;
+			node_reports.append(node_report);
+		}
+		walk_report["nodes"] = node_reports;
+		source_walk_previews.append(walk_report);
+	}
+	phase["source_node_walk_previews"] = source_walk_previews;
 	return phase;
 }
 
@@ -5723,7 +5751,8 @@ Dictionary zone_boundary_and_span_fill_phase(const Dictionary &normalized_config
 	phase["randomized_line_writer_anchor"] = "0x4a2413";
 	phase["span_fill_anchor"] = "0x4a325d";
 	phase["strict_port_scope"] = "source-node boundary traversal and private span-fill zone buffer only; no finalizer, terrain, map cells, or public output";
-	phase["source"] = "h3maped 0x4a2777 traversal over finalized source-node cycles plus 0x4a325d private span fill; 0x4a3710 ordering/finalizer remains pending";
+	phase["source"] = "current native materialization over finalized source-node cycles plus 0x4a325d private span fill; exact h3maped 0x4a2777 active source-node boundary traversal remains pending";
+	phase["semantic_blocker"] = "0x4a2777 consumes active source-node edge coordinates and runtime_zone+0x3f4 boundary vectors; 0x4a3a03 passes the 0x4cca55 descriptor result plus the selected source-node record into 0x4a325d. Replacing that handoff with finalized cycles directly regresses boundary materialization, so the descriptor layout and traversal order must be ported instead of tuned";
 	phase["materializes_private_zone_cell_buffer"] = false;
 	phase["materializes_boundary_trace"] = false;
 	phase["materializes_span_fill"] = false;
@@ -5764,6 +5793,7 @@ Dictionary zone_boundary_and_span_fill_phase(const Dictionary &normalized_config
 	phase["boundary_randomized_rng_call_count"] = fill.get("randomized_rng_call_count", 0);
 	phase["boundary_randomized_inserted_midpoint_count"] = fill.get("randomized_inserted_midpoint_count", 0);
 	phase["boundary_randomized_max_pending_point_count"] = fill.get("randomized_max_pending_point_count", 0);
+	phase["boundary_skipped_unfinalized_node_count"] = fill.get("skipped_unfinalized_node_count", 0);
 	phase["boundary_rng_state_after_0x4a2777_uint32"] = fill.get("rng_state_after_0x4a2777_uint32", 0);
 	phase["boundary_trace_write_count"] = fill.get("trace_write_count", 0);
 	phase["boundary_unique_cell_count"] = fill.get("unique_boundary_cell_count", 0);
@@ -5907,9 +5937,10 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 	phase["rng_state_before_0x49b53d_uint32"] = int64_t(rng_state_after_coordinate_replay);
 	phase["rng_state_before_0x49b53d_source"] = "0x4a218c_post_bbox_rescale_runtime_terrain_selection";
 	phase["boundary_rng_state_after_0x4a2777_uint32_diagnostic"] = span_fill_phase.get("boundary_rng_state_after_0x4a2777_uint32", 0);
-	phase["unrecovered_followup"] = "0x49b4e1 monster-town runtime selection follows 0x49b53d in h3maped.exe and remains a named recovery target before object RNG parity can be claimed";
-	phase["strict_port_scope"] = "runtime-zone terrain id selection only; no terrain cell writeout, TerrainPlacement art, map cells, package tiles, or public output";
+	phase["unrecovered_followup"] = "0x49b4e1 RNG consumption is ported, but the 0x58db78 monster-town table values are not materialized here";
+	phase["strict_port_scope"] = "runtime-zone terrain id selection plus 0x49b4e1 monster-town RNG consumption; no terrain cell writeout, TerrainPlacement art, map cells, package tiles, or public output";
 	phase["materializes_runtime_zone_terrain_ids"] = false;
+	phase["materializes_runtime_monster_town_ids"] = false;
 	phase["materializes_terrain_cells"] = false;
 	phase["materializes_terrain_art"] = false;
 	phase["materializes_map_cells"] = false;
@@ -5941,6 +5972,7 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 	int32_t allowed_flag_choice_count = 0;
 	int32_t blank_allowed_mask_count = 0;
 	int32_t forced_subterranean_count = 0;
+	int32_t monster_town_rng_call_count = 0;
 
 	for (int32_t index = 0; index < runtime_records.size(); ++index) {
 		if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
@@ -6001,6 +6033,22 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 			selection["forced_subterranean_branch"] = "0x49b5b7_0x49b5c3_level_1_non_lava_forces_terrain_6";
 		}
 
+		if (town_choice_index == -1) {
+			const int32_t monster_table_candidate_count = 4;
+			const int32_t rng_value = rng.next();
+			const int32_t selected_monster_table_ordinal = rng_value % monster_table_candidate_count;
+			monster_town_rng_call_count += 1;
+			selection["monster_town_source"] = "0x49b4e1_0x58db78_rng_choice";
+			selection["monster_town_rng_value"] = rng_value;
+			selection["monster_town_rng_modulus"] = monster_table_candidate_count;
+			selection["selected_monster_table_ordinal_0x49b4e1"] = selected_monster_table_ordinal;
+			selection["selected_monster_table_value_materialized"] = false;
+		} else {
+			selection["monster_town_source"] = "0x49b4e1_fixed_town_choice_no_rng";
+			selection["selected_monster_table_ordinal_0x49b4e1"] = town_choice_index;
+			selection["selected_monster_table_value_materialized"] = true;
+		}
+
 		selection["selected_h3maped_terrain_id"] = selected_terrain;
 		selection["selected_project_terrain_id"] = project_terrain_for_h3maped_id(selected_terrain);
 		selection["source"] = source;
@@ -6021,7 +6069,10 @@ Dictionary runtime_terrain_selection_phase(const Dictionary &normalized_config, 
 	phase["blank_allowed_mask_count"] = blank_allowed_mask_count;
 	phase["forced_subterranean_count"] = forced_subterranean_count;
 	phase["terrain_rng_call_count"] = rng_call_count;
+	phase["monster_town_rng_call_count_0x49b4e1"] = monster_town_rng_call_count;
+	phase["total_runtime_terrain_rng_call_count"] = rng_call_count + monster_town_rng_call_count;
 	phase["rng_state_after_0x49b53d_uint32"] = int64_t(rng.state);
+	phase["rng_state_after_0x49b53d_0x49b4e1_uint32"] = int64_t(rng.state);
 	return phase;
 }
 
