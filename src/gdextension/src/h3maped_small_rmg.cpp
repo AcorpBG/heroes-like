@@ -293,6 +293,7 @@ int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, 
 Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor);
 bool h3_object_row_matches_runtime_terrain(const H3ObjectRow &row, int32_t h3maped_terrain_id);
 bool h3_object_row_matches_decorative_score_terrain_0x49e1bf(const H3ObjectRow &row, int32_t h3maped_terrain_id);
+bool h3_object_row_matches_template_selector_0x4a9e40(const H3ObjectRow &row, int32_t source_field_0x20, int32_t h3maped_terrain_id);
 bool h3maped_49a1d8_generated_cell_valid(const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, int64_t flat);
 std::vector<H3MaskPoint> h3_msk_mask_points_0x49e1bf(uint64_t mask, int32_t width_0x34, int32_t height_0x38);
 std::vector<H3MaskPoint> h3_object_row_nonpassable_points_0x41e951(const H3ObjectRow &row);
@@ -1951,6 +1952,24 @@ bool h3_object_row_matches_reward_primary_terrain(const H3ObjectRow &row, int32_
 	return row.terrain_mask_primary[terrain_mask_index] == '1';
 }
 
+bool h3_object_row_source_mask_0x18_has_lane_0x4a9e40(const H3ObjectRow &row, int32_t h3maped_terrain_id) {
+	if (h3maped_terrain_id < 0 || h3maped_terrain_id >= 9 || row.terrain_mask_secondary.length() < 9) {
+		return false;
+	}
+	const int32_t terrain_mask_index = 8 - h3maped_terrain_id;
+	return row.terrain_mask_secondary[terrain_mask_index] == '1';
+}
+
+bool h3_object_row_matches_template_selector_0x4a9e40(const H3ObjectRow &row, int32_t source_field_0x20, int32_t h3maped_terrain_id) {
+	if (row.subtype_id != source_field_0x20) {
+		return false;
+	}
+	if (row.group_id == 4 || row.group_id == 5) {
+		return h3_object_row_source_mask_0x18_has_lane_0x4a9e40(row, h3maped_terrain_id);
+	}
+	return h3maped_terrain_id != 8;
+}
+
 std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype_and_terrain(const std::vector<H3ObjectRow> &rows, int32_t subtype, int32_t h3maped_terrain_id) {
 	std::vector<H3ObjectRow> result;
 	for (const H3ObjectRow &row : rows) {
@@ -1965,6 +1984,16 @@ std::vector<H3ObjectRow> filtered_h3_object_rows_for_subtype_and_reward_primary_
 	std::vector<H3ObjectRow> result;
 	for (const H3ObjectRow &row : rows) {
 		if (row.subtype_id == subtype && h3_object_row_matches_reward_primary_terrain(row, h3maped_terrain_id)) {
+			result.push_back(row);
+		}
+	}
+	return result;
+}
+
+std::vector<H3ObjectRow> filtered_h3_object_rows_for_selector_0x4a9e40(const std::vector<H3ObjectRow> &rows, int32_t source_field_0x20, int32_t h3maped_terrain_id) {
+	std::vector<H3ObjectRow> result;
+	for (const H3ObjectRow &row : rows) {
+		if (h3_object_row_matches_template_selector_0x4a9e40(row, source_field_0x20, h3maped_terrain_id)) {
 			result.push_back(row);
 		}
 	}
@@ -2774,7 +2803,7 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 		H3MapedObjectTypeLimitState limit_state;
 	};
 	std::vector<Eligible> eligible;
-	static std::map<int32_t, std::vector<H3ObjectRow>> template_rows_by_type_cache;
+	static std::map<int32_t, std::vector<H3ObjectRow>> template_rows_by_bucket_cache;
 	for (const H3MapedRewardCandidate &candidate : h3maped_reward_materialized_candidates_49f95a()) {
 		if ((candidate.dynamic_monster || candidate.dynamic_type17) && candidate.monster_terrain_id != h3maped_terrain_id) {
 			result.rejected_template_count += 1;
@@ -2811,22 +2840,20 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 			proxy = generic_reward_proxy_for_h3maped_candidate(candidate);
 			result.rejected_proxy_count += 1;
 		}
-		auto cached_rows = template_rows_by_type_cache.find(candidate.type_id);
-		if (cached_rows == template_rows_by_type_cache.end()) {
+		auto cached_rows = template_rows_by_bucket_cache.find(candidate.type_id);
+		if (cached_rows == template_rows_by_bucket_cache.end()) {
 			Dictionary template_catalog_load;
-			cached_rows = template_rows_by_type_cache.emplace(candidate.type_id, h3_object_rows_by_type_from_recovered_catalog(candidate.type_id, template_catalog_load)).first;
+			cached_rows = template_rows_by_bucket_cache.emplace(candidate.type_id, h3_object_rows_by_type_or_metadata_bucket_from_recovered_catalog(candidate.type_id, template_catalog_load)).first;
 		}
-		const std::vector<H3ObjectRow> terrain_templates = h3maped_reward_candidate_type_is_reward_category(candidate.type_id)
-				? filtered_h3_object_rows_for_subtype_and_reward_primary_terrain(cached_rows->second, candidate.subtype_id, h3maped_terrain_id)
-				: filtered_h3_object_rows_for_subtype_and_terrain(cached_rows->second, candidate.subtype_id, h3maped_terrain_id);
-		if (terrain_templates.empty()) {
+		const std::vector<H3ObjectRow> selector_templates = filtered_h3_object_rows_for_selector_0x4a9e40(cached_rows->second, candidate.subtype_id, h3maped_terrain_id);
+		if (selector_templates.empty()) {
 			result.rejected_template_count += 1;
 			continue;
 		}
 		const int32_t template_rng_value = rng.next();
 		result.candidate_template_rng_call_count_0x4a9e40 += 1;
-		const int32_t selected_template_index = template_rng_value % int32_t(terrain_templates.size());
-		eligible.push_back(Eligible { runtime_candidate, proxy, std::vector<H3ObjectRow> { terrain_templates[size_t(selected_template_index)] }, template_rng_value, selected_template_index, int32_t(terrain_templates.size()), limit_state });
+		const int32_t selected_template_index = template_rng_value % int32_t(selector_templates.size());
+		eligible.push_back(Eligible { runtime_candidate, proxy, std::vector<H3ObjectRow> { selector_templates[size_t(selected_template_index)] }, template_rng_value, selected_template_index, int32_t(selector_templates.size()), limit_state });
 		result.eligible_weight_total += runtime_candidate.weight;
 	}
 	result.eligible_count = int32_t(eligible.size());
@@ -11310,8 +11337,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				object_lookup["candidate_scan_helper_address"] = "0x4a9f1c";
 			object_lookup["candidate_vector_builder_address"] = "0x49f95a";
 			object_lookup["source_0x4a9f1c_template_selector_timing"] = "0x4a9f1c calls 0x4a9e40 while building each candidate-vector entry before weighted selection";
+			object_lookup["source_0x4a9e40_template_selector_filter"] = "bucket source vector by requested type lane, then source+0x20 subtype match; source+0x24 groups 4/5 require source+0x18 terrain-lane bit, other groups reject terrain lane 8 only";
 			object_lookup["source_0x4a9f1c_fallback_flag_filter"] = "0x4aab7e primary retries pass flag 0 to 0x4aa354, fallback retries pass flag 1, and 0x4aa1db forwards that flag to 0x4a9f1c arg+0x20 where 0x4aa195 value-per-footprint filtering is applied";
 			object_lookup["source_0x4a9f1c_template_timing_behavioral"] = true;
+			object_lookup["template_selector_filter_source"] = "recovered_0x4a9e40_source_record_0x20_0x24_0x18";
 			object_lookup["candidate_template_rng_call_count_0x4a9e40"] = object_selection.candidate_template_rng_call_count_0x4a9e40;
 			object_lookup["primary_probe_retry_budget"] = 3;
 			object_lookup["primary_min_value"] = object_lookup_min_value;
@@ -11392,12 +11421,15 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				object_lookup["homm3_re_object_def_ref"] = object_selection.proxy.get("homm3_re_object_def_ref", "");
 				object_lookup["selected_template_selector_address"] = "0x4a9e40";
 				object_lookup["selected_template_count_after_terrain_filter"] = object_selection.selected_template_count;
+				object_lookup["selected_template_count_after_0x4a9e40_filter"] = object_selection.selected_template_count;
 				object_lookup["selected_template_rng_value"] = object_selection.template_rng_value;
 				object_lookup["selected_template_index"] = object_selection.selected_template_index;
 				object_lookup["selected_template_source_line"] = object_selection.template_row.source_line;
+				object_lookup["selected_template_source_record_group_0x24"] = object_selection.template_row.group_id;
 				object_lookup["selected_template_def_name"] = object_selection.template_row.def_name;
 				object_lookup["selected_template_passability_mask"] = object_selection.template_row.passability_mask;
 				object_lookup["selected_template_action_mask"] = object_selection.template_row.action_mask;
+				object_lookup["selected_template_terrain_mask_primary"] = object_selection.template_row.terrain_mask_primary;
 				object_lookup["selected_template_terrain_mask_secondary"] = object_selection.template_row.terrain_mask_secondary;
 				object_lookup["selected_candidate_dynamic_monster"] = object_selection.candidate.dynamic_monster;
 				object_lookup["selected_candidate_dynamic_type10"] = object_selection.candidate.dynamic_type10;
