@@ -87,10 +87,19 @@ def controlled_case_from_reference_manifest(path: Path) -> str:
     parsed_summary = summary.get("parsed", {}) if isinstance(summary.get("parsed"), dict) else {}
 
     case_id = str(manifest.get("case_id") or path.parent.name).strip()
-    seed = str(identity.get("seed") or parsed_summary.get("seed") or inputs.get("seed") or identity.get("requested_seed") or "0")
-    humans = int(identity.get("observed_humans") or parsed_summary.get("humans") or inputs.get("human_players") or inputs.get("players") or 1)
-    computers = int(identity.get("observed_computers") or parsed_summary.get("computers") or inputs.get("computer_only_players") or 0)
-    players = max(2, min(8, humans + computers))
+    seed = str(inputs.get("seed") or identity.get("seed") or parsed_summary.get("seed") or identity.get("requested_seed") or "0")
+    humans = int(
+        inputs.get("human_computer_players")
+        or identity.get("requested_humans")
+        or parsed_summary.get("humans")
+        or identity.get("observed_humans")
+        or inputs.get("human_players")
+        or inputs.get("players")
+        or 1
+    )
+    computers = int(inputs.get("computer_only_players") or parsed_summary.get("computers") or identity.get("observed_computers") or 0)
+    players = int(inputs.get("players") or max(2, humans + computers))
+    players = max(2, min(8, players))
     size_class = size_class_from_reference(str(inputs.get("size") or parsed_summary.get("size") or "small"))
     water_mode = water_mode_from_reference(str(inputs.get("water") or parsed_summary.get("water") or "land"))
     level_count = int(inputs.get("level_count") or parsed_summary.get("levels") or 1)
