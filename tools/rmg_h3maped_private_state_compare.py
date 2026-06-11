@@ -17,11 +17,20 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from rmg_h3maped_final_tile_payload_summary import (
+    CELL_DWORDS,
+    EXPECTED_ADDRESS as FINAL_TILE_WRITEOUT_RETURN_ADDRESS,
+    find_generator_dump,
+    find_grid_lines,
+    flatten_words,
+)
+
 
 CELL_SCHEMA = "h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1"
 RELATION_SCHEMA = "h3maped_private_state_checkpoint_0x49b3fb_relations_v1"
 DWORD_LINE_RE = re.compile(r"(?:^|>)\s*(?:0x)?([0-9a-fA-F]+):\s+(.+)$")
 HEX_WORD_RE = re.compile(r"\b[0-9a-fA-F]{1,8}\b")
+ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]|\x1b\][^\a]*(?:\a|\x1b\\)")
 
 
 def as_uint32(value: Any) -> int:
@@ -61,6 +70,7 @@ def parse_h3maped_generated_cell_dump(path: Path, expected_cell_count: int, base
     words: list[int] = []
     collecting = base_address is None
     for line in path.read_text(errors="replace").splitlines():
+        line = ANSI_RE.sub("", line).replace("\r", "")
         match = DWORD_LINE_RE.search(line)
         if not match:
             continue
@@ -92,6 +102,67 @@ def parse_h3maped_generated_cell_dump(path: Path, expected_cell_count: int, base
                 "word_0x20": word_0x20,
                 "word_0x24": word_0x24,
                 "word_0x28": word_0x28,
+                "owner_byte2_signed": signed_byte(word_0x20 >> 16),
+                "owner_byte3_signed": signed_byte(word_0x20 >> 24),
+            }
+        )
+    return records
+
+
+def parse_h3maped_generated_cell_final_ledger(path: Path, expected_cell_count: int) -> list[dict[str, Any]]:
+    ledger = json.loads(path.read_text(encoding="utf-8"))
+    matching_events = [
+        event
+        for event in ledger.get("events", [])
+        if event.get("address") == FINAL_TILE_WRITEOUT_RETURN_ADDRESS
+    ]
+    if len(matching_events) != 1:
+        raise ValueError(
+            f"expected exactly one {FINAL_TILE_WRITEOUT_RETURN_ADDRESS} final tile writeout event, "
+            f"got {len(matching_events)}"
+        )
+    event = matching_events[0]
+    _generator, generator_words = find_generator_dump(event)
+    grid_base = int(generator_words[0x14 // 4])
+    width = int(generator_words[0x18 // 4])
+    height = int(generator_words[0x1C // 4])
+    levels = int(generator_words[0x20 // 4])
+    actual_cell_count = width * height * levels
+    if expected_cell_count and actual_cell_count != expected_cell_count:
+        raise ValueError(
+            f"H3MapEd ledger has {actual_cell_count} cells ({width}x{height}x{levels}), "
+            f"expected {expected_cell_count}"
+        )
+    expected_grid_words = actual_cell_count * CELL_DWORDS
+    expected_grid_lines = expected_grid_words // 4
+    grid_lines = find_grid_lines(event, grid_base, expected_grid_lines)
+    grid_words = flatten_words(grid_lines)
+    if len(grid_words) < expected_grid_words:
+        raise ValueError(
+            f"H3MapEd ledger has {len(grid_words)} generated-cell dwords, "
+            f"needs {expected_grid_words}"
+        )
+
+    records: list[dict[str, Any]] = []
+    for flat in range(actual_cell_count):
+        base = flat * CELL_DWORDS
+        word_0x20 = grid_words[base + 0x20 // 4]
+        word_0x24 = grid_words[base + 0x24 // 4]
+        word_0x28 = grid_words[base + 0x28 // 4]
+        word_0x2c = grid_words[base + 0x2C // 4]
+        level_size = width * height
+        level = flat // level_size
+        remainder = flat % level_size
+        records.append(
+            {
+                "flat": flat,
+                "x": remainder % width,
+                "y": remainder // width,
+                "level": level,
+                "word_0x20": word_0x20,
+                "word_0x24": word_0x24,
+                "word_0x28": word_0x28,
+                "word_0x2c": word_0x2c,
                 "owner_byte2_signed": signed_byte(word_0x20 >> 16),
                 "owner_byte3_signed": signed_byte(word_0x20 >> 24),
             }
@@ -198,6 +269,8 @@ def compare_cells(h3_records: list[dict[str, Any]], native_records: dict[int, di
             if int(h3[field]) != int(native[field]):
                 mismatch_counts[f"{field}_mismatch"] += 1
                 fields.append(field)
+        if "word_0x2c" in h3 and "word_0x2c" not in native:
+            mismatch_counts["word_0x2c_native_not_recorded"] += 1
         if fields and len(mismatches) < max_mismatches:
             mismatches.append(
                 {
@@ -275,9 +348,20 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         },
     }
 
+    if args.h3maped_cell_dump and args.h3maped_final_ledger:
+        raise ValueError("use either --h3maped-cell-dump or --h3maped-final-ledger, not both")
+
     if args.h3maped_cell_dump:
         base_address = int(str(args.h3maped_cell_base_address), 0) if args.h3maped_cell_base_address else None
         h3_cells = parse_h3maped_generated_cell_dump(args.h3maped_cell_dump, expected_cell_count, base_address)
+        report["generated_cells"] = compare_cells(h3_cells, native_cells, args.max_mismatches)
+        report["generated_cells"]["h3maped_summary"] = summarize_cells(h3_cells)
+        report["generated_cells"]["native_summary"] = native_summary
+        report["h3maped_input_kind"] = "cell_dump"
+    elif args.h3maped_final_ledger:
+        h3_cells = parse_h3maped_generated_cell_final_ledger(args.h3maped_final_ledger, expected_cell_count)
+        report["h3maped_final_ledger"] = str(args.h3maped_final_ledger)
+        report["h3maped_input_kind"] = "final_writeout_ledger_generated_cell_grid"
         report["generated_cells"] = compare_cells(h3_cells, native_cells, args.max_mismatches)
         report["generated_cells"]["h3maped_summary"] = summarize_cells(h3_cells)
         report["generated_cells"]["native_summary"] = native_summary
@@ -301,6 +385,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--native-checkpoint-id", default="", help="Optional native generated-cell checkpoint_id to compare, e.g. pre_0x4a4c8e.")
     parser.add_argument("--h3maped-cell-dump", type=Path, default=None, help="winedbg memory dump from 0x4a4c8e entry: x/15552x *(int*)($esi+0x14).")
     parser.add_argument("--h3maped-cell-base-address", default="", help="Optional hex base address for the first generated cell line; ignores earlier debugger memory dumps.")
+    parser.add_argument("--h3maped-final-ledger", type=Path, default=None, help="Wine trace ledger containing the final 0x49b2b6/0x4ad251 generated-cell grid dump.")
     parser.add_argument("--h3maped-relations-json", type=Path, default=None, help="Optional parsed H3MapEd relation records, if available.")
     parser.add_argument("--expected-cell-count", type=int, default=0, help="Expected generated-cell count; defaults to native checkpoint cell_count.")
     parser.add_argument("--max-mismatches", type=int, default=50, help="Maximum mismatching cell records to include.")

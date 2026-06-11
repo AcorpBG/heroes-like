@@ -190,8 +190,8 @@ Dictionary build_native_random_map_config(const String &seed, int32_t player_cou
 	Dictionary player_constraints;
 	int32_t clamped_player_count = std::max<int32_t>(2, std::min<int32_t>(8, player_count));
 	const int32_t clamped_human_count = std::max<int32_t>(1, std::min<int32_t>(8, human_count));
-	const int32_t clamped_computer_count = computer_count >= 0 ? std::max<int32_t>(0, std::min<int32_t>(8 - clamped_human_count, computer_count)) : std::max<int32_t>(0, clamped_player_count - clamped_human_count);
-	clamped_player_count = std::max<int32_t>(2, std::min<int32_t>(8, computer_count >= 0 ? clamped_human_count + clamped_computer_count : clamped_player_count));
+	const int32_t clamped_computer_count = computer_count >= 0 ? std::max<int32_t>(0, std::min<int32_t>(8, computer_count)) : std::max<int32_t>(0, clamped_player_count - clamped_human_count);
+	clamped_player_count = std::max<int32_t>(clamped_human_count, clamped_player_count);
 	player_constraints["human_count"] = clamped_human_count;
 	player_constraints["player_count"] = clamped_player_count;
 	player_constraints["computer_count"] = clamped_computer_count;
