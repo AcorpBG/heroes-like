@@ -7313,10 +7313,12 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	int32_t live_initial_water_attempt_count = 0;
 	int32_t live_repaint_attempt_count = 0;
 	int32_t live_queue_attempt_count = 0;
-		int32_t live_full_native_cell_count = 0;
-		int32_t live_terrain_art_nonzero_cell_count = 0;
-		int32_t live_terrain_flag_cell_count = 0;
-		int32_t live_cell_word_0x28_bit25_default_write_count = 0;
+	int32_t live_full_native_cell_count = 0;
+	int32_t live_terrain_art_nonzero_cell_count = 0;
+	int32_t live_terrain_flag_cell_count = 0;
+	int32_t live_cell_word_0x28_bit25_default_write_count = 0;
+	int32_t final_sweep_class_correction_count_0x4bbfcc = 0;
+	Dictionary final_sweep_class_correction_histogram_0x4bbfcc;
 
 	auto live_accept_neighbor = [&](int32_t neighbor_index, int32_t terrain_id) -> bool {
 		if (neighbor_index < 0 || neighbor_index >= tile_count) {
@@ -7342,7 +7344,36 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 		}
 		return mask;
 	};
-	auto write_live_visual_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id, const char *source_branch, int32_t forced_neighbor_mask = -1) -> bool {
+	auto apply_final_sweep_class_correction_0x4bbfcc = [&](TerrainClassResult classified, bool apply_correction) -> TerrainClassResult {
+		if (!apply_correction) {
+			return classified;
+		}
+		int32_t corrected_class = classified.shape_class;
+		switch (classified.shape_class) {
+			case 2:
+				corrected_class = 6;
+				break;
+			case 8:
+				corrected_class = 12;
+				break;
+			case 5:
+				corrected_class = 7;
+				break;
+			case 11:
+				corrected_class = 13;
+				break;
+			default:
+				break;
+		}
+		if (corrected_class != classified.shape_class) {
+			final_sweep_class_correction_count_0x4bbfcc += 1;
+			const String correction_key = String::num_int64(classified.shape_class) + "->" + String::num_int64(corrected_class);
+			final_sweep_class_correction_histogram_0x4bbfcc[correction_key] = int32_t(final_sweep_class_correction_histogram_0x4bbfcc.get(correction_key, 0)) + 1;
+			classified.shape_class = corrected_class;
+		}
+		return classified;
+	};
+	auto write_live_visual_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id, const char *source_branch, bool apply_final_sweep_class_correction = false) -> bool {
 		if (x < 0 || y < 0 || x >= map_width || y >= map_height) {
 			return false;
 		}
@@ -7351,8 +7382,8 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 			return false;
 		}
 		live_visual_attempt_count += 1;
-		const TerrainClassResult classified = classify_grid_cell(live_terrain_code, map_width, map_height, level_tile_count, level, x, y, terrain_id);
-		const int32_t neighbor_mask = forced_neighbor_mask >= 0 ? forced_neighbor_mask : live_neighbor_mask_for_cell(level, x, y, terrain_id);
+		const TerrainClassResult classified = apply_final_sweep_class_correction_0x4bbfcc(classify_grid_cell(live_terrain_code, map_width, map_height, level_tile_count, level, x, y, terrain_id), apply_final_sweep_class_correction);
+		const int32_t neighbor_mask = live_neighbor_mask_for_cell(level, x, y, terrain_id);
 		const String mask_key = String::num_int64(neighbor_mask);
 		neighbor_mask_histogram[mask_key] = int32_t(neighbor_mask_histogram.get(mask_key, 0)) + 1;
 		if (classified.shape_class == 0) {
@@ -7679,14 +7710,14 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 					final_sweep_zero_boundary_cell_count_0x4bbfcc += 1;
 				}
 				final_sweep_max_boundary_count_0x4bbfcc = std::max(final_sweep_max_boundary_count_0x4bbfcc, boundary_count);
-				final_sweep_cell_count_0x4bbfcc += write_live_visual_cell(level, x, y, live_terrain_code[size_t(index)], "0x4bbfcc_final_whole_map_sweep", boundary_count) ? 1 : 0;
+				final_sweep_cell_count_0x4bbfcc += write_live_visual_cell(level, x, y, live_terrain_code[size_t(index)], "0x4bbfcc_final_whole_map_sweep", true) ? 1 : 0;
 			}
 		}
 	}
 
-		int32_t live_dirty_cell_count = 0;
-		int32_t live_roundtrip_mismatch_count = 0;
-		int32_t live_terrain_mismatch_count = 0;
+	int32_t live_dirty_cell_count = 0;
+	int32_t live_roundtrip_mismatch_count = 0;
+	int32_t live_terrain_mismatch_count = 0;
 	int32_t post_queue_terrain_difference_count = 0;
 	for (int32_t index = 0; index < tile_count; ++index) {
 		const uint32_t scratch_word = live_scratch_word[size_t(index)];
@@ -7735,9 +7766,9 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	phase["live_roundtrip_mismatch_count"] = live_roundtrip_mismatch_count;
 	phase["live_terrain_mismatch_count"] = live_terrain_mismatch_count;
 	phase["live_full_native_cell_count"] = live_full_native_cell_count;
-		phase["live_terrain_art_nonzero_cell_count"] = live_terrain_art_nonzero_cell_count;
-		phase["live_terrain_flag_cell_count"] = live_terrain_flag_cell_count;
-		phase["live_cell_word_0x28_bit25_default_write_count"] = live_cell_word_0x28_bit25_default_write_count;
+	phase["live_terrain_art_nonzero_cell_count"] = live_terrain_art_nonzero_cell_count;
+	phase["live_terrain_flag_cell_count"] = live_terrain_flag_cell_count;
+	phase["live_cell_word_0x28_bit25_default_write_count"] = live_cell_word_0x28_bit25_default_write_count;
 	phase["post_queue_terrain_difference_count"] = post_queue_terrain_difference_count;
 	phase["neighbor_mask_histogram"] = neighbor_mask_histogram;
 	phase["selector_kind_histogram"] = selector_kind_histogram;
@@ -7756,17 +7787,19 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 	phase["total_set_b_current_remove_count"] = set_b_current_remove_count;
 	phase["set_a_drain_count"] = set_a_drain_count;
 	phase["set_b_drain_count"] = set_b_drain_count;
-		phase["set_b_candidate_true_count"] = set_b_candidate_true_count;
-		phase["retouched_cell_write_count"] = retouched_cell_write_count;
-		phase["drain_guard_limit"] = drain_guard_limit;
-		phase["drain_guard_exhausted"] = drain_guard_count >= drain_guard_limit;
-		phase["final_sweep_address"] = "0x4bbfcc";
-		phase["final_sweep_source"] = "recovered 0x4bc5f0 tail runs 0x4bbfcc whole-map normalization after set-A/set-B drain; boundary counts scan E/S/SE/SW and feed full/native row selection";
-		phase["final_sweep_cell_count_0x4bbfcc"] = final_sweep_cell_count_0x4bbfcc;
-		phase["final_sweep_boundary_cell_count_0x4bbfcc"] = final_sweep_boundary_cell_count_0x4bbfcc;
-		phase["final_sweep_zero_boundary_cell_count_0x4bbfcc"] = final_sweep_zero_boundary_cell_count_0x4bbfcc;
-		phase["final_sweep_max_boundary_count_0x4bbfcc"] = final_sweep_max_boundary_count_0x4bbfcc;
-		phase["final_sweep_boundary_count_histogram_0x4bbfcc"] = final_sweep_boundary_count_histogram_0x4bbfcc;
+	phase["set_b_candidate_true_count"] = set_b_candidate_true_count;
+	phase["retouched_cell_write_count"] = retouched_cell_write_count;
+	phase["drain_guard_limit"] = drain_guard_limit;
+	phase["drain_guard_exhausted"] = drain_guard_count >= drain_guard_limit;
+	phase["final_sweep_address"] = "0x4bbfcc";
+	phase["final_sweep_source"] = "recovered 0x4bc5f0 tail runs 0x4bbfcc whole-map normalization after set-A/set-B drain; boundary counts scan E/S/SE/SW and feed full/native row selection";
+	phase["final_sweep_cell_count_0x4bbfcc"] = final_sweep_cell_count_0x4bbfcc;
+	phase["final_sweep_boundary_cell_count_0x4bbfcc"] = final_sweep_boundary_cell_count_0x4bbfcc;
+	phase["final_sweep_zero_boundary_cell_count_0x4bbfcc"] = final_sweep_zero_boundary_cell_count_0x4bbfcc;
+	phase["final_sweep_max_boundary_count_0x4bbfcc"] = final_sweep_max_boundary_count_0x4bbfcc;
+	phase["final_sweep_boundary_count_histogram_0x4bbfcc"] = final_sweep_boundary_count_histogram_0x4bbfcc;
+	phase["final_sweep_class_correction_count_0x4bbfcc"] = final_sweep_class_correction_count_0x4bbfcc;
+	phase["final_sweep_class_correction_histogram_0x4bbfcc"] = final_sweep_class_correction_histogram_0x4bbfcc;
 	phase["rng_state_after_live_visual_selection_uint32"] = int64_t(live_visual_rng.state);
 	phase["rng_state_before_live_visual_selection_source"] = "0x49b53d_runtime_terrain_selection_rng_state_after";
 	phase["seed_samples"] = seed_samples;
