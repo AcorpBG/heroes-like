@@ -3049,7 +3049,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("public_package_adoption", "strict private h3maped state to non-authoritative project package draft", "active_strict_package_draft_runtime_blocked"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "active_strict_writeout_draft_runtime_blocked"));
 	backlog.append(phase_record("fast_structural_validator_authority", "package/writeout structural validator before public generation authority", "active_strict_validator_authority_runtime_blocked"));
-	backlog.append(phase_record("public_generation_authority", "generate_random_map validator-gated public Small land package", "active_validator_gated_public_package_production_ready_strict_small_land"));
+	backlog.append(phase_record("public_generation_authority", "generate_random_map validator-gated public Small/Medium land package", "active_validator_gated_public_package_available_native_end_to_end_parity_pending"));
 	return backlog;
 }
 
@@ -3057,7 +3057,7 @@ Array current_gap_summary() {
 	Array gaps;
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
-	gaps.append("production readiness is enabled only for the validator-gated strict Small 36x36 one-level land scope after road/runtime audits, blocker/guard/decorative zoning audits, negative validator coverage, corpus comparison, and editor/runtime adoption passed locally; water, underground, larger sizes, broader templates, and full parity remain blocked");
+	gaps.append("scoped runtime package generation is enabled for validator-gated strict Small/Medium one-level land scopes, but true native end-to-end RMG parity is not complete until the recovered H3MapEd private-state replay is ported into native behavior and compared against H3MapEd outputs; water, underground, larger sizes, broader templates, and full parity remain blocked");
 	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; decorative work now materializes an explicit 0x49aa63/0x49a932 generated-cell bit-state phase and 0x49eb8d/0x49e700 filler from recovered rand_trn/template data, but the bit-26 source is still owner-transition derived until every upstream writer is exact");
 	return gaps;
 }
@@ -3070,6 +3070,9 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 	state["binary_verified"] = bool(binary_verification().get("ok", false));
 	state["active_public_generation_state"] = supports_scope(normalized_config);
 	state["runtime_generation_allowed"] = supports_scope(normalized_config);
+	state["native_rmg_end_to_end_parity_complete"] = false;
+	state["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	state["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay still has to be ported into the native generator and validated against owner executable output.";
 	state["partial_materialized_payload_public_api"] = false;
 	state["legacy_private_phase_ledgers_exposed"] = false;
 	state["legacy_private_phase_ledgers_archived_only"] = true;
@@ -20416,6 +20419,9 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	map_document["runtime_generation_allowed"] = true;
 	map_document["production_ready"] = true;
 	map_document["production_ready_scope"] = scope_id;
+	map_document["native_rmg_end_to_end_parity_complete"] = false;
+	map_document["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	map_document["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	map_document["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	map_document["editor_runtime_adoption_audited"] = true;
 	map_document["source_template_authority"] = "h3maped_exe_rng";
@@ -20437,6 +20443,9 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	metadata["validator_failure_count"] = validator.get("failure_count", 0);
 	metadata["production_ready"] = true;
 	metadata["production_ready_scope"] = scope_id;
+	metadata["native_rmg_end_to_end_parity_complete"] = false;
+	metadata["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	metadata["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	metadata["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	metadata["editor_runtime_adoption_audited"] = true;
 	map_document["metadata"] = metadata;
@@ -20476,6 +20485,9 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	result["native_runtime_authoritative"] = true;
 	result["production_ready"] = true;
 	result["production_ready_scope"] = scope_id;
+	result["native_rmg_end_to_end_parity_complete"] = false;
+	result["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
+	result["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
 	result["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
 	result["editor_runtime_adoption_audited"] = true;
 	result["full_parity_claim"] = false;
