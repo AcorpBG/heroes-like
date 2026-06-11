@@ -13171,8 +13171,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						}
 						source_final_writer_projection_probe_0x4aa3e9["source_final_writer_member_count_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9.size();
 						source_final_writer_projection_probe_0x4aa3e9["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
+						const bool source_final_writer_member_projection_behavioral_0x4aa3e9 = source_final_writer_member_body_flat_count_0x4aa3e9 > 0;
 						source_final_writer_projection_probe_0x4aa3e9["source_final_writer_member_body_flat_count_0x4aa3e9"] = source_final_writer_member_body_flat_count_0x4aa3e9;
-						source_final_writer_projection_probe_0x4aa3e9["source_final_writer_member_projection_behavioral"] = source_final_writer_member_body_flat_count_0x4aa3e9 > 0;
+						source_final_writer_projection_probe_0x4aa3e9["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
 						source_final_writer_projection_probe_0x4aa3e9["source_final_writer_member_projection_exactness_blocker"] = "0x4aa3e9 member body projection is adopted for object_occupied/package surfaces; remaining exactness blocker is the upstream proxy reward object catalog and partial score-depletion descriptor adoption";
 					const int32_t source_projection_start_x_0x4aa3e9 = std::max<int32_t>(0, -selected_coordinate.x);
 					const int32_t source_projection_start_y_0x4aa3e9 = std::max<int32_t>(0, -selected_coordinate.y);
@@ -13415,7 +13416,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					source_final_writer_projection_probe_0x4aa3e9["remaining_exact_blocker"] = "The recovered 0x4aa3e9 generated-cell bit mirror now drives private +0x28 state; full member/package projection and reward guard adoption still need H3MapEd private-state comparison.";
 					placement_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 					placement_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
-					placement_record["source_final_writer_member_projection_behavioral"] = false;
+					placement_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
 					placement_record["source_final_writer_merge_behavioral"] = true;
 					placement_record["source_final_writer_merge_behavioral_scope"] = "0x4aa5a9_generated_cell_bit26_bit27_mirror";
 					placement_record["source_final_writer_merge_bit26_mutation_count"] = source_merge_behavioral_bit26_mirror_mutation_count_0x4aa3e9;
@@ -13528,7 +13529,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					coordinate_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 					coordinate_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 					coordinate_record["source_final_writer_member_count_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9.size();
-					coordinate_record["source_final_writer_member_projection_behavioral"] = false;
+					coordinate_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
 					coordinate_record["source_final_writer_member_projection_exactness_blocker"] = "source member body projection now drives object_occupied/package surfaces; remaining exactness blocker is score-depletion descriptor behavior and upstream proxy reward catalog parity";
 					coordinate_record["reward_value_tier"] = h3maped_reward_value_tier(selected_value);
 						coordinate_record["native_proxy_object_id"] = object_selection.proxy.get("native_proxy_object_id", "");
@@ -13619,7 +13620,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["source_reward_guard_attach_behavioral"] = false;
 								guard_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 								guard_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
-								guard_record["source_final_writer_member_projection_behavioral"] = false;
+								guard_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
 								guard_record["exact_port_claim"] = false;
 								guard_record["exactness_blocker"] = "reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate; exact 0x49cf34/0x49d69d/0x4aa3e9 wrapper projection must be adopted together with package object-vector projection and source RNG order";
 								reward_guard_records.append(guard_record);
@@ -19029,7 +19030,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		const Dictionary source_guard_member_0x4aa3e9 = h3maped_source_final_writer_member_record_0x4aa3e9(source, "reward_guard_member");
 		const bool source_guard_member_projection_available_0x4aa3e9 = !source_guard_member_0x4aa3e9.is_empty()
 				&& !h3maped_package_cell_array_from_variant(source_guard_member_0x4aa3e9.get("body_tiles", Array())).is_empty();
-		const bool adopt_reward_guard_member_projection_0x4aa3e9 = false;
+		const bool adopt_reward_guard_member_projection_0x4aa3e9 = source_guard_member_projection_available_0x4aa3e9;
 		Array body_tiles = adopt_reward_guard_member_projection_0x4aa3e9 && source_guard_member_projection_available_0x4aa3e9
 				? h3maped_package_cell_array_from_variant(source_guard_member_0x4aa3e9.get("body_tiles", Array()))
 				: Array::make(h3maped_package_adoption_cell_from_record(source));
@@ -19074,8 +19075,12 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["source_projected_guard_x_0x4aa3e9"] = source_guard_member_projection_available_0x4aa3e9 ? int32_t(source_guard_member_0x4aa3e9.get("projected_world_x", package_primary_x)) : package_primary_x;
 		object["source_projected_guard_y_0x4aa3e9"] = source_guard_member_projection_available_0x4aa3e9 ? int32_t(source_guard_member_0x4aa3e9.get("projected_world_y", package_primary_y)) : package_primary_y;
 		object["source_projected_guard_level_0x4aa3e9"] = source_guard_member_projection_available_0x4aa3e9 ? int32_t(source_guard_member_0x4aa3e9.get("projected_world_level", package_primary_level)) : package_primary_level;
-		object["package_reward_guard_coordinate_policy"] = "uses_committed_0x49cf34_reward_guard_record_cell";
-		object["package_reward_guard_projection_adoption_policy"] = "0x4aa3e9_guard_member_projection_is_diagnostic_until_coordinate_frame_recovery_is_complete";
+		object["package_reward_guard_coordinate_policy"] = adopt_reward_guard_member_projection_0x4aa3e9
+				? String("uses_source_projected_0x4aa3e9_reward_guard_member_cell")
+				: String("uses_committed_0x49cf34_reward_guard_record_cell");
+		object["package_reward_guard_projection_adoption_policy"] = adopt_reward_guard_member_projection_0x4aa3e9
+				? String("source_0x4aa3e9_reward_guard_member_projection_adopted_for_package_surface")
+				: String("diagnostic_only_source_projected_reward_guard_member_surface_unavailable_package_uses_committed_guard_record_cell");
 		object["primary_tile"] = package_primary_cell;
 		object["body_tiles"] = body_tiles;
 		object["visit_tile"] = Dictionary(visit_tiles[0]);
@@ -19100,8 +19105,8 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 		object["source_final_writer_projection_probe_0x4aa3e9"] = source.get("source_final_writer_projection_probe_0x4aa3e9", Dictionary());
 		object["source_final_writer_member_records_0x4aa3e9"] = source.get("source_final_writer_member_records_0x4aa3e9", Array());
 		object["source_final_writer_member_projection_behavioral"] = adopt_reward_guard_member_projection_0x4aa3e9 && source_guard_member_projection_available_0x4aa3e9;
-		object["source_final_writer_member_projection_adoption_status"] = source_guard_member_projection_available_0x4aa3e9
-				? String("diagnostic_only_source_projected_reward_guard_member_surface_available_package_uses_committed_guard_record_cell")
+		object["source_final_writer_member_projection_adoption_status"] = adopt_reward_guard_member_projection_0x4aa3e9
+				? String("source_projected_reward_guard_member_surface_adopted_for_package_guard")
 				: String("diagnostic_only_source_projected_reward_guard_member_surface_unavailable_package_behavior_unchanged");
 		object["package_adoption_source"] = "h3maped_private_0x4aa3e9_reward_guard_0x4a65a5";
 		object["public_runtime_authoritative"] = false;
