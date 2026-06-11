@@ -6873,6 +6873,39 @@ std::array<int32_t, 8> h3maped_same_terrain_mask_4bc74c(const std::vector<int32_
 	return mask;
 }
 
+std::vector<uint8_t> h3maped_final_sweep_boundary_counts_0x4bbfcc(const std::vector<int32_t> &terrain_codes, int32_t map_width, int32_t map_height, int32_t level_count) {
+	const int32_t level_tile_count = map_width * map_height;
+	const int32_t expected_tile_count = level_tile_count * std::max(0, level_count);
+	std::vector<uint8_t> boundary_counts(size_t(std::max(0, expected_tile_count)), 0);
+	if (map_width <= 0 || map_height <= 0 || level_count <= 0 || int32_t(terrain_codes.size()) != expected_tile_count) {
+		return boundary_counts;
+	}
+	auto increment_if_different = [&](int32_t level_base, int32_t x, int32_t y, int32_t nx, int32_t ny) {
+		if (nx < 0 || ny < 0 || nx >= map_width || ny >= map_height) {
+			return;
+		}
+		const int32_t index = level_base + y * map_width + x;
+		const int32_t neighbor_index = level_base + ny * map_width + nx;
+		if (terrain_codes[size_t(index)] == terrain_codes[size_t(neighbor_index)]) {
+			return;
+		}
+		boundary_counts[size_t(index)] = uint8_t(std::min<int32_t>(255, int32_t(boundary_counts[size_t(index)]) + 1));
+		boundary_counts[size_t(neighbor_index)] = uint8_t(std::min<int32_t>(255, int32_t(boundary_counts[size_t(neighbor_index)]) + 1));
+	};
+	for (int32_t level = 0; level < level_count; ++level) {
+		const int32_t level_base = level * level_tile_count;
+		for (int32_t y = 0; y < map_height; ++y) {
+			for (int32_t x = 0; x < map_width; ++x) {
+				increment_if_different(level_base, x, y, x + 1, y);
+				increment_if_different(level_base, x, y, x, y + 1);
+				increment_if_different(level_base, x, y, x + 1, y + 1);
+				increment_if_different(level_base, x, y, x - 1, y + 1);
+			}
+		}
+	}
+	return boundary_counts;
+}
+
 bool h3maped_same_class_region_gate_4bc928(const std::array<int32_t, 8> &mask) {
 	int32_t cursor = 0;
 	if (mask[0] != 0) {
@@ -7309,7 +7342,7 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 		}
 		return mask;
 	};
-	auto write_live_visual_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id, const char *source_branch) -> bool {
+	auto write_live_visual_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id, const char *source_branch, int32_t forced_neighbor_mask = -1) -> bool {
 		if (x < 0 || y < 0 || x >= map_width || y >= map_height) {
 			return false;
 		}
@@ -7319,7 +7352,7 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 		}
 		live_visual_attempt_count += 1;
 		const TerrainClassResult classified = classify_grid_cell(live_terrain_code, map_width, map_height, level_tile_count, level, x, y, terrain_id);
-		const int32_t neighbor_mask = live_neighbor_mask_for_cell(level, x, y, terrain_id);
+		const int32_t neighbor_mask = forced_neighbor_mask >= 0 ? forced_neighbor_mask : live_neighbor_mask_for_cell(level, x, y, terrain_id);
 		const String mask_key = String::num_int64(neighbor_mask);
 		neighbor_mask_histogram[mask_key] = int32_t(neighbor_mask_histogram.get(mask_key, 0)) + 1;
 		if (classified.shape_class == 0) {
@@ -7623,6 +7656,34 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 		drain_queue_for_active_terrain(terrain);
 	}
 
+	const std::vector<uint8_t> final_sweep_boundary_counts_0x4bbfcc = h3maped_final_sweep_boundary_counts_0x4bbfcc(live_terrain_code, map_width, map_height, map_level_count);
+	int32_t final_sweep_cell_count_0x4bbfcc = 0;
+	int32_t final_sweep_boundary_cell_count_0x4bbfcc = 0;
+	int32_t final_sweep_zero_boundary_cell_count_0x4bbfcc = 0;
+	int32_t final_sweep_max_boundary_count_0x4bbfcc = 0;
+	Dictionary final_sweep_boundary_count_histogram_0x4bbfcc;
+	for (int32_t level = 0; level < map_level_count; ++level) {
+		const int32_t level_base = level * level_tile_count;
+		for (int32_t y = 0; y < map_height; ++y) {
+			for (int32_t x = 0; x < map_width; ++x) {
+				const int32_t index = level_base + y * map_width + x;
+				if (index < 0 || index >= tile_count) {
+					continue;
+				}
+				const int32_t boundary_count = index < int32_t(final_sweep_boundary_counts_0x4bbfcc.size()) ? int32_t(final_sweep_boundary_counts_0x4bbfcc[size_t(index)]) : 0;
+				const String boundary_key = String::num_int64(boundary_count);
+				final_sweep_boundary_count_histogram_0x4bbfcc[boundary_key] = int32_t(final_sweep_boundary_count_histogram_0x4bbfcc.get(boundary_key, 0)) + 1;
+				if (boundary_count > 0) {
+					final_sweep_boundary_cell_count_0x4bbfcc += 1;
+				} else {
+					final_sweep_zero_boundary_cell_count_0x4bbfcc += 1;
+				}
+				final_sweep_max_boundary_count_0x4bbfcc = std::max(final_sweep_max_boundary_count_0x4bbfcc, boundary_count);
+				final_sweep_cell_count_0x4bbfcc += write_live_visual_cell(level, x, y, live_terrain_code[size_t(index)], "0x4bbfcc_final_whole_map_sweep", boundary_count) ? 1 : 0;
+			}
+		}
+	}
+
 		int32_t live_dirty_cell_count = 0;
 		int32_t live_roundtrip_mismatch_count = 0;
 		int32_t live_terrain_mismatch_count = 0;
@@ -7699,6 +7760,13 @@ Dictionary terrainplacement_live_feedback_phase(const Dictionary &normalized_con
 		phase["retouched_cell_write_count"] = retouched_cell_write_count;
 		phase["drain_guard_limit"] = drain_guard_limit;
 		phase["drain_guard_exhausted"] = drain_guard_count >= drain_guard_limit;
+		phase["final_sweep_address"] = "0x4bbfcc";
+		phase["final_sweep_source"] = "recovered 0x4bc5f0 tail runs 0x4bbfcc whole-map normalization after set-A/set-B drain; boundary counts scan E/S/SE/SW and feed full/native row selection";
+		phase["final_sweep_cell_count_0x4bbfcc"] = final_sweep_cell_count_0x4bbfcc;
+		phase["final_sweep_boundary_cell_count_0x4bbfcc"] = final_sweep_boundary_cell_count_0x4bbfcc;
+		phase["final_sweep_zero_boundary_cell_count_0x4bbfcc"] = final_sweep_zero_boundary_cell_count_0x4bbfcc;
+		phase["final_sweep_max_boundary_count_0x4bbfcc"] = final_sweep_max_boundary_count_0x4bbfcc;
+		phase["final_sweep_boundary_count_histogram_0x4bbfcc"] = final_sweep_boundary_count_histogram_0x4bbfcc;
 	phase["rng_state_after_live_visual_selection_uint32"] = int64_t(live_visual_rng.state);
 	phase["rng_state_before_live_visual_selection_source"] = "0x49b53d_runtime_terrain_selection_rng_state_after";
 	phase["seed_samples"] = seed_samples;
