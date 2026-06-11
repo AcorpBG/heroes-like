@@ -216,6 +216,7 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
     bit25 = 0
     bit26 = 0
     bit27 = 0
+    bit28 = 0
     count = 0
     for record in values:
         if not isinstance(record, dict):
@@ -235,12 +236,14 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
         bit25 += 1 if word_0x28 & (1 << 25) else 0
         bit26 += 1 if word_0x28 & (1 << 26) else 0
         bit27 += 1 if word_0x28 & (1 << 27) else 0
+        bit28 += 1 if word_0x28 & (1 << 28) else 0
     return {
         "cell_count": count,
         "word_0x28_bit22_count": bit22,
         "word_0x28_bit25_count": bit25,
         "word_0x28_bit26_count": bit26,
         "word_0x28_bit27_count": bit27,
+        "word_0x28_bit28_count": bit28,
         "owner_byte2_signed_histogram": string_key_histogram(owner_byte2),
         "owner_byte3_signed_histogram": string_key_histogram(owner_byte3),
         "word_0x24_terrain_histogram": string_key_histogram(terrain_bits),
@@ -420,18 +423,20 @@ def main() -> int:
     h3_summary = generated.get("h3maped_summary") if isinstance(generated, dict) else None
     if isinstance(native_summary, dict):
         print(
-            "native checkpoint={checkpoint} bit26={bit26} bit27={bit27} top_owner2={owner2}".format(
+            "native checkpoint={checkpoint} bit26={bit26} bit27={bit27} bit28={bit28} top_owner2={owner2}".format(
                 checkpoint=report.get("native_checkpoint_id", ""),
                 bit26=native_summary.get("word_0x28_bit26_count"),
                 bit27=native_summary.get("word_0x28_bit27_count"),
+                bit28=native_summary.get("word_0x28_bit28_count"),
                 owner2=native_summary.get("top_owner_byte2_signed", [])[:5],
             )
         )
     if isinstance(h3_summary, dict):
         print(
-            "h3maped bit26={bit26} bit27={bit27} top_owner2={owner2}".format(
+            "h3maped bit26={bit26} bit27={bit27} bit28={bit28} top_owner2={owner2}".format(
                 bit26=h3_summary.get("word_0x28_bit26_count"),
                 bit27=h3_summary.get("word_0x28_bit27_count"),
+                bit28=h3_summary.get("word_0x28_bit28_count"),
                 owner2=h3_summary.get("top_owner_byte2_signed", [])[:5],
             )
         )
