@@ -8,9 +8,9 @@ This ledger is the reporting baseline for the final recovery push. Do not expand
 
 Original recovery baseline at ledger creation: about 75% recovered.
 
-Current scored recovery after R3 closure: about 89% recovered.
+Current scored recovery after R4 closure: about 92% recovered.
 
-Remaining fixed recovery budget: 11 of the original 25 points.
+Remaining fixed recovery budget: 8 of the original 25 points.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.
 
@@ -21,14 +21,14 @@ Percent movement rule: progress only moves when a blocker or explicitly named su
 | R1 | Reward/guard projection chain: `0x4adb72 / 0x4ad7f7 / 0x4aa9b7 / 0x4aa3e9` | 7 | Closed. Live `0x540b14` projection dispatch is recovered through `0x49c0a6 -> 0x4ad947 -> 0x4ad7f7`, tied to successful `0x4aa9b7 -> 0x4aa3e9` by relation pointer `0x017e0380`; sibling `0x4adb72/+0xc8` and `+0xf5c/+0x1104` surfaces are source-bounded and not ported. |
 | R2 | Endpoint/cursor chain: `0x4a5e73 / 0x4a606b / 0x4a746b / 0x4a7605 / 0x4a696b / 0x4a7312` | 4 | Closed for supported one-level land. The stale `generator+0xf5c` endpoint failures, `0x4a696b` source/relation byte-pair gate, `0x4a606b` no-live-hit surface, and Border Guard fallback chain are source-backed; the fresh R1 branch split replaces the older zero-projection assumption without making `0x4adb72/0x4add76` live. |
 | R3 | Weighted materialization tail: `0x4a8db2 -> 0x4a901a -> 0x4a54a7` | 3 | Closed. The deterministic seed-58 Large one-level no-water weighted tail is recovered across all three sampled dispatches: return/caller-after, object-vector growth, descriptor counter lane 98, dispatch 0 score-write count, and dispatch 1/2 full matched score-write streams. |
-| R4 | Descriptor/source identity crosswalk for mixed lanes | 3 | Finish source-backed mapping for mixed descriptor lanes such as `45`, `53`, `54`, and `79`, source records, and template/catalog identity. No row-id guessing. |
+| R4 | Descriptor/source identity crosswalk for mixed lanes | 3 | Closed. Mixed selected lanes `45`, `53`, `54`, and `79` now have a source-backed crosswalk: all 87 selected descriptors join to same-run `0x4903e8` build events; `descriptor+0x00` is a registry/source-key value, not a universal row id; exact catalog identity authority is the copied `0x4c` source record and recovered provider/object-loader surface. |
 | R5 | Source-handler pending-entry chain: `0x53eafc / 0x484d9f -> 0x4afa99` | 2 | Either recover a live owner/action and replay `generator+0xeec/+0xef0/+0xef4`, or source-exclude it from the direct RMG target mode. |
 | R6 | Relation/scoring semantic replay | 2 | Runtime-name remaining scoring/relation surfaces: `0x49e1bf`, `0x4a5767/0x49a318`, and `0x4a54a7` relation/control linkage. |
 | R7 | One continuous ordered private-state replay | 4 | Stitch recovered pieces into ordered replay from RMG entrypoint to final map write, with phase/private-buffer checkpoints. This is the final proof step before native parity changes. |
 
 Original total remaining at ledger creation: 25 points.
 
-Current remaining after R3 closure: 11 points.
+Current remaining after R4 closure: 8 points.
 
 ## Reporting Rules
 
@@ -41,7 +41,7 @@ Current remaining after R3 closure: 11 points.
 
 ## Active Blocker
 
-Active blocker: R4.
+Active blocker: R5.
 
 Current R1 state:
 
@@ -88,3 +88,17 @@ Recovered R3 state:
 - Dispatch 2 appends record `0x036b67e0` at `(18, 6, 0)`, increments the object vector by one, increments `generator+0x1110[98]` from `7` to `8`, and has `1295` matched `0x4a56b6/0x4a56b9` before/after score-write pairs.
 - The descriptor type-98 bridge ties the sampled weighted counter increments to the sampled `0x4a54a7` descriptor/relation commit lane without assigning a final human object-kind label.
 - R3 does not close global descriptor/source identity, source-handler pending-entry behavior, broader relation/scoring semantics, cleanup/uncommit behavior, endpoint success behavior, or the final ordered private-state replay.
+
+## R4 Closure
+
+R4 is closed by `.artifacts/rmg_recovery/r4_descriptor_source_identity_closure_summary_20260611.json`.
+
+Recovered R4 state:
+
+- All 87 selected mixed-lane descriptors for target contexts `0x004a744a | 45`, `0x004a98f0 | 53`, `0x004a5e6c | 54`, and `0x004a9c3f | 79` join by pointer to exact same-run `0x4903e8` descriptor build events.
+- `descriptor+0x00` is recovered as the source-key registry value returned through `0x491eed`; mixed-lane row-mode samples prove it is not a universal zero-based `objects.txt` row id.
+- `descriptor+0x1c` is the descriptor type/counter lane, `descriptor+0x20` is the subtype/source object id, and `descriptor+0x24` is the class/group-like selector. These fields are selector metadata, not a replacement for the full source record.
+- The base object loader recovers `objects.txt` row stride `0x4c`, row `+0x1c` as object type id, row `+0x20` as subtype-like field, and the type-45 special case.
+- The source catalog/template producer recovers full `0x4c` source-record preservation, DEF/name-bearing cache-key fields, and provider dispatch for target lanes 53 Mine, 54 Monster, and 79 Resource.
+- Type 45, 54, and 79 sampled type/subtype pairs resolve against the catalog without row guessing. Type 53 mines are intentionally descriptor-only ambiguous because several DEF rows share a mine subtype; the recovered identity rule is to carry the copied source record, not guess among terrain variants.
+- R4 does not close R5 pending-entry behavior, R6 relation/scoring semantic replay, R7 ordered replay, or any native RMG parity changes.
