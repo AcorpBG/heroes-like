@@ -11764,7 +11764,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					int32_t direction_index = 0;
 					int32_t existing_member_index = 0;
 				};
-				H3MapedRng secondary_probe_rng { reward_preview_rng.state };
+				H3MapedRng &secondary_probe_rng = reward_preview_rng;
 				std::map<int32_t, int32_t> secondary_probe_global_counts = composite_global_type_counts;
 				std::map<int32_t, std::map<int32_t, int32_t>> secondary_probe_zone_counts = composite_zone_type_counts;
 				while (true) {
@@ -12132,9 +12132,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				object_lookup["source_secondary_nonpositive_value_abort_count_0x4aa1db"] = source_secondary_nonpositive_value_abort_count_0x4aa1db;
 				object_lookup["source_primary_action_control_cell_count_0x49abd6"] = int32_t(source_wrapper_action_control_type_by_cell_0x49abd6.size());
 				object_lookup["source_secondary_validation_helper"] = "0x49d2e0";
-				object_lookup["source_secondary_position_exactness_blocker"] = secondary_probe_would_run_0x4aa1db ? String("0x49d471 candidate recovery is diagnostic; behavioral adoption rejected until final object-vector writer and reward-guard adoption semantics are recovered") : String("not_needed_primary_value_satisfies_0x4aa1db_residual_gate");
+				object_lookup["source_secondary_position_exactness_blocker"] = secondary_probe_would_run_0x4aa1db ? String("0x49d471 secondary placement now consumes the active reward RNG stream; remaining exactness blocker is upstream proxy reward catalog parity") : String("not_needed_primary_value_satisfies_0x4aa1db_residual_gate");
 				object_lookup["composite_secondary_validation_helper_address"] = "0x49d471";
-				object_lookup["composite_secondary_materialization_status"] = secondary_probe_would_run_0x4aa1db ? String("diagnostic_only_rejected_behavioral_probe_due_reward_guard_overproduction") : String("not_needed_primary_value_satisfies_0x4aa1db_residual_gate");
+				object_lookup["composite_secondary_materialization_status"] = secondary_probe_would_run_0x4aa1db ? String("source_recovered_0x4aa1db_secondary_materialization_behavior_drives_composite_package_surface") : String("not_needed_primary_value_satisfies_0x4aa1db_residual_gate");
 				object_lookup["composite_vector_records"] = composite_vector_records;
 
 				std::vector<H3MaskPoint> reward_body_points;
@@ -13525,7 +13525,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					coordinate_record["source_secondary_position_rng_call_count_0x49d471"] = source_secondary_position_rng_call_count_0x49d471;
 					coordinate_record["source_secondary_nonpositive_value_abort_count_0x4aa1db"] = source_secondary_nonpositive_value_abort_count_0x4aa1db;
 					coordinate_record["source_primary_action_control_cell_count_0x49abd6"] = int32_t(source_wrapper_action_control_type_by_cell_0x49abd6.size());
-					coordinate_record["source_secondary_position_exactness_blocker"] = secondary_probe_would_run_0x4aa1db ? String("0x49d471 candidate recovery is diagnostic; behavioral adoption rejected until final object-vector writer and reward-guard adoption semantics are recovered") : String("not_needed_primary_value_satisfies_0x4aa1db_residual_gate");
+					coordinate_record["source_secondary_position_exactness_blocker"] = secondary_probe_would_run_0x4aa1db ? String("0x49d471 secondary placement now consumes the active reward RNG stream; remaining exactness blocker is upstream proxy reward catalog parity") : String("not_needed_primary_value_satisfies_0x4aa1db_residual_gate");
 					coordinate_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 					coordinate_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 					coordinate_record["source_final_writer_member_count_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9.size();
@@ -13560,7 +13560,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							coordinate_record["exact_port_claim"] = false;
 							coordinate_record["score_gate_recovery_used"] = false;
 							coordinate_record["score_gate_rebased_used"] = score_gate_rebased_used;
-							coordinate_record["exactness_blocker"] = "reward coordinate commit uses the current native union footprint; 0x49d471 secondary candidates are diagnostic only because final H3MapEd member-record writer and reward-guard adoption semantics remain unrecovered";
+							coordinate_record["exactness_blocker"] = "reward coordinate commit uses the current native union footprint with recovered 0x49d471 secondary members consuming the active reward RNG stream; remaining exactness blocker is upstream proxy reward catalog parity";
 							reward_coordinate_records.append(coordinate_record);
 							for (const RewardObjectSelection &committed_selection : composite_object_vector) {
 								h3maped_increment_type_count(reward_global_type_counts, committed_selection.candidate.type_id);
