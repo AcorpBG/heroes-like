@@ -15861,6 +15861,103 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		return false;
 	};
 
+	// 0x49abd6 object/vector footprint mutation happens before the 0x4a4c8e
+	// entry checkpoint. Connection blocker/guard mutation is intentionally kept
+	// later because H3MapEd reaches 0x4a79a3 after the 0x4a8c15/0x4a4c8e path.
+	for (int64_t index = 0; index < town_records.size(); ++index) {
+		if (Variant(town_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary town = town_records[index];
+			mark_cell_dictionary_array_occupied(town.get("body_tiles", Array()));
+		}
+	}
+	for (int64_t index = 0; index < mine_records.size(); ++index) {
+		if (Variant(mine_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = mine_records[index];
+			mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
+		}
+	}
+	for (int64_t index = 0; index < reward_records.size(); ++index) {
+		if (Variant(reward_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = reward_records[index];
+			const int32_t body_mark_count = mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
+			if (body_mark_count == 0) {
+				mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
+			}
+		}
+	}
+	for (int64_t index = 0; index < primary_category_records.size(); ++index) {
+		if (Variant(primary_category_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = primary_category_records[index];
+			const int32_t body_mark_count = mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
+			if (body_mark_count == 0) {
+				mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
+			}
+		}
+	}
+	for (int64_t index = 0; index < mine_guard_records.size(); ++index) {
+		if (Variant(mine_guard_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = mine_guard_records[index];
+			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
+		}
+	}
+	for (int64_t index = 0; index < mine_adjacent_resource_records.size(); ++index) {
+		if (Variant(mine_adjacent_resource_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = mine_adjacent_resource_records[index];
+			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
+		}
+	}
+	for (int64_t index = 0; index < reward_guard_records.size(); ++index) {
+		if (Variant(reward_guard_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = reward_guard_records[index];
+			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
+		}
+	}
+	for (int64_t index = 0; index < primary_category_guard_records.size(); ++index) {
+		if (Variant(primary_category_guard_records[index]).get_type() == Variant::DICTIONARY) {
+			Dictionary record = primary_category_guard_records[index];
+			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
+		}
+	}
+
+	int32_t route_container_0x4a8260_scan_cell_count = 0;
+	int32_t route_container_0x4a8260_object_vector_empty_count = 0;
+	int32_t route_container_0x4a8260_object_vector_nonempty_count = 0;
+	int32_t route_container_0x4a8260_bit26_set_count = 0;
+	int32_t route_container_0x4a8260_bit27_set_count = 0;
+	int32_t route_container_0x4a8260_cell_0x2c_bit0_skip_count = 0;
+	// 0x4a8291..0x4a82ce scans each GeneratedCell object-reference vector
+	// at +0x04/+0x08. Empty vectors become bit26 candidates; non-empty
+	// vectors remain bit27 occupied. The later 0x4a8260 route-list
+	// subdivision and route stamp stream is deliberately not guessed here.
+	for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
+		route_container_0x4a8260_scan_cell_count += 1;
+		if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+			route_container_0x4a8260_cell_0x2c_bit0_skip_count += 1;
+			continue;
+		}
+		if (private_object_vector_cell_empty(flat)) {
+			route_container_0x4a8260_object_vector_empty_count += 1;
+			if (mark_decor_candidate_49aa63(flat, true)) {
+				route_container_0x4a8260_bit26_set_count += 1;
+			}
+		} else {
+			route_container_0x4a8260_object_vector_nonempty_count += 1;
+			if (mark_occupied_blocked_49a932(flat, true)) {
+				route_container_0x4a8260_bit27_set_count += 1;
+			}
+		}
+	}
+	const Dictionary pre_0x4a4c8e_checkpoint = private_state_checkpoint_0x4a4c8e_generated_cells(
+			map_width,
+			map_height,
+			map_level_count,
+			live_cell_word_0x20,
+			live_cell_word_0x24,
+			live_cell_word_0x28,
+			live_terrain_code,
+			"pre_0x4a4c8e",
+			"0x4a4c8e");
+
 	int32_t land_edge_0x4a4c8e_scan_cell_count = 0;
 	int32_t land_edge_0x4a4c8e_owner_high_negative_skip_count = 0;
 	int32_t land_edge_0x4a4c8e_source_nonwater_cell_count = 0;
@@ -16193,60 +16290,6 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		}
 	}
 
-	for (int64_t index = 0; index < town_records.size(); ++index) {
-		if (Variant(town_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary town = town_records[index];
-			mark_cell_dictionary_array_occupied(town.get("body_tiles", Array()));
-		}
-	}
-	for (int64_t index = 0; index < mine_records.size(); ++index) {
-		if (Variant(mine_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_records[index];
-			mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
-		}
-	}
-	for (int64_t index = 0; index < reward_records.size(); ++index) {
-		if (Variant(reward_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = reward_records[index];
-			const int32_t body_mark_count = mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
-			if (body_mark_count == 0) {
-				mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
-			}
-		}
-	}
-	for (int64_t index = 0; index < primary_category_records.size(); ++index) {
-		if (Variant(primary_category_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = primary_category_records[index];
-			const int32_t body_mark_count = mark_cell_dictionary_array_occupied(record.get("body_tiles", Array()));
-			if (body_mark_count == 0) {
-				mark_occupied_blocked_49a932(h3maped_cell_index(map_width, map_height, int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), true);
-			}
-		}
-	}
-	for (int64_t index = 0; index < mine_guard_records.size(); ++index) {
-		if (Variant(mine_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_guard_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
-	for (int64_t index = 0; index < mine_adjacent_resource_records.size(); ++index) {
-		if (Variant(mine_adjacent_resource_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = mine_adjacent_resource_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
-	for (int64_t index = 0; index < reward_guard_records.size(); ++index) {
-		if (Variant(reward_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = reward_guard_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
-	for (int64_t index = 0; index < primary_category_guard_records.size(); ++index) {
-		if (Variant(primary_category_guard_records[index]).get_type() == Variant::DICTIONARY) {
-			Dictionary record = primary_category_guard_records[index];
-			mark_occupied_blocked_49a932(int32_t(record.get("flat_cell_index", -1)), true);
-		}
-	}
 	// H3MapEd phase order runs the flagged-cell decorative pass at 0x49eb8d
 	// before the later 0x4ab52a object-adjacency/road adjustment family. Road
 	// overlay cells must not pre-clear decorative candidates here.
@@ -16307,6 +16350,13 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["cleanup_0x49a962_candidate_set_count"] = cleanup_0x49a962_candidate_set_count;
 	upstream_sources["cleanup_0x49a962_neighbor_0x49a932_false_set_count"] = cleanup_0x49a962_neighbor_0x49a932_false_clear_count;
 	upstream_sources["cleanup_0x49a962_neighbor_0x49a932_false_clear_count"] = cleanup_0x49a962_neighbor_0x49a932_false_clear_count;
+	upstream_sources["route_container_0x4a8260_scan_cell_count"] = route_container_0x4a8260_scan_cell_count;
+	upstream_sources["route_container_0x4a8260_object_vector_empty_count"] = route_container_0x4a8260_object_vector_empty_count;
+	upstream_sources["route_container_0x4a8260_object_vector_nonempty_count"] = route_container_0x4a8260_object_vector_nonempty_count;
+	upstream_sources["route_container_0x4a8260_bit26_set_count"] = route_container_0x4a8260_bit26_set_count;
+	upstream_sources["route_container_0x4a8260_bit27_set_count"] = route_container_0x4a8260_bit27_set_count;
+	upstream_sources["route_container_0x4a8260_cell_0x2c_bit0_skip_count"] = route_container_0x4a8260_cell_0x2c_bit0_skip_count;
+	upstream_sources["route_container_0x4a8260_route_list_replay_complete"] = false;
 	upstream_sources["land_edge_0x4a4c8e_scan_cell_count"] = land_edge_0x4a4c8e_scan_cell_count;
 	upstream_sources["land_edge_0x4a4c8e_owner_high_negative_skip_count"] = land_edge_0x4a4c8e_owner_high_negative_skip_count;
 	upstream_sources["land_edge_0x4a4c8e_source_nonwater_cell_count"] = land_edge_0x4a4c8e_source_nonwater_cell_count;
@@ -16363,6 +16413,13 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["owner_transition_diagnostic_new_gap_count"] = owner_transition_diagnostic_new_gap_count;
 	phase["cleanup_0x49a962_candidate_set_count"] = cleanup_0x49a962_candidate_set_count;
 	phase["cleanup_0x4a8c15_object_vector_occupied_skip_count"] = cleanup_0x4a8c15_object_vector_occupied_skip_count;
+	phase["route_container_0x4a8260_object_vector_scan_status"] = "active_source_backed_partial";
+	phase["route_container_0x4a8260_route_list_replay_status"] = "blocked_missing_same_run_route_coordinate_vector";
+	phase["route_container_0x4a8260_scan_cell_count"] = route_container_0x4a8260_scan_cell_count;
+	phase["route_container_0x4a8260_object_vector_empty_count"] = route_container_0x4a8260_object_vector_empty_count;
+	phase["route_container_0x4a8260_object_vector_nonempty_count"] = route_container_0x4a8260_object_vector_nonempty_count;
+	phase["route_container_0x4a8260_bit26_set_count"] = route_container_0x4a8260_bit26_set_count;
+	phase["route_container_0x4a8260_bit27_set_count"] = route_container_0x4a8260_bit27_set_count;
 	phase["junction_0x4a89da_candidate_set_count"] = junction_0x4a89da_candidate_set_count;
 	phase["border_guard_marker_0x4a5a23_record_count"] = border_guard_marker_record_count;
 	phase["decor_candidate_set_count"] = decor_candidate_set_count;
@@ -16371,8 +16428,10 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["final_occupied_blocked_bit_27_count"] = final_bit_27_count;
 	phase["materializes_generated_cell_bit_26"] = final_bit_26_count > 0;
 	phase["materializes_generated_cell_bit_27"] = final_bit_27_count > 0;
-	phase["exact_upstream_bit_source_claim"] = owner_transition_diagnostic_new_gap_count == 0;
-	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = private_state_checkpoint_0x4a4c8e_generated_cells(map_width, map_height, map_level_count, live_cell_word_0x20, live_cell_word_0x24, live_cell_word_0x28, live_terrain_code, "pre_0x4a4c8e", "0x4a4c8e");
+	phase["exact_upstream_bit_source_claim"] = false;
+	phase["exact_upstream_bit_source_blocker"] = "0x4a8260 route-list coordinate vector and route-stamp/0x49a962 stream are not yet replayed from same-run source state";
+	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = pre_0x4a4c8e_checkpoint;
+	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_before_unreplayed_0x4a8260_route_list_and_native_0x4a4c8e_land_edge_pass";
 	if (out_live_cell_word_0x2c != nullptr) {
 		*out_live_cell_word_0x2c = live_cell_word_0x2c;
 	}
