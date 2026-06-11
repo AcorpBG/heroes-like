@@ -12,6 +12,8 @@ Current scored recovery after R7 closure: 100% recovered for this fixed recovery
 
 Native RMG parity status: not complete. The recovered R1-R7 surfaces still have to be ported/adopted in the native generator and compared against H3MapEd owner executable output before any true end-to-end native RMG parity claim is valid.
 
+Native adoption checkpoint: `tools/rmg_h3maped_final_tile_payload_compare.py` compares the recovered H3MapEd final `0x49b2b6` tile payload against the native phase snapshot. On the current Medium seed-10 one-level land native export, it reports `14,571` byte mismatches out of `36,288` final tile bytes. The first drift class is `terrain_generated_cell_word_0x24_before_0x49b2b6`, so native terrain/generated-cell private state must be ported before object-density, river, or road tuning can be treated as the primary fix.
+
 Remaining fixed recovery budget: 0 of the original 25 points. The fixed recovery-ledger blockers are closed.
 
 Percent movement rule: progress only moves when a blocker or explicitly named sub-blocker is closed by Wine/Ghidra/Python evidence. A new report, trace harness, or diagnostic does not move the percentage unless it proves or excludes required source behavior.

@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `rmg-small-generalization-hardening-10184` is in progress. The active work is strict H3MapEd behavior hardening for Small/Medium one-level land RMG parity, focused on source-backed phase fixes rather than density multipliers, extra gates, or report-only churn.
+- Current implementation slice: `rmg-small-generalization-hardening-10184` is in progress. The active work is strict H3MapEd behavior hardening for Small/Medium one-level land RMG parity, focused on source-backed phase fixes rather than density multipliers, extra gates, or report-only churn. The R1-R7 recovery ledger is evidence only; true end-to-end native RMG parity remains incomplete until native output matches recovered H3MapEd final payloads and phase/private-state checkpoints.
+- Current native-vs-H3MapEd finding: the recovered Medium seed-10 one-level land final tile payload (`36,288` bytes) does not match current native output (`14,571` byte mismatches). Drift starts at terrain/generated-cell `word_0x24` before `0x49b2b6`; river and road lanes are later blockers, not the first cause.
 - Paused/in-progress evidence slice: `strategic-ai-medium-long-run-seed-matrix-10184` remains in progress as strategic-AI evidence, but it is no longer the selected immediate work while the Medium H3MapEd RMG track is being planned and staged.
 - Latest completed planning slice: `native-rmg-medium-h3maped-land-goals-10184`.
 - Latest completed slice: `native-rmg-medium-h3maped-land-public-ui-10184`.

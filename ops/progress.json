@@ -443,9 +443,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Native RMG true end-to-end parity remains incomplete. The latest recovery evidence provides ordered H3MapEd private-state replay checkpoints, but native behavior has not been ported/adopted from that replay. Current work must implement native replay adoption and Python-owned native-vs-H3MapEd comparison for supported one-level land Small/Medium maps; no density scalars, heuristic gates, or final-map delta tuning.",
-    "currentSliceNotes": "Native RMG true end-to-end parity remains incomplete. The latest recovery evidence provides ordered H3MapEd private-state replay checkpoints, but native behavior has not been ported/adopted from that replay. Current work must implement native replay adoption and Python-owned native-vs-H3MapEd comparison for supported one-level land Small/Medium maps; no density scalars, heuristic gates, or final-map delta tuning.",
-    "currentSliceUpdatedAt": "2026-06-11T11:45:19Z",
+    "currentNotes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
+    "currentSliceNotes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
+    "currentSliceUpdatedAt": "2026-06-11T12:50:25Z",
     "guardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -453,71 +453,33 @@
       "Python-owned native-vs-H3MapEd parity comparison"
     ],
     "lastValidation": {
-      "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
-      "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed: R7 ordered private-state replay closed; score=100, budget=0)",
-        "jq empty .artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json ops/progress.json (passed)",
-        "git diff --check (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
-      ],
+      "artifact": ".artifacts/rmg_native_medium_seed10_after_compare/final_tile_payload_compare.json",
       "commands": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed: R7 ordered private-state replay closed; score=100, budget=0)",
-        "jq empty .artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json ops/progress.json (passed)",
+        "python3 -m py_compile tools/rmg_h3maped_final_tile_payload_compare.py (passed)",
+        "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_current/final_tile_payload_compare.json (passed: mismatch expected, total_byte_mismatch_count=14571, first_drift_phase=terrain_generated_cell_word_0x24_before_0x49b2b6)",
+        "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+        "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_release -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+        "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_cross -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build_windows_cross --parallel 2 (passed)",
+        "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_cross_release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2 (passed)",
+        "python3 tools/rmg_native_batch_export.py --godot /root/.local/bin/godot --out .artifacts/rmg_native_medium_seed10_after_compare --controlled-case medium_4p_seed_10_controlled:medium:4:10:land:1:1:0 --emit-phase-snapshot --print-manifest (passed)",
+        "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_after_compare/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_after_compare/final_tile_payload_compare.json (passed: mismatch expected, total_byte_mismatch_count=14571, first_drift_phase=terrain_generated_cell_word_0x24_before_0x49b2b6)",
+        "jq empty ops/progress.json .artifacts/rmg_native_medium_seed10_after_compare/final_tile_payload_compare.json .artifacts/rmg_native_medium_seed10_current/final_tile_payload_compare.json (passed)",
         "git diff --check (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+        "python3 tests/validate_repo.py (passed)"
       ],
-      "date": "2026-06-11T11:45:19Z",
-      "id": "rmg-small-generalization-hardening-10184",
-      "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "passed",
-      "summary": "H3MapEd ordered private-state replay evidence is available, but native RMG true end-to-end parity is not complete. No native RMG behavior changed in that recovery evidence.",
-      "remainingWork": "Port/adopt recovered H3MapEd private-state behavior into native Small/Medium one-level land generation and validate against H3MapEd executable output with Python-owned comparison tooling. Do not treat recovery-ledger closure as the product goal.",
-      "metrics": {
-        "active_blocker_before": "R7",
-        "active_blocker_after": "none_r_all_closed",
-        "closed_blocker": "R7 ordered private-state replay: all 18 phases recovered; R1-R6 all closed",
-        "fixed_recovery_percent_before": 96,
-        "fixed_recovery_percent_after": 100,
-        "fixed_remaining_points_before": 4,
-        "fixed_remaining_points_after": 0,
-        "fixed_score_before": 96,
-        "fixed_score_after": 100,
-        "remaining_fixed_budget_after": 0,
-        "r7_complete": true,
-        "ordered_private_state_mutation_replay_complete": true,
-        "full_private_payload_replay_complete": true,
-        "fixed_recovery_goal_complete": true,
-        "native_rmg_parity_implementation_complete": false,
-        "overall_goal_complete": false,
-        "native_behavior_changed": false,
-        "used_objdump": false,
-        "ordered_replay_phase_count": 18,
-        "tile_payload_byte_count": 36288,
-        "tile_payload_sha256": "cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65",
-        "object_payload_byte_count": 17057,
-        "object_payload_sha256": "4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c",
-        "object_count": 1212,
-        "object_write_event_count": 7082,
-        "header_decoded_event_count": 4964,
-        "header_section_count": 11,
-        "manifest_checkpoint_count": 7,
-        "manifest_frontier_count": 49,
-        "manifest_function_count": 178,
-        "invariants": {
-          "r1_r6_all_closed": true,
-          "ordered_writeout_boundary_replay_complete": true,
-          "same_run_tile_object_payload_stitching_complete": true,
-          "final_tile_payload_replay_complete": true,
-          "final_object_payload_replay_complete": true,
-          "stream_state_recovered": true,
-          "header_metadata_decoded": true,
-          "all_ordered_replay_phases_recovered": true,
-          "no_native_behavior_change": true,
-          "no_objdump_used": true
-        }
-      }
+      "checks": [
+        "Python comparator compiles",
+        "Linux Debug and Release native builds pass",
+        "Windows Debug and Release cross-builds pass",
+        "Fresh Medium seed-10 native export passes",
+        "Final tile payload comparator identifies the source-backed native mismatch",
+        "Repo validation, JSON validation, and diff whitespace checks pass"
+      ],
+      "summary": "Native-vs-H3MapEd final tile payload mismatch is explicit and source-backed; native behavior is not parity-complete.",
+      "native_rmg_end_to_end_parity_complete": false,
+      "first_drift_phase": "terrain_generated_cell_word_0x24_before_0x49b2b6",
+      "total_byte_mismatch_count": 14571,
+      "updatedAt": "2026-06-11T12:49:54Z"
     },
     "latestEvidence": {
       "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
@@ -942,7 +904,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG true end-to-end parity is incomplete; ordered H3MapEd recovery evidence is available for native adoption, but native behavior has not yet been ported from it.",
+    "summary": "Native RMG end-to-end parity is not complete. Current source-backed adoption evidence compares recovered H3MapEd Medium seed-10 final tile bytes to native and finds 14,571/36,288 byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6.",
     "title": "RMG Small Generalization Hardening",
     "updatedAt": "2026-06-11T11:45:19Z",
     "validation": {
@@ -10510,14 +10472,14 @@
       }
     }
   ],
-  "currentNotes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
+  "currentNotes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "R7 is fully closed in the fixed H3MapEd full-recovery blocker ledger. tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py consolidates all recovered surfaces (R1-R6 closure summaries, ordered writeout spine, same-run final tile/object payload, final stream state, header/metadata payload, recovery manifest) into one ordered replay from RMG entrypoint to final map write with phase/private-buffer checkpoints. All 18 ordered replay phases are recovered: 0x4602c1 -> 0x4adfe1 -> 0x4ac552 -> 0x4ad1e3 -> 0x49b2b6 tile loop (5184 cells, 36288 bytes) -> 0x4ad251 -> 0x4ad309/0x4ad3eb object serialization (1212 objects, 17057 bytes, 7082 stream writes) -> 0x4ad3de success -> 0x4ae09a return. Stream adapter/wrapped sink recovered. Header/metadata: 4964 events across 11 sections, zero malformed. Fixed recovery score is 100% (25/25 points), remaining fixed budget is 0 points, and no active recovery blocker remains. Native RMG behavior is unchanged and no objdump recovery was used.",
+  "currentSliceNotes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-11T11:45:19Z",
+  "currentSliceUpdatedAt": "2026-06-11T12:50:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12378,8 +12340,8 @@
       }
     }
   },
-  "nextActionGuardrailNote": "True end-to-end native RMG parity is incomplete. Recovery evidence is not the goal; the selected work is native adoption/porting from recovered H3MapEd private-state behavior plus Python-owned native-vs-H3MapEd comparison for Small/Medium one-level land maps.",
-  "notes": "Native RMG true end-to-end parity remains incomplete. The latest recovery evidence provides ordered H3MapEd private-state replay checkpoints, but native behavior has not been ported/adopted from that replay. Current work must implement native replay adoption and Python-owned native-vs-H3MapEd comparison for supported one-level land Small/Medium maps; no density scalars, heuristic gates, or final-map delta tuning.",
+  "nextActionGuardrailNote": "True end-to-end native RMG parity is incomplete; the next implementation must reduce the source-backed final payload/private-state mismatch, not report R1-R7 recovery closure.",
+  "notes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -45820,71 +45782,33 @@
         "RMG strict Small reports"
       ],
       "lastValidation": {
-        "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
-        "checks": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed: R7 ordered private-state replay closed; score=100, budget=0)",
-          "jq empty .artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json ops/progress.json (passed)",
-          "git diff --check (passed)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
-        ],
+        "artifact": ".artifacts/rmg_native_medium_seed10_after_compare/final_tile_payload_compare.json",
         "commands": [
-          "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_r7_ordered_private_state_replay_summary.py (passed: R7 ordered private-state replay closed; score=100, budget=0)",
-          "jq empty .artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json ops/progress.json (passed)",
+          "python3 -m py_compile tools/rmg_h3maped_final_tile_payload_compare.py (passed)",
+          "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_current/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_current/final_tile_payload_compare.json (passed: mismatch expected, total_byte_mismatch_count=14571, first_drift_phase=terrain_generated_cell_word_0x24_before_0x49b2b6)",
+          "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
+          "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_release -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
+          "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_cross -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build_windows_cross --parallel 2 (passed)",
+          "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_cross_release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2 (passed)",
+          "python3 tools/rmg_native_batch_export.py --godot /root/.local/bin/godot --out .artifacts/rmg_native_medium_seed10_after_compare --controlled-case medium_4p_seed_10_controlled:medium:4:10:land:1:1:0 --emit-phase-snapshot --print-manifest (passed)",
+          "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_after_compare/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_after_compare/final_tile_payload_compare.json (passed: mismatch expected, total_byte_mismatch_count=14571, first_drift_phase=terrain_generated_cell_word_0x24_before_0x49b2b6)",
+          "jq empty ops/progress.json .artifacts/rmg_native_medium_seed10_after_compare/final_tile_payload_compare.json .artifacts/rmg_native_medium_seed10_current/final_tile_payload_compare.json (passed)",
           "git diff --check (passed)",
-          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)"
+          "python3 tests/validate_repo.py (passed)"
         ],
-        "date": "2026-06-11T11:45:19Z",
-        "id": "rmg-small-generalization-hardening-10184",
-        "sliceId": "rmg-small-generalization-hardening-10184",
-        "status": "passed",
-        "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
-        "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
-        "metrics": {
-          "active_blocker_before": "R7",
-          "active_blocker_after": "none_r_all_closed",
-          "closed_blocker": "R7 ordered private-state replay: all 18 phases recovered; R1-R6 all closed",
-          "fixed_recovery_percent_before": 96,
-          "fixed_recovery_percent_after": 100,
-          "fixed_remaining_points_before": 4,
-          "fixed_remaining_points_after": 0,
-          "fixed_score_before": 96,
-          "fixed_score_after": 100,
-          "remaining_fixed_budget_after": 0,
-          "r7_complete": true,
-          "ordered_private_state_mutation_replay_complete": true,
-          "full_private_payload_replay_complete": true,
-          "fixed_recovery_goal_complete": true,
-          "native_rmg_parity_implementation_complete": false,
-          "overall_goal_complete": false,
-          "native_behavior_changed": false,
-          "used_objdump": false,
-          "ordered_replay_phase_count": 18,
-          "tile_payload_byte_count": 36288,
-          "tile_payload_sha256": "cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65",
-          "object_payload_byte_count": 17057,
-          "object_payload_sha256": "4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c",
-          "object_count": 1212,
-          "object_write_event_count": 7082,
-          "header_decoded_event_count": 4964,
-          "header_section_count": 11,
-          "manifest_checkpoint_count": 7,
-          "manifest_frontier_count": 49,
-          "manifest_function_count": 178,
-          "invariants": {
-            "r1_r6_all_closed": true,
-            "ordered_writeout_boundary_replay_complete": true,
-            "same_run_tile_object_payload_stitching_complete": true,
-            "final_tile_payload_replay_complete": true,
-            "final_object_payload_replay_complete": true,
-            "stream_state_recovered": true,
-            "header_metadata_decoded": true,
-            "all_ordered_replay_phases_recovered": true,
-            "no_native_behavior_change": true,
-            "no_objdump_used": true
-          }
-        }
+        "checks": [
+          "Python comparator compiles",
+          "Linux Debug and Release native builds pass",
+          "Windows Debug and Release cross-builds pass",
+          "Fresh Medium seed-10 native export passes",
+          "Final tile payload comparator identifies the source-backed native mismatch",
+          "Repo validation, JSON validation, and diff whitespace checks pass"
+        ],
+        "summary": "Native-vs-H3MapEd final tile payload mismatch is explicit and source-backed; native behavior is not parity-complete.",
+        "native_rmg_end_to_end_parity_complete": false,
+        "first_drift_phase": "terrain_generated_cell_word_0x24_before_0x49b2b6",
+        "total_byte_mismatch_count": 14571,
+        "updatedAt": "2026-06-11T12:49:54Z"
       },
       "latestEvidence": {
         "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
@@ -46081,7 +46005,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Wine/Ghidra/Python recovery now closes the non-hero source catalog/template producer blocker. tools/rmg_h3maped_source_catalog_template_producer_summary.py verifies 25/25 markers: provider global 0x59e390 is published through vtable 0x53942c, 27 builder/materializer provider slot pairs are recovered, and concrete provider constructors copy/adopt the full 0x4c source record through 0x43d309/0x437751. The compare key includes text/DEF-bearing fields plus raw type +0x1c and subtype-like +0x20, so source catalog identity is preserved from objects.txt/objtmplt.txt-shaped rows rather than descriptor-local ids. Native RMG behavior is unchanged; no objdump recovery was used.",
+      "notes": "Native RMG true end-to-end parity remains incomplete. Added tools/rmg_h3maped_final_tile_payload_compare.py and ran it against recovered H3MapEd Medium seed-10 one-level land final tile payload and current native Medium seed-10 phase snapshots: 14,571/36,288 final tile bytes mismatch, first drift terrain_generated_cell_word_0x24_before_0x49b2b6. Native final writeout metadata now marks river bytes as placeholder zeros until 0x4b4243 river overlay writeback is ported. Linux/Windows native libraries were rebuilt. Next real implementation target is source-backed terrain/generated-cell private-state parity before object density, river, or road tuning.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -46095,9 +46019,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
+      "summary": "Native RMG end-to-end parity is not complete. Current source-backed adoption evidence compares recovered H3MapEd Medium seed-10 final tile bytes to native and finds 14,571/36,288 byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-11T11:45:19Z",
+      "updatedAt": "2026-06-11T12:50:25Z",
       "validation": {
         "artifact": ".artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json",
         "checks": [
@@ -53086,9 +53010,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used.",
+  "summary": "Native RMG end-to-end parity is not complete. Current source-backed adoption evidence compares recovered H3MapEd Medium seed-10 final tile bytes to native and finds 14,571/36,288 byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6.",
   "taskId": "10184",
-  "updatedAt": "2026-06-11T11:45:19Z",
+  "updatedAt": "2026-06-11T12:50:25Z",
   "validation": {
     "artifact": ".artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json",
     "checks": [
