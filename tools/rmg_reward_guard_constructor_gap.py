@@ -239,7 +239,21 @@ def constructor_rng_for_record(
     descriptor_subtypes: set[int] | None,
 ) -> dict[str, Any]:
     probe = record["source_reward_guard_attach_probe_0x49cf34"]
-    stamp = probe["source_selected_guard_stamp_shape_0x49d69d"]
+    stamp = probe.get("source_selected_guard_stamp_shape_0x49d69d", {})
+    if "diagnostic_rng_state_before_uint32" not in stamp:
+        return {
+            "constructor_success": False,
+            "diagnostic_rng_available": False,
+            "diagnostic_rng_unavailable_reason": stamp.get(
+                "exactness_blocker",
+                "source_selected_guard_stamp_shape_0x49d69d lacks diagnostic_rng_state_before_uint32",
+            ),
+            "eligible_candidate_count": 0,
+            "constructor_rng_calls": 0,
+            "attach_rng_calls": 0,
+            "total_rng_calls": 0,
+        }
+
     state_before = signed_int(stamp["diagnostic_rng_state_before_uint32"]) & 0xFFFFFFFF
     state_after, rng_value = rng_next(state_before)
     guard_value = int(record["reward_guard_scaled_value"])
@@ -248,6 +262,7 @@ def constructor_rng_for_record(
     if not eligible:
         return {
             "constructor_success": False,
+            "diagnostic_rng_available": True,
             "eligible_candidate_count": 0,
             "constructor_rng_calls": 0,
             "attach_rng_calls": 0,
@@ -272,6 +287,7 @@ def constructor_rng_for_record(
 
     return {
         "constructor_success": True,
+        "diagnostic_rng_available": True,
         "eligible_candidate_count": len(eligible),
         "selected_monster_name": selected.name,
         "selected_monster_table_index": selected.monster_table_index,
@@ -305,6 +321,7 @@ def summarize_policy(
         for record in guarded_records
     ]
     success_rows = [row for row in rows if row["constructor_success"]]
+    diagnostic_unavailable_rows = [row for row in rows if not row.get("diagnostic_rng_available", True)]
     return {
         "policy": f"{membership_policy}::{terrain_policy}",
         "membership_policy": membership_policy,
@@ -314,6 +331,7 @@ def summarize_policy(
         "guarded_reward_count": len(guarded_records),
         "constructor_success_count": len(success_rows),
         "constructor_failure_count": len(guarded_records) - len(success_rows),
+        "diagnostic_rng_unavailable_count": len(diagnostic_unavailable_rows),
         "constructor_rng_calls": sum(int(row["constructor_rng_calls"]) for row in rows),
         "attach_rng_calls": sum(int(row["attach_rng_calls"]) for row in rows),
         "total_rng_calls": sum(int(row["total_rng_calls"]) for row in rows),
@@ -321,6 +339,7 @@ def summarize_policy(
         "non_jitter_selected_count": sum(1 for row in rows if row["constructor_success"] and int(row.get("quantity_jitter_rng_calls", 0)) == 0),
         "eligible_non_jitter_candidate_total": sum(int(row.get("eligible_non_jitter_candidate_count", 0)) for row in rows),
         "sample_records": rows[:8],
+        "diagnostic_rng_unavailable_sample": diagnostic_unavailable_rows[:8],
     }
 
 
@@ -361,6 +380,9 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
         if summary["total_rng_calls"] == args.expected_gap
     ]
     scheduler = json.loads(args.phase_snapshot.read_text(encoding="utf-8"))["h3maped_small_port"]["mines_rewards_and_object_vector"]["reward_scheduler_boundary"]
+    positive_guard_record_count = len(guarded_records)
+    native_guard_coordinate_records = scheduler.get("reward_guard_coordinate_record_count")
+    active_guard_attach_rng_calls = scheduler.get("reward_guard_attach_rng_call_count_0x49cf34")
     return {
         "schema_id": "rmg_reward_guard_constructor_gap_v1",
         "phase_snapshot": str(args.phase_snapshot),
@@ -420,10 +442,11 @@ def build_summary(args: argparse.Namespace) -> dict[str, Any]:
             "including the descriptor-vector subtype filter, the ten-slot descriptor "
             "terrain-mask proxy variants, source selection order, and the exact "
             "quantity-jitter RNG condition. The modeled native-selected guarded "
-            "records still do not make the same-run 76-call route-entry gap directly "
+            f"records still do not make the same-run {args.expected_gap}-call route-entry gap directly "
             "actionable, because the input record set is already native-drifted: "
-            "29 positive native lookup records exist, but only five native surrogate "
-            "guard-coordinate records are materialized and no active 0x49cf34 RNG is "
+            f"{positive_guard_record_count} positive native lookup records exist, but only "
+            f"{native_guard_coordinate_records} native surrogate guard-coordinate records are "
+            f"materialized and {active_guard_attach_rng_calls} active 0x49cf34 RNG calls are "
             "consumed. The remaining source-backed blocker is therefore the live "
             "0x4aa354 H3MapEd callsite stream itself: selected reward descriptor, "
             "generator +0x398/+0x39c vector contents, selected descriptor "
