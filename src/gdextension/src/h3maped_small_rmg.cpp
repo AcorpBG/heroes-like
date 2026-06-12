@@ -15768,7 +15768,7 @@ Dictionary private_state_checkpoint_0x49b3fb_relations(const Dictionary &relatio
 	return checkpoint;
 }
 
-Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &relation_lookup_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> *out_live_cell_word_0x2c = nullptr) {
+Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalized_config, const Dictionary &runtime_zone_phase, const Dictionary &town_castle_phase, const Dictionary &object_vector_phase, const Dictionary &relation_lookup_phase, const Dictionary &roads_rivers_phase, const Dictionary &connections_phase, const Dictionary &terrainplacement_live_feedback_phase, const std::vector<uint32_t> &zone_words, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, std::vector<uint32_t> &live_cell_word_0x28, std::vector<uint32_t> *out_live_cell_word_0x2c = nullptr) {
 	static constexpr std::array<std::array<int32_t, 2>, 8> NEIGHBOR_DELTAS = { {
 		{ 1, 0 },
 		{ 1, 1 },
@@ -16045,6 +16045,27 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	// six town footprints. Later mine/reward/primary/guard surfaces must not
 	// feed this pre-0x4a4c8e object-vector scan.
 
+	struct RoutePoint0x4a8260 {
+		int32_t x = 0;
+		int32_t y = 0;
+	};
+	auto route_half_sum_0x4a8260 = [](int32_t a, int32_t b) -> int32_t {
+		return (a + b + 1) / 2;
+	};
+	auto route_distance_0x4cc5ad = [](int32_t dx, int32_t dy) -> int32_t {
+		const int64_t squared = int64_t(dx) * int64_t(dx) + int64_t(dy) * int64_t(dy);
+		return int32_t(std::sqrt(double(squared)));
+	};
+	auto route_step_sign_0x4a80dc = [](int32_t delta) -> int32_t {
+		return delta <= 0 ? -1 : 1;
+	};
+	auto route_point_in_bounds = [&](const RoutePoint0x4a8260 &point) -> bool {
+		return point.x >= 0 && point.y >= 0 && point.x < map_width && point.y < map_height;
+	};
+	auto route_inner_point_in_bounds = [&](const RoutePoint0x4a8260 &point) -> bool {
+		return point.x >= 1 && point.y >= 1 && point.x < map_width - 1 && point.y < map_height - 1;
+	};
+
 	int32_t route_container_0x4a8260_scan_cell_count = 0;
 	int32_t route_container_0x4a8260_object_vector_empty_count = 0;
 	int32_t route_container_0x4a8260_object_vector_nonempty_count = 0;
@@ -16071,6 +16092,278 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			if (mark_occupied_blocked_49a932(flat, true)) {
 				route_container_0x4a8260_bit27_set_count += 1;
 			}
+		}
+	}
+	uint32_t route_container_0x4a8260_rng_state_before = uint32_t(int64_t(terrainplacement_live_feedback_phase.get("rng_state_after_live_visual_selection_uint32", 0)));
+	H3MapedRng route_container_0x4a8260_rng { route_container_0x4a8260_rng_state_before };
+	const bool route_container_0x4a8260_rng_boundary_exact = false;
+	const bool route_container_0x4a8260_active_adoption = route_container_0x4a8260_rng_boundary_exact;
+	std::vector<uint32_t> route_container_0x4a8260_diagnostic_word_0x28 = live_cell_word_0x28;
+	int32_t route_container_0x4a8260_level_count = 0;
+	int32_t route_container_0x4a8260_orientation_rng_call_count = 0;
+	int32_t route_container_0x4a8260_split_rng_call_count = 0;
+	int32_t route_container_0x4a8260_split_count = 0;
+	int32_t route_container_0x4a8260_terminal_in_bounds_count = 0;
+	int32_t route_container_0x4a8260_terminal_oob_count = 0;
+	int32_t route_container_0x4a8260_stamp_call_count = 0;
+	int32_t route_container_0x4a8260_stamp_covered_cell_count = 0;
+	int32_t route_container_0x4a8260_stamp_new_bit27_count = 0;
+	int32_t route_container_0x4a8260_secondary_pair_count = 0;
+	int32_t route_container_0x4a8260_secondary_processed_count = 0;
+	int32_t route_container_0x4a8260_far_cut_count = 0;
+	int32_t route_container_0x4a8260_a80dc_call_count = 0;
+	int32_t route_container_0x4a8260_a80dc_occupied_hit_count = 0;
+	int32_t route_container_0x4a8260_a80dc_boundary_return_count = 0;
+	int32_t route_container_0x4a8260_max_pending_count = 0;
+	int32_t route_container_0x4a8260_max_secondary_count = 0;
+	bool route_container_0x4a8260_drain_complete = true;
+	auto route_container_0x4a8260_word = [&](int64_t flat) -> uint32_t {
+		if (flat < 0 || flat >= expected_cell_count) {
+			return 0;
+		}
+		return route_container_0x4a8260_active_adoption ? live_cell_word_0x28[size_t(flat)] : route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)];
+	};
+	auto route_container_0x4a8260_mark_occupied = [&](int64_t flat) -> bool {
+		if (flat < 0 || flat >= expected_cell_count) {
+			return false;
+		}
+		if (route_container_0x4a8260_active_adoption) {
+			return mark_occupied_blocked_49a932(flat, true);
+		}
+		if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+			return false;
+		}
+		const bool newly_set = (route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
+		route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
+		route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+		return newly_set;
+	};
+
+	auto route_stamp_0x49a85d = [&](const RoutePoint0x4a8260 &point, int32_t level) {
+		if (!route_point_in_bounds(point) || level < 0 || level >= map_level_count) {
+			return;
+		}
+		route_container_0x4a8260_stamp_call_count += 1;
+		const int64_t center_flat = h3maped_cell_index(map_width, map_height, point.x, point.y, level);
+		if (center_flat >= 0 && center_flat < expected_cell_count) {
+			const bool was_clear = (route_container_0x4a8260_word(center_flat) & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
+			if (route_container_0x4a8260_mark_occupied(center_flat) && was_clear) {
+				route_container_0x4a8260_stamp_new_bit27_count += 1;
+			}
+		}
+		const int32_t min_x = std::max<int32_t>(0, point.x - 1);
+		const int32_t min_y = std::max<int32_t>(0, point.y - 1);
+		const int32_t max_x = std::min<int32_t>(map_width, point.x + 2);
+		const int32_t max_y = std::min<int32_t>(map_height, point.y + 2);
+		for (int32_t y = min_y; y < max_y; ++y) {
+			for (int32_t x = min_x; x < max_x; ++x) {
+				const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, level);
+				if (flat < 0 || flat >= expected_cell_count) {
+					continue;
+				}
+				route_container_0x4a8260_stamp_covered_cell_count += 1;
+				const bool was_clear = (route_container_0x4a8260_word(flat) & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
+				if (route_container_0x4a8260_mark_occupied(flat) && was_clear) {
+					route_container_0x4a8260_stamp_new_bit27_count += 1;
+				}
+			}
+		}
+	};
+
+	auto route_cut_0x4a80dc = [&](const RoutePoint0x4a8260 &start, const RoutePoint0x4a8260 &target, int32_t level, bool &occupied_hit, bool &boundary_return) -> RoutePoint0x4a8260 {
+		route_container_0x4a8260_a80dc_call_count += 1;
+		occupied_hit = false;
+		boundary_return = false;
+		const int32_t dx = target.x - start.x;
+		const int32_t dy = target.y - start.y;
+		const int32_t abs_dx = std::abs(dx);
+		const int32_t abs_dy = std::abs(dy);
+		RoutePoint0x4a8260 current = start;
+		RoutePoint0x4a8260 previous = start;
+		int32_t error = 0;
+		const int32_t guard_limit = std::max<int32_t>(8, (map_width + map_height) * 4);
+		int32_t step_count = 0;
+		if (abs_dx > abs_dy) {
+			const int32_t step_x = route_step_sign_0x4a80dc(dx);
+			const int32_t step_y = route_step_sign_0x4a80dc(dy);
+			error = abs_dx / 2;
+			while (step_count < guard_limit) {
+				previous = current;
+				error += abs_dy;
+				if (error >= abs_dx) {
+					error -= abs_dx;
+					current.y += step_y;
+				}
+				current.x += step_x;
+				step_count += 1;
+				if (!route_inner_point_in_bounds(current)) {
+					boundary_return = true;
+					return previous;
+				}
+				if (step_count <= 2) {
+					continue;
+				}
+				for (int32_t y = current.y - 1; y <= current.y + 1; ++y) {
+					for (int32_t x = current.x - 1; x <= current.x + 1; ++x) {
+						const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, level);
+						if (flat >= 0
+								&& flat < expected_cell_count
+								&& (route_container_0x4a8260_word(flat) & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+							occupied_hit = true;
+							return previous;
+						}
+					}
+				}
+			}
+			boundary_return = true;
+			return previous;
+		}
+		const int32_t step_x = route_step_sign_0x4a80dc(dx);
+		const int32_t step_y = route_step_sign_0x4a80dc(dy);
+		error = abs_dy / 2;
+		while (step_count < guard_limit) {
+			previous = current;
+			error += abs_dx;
+			if (error >= abs_dy) {
+				error -= abs_dy;
+				current.x += step_x;
+			}
+			current.y += step_y;
+			step_count += 1;
+			if (!route_inner_point_in_bounds(current)) {
+				boundary_return = true;
+				return previous;
+			}
+			if (step_count <= 2) {
+				continue;
+			}
+			for (int32_t y = current.y - 1; y <= current.y + 1; ++y) {
+				for (int32_t x = current.x - 1; x <= current.x + 1; ++x) {
+					const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, level);
+					if (flat >= 0
+							&& flat < expected_cell_count
+							&& (route_container_0x4a8260_word(flat) & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+						occupied_hit = true;
+						return previous;
+					}
+				}
+			}
+		}
+		boundary_return = true;
+		return previous;
+	};
+
+	for (int32_t level = 0; level < map_level_count; ++level) {
+		route_container_0x4a8260_level_count += 1;
+		const int32_t orientation = route_container_0x4a8260_rng.next() % 4;
+		route_container_0x4a8260_orientation_rng_call_count += 1;
+		RoutePoint0x4a8260 start;
+		RoutePoint0x4a8260 end;
+		switch (orientation) {
+			case 0:
+				start = { 0, 0 };
+				end = { map_width - 1, map_height - 1 };
+				break;
+			case 1:
+				start = { map_width / 2, 0 };
+				end = { map_width / 2, map_height - 1 };
+				break;
+			case 2:
+				start = { map_width - 1, 0 };
+				end = { 0, map_height - 1 };
+				break;
+			default:
+				start = { 0, map_height / 2 };
+				end = { map_width - 1, map_height / 2 };
+				break;
+		}
+		std::vector<RoutePoint0x4a8260> pending;
+		std::deque<std::pair<RoutePoint0x4a8260, RoutePoint0x4a8260>> secondary;
+		pending.push_back(end);
+		pending.push_back(start);
+		const int32_t guard_limit = std::max<int32_t>(1024, expected_cell_count * 16);
+		int32_t guard_count = 0;
+		while (guard_count < guard_limit) {
+			bool progressed = false;
+			while (pending.size() >= 2 && guard_count < guard_limit) {
+				guard_count += 1;
+				progressed = true;
+				const RoutePoint0x4a8260 p1 = pending.back();
+				pending.pop_back();
+				const RoutePoint0x4a8260 p2 = pending.back();
+				pending.pop_back();
+				route_container_0x4a8260_max_pending_count = std::max<int32_t>(route_container_0x4a8260_max_pending_count, int32_t(pending.size()));
+				const RoutePoint0x4a8260 mid { route_half_sum_0x4a8260(p1.x, p2.x), route_half_sum_0x4a8260(p1.y, p2.y) };
+				if ((mid.x == p1.x && mid.y == p1.y) || (mid.x == p2.x && mid.y == p2.y)) {
+					if (route_point_in_bounds(p2)) {
+						route_container_0x4a8260_terminal_in_bounds_count += 1;
+						route_stamp_0x49a85d(p2, level);
+					} else {
+						route_container_0x4a8260_terminal_oob_count += 1;
+					}
+					continue;
+				}
+				const int32_t dx_p2_to_p1 = p1.x - p2.x;
+				const int32_t dyneg_p2_to_p1 = p2.y - p1.y;
+				const int32_t distance = route_distance_0x4cc5ad(dx_p2_to_p1, dyneg_p2_to_p1);
+				RoutePoint0x4a8260 randomized_mid = mid;
+				if (distance > 1) {
+					const int32_t split_rng_value = route_container_0x4a8260_rng.next();
+					route_container_0x4a8260_split_rng_call_count += 1;
+					const int32_t offset = (split_rng_value % distance) - (distance / 2);
+					randomized_mid.x += (offset * dyneg_p2_to_p1) / distance;
+					randomized_mid.y += (offset * dx_p2_to_p1) / distance;
+				}
+				pending.push_back(p1);
+				pending.push_back(randomized_mid);
+				pending.push_back(randomized_mid);
+				pending.push_back(p2);
+				route_container_0x4a8260_split_count += 1;
+				route_container_0x4a8260_max_pending_count = std::max<int32_t>(route_container_0x4a8260_max_pending_count, int32_t(pending.size()));
+				if (distance >= 8 && route_point_in_bounds(randomized_mid)) {
+					const RoutePoint0x4a8260 target_a { randomized_mid.x + dyneg_p2_to_p1, randomized_mid.y + dx_p2_to_p1 };
+					const RoutePoint0x4a8260 target_b { randomized_mid.x - dyneg_p2_to_p1, randomized_mid.y - dx_p2_to_p1 };
+					secondary.push_back(std::make_pair(randomized_mid, target_a));
+					secondary.push_back(std::make_pair(randomized_mid, target_b));
+					route_container_0x4a8260_secondary_pair_count += 2;
+					route_container_0x4a8260_max_secondary_count = std::max<int32_t>(route_container_0x4a8260_max_secondary_count, int32_t(secondary.size()));
+				}
+			}
+			if (!pending.empty()) {
+				route_container_0x4a8260_drain_complete = false;
+				break;
+			}
+			if (secondary.empty()) {
+				break;
+			}
+			progressed = true;
+			const auto pair = secondary.front();
+			secondary.pop_front();
+			route_container_0x4a8260_secondary_processed_count += 1;
+			bool occupied_hit = false;
+			bool boundary_return = false;
+			const RoutePoint0x4a8260 returned = route_cut_0x4a80dc(pair.first, pair.second, level, occupied_hit, boundary_return);
+			if (occupied_hit) {
+				route_container_0x4a8260_a80dc_occupied_hit_count += 1;
+			}
+			if (boundary_return) {
+				route_container_0x4a8260_a80dc_boundary_return_count += 1;
+			}
+			const int32_t delta_x = returned.x - pair.first.x;
+			const int32_t delta_y = returned.y - pair.first.y;
+			if (delta_x * delta_x + delta_y * delta_y >= 25) {
+				pending.push_back(returned);
+				pending.push_back(pair.first);
+				route_container_0x4a8260_far_cut_count += 1;
+				route_container_0x4a8260_max_pending_count = std::max<int32_t>(route_container_0x4a8260_max_pending_count, int32_t(pending.size()));
+			}
+			if (!progressed) {
+				route_container_0x4a8260_drain_complete = false;
+				break;
+			}
+		}
+		if (guard_count >= guard_limit) {
+			route_container_0x4a8260_drain_complete = false;
 		}
 	}
 	auto generated_cell_valid_49a1d8_word24 = [&](int64_t flat) {
@@ -16564,7 +16857,16 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count;
 	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count;
 	upstream_sources["route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count"] = route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count;
-	upstream_sources["route_container_0x4a8260_route_list_replay_complete"] = false;
+	upstream_sources["route_container_0x4a8260_route_list_replay_complete"] = route_container_0x4a8260_drain_complete;
+	upstream_sources["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
+	upstream_sources["route_container_0x4a8260_active_adoption"] = route_container_0x4a8260_active_adoption;
+	upstream_sources["route_container_0x4a8260_rng_state_source"] = "terrainplacement_live_feedback.rng_state_after_live_visual_selection_uint32";
+	upstream_sources["route_container_0x4a8260_rng_state_before_uint32"] = int64_t(route_container_0x4a8260_rng_state_before);
+	upstream_sources["route_container_0x4a8260_rng_state_after_uint32"] = int64_t(route_container_0x4a8260_rng.state);
+	upstream_sources["route_container_0x4a8260_orientation_rng_call_count"] = route_container_0x4a8260_orientation_rng_call_count;
+	upstream_sources["route_container_0x4a8260_split_rng_call_count"] = route_container_0x4a8260_split_rng_call_count;
+	upstream_sources["route_container_0x4a8260_stamp_call_count"] = route_container_0x4a8260_stamp_call_count;
+	upstream_sources["route_container_0x4a8260_a80dc_call_count"] = route_container_0x4a8260_a80dc_call_count;
 	upstream_sources["land_edge_0x4a4c8e_scan_cell_count"] = land_edge_0x4a4c8e_scan_cell_count;
 	upstream_sources["land_edge_0x4a4c8e_owner_high_negative_skip_count"] = land_edge_0x4a4c8e_owner_high_negative_skip_count;
 	upstream_sources["land_edge_0x4a4c8e_source_nonwater_cell_count"] = land_edge_0x4a4c8e_source_nonwater_cell_count;
@@ -16630,7 +16932,30 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["cleanup_0x49a962_candidate_set_count"] = cleanup_0x49a962_candidate_set_count;
 	phase["cleanup_0x4a8c15_object_vector_occupied_skip_count"] = cleanup_0x4a8c15_object_vector_occupied_skip_count;
 	phase["route_container_0x4a8260_object_vector_scan_status"] = "active_source_backed_partial";
-	phase["route_container_0x4a8260_route_list_replay_status"] = "blocked_missing_same_run_route_coordinate_vector";
+	phase["route_container_0x4a8260_route_list_replay_status"] = route_container_0x4a8260_drain_complete ? String("mechanics_ported_rng_boundary_unproven_diagnostic_only") : String("route_replay_guard_exhausted");
+	phase["route_container_0x4a8260_route_list_replay_source"] = "ported from recovered 0x4a8260/0x4a80dc/0x49a85d instruction flow; live native adoption is disabled until the pre-0x4a8260 RNG boundary matches H3MapEd";
+	phase["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
+	phase["route_container_0x4a8260_active_adoption"] = route_container_0x4a8260_active_adoption;
+	phase["route_container_0x4a8260_rng_state_source"] = "terrainplacement_live_feedback.rng_state_after_live_visual_selection_uint32";
+	phase["route_container_0x4a8260_rng_state_before_uint32"] = int64_t(route_container_0x4a8260_rng_state_before);
+	phase["route_container_0x4a8260_rng_state_after_uint32"] = int64_t(route_container_0x4a8260_rng.state);
+	phase["route_container_0x4a8260_level_count"] = route_container_0x4a8260_level_count;
+	phase["route_container_0x4a8260_orientation_rng_call_count"] = route_container_0x4a8260_orientation_rng_call_count;
+	phase["route_container_0x4a8260_split_rng_call_count"] = route_container_0x4a8260_split_rng_call_count;
+	phase["route_container_0x4a8260_split_count"] = route_container_0x4a8260_split_count;
+	phase["route_container_0x4a8260_terminal_in_bounds_count"] = route_container_0x4a8260_terminal_in_bounds_count;
+	phase["route_container_0x4a8260_terminal_oob_count"] = route_container_0x4a8260_terminal_oob_count;
+	phase["route_container_0x4a8260_stamp_call_count"] = route_container_0x4a8260_stamp_call_count;
+	phase["route_container_0x4a8260_stamp_covered_cell_count"] = route_container_0x4a8260_stamp_covered_cell_count;
+	phase["route_container_0x4a8260_stamp_new_bit27_count"] = route_container_0x4a8260_stamp_new_bit27_count;
+	phase["route_container_0x4a8260_secondary_pair_count"] = route_container_0x4a8260_secondary_pair_count;
+	phase["route_container_0x4a8260_secondary_processed_count"] = route_container_0x4a8260_secondary_processed_count;
+	phase["route_container_0x4a8260_far_cut_count"] = route_container_0x4a8260_far_cut_count;
+	phase["route_container_0x4a8260_a80dc_call_count"] = route_container_0x4a8260_a80dc_call_count;
+	phase["route_container_0x4a8260_a80dc_occupied_hit_count"] = route_container_0x4a8260_a80dc_occupied_hit_count;
+	phase["route_container_0x4a8260_a80dc_boundary_return_count"] = route_container_0x4a8260_a80dc_boundary_return_count;
+	phase["route_container_0x4a8260_max_pending_count"] = route_container_0x4a8260_max_pending_count;
+	phase["route_container_0x4a8260_max_secondary_count"] = route_container_0x4a8260_max_secondary_count;
 	phase["route_container_0x4a8260_scan_cell_count"] = route_container_0x4a8260_scan_cell_count;
 	phase["route_container_0x4a8260_object_vector_empty_count"] = route_container_0x4a8260_object_vector_empty_count;
 	phase["route_container_0x4a8260_object_vector_nonempty_count"] = route_container_0x4a8260_object_vector_nonempty_count;
@@ -16651,9 +16976,11 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["materializes_generated_cell_bit_26"] = final_bit_26_count > 0;
 	phase["materializes_generated_cell_bit_27"] = final_bit_27_count > 0;
 	phase["exact_upstream_bit_source_claim"] = false;
-	phase["exact_upstream_bit_source_blocker"] = "0x4a8260 route-list coordinate vector, route RNG entry state, and 0x49a85d route stamp stream are not yet replayed from same-run source state";
+	phase["exact_upstream_bit_source_blocker"] = route_container_0x4a8260_drain_complete
+			? String("0x4a8260 route mechanics are ported, but the exact same-run RNG entry boundary is still unrecovered/unwired")
+			: String("0x4a8260 route-list replay guard exhausted before source queue drained");
 	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = pre_0x4a4c8e_checkpoint;
-	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_plus_final_terrain_8_9_and_0x49a962_sweep_before_unreplayed_0x4a8260_route_list_0x49a85d_stamp_stream_and_native_0x4a4c8e_land_edge_pass";
+	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_route_list_0x49a85d_stamp_stream_plus_final_terrain_8_9_and_0x49a962_sweep_before_native_0x4a4c8e_land_edge_pass";
 	if (out_live_cell_word_0x2c != nullptr) {
 		*out_live_cell_word_0x2c = live_cell_word_0x2c;
 	}
@@ -20872,7 +21199,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 	Dictionary pre_connection_phase;
 	pre_connection_phase["status"] = "source_order_pending_0x4a79a3";
 	pre_connection_phase["source_order_policy"] = "0x4a79a3 blockers/guards are materialized after 0x4a8260/0x4a4c8e/0x49a962/0x4a4913/0x4a5767/0x4a4fc5 generated-cell passes";
-		Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, relation_lookup, pre_road_phase, pre_connection_phase, zone_words, live_cell_word_0x20, live_cell_word_0x24, cell_flags, live_terrain_code, live_cell_word_0x28, &live_cell_word_0x2c);
+		Dictionary generated_cell_bit_state = generated_cell_decoration_bit_state_phase(normalized_config, runtime_zones, town_castle, object_vector, relation_lookup, pre_road_phase, pre_connection_phase, terrainplacement_live_feedback, zone_words, live_cell_word_0x20, live_cell_word_0x24, cell_flags, live_terrain_code, live_cell_word_0x28, &live_cell_word_0x2c);
 	generated_cell_bit_state["source_range"] = "0x4a4c8e/0x49aa63/0x49a932/0x4a5a23/0x4a4fc5/0x49eb8d";
 	generated_cell_bit_state["binary_byte_prefix_0x49aa63"] = "generated_cell_decor_candidate_bit_26_helper_recovered_spec_boundary";
 	generated_cell_bit_state["binary_byte_prefix_0x49a932"] = "generated_cell_occupied_blocked_bit_27_helper_recovered_spec_boundary";
