@@ -455,10 +455,10 @@
     "lastValidation": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T05:20:20Z",
-      "validatedAt": "2026-06-12T05:20:20Z",
+      "date": "2026-06-12T12:03:20Z",
+      "validatedAt": "2026-06-12T12:03:20Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Applied the focused 0x4aa9b7 owner-byte alignment so runtime records with source_zone_id use that source-zone id for the expected generated-cell high-owner byte. For Small 2-player seed 58, the source-selected coordinate (4,3,0) already had generated high owner byte 1 while the old expected owner was runtime index 0. The Linux/Python route replay improved the route-entry offset gap from 76 to 10, but the recovered 0x4aa9b7 handoff prefix is still not parity because native accepts earlier proxy reward objects before the source first successful handoff. A candidate guard-attach no-candidate gate was tested and rejected because it worsened the same route offset gap to 550. Windows .dll builds remain deferred until Linux parity is exact.",
+      "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
       "artifacts": {
         "kept_owner_gate_snapshot": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
         "kept_owner_gate_route_compare": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/route_replay_verify.json",
@@ -503,10 +503,10 @@
     "latestEvidence": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T05:20:20Z",
-      "validatedAt": "2026-06-12T05:20:20Z",
+      "date": "2026-06-12T12:03:20Z",
+      "validatedAt": "2026-06-12T12:03:20Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Applied the focused 0x4aa9b7 owner-byte alignment so runtime records with source_zone_id use that source-zone id for the expected generated-cell high-owner byte. For Small 2-player seed 58, the source-selected coordinate (4,3,0) already had generated high owner byte 1 while the old expected owner was runtime index 0. The Linux/Python route replay improved the route-entry offset gap from 76 to 10, but the recovered 0x4aa9b7 handoff prefix is still not parity because native accepts earlier proxy reward objects before the source first successful handoff. A candidate guard-attach no-candidate gate was tested and rejected because it worsened the same route offset gap to 550. Windows .dll builds remain deferred until Linux parity is exact.",
+      "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
       "artifacts": {
         "kept_owner_gate_snapshot": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
         "kept_owner_gate_route_compare": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/route_replay_verify.json",
@@ -1000,7 +1000,7 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "Native RMG parity is still incomplete. Applied the focused 0x4aa9b7 owner-byte alignment so runtime records with source_zone_id use that source-zone id for the expected generated-cell high-owner byte. For Small 2-player seed 58, the source-selected coordinate (4,3,0) already had generated high owner byte 1 while the old expected owner was runtime index 0. The Linux/Python route replay improved the route-entry offset gap from 76 to 10, but the recovered 0x4aa9b7 handoff prefix is still not parity because native accepts earlier proxy reward objects before the source first successful handoff. A candidate guard-attach no-candidate gate was tested and rejected because it worsened the same route offset gap to 550. Windows .dll builds remain deferred until Linux parity is exact.",
+    "notes": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -1014,16 +1014,16 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-12T05:20:20Z",
+    "updatedAt": "2026-06-12T12:03:20Z",
     "validation": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T05:20:20Z",
-      "validatedAt": "2026-06-12T05:20:20Z",
+      "date": "2026-06-12T12:03:20Z",
+      "validatedAt": "2026-06-12T12:03:20Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Applied the focused 0x4aa9b7 owner-byte alignment so runtime records with source_zone_id use that source-zone id for the expected generated-cell high-owner byte. For Small 2-player seed 58, the source-selected coordinate (4,3,0) already had generated high owner byte 1 while the old expected owner was runtime index 0. The Linux/Python route replay improved the route-entry offset gap from 76 to 10, but the recovered 0x4aa9b7 handoff prefix is still not parity because native accepts earlier proxy reward objects before the source first successful handoff. A candidate guard-attach no-candidate gate was tested and rejected because it worsened the same route offset gap to 550. Windows .dll builds remain deferred until Linux parity is exact.",
+      "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
       "artifacts": {
         "kept_owner_gate_snapshot": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
         "kept_owner_gate_route_compare": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/route_replay_verify.json",
@@ -1068,10 +1068,10 @@
     "validationResults": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T05:20:20Z",
-      "validatedAt": "2026-06-12T05:20:20Z",
+      "date": "2026-06-12T12:03:20Z",
+      "validatedAt": "2026-06-12T12:03:20Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Applied the focused 0x4aa9b7 owner-byte alignment so runtime records with source_zone_id use that source-zone id for the expected generated-cell high-owner byte. For Small 2-player seed 58, the source-selected coordinate (4,3,0) already had generated high owner byte 1 while the old expected owner was runtime index 0. The Linux/Python route replay improved the route-entry offset gap from 76 to 10, but the recovered 0x4aa9b7 handoff prefix is still not parity because native accepts earlier proxy reward objects before the source first successful handoff. A candidate guard-attach no-candidate gate was tested and rejected because it worsened the same route offset gap to 550. Windows .dll builds remain deferred until Linux parity is exact.",
+      "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
       "artifacts": {
         "kept_owner_gate_snapshot": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
         "kept_owner_gate_route_compare": ".artifacts/rmg_native_small2p_seed58_source_zone_owner_gate_20260612/route_replay_verify.json",
@@ -12445,10 +12445,10 @@
   "lastValidation": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T05:41:20Z",
-    "validatedAt": "2026-06-12T05:41:20Z",
+    "date": "2026-06-12T12:03:20Z",
+    "validatedAt": "2026-06-12T12:03:20Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Corrected the generated-cell owner-byte helper to match recovered 0x4aa9b7/0x4a8c15 shl 8; sar 24 behavior: owner gates now read signed byte2 bits 16..23 from cell+0x20, not the high byte. Fresh Linux/Python seed-58 evidence confirms the route replay still passes recovered H3MapEd route mechanics but native route adoption remains denied with route-entry offset gap 10. The recovered 0x4aa9b7 handoff compare remains 1/8 prefix full matches because native still accepts earlier proxy reward candidates before the source first successful handoff. The reward-guard constructor-gap diagnostic was fixed to handle no-stamp positive guard records and now reports no source-backed active guard-constructor policy matching the 10-call gap. Windows .dll builds were intentionally not run; the inner loop remains Linux .so plus Python parity tooling until Linux parity is exact.",
+    "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
     "artifacts": {
       "fresh_owner_byte2_snapshot": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
       "fresh_owner_byte2_route_compare": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/route_replay_verify.json",
@@ -12499,10 +12499,10 @@
   "latestEvidence": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T05:41:20Z",
-    "validatedAt": "2026-06-12T05:41:20Z",
+    "date": "2026-06-12T12:03:20Z",
+    "validatedAt": "2026-06-12T12:03:20Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Corrected the generated-cell owner-byte helper to match recovered 0x4aa9b7/0x4a8c15 shl 8; sar 24 behavior: owner gates now read signed byte2 bits 16..23 from cell+0x20, not the high byte. Fresh Linux/Python seed-58 evidence confirms the route replay still passes recovered H3MapEd route mechanics but native route adoption remains denied with route-entry offset gap 10. The recovered 0x4aa9b7 handoff compare remains 1/8 prefix full matches because native still accepts earlier proxy reward candidates before the source first successful handoff. The reward-guard constructor-gap diagnostic was fixed to handle no-stamp positive guard records and now reports no source-backed active guard-constructor policy matching the 10-call gap. Windows .dll builds were intentionally not run; the inner loop remains Linux .so plus Python parity tooling until Linux parity is exact.",
+    "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
     "artifacts": {
       "fresh_owner_byte2_snapshot": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
       "fresh_owner_byte2_route_compare": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/route_replay_verify.json",
@@ -53312,10 +53312,10 @@
   "validation": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T05:41:20Z",
-    "validatedAt": "2026-06-12T05:41:20Z",
+    "date": "2026-06-12T12:03:20Z",
+    "validatedAt": "2026-06-12T12:03:20Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Corrected the generated-cell owner-byte helper to match recovered 0x4aa9b7/0x4a8c15 shl 8; sar 24 behavior: owner gates now read signed byte2 bits 16..23 from cell+0x20, not the high byte. Fresh Linux/Python seed-58 evidence confirms the route replay still passes recovered H3MapEd route mechanics but native route adoption remains denied with route-entry offset gap 10. The recovered 0x4aa9b7 handoff compare remains 1/8 prefix full matches because native still accepts earlier proxy reward candidates before the source first successful handoff. The reward-guard constructor-gap diagnostic was fixed to handle no-stamp positive guard records and now reports no source-backed active guard-constructor policy matching the 10-call gap. Windows .dll builds were intentionally not run; the inner loop remains Linux .so plus Python parity tooling until Linux parity is exact.",
+    "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
     "artifacts": {
       "fresh_owner_byte2_snapshot": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
       "fresh_owner_byte2_route_compare": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/route_replay_verify.json",
@@ -61027,15 +61027,22 @@
         },
         "remainingWork": "Implement exact same-run reward object/materialization and guard stream parity before 0x4a8260: selected 0x4aa354 reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95/+0x20 state, dynamic +0xf5c/+0xf58/+0x10b4 state, and exact 0x49cf34/0x49d69d/0x4aa3e9 branch/mutation order. Do not compensate with route adoption, density scalars, brute-force retries, guard surrogates, Windows build churn, or final-map delta tuning."
       }
+    },
+    {
+      "id": "rmg-small-generalization-hardening-10184",
+      "status": "in_progress",
+      "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
+      "date": "2026-06-12T12:03:20Z",
+      "validatedAt": "2026-06-12T12:03:20Z"
     }
   ],
   "validationResults": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T05:41:20Z",
-    "validatedAt": "2026-06-12T05:41:20Z",
+    "date": "2026-06-12T12:03:20Z",
+    "validatedAt": "2026-06-12T12:03:20Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Corrected the generated-cell owner-byte helper to match recovered 0x4aa9b7/0x4a8c15 shl 8; sar 24 behavior: owner gates now read signed byte2 bits 16..23 from cell+0x20, not the high byte. Fresh Linux/Python seed-58 evidence confirms the route replay still passes recovered H3MapEd route mechanics but native route adoption remains denied with route-entry offset gap 10. The recovered 0x4aa9b7 handoff compare remains 1/8 prefix full matches because native still accepts earlier proxy reward candidates before the source first successful handoff. The reward-guard constructor-gap diagnostic was fixed to handle no-stamp positive guard records and now reports no source-backed active guard-constructor policy matching the 10-call gap. Windows .dll builds were intentionally not run; the inner loop remains Linux .so plus Python parity tooling until Linux parity is exact.",
+    "summary": "Native RMG parity is still incomplete. Corrected the 0x4a9f1c/0x4aa195 argument mapping: 0x4a9f1c stack +0x20 is sourced from the selected treasure-band low-value byte passed through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10, not from the 0x4aab7e retry-pass literal. Two Linux-only native adoption probes were rejected: retry-pass wiring regressed the seed-58 route-entry gap from 10 to -28 with handoff prefix still 1/8, and corrected low-byte wiring regressed the route-entry gap to -1228 while improving handoff prefix only to 2/8. Native behavior was reverted to baseline; Windows .dll builds remain deferred. The blocker remains exact same-run 0x4aa354 selected descriptor/object plus 0x49a6f9/0x4a5c07/0x49cf34 materialization state before route adoption.",
     "artifacts": {
       "fresh_owner_byte2_snapshot": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/small_2p_seed_58_manual20.phase_snapshot.json",
       "fresh_owner_byte2_route_compare": ".artifacts/rmg_native_small2p_seed58_owner_byte2_current_20260612/route_replay_verify.json",

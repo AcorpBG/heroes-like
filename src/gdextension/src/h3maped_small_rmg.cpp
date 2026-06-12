@@ -11357,7 +11357,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["candidate_vector_builder_address"] = "0x49f95a";
 			object_lookup["source_0x4a9f1c_template_selector_timing"] = "0x4a9f1c calls 0x4a9e40 while building each candidate-vector entry before weighted selection";
 			object_lookup["source_0x4a9e40_template_selector_filter"] = "bucket source vector by requested type lane, then source+0x20 subtype match; source+0x24 groups 4/5 require source+0x18 terrain-lane bit, other groups reject terrain lane 8 only";
-			object_lookup["source_0x4a9f1c_fallback_flag_filter"] = "0x4aab7e primary retries pass flag 0 to 0x4aa354, fallback retries pass flag 1, and 0x4aa1db forwards that flag to 0x4a9f1c arg+0x20 where 0x4aa195 value-per-footprint filtering is applied";
+			object_lookup["source_0x4a9f1c_mask_extent_value_filter"] = "0x4aab7e passes the selected treasure-band low value through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10 to 0x4a9f1c arg+0x20; 0x4a9f1c tests that low byte before applying 0x4aa195 value-per-footprint filtering. Native behavioral adoption remains blocked until exact same-run candidate/materialization state is ported.";
 			object_lookup["source_0x4a9f1c_template_timing_behavioral"] = true;
 			object_lookup["template_selector_filter_source"] = "recovered_0x4a9e40_source_record_0x20_0x24_0x18";
 			object_lookup["candidate_template_rng_call_count_0x4a9e40"] = object_selection.candidate_template_rng_call_count_0x4a9e40;
