@@ -297,6 +297,7 @@ bool h3_object_row_matches_template_selector_0x4a9e40(const H3ObjectRow &row, in
 bool h3maped_49a1d8_generated_cell_valid(const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, int64_t flat);
 std::vector<H3MaskPoint> h3_msk_mask_points_0x49e1bf(uint64_t mask, int32_t width_0x34, int32_t height_0x38);
 std::vector<H3MaskPoint> h3_object_row_nonpassable_points_0x41e951(const H3ObjectRow &row);
+int32_t h3_object_row_mask_extent_count_0x4aa195(const H3ObjectRow &row);
 bool h3_object_row_passable_bit_0x41e951(const H3ObjectRow &row, int32_t local_x, int32_t local_y);
 bool h3_object_row_action_bit_0x4268eb(const H3ObjectRow &row, int32_t local_x, int32_t local_y);
 std::vector<int32_t> h3_object_row_recalculation_table_0x49b89c(const H3ObjectRow &row);
@@ -2743,6 +2744,20 @@ struct RewardObjectSelection {
 	int32_t selected_weight_roll = -1;
 	int32_t template_rng_value = -1;
 	int32_t candidate_template_rng_call_count_0x4a9e40 = 0;
+	int32_t selector_low_value_0x20 = 0;
+	int32_t selector_low_value_byte_0x20 = 0;
+	bool mask_extent_filter_requested_0x4aa195 = false;
+	bool mask_extent_filter_behavioral_0x4aa195 = false;
+	int32_t pre_mask_extent_eligible_count_0x4a9f1c = 0;
+	int32_t pre_mask_extent_weight_total_0x4a9f1c = 0;
+	int32_t mask_extent_shadow_eligible_count_0x4aa195 = 0;
+	int32_t mask_extent_shadow_weight_total_0x4aa195 = 0;
+	int32_t mask_extent_shadow_rejected_count_0x4aa195 = 0;
+	int32_t mask_extent_shadow_cleared_vector_count_0x4aa195 = 0;
+	int32_t mask_extent_shadow_best_score_0x4aa195 = -1;
+	bool selected_survives_mask_extent_shadow_0x4aa195 = true;
+	int32_t selected_mask_extent_count_0x4aa195 = 0;
+	int32_t selected_value_per_extent_score_0x4aa195 = -1;
 	int32_t selected_global_type_count_before = 0;
 	int32_t selected_global_type_limit = 0;
 	int32_t selected_zone_type_count_before = 0;
@@ -2791,8 +2806,12 @@ int32_t h3maped_candidate_runtime_value_49c849(const H3MapedRewardCandidate &can
 	return int32_t(std::max<int64_t>(0, std::min<int64_t>(value, 0x7fffffff)));
 }
 
-RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, int32_t max_value, int32_t h3maped_terrain_id, const H3MapedCandidateValueContext &value_context, const std::map<int32_t, int32_t> &global_type_counts, const std::map<int32_t, std::map<int32_t, int32_t>> &zone_type_counts, int32_t runtime_zone_index, H3MapedRng &rng) {
+RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, int32_t max_value, int32_t h3maped_terrain_id, const H3MapedCandidateValueContext &value_context, const std::map<int32_t, int32_t> &global_type_counts, const std::map<int32_t, std::map<int32_t, int32_t>> &zone_type_counts, int32_t runtime_zone_index, H3MapedRng &rng, int32_t selector_low_value_0x20, bool behavioral_mask_extent_filter_0x4aa195) {
 	RewardObjectSelection result;
+	result.selector_low_value_0x20 = selector_low_value_0x20;
+	result.selector_low_value_byte_0x20 = selector_low_value_0x20 & 0xff;
+	result.mask_extent_filter_requested_0x4aa195 = result.selector_low_value_byte_0x20 != 0;
+	result.mask_extent_filter_behavioral_0x4aa195 = behavioral_mask_extent_filter_0x4aa195 && result.mask_extent_filter_requested_0x4aa195;
 	struct Eligible {
 		H3MapedRewardCandidate candidate;
 		Dictionary proxy;
@@ -2801,8 +2820,12 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 		int32_t selected_template_index_0x4a9e40 = -1;
 		int32_t template_choice_count_0x4a9e40 = 0;
 		H3MapedObjectTypeLimitState limit_state;
+		int32_t mask_extent_count_0x4aa195 = 0;
+		int32_t value_per_extent_score_0x4aa195 = -1;
+		bool survives_mask_extent_shadow_0x4aa195 = true;
 	};
 	std::vector<Eligible> eligible;
+	int32_t pre_mask_extent_weight_total = 0;
 	static std::map<int32_t, std::vector<H3ObjectRow>> template_rows_by_bucket_cache;
 	for (const H3MapedRewardCandidate &candidate : h3maped_reward_materialized_candidates_49f95a()) {
 		if ((candidate.dynamic_monster || candidate.dynamic_type17) && candidate.monster_terrain_id != h3maped_terrain_id) {
@@ -2831,8 +2854,8 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 			proxy["homm3_re_object_type_id"] = 54;
 			proxy["homm3_re_object_subtype"] = candidate.monster_table_index;
 			proxy["homm3_re_object_def_ref"] = String("h3maped_monster_table_index_") + String::num_int64(candidate.monster_table_index);
-			eligible.push_back(Eligible { runtime_candidate, proxy, std::vector<H3ObjectRow>(), -1, -1, 0, limit_state });
-			result.eligible_weight_total += runtime_candidate.weight;
+			eligible.push_back(Eligible { runtime_candidate, proxy, std::vector<H3ObjectRow>(), -1, -1, 0, limit_state, 1, runtime_candidate.value, true });
+			pre_mask_extent_weight_total += runtime_candidate.weight;
 			continue;
 		}
 		Dictionary proxy = reward_proxy_for_type_subtype(candidate.type_id, candidate.subtype_id);
@@ -2853,17 +2876,75 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 		const int32_t template_rng_value = rng.next();
 		result.candidate_template_rng_call_count_0x4a9e40 += 1;
 		const int32_t selected_template_index = template_rng_value % int32_t(selector_templates.size());
-		eligible.push_back(Eligible { runtime_candidate, proxy, std::vector<H3ObjectRow> { selector_templates[size_t(selected_template_index)] }, template_rng_value, selected_template_index, int32_t(selector_templates.size()), limit_state });
-		result.eligible_weight_total += runtime_candidate.weight;
+		const H3ObjectRow selected_template = selector_templates[size_t(selected_template_index)];
+		const int32_t mask_extent_count_0x4aa195 = std::max<int32_t>(1, h3_object_row_mask_extent_count_0x4aa195(selected_template));
+		const int32_t value_per_extent_score_0x4aa195 = runtime_candidate.value / mask_extent_count_0x4aa195;
+		eligible.push_back(Eligible { runtime_candidate, proxy, std::vector<H3ObjectRow> { selected_template }, template_rng_value, selected_template_index, int32_t(selector_templates.size()), limit_state, mask_extent_count_0x4aa195, value_per_extent_score_0x4aa195, true });
+		pre_mask_extent_weight_total += runtime_candidate.weight;
 	}
-	result.eligible_count = int32_t(eligible.size());
+	result.pre_mask_extent_eligible_count_0x4a9f1c = int32_t(eligible.size());
+	result.pre_mask_extent_weight_total_0x4a9f1c = pre_mask_extent_weight_total;
+	std::vector<size_t> active_indices;
+	std::vector<size_t> mask_extent_shadow_indices;
+	if (result.mask_extent_filter_requested_0x4aa195) {
+		for (size_t index = 0; index < eligible.size(); ++index) {
+			Eligible &entry = eligible[index];
+			const int32_t score = entry.value_per_extent_score_0x4aa195;
+			bool accepted = true;
+			if (!mask_extent_shadow_indices.empty()) {
+				const int64_t best_threshold = (int64_t(result.mask_extent_shadow_best_score_0x4aa195) * 3) / 4;
+				if (int64_t(score) < best_threshold) {
+					accepted = false;
+				} else {
+					const int64_t new_threshold = (int64_t(score) * 3) / 4;
+					if (int64_t(result.mask_extent_shadow_best_score_0x4aa195) < new_threshold) {
+						result.mask_extent_shadow_cleared_vector_count_0x4aa195 += int32_t(mask_extent_shadow_indices.size());
+						for (const size_t cleared_index : mask_extent_shadow_indices) {
+							eligible[cleared_index].survives_mask_extent_shadow_0x4aa195 = false;
+						}
+						mask_extent_shadow_indices.clear();
+						result.mask_extent_shadow_best_score_0x4aa195 = score;
+					}
+				}
+			} else {
+				result.mask_extent_shadow_best_score_0x4aa195 = score;
+			}
+			if (accepted) {
+				entry.survives_mask_extent_shadow_0x4aa195 = true;
+				mask_extent_shadow_indices.push_back(index);
+			} else {
+				entry.survives_mask_extent_shadow_0x4aa195 = false;
+				result.mask_extent_shadow_rejected_count_0x4aa195 += 1;
+			}
+		}
+	} else {
+		for (size_t index = 0; index < eligible.size(); ++index) {
+			mask_extent_shadow_indices.push_back(index);
+		}
+	}
+	for (const size_t index : mask_extent_shadow_indices) {
+		result.mask_extent_shadow_weight_total_0x4aa195 += eligible[index].candidate.weight;
+	}
+	result.mask_extent_shadow_eligible_count_0x4aa195 = int32_t(mask_extent_shadow_indices.size());
+	if (result.mask_extent_filter_behavioral_0x4aa195) {
+		active_indices = mask_extent_shadow_indices;
+	} else {
+		for (size_t index = 0; index < eligible.size(); ++index) {
+			active_indices.push_back(index);
+		}
+	}
+	for (const size_t index : active_indices) {
+		result.eligible_weight_total += eligible[index].candidate.weight;
+	}
+	result.eligible_count = int32_t(active_indices.size());
 	if (eligible.empty() || result.eligible_weight_total <= 0) {
 		return result;
 	}
 	result.rng_value = rng.next();
 	result.selected_weight_roll = result.rng_value % result.eligible_weight_total;
 	int32_t accumulator = 0;
-	for (const Eligible &entry : eligible) {
+	for (const size_t active_index : active_indices) {
+		const Eligible &entry = eligible[active_index];
 		accumulator += entry.candidate.weight;
 		if (result.selected_weight_roll < accumulator) {
 			result.selected = true;
@@ -2874,6 +2955,9 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 			result.selected_zone_type_count_before = entry.limit_state.zone_count;
 			result.selected_zone_type_limit = entry.limit_state.zone_limit;
 			result.selected_template_count = entry.template_choice_count_0x4a9e40;
+			result.selected_survives_mask_extent_shadow_0x4aa195 = entry.survives_mask_extent_shadow_0x4aa195;
+			result.selected_mask_extent_count_0x4aa195 = entry.mask_extent_count_0x4aa195;
+			result.selected_value_per_extent_score_0x4aa195 = entry.value_per_extent_score_0x4aa195;
 			if (!entry.template_rows.empty()) {
 				result.template_rng_value = entry.template_rng_value_0x4a9e40;
 				result.selected_template_index = entry.selected_template_index_0x4a9e40;
@@ -2883,17 +2967,21 @@ RewardObjectSelection h3maped_select_reward_candidate_4a9f1c(int32_t min_value, 
 		}
 	}
 	result.selected = true;
-	result.candidate = eligible.back().candidate;
-	result.proxy = eligible.back().proxy;
-	result.selected_global_type_count_before = eligible.back().limit_state.global_count;
-	result.selected_global_type_limit = eligible.back().limit_state.global_limit;
-	result.selected_zone_type_count_before = eligible.back().limit_state.zone_count;
-	result.selected_zone_type_limit = eligible.back().limit_state.zone_limit;
-	result.selected_template_count = eligible.back().template_choice_count_0x4a9e40;
-	if (!eligible.back().template_rows.empty()) {
-		result.template_rng_value = eligible.back().template_rng_value_0x4a9e40;
-		result.selected_template_index = eligible.back().selected_template_index_0x4a9e40;
-		result.template_row = eligible.back().template_rows.front();
+	const Eligible &fallback_entry = eligible[active_indices.back()];
+	result.candidate = fallback_entry.candidate;
+	result.proxy = fallback_entry.proxy;
+	result.selected_global_type_count_before = fallback_entry.limit_state.global_count;
+	result.selected_global_type_limit = fallback_entry.limit_state.global_limit;
+	result.selected_zone_type_count_before = fallback_entry.limit_state.zone_count;
+	result.selected_zone_type_limit = fallback_entry.limit_state.zone_limit;
+	result.selected_template_count = fallback_entry.template_choice_count_0x4a9e40;
+	result.selected_survives_mask_extent_shadow_0x4aa195 = fallback_entry.survives_mask_extent_shadow_0x4aa195;
+	result.selected_mask_extent_count_0x4aa195 = fallback_entry.mask_extent_count_0x4aa195;
+	result.selected_value_per_extent_score_0x4aa195 = fallback_entry.value_per_extent_score_0x4aa195;
+	if (!fallback_entry.template_rows.empty()) {
+		result.template_rng_value = fallback_entry.template_rng_value_0x4a9e40;
+		result.selected_template_index = fallback_entry.selected_template_index_0x4a9e40;
+		result.template_row = fallback_entry.template_rows.front();
 	}
 	return result;
 }
@@ -3661,6 +3749,22 @@ std::vector<H3MaskPoint> h3_object_row_wrapper_vector_points_0x49abd6(const H3Ob
 		}
 	}
 	return points;
+}
+
+int32_t h3_object_row_mask_extent_count_0x4aa195(const H3ObjectRow &row) {
+	const int32_t width = std::max<int32_t>(0, std::min<int32_t>(row.msk_width_0x34, H3MAPED_OBJECT_MASK_COLUMNS));
+	const int32_t height = std::max<int32_t>(0, std::min<int32_t>(row.msk_height_0x38, H3MAPED_OBJECT_MASK_ROWS));
+	int32_t count = 0;
+	for (int32_t local_x = 0; local_x < width; ++local_x) {
+		for (int32_t local_y = 0; local_y < height; ++local_y) {
+			const bool passable_cell = h3_object_row_passable_bit_0x41e951(row, local_x, local_y);
+			const bool action_cell = h3_object_row_action_bit_0x4268eb(row, local_x, local_y);
+			if (!passable_cell || (passable_cell && action_cell)) {
+				count += 1;
+			}
+		}
+	}
+	return count;
 }
 
 std::vector<H3MaskPoint> h3_object_row_action_points_0x4268eb(const H3ObjectRow &row) {
@@ -11150,6 +11254,15 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_candidate_scan_eligible_total = 0;
 	int32_t reward_candidate_scan_weight_total = 0;
 	int32_t reward_candidate_scan_rejected_template_total = 0;
+	int32_t reward_mask_extent_filter_requested_count_0x4aa195 = 0;
+	int32_t reward_mask_extent_filter_behavioral_count_0x4aa195 = 0;
+	int32_t reward_mask_extent_shadow_eligible_total_0x4aa195 = 0;
+	int32_t reward_mask_extent_shadow_rejected_total_0x4aa195 = 0;
+	int32_t reward_mask_extent_shadow_cleared_vector_total_0x4aa195 = 0;
+	int32_t reward_mask_extent_selected_survives_shadow_count_0x4aa195 = 0;
+	int32_t reward_mask_extent_selected_rejected_by_shadow_count_0x4aa195 = 0;
+	int32_t reward_secondary_mask_extent_filter_requested_count_0x4aa195 = 0;
+	int32_t reward_secondary_mask_extent_shadow_rejected_total_0x4aa195 = 0;
 	int32_t reward_coordinate_scan_call_count = 0;
 	int32_t reward_coordinate_scan_owner_match_total = 0;
 	int32_t reward_coordinate_scan_candidate_total = 0;
@@ -11340,12 +11453,28 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				0,
 				0
 			};
-			const RewardObjectSelection object_selection = h3maped_select_reward_candidate_4a9f1c(object_lookup_min_value, object_lookup_max_value, runtime_terrain_id, candidate_value_context, reward_global_type_counts, reward_zone_type_counts, runtime_index, reward_preview_rng);
+			const RewardObjectSelection object_selection = h3maped_select_reward_candidate_4a9f1c(object_lookup_min_value, object_lookup_max_value, runtime_terrain_id, candidate_value_context, reward_global_type_counts, reward_zone_type_counts, runtime_index, reward_preview_rng, selected_band.low, false);
 			reward_object_lookup_count += 1;
 			reward_candidate_scan_count += 1;
 			reward_candidate_scan_eligible_total += object_selection.eligible_count;
 			reward_candidate_scan_weight_total += object_selection.eligible_weight_total;
 			reward_candidate_scan_rejected_template_total += object_selection.rejected_template_count;
+			if (object_selection.mask_extent_filter_requested_0x4aa195) {
+				reward_mask_extent_filter_requested_count_0x4aa195 += 1;
+			}
+			if (object_selection.mask_extent_filter_behavioral_0x4aa195) {
+				reward_mask_extent_filter_behavioral_count_0x4aa195 += 1;
+			}
+			reward_mask_extent_shadow_eligible_total_0x4aa195 += object_selection.mask_extent_shadow_eligible_count_0x4aa195;
+			reward_mask_extent_shadow_rejected_total_0x4aa195 += object_selection.mask_extent_shadow_rejected_count_0x4aa195;
+			reward_mask_extent_shadow_cleared_vector_total_0x4aa195 += object_selection.mask_extent_shadow_cleared_vector_count_0x4aa195;
+			if (object_selection.selected) {
+				if (object_selection.selected_survives_mask_extent_shadow_0x4aa195) {
+					reward_mask_extent_selected_survives_shadow_count_0x4aa195 += 1;
+				} else {
+					reward_mask_extent_selected_rejected_by_shadow_count_0x4aa195 += 1;
+				}
+			}
 			if (object_selection.rng_value >= 0) {
 				reward_object_lookup_rng_call_count += 1;
 			}
@@ -11358,6 +11487,18 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["source_0x4a9f1c_template_selector_timing"] = "0x4a9f1c calls 0x4a9e40 while building each candidate-vector entry before weighted selection";
 			object_lookup["source_0x4a9e40_template_selector_filter"] = "bucket source vector by requested type lane, then source+0x20 subtype match; source+0x24 groups 4/5 require source+0x18 terrain-lane bit, other groups reject terrain lane 8 only";
 			object_lookup["source_0x4a9f1c_mask_extent_value_filter"] = "0x4aab7e passes the selected treasure-band low value through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10 to 0x4a9f1c arg+0x20; 0x4a9f1c tests that low byte before applying 0x4aa195 value-per-footprint filtering. Native behavioral adoption remains blocked until exact same-run candidate/materialization state is ported.";
+			object_lookup["selector_low_value_arg_0x20"] = object_selection.selector_low_value_0x20;
+			object_lookup["selector_low_value_byte_0x20"] = object_selection.selector_low_value_byte_0x20;
+			object_lookup["source_0x4aa195_mask_extent_filter_requested"] = object_selection.mask_extent_filter_requested_0x4aa195;
+			object_lookup["source_0x4aa195_mask_extent_filter_behavioral"] = object_selection.mask_extent_filter_behavioral_0x4aa195;
+			object_lookup["source_0x4aa195_behavioral_blocker"] = "Recovered 0x4aa195 is ported as a shadow accepted-vector filter only. Prior active probes with retry-pass and corrected low-byte wiring regressed seed-58 route parity, so behavior stays disabled until the exact same-run 0x4aa354 candidate/materialization stream is matched.";
+			object_lookup["pre_mask_extent_eligible_count_0x4a9f1c"] = object_selection.pre_mask_extent_eligible_count_0x4a9f1c;
+			object_lookup["pre_mask_extent_weight_total_0x4a9f1c"] = object_selection.pre_mask_extent_weight_total_0x4a9f1c;
+			object_lookup["mask_extent_shadow_eligible_count_0x4aa195"] = object_selection.mask_extent_shadow_eligible_count_0x4aa195;
+			object_lookup["mask_extent_shadow_weight_total_0x4aa195"] = object_selection.mask_extent_shadow_weight_total_0x4aa195;
+			object_lookup["mask_extent_shadow_rejected_count_0x4aa195"] = object_selection.mask_extent_shadow_rejected_count_0x4aa195;
+			object_lookup["mask_extent_shadow_cleared_vector_count_0x4aa195"] = object_selection.mask_extent_shadow_cleared_vector_count_0x4aa195;
+			object_lookup["mask_extent_shadow_best_score_0x4aa195"] = object_selection.mask_extent_shadow_best_score_0x4aa195;
 			object_lookup["source_0x4a9f1c_template_timing_behavioral"] = true;
 			object_lookup["template_selector_filter_source"] = "recovered_0x4a9e40_source_record_0x20_0x24_0x18";
 			object_lookup["candidate_template_rng_call_count_0x4a9e40"] = object_selection.candidate_template_rng_call_count_0x4a9e40;
@@ -11462,6 +11603,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				object_lookup["selected_monster_ai_value"] = object_selection.candidate.monster_ai_value;
 				object_lookup["selected_monster_growth_value"] = object_selection.candidate.monster_growth_value;
 				object_lookup["selected_monster_quantity"] = object_selection.candidate.monster_quantity;
+				object_lookup["selected_survives_mask_extent_shadow_0x4aa195"] = object_selection.selected_survives_mask_extent_shadow_0x4aa195;
+				object_lookup["selected_mask_extent_count_0x4aa195"] = object_selection.selected_mask_extent_count_0x4aa195;
+				object_lookup["selected_value_per_extent_score_0x4aa195"] = object_selection.selected_value_per_extent_score_0x4aa195;
 
 				std::vector<RewardObjectSelection> composite_object_vector;
 				composite_object_vector.push_back(object_selection);
@@ -11800,10 +11944,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					bool materialized_this_residual = false;
 					for (int32_t secondary_retry_index = 0; secondary_retry_index < 3; ++secondary_retry_index) {
 						composite_secondary_attempt_count += 1;
-						const RewardObjectSelection secondary_selection = h3maped_select_reward_candidate_4a9f1c(current_secondary_min_value_0x4aa1db, current_secondary_max_value_0x4aa1db, runtime_terrain_id, candidate_value_context, secondary_probe_global_counts, secondary_probe_zone_counts, runtime_index, secondary_probe_rng);
+						const RewardObjectSelection secondary_selection = h3maped_select_reward_candidate_4a9f1c(current_secondary_min_value_0x4aa1db, current_secondary_max_value_0x4aa1db, runtime_terrain_id, candidate_value_context, secondary_probe_global_counts, secondary_probe_zone_counts, runtime_index, secondary_probe_rng, selected_band.low, false);
 						reward_secondary_lookup_count_0x4aa1db += 1;
 						reward_secondary_template_rng_call_count_0x4a9e40 += secondary_selection.candidate_template_rng_call_count_0x4a9e40;
 						reward_secondary_lookup_rng_call_count_0x4aa1db += secondary_selection.candidate_template_rng_call_count_0x4a9e40;
+						if (secondary_selection.mask_extent_filter_requested_0x4aa195) {
+							reward_secondary_mask_extent_filter_requested_count_0x4aa195 += 1;
+						}
+						reward_secondary_mask_extent_shadow_rejected_total_0x4aa195 += secondary_selection.mask_extent_shadow_rejected_count_0x4aa195;
 						if (secondary_selection.rng_value >= 0) {
 							reward_secondary_weighted_rng_call_count_0x4a9f1c += 1;
 							reward_secondary_lookup_rng_call_count_0x4aa1db += 1;
@@ -11821,6 +11969,17 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						probe["candidate_template_rng_call_count_0x4a9e40"] = secondary_selection.candidate_template_rng_call_count_0x4a9e40;
 						probe["weighted_rng_value_0x4a9f1c"] = secondary_selection.rng_value;
 						probe["weighted_rng_consumed_0x4a9f1c"] = secondary_selection.rng_value >= 0;
+						probe["selector_low_value_arg_0x20"] = secondary_selection.selector_low_value_0x20;
+						probe["selector_low_value_byte_0x20"] = secondary_selection.selector_low_value_byte_0x20;
+						probe["source_0x4aa195_mask_extent_filter_requested"] = secondary_selection.mask_extent_filter_requested_0x4aa195;
+						probe["source_0x4aa195_mask_extent_filter_behavioral"] = secondary_selection.mask_extent_filter_behavioral_0x4aa195;
+						probe["pre_mask_extent_eligible_count_0x4a9f1c"] = secondary_selection.pre_mask_extent_eligible_count_0x4a9f1c;
+						probe["pre_mask_extent_weight_total_0x4a9f1c"] = secondary_selection.pre_mask_extent_weight_total_0x4a9f1c;
+						probe["mask_extent_shadow_eligible_count_0x4aa195"] = secondary_selection.mask_extent_shadow_eligible_count_0x4aa195;
+						probe["mask_extent_shadow_weight_total_0x4aa195"] = secondary_selection.mask_extent_shadow_weight_total_0x4aa195;
+						probe["mask_extent_shadow_rejected_count_0x4aa195"] = secondary_selection.mask_extent_shadow_rejected_count_0x4aa195;
+						probe["mask_extent_shadow_cleared_vector_count_0x4aa195"] = secondary_selection.mask_extent_shadow_cleared_vector_count_0x4aa195;
+						probe["mask_extent_shadow_best_score_0x4aa195"] = secondary_selection.mask_extent_shadow_best_score_0x4aa195;
 						probe["primary_existing_child_metadata_plus_1_0x598300"] = source_primary_metadata_plus_1_0x598300;
 						probe["primary_existing_child_metadata_plus_2_0x598300"] = source_primary_metadata_plus_2_0x598300;
 						probe["primary_existing_child_direction_indices_0x49d471"] = source_primary_direction_indices_0x49d471;
@@ -11834,6 +11993,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						}
 						reward_secondary_lookup_selected_count_0x4aa1db += 1;
 						source_secondary_edge_probe_selected_count_0x49d471 += 1;
+						probe["selected_survives_mask_extent_shadow_0x4aa195"] = secondary_selection.selected_survives_mask_extent_shadow_0x4aa195;
+						probe["selected_mask_extent_count_0x4aa195"] = secondary_selection.selected_mask_extent_count_0x4aa195;
+						probe["selected_value_per_extent_score_0x4aa195"] = secondary_selection.selected_value_per_extent_score_0x4aa195;
 						const int32_t secondary_width_0x34 = secondary_selection.candidate.dynamic_monster ? 1 : std::max<int32_t>(0, secondary_selection.template_row.msk_width_0x34);
 						const int32_t secondary_height_0x38 = secondary_selection.candidate.dynamic_monster ? 1 : std::max<int32_t>(0, secondary_selection.template_row.msk_height_0x38);
 						const H3MaskPoint secondary_origin_0x2c_0x30 = secondary_selection.candidate.dynamic_monster ? H3MaskPoint { 0, 0 } : h3_object_row_origin_0x2c_0x30_from_action_mask(secondary_selection.template_row.action_mask);
@@ -13905,6 +14067,16 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["candidate_scan_eligible_total"] = reward_candidate_scan_eligible_total;
 	reward_scheduler["candidate_scan_weight_total"] = reward_candidate_scan_weight_total;
 	reward_scheduler["candidate_scan_rejected_template_total"] = reward_candidate_scan_rejected_template_total;
+	reward_scheduler["mask_extent_filter_source_0x4aa195"] = "0x4a9f1c stack +0x20 low byte enables 0x4aa195 value-per-footprint accepted-vector filtering; native records shadow state only until exact same-run candidate/materialization parity is available";
+	reward_scheduler["mask_extent_filter_requested_count_0x4aa195"] = reward_mask_extent_filter_requested_count_0x4aa195;
+	reward_scheduler["mask_extent_filter_behavioral_count_0x4aa195"] = reward_mask_extent_filter_behavioral_count_0x4aa195;
+	reward_scheduler["mask_extent_shadow_eligible_total_0x4aa195"] = reward_mask_extent_shadow_eligible_total_0x4aa195;
+	reward_scheduler["mask_extent_shadow_rejected_total_0x4aa195"] = reward_mask_extent_shadow_rejected_total_0x4aa195;
+	reward_scheduler["mask_extent_shadow_cleared_vector_total_0x4aa195"] = reward_mask_extent_shadow_cleared_vector_total_0x4aa195;
+	reward_scheduler["mask_extent_selected_survives_shadow_count_0x4aa195"] = reward_mask_extent_selected_survives_shadow_count_0x4aa195;
+	reward_scheduler["mask_extent_selected_rejected_by_shadow_count_0x4aa195"] = reward_mask_extent_selected_rejected_by_shadow_count_0x4aa195;
+	reward_scheduler["secondary_mask_extent_filter_requested_count_0x4aa195"] = reward_secondary_mask_extent_filter_requested_count_0x4aa195;
+	reward_scheduler["secondary_mask_extent_shadow_rejected_total_0x4aa195"] = reward_secondary_mask_extent_shadow_rejected_total_0x4aa195;
 	reward_scheduler["candidate_scan_source"] = "materialized_0x49f95a_static_direct_literal_0x49f9ed_single_level_monster_0x49ff59_type10_0x4a0402_type17_and_0x4a0eeb_type53_candidates";
 	reward_scheduler["candidate_scan_complete_vector_claim"] = false;
 	reward_scheduler["preview_rng_state_before_0x4aa354_uint32"] = int64_t(reward_preview_rng_state_before);
@@ -14024,6 +14196,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["reward_candidate_scan_eligible_total"] = reward_candidate_scan_eligible_total;
 	phase["reward_candidate_scan_weight_total"] = reward_candidate_scan_weight_total;
 	phase["reward_candidate_scan_rejected_template_total"] = reward_candidate_scan_rejected_template_total;
+	phase["reward_mask_extent_filter_requested_count_0x4aa195"] = reward_mask_extent_filter_requested_count_0x4aa195;
+	phase["reward_mask_extent_filter_behavioral_count_0x4aa195"] = reward_mask_extent_filter_behavioral_count_0x4aa195;
+	phase["reward_mask_extent_shadow_eligible_total_0x4aa195"] = reward_mask_extent_shadow_eligible_total_0x4aa195;
+	phase["reward_mask_extent_shadow_rejected_total_0x4aa195"] = reward_mask_extent_shadow_rejected_total_0x4aa195;
+	phase["reward_mask_extent_selected_survives_shadow_count_0x4aa195"] = reward_mask_extent_selected_survives_shadow_count_0x4aa195;
+	phase["reward_mask_extent_selected_rejected_by_shadow_count_0x4aa195"] = reward_mask_extent_selected_rejected_by_shadow_count_0x4aa195;
+	phase["reward_secondary_mask_extent_filter_requested_count_0x4aa195"] = reward_secondary_mask_extent_filter_requested_count_0x4aa195;
+	phase["reward_secondary_mask_extent_shadow_rejected_total_0x4aa195"] = reward_secondary_mask_extent_shadow_rejected_total_0x4aa195;
 	phase["reward_coordinate_scan_call_count"] = reward_coordinate_scan_call_count;
 	phase["reward_coordinate_scan_candidate_total"] = reward_coordinate_scan_candidate_total;
 	phase["reward_coordinate_scan_rejected_guard_composite_count"] = reward_coordinate_scan_rejected_guard_composite_count;
