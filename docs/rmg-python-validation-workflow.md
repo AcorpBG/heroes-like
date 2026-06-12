@@ -19,6 +19,11 @@ launcher.
 cmake --build .artifacts/map_persistence_native_build --parallel 2
 ```
 
+For native RMG parity work this is the Linux `.so` inner-loop build. Do not
+cross-build Windows DLLs on every probe. Run the Windows native builds only once
+the Linux `.so` export and Python parity evidence are green for the boundary
+being changed.
+
 2. Export only the cases affected by the change:
 
 ```bash
@@ -52,6 +57,10 @@ python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_expor
 python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_full --require-timing-summary
 python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_full --summary
 ```
+
+`tools/rmg_python_validation_gate.py` checks Linux native binary freshness by
+default. Add `--include-windows-native-freshness` only for a final
+cross-platform checkpoint after Linux parity is verified.
 
 ## Boundary
 

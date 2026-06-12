@@ -30,7 +30,7 @@ PYTHON_GATE_MODULES = [
     ROOT / "tools" / "rmg_production_gap_audit.py",
     ROOT / "tools" / "rmg_quick_validation.py",
 ]
-NATIVE_FRESHNESS_INPUTS = [
+NATIVE_FRESHNESS_SOURCE_INPUTS = [
     ROOT / "src" / "gdextension" / "include" / "rmg_native_batch_export_runner.hpp",
     ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg.cpp",
     ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg_embedded_data.cpp",
@@ -38,8 +38,12 @@ NATIVE_FRESHNESS_INPUTS = [
     ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_runner.cpp",
     ROOT / "tools" / "rmg_native_batch_export.py",
     ROOT / "tools" / "rmg_native_batch_export_native.tscn",
+]
+NATIVE_FRESHNESS_LINUX_BINARY_INPUTS = [
     ROOT / "bin" / "libaurelion_map_persistence.linux.template_debug.x86_64.so",
     ROOT / "bin" / "libaurelion_map_persistence.linux.template_release.x86_64.so",
+]
+NATIVE_FRESHNESS_WINDOWS_BINARY_INPUTS = [
     ROOT / "bin" / "aurelion_map_persistence.windows.template_debug.x86_64.dll",
     ROOT / "bin" / "aurelion_map_persistence.windows.template_release.x86_64.dll",
 ]
@@ -84,7 +88,14 @@ def write_report(path: Path, report: dict[str, Any]) -> None:
     path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
 
-def native_export_freshness(report: dict[str, Any]) -> dict[str, Any]:
+def native_freshness_inputs(include_windows: bool) -> list[Path]:
+    inputs = NATIVE_FRESHNESS_SOURCE_INPUTS + NATIVE_FRESHNESS_LINUX_BINARY_INPUTS
+    if include_windows:
+        inputs += NATIVE_FRESHNESS_WINDOWS_BINARY_INPUTS
+    return inputs
+
+
+def native_export_freshness(report: dict[str, Any], include_windows: bool) -> dict[str, Any]:
     inputs = report.get("inputs", {})
     native_dir = Path(str(inputs.get("amap_dir", "")))
     if not native_dir:
@@ -101,7 +112,8 @@ def native_export_freshness(report: dict[str, Any]) -> dict[str, Any]:
     if not export_files:
         return {"status": "missing", "native_dir": str(native_dir), "reason": "native_export_files_not_found"}
 
-    existing_inputs = [path for path in NATIVE_FRESHNESS_INPUTS if path.exists()]
+    expected_inputs = native_freshness_inputs(include_windows)
+    existing_inputs = [path for path in expected_inputs if path.exists()]
     if not existing_inputs:
         return {"status": "unknown", "native_dir": str(native_dir), "reason": "native_freshness_inputs_missing"}
 
@@ -114,7 +126,13 @@ def native_export_freshness(report: dict[str, Any]) -> dict[str, Any]:
         "export_mtime": export_mtime,
         "newest_native_input": str(newest_input.relative_to(ROOT)),
         "newest_native_input_mtime": newest_input_mtime,
-        "freshness_policy": "selected native AMAP batch must be newer than native RMG sources and platform binaries",
+        "freshness_policy": (
+            "selected native AMAP batch must be newer than native RMG sources and Linux native binaries; "
+            "Windows DLL freshness is opt-in after Linux parity is verified"
+            if not include_windows
+            else "selected native AMAP batch must be newer than native RMG sources plus Linux and Windows native binaries"
+        ),
+        "windows_native_freshness_included": include_windows,
     }
 
 
@@ -234,6 +252,11 @@ def main() -> int:
     parser.add_argument("--skip-py-compile", action="store_true", help="Skip parser/gate syntax compilation")
     parser.add_argument("--skip-timing-summary", action="store_true", help="Do not summarize the native batch export manifest")
     parser.add_argument("--require-timing-summary", action="store_true", help="Fail if no readable native export timing summary can be found")
+    parser.add_argument(
+        "--include-windows-native-freshness",
+        action="store_true",
+        help="Include Windows DLL mtimes in native export freshness checks. Keep this off for the RMG parity inner loop; use it only for final cross-platform checkpoints.",
+    )
     parser.add_argument("--timing-limit", type=int, default=6, help="Number of slowest cases to include from the export timing manifest")
     parser.add_argument("--report-json", type=Path, default=DEFAULT_REPORT_JSON, help="Write full JSON report here")
     parser.add_argument("--failure-limit", type=int, default=8)
@@ -243,7 +266,7 @@ def main() -> int:
     compile_results = [] if args.skip_py_compile else compile_gate_modules()
     compile_ok = all(result.get("status") == "pass" for result in compile_results)
     report = rmg_fast_validation.build_report(validation_args(args))
-    freshness = native_export_freshness(report)
+    freshness = native_export_freshness(report, args.include_windows_native_freshness)
     timing = timing_summary_for_validation(report, args.timing_limit, not args.skip_timing_summary)
     timing_required_ok = not args.require_timing_summary or timing.get("status") in {"pass", "fallback"}
     timing_ok = timing.get("status") != "fail" and timing_required_ok
