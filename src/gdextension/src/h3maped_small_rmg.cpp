@@ -11168,6 +11168,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_generated_cell_score_depletion_mutated_cell_count = 0;
 	int32_t reward_guard_placement_attempt_count = 0;
 	int32_t reward_guard_coordinate_record_count = 0;
+	int32_t reward_guard_source_projected_record_count_0x4aa3e9 = 0;
+	int32_t reward_guard_surrogate_rng_call_count = 0;
 	int32_t reward_guard_attach_source_invocation_count_0x49cf34 = 0;
 	int32_t reward_guard_attach_source_skipped_count_0x49cf34 = 0;
 	int32_t reward_guard_attach_source_failure_count_0x49cf34 = 0;
@@ -13683,6 +13685,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							SingleTilePlacementCandidate guard_candidate;
 							int32_t guard_candidate_count = 0;
 							if (find_reward_guard_vector_candidate_49cf34(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level, expected_zone_word_id, true, reward_preview_rng, guard_candidate, guard_candidate_count)) {
+								reward_guard_surrogate_rng_call_count += 1;
 								const int64_t guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
 								if (guard_flat >= 0 && guard_flat < expected_cell_count) {
 									object_occupied[size_t(guard_flat)] = 1;
@@ -13695,9 +13698,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["source_runtime_zone_index"] = runtime_index;
 								guard_record["source_zone_id"] = runtime.get("source_zone_id", -1);
 								guard_record["protected_reward_placement_id"] = coordinate_record.get("placement_id", "");
-							guard_record["protected_reward_value"] = selected_value;
-							guard_record["guard_base_value"] = reward_guard_base_value;
-							guard_record["guard_base_value_source"] = "0x4aa354_0x4aa1db_composite_total_value";
+								guard_record["protected_reward_value"] = selected_value;
+								guard_record["guard_base_value"] = reward_guard_base_value;
+								guard_record["guard_base_value_source"] = "0x4aa354_0x4aa1db_composite_total_value";
 								guard_record["guard_value"] = reward_guard_value;
 								guard_record["guard_global_strength_mode"] = global_monster_strength_mode;
 								guard_record["guard_effective_strength_mode_0x4a960a"] = reward_guard_effective_strength_mode;
@@ -13718,11 +13721,15 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 								guard_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 								guard_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
+								guard_record["reward_guard_surrogate_rng_consumed"] = true;
+								guard_record["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked";
 								guard_record["exact_port_claim"] = false;
-								guard_record["exactness_blocker"] = "reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate; exact 0x49cf34/0x49d69d/0x4aa3e9 wrapper projection must be adopted together with package object-vector projection and source RNG order";
+								guard_record["exactness_blocker"] = "reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate; exact 0x49cf34/0x49d69d/0x4aa3e9 wrapper projection must be adopted together with source RNG order";
 								reward_guard_records.append(guard_record);
 								reward_guard_coordinate_record_count += 1;
 								placement_record["reward_guard_status"] = "reward_guard_record_materialized";
+								placement_record["reward_guard_surrogate_rng_consumed"] = true;
+								placement_record["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked";
 							} else {
 								placement_record["reward_guard_status"] = "reward_guard_0x49cf34_vector_candidate_not_found";
 							}
@@ -13861,6 +13868,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["reward_guard_records"] = reward_guard_records;
 	reward_scheduler["reward_guard_placement_attempt_count"] = reward_guard_placement_attempt_count;
 	reward_scheduler["reward_guard_coordinate_record_count"] = reward_guard_coordinate_record_count;
+	reward_scheduler["reward_guard_source_projected_record_count_0x4aa3e9"] = reward_guard_source_projected_record_count_0x4aa3e9;
+	reward_scheduler["reward_guard_surrogate_rng_call_count"] = reward_guard_surrogate_rng_call_count;
+	reward_scheduler["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked; do not treat this as source parity";
 	reward_scheduler["reward_guard_attach_source_invocation_count_0x49cf34"] = reward_guard_attach_source_invocation_count_0x49cf34;
 	reward_scheduler["reward_guard_attach_source_skipped_count_0x49cf34"] = reward_guard_attach_source_skipped_count_0x49cf34;
 	reward_scheduler["reward_guard_attach_source_failure_count_0x49cf34"] = reward_guard_attach_source_failure_count_0x49cf34;
