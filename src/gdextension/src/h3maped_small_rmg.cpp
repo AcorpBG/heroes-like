@@ -13919,10 +13919,46 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							int32_t guard_candidate_count = 0;
 							if (find_reward_guard_vector_candidate_49cf34(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level, expected_zone_word_id, true, reward_preview_rng, guard_candidate, guard_candidate_count)) {
 								reward_guard_surrogate_rng_call_count += 1;
-								const int64_t guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
-								if (guard_flat >= 0 && guard_flat < expected_cell_count) {
-									object_occupied[size_t(guard_flat)] = 1;
+								const int64_t native_surrogate_guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
+								Dictionary source_projected_guard_member_0x4aa3e9;
+								bool source_projected_guard_record_available_0x4aa3e9 = false;
+								int32_t source_projected_guard_x_0x4aa3e9 = -1;
+								int32_t source_projected_guard_y_0x4aa3e9 = -1;
+								int32_t source_projected_guard_level_0x4aa3e9 = selected_coordinate.level;
+								int64_t source_projected_guard_flat_0x4aa3e9 = -1;
+								for (int64_t member_index = 0; member_index < source_final_writer_member_records_0x4aa3e9.size(); ++member_index) {
+									if (Variant(source_final_writer_member_records_0x4aa3e9[member_index]).get_type() != Variant::DICTIONARY) {
+										continue;
+									}
+									Dictionary source_member = source_final_writer_member_records_0x4aa3e9[member_index];
+									if (String(source_member.get("member_role", "")) != String("reward_guard_member")) {
+										continue;
+									}
+									source_projected_guard_x_0x4aa3e9 = int32_t(source_member.get("projected_world_x", -1));
+									source_projected_guard_y_0x4aa3e9 = int32_t(source_member.get("projected_world_y", -1));
+									source_projected_guard_level_0x4aa3e9 = int32_t(source_member.get("projected_world_level", selected_coordinate.level));
+									source_projected_guard_flat_0x4aa3e9 = h3maped_cell_index(map_width, map_height, source_projected_guard_x_0x4aa3e9, source_projected_guard_y_0x4aa3e9, source_projected_guard_level_0x4aa3e9);
+									if (source_projected_guard_flat_0x4aa3e9 >= 0 && source_projected_guard_flat_0x4aa3e9 < expected_cell_count) {
+										source_projected_guard_member_0x4aa3e9 = source_member;
+										source_projected_guard_record_available_0x4aa3e9 = true;
+										break;
+									}
 								}
+								const bool adopt_source_projected_guard_record_0x4aa3e9 = source_projected_guard_record_available_0x4aa3e9;
+								const int32_t guard_record_x = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_x_0x4aa3e9 : guard_candidate.x;
+								const int32_t guard_record_y = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_y_0x4aa3e9 : guard_candidate.y;
+								const int32_t guard_record_level = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_level_0x4aa3e9 : guard_candidate.level;
+								const int64_t guard_record_flat = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_flat_0x4aa3e9 : native_surrogate_guard_flat;
+								if (guard_record_flat >= 0 && guard_record_flat < expected_cell_count) {
+									object_occupied[size_t(guard_record_flat)] = 1;
+								}
+								const int32_t guard_record_dx = guard_record_x - selected_coordinate.x;
+								const int32_t guard_record_dy = guard_record_y - selected_coordinate.y;
+								const int32_t guard_record_distance_squared = guard_record_dx * guard_record_dx + guard_record_dy * guard_record_dy;
+								const int32_t guard_record_score = guard_record_flat >= 0 && guard_record_flat < expected_cell_count
+										? int32_t(private_generated_word_0x20[size_t(guard_record_flat)] & 0xffffU)
+										: guard_candidate.score;
+								const int32_t source_guard_descriptor_candidate_count_0x49cf34 = int32_t(source_guard_attach_probe_0x49cf34.get("source_guard_descriptor_0x49d2e0_accepted_count", -1));
 								Dictionary guard_record;
 								guard_record["vector_index"] = town_records.size() + mine_coordinate_records.size() + reward_coordinate_records.size() + reward_guard_records.size();
 								guard_record["record_size_bytes"] = 12;
@@ -13937,32 +13973,59 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["guard_value"] = reward_guard_value;
 								guard_record["guard_global_strength_mode"] = global_monster_strength_mode;
 								guard_record["guard_effective_strength_mode_0x4a960a"] = reward_guard_effective_strength_mode;
-								guard_record["x"] = guard_candidate.x;
-								guard_record["y"] = guard_candidate.y;
-								guard_record["level"] = guard_candidate.level;
-								guard_record["flat_cell_index"] = int32_t(guard_flat);
-								guard_record["coordinate_triplet"] = Array::make(guard_candidate.x, guard_candidate.y, guard_candidate.level);
-								guard_record["distance_squared_from_reward"] = guard_candidate.distance_squared;
-								guard_record["placement_score_low_word"] = guard_candidate.score;
+								guard_record["x"] = guard_record_x;
+								guard_record["y"] = guard_record_y;
+								guard_record["level"] = guard_record_level;
+								guard_record["flat_cell_index"] = int32_t(guard_record_flat);
+								guard_record["coordinate_triplet"] = Array::make(guard_record_x, guard_record_y, guard_record_level);
+								guard_record["distance_squared_from_reward"] = guard_record_distance_squared;
+								guard_record["placement_score_low_word"] = guard_record_score;
 								guard_record["candidate_count_0x49cf34"] = guard_candidate_count;
+								guard_record["candidate_count_source"] = "native_surrogate_post_coordinate_guard_vector_until_exact_0x49cf34_active_rng_order_is_adopted";
+								guard_record["source_guard_descriptor_candidate_count_0x49cf34"] = source_guard_descriptor_candidate_count_0x49cf34;
+								guard_record["native_surrogate_x_0x49cf34"] = guard_candidate.x;
+								guard_record["native_surrogate_y_0x49cf34"] = guard_candidate.y;
+								guard_record["native_surrogate_level_0x49cf34"] = guard_candidate.level;
+								guard_record["native_surrogate_flat_cell_index_0x49cf34"] = int32_t(native_surrogate_guard_flat);
+								guard_record["native_surrogate_distance_squared_from_reward"] = guard_candidate.distance_squared;
+								guard_record["native_surrogate_placement_score_low_word"] = guard_candidate.score;
+								guard_record["source_projected_guard_record_available_0x4aa3e9"] = source_projected_guard_record_available_0x4aa3e9;
+								guard_record["source_projected_guard_record_adopted_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9;
+								guard_record["source_projected_guard_member_record_0x4aa3e9"] = source_projected_guard_member_0x4aa3e9;
+								guard_record["source_projected_guard_x_0x4aa3e9"] = source_projected_guard_x_0x4aa3e9;
+								guard_record["source_projected_guard_y_0x4aa3e9"] = source_projected_guard_y_0x4aa3e9;
+								guard_record["source_projected_guard_level_0x4aa3e9"] = source_projected_guard_level_0x4aa3e9;
+								guard_record["source_projected_guard_flat_cell_index_0x4aa3e9"] = int32_t(source_projected_guard_flat_0x4aa3e9);
+								guard_record["reward_guard_record_coordinate_policy_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9
+										? String("uses_recovered_0x49d69d_member_stored_coordinate_projected_by_0x4aa3e9")
+										: String("falls_back_to_native_surrogate_0x49cf34_single_tile_record");
 								guard_record["source_algorithm"] = "h3maped_reward_guard_0x4a65a5_0x49cf34_direction_table_guard_gate";
-								guard_record["port_fidelity"] = "guard_coordinate_commit_aligned";
+								guard_record["port_fidelity"] = adopt_source_projected_guard_record_0x4aa3e9 ? String("source_projected_guard_member_record_coordinate_adopted") : String("guard_coordinate_commit_aligned");
 								guard_record["guard_value_exact"] = true;
-								guard_record["guard_coordinate_port_fidelity"] = "0x49cf34_direction_table_and_0x49a09c_single_tile_guard_gate_projected";
+								guard_record["guard_coordinate_port_fidelity"] = adopt_source_projected_guard_record_0x4aa3e9
+										? String("0x49d69d_selected_member_coordinate_projected_by_0x4aa3e9")
+										: String("0x49cf34_direction_table_and_0x49a09c_single_tile_guard_gate_projected");
 								guard_record["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
 								guard_record["source_reward_guard_attach_behavioral"] = false;
+								guard_record["source_reward_guard_record_projection_behavioral_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9;
 								guard_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 								guard_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 								guard_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
 								guard_record["reward_guard_surrogate_rng_consumed"] = true;
 								guard_record["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked";
 								guard_record["exact_port_claim"] = false;
-								guard_record["exactness_blocker"] = "reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate; exact 0x49cf34/0x49d69d/0x4aa3e9 wrapper projection must be adopted together with source RNG order";
+								guard_record["exactness_blocker"] = adopt_source_projected_guard_record_0x4aa3e9
+										? String("reward guard record coordinate now adopts recovered 0x49d69d/0x4aa3e9 member projection; exact remaining blocker is active 0x49cf34 RNG/order plus upstream reward catalog parity")
+										: String("reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate because no recovered 0x49d69d member projection was available");
 								reward_guard_records.append(guard_record);
 								reward_guard_coordinate_record_count += 1;
-								placement_record["reward_guard_status"] = "reward_guard_record_materialized";
+								placement_record["reward_guard_status"] = adopt_source_projected_guard_record_0x4aa3e9 ? String("reward_guard_record_materialized_source_projected_0x4aa3e9") : String("reward_guard_record_materialized");
 								placement_record["reward_guard_surrogate_rng_consumed"] = true;
 								placement_record["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked";
+								placement_record["source_projected_reward_guard_record_adopted_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9;
+								placement_record["reward_guard_record_coordinate_policy_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9
+										? String("uses_recovered_0x49d69d_member_stored_coordinate_projected_by_0x4aa3e9")
+										: String("falls_back_to_native_surrogate_0x49cf34_single_tile_record");
 							} else {
 								placement_record["reward_guard_status"] = "reward_guard_0x49cf34_vector_candidate_not_found";
 							}
