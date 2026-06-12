@@ -68,6 +68,25 @@ def local_coord(event: dict[str, Any], offset: int = -0x30) -> dict[str, Any]:
     }
 
 
+def local_vector_coordinates(event: dict[str, Any], max_records: int = 16) -> list[dict[str, Any]]:
+    begin = local_word(event, -0x4C)
+    end = local_word(event, -0x48)
+    if not isinstance(begin, int) or not isinstance(end, int) or end < begin:
+        return []
+    memory = event_memory(event)
+    count = min((end - begin) // 12, max_records)
+    records: list[dict[str, Any]] = []
+    for index in range(count):
+        pointer = begin + index * 12
+        x = signed32(word(memory, pointer))
+        y = signed32(word(memory, pointer + 4))
+        level = signed32(word(memory, pointer + 8))
+        if x is None or y is None or level is None:
+            return []
+        records.append({"index": index, "x": x, "y": y, "level": level})
+    return records
+
+
 def slot8_record(event: dict[str, Any], event_index: int) -> dict[str, Any]:
     registers = event.get("registers", {})
     member = registers.get("ecx")
@@ -149,6 +168,47 @@ def selected_pointer_record(event: dict[str, Any], event_index: int) -> dict[str
     }
 
 
+def compact_call_record(call: dict[str, Any], ordinal: int) -> dict[str, Any]:
+    entry = call.get("entry") or {}
+    count_check = call.get("count_check") or {}
+    random_selection = call.get("random_selection") or {}
+    post_random_modulo = call.get("post_random_modulo") or {}
+    selected_copy = call.get("selected_copy") or {}
+    before_4aa3e9 = call.get("before_4aa3e9") or {}
+    aa3e9_entry = call.get("aa3e9_entry") or {}
+    return_record = call.get("return") or {}
+    count_vector = count_check.get("local_vector") or {}
+    candidate_coordinates = count_check.get("candidate_coordinates", [])
+    candidate_count = count_vector.get("count")
+    before_coordinate = before_4aa3e9.get("selected_coordinate")
+    entry_coordinate = aa3e9_entry.get("selected_coordinate")
+    return {
+        "call_ordinal": ordinal,
+        "entry_event_index": entry.get("event_index"),
+        "entry_wrapper": entry.get("wrapper"),
+        "entry_relation": entry.get("relation"),
+        "entry_minimum_low_word": entry.get("minimum_low_word"),
+        "entry_policy_word": entry.get("policy_word"),
+        "entry_extra_arg": entry.get("extra_arg"),
+        "candidate_count_at_count_check": candidate_count,
+        "candidate_coordinates_at_count_check": candidate_coordinates,
+        "candidate_coordinates_memory_available": candidate_count == 0
+        or len(candidate_coordinates) == candidate_count,
+        "candidate_count_at_random_selection": random_selection.get("candidate_count"),
+        "selected_index": post_random_modulo.get("selected_index", selected_copy.get("selected_index")),
+        "selected_coordinate_before_4aa3e9": before_coordinate,
+        "selected_coordinate_4aa3e9_entry": entry_coordinate,
+        "reached_4aa3e9": call.get("after_4aa3e9") is not None,
+        "return_success_flag_bl": return_record.get("success_flag_bl"),
+        "cleanup_seen": call.get("cleanup") is not None,
+        "slot8_targets": [
+            record.get("slot_target")
+            for record in call.get("slot8_callbacks", [])
+            if isinstance(record, dict)
+        ],
+    }
+
+
 def new_call(event: dict[str, Any], event_index: int) -> dict[str, Any]:
     return {
         "entry": entry_record(event, event_index),
@@ -184,12 +244,17 @@ def summarize(ledger: dict[str, Any]) -> dict[str, Any]:
             orphan_before_entry.append({"event_index": event_index, "address": address})
             continue
         if address == COUNT_CHECK:
-            current["count_check"] = {"event_index": event_index, "local_vector": local_vector(event)}
+            current["count_check"] = {
+                "event_index": event_index,
+                "local_vector": local_vector(event),
+                "candidate_coordinates": local_vector_coordinates(event),
+            }
         elif address == RANDOM_SELECTION:
             current["random_selection"] = {
                 "event_index": event_index,
                 "candidate_count": event.get("registers", {}).get("esi"),
                 "local_vector": local_vector(event),
+                "candidate_coordinates": local_vector_coordinates(event),
             }
         elif address == POST_RANDOM_MODULO:
             current["post_random_modulo"] = {
@@ -197,6 +262,7 @@ def summarize(ledger: dict[str, Any]) -> dict[str, Any]:
                 "selected_index": event.get("registers", {}).get("edx"),
                 "candidate_count": event.get("registers", {}).get("esi"),
                 "local_vector": local_vector(event),
+                "candidate_coordinates": local_vector_coordinates(event),
             }
         elif address == SELECTED_COPY:
             current["selected_copy"] = selected_pointer_record(event, event_index)
@@ -294,6 +360,10 @@ def summarize(ledger: dict[str, Any]) -> dict[str, Any]:
         "seed_control": ledger.get("seed_control", {}),
         "address_counts": dict(sorted(address_counts.items())),
         "call_count": len(calls),
+        "call_sequence": [
+            compact_call_record(call, ordinal)
+            for ordinal, call in enumerate(calls, start=1)
+        ],
         "false_completed_call_count_before_success": len(false_completed_calls),
         "successful_handoff_count": len(successful_handoffs),
         "first_successful_handoff": first_success,
