@@ -11136,6 +11136,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_object_lookup_count = 0;
 	int32_t reward_object_lookup_selected_count = 0;
 	int32_t reward_object_lookup_rng_call_count = 0;
+	int32_t reward_secondary_lookup_count_0x4aa1db = 0;
+	int32_t reward_secondary_lookup_selected_count_0x4aa1db = 0;
+	int32_t reward_secondary_lookup_rng_call_count_0x4aa1db = 0;
+	int32_t reward_secondary_template_rng_call_count_0x4a9e40 = 0;
+	int32_t reward_secondary_weighted_rng_call_count_0x4a9f1c = 0;
+	int32_t reward_secondary_position_rng_call_count_0x49d471 = 0;
 	int32_t reward_candidate_scan_count = 0;
 	int32_t reward_candidate_scan_eligible_total = 0;
 	int32_t reward_candidate_scan_weight_total = 0;
@@ -11789,6 +11795,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					for (int32_t secondary_retry_index = 0; secondary_retry_index < 3; ++secondary_retry_index) {
 						composite_secondary_attempt_count += 1;
 						const RewardObjectSelection secondary_selection = h3maped_select_reward_candidate_4a9f1c(current_secondary_min_value_0x4aa1db, current_secondary_max_value_0x4aa1db, runtime_terrain_id, candidate_value_context, secondary_probe_global_counts, secondary_probe_zone_counts, runtime_index, secondary_probe_rng);
+						reward_secondary_lookup_count_0x4aa1db += 1;
+						reward_secondary_template_rng_call_count_0x4a9e40 += secondary_selection.candidate_template_rng_call_count_0x4a9e40;
+						reward_secondary_lookup_rng_call_count_0x4aa1db += secondary_selection.candidate_template_rng_call_count_0x4a9e40;
+						if (secondary_selection.rng_value >= 0) {
+							reward_secondary_weighted_rng_call_count_0x4a9f1c += 1;
+							reward_secondary_lookup_rng_call_count_0x4aa1db += 1;
+						}
 						Dictionary probe;
 						probe["retry_index_0x4aa1db"] = secondary_retry_index;
 						probe["candidate_lookup_helper_address"] = "0x4a9f1c";
@@ -11799,6 +11812,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						probe["probe_min_value"] = current_secondary_min_value_0x4aa1db;
 						probe["probe_max_value"] = current_secondary_max_value_0x4aa1db;
 						probe["selected"] = secondary_selection.selected;
+						probe["candidate_template_rng_call_count_0x4a9e40"] = secondary_selection.candidate_template_rng_call_count_0x4a9e40;
+						probe["weighted_rng_value_0x4a9f1c"] = secondary_selection.rng_value;
+						probe["weighted_rng_consumed_0x4a9f1c"] = secondary_selection.rng_value >= 0;
 						probe["primary_existing_child_metadata_plus_1_0x598300"] = source_primary_metadata_plus_1_0x598300;
 						probe["primary_existing_child_metadata_plus_2_0x598300"] = source_primary_metadata_plus_2_0x598300;
 						probe["primary_existing_child_direction_indices_0x49d471"] = source_primary_direction_indices_0x49d471;
@@ -11810,6 +11826,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							source_secondary_edge_probe_records_0x49d471.append(probe);
 							continue;
 						}
+						reward_secondary_lookup_selected_count_0x4aa1db += 1;
 						source_secondary_edge_probe_selected_count_0x49d471 += 1;
 						const int32_t secondary_width_0x34 = secondary_selection.candidate.dynamic_monster ? 1 : std::max<int32_t>(0, secondary_selection.template_row.msk_width_0x34);
 						const int32_t secondary_height_0x38 = secondary_selection.candidate.dynamic_monster ? 1 : std::max<int32_t>(0, secondary_selection.template_row.msk_height_0x38);
@@ -12049,6 +12066,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							const int32_t secondary_position_rng_state_before = int32_t(secondary_probe_rng.state);
 							const int32_t secondary_position_rng_value = secondary_probe_rng.next();
 							source_secondary_position_rng_call_count_0x49d471 += 1;
+							reward_secondary_position_rng_call_count_0x49d471 += 1;
 							const int32_t selected_secondary_position_index = secondary_position_rng_value % int32_t(valid_secondary_candidates_0x49d471.size());
 							const SourceSecondaryCandidate0x49d471 &selected_secondary_position = valid_secondary_candidates_0x49d471[size_t(selected_secondary_position_index)];
 							const H3MaskPoint secondary_member_stored_coordinate_0x49abd6 {
@@ -13799,6 +13817,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["object_lookup_count"] = reward_object_lookup_count;
 	reward_scheduler["object_lookup_selected_count"] = reward_object_lookup_selected_count;
 	reward_scheduler["object_lookup_rng_call_count"] = reward_object_lookup_rng_call_count;
+	reward_scheduler["secondary_lookup_count_0x4aa1db"] = reward_secondary_lookup_count_0x4aa1db;
+	reward_scheduler["secondary_lookup_selected_count_0x4aa1db"] = reward_secondary_lookup_selected_count_0x4aa1db;
+	reward_scheduler["secondary_lookup_rng_call_count_0x4aa1db"] = reward_secondary_lookup_rng_call_count_0x4aa1db;
+	reward_scheduler["secondary_template_rng_call_count_0x4a9e40"] = reward_secondary_template_rng_call_count_0x4a9e40;
+	reward_scheduler["secondary_weighted_rng_call_count_0x4a9f1c"] = reward_secondary_weighted_rng_call_count_0x4a9f1c;
+	reward_scheduler["secondary_position_rng_call_count_0x49d471"] = reward_secondary_position_rng_call_count_0x49d471;
 	reward_scheduler["candidate_scan_count"] = reward_candidate_scan_count;
 	reward_scheduler["candidate_scan_eligible_total"] = reward_candidate_scan_eligible_total;
 	reward_scheduler["candidate_scan_weight_total"] = reward_candidate_scan_weight_total;
