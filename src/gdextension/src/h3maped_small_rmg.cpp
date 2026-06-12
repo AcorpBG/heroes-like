@@ -4806,6 +4806,10 @@ uint32_t zone_word_4a325d(uint32_t existing_word, int32_t zone_id) {
 }
 
 int32_t zone_word_id_for_runtime_zone(const Dictionary &runtime_zone) {
+	const int32_t source_zone_id = int32_t(runtime_zone.get("source_zone_id", -1));
+	if (source_zone_id > 0) {
+		return source_zone_id;
+	}
 	const int32_t runtime_index = int32_t(runtime_zone.get("runtime_zone_index", runtime_zone.get("runtime_index", -1)));
 	return runtime_index;
 }
