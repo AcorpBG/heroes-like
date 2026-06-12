@@ -12816,6 +12816,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					int32_t rejected_source_boundary_transition_count_0x49a09c = 0;
 					int32_t rejected_guard_composite_count = 0;
 				int32_t guard_composite_candidate_total = 0;
+				Array coordinate_scan_sample_records;
+				const int32_t coordinate_scan_sample_limit = 96;
 					reward_coordinate_scan_call_count += 1;
 					if (reward_body_points.empty() || !grid_available) {
 						rejected_filter_count = map_width * map_height * map_level_count;
@@ -12962,6 +12964,63 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						if (!bounded_scan_has_space) {
 							rejected_filter_count = map_width * map_height * map_level_count;
 						}
+						auto append_coordinate_scan_sample = [&](int32_t sample_x,
+															 int32_t sample_y,
+															 int64_t sample_flat,
+															 const char *rejection_reason,
+															 int32_t sample_generated_owner_byte,
+															 int32_t sample_score,
+															 const H3FootprintGateResult *sample_footprint,
+															 const H3FootprintGateResult *sample_source_boundary_footprint,
+															 int32_t sample_guard_candidate_count) {
+							if (coordinate_scan_sample_records.size() >= coordinate_scan_sample_limit) {
+								return;
+							}
+							Dictionary sample;
+							sample["x"] = sample_x;
+							sample["y"] = sample_y;
+							sample["level"] = anchor_level;
+							sample["flat_cell_index"] = int32_t(sample_flat);
+							sample["rejection_reason"] = String(rejection_reason);
+							sample["generated_owner_byte_0x20"] = sample_generated_owner_byte;
+							sample["expected_owner_byte"] = expected_zone_word_id;
+							sample["score_low_word_0x20"] = sample_score;
+							sample["placement_budget"] = placement_budget;
+							if (sample_flat >= 0 && sample_flat < expected_cell_count) {
+								const uint32_t sample_word_0x20 = private_generated_word_0x20[size_t(sample_flat)];
+								const uint32_t sample_word_0x28 = private_generated_word_0x28[size_t(sample_flat)];
+								sample["private_generated_word_0x20"] = int64_t(sample_word_0x20);
+								sample["private_generated_word_0x28"] = int64_t(sample_word_0x28);
+								sample["word_0x28_bit22_action"] = (sample_word_0x28 & H3MAPED_CELL_ACTION_CONTROL_BIT_22) != 0U;
+								sample["word_0x28_bit26_decor_candidate"] = (sample_word_0x28 & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U;
+								sample["word_0x28_bit27_blocked"] = (sample_word_0x28 & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+								sample["object_occupied"] = object_occupied[size_t(sample_flat)] != 0;
+							}
+							if (sample_footprint != nullptr) {
+								sample["reward_mask_gate_valid_count"] = sample_footprint->valid_count;
+								sample["reward_mask_gate_invalid_count"] = sample_footprint->invalid_count;
+								sample["reward_mask_gate_out_of_bounds_count"] = sample_footprint->out_of_bounds_count;
+								sample["reward_mask_gate_owner_mismatch_count"] = sample_footprint->owner_mismatch_count;
+								sample["reward_mask_gate_occupied_count"] = sample_footprint->occupied_count;
+								sample["reward_mask_gate_terrain_rejected_count"] = sample_footprint->terrain_rejected_count;
+								sample["reward_mask_gate_repaint_rejected_count"] = sample_footprint->repaint_rejected_count;
+								sample["reward_mask_gate_invalid_transition_count"] = sample_footprint->invalid_transition_count;
+							}
+							if (sample_source_boundary_footprint != nullptr) {
+								sample["source_boundary_gate_valid_count"] = sample_source_boundary_footprint->valid_count;
+								sample["source_boundary_gate_invalid_count"] = sample_source_boundary_footprint->invalid_count;
+								sample["source_boundary_gate_out_of_bounds_count"] = sample_source_boundary_footprint->out_of_bounds_count;
+								sample["source_boundary_gate_owner_mismatch_count"] = sample_source_boundary_footprint->owner_mismatch_count;
+								sample["source_boundary_gate_occupied_count"] = sample_source_boundary_footprint->occupied_count;
+								sample["source_boundary_gate_terrain_rejected_count"] = sample_source_boundary_footprint->terrain_rejected_count;
+								sample["source_boundary_gate_repaint_rejected_count"] = sample_source_boundary_footprint->repaint_rejected_count;
+								sample["source_boundary_gate_invalid_transition_count"] = sample_source_boundary_footprint->invalid_transition_count;
+							}
+							if (sample_guard_candidate_count >= 0) {
+								sample["guard_candidate_count_0x49cf34"] = sample_guard_candidate_count;
+							}
+							coordinate_scan_sample_records.append(sample);
+						};
 						for (int32_t y = scan_min_y; bounded_scan_has_space && y < scan_max_y_exclusive; ++y) {
 							for (int32_t x = scan_min_x; x < scan_max_x_exclusive; ++x) {
 							const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, anchor_level);
@@ -12972,17 +13031,20 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							const int32_t generated_owner_byte = h3maped_generated_cell_owner_byte_0x20(private_generated_word_0x20[size_t(flat)]);
 							if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || generated_owner_byte != expected_zone_word_id) {
 								rejected_owner_count += 1;
+								append_coordinate_scan_sample(x, y, flat, "owner_mismatch_or_unassigned_zone", generated_owner_byte, int32_t(private_generated_word_0x20[size_t(flat)] & 0xffffU), nullptr, nullptr, -1);
 								continue;
 							}
 							owner_match_count += 1;
 							const int32_t score = int32_t(private_generated_word_0x20[size_t(flat)] & 0xffffU);
 							if (score < placement_budget) {
 								rejected_score_count += 1;
+								append_coordinate_scan_sample(x, y, flat, "score_below_placement_budget", generated_owner_byte, score, nullptr, nullptr, -1);
 								continue;
 							}
 							const H3FootprintGateResult footprint = h3maped_4aa603_reward_mask_gate_proxy(reward_body_points, reward_action_points, private_generated_word_0x20, private_generated_word_0x28, cell_flags, live_terrain_code, object_occupied, map_width, map_height, map_level_count, x, y, anchor_level, expected_zone_word_id, false);
 								if (!footprint.pass) {
 									rejected_filter_count += 1;
+									append_coordinate_scan_sample(x, y, flat, "reward_mask_gate_rejected", generated_owner_byte, score, &footprint, nullptr, -1);
 									continue;
 								}
 								if (!source_primary_boundary_vector_0x49d7c3.empty()) {
@@ -12995,6 +13057,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 										rejected_source_boundary_occupied_count_0x49a09c += source_boundary_footprint.occupied_count;
 										rejected_source_boundary_repaint_count_0x49a09c += source_boundary_footprint.repaint_rejected_count;
 										rejected_source_boundary_transition_count_0x49a09c += source_boundary_footprint.invalid_transition_count;
+										append_coordinate_scan_sample(x, y, flat, "source_boundary_gate_rejected", generated_owner_byte, score, &footprint, &source_boundary_footprint, -1);
 										continue;
 									}
 								}
@@ -13003,11 +13066,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								SingleTilePlacementCandidate guard_probe;
 								if (!find_reward_guard_vector_candidate_49cf34(x, y, anchor_level, expected_zone_word_id, false, reward_preview_rng, guard_probe, guard_candidate_count)) {
 									rejected_guard_composite_count += 1;
+									append_coordinate_scan_sample(x, y, flat, "guard_composite_candidate_not_found", generated_owner_byte, score, &footprint, nullptr, guard_candidate_count);
 									continue;
 								}
 								guard_composite_candidate_total += guard_candidate_count;
 							}
 							coordinate_candidate_count += 1;
+							append_coordinate_scan_sample(x, y, flat, "accepted_candidate", generated_owner_byte, score, &footprint, nullptr, -1);
 							if (score > best_score) {
 								best_score = score;
 								tied_candidates.clear();
@@ -13028,6 +13093,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						reward_coordinate_scan_rejected_guard_composite_count += rejected_guard_composite_count;
 					reward_coordinate_guard_composite_candidate_total += guard_composite_candidate_total;
 				placement_record["owner_match_count"] = owner_match_count;
+				placement_record["coordinate_scan_sample_limit"] = coordinate_scan_sample_limit;
+				placement_record["coordinate_scan_sample_records"] = coordinate_scan_sample_records;
 				placement_record["owner_gate_source"] = "generated_cell_word_0x20_signed_high_byte_bits24_31";
 				placement_record["filter_gate_policy"] = "0x4aa603_0x49a6f9_reward_proxy_checks_anchor_owner_then_action_and_nonpassable_generated_owner_bytes";
 				placement_record["filter_gate_private_state_source"] = "private_generated_cell_word_0x20_owner_byte_plus_word_0x28_bit22_action_and_bit26_action_candidate_state; nonpassable body follows 0x49abd6 bit25 clear and 0x49a6f9 does not reject bit27";
