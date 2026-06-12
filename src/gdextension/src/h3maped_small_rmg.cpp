@@ -8365,6 +8365,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	int32_t direct_unique_selection_count = 0;
 	int32_t direct_random_tie_selection_count = 0;
 	int32_t direct_random_tie_rng_call_count = 0;
+	int32_t direct_candidate_vector_selection_rng_call_count = 0;
 	int32_t direct_record_projection_count = 0;
 	int32_t direct_grid_unavailable_count = 0;
 	int32_t direct_skipped_after_prior_success_count = 0;
@@ -8738,6 +8739,8 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 			bool selected_from_random_tie = false;
 			int32_t random_tie_rng_value = -1;
 			int32_t random_tie_selected_index = -1;
+			Array selection_candidates;
+			String selection_status;
 			if (weighted_continuation_record && !weighted_delegates_direct_0x4a93a2) {
 				if (weighted_footprint_candidates.is_empty()) {
 					record["status"] = "0x4a901a_weighted_town_footprint_gate_no_budget_candidates";
@@ -8751,37 +8754,36 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 					direct_stamping_records.append(record);
 					continue;
 				}
-				random_tie_rng_value = object_rng.next();
-				direct_random_tie_rng_call_count += 1;
-				random_tie_selected_index = random_tie_rng_value % int32_t(weighted_footprint_candidates.size());
-				selected = weighted_footprint_candidates[random_tie_selected_index];
-				selected_from_random_tie = true;
-				record["status"] = "0x4a901a_weighted_random_0x49aa93_town_footprint_candidate_record_projection_private";
-				direct_random_tie_selection_count += 1;
-			} else if (weighted_delegates_direct_0x4a93a2 && closest_footprint_candidates.size() == 1 && Variant(closest_footprint_candidates[0]).get_type() == Variant::DICTIONARY) {
-				selected = closest_footprint_candidates[0];
-				record["status"] = "0x4a901a_runtime_byte_0x3c_zero_delegated_0x4a93a2_unique_closest_candidate_record_projection_private";
-				direct_unique_selection_count += 1;
+				selection_candidates = weighted_footprint_candidates;
+				selection_status = "0x4a901a_weighted_0x4e7276_0x49aa93_town_footprint_candidate_record_projection_private";
 			} else if (weighted_delegates_direct_0x4a93a2) {
-				random_tie_rng_value = object_rng.next();
-				direct_random_tie_rng_call_count += 1;
-				random_tie_selected_index = random_tie_rng_value % int32_t(closest_footprint_candidates.size());
-				selected = closest_footprint_candidates[random_tie_selected_index];
-				selected_from_random_tie = true;
-				record["status"] = "0x4a901a_runtime_byte_0x3c_zero_delegated_0x4a93a2_random_tie_candidate_record_projection_private";
-				direct_random_tie_selection_count += 1;
-			} else if (closest_footprint_candidates.size() == 1 && Variant(closest_footprint_candidates[0]).get_type() == Variant::DICTIONARY) {
-				selected = closest_footprint_candidates[0];
-				record["status"] = "0x4a93a2_unique_closest_0x49aa93_town_footprint_candidate_record_projection_private";
-				direct_unique_selection_count += 1;
+				selection_candidates = closest_footprint_candidates;
+				selection_status = "0x4a901a_runtime_byte_0x3c_zero_delegated_0x4a93a2_0x4e7276_candidate_record_projection_private";
 			} else {
-				random_tie_rng_value = object_rng.next();
-				direct_random_tie_rng_call_count += 1;
-				random_tie_selected_index = random_tie_rng_value % int32_t(closest_footprint_candidates.size());
-				selected = closest_footprint_candidates[random_tie_selected_index];
-				selected_from_random_tie = true;
-				record["status"] = "0x4a93a2_random_tie_0x49aa93_town_footprint_candidate_record_projection_private";
+				selection_candidates = closest_footprint_candidates;
+				selection_status = "0x4a93a2_0x4e7276_0x49aa93_town_footprint_candidate_record_projection_private";
+			}
+			if (selection_candidates.is_empty()) {
+				record["status"] = "0x4a93a2_candidate_vector_empty_after_footprint_success";
+				direct_footprint_missing_count += 1;
+				direct_stamping_records.append(record);
+				continue;
+			}
+			random_tie_rng_value = object_rng.next();
+			direct_candidate_vector_selection_rng_call_count += 1;
+			random_tie_selected_index = random_tie_rng_value % int32_t(selection_candidates.size());
+			selected = selection_candidates[random_tie_selected_index];
+			selected_from_random_tie = selection_candidates.size() > 1;
+			record["status"] = selection_status;
+			record["selection_rng_source"] = "0x4a93a2_calls_0x4e7276_and_mods_by_best_candidate_count_even_for_singleton_vectors";
+			record["selection_candidate_count_0x4a93a2"] = selection_candidates.size();
+			record["candidate_selection_rng_value_0x4e7276"] = random_tie_rng_value;
+			record["candidate_vector_selected_index_0x4e7276"] = random_tie_selected_index;
+			if (selected_from_random_tie) {
 				direct_random_tie_selection_count += 1;
+				direct_random_tie_rng_call_count += 1;
+			} else {
+				direct_unique_selection_count += 1;
 			}
 			record["selected_x"] = selected.get("x", -1);
 			record["selected_y"] = selected.get("y", -1);
@@ -9054,6 +9056,7 @@ Dictionary town_castle_phase(const Dictionary &normalized_config, const Dictiona
 	direct_stamping["direct_unique_selection_count"] = direct_unique_selection_count;
 	direct_stamping["direct_random_tie_selection_count"] = direct_random_tie_selection_count;
 	direct_stamping["direct_random_tie_rng_call_count"] = direct_random_tie_rng_call_count;
+	direct_stamping["direct_candidate_vector_selection_rng_call_count_0x4e7276"] = direct_candidate_vector_selection_rng_call_count;
 	direct_stamping["direct_record_projection_count"] = direct_record_projection_count;
 	direct_stamping["direct_skipped_after_prior_success_count"] = direct_skipped_after_prior_success_count;
 	direct_stamping["object_rng_state_before_0x4a93a2_uint32"] = int64_t(object_rng_state_before);
