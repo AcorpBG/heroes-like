@@ -38,6 +38,25 @@ def as_int(value: Any, default: int = 0) -> int:
         return default
 
 
+def native_phase_root(snapshot: dict[str, Any]) -> dict[str, Any]:
+    """Return the native RMG phase payload for both legacy and wrapped snapshots."""
+    port = snapshot.get("h3maped_small_port")
+    if isinstance(port, dict):
+        return port
+    phase = snapshot.get("phase_summaries")
+    if isinstance(phase, dict):
+        return phase
+    return snapshot
+
+
+def native_config(snapshot: dict[str, Any]) -> dict[str, Any]:
+    config = snapshot.get("config")
+    if isinstance(config, dict):
+        return config
+    root_config = native_phase_root(snapshot).get("config")
+    return root_config if isinstance(root_config, dict) else {}
+
+
 def reward_coordinate_selected_count(phase: dict[str, Any]) -> int:
     """Read the selected reward count from the phase-level export, with legacy fallback."""
     direct = get_path(phase, "mines_rewards_and_object_vector.reward_coordinate_selected_count", None)
@@ -388,7 +407,10 @@ def h3m_road_detail(path: Path) -> dict[str, Any]:
 
 
 def native_private_road_detail(snapshot: dict[str, Any]) -> dict[str, Any]:
-    road_inputs = snapshot.get("road_comparison_inputs", {}) if isinstance(snapshot.get("road_comparison_inputs"), dict) else {}
+    phase = native_phase_root(snapshot)
+    road_inputs = phase.get("road_comparison_inputs", {}) if isinstance(phase.get("road_comparison_inputs"), dict) else {}
+    if not road_inputs:
+        road_inputs = phase.get("roads_and_rivers", {}) if isinstance(phase.get("roads_and_rivers"), dict) else {}
     overlay_records = road_inputs.get("road_overlay_cell_records", []) if isinstance(road_inputs.get("road_overlay_cell_records"), list) else []
     cells: set[str] = set()
     byte4: Counter[str] = Counter()
@@ -727,9 +749,10 @@ def controlled_template_identity_is_hard(controlled_identity: dict[str, Any]) ->
 
 
 def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, controlled_manifest: dict[str, Any] | None) -> dict[str, Any]:
-    selection = snapshot.get("selection_identity", {}) if isinstance(snapshot.get("selection_identity"), dict) else {}
-    selection_diagnostics = snapshot.get("selection_diagnostics", {}) if isinstance(snapshot.get("selection_diagnostics"), dict) else {}
-    config = snapshot.get("config", {}) if isinstance(snapshot.get("config"), dict) else {}
+    phase = native_phase_root(snapshot)
+    selection = phase.get("selection_identity", {}) if isinstance(phase.get("selection_identity"), dict) else {}
+    selection_diagnostics = phase.get("selection_diagnostics", {}) if isinstance(phase.get("selection_diagnostics"), dict) else {}
+    config = native_config(snapshot)
     player_constraints = config.get("player_constraints", {}) if isinstance(config.get("player_constraints"), dict) else {}
     native_identity = {
         "seed": str(config.get("seed", "")),
@@ -760,13 +783,16 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
     requested_players = as_int(controlled_inputs.get("players", controlled_identity.get("players", 0)))
     requested_humans = as_int(controlled_inputs.get("human_players", controlled_identity.get("requested_humans", 0)))
     requested_computers = as_int(controlled_inputs.get("computer_only_players", max(0, requested_players - requested_humans)))
+    observed_slot_counts_present = "observed_humans" in controlled_identity or "observed_computers" in controlled_identity
+    expected_humans = as_int(controlled_identity.get("observed_humans"), requested_humans) if observed_slot_counts_present else requested_humans
+    expected_computers = as_int(controlled_identity.get("observed_computers"), requested_computers) if observed_slot_counts_present else requested_computers
     observed_source_template_id = controlled_identity.get("observed_source_template_id", controlled_identity.get("source_template_id"))
     observed_source_catalog_index = controlled_identity.get("observed_source_catalog_index", controlled_identity.get("source_catalog_index"))
     expected_identity = {
         "seed": str(controlled_inputs.get("seed", controlled_identity.get("requested_seed", controlled_identity.get("seed", "")))),
         "players": requested_players,
-        "humans": requested_humans,
-        "computers": requested_computers,
+        "humans": expected_humans,
+        "computers": expected_computers,
         "source_template_id": observed_source_template_id,
         "source_catalog_index": observed_source_catalog_index,
     }
@@ -792,6 +818,7 @@ def reference_alignment_finding(snapshot: dict[str, Any], h3m_path: Path, contro
         "observed_saved_h3m_identity": observed_saved_h3m_identity,
         "template_identity_authority": controlled_identity.get("identity_authority", ""),
         "template_identity_hard_gate": hard_template_identity,
+        "comparison_identity_source": "observed_saved_h3m_identity" if observed_slot_counts_present else "requested_controlled_inputs",
         "native_selection_diagnostics": selection_diagnostics,
         "requested_controlled_identity": {
             "source_template_id": controlled_identity.get("source_template_id"),
@@ -896,7 +923,7 @@ def build_report(snapshot: dict[str, Any], h3m_path: Path, amap_path: Path, cont
     blocker_guard_report = blocker_guard_surface_report(h3m_path, amap_path)
     owner = compact_metrics(owner_metrics)
     native = compact_metrics(native_metrics)
-    phase = snapshot.get("phase_summaries", {}) if isinstance(snapshot.get("phase_summaries"), dict) else {}
+    phase = native_phase_root(snapshot)
     package_phase = phase.get("public_package_adoption", {}) if isinstance(phase.get("public_package_adoption"), dict) else {}
     fidelity = port_fidelity_summary(phase)
 

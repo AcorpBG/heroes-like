@@ -12797,10 +12797,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					if (reward_body_points.empty() || !grid_available) {
 						rejected_filter_count = map_width * map_height * map_level_count;
 						} else {
-						int32_t zone_scan_min_x = map_width;
-						int32_t zone_scan_min_y = map_height;
-						int32_t zone_scan_max_x_exclusive = 0;
-						int32_t zone_scan_max_y_exclusive = 0;
+						int32_t reconstructed_zone_scan_min_x = map_width;
+						int32_t reconstructed_zone_scan_min_y = map_height;
+						int32_t reconstructed_zone_scan_max_x_exclusive = 0;
+						int32_t reconstructed_zone_scan_max_y_exclusive = 0;
 						for (int32_t zone_y = 0; zone_y < map_height; ++zone_y) {
 							for (int32_t zone_x = 0; zone_x < map_width; ++zone_x) {
 								const int64_t zone_flat = h3maped_cell_index(map_width, map_height, zone_x, zone_y, anchor_level);
@@ -12812,19 +12812,42 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								if (masked == H3MAPED_UNASSIGNED_ZONE_WORD || generated_owner_byte != expected_zone_word_id) {
 									continue;
 								}
-								zone_scan_min_x = std::min(zone_scan_min_x, zone_x);
-								zone_scan_min_y = std::min(zone_scan_min_y, zone_y);
-								zone_scan_max_x_exclusive = std::max(zone_scan_max_x_exclusive, zone_x + 1);
-								zone_scan_max_y_exclusive = std::max(zone_scan_max_y_exclusive, zone_y + 1);
+								reconstructed_zone_scan_min_x = std::min(reconstructed_zone_scan_min_x, zone_x);
+								reconstructed_zone_scan_min_y = std::min(reconstructed_zone_scan_min_y, zone_y);
+								reconstructed_zone_scan_max_x_exclusive = std::max(reconstructed_zone_scan_max_x_exclusive, zone_x + 1);
+								reconstructed_zone_scan_max_y_exclusive = std::max(reconstructed_zone_scan_max_y_exclusive, zone_y + 1);
+							}
+						}
+						const bool reconstructed_zone_scan_bbox_found = reconstructed_zone_scan_min_x < reconstructed_zone_scan_max_x_exclusive && reconstructed_zone_scan_min_y < reconstructed_zone_scan_max_y_exclusive;
+						if (!reconstructed_zone_scan_bbox_found) {
+							reconstructed_zone_scan_min_x = 0;
+							reconstructed_zone_scan_min_y = 0;
+							reconstructed_zone_scan_max_x_exclusive = map_width;
+							reconstructed_zone_scan_max_y_exclusive = map_height;
+						}
+						const bool source_relation_rect_fields_present = runtime.has("filled_rect_min_x_0x20")
+								&& runtime.has("filled_rect_min_y_0x24")
+								&& runtime.has("filled_rect_max_x_exclusive_0x28")
+								&& runtime.has("filled_rect_max_y_exclusive_0x2c");
+						int32_t zone_scan_min_x = reconstructed_zone_scan_min_x;
+						int32_t zone_scan_min_y = reconstructed_zone_scan_min_y;
+						int32_t zone_scan_max_x_exclusive = reconstructed_zone_scan_max_x_exclusive;
+						int32_t zone_scan_max_y_exclusive = reconstructed_zone_scan_max_y_exclusive;
+						bool source_relation_rect_applied_0x4aa9b7 = false;
+						if (source_relation_rect_fields_present) {
+							const int32_t source_relation_min_x = std::max<int32_t>(0, int32_t(runtime.get("filled_rect_min_x_0x20", 0)));
+							const int32_t source_relation_min_y = std::max<int32_t>(0, int32_t(runtime.get("filled_rect_min_y_0x24", 0)));
+							const int32_t source_relation_max_x_exclusive = std::min<int32_t>(map_width, int32_t(runtime.get("filled_rect_max_x_exclusive_0x28", 0)));
+							const int32_t source_relation_max_y_exclusive = std::min<int32_t>(map_height, int32_t(runtime.get("filled_rect_max_y_exclusive_0x2c", 0)));
+							if (source_relation_min_x < source_relation_max_x_exclusive && source_relation_min_y < source_relation_max_y_exclusive) {
+								zone_scan_min_x = source_relation_min_x;
+								zone_scan_min_y = source_relation_min_y;
+								zone_scan_max_x_exclusive = source_relation_max_x_exclusive;
+								zone_scan_max_y_exclusive = source_relation_max_y_exclusive;
+								source_relation_rect_applied_0x4aa9b7 = true;
 							}
 						}
 						const bool zone_scan_bbox_found = zone_scan_min_x < zone_scan_max_x_exclusive && zone_scan_min_y < zone_scan_max_y_exclusive;
-						if (!zone_scan_bbox_found) {
-							zone_scan_min_x = 0;
-							zone_scan_min_y = 0;
-							zone_scan_max_x_exclusive = map_width;
-							zone_scan_max_y_exclusive = map_height;
-						}
 						const RewardVectorExtent reward_scan_extent = reward_extent_for_points(reward_body_points, reward_action_points, H3MaskPoint { 0, 0 });
 						const int32_t object_left_0x18 = -reward_scan_extent.min_dx;
 						const int32_t object_top_0x1c = -reward_scan_extent.min_dy;
@@ -12841,7 +12864,17 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							int32_t scan_max_x_exclusive = native_projected_scan_max_x_exclusive;
 							int32_t scan_max_y_exclusive = native_projected_scan_max_y_exclusive;
 							bool source_0x4aa9b7_scan_rect_applied = false;
-							placement_record["coordinate_scan_source"] = "0x4aa9b7_runtime_zone_rectangle_plus_selected_object_extent";
+							placement_record["coordinate_scan_source"] = source_relation_rect_applied_0x4aa9b7
+									? String("0x4aa9b7_relation_plus_0x20_rectangle_plus_selected_object_extent")
+									: String("0x4aa9b7_generated_owner_bbox_fallback_plus_selected_object_extent");
+						placement_record["source_relation_rect_fields_present_0x4aa9b7"] = source_relation_rect_fields_present;
+						placement_record["source_relation_rect_applied_0x4aa9b7"] = source_relation_rect_applied_0x4aa9b7;
+						placement_record["source_relation_rect_policy_0x4aa9b7"] = "0x4aa9b7 copies relation+0x20/+0x24/+0x28/+0x2c before wrapper-bounds adjustment; native uses recovered 0x4a2105/0x4a2ffa runtime relation rectangle fields when present";
+						placement_record["fallback_reconstructed_zone_bbox_found"] = reconstructed_zone_scan_bbox_found;
+						placement_record["fallback_reconstructed_zone_min_x"] = reconstructed_zone_scan_min_x;
+						placement_record["fallback_reconstructed_zone_min_y"] = reconstructed_zone_scan_min_y;
+						placement_record["fallback_reconstructed_zone_max_x_exclusive"] = reconstructed_zone_scan_max_x_exclusive;
+						placement_record["fallback_reconstructed_zone_max_y_exclusive"] = reconstructed_zone_scan_max_y_exclusive;
 						placement_record["coordinate_scan_zone_bbox_found"] = zone_scan_bbox_found;
 						placement_record["coordinate_scan_zone_min_x"] = zone_scan_min_x;
 						placement_record["coordinate_scan_zone_min_y"] = zone_scan_min_y;
