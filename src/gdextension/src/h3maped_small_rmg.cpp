@@ -575,7 +575,7 @@ bool h3maped_decorative_filler_type_table_allows_54092c(int32_t type_id) {
 
 int32_t h3maped_generated_cell_owner_byte_0x20(uint32_t word_0x20) {
 	// 0x4aa9b7 and 0x4a8c15 both read cell+0x20 with shl 8; sar 24.
-	return int8_t((word_0x20 >> 24U) & 0xffU);
+	return int8_t((word_0x20 >> 16U) & 0xffU);
 }
 
 struct H3FootprintGateResult {
@@ -10811,7 +10811,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			primary_category_candidate_total += candidate_count;
 			placement["candidate_count"] = candidate_count;
 			placement["rejected_owner_count"] = rejected_owner_count;
-			placement["owner_gate_source"] = "generated_cell_word_0x20_signed_high_byte_bits24_31";
+			placement["owner_gate_source"] = "generated_cell_word_0x20_signed_byte2_bits16_23";
 			placement["rejected_score_count"] = rejected_score_count;
 			placement["rejected_footprint_count"] = rejected_footprint_count;
 			placement["best_score_low_word"] = tied_candidates.empty() ? -1 : best_score;
@@ -13099,7 +13099,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				placement_record["owner_match_count"] = owner_match_count;
 				placement_record["coordinate_scan_sample_limit"] = coordinate_scan_sample_limit;
 				placement_record["coordinate_scan_sample_records"] = coordinate_scan_sample_records;
-				placement_record["owner_gate_source"] = "generated_cell_word_0x20_signed_high_byte_bits24_31";
+				placement_record["owner_gate_source"] = "generated_cell_word_0x20_signed_byte2_bits16_23";
 				placement_record["filter_gate_policy"] = "0x4aa603_0x49a6f9_reward_proxy_checks_anchor_owner_then_action_and_nonpassable_generated_owner_bytes";
 				placement_record["filter_gate_private_state_source"] = "private_generated_cell_word_0x20_owner_byte_plus_word_0x28_bit22_action_and_bit26_action_candidate_state; nonpassable body follows 0x49abd6 bit25 clear and 0x49a6f9 does not reject bit27";
 				placement_record["candidate_count"] = coordinate_candidate_count;
@@ -13917,7 +13917,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["coordinate_scan_owner_match_total"] = reward_coordinate_scan_owner_match_total;
 	reward_scheduler["coordinate_scan_candidate_total"] = reward_coordinate_scan_candidate_total;
 	reward_scheduler["coordinate_scan_rejected_owner_count"] = reward_coordinate_scan_rejected_owner_count;
-	reward_scheduler["coordinate_owner_gate_source"] = "generated_cell_word_0x20_signed_high_byte_bits24_31_matches_0x4aa9b7_shl8_sar24";
+	reward_scheduler["coordinate_owner_gate_source"] = "generated_cell_word_0x20_signed_byte2_bits16_23_matches_0x4aa9b7_shl8_sar24";
 	reward_scheduler["coordinate_scan_rejected_score_count"] = reward_coordinate_scan_rejected_score_count;
 	reward_scheduler["coordinate_scan_rejected_filter_count"] = reward_coordinate_scan_rejected_filter_count;
 	reward_scheduler["coordinate_scan_rejected_guard_composite_count"] = reward_coordinate_scan_rejected_guard_composite_count;
