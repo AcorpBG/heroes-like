@@ -388,6 +388,49 @@ def find_native_rng_states(snapshot: dict[str, Any]) -> dict[str, int]:
     return result
 
 
+def find_native_route_counts(snapshot: dict[str, Any]) -> dict[str, int | bool | str]:
+    phase = (
+        snapshot.get("h3maped_small_port", {})
+        .get("generated_cell_decoration_bit_state", {})
+    )
+    keys = [
+        "route_container_0x4a8260_object_vector_scan_status",
+        "route_container_0x4a8260_scan_source",
+        "route_container_0x4a8260_scan_cell_count",
+        "route_container_0x4a8260_object_vector_empty_count",
+        "route_container_0x4a8260_object_vector_nonempty_count",
+        "route_container_0x4a8260_bit26_set_count",
+        "route_container_0x4a8260_bit26_clear_count",
+        "route_container_0x4a8260_bit27_set_count",
+        "route_container_0x4a8260_pre_scan_bit26_count",
+        "route_container_0x4a8260_pre_scan_bit27_count",
+        "route_container_0x4a8260_post_scan_bit26_count",
+        "route_container_0x4a8260_post_scan_bit27_count",
+        "route_container_0x4a8260_route_list_replay_status",
+        "route_container_0x4a8260_rng_boundary_exact",
+        "route_container_0x4a8260_active_adoption",
+        "route_container_0x4a8260_orientation_rng_call_count",
+        "route_container_0x4a8260_split_rng_call_count",
+        "route_container_0x4a8260_split_count",
+        "route_container_0x4a8260_stamp_call_count",
+        "route_container_0x4a8260_far_cut_count",
+        "route_container_0x4a8260_a80dc_call_count",
+        "route_container_0x4a8260_final_sweep_0x49a962_call_count",
+        "final_decor_candidate_bit_26_count",
+        "final_occupied_blocked_bit_27_count",
+    ]
+    result: dict[str, int | bool | str] = {}
+    for key in keys:
+        value = phase.get(key)
+        if isinstance(value, bool):
+            result[key] = value
+        elif isinstance(value, int):
+            result[key] = value
+        elif isinstance(value, str):
+            result[key] = value
+    return result
+
+
 def state_offsets_from_seed(seed: int, states: dict[str, int], max_offset: int) -> dict[str, int | None]:
     wanted = set(states.values())
     current = seed & 0xFFFFFFFF
@@ -442,6 +485,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         snapshot = json.loads(args.native_phase_snapshot.read_text(encoding="utf-8"))
         native_states = find_native_rng_states(snapshot)
         native_offsets = state_offsets_from_seed(args.seed, native_states, args.max_rng_offset)
+        native_counts = find_native_route_counts(snapshot)
         route_entry_state = rng_hits[0]["entry_state_before_selector_uint32"] if len(rng_hits) == 1 else None
         report["native_rng_boundary_compare"] = {
             "native_phase_snapshot": str(args.native_phase_snapshot),
@@ -450,6 +494,15 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "h3maped_route_entry_state_uint32": route_entry_state,
             "h3maped_route_entry_offset_from_seed": rng_hits[0]["offset"] if len(rng_hits) == 1 else None,
             "native_has_matching_route_entry_state": route_entry_state in native_states.values() if route_entry_state is not None else False,
+        }
+        report["native_route_event_compare"] = {
+            "native_phase_snapshot": str(args.native_phase_snapshot),
+            "native_route_counts": native_counts,
+            "h3maped_route_counts": report["route_event_counts"],
+            "split_count_matches_h3maped": native_counts.get("route_container_0x4a8260_split_count") == len(splits),
+            "stamp_count_matches_h3maped": native_counts.get("route_container_0x4a8260_stamp_call_count") == len(stamps),
+            "a80dc_count_matches_h3maped": native_counts.get("route_container_0x4a8260_a80dc_call_count") == len(a80dc_pairs),
+            "far_cut_count_matches_h3maped": native_counts.get("route_container_0x4a8260_far_cut_count") == len(far_pairs),
         }
     return report
 

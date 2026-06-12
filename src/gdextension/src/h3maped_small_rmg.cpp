@@ -16070,12 +16070,24 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	int32_t route_container_0x4a8260_object_vector_empty_count = 0;
 	int32_t route_container_0x4a8260_object_vector_nonempty_count = 0;
 	int32_t route_container_0x4a8260_bit26_set_count = 0;
+	int32_t route_container_0x4a8260_bit26_clear_count = 0;
 	int32_t route_container_0x4a8260_bit27_set_count = 0;
+	int32_t route_container_0x4a8260_pre_scan_bit26_count = 0;
+	int32_t route_container_0x4a8260_pre_scan_bit27_count = 0;
+	int32_t route_container_0x4a8260_post_scan_bit26_count = 0;
+	int32_t route_container_0x4a8260_post_scan_bit27_count = 0;
 	int32_t route_container_0x4a8260_cell_0x2c_bit0_skip_count = 0;
-	// 0x4a8291..0x4a82ce scans each GeneratedCell object-reference vector
-	// at +0x04/+0x08. Empty vectors become bit26 candidates; non-empty
-	// vectors remain bit27 occupied. The later 0x4a8260 route-list
-	// subdivision and route stamp stream is deliberately not guessed here.
+	for (uint32_t word : live_cell_word_0x28) {
+		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+			route_container_0x4a8260_pre_scan_bit26_count += 1;
+		}
+		if ((word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+			route_container_0x4a8260_pre_scan_bit27_count += 1;
+		}
+	}
+	// Recovered 0x4a8260 first scans each GeneratedCell object-reference
+	// vector at +0x04/+0x08. Empty vectors become bit26 candidates;
+	// non-empty vectors remain bit27 occupied.
 	for (int32_t flat = 0; flat < expected_cell_count; ++flat) {
 		route_container_0x4a8260_scan_cell_count += 1;
 		if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
@@ -16089,9 +16101,20 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			}
 		} else {
 			route_container_0x4a8260_object_vector_nonempty_count += 1;
+			if ((live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+				route_container_0x4a8260_bit26_clear_count += 1;
+			}
 			if (mark_occupied_blocked_49a932(flat, true)) {
 				route_container_0x4a8260_bit27_set_count += 1;
 			}
+		}
+	}
+	for (uint32_t word : live_cell_word_0x28) {
+		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+			route_container_0x4a8260_post_scan_bit26_count += 1;
+		}
+		if ((word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+			route_container_0x4a8260_post_scan_bit27_count += 1;
 		}
 	}
 	const bool route_container_0x4a8260_has_post_object_vector_rng =
@@ -16856,8 +16879,15 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["route_container_0x4a8260_object_vector_empty_count"] = route_container_0x4a8260_object_vector_empty_count;
 	upstream_sources["route_container_0x4a8260_object_vector_nonempty_count"] = route_container_0x4a8260_object_vector_nonempty_count;
 	upstream_sources["route_container_0x4a8260_bit26_set_count"] = route_container_0x4a8260_bit26_set_count;
+	upstream_sources["route_container_0x4a8260_bit26_clear_count"] = route_container_0x4a8260_bit26_clear_count;
 	upstream_sources["route_container_0x4a8260_bit27_set_count"] = route_container_0x4a8260_bit27_set_count;
+	upstream_sources["route_container_0x4a8260_pre_scan_bit26_count"] = route_container_0x4a8260_pre_scan_bit26_count;
+	upstream_sources["route_container_0x4a8260_pre_scan_bit27_count"] = route_container_0x4a8260_pre_scan_bit27_count;
+	upstream_sources["route_container_0x4a8260_post_scan_bit26_count"] = route_container_0x4a8260_post_scan_bit26_count;
+	upstream_sources["route_container_0x4a8260_post_scan_bit27_count"] = route_container_0x4a8260_post_scan_bit27_count;
 	upstream_sources["route_container_0x4a8260_cell_0x2c_bit0_skip_count"] = route_container_0x4a8260_cell_0x2c_bit0_skip_count;
+	upstream_sources["route_container_0x4a8260_scan_policy"] = "source-backed 0x4a8291..0x4a82ce internal scan: empty object-reference vectors set bit26 and clear bit27; non-empty vectors set bit27 and clear bit26";
+	upstream_sources["route_container_0x4a8260_scan_source"] = ".artifacts/rmg_recovery/4a8260_instructions.txt";
 	upstream_sources["route_container_0x4a8260_final_sweep_scan_count"] = route_container_0x4a8260_final_sweep_scan_count;
 	upstream_sources["route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count;
 	upstream_sources["route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count;
@@ -16944,7 +16974,9 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["owner_transition_diagnostic_new_gap_count"] = owner_transition_diagnostic_new_gap_count;
 	phase["cleanup_0x49a962_candidate_set_count"] = cleanup_0x49a962_candidate_set_count;
 	phase["cleanup_0x4a8c15_object_vector_occupied_skip_count"] = cleanup_0x4a8c15_object_vector_occupied_skip_count;
-	phase["route_container_0x4a8260_object_vector_scan_status"] = "active_source_backed_partial";
+	phase["route_container_0x4a8260_object_vector_scan_status"] = "active_source_backed_internal_object_vector_scan";
+	phase["route_container_0x4a8260_scan_policy"] = "source-backed 0x4a8291..0x4a82ce internal scan: empty object-reference vectors set bit26 and clear bit27; non-empty vectors set bit27 and clear bit26";
+	phase["route_container_0x4a8260_scan_source"] = ".artifacts/rmg_recovery/4a8260_instructions.txt";
 	phase["route_container_0x4a8260_route_list_replay_status"] = route_container_0x4a8260_drain_complete ? String("mechanics_ported_rng_boundary_unproven_diagnostic_only") : String("route_replay_guard_exhausted");
 	phase["route_container_0x4a8260_route_list_replay_source"] = "ported from recovered 0x4a8260/0x4a80dc/0x49a85d instruction flow; live native adoption is disabled until the pre-0x4a8260 RNG boundary matches H3MapEd";
 	phase["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
@@ -16975,7 +17007,12 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["route_container_0x4a8260_object_vector_empty_count"] = route_container_0x4a8260_object_vector_empty_count;
 	phase["route_container_0x4a8260_object_vector_nonempty_count"] = route_container_0x4a8260_object_vector_nonempty_count;
 	phase["route_container_0x4a8260_bit26_set_count"] = route_container_0x4a8260_bit26_set_count;
+	phase["route_container_0x4a8260_bit26_clear_count"] = route_container_0x4a8260_bit26_clear_count;
 	phase["route_container_0x4a8260_bit27_set_count"] = route_container_0x4a8260_bit27_set_count;
+	phase["route_container_0x4a8260_pre_scan_bit26_count"] = route_container_0x4a8260_pre_scan_bit26_count;
+	phase["route_container_0x4a8260_pre_scan_bit27_count"] = route_container_0x4a8260_pre_scan_bit27_count;
+	phase["route_container_0x4a8260_post_scan_bit26_count"] = route_container_0x4a8260_post_scan_bit26_count;
+	phase["route_container_0x4a8260_post_scan_bit27_count"] = route_container_0x4a8260_post_scan_bit27_count;
 	phase["route_container_0x4a8260_final_sweep_scan_count"] = route_container_0x4a8260_final_sweep_scan_count;
 	phase["route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count;
 	phase["route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count"] = route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count;
