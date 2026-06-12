@@ -16094,7 +16094,18 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			}
 		}
 	}
-	uint32_t route_container_0x4a8260_rng_state_before = uint32_t(int64_t(terrainplacement_live_feedback_phase.get("rng_state_after_live_visual_selection_uint32", 0)));
+	const bool route_container_0x4a8260_has_post_object_vector_rng =
+			reward_boundary.has("preview_rng_state_after_0x4aa354_uint32");
+	const uint32_t route_container_0x4a8260_fallback_terrain_rng_state =
+			uint32_t(int64_t(terrainplacement_live_feedback_phase.get("rng_state_after_live_visual_selection_uint32", 0)));
+	uint32_t route_container_0x4a8260_rng_state_before =
+			route_container_0x4a8260_has_post_object_vector_rng
+					? uint32_t(int64_t(reward_boundary.get("preview_rng_state_after_0x4aa354_uint32", route_container_0x4a8260_fallback_terrain_rng_state)))
+					: route_container_0x4a8260_fallback_terrain_rng_state;
+	const String route_container_0x4a8260_rng_state_source =
+			route_container_0x4a8260_has_post_object_vector_rng
+					? String("mines_rewards_and_object_vector.reward_scheduler_boundary.preview_rng_state_after_0x4aa354_uint32")
+					: String("terrainplacement_live_feedback.rng_state_after_live_visual_selection_uint32_fallback");
 	H3MapedRng route_container_0x4a8260_rng { route_container_0x4a8260_rng_state_before };
 	const bool route_container_0x4a8260_rng_boundary_exact = false;
 	const bool route_container_0x4a8260_active_adoption = route_container_0x4a8260_rng_boundary_exact;
@@ -16860,7 +16871,9 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["route_container_0x4a8260_route_list_replay_complete"] = route_container_0x4a8260_drain_complete;
 	upstream_sources["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
 	upstream_sources["route_container_0x4a8260_active_adoption"] = route_container_0x4a8260_active_adoption;
-	upstream_sources["route_container_0x4a8260_rng_state_source"] = "terrainplacement_live_feedback.rng_state_after_live_visual_selection_uint32";
+	upstream_sources["route_container_0x4a8260_rng_state_source"] = route_container_0x4a8260_rng_state_source;
+	upstream_sources["route_container_0x4a8260_has_post_object_vector_rng"] = route_container_0x4a8260_has_post_object_vector_rng;
+	upstream_sources["route_container_0x4a8260_fallback_terrain_rng_state_uint32"] = int64_t(route_container_0x4a8260_fallback_terrain_rng_state);
 	upstream_sources["route_container_0x4a8260_rng_state_before_uint32"] = int64_t(route_container_0x4a8260_rng_state_before);
 	upstream_sources["route_container_0x4a8260_rng_state_after_uint32"] = int64_t(route_container_0x4a8260_rng.state);
 	upstream_sources["route_container_0x4a8260_orientation_rng_call_count"] = route_container_0x4a8260_orientation_rng_call_count;
@@ -16936,7 +16949,9 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["route_container_0x4a8260_route_list_replay_source"] = "ported from recovered 0x4a8260/0x4a80dc/0x49a85d instruction flow; live native adoption is disabled until the pre-0x4a8260 RNG boundary matches H3MapEd";
 	phase["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
 	phase["route_container_0x4a8260_active_adoption"] = route_container_0x4a8260_active_adoption;
-	phase["route_container_0x4a8260_rng_state_source"] = "terrainplacement_live_feedback.rng_state_after_live_visual_selection_uint32";
+	phase["route_container_0x4a8260_rng_state_source"] = route_container_0x4a8260_rng_state_source;
+	phase["route_container_0x4a8260_has_post_object_vector_rng"] = route_container_0x4a8260_has_post_object_vector_rng;
+	phase["route_container_0x4a8260_fallback_terrain_rng_state_uint32"] = int64_t(route_container_0x4a8260_fallback_terrain_rng_state);
 	phase["route_container_0x4a8260_rng_state_before_uint32"] = int64_t(route_container_0x4a8260_rng_state_before);
 	phase["route_container_0x4a8260_rng_state_after_uint32"] = int64_t(route_container_0x4a8260_rng.state);
 	phase["route_container_0x4a8260_level_count"] = route_container_0x4a8260_level_count;
