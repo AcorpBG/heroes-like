@@ -443,10 +443,10 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
-    "currentNotes": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
-    "currentSliceNotes": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
-    "currentSliceUpdatedAt": "2026-06-12T03:51:54Z",
-    "guardrailNote": "Next progress must use a same-run seed58 H3MapEd 0x4aa354 source stream or an equivalent source-backed replay artifact before changing active reward/guard constructor or attach behavior. Linux/Python only; Windows .dll build deferred until Linux parity is exact.",
+    "currentNotes": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "currentSliceNotes": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "currentSliceUpdatedAt": "2026-06-12T03:59:04Z",
+    "guardrailNote": "Next native RMG behavior change must be backed by the same-run seed58 H3MapEd 0x4aa354 source stream or an equivalent source-backed replay artifact. Linux/Python only; Windows .dll build deferred until Linux parity is exact.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native Small/Medium one-level land RMG behavior adoption from recovered H3MapEd replay",
@@ -455,68 +455,78 @@
     "lastValidation": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T03:51:54Z",
-      "validatedAt": "2026-06-12T03:51:54Z",
+      "date": "2026-06-12T03:59:04Z",
+      "validatedAt": "2026-06-12T03:59:04Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+      "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
       "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-        "jq summary inspection of .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+        "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
         "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
         "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
         "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
       ],
       "metrics": {
+        "recursive_recovery_json_file_count": 691,
+        "recursive_json_event_hit_artifact_count": 25,
+        "recursive_0x4aa354_event_hit_count": 46,
+        "recursive_text_0x4aa354_hit_file_count": 47,
+        "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+        "recursive_text_seed58_0x4aa354_hit_file_count": 0,
         "full_same_run_seed58_source_stream_artifact_found": false,
         "source_backed_native_rule_available": false,
-        "seed58_0x4aa354_constructor_ledgers_found": 0,
-        "broad_unseeded_0x4aa354_hit_count": 45,
         "native_behavior_changed": false,
         "native_rmg_end_to_end_parity_complete": false,
         "windows_dll_build_deferred": true,
+        "windows_dll_build_run": false,
         "repo_validation_passed": true,
         "git_diff_check_passed": true,
-        "progress_status_current_slice_in_progress": true,
-        "windows_dll_build_run": false
+        "progress_status_current_slice_in_progress": true
       },
-      "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+      "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
     },
     "latestEvidence": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T03:51:54Z",
-      "validatedAt": "2026-06-12T03:51:54Z",
+      "date": "2026-06-12T03:59:04Z",
+      "validatedAt": "2026-06-12T03:59:04Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+      "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
       "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-        "jq summary inspection of .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+        "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
         "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
         "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
         "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
       ],
       "metrics": {
+        "recursive_recovery_json_file_count": 691,
+        "recursive_json_event_hit_artifact_count": 25,
+        "recursive_0x4aa354_event_hit_count": 46,
+        "recursive_text_0x4aa354_hit_file_count": 47,
+        "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+        "recursive_text_seed58_0x4aa354_hit_file_count": 0,
         "full_same_run_seed58_source_stream_artifact_found": false,
         "source_backed_native_rule_available": false,
-        "seed58_0x4aa354_constructor_ledgers_found": 0,
-        "broad_unseeded_0x4aa354_hit_count": 45,
         "native_behavior_changed": false,
         "native_rmg_end_to_end_parity_complete": false,
         "windows_dll_build_deferred": true,
+        "windows_dll_build_run": false,
         "repo_validation_passed": true,
         "git_diff_check_passed": true,
-        "progress_status_current_slice_in_progress": true,
-        "windows_dll_build_run": false
+        "progress_status_current_slice_in_progress": true
       },
-      "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+      "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
     },
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
@@ -956,7 +966,14 @@
       "full_same_run_seed58_source_stream_artifact_found": false,
       "source_backed_native_rule_available": false,
       "seed58_0x4aa354_constructor_ledgers_found": 0,
-      "broad_unseeded_0x4aa354_hit_count": 45
+      "broad_unseeded_0x4aa354_hit_count": 45,
+      "recursive_recovery_json_file_count": 691,
+      "recursive_json_event_hit_artifact_count": 25,
+      "recursive_0x4aa354_event_hit_count": 46,
+      "recursive_text_0x4aa354_hit_file_count": 47,
+      "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+      "recursive_text_seed58_0x4aa354_hit_file_count": 0,
+      "windows_dll_build_run": false
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -967,8 +984,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence.",
-    "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence.",
+    "remainingGap": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence.",
+    "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence.",
     "result": "in_progress_source_backed_final_sweep_port_private_state_still_blocked",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -977,41 +994,46 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
     "title": "RMG Small Generalization Hardening",
-    "updatedAt": "2026-06-12T03:51:54Z",
+    "updatedAt": "2026-06-12T03:59:04Z",
     "validation": {
       "id": "rmg-small-generalization-hardening-10184",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "date": "2026-06-12T03:51:54Z",
-      "validatedAt": "2026-06-12T03:51:54Z",
+      "date": "2026-06-12T03:59:04Z",
+      "validatedAt": "2026-06-12T03:59:04Z",
       "status": "in_progress",
-      "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+      "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
       "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
       "checks": [
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-        "jq summary inspection of .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+        "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
         "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
         "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
         "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
       ],
       "metrics": {
+        "recursive_recovery_json_file_count": 691,
+        "recursive_json_event_hit_artifact_count": 25,
+        "recursive_0x4aa354_event_hit_count": 46,
+        "recursive_text_0x4aa354_hit_file_count": 47,
+        "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+        "recursive_text_seed58_0x4aa354_hit_file_count": 0,
         "full_same_run_seed58_source_stream_artifact_found": false,
         "source_backed_native_rule_available": false,
-        "seed58_0x4aa354_constructor_ledgers_found": 0,
-        "broad_unseeded_0x4aa354_hit_count": 45,
         "native_behavior_changed": false,
         "native_rmg_end_to_end_parity_complete": false,
         "windows_dll_build_deferred": true,
+        "windows_dll_build_run": false,
         "repo_validation_passed": true,
         "git_diff_check_passed": true,
-        "progress_status_current_slice_in_progress": true,
-        "windows_dll_build_run": false
+        "progress_status_current_slice_in_progress": true
       },
-      "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+      "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
     },
     "validationResults": {
       "id": "rmg-small-generalization-hardening-10184",
@@ -10553,14 +10575,14 @@
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used."
     }
   ],
-  "currentNotes": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+  "currentNotes": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+  "currentSliceNotes": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-12T03:51:54Z",
+  "currentSliceUpdatedAt": "2026-06-12T03:59:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12376,74 +12398,84 @@
       "validatedAt": "2026-06-11T18:30:24Z"
     }
   },
-  "guardrailNote": "Next progress must use a same-run seed58 H3MapEd 0x4aa354 source stream or an equivalent source-backed replay artifact before changing active reward/guard constructor or attach behavior. Linux/Python only; Windows .dll build deferred until Linux parity is exact.",
+  "guardrailNote": "Next native RMG behavior change must be backed by the same-run seed58 H3MapEd 0x4aa354 source stream or an equivalent source-backed replay artifact. Linux/Python only; Windows .dll build deferred until Linux parity is exact.",
   "lastValidation": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T03:51:54Z",
-    "validatedAt": "2026-06-12T03:51:54Z",
+    "date": "2026-06-12T03:59:04Z",
+    "validatedAt": "2026-06-12T03:59:04Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
     "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-      "jq summary inspection of .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+      "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
       "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
       "git diff --check (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
     ],
     "metrics": {
+      "recursive_recovery_json_file_count": 691,
+      "recursive_json_event_hit_artifact_count": 25,
+      "recursive_0x4aa354_event_hit_count": 46,
+      "recursive_text_0x4aa354_hit_file_count": 47,
+      "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+      "recursive_text_seed58_0x4aa354_hit_file_count": 0,
       "full_same_run_seed58_source_stream_artifact_found": false,
       "source_backed_native_rule_available": false,
-      "seed58_0x4aa354_constructor_ledgers_found": 0,
-      "broad_unseeded_0x4aa354_hit_count": 45,
       "native_behavior_changed": false,
       "native_rmg_end_to_end_parity_complete": false,
       "windows_dll_build_deferred": true,
+      "windows_dll_build_run": false,
       "repo_validation_passed": true,
       "git_diff_check_passed": true,
-      "progress_status_current_slice_in_progress": true,
-      "windows_dll_build_run": false
+      "progress_status_current_slice_in_progress": true
     },
-    "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+    "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
   },
   "latestEvidence": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T03:51:54Z",
-    "validatedAt": "2026-06-12T03:51:54Z",
+    "date": "2026-06-12T03:59:04Z",
+    "validatedAt": "2026-06-12T03:59:04Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
     "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-      "jq summary inspection of .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+      "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
       "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
       "git diff --check (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
     ],
     "metrics": {
+      "recursive_recovery_json_file_count": 691,
+      "recursive_json_event_hit_artifact_count": 25,
+      "recursive_0x4aa354_event_hit_count": 46,
+      "recursive_text_0x4aa354_hit_file_count": 47,
+      "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+      "recursive_text_seed58_0x4aa354_hit_file_count": 0,
       "full_same_run_seed58_source_stream_artifact_found": false,
       "source_backed_native_rule_available": false,
-      "seed58_0x4aa354_constructor_ledgers_found": 0,
-      "broad_unseeded_0x4aa354_hit_count": 45,
       "native_behavior_changed": false,
       "native_rmg_end_to_end_parity_complete": false,
       "windows_dll_build_deferred": true,
+      "windows_dll_build_run": false,
       "repo_validation_passed": true,
       "git_diff_check_passed": true,
-      "progress_status_current_slice_in_progress": true,
-      "windows_dll_build_run": false
+      "progress_status_current_slice_in_progress": true
     },
-    "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+    "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
   },
-  "nextActionGuardrailNote": "Next progress must use a same-run seed58 H3MapEd 0x4aa354 source stream or an equivalent source-backed replay artifact before changing active reward/guard constructor or attach behavior. Linux/Python only; Windows .dll build deferred until Linux parity is exact.",
+  "nextActionGuardrailNote": "Next native RMG behavior change must be backed by the same-run seed58 H3MapEd 0x4aa354 source stream or an equivalent source-backed replay artifact. Linux/Python only; Windows .dll build deferred until Linux parity is exact.",
   "notes": "Native RMG parity is still incomplete. Native now ports the recovered 0x4a8260 route mechanics (0x4a80dc cuts plus 0x49a85d stamps), but live adoption is gated off because the same-run RNG entry boundary is not matched. Small seed-58 route verification still passes the recovered H3MapEd route stream mechanically (416 splits, 340 stamps, 52 0x4a80dc cuts at H3MapEd route entry offset 5002), while native_has_matching_route_entry_state remains false and the closest current native candidate is reward_preview_rng_after_0x4aa354_uint32 at offset 4926. Medium seed-10 remains non-parity: final tile payload mismatch is 11726 bytes with first drift terrain_generated_cell_word_0x24_before_0x49b2b6, and pre_0x4a4c8e private-state mismatches are word_0x20=5184, word_0x24=4850, word_0x28=2999. Windows .dll builds were not run; the inner loop remains Linux .so plus Python parity compares until a Linux-verified final boundary. Adopt the exact reward object/materialization and guard-attachment state before 0x4a8260: 0x4a9f1c, dynamic +0xf5c/+0xf58/+0x10b4, 0x49d471, 0x49cf34, 0x49d69d, 0x4aa9b7, and 0x4aa3e9. Then re-check the same-run 0x4a8260 route RNG/stamp stream and terrain/generated-cell word_0x24 parity before 0x49b2b6. Do not use density scalars, brute-force retries, final-map delta tuning, or Windows rebuild churn.",
   "plannedSlices": [
     {
@@ -52785,8 +52817,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence.",
-  "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence.",
+  "remainingGap": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence.",
+  "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -53300,39 +53332,44 @@
   ],
   "summary": "Native RMG parity is still incomplete. Fixed the Python phase-drift audit to read wrapped h3maped_small_port snapshots and compare Medium controlled references against the observed saved H3M identity. With current Linux artifacts .artifacts/rmg_native_medium_seed10_report_fix_current_20260611 and .artifacts/rmg_native_small2p_seed58_report_fix_current_20260611, reference alignment passes and the first same-identity drift is town_castle_endpoint_vector coordinate drift: H3M towns 16,49 / 20,32 / 39,35 / 50,47 / 55,63 / 9,19 versus native 16,48 / 20,32 / 41,33 / 48,46 / 53,63 / 9,18. Mines remain matched at 24/24; rewards remain 53 native vs 144 H3M; guards remain 51 native vs 126 H3M; roads remain 315 native vs 136 H3M; Medium pre_0x4a4c8e word_0x28 mismatch remains 2999. Small seed-58 route replay still passes mechanically but native_match=False with H3MapEd route entry offset 5002. A selected-town-subtype mask probe was tested and rejected because it changed downstream RNG/roads/rewards without fixing the controlled town coordinates. Windows .dll builds were not run; inner-loop validation remains Linux .so plus Python parity compares until a Linux-verified final boundary.",
   "taskId": "10184",
-  "updatedAt": "2026-06-12T03:51:54Z",
+  "updatedAt": "2026-06-12T03:59:04Z",
   "validation": {
     "id": "rmg-small-generalization-hardening-10184",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "date": "2026-06-12T03:51:54Z",
-    "validatedAt": "2026-06-12T03:51:54Z",
+    "date": "2026-06-12T03:59:04Z",
+    "validatedAt": "2026-06-12T03:59:04Z",
     "status": "in_progress",
-    "summary": "Native RMG parity is still incomplete. Added a Python source-stream coverage audit for existing recovered H3MapEd reward/guard artifacts. The audit confirms there is no full same-run seed58 0x4aa354 selected reward/guard source stream with generator +0x398/+0x39c descriptor-vector state and selected descriptor +0x94/+0x95 state. Seed58 artifacts cover route/downstream handoff only; the seed10 artifact proves one attach-order sample; the broad 45-hit 0x4aa354 trace is unseeded/non-parity evidence. No native behavior changed, no source-backed active 0x4a5c07/0x49cf34 rule is available from these artifacts, and Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+    "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
     "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
     "checks": [
-      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-      "jq summary inspection of .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+      "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
       "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
       "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
-      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
       "git diff --check (passed)",
+      "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
       "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
       "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
     ],
     "metrics": {
+      "recursive_recovery_json_file_count": 691,
+      "recursive_json_event_hit_artifact_count": 25,
+      "recursive_0x4aa354_event_hit_count": 46,
+      "recursive_text_0x4aa354_hit_file_count": 47,
+      "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+      "recursive_text_seed58_0x4aa354_hit_file_count": 0,
       "full_same_run_seed58_source_stream_artifact_found": false,
       "source_backed_native_rule_available": false,
-      "seed58_0x4aa354_constructor_ledgers_found": 0,
-      "broad_unseeded_0x4aa354_hit_count": 45,
       "native_behavior_changed": false,
       "native_rmg_end_to_end_parity_complete": false,
       "windows_dll_build_deferred": true,
+      "windows_dll_build_run": false,
       "repo_validation_passed": true,
       "git_diff_check_passed": true,
-      "progress_status_current_slice_in_progress": true,
-      "windows_dll_build_run": false
+      "progress_status_current_slice_in_progress": true
     },
-    "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+    "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
   },
   "validationHistory": [
     {
@@ -60804,6 +60841,44 @@
         "windows_dll_build_run": false
       },
       "remainingWork": "Provide or produce the same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, or final-map-delta evidence."
+    },
+    {
+      "id": "rmg-small-generalization-hardening-10184",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "date": "2026-06-12T03:59:04Z",
+      "validatedAt": "2026-06-12T03:59:04Z",
+      "status": "in_progress",
+      "summary": "Native RMG parity is still incomplete. Strengthened the H3MapEd reward/guard source-stream coverage audit so it scans the full recovered corpus recursively instead of only a curated artifact list. The refreshed audit scanned 691 recovered JSON files plus raw text/log hits and found 46 total 0x4aa354 event hits: 45 from the broad unseeded reward-chain trace and one seed10 attach-order sample. It found zero seed58 0x4aa354 constructor ledgers and zero raw seed58 text/log hits for 0x4aa354, so no source-backed active 0x4a5c07/0x49cf34 native behavior change is available. Native behavior is unchanged; Windows .dll builds remain deferred until Linux/Python parity reaches a final boundary.",
+      "artifact": ".artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json",
+      "checks": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive corpus scan)",
+        "jq summary inspection of recursive_recovery_corpus_scan and invariants (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_reward_guard_source_stream_coverage.py (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_reward_guard_source_stream_coverage.py --out .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed; recursive scan stable)",
+        "jq empty ops/progress.json .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_20260612.json (passed)",
+        "git diff --check (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like (passed: currentSlice rmg-small-generalization-hardening-10184 in_progress)",
+        "Windows .dll build intentionally not run; no native C++ changed and Windows build is deferred until Linux/Python parity reaches a final boundary"
+      ],
+      "metrics": {
+        "recursive_recovery_json_file_count": 691,
+        "recursive_json_event_hit_artifact_count": 25,
+        "recursive_0x4aa354_event_hit_count": 46,
+        "recursive_text_0x4aa354_hit_file_count": 47,
+        "recursive_seed58_0x4aa354_constructor_ledgers_found": 0,
+        "recursive_text_seed58_0x4aa354_hit_file_count": 0,
+        "full_same_run_seed58_source_stream_artifact_found": false,
+        "source_backed_native_rule_available": false,
+        "native_behavior_changed": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "windows_dll_build_deferred": true,
+        "windows_dll_build_run": false,
+        "repo_validation_passed": true,
+        "git_diff_check_passed": true,
+        "progress_status_current_slice_in_progress": true
+      },
+      "remainingWork": "Provide or produce a same-run seed58 H3MapEd 0x4aa354 reward/guard source-stream artifact, including selected reward descriptor/object identity, generator +0x398/+0x39c descriptor-vector membership, selected descriptor +0x94/+0x95 state, and per-call branch decisions into or around 0x4a5c07/0x49cf34. Do not patch native behavior from route-only, seed10-only, unseeded, recursive-summary, or final-map-delta evidence."
     }
   ],
   "validationResults": {

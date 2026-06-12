@@ -18,6 +18,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_RECOVERY_ROOT = Path(".artifacts/rmg_recovery")
 
 DEFAULT_ARTIFACTS: dict[str, Path] = {
     "seed58_route_replay_verify": Path(
@@ -84,6 +85,8 @@ DOWNSTREAM_ADDRESSES = [
 
 DESCRIPTOR_VECTOR_FIELDS = ["0x398", "+0x398", "0x39c", "+0x39c"]
 SELECTED_DESCRIPTOR_FIELDS = ["0x94", "+0x94", "0x95", "+0x95"]
+TEXT_SCAN_EXTENSIONS = {".json", ".log", ".txt"}
+SELF_SUMMARY_PREFIX = "reward_guard_source_stream_coverage_summary"
 
 
 def normalize_address(value: Any) -> str:
@@ -227,8 +230,100 @@ def artifact_summary(label: str, relative_path: Path) -> dict[str, Any]:
     }
 
 
-def summarize(artifacts: dict[str, Path]) -> dict[str, Any]:
-    summaries = [artifact_summary(label, path) for label, path in artifacts.items()]
+def iter_recovery_json_paths(recovery_root: Path, output_path: Path | None) -> list[Path]:
+    root = ROOT / recovery_root if not recovery_root.is_absolute() else recovery_root
+    excluded = output_path.resolve() if output_path is not None and output_path.exists() else None
+    paths: list[Path] = []
+    for path in sorted(root.rglob("*.json")):
+        if excluded is not None and path.resolve() == excluded:
+            continue
+        if path.name.startswith(SELF_SUMMARY_PREFIX):
+            continue
+        paths.append(path.relative_to(ROOT))
+    return paths
+
+
+def iter_text_hit_paths(recovery_root: Path, output_path: Path | None) -> list[Path]:
+    root = ROOT / recovery_root if not recovery_root.is_absolute() else recovery_root
+    excluded = output_path.resolve() if output_path is not None and output_path.exists() else None
+    hits: list[Path] = []
+    for path in sorted(root.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in TEXT_SCAN_EXTENSIONS:
+            continue
+        if excluded is not None and path.resolve() == excluded:
+            continue
+        if path.name.startswith(SELF_SUMMARY_PREFIX):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        except OSError:
+            continue
+        if "0x004aa354" in text or "004aa354" in text or "0x4aa354" in text:
+            hits.append(path.relative_to(ROOT))
+    return hits
+
+
+def recursive_artifact_summary(relative_path: Path) -> dict[str, Any]:
+    path = ROOT / relative_path
+    data = load_json(path)
+    if data is None:
+        return {
+            "label": str(relative_path),
+            "path": str(relative_path),
+            "exists": False,
+            "classification": "unreadable_json_artifact",
+        }
+    if not isinstance(data.get("events"), list):
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        return {
+            "label": str(relative_path),
+            "path": str(relative_path),
+            "exists": True,
+            "schema_id": data.get("schema_id"),
+            "event_count": data.get("event_count"),
+            "seed_controlled": requested_seed(data) is not None,
+            "requested_seed": requested_seed(data),
+            "summary_text_mentions_0x4aa354": (
+                "0x004aa354" in text or "004aa354" in text or "0x4aa354" in text
+            ),
+            "classification": "summary_text_reference_not_event_stream",
+        }
+    return artifact_summary(str(relative_path), relative_path)
+
+
+def summarize(artifacts: dict[str, Path], recovery_root: Path, output_path: Path | None) -> dict[str, Any]:
+    curated_summaries = [artifact_summary(label, path) for label, path in artifacts.items()]
+    recursive_json_paths = iter_recovery_json_paths(recovery_root, output_path)
+    recursive_summaries = [recursive_artifact_summary(path) for path in recursive_json_paths]
+    text_hit_paths = iter_text_hit_paths(recovery_root, output_path)
+    event_stream_summaries = [
+        item
+        for item in recursive_summaries
+        if isinstance(item.get("required_address_counts"), dict)
+        and any(int(count) > 0 for count in item["required_address_counts"].values())
+    ]
+    recursive_full_stream_candidates = [
+        item
+        for item in recursive_summaries
+        if item.get("classification") == "candidate_full_seed58_same_run_source_stream"
+    ]
+    recursive_seed58_constructor_ledgers = [
+        item
+        for item in recursive_summaries
+        if item.get("requested_seed") == 58
+        and item.get("required_address_counts", {}).get("0x004aa354", 0) > 0
+    ]
+    recursive_broad_aa354_count = sum(
+        int(item.get("required_address_counts", {}).get("0x004aa354", 0))
+        for item in recursive_summaries
+    )
+    text_seed58_aa354_paths = [
+        str(path)
+        for path in text_hit_paths
+        if "seed58" in str(path).lower() or "seed_58" in str(path).lower()
+    ]
+
+    summaries = curated_summaries
     full_stream_candidates = [
         item
         for item in summaries
@@ -271,19 +366,44 @@ def summarize(artifacts: dict[str, Path]) -> dict[str, Any]:
             ],
         },
         "artifacts": summaries,
+        "recursive_recovery_corpus_scan": {
+            "recovery_root": str(recovery_root),
+            "json_file_count": len(recursive_json_paths),
+            "json_event_hit_artifact_count": len(event_stream_summaries),
+            "text_file_0x4aa354_hit_count": len(text_hit_paths),
+            "text_seed58_0x4aa354_hit_files": text_seed58_aa354_paths,
+            "event_stream_artifacts": event_stream_summaries,
+            "summary_text_reference_files": [
+                {
+                    "path": item["path"],
+                    "schema_id": item.get("schema_id"),
+                    "requested_seed": item.get("requested_seed"),
+                }
+                for item in recursive_summaries
+                if item.get("classification") == "summary_text_reference_not_event_stream"
+                and item.get("summary_text_mentions_0x4aa354")
+            ],
+        },
         "invariants": {
-            "full_same_run_seed58_source_stream_artifact_found": bool(full_stream_candidates),
-            "source_backed_native_rule_available": bool(full_stream_candidates),
+            "full_same_run_seed58_source_stream_artifact_found": bool(full_stream_candidates)
+            or bool(recursive_full_stream_candidates),
+            "source_backed_native_rule_available": bool(full_stream_candidates)
+            or bool(recursive_full_stream_candidates),
             "seed58_0x4aa354_constructor_ledgers_found": len(seed58_constructor_ledgers),
+            "recursive_seed58_0x4aa354_constructor_ledgers_found": len(recursive_seed58_constructor_ledgers),
             "broad_unseeded_0x4aa354_hit_count": broad_aa354_count,
+            "recursive_0x4aa354_event_hit_count": recursive_broad_aa354_count,
+            "recursive_json_event_hit_artifact_count": len(event_stream_summaries),
+            "recursive_text_seed58_0x4aa354_hit_file_count": len(text_seed58_aa354_paths),
         },
         "exact_blocker": (
             "Existing recovered artifacts do not contain a full same-run seed58 H3MapEd "
             "0x4aa354 selected reward/guard source stream with descriptor-vector and selected "
-            "descriptor state. Available artifacts prove route entry, one seed10 attach-order "
-            "sample, downstream 0x49cf34/0x49d69d mechanics, and an unseeded broad reward-chain "
-            "flow, but they do not justify changing active native 0x4a5c07/0x49cf34 behavior for "
-            "the seed58 route-entry gap."
+            "descriptor state. The recursive recovered-corpus scan finds no seed58 0x4aa354 "
+            "event ledger and no raw seed58 text/log hit for 0x4aa354. Available artifacts prove "
+            "route entry, one seed10 attach-order sample, downstream 0x49cf34/0x49d69d mechanics, "
+            "and an unseeded broad reward-chain flow, but they do not justify changing active "
+            "native 0x4a5c07/0x49cf34 behavior for the seed58 route-entry gap."
         ),
         "next_source_backed_step": (
             "Provide or produce the same-run seed58 0x4aa354 stream artifact, or a source-backed "
@@ -296,15 +416,16 @@ def summarize(artifacts: dict[str, Path]) -> dict[str, Any]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--recovery-root", type=Path, default=DEFAULT_RECOVERY_ROOT)
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    summary = summarize(DEFAULT_ARTIFACTS)
     output_path = args.out
     if not output_path.is_absolute():
         output_path = ROOT / output_path
+    summary = summarize(DEFAULT_ARTIFACTS, args.recovery_root, output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     invariants = summary["invariants"]
@@ -312,8 +433,9 @@ def main() -> int:
     print(
         "RMG_H3MAPED_REWARD_GUARD_SOURCE_STREAM_COVERAGE "
         f"status={status} seed58_constructor_ledgers="
-        f"{invariants['seed58_0x4aa354_constructor_ledgers_found']} "
-        f"unseeded_0x4aa354_hits={invariants['broad_unseeded_0x4aa354_hit_count']} "
+        f"{invariants['recursive_seed58_0x4aa354_constructor_ledgers_found']} "
+        f"recursive_0x4aa354_hits={invariants['recursive_0x4aa354_event_hit_count']} "
+        f"seed58_text_hits={invariants['recursive_text_seed58_0x4aa354_hit_file_count']} "
         f"windows_dll_build_required=false out={output_path}"
     )
     return 0
