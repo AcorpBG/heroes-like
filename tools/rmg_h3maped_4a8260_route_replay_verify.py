@@ -31,6 +31,25 @@ ROUTE_SITES = {
     "0x004a864a",
 }
 SPLIT_SITE_ORDER = ["0x004a8491", "0x004a849d", "0x004a84a9", "0x004a84b5"]
+REQUIRED_SOURCE_STREAM = {
+    "ordered_addresses": [
+        "0x004aa354",
+        "0x004aa38a",
+        "0x004aa38f",
+        "0x004aa3a8",
+        "0x004aa3b6",
+        "0x0049cf34",
+        "0x0049d2be",
+        "0x004aa3bb",
+    ],
+    "required_generator_state": [
+        "generator +0x398 descriptor-vector begin",
+        "generator +0x39c descriptor-vector end",
+        "selected descriptor +0x94/+0x95 state",
+        "selected descriptor/object identity for each 0x4aa354 call",
+        "per-call branch into or around 0x4a5c07/0x49cf34",
+    ],
+}
 
 
 def s32(value: Any) -> int:
@@ -442,6 +461,67 @@ def state_offsets_from_seed(seed: int, states: dict[str, int], max_offset: int) 
     return {name: offsets.get(state) for name, state in states.items()}
 
 
+def build_native_adoption_gate(
+    native_states: dict[str, int],
+    native_offsets: dict[str, int | None],
+    native_counts: dict[str, int | bool | str],
+    route_entry_state: int | None,
+    route_entry_offset: int | None,
+    native_has_matching_route_entry_state: bool,
+    route_event_counts: dict[str, int],
+) -> dict[str, Any]:
+    native_route_offset = native_offsets.get("route_container_0x4a8260_rng_state_before_uint32")
+    offset_gap = None
+    if native_route_offset is not None and route_entry_offset is not None:
+        offset_gap = route_entry_offset - native_route_offset
+
+    event_count_matches = {
+        "split": native_counts.get("route_container_0x4a8260_split_count") == route_event_counts["split_count"],
+        "stamp": native_counts.get("route_container_0x4a8260_stamp_call_count") == route_event_counts["stamp_count"],
+        "a80dc": native_counts.get("route_container_0x4a8260_a80dc_call_count") == route_event_counts["a80dc_pair_count"],
+        "far_cut": native_counts.get("route_container_0x4a8260_far_cut_count") == route_event_counts["far_cut_pair_count"],
+    }
+    route_events_match = all(event_count_matches.values())
+    native_phase_claims_exact = native_counts.get("route_container_0x4a8260_rng_boundary_exact") is True
+    native_active_adoption = native_counts.get("route_container_0x4a8260_active_adoption") is True
+    native_adoption_allowed = (
+        route_entry_state is not None
+        and route_entry_offset is not None
+        and native_has_matching_route_entry_state
+        and route_events_match
+        and native_phase_claims_exact
+        and native_active_adoption
+    )
+
+    denial_reasons: list[str] = []
+    if route_entry_state is None or route_entry_offset is None:
+        denial_reasons.append("h3maped_route_entry_state_not_unique")
+    if not native_has_matching_route_entry_state:
+        denial_reasons.append("native_route_entry_rng_state_does_not_match_h3maped")
+    if not route_events_match:
+        denial_reasons.append("native_route_event_counts_do_not_match_h3maped")
+    if not native_phase_claims_exact:
+        denial_reasons.append("native_phase_does_not_claim_exact_0x4a8260_rng_boundary")
+    if not native_active_adoption:
+        denial_reasons.append("native_route_adoption_is_disabled")
+
+    return {
+        "native_adoption_allowed": native_adoption_allowed,
+        "native_adoption_status": "allowed" if native_adoption_allowed else "denied",
+        "denial_reasons": denial_reasons,
+        "h3maped_route_entry_offset_from_seed": route_entry_offset,
+        "native_route_entry_offset_from_seed": native_route_offset,
+        "route_entry_offset_gap": offset_gap,
+        "h3maped_route_entry_state_uint32": route_entry_state,
+        "native_route_entry_state_uint32": native_states.get("route_container_0x4a8260_rng_state_before_uint32"),
+        "route_event_count_matches": event_count_matches,
+        "route_events_match_h3maped": route_events_match,
+        "required_source_stream_before_enabling_adoption": REQUIRED_SOURCE_STREAM,
+        "source_backed_native_rule_available": native_adoption_allowed,
+        "native_behavior_changed": False,
+    }
+
+
 def build_report(args: argparse.Namespace) -> dict[str, Any]:
     route_events = load_route_events(args.route_ledger)
     splits, stamps, far_pairs = group_route_events(route_events)
@@ -504,6 +584,26 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "a80dc_count_matches_h3maped": native_counts.get("route_container_0x4a8260_a80dc_call_count") == len(a80dc_pairs),
             "far_cut_count_matches_h3maped": native_counts.get("route_container_0x4a8260_far_cut_count") == len(far_pairs),
         }
+        adoption_gate = build_native_adoption_gate(
+            native_states=native_states,
+            native_offsets=native_offsets,
+            native_counts=native_counts,
+            route_entry_state=route_entry_state,
+            route_entry_offset=rng_hits[0]["offset"] if len(rng_hits) == 1 else None,
+            native_has_matching_route_entry_state=report["native_rng_boundary_compare"]["native_has_matching_route_entry_state"],
+            route_event_counts=report["route_event_counts"],
+        )
+        report["native_route_adoption_gate"] = adoption_gate
+        report["source_adoption_result"].update(
+            {
+                "native_adoption_allowed": adoption_gate["native_adoption_allowed"],
+                "native_adoption_status": adoption_gate["native_adoption_status"],
+                "native_route_entry_offset_from_seed": adoption_gate["native_route_entry_offset_from_seed"],
+                "h3maped_route_entry_offset_from_seed": adoption_gate["h3maped_route_entry_offset_from_seed"],
+                "route_entry_offset_gap": adoption_gate["route_entry_offset_gap"],
+                "denial_reasons": adoption_gate["denial_reasons"],
+            }
+        )
     return report
 
 
@@ -529,6 +629,7 @@ def main() -> int:
     replay = report["route_replay"]
     hits = report["rng_offset_hits"]
     native = report.get("native_rng_boundary_compare", {})
+    adoption_gate = report.get("native_route_adoption_gate", {})
     print(
         "RMG_H3MAPED_4A8260_ROUTE_REPLAY_VERIFY "
         f"status={report['status']} "
@@ -538,6 +639,8 @@ def main() -> int:
         f"rng_hits={len(hits)} "
         f"route_offset={hits[0]['offset'] if len(hits) == 1 else 'unknown'} "
         f"native_match={native.get('native_has_matching_route_entry_state', '')} "
+        f"native_adoption={adoption_gate.get('native_adoption_status', 'not_checked')} "
+        f"offset_gap={adoption_gate.get('route_entry_offset_gap', '')} "
         f"out={args.out}"
     )
     return 0 if report["status"] == "pass" else 1
