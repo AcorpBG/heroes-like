@@ -361,6 +361,10 @@ def find_native_rng_states(snapshot: dict[str, Any]) -> dict[str, int]:
             .get("reward_scheduler_boundary", {})
             .get("preview_rng_state_after_0x4aa354_uint32")
         ),
+        "route_container_0x4a8260_rng_state_before_uint32": (
+            port.get("generated_cell_decoration_bit_state", {})
+            .get("route_container_0x4a8260_rng_state_before_uint32")
+        ),
         "connection_dispatch_rng_before_uint32": (
             port.get("connections_blockers_guards", {})
             .get("dispatch_summary", {})
