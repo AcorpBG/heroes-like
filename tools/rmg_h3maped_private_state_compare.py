@@ -31,6 +31,7 @@ RELATION_SCHEMA = "h3maped_private_state_checkpoint_0x49b3fb_relations_v1"
 DWORD_LINE_RE = re.compile(r"(?:^|>)\s*(?:0x)?([0-9a-fA-F]+):\s+(.+)$")
 HEX_WORD_RE = re.compile(r"\b[0-9a-fA-F]{1,8}\b")
 ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]|\x1b\][^\a]*(?:\a|\x1b\\)")
+CELL_GRID_DUMP_COMMAND_RE = re.compile(r"x/(\d+)x\s+\*\(int\*\)\(\$esi\+0x14\)")
 
 
 def as_uint32(value: Any) -> int:
@@ -67,10 +68,25 @@ def find_checkpoint(snapshot: dict[str, Any], schema_id: str, checkpoint_id: str
 
 
 def parse_h3maped_generated_cell_dump(path: Path, expected_cell_count: int, base_address: int | None) -> list[dict[str, Any]]:
+    words_per_cell = 12
+    required_words = expected_cell_count * words_per_cell
     words: list[int] = []
-    collecting = base_address is None
+    fallback_words: list[int] = []
+    collecting = False
+    saw_grid_dump_command = False
     for line in path.read_text(errors="replace").splitlines():
         line = ANSI_RE.sub("", line).replace("\r", "")
+        command_match = CELL_GRID_DUMP_COMMAND_RE.search(line)
+        if (
+            base_address is None
+            and not saw_grid_dump_command
+            and command_match
+            and int(command_match.group(1)) >= required_words
+        ):
+            words.clear()
+            collecting = True
+            saw_grid_dump_command = True
+            continue
         match = DWORD_LINE_RE.search(line)
         if not match:
             continue
@@ -78,12 +94,16 @@ def parse_h3maped_generated_cell_dump(path: Path, expected_cell_count: int, base
         if base_address is not None and address == base_address:
             collecting = True
         if not collecting:
+            if base_address is None:
+                for token in HEX_WORD_RE.findall(match.group(2)):
+                    fallback_words.append(int(token, 16) & 0xFFFFFFFF)
             continue
         for token in HEX_WORD_RE.findall(match.group(2)):
             words.append(int(token, 16) & 0xFFFFFFFF)
 
-    words_per_cell = 12
-    required_words = expected_cell_count * words_per_cell
+    if base_address is None and not saw_grid_dump_command:
+        words = fallback_words
+
     if len(words) < required_words:
         raise ValueError(
             f"H3MapEd cell dump has {len(words)} dwords, needs {required_words} "
@@ -386,7 +406,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--native-phase-snapshot", type=Path, required=True, help="Native .phase_snapshot.json with private checkpoints.")
     parser.add_argument("--native-checkpoint-id", default="", help="Optional native generated-cell checkpoint_id to compare, e.g. pre_0x4a4c8e.")
-    parser.add_argument("--h3maped-cell-dump", type=Path, default=None, help="winedbg memory dump from 0x4a4c8e entry: x/15552x *(int*)($esi+0x14).")
+    parser.add_argument("--h3maped-cell-dump", type=Path, default=None, help="winedbg memory dump from 0x4a4c8e entry: x/<cell_count*12>x *(int*)($esi+0x14).")
     parser.add_argument("--h3maped-cell-base-address", default="", help="Optional hex base address for the first generated cell line; ignores earlier debugger memory dumps.")
     parser.add_argument("--h3maped-final-ledger", type=Path, default=None, help="Wine trace ledger containing the final 0x49b2b6/0x4ad251 generated-cell grid dump.")
     parser.add_argument("--h3maped-relations-json", type=Path, default=None, help="Optional parsed H3MapEd relation records, if available.")
