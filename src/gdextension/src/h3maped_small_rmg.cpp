@@ -968,10 +968,18 @@ struct RuntimeLinkSeed {
 
 constexpr TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, "", 0xff, 0xff },
+	{ "h3maped_template_010", 10, 1, 8, 1, 2, 2, 2, 4, 4, "", 0x03, 0x03 },
+	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, "", 0x03, 0x03 },
 	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, "", 0x0f, 0x0f },
+	{ "h3maped_template_013", 13, 1, 8, 1, 2, 2, 2, 6, 10, "", 0x03, 0x03 },
+	{ "h3maped_template_014", 14, 1, 8, 1, 2, 2, 2, 10, 15, "", 0x03, 0x03 },
+	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, "", 0x03, 0x03 },
 	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, "", 0x0f, 0x0f },
+	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, "", 0x03, 0x03 },
 	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, "", 0x0f, 0x0f },
+	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, "", 0x03, 0x03 },
 	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, "", 0x03, 0x03 },
+	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, "", 0x03, 0x03 },
 	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, "", 0x0f, 0x0f },
 	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, "", 0x0f, 0x0f },
 	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, "", 0x0f, 0x0f },
@@ -2994,18 +3002,9 @@ Array accepted_templates(const Dictionary &normalized_config) {
 	if (!supports_scope(normalized_config)) {
 		return accepted;
 	}
-	if (supports_small_land_scope(normalized_config)) {
-		for (const TemplateEvidence &candidate : SMALL_LAND_TEMPLATES) {
-			if (score < candidate.min_size_score || score > candidate.max_size_score) {
-				continue;
-			}
-			if (humans < candidate.min_humans || humans > candidate.max_humans || players < candidate.min_total_players || players > candidate.max_total_players || players < humans) {
-				continue;
-			}
-			accepted.append(template_record(candidate));
-		}
-		return accepted;
-	}
+	// Small and Medium both use recovered catalog order. The previous Small
+	// shortcut carried only 13 public templates; H3MapEd accepts 21 for 2p
+	// Small land, and seed 58 proves catalog-order selection of template 046.
 	Dictionary catalog_load = load_compiled_template_catalog();
 	if (!bool(catalog_load.get("ok", false))) {
 		return accepted;
@@ -9431,22 +9430,23 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count = 0;
 	Array reward_scheduler_active_runtime_records_0x10e4;
 	int32_t reward_scheduler_active_relation_vector_count_0x10e4 = 0;
+	int32_t reward_scheduler_inactive_runtime_record_count_0x10e4 = 0;
 	for (int64_t index = 0; index < runtime_records.size(); ++index) {
 		if (Variant(runtime_records[index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
 		Dictionary runtime = runtime_records[index];
-		if (!bool(runtime.get("runtime_byte_0x3c_inferred", false))) {
+		const bool runtime_byte_0x3c_inferred = bool(runtime.get("runtime_byte_0x3c_inferred", false));
+		if (!runtime_byte_0x3c_inferred) {
 			h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count += 1;
-			continue;
 		}
 		Dictionary active_runtime = runtime.duplicate(true);
 		active_runtime["active_relation_vector_index_0x10e4"] = reward_scheduler_active_relation_vector_count_0x10e4;
-		active_runtime["active_relation_vector_source_0x10e4"] = "0x4ac552 iterates generator+0x10e4..+0x10e8 after 0x4aadd2 counts records with runtime byte+0x3c set";
+		active_runtime["active_relation_vector_source_0x10e4"] = "0x4ac552/0x4aab7e iterates recovered reward relation records; runtime byte+0x3c remains the 0x4aadd2 town-choice counter input and does not suppress 0x4aa354 reward scheduling";
 		reward_scheduler_active_runtime_records_0x10e4.append(active_runtime);
 		reward_scheduler_active_relation_vector_count_0x10e4 += 1;
 		const int32_t town_choice_index = int32_t(runtime.get("town_choice_index", runtime.get("town_choice_index_49b3c1", -1)));
-		if (town_choice_index >= 0 && town_choice_index < int32_t(h3maped_generator_0xf64_town_choice_counts.size())) {
+		if (runtime_byte_0x3c_inferred && town_choice_index >= 0 && town_choice_index < int32_t(h3maped_generator_0xf64_town_choice_counts.size())) {
 			h3maped_generator_0xf64_town_choice_counts[size_t(town_choice_index)] += 1;
 			h3maped_generator_0xf60_town_choice_total += 1;
 		}
@@ -9623,8 +9623,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		reward_zone["treasure_band_count"] = bands.size();
 		reward_zone["eligible_reward_band_count"] = zone_eligible_count;
 		reward_zone["eligible_reward_density_sum"] = zone_density_sum;
-		reward_zone["active_relation_vector_member_0x10e4"] = bool(runtime.get("runtime_byte_0x3c_inferred", false));
-		reward_zone["active_relation_vector_source_0x10e4"] = "0x4ac552 reward scheduler consumes generator+0x10e4 active records; native projects that vector from recovered 0x4aadd2 runtime byte+0x3c semantics";
+		reward_zone["active_relation_vector_member_0x10e4"] = zone_eligible_count > 0;
+		reward_zone["active_relation_vector_source_0x10e4"] = "0x4ac552/0x4aab7e reward scheduling consumes recovered relation records with eligible treasure bands; runtime byte+0x3c is not a scheduler membership filter";
 		reward_zone["scheduler_status"] = zone_eligible_count > 0 ? String("0x4aab7e_reward_band_budget_preview_private") : String("0x4aab7e_no_eligible_reward_band");
 		reward_zone["coordinate_commit_materialized"] = false;
 		reward_scheduler_preview.append(reward_zone);
@@ -14095,11 +14095,11 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["h3maped_generator_0xf60_town_choice_total"] = h3maped_generator_0xf60_town_choice_total;
 	reward_scheduler["h3maped_generator_0xf64_town_choice_counts"] = h3maped_generator_0xf64_town_choice_counts_array;
 	reward_scheduler["h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count"] = h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count;
-	reward_scheduler["h3maped_generator_0xf60_0xf64_source"] = "0x4aadd2_counts_only_runtime_zones_with_runtime_byte_0x3c_set";
+	reward_scheduler["h3maped_generator_0xf60_0xf64_source"] = "0x4aadd2 counts only runtime zones with runtime byte+0x3c set for town-choice buckets; recovered seed-58 0x4aa354 stream proves this byte is not the reward scheduler membership filter";
 	reward_scheduler["active_relation_vector_count_0x10e4"] = reward_scheduler_active_relation_vector_count_0x10e4;
-	reward_scheduler["active_relation_vector_source_0x10e4"] = "0x4ac552 calls 0x4aab7e once per generator+0x10e4..+0x10e8 active record; native projects that vector from recovered 0x4aadd2 runtime byte+0x3c records instead of scheduling every runtime zone";
+	reward_scheduler["active_relation_vector_source_0x10e4"] = "0x4ac552 calls 0x4aab7e across recovered reward relation records; native no longer gates 0x4aa354 scheduling on the 0x4aadd2 runtime byte+0x3c town-choice counter proxy";
 	reward_scheduler["scheduler_runtime_record_count_before_active_filter"] = runtime_records.size();
-	reward_scheduler["scheduler_inactive_runtime_record_count"] = h3maped_generator_0xf60_runtime_byte_0x3c_skipped_count;
+	reward_scheduler["scheduler_inactive_runtime_record_count"] = reward_scheduler_inactive_runtime_record_count_0x10e4;
 	reward_scheduler["coordinate_commit_anchor"] = "0x4aa9b7";
 	reward_scheduler["coordinate_filter_anchor"] = "0x4aa603";
 	reward_scheduler["final_object_commit_anchor"] = "0x4aa3e9";
