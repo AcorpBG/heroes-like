@@ -473,17 +473,16 @@
         "closureCriteria": "Focused Python compare reports zero unexplained pre-0x4a4c8e generated-cell word drift for the selected references before route/object adoption is treated as valid.",
         "id": "native-rmg-private-generated-cell-grid-alignment-10184",
         "latestEvidenceArtifacts": [
-          ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/manifest.json",
-          ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/wrapper_manifest.json",
+          "tools/rmg_h3maped_private_state_compare.py",
           ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
           ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
         ],
-        "latestEvidenceId": "native-rmg-no-godot-phase-snapshot-only-trigger-20260613",
-        "latestFinding": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
+        "latestEvidenceId": "native-rmg-checkpoint2-word0x20-split-20260613",
+        "latestFinding": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
         "status": "pending",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment",
-        "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append record layout and generated-cell owner/bit semantics, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Keep 0x4a325d out-of-bounds relocation exactness pending until a reference exercises it. For any native RMG run on this host, use the standalone CLI --phase-snapshot-only path for private-state snapshots; do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint."
+        "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append owner surface, then port the recovered ordered low-word score producer and generated-cell bit mutations before rerunning the same-run pre-0x4a4c8e generated-cell comparison. Do not replace the score field with heuristic distance fills, density scalars, brute-force retries, Godot/headless Godot exports, GDScript reports, Windows DLL churn, or final-map delta tuning."
       },
       {
         "closureCriteria": "Selected reward/object descriptor and copied source-record identity match the recovered same-run stream through materialization for the selected references.",
@@ -551,9 +550,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
-    "currentSliceNotes": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
-    "currentSliceUpdatedAt": "2026-06-13T21:41:09Z",
+    "currentNotes": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
+    "currentSliceNotes": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
+    "currentSliceUpdatedAt": "2026-06-13T21:57:37Z",
     "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, refuses to run while Godot is already active, and the Python freshness gate tracks standalone CLI inputs rather than the old in-engine runner or GDExtension shared libraries. Defer Windows .dll builds until Linux parity reaches the final boundary. Use --phase-snapshot-only for supported private-state snapshot runs; full .amap export remains blocked until the generation/package core is split from Godot APIs.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -562,28 +561,23 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-no-godot-phase-snapshot-only-trigger-20260613",
-      "date": "2026-06-13T21:41:09Z",
-      "recordedAt": "2026-06-13T21:41:09Z",
-      "validatedAt": "2026-06-13T21:41:09Z",
+      "id": "native-rmg-checkpoint2-word0x20-split-20260613",
+      "date": "2026-06-13T21:57:37Z",
+      "recordedAt": "2026-06-13T21:57:37Z",
+      "validatedAt": "2026-06-13T21:57:37Z",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "checkpoint2_pending_phase_snapshot_only_trigger_available",
-      "summary": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
-      "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append record layout and generated-cell owner/bit semantics, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Keep 0x4a325d out-of-bounds relocation exactness pending until a reference exercises it. For any native RMG run on this host, use the standalone CLI --phase-snapshot-only path for private-state snapshots; do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+      "status": "checkpoint2_pending_word0x20_split_compare",
+      "summary": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
+      "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append owner surface, then port the recovered ordered low-word score producer and generated-cell bit mutations before rerunning the same-run pre-0x4a4c8e generated-cell comparison. Do not replace the score field with heuristic distance fills, density scalars, brute-force retries, Godot/headless Godot exports, GDScript reports, Windows DLL churn, or final-map delta tuning.",
       "artifacts": [
-        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
-        "tools/rmg_native_batch_export.py",
-        "bin/rmg_native_batch_export_cli",
-        "PLAN.md",
-        ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/manifest.json",
-        ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/wrapper_manifest.json",
+        "tools/rmg_h3maped_private_state_compare.py",
         ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
         ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
       ],
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
         "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4 --print-manifest (passed; status=pass, phase_snapshots=1, godot_process_started=false)",
-        "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible: owner_byte2_signed_mismatch=475, word_0x20=5184, word_0x24=4768, word_0x28=4065)",
+        "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible and split: owner_byte2_signed_mismatch=475, word_0x20_high_word_mismatch=475, word_0x20_low_word_mismatch=5184, word_0x24_mismatch=4768, word_0x28_mismatch=4065)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
@@ -607,32 +601,31 @@
         "validate_repo_passed": true,
         "jq_validation_passed": true,
         "git_diff_check_passed": true,
-        "no_godot_process_detected": true
+        "no_godot_process_detected": true,
+        "word_0x20_high_word_mismatch": 475,
+        "word_0x20_low_word_mismatch": 5184,
+        "word_0x20_low_word_mismatch_owner_byte2_same": 4709,
+        "word_0x20_low_word_mismatch_owner_byte2_different": 475
       }
     },
     "latestEvidence": {
-      "id": "native-rmg-no-godot-phase-snapshot-only-trigger-20260613",
-      "date": "2026-06-13T21:41:09Z",
-      "recordedAt": "2026-06-13T21:41:09Z",
-      "validatedAt": "2026-06-13T21:41:09Z",
+      "id": "native-rmg-checkpoint2-word0x20-split-20260613",
+      "date": "2026-06-13T21:57:37Z",
+      "recordedAt": "2026-06-13T21:57:37Z",
+      "validatedAt": "2026-06-13T21:57:37Z",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "checkpoint2_pending_phase_snapshot_only_trigger_available",
-      "summary": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
-      "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append record layout and generated-cell owner/bit semantics, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Keep 0x4a325d out-of-bounds relocation exactness pending until a reference exercises it. For any native RMG run on this host, use the standalone CLI --phase-snapshot-only path for private-state snapshots; do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+      "status": "checkpoint2_pending_word0x20_split_compare",
+      "summary": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
+      "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append owner surface, then port the recovered ordered low-word score producer and generated-cell bit mutations before rerunning the same-run pre-0x4a4c8e generated-cell comparison. Do not replace the score field with heuristic distance fills, density scalars, brute-force retries, Godot/headless Godot exports, GDScript reports, Windows DLL churn, or final-map delta tuning.",
       "artifacts": [
-        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
-        "tools/rmg_native_batch_export.py",
-        "bin/rmg_native_batch_export_cli",
-        "PLAN.md",
-        ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/manifest.json",
-        ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/wrapper_manifest.json",
+        "tools/rmg_h3maped_private_state_compare.py",
         ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
         ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
       ],
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
         "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4 --print-manifest (passed; status=pass, phase_snapshots=1, godot_process_started=false)",
-        "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible: owner_byte2_signed_mismatch=475, word_0x20=5184, word_0x24=4768, word_0x28=4065)",
+        "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible and split: owner_byte2_signed_mismatch=475, word_0x20_high_word_mismatch=475, word_0x20_low_word_mismatch=5184, word_0x24_mismatch=4768, word_0x28_mismatch=4065)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)",
@@ -656,7 +649,11 @@
         "validate_repo_passed": true,
         "jq_validation_passed": true,
         "git_diff_check_passed": true,
-        "no_godot_process_detected": true
+        "no_godot_process_detected": true,
+        "word_0x20_high_word_mismatch": 475,
+        "word_0x20_low_word_mismatch": 5184,
+        "word_0x20_low_word_mismatch_owner_byte2_same": 4709,
+        "word_0x20_low_word_mismatch_owner_byte2_different": 475
       }
     },
     "metrics": {
@@ -10766,14 +10763,14 @@
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used."
     }
   ],
-  "currentNotes": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
+  "currentNotes": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
+  "currentSliceNotes": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-13T21:41:09Z",
+  "currentSliceUpdatedAt": "2026-06-13T21:57:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12734,28 +12731,23 @@
   },
   "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, refuses to run while Godot is already active, and the Python freshness gate tracks standalone CLI inputs rather than the old in-engine runner or GDExtension shared libraries. Defer Windows .dll builds until Linux parity reaches the final boundary. Use --phase-snapshot-only for supported private-state snapshot runs; full .amap export remains blocked until the generation/package core is split from Godot APIs.",
   "lastValidation": {
-    "id": "native-rmg-no-godot-phase-snapshot-only-trigger-20260613",
-    "date": "2026-06-13T21:41:09Z",
-    "recordedAt": "2026-06-13T21:41:09Z",
-    "validatedAt": "2026-06-13T21:41:09Z",
+    "id": "native-rmg-checkpoint2-word0x20-split-20260613",
+    "date": "2026-06-13T21:57:37Z",
+    "recordedAt": "2026-06-13T21:57:37Z",
+    "validatedAt": "2026-06-13T21:57:37Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "checkpoint2_pending_phase_snapshot_only_trigger_available",
-    "summary": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
-    "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append record layout and generated-cell owner/bit semantics, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Keep 0x4a325d out-of-bounds relocation exactness pending until a reference exercises it. For any native RMG run on this host, use the standalone CLI --phase-snapshot-only path for private-state snapshots; do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+    "status": "checkpoint2_pending_word0x20_split_compare",
+    "summary": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
+    "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append owner surface, then port the recovered ordered low-word score producer and generated-cell bit mutations before rerunning the same-run pre-0x4a4c8e generated-cell comparison. Do not replace the score field with heuristic distance fills, density scalars, brute-force retries, Godot/headless Godot exports, GDScript reports, Windows DLL churn, or final-map delta tuning.",
     "artifacts": [
-      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
-      "tools/rmg_native_batch_export.py",
-      "bin/rmg_native_batch_export_cli",
-      "PLAN.md",
-      ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/manifest.json",
-      ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/wrapper_manifest.json",
+      "tools/rmg_h3maped_private_state_compare.py",
       ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
       ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
     ],
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
       "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4 --print-manifest (passed; status=pass, phase_snapshots=1, godot_process_started=false)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible: owner_byte2_signed_mismatch=475, word_0x20=5184, word_0x24=4768, word_0x28=4065)",
+      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible and split: owner_byte2_signed_mismatch=475, word_0x20_high_word_mismatch=475, word_0x20_low_word_mismatch=5184, word_0x24_mismatch=4768, word_0x28_mismatch=4065)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
@@ -12779,32 +12771,31 @@
       "validate_repo_passed": true,
       "jq_validation_passed": true,
       "git_diff_check_passed": true,
-      "no_godot_process_detected": true
+      "no_godot_process_detected": true,
+      "word_0x20_high_word_mismatch": 475,
+      "word_0x20_low_word_mismatch": 5184,
+      "word_0x20_low_word_mismatch_owner_byte2_same": 4709,
+      "word_0x20_low_word_mismatch_owner_byte2_different": 475
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-no-godot-phase-snapshot-only-trigger-20260613",
-    "date": "2026-06-13T21:41:09Z",
-    "recordedAt": "2026-06-13T21:41:09Z",
-    "validatedAt": "2026-06-13T21:41:09Z",
+    "id": "native-rmg-checkpoint2-word0x20-split-20260613",
+    "date": "2026-06-13T21:57:37Z",
+    "recordedAt": "2026-06-13T21:57:37Z",
+    "validatedAt": "2026-06-13T21:57:37Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "checkpoint2_pending_phase_snapshot_only_trigger_available",
-    "summary": "Standalone no-Godot RMG trigger now has an explicit --phase-snapshot-only mode. The Python wrapper and C++ CLI return pass for supported controlled Small/Medium one-level land private-state snapshots without launching Godot, while .amap export still fails closed until the recovered generation/package core is split from Godot Dictionary/Array/String/Variant/FileAccess APIs. The matched Medium hc4_comp0 setup 0 reference still reports checkpoint-2 drift: owner_byte2_signed_mismatch=475/5184, word_0x20=5184, word_0x24=4768, and word_0x28=4065, so checkpoint 2 remains pending.",
-    "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append record layout and generated-cell owner/bit semantics, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Keep 0x4a325d out-of-bounds relocation exactness pending until a reference exercises it. For any native RMG run on this host, use the standalone CLI --phase-snapshot-only path for private-state snapshots; do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+    "status": "checkpoint2_pending_word0x20_split_compare",
+    "summary": "Checkpoint-2 no-Godot compare now splits word_0x20 drift. The matched Medium hc4_comp0 setup 0 reference still fails, but the failure is no longer opaque: word_0x20_mismatch=5184/5184 is entirely explained by word_0x20_low_word_mismatch=5184 with native still at constructor low word 0x7fbc, while word_0x20_high_word_mismatch=475 matches owner_byte2_signed_mismatch=475/5184. word_0x24_mismatch=4768 and word_0x28_mismatch=4065 remain. Checkpoint 2 remains pending; next source-backed work is exact 0x4a2777 generator+0x3f4 fallback/append owner surface plus ordered score/bit mutation replay. No Godot was launched.",
+    "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 fallback/append owner surface, then port the recovered ordered low-word score producer and generated-cell bit mutations before rerunning the same-run pre-0x4a4c8e generated-cell comparison. Do not replace the score field with heuristic distance fills, density scalars, brute-force retries, Godot/headless Godot exports, GDScript reports, Windows DLL churn, or final-map delta tuning.",
     "artifacts": [
-      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
-      "tools/rmg_native_batch_export.py",
-      "bin/rmg_native_batch_export_cli",
-      "PLAN.md",
-      ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/manifest.json",
-      ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/wrapper_manifest.json",
+      "tools/rmg_h3maped_private_state_compare.py",
       ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
       ".artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
     ],
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
       "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4 --print-manifest (passed; status=pass, phase_snapshots=1, godot_process_started=false)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible: owner_byte2_signed_mismatch=475, word_0x20=5184, word_0x24=4768, word_0x28=4065)",
+      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_phase_snapshot_only_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --out .artifacts/rmg_native_cli_phase_snapshot_only_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; expected mismatch remains visible and split: owner_byte2_signed_mismatch=475, word_0x20_high_word_mismatch=475, word_0x20_low_word_mismatch=5184, word_0x24_mismatch=4768, word_0x28_mismatch=4065)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
@@ -12828,7 +12819,11 @@
       "validate_repo_passed": true,
       "jq_validation_passed": true,
       "git_diff_check_passed": true,
-      "no_godot_process_detected": true
+      "no_godot_process_detected": true,
+      "word_0x20_high_word_mismatch": 475,
+      "word_0x20_low_word_mismatch": 5184,
+      "word_0x20_low_word_mismatch_owner_byte2_same": 4709,
+      "word_0x20_low_word_mismatch_owner_byte2_different": 475
     }
   },
   "nextActionGuardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, refuses to run while Godot is already active, and the Python freshness gate tracks standalone CLI inputs rather than the old in-engine runner or GDExtension shared libraries. Defer Windows .dll builds until Linux parity reaches the final boundary.",
