@@ -8,12 +8,13 @@
         "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "tools/rmg_native_batch_export.py"
       ],
-      "notes": "Required before fresh native map generation/parity exports on this host: expose H3MapEd RMG generation through plain C++ data structures and JSON/file output without Godot engine APIs. Checkpoint-2 implementation also needs source-handler +0x44/generator+0x10b8 capture and 0x4a3b48/0x49b452 synthetic runtime-zone append replay.",
+      "notes": "Required before fresh native map generation/parity exports on this host: expose H3MapEd RMG generation through plain C++ data structures and JSON/file output without Godot engine APIs. tools/rmg_native_batch_export.py now has no Godot runner path; the CLI is the only export target and currently fails closed until the core split exists. Checkpoint-2 implementation also needs RMG setup object +0x44/generator+0x10b8 same-run capture and 0x4a3b48/0x49b452 synthetic runtime-zone append replay.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
-      "title": "Split Native RMG Core From Godot APIs"
+      "title": "Split Native RMG Core From Godot APIs",
+      "updatedAt": "2026-06-13T16:29:44Z"
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -472,15 +473,17 @@
         "closureCriteria": "Focused Python compare reports zero unexplained pre-0x4a4c8e generated-cell word drift for the selected references before route/object adoption is treated as valid.",
         "id": "native-rmg-private-generated-cell-grid-alignment-10184",
         "latestEvidenceArtifacts": [
+          "tools/rmg_native_batch_export.py",
           "src/gdextension/src/h3maped_small_rmg.cpp",
+          "PLAN.md",
+          "docs/rmg-python-validation-workflow.md",
           "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
           "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-          ".artifacts/rmg_native_batch_export_cli_0x10b8_smoke/manifest.json",
-          ".artifacts/rmg_native_batch_export_py_0x10b8_smoke/wrapper_manifest.json",
-          "PLAN.md"
+          ".artifacts/rmg_native_batch_export_cli_no_godot_runner_smoke/manifest.json",
+          ".artifacts/rmg_native_batch_export_py_no_godot_runner_smoke/wrapper_manifest.json"
         ],
-        "latestEvidenceId": "native-rmg-checkpoint2-0x10b8-synthetic-branch-gating-20260613",
-        "latestFinding": "Medium seed-10 H3MapEd owner surface still has 13 non-negative owner ids for a 10-zone selected template while native has 9. The branch rule for missing same-level owner surfaces is now source-backed through generator+0x10b8/source-handler+0x44; native is gated until that input and the 0x4a3b48/0x49b452 synthetic runtime-zone append are ported.",
+        "latestEvidenceId": "native-rmg-no-godot-runner-removal-and-0x10b8-setup-field-correction-20260613",
+        "latestFinding": "Medium seed-10 H3MapEd owner surface still has 13 non-negative owner ids for a 10-zone selected template while native has 9. The branch rule for missing same-level owner surfaces is source-backed through generator+0x10b8 from RMG setup object +0x44, not the older source-handler label. Static path: 0x4adf88 initializes setup +0x44 to 3; 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1; 0x49ecf2 writes arg8 to generator+0x10b8. Native remains gated until same-run setup +0x44 capture and 0x4a3b48/0x49b452 synthetic runtime-zone append are ported.",
         "status": "pending",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment"
@@ -551,10 +554,10 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed. Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
-    "currentSliceNotes": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed. Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
-    "currentSliceUpdatedAt": "2026-06-13T15:54:38Z",
-    "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py defaults to the standalone no-Godot bin/rmg_native_batch_export_cli path; the legacy Godot runner requires both explicit --runner godot --allow-godot and RMG_NATIVE_BATCH_EXPORT_ALLOW_GODOT=1 and must not be used for parity work on this host. Defer Windows .dll builds until Linux parity reaches the final boundary.",
+    "currentNotes": "RMG export orchestration now has no Godot runner path in tools/rmg_native_batch_export.py: --runner only accepts native-cli, --runner godot is rejected by argparse, and smoke checks show godot_process_started=false. Checkpoint 2 diagnostics now name the correct generator+0x10b8 source: 0x49ecf2 arg8 comes from the RMG setup object +0x44 passed by 0x4adfe1; 0x4adf88 initializes +0x44 to 3 and 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1. No parity checkpoint was completed. Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
+    "currentSliceNotes": "RMG export orchestration now has no Godot runner path in tools/rmg_native_batch_export.py: --runner only accepts native-cli, --runner godot is rejected by argparse, and smoke checks show godot_process_started=false. Checkpoint 2 diagnostics now name the correct generator+0x10b8 source: 0x49ecf2 arg8 comes from the RMG setup object +0x44 passed by 0x4adfe1; 0x4adf88 initializes +0x44 to 3 and 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1. No parity checkpoint was completed. Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
+    "currentSliceUpdatedAt": "2026-06-13T16:29:44Z",
+    "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, and the legacy Godot runner has been removed from that wrapper. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
       "native Small/Medium one-level land RMG alignment to recovered H3MapEd R1-R7 replay",
@@ -10654,14 +10657,14 @@
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used."
     }
   ],
-  "currentNotes": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed. Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
+  "currentNotes": "RMG export orchestration now has no Godot runner path in tools/rmg_native_batch_export.py: --runner only accepts native-cli, --runner godot is rejected by argparse, and smoke checks show godot_process_started=false. Checkpoint 2 diagnostics now name the correct generator+0x10b8 source: 0x49ecf2 arg8 comes from the RMG setup object +0x44 passed by 0x4adfe1; 0x4adf88 initializes +0x44 to 3 and 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1. No parity checkpoint was completed. Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed. Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
+  "currentSliceNotes": "RMG export orchestration now has no Godot runner path in tools/rmg_native_batch_export.py: --runner only accepts native-cli, --runner godot is rejected by argparse, and smoke checks show godot_process_started=false. Checkpoint 2 diagnostics now name the correct generator+0x10b8 source: 0x49ecf2 arg8 comes from the RMG setup object +0x44 passed by 0x4adfe1; 0x4adf88 initializes +0x44 to 3 and 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1. No parity checkpoint was completed. Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-13T16:16:15Z",
+  "currentSliceUpdatedAt": "2026-06-13T16:29:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12353,6 +12356,32 @@
       "status": "passed",
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used."
     },
+    "native-rmg-checkpoint2-0x10b8-synthetic-branch-gating-20260613": {
+      "artifacts": [
+        "src/gdextension/src/h3maped_small_rmg.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        ".artifacts/rmg_native_batch_export_cli_0x10b8_smoke/manifest.json",
+        ".artifacts/rmg_native_batch_export_py_0x10b8_smoke/wrapper_manifest.json",
+        "PLAN.md"
+      ],
+      "metrics": {
+        "alignment_checkpoints_completed": 3,
+        "alignment_checkpoints_pending": 5,
+        "checkpoint2_status": "pending",
+        "generator_0x10b8_branch_condition_recovered": true,
+        "godot_process_started": false,
+        "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound",
+        "native_no_appended_zone_exact_claim_removed_when_0x10b8_unknown": true,
+        "source_handler_0x44_same_run_capture_ported": false,
+        "standalone_cli_built": true,
+        "synthetic_runtime_zone_append_ported": false
+      },
+      "remainingGap": "Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
+      "summary": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed.",
+      "timestamp": "2026-06-13T16:16:15Z",
+      "type": "native_rmg_alignment_checkpoint_narrowing"
+    },
     "native-rmg-final-sweep-mask-classfix-20260611": {
       "artifact": ".artifacts/rmg_native_medium_seed10_final_sweep_classfix_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json",
       "checks": [
@@ -12529,118 +12558,101 @@
       "scope": "Small 36x36 one-level land template-selection authority only",
       "status": "focused_regression_gate_passed",
       "validation": "Focused Small-land template-selection hard lock on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed. The hard-lock report proves supported Small land selects original h3maped_template_018 authority, explicit translated-template requests are overridden, generated payloads preserve h3maped_exe_rng original-catalog authority/no-fallback flags, and unsupported medium/water/two-level/non-numeric-seed cases block without map payload, translated-template authority, or archived catalog-auto fallback output. This is focused template-selection evidence only; production readiness and broader modes remain blocked."
-    },
-    "native-rmg-checkpoint2-0x10b8-synthetic-branch-gating-20260613": {
-      "type": "native_rmg_alignment_checkpoint_narrowing",
-      "timestamp": "2026-06-13T16:16:15Z",
-      "summary": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed.",
-      "remainingGap": "Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
-      "metrics": {
-        "alignment_checkpoints_completed": 3,
-        "alignment_checkpoints_pending": 5,
-        "checkpoint2_status": "pending",
-        "generator_0x10b8_branch_condition_recovered": true,
-        "source_handler_0x44_same_run_capture_ported": false,
-        "synthetic_runtime_zone_append_ported": false,
-        "native_no_appended_zone_exact_claim_removed_when_0x10b8_unknown": true,
-        "godot_process_started": false,
-        "standalone_cli_built": true,
-        "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound"
-      },
-      "artifacts": [
-        "src/gdextension/src/h3maped_small_rmg.cpp",
-        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-        ".artifacts/rmg_native_batch_export_cli_0x10b8_smoke/manifest.json",
-        ".artifacts/rmg_native_batch_export_py_0x10b8_smoke/wrapper_manifest.json",
-        "PLAN.md"
-      ]
     }
   },
-  "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py defaults to the standalone no-Godot bin/rmg_native_batch_export_cli path; the legacy Godot runner requires both explicit --runner godot --allow-godot and RMG_NATIVE_BATCH_EXPORT_ALLOW_GODOT=1 and must not be used for parity work on this host. Defer Windows .dll builds until Linux parity reaches the final boundary.",
+  "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, and the legacy Godot runner has been removed from that wrapper. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
     "artifacts": [
-      ".artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json",
-      ".artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509",
-      ".artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/template_selection_reference_check.json",
-      ".artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/4aa354_native_handoff_compare.json",
-      ".artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/route_replay_verify.json"
-    ],
-    "checks": [
-      "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-      "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-      "python3 tools/rmg_h3maped_4aa354_source_stream_summary.py --ledger .artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509 --controlled-reference-manifest .artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
-      "python3 tools/rmg_h3maped_template_selection_reference_check.py --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/template_selection_reference_check.json",
-      "python3 tools/rmg_h3maped_4aa9b7_native_handoff_compare.py --h3maped-handoff .artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/small_2p_seed_58_manual20.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/4aa354_native_handoff_compare.json",
-      "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/small_2p_seed_58_manual20.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/route_replay_verify.json",
-      "python3 -m py_compile tools/rmg_h3maped_4aa354_source_stream_summary.py tools/rmg_h3maped_template_selection_reference_check.py",
-      "jq empty ops/progress.json",
-      "git diff --check",
-      "python3 tests/validate_repo.py"
-    ],
-    "date": "2026-06-12",
-    "id": "native-rmg-small-template-order-reward-stream-membership-20260612",
-    "metrics": {
-      "godot_public_template_matrix_status": "stopped_after_9_minutes_no_output_process_active_100pct_cpu",
-      "seed58_active_reward_relation_records_after": 9,
-      "seed58_first_native_success_attempt_after": 16,
-      "seed58_first_source_success_attempt": 1,
-      "seed58_h3maped_reward_attempts_recovered": 195,
-      "seed58_handoff_prefix_full_matches_after": "165/195",
-      "seed58_native_reward_attempts_after": 189,
-      "seed58_native_reward_attempts_before": 48,
-      "seed58_runtime_relation_records_after": 9,
-      "seed58_selected_source_catalog_index_after": 46,
-      "seed58_selected_source_catalog_index_before": 28,
-      "small_2p_template_reference_matches": "20/20"
-    },
-    "remainingWork": "Recover and port the remaining exact same-run reward materialization state: selected 0x4a9f1c descriptor/object identity, 0x4aa9b7 candidate availability/private-cell state, dynamic bucket mutation state, and active 0x49cf34/0x49d69d/0x4aa3e9 branch/RNG order. Native first source-stream divergence is still ordinal 1: H3MapEd has two coordinate candidates and succeeds, native has zero candidates and first succeeds at attempt 16.",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "in_progress",
-    "summary": "Small template selection now uses recovered H3MapEd catalog order instead of the stale 13-template shortcut. The 20-reference 2p Small manifest check passes 20/20, and seed 58 now selects source catalog 46 / 5SB0a with 9 runtime relation records. Reward scheduling now treats runtime byte+0x3c as the 0x4aadd2 town-choice counter input only, not the 0x4aa354 scheduler membership filter; seed 58 now schedules 9/9 relation records and 189 reward attempts versus the recovered source stream 195. Remaining blocker is exact 0x4aa9b7 coordinate/private-cell and selected descriptor/materialization parity before 0x4a8260.",
-    "validatedAt": "2026-06-12T15:45:00Z"
-  },
-  "latestEvidence": {
-    "id": "native-rmg-checkpoint2-0x10b8-synthetic-branch-gating-20260613",
-    "date": "2026-06-13",
-    "recordedAt": "2026-06-13T16:16:15Z",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "checkpoint2_pending_source_backed_branch_gated",
-    "summary": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed.",
-    "remainingWork": "Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
-    "artifacts": [
+      "tools/rmg_native_batch_export.py",
       "src/gdextension/src/h3maped_small_rmg.cpp",
+      "PLAN.md",
+      "docs/rmg-python-validation-workflow.md",
       "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
       "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-      ".artifacts/rmg_native_batch_export_cli_0x10b8_smoke/manifest.json",
-      ".artifacts/rmg_native_batch_export_py_0x10b8_smoke/wrapper_manifest.json",
-      "PLAN.md"
+      ".artifacts/rmg_native_batch_export_cli_no_godot_runner_smoke/manifest.json",
+      ".artifacts/rmg_native_batch_export_py_no_godot_runner_smoke/wrapper_manifest.json"
     ],
     "checks": [
+      "python3 -m py_compile tools/rmg_native_batch_export.py tools/rmg_h3maped_private_state_compare.py tools/rmg_h3maped_final_writeout_authority_report.py (passed)",
+      "RMG wrapper/source diagnostic forbidden-token scan over target files (passed: no Godot runner path and no old source-handler +0x44 naming in target files)",
       "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli --parallel 2 (passed)",
       "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence --parallel 2 (passed)",
-      "python3 -m py_compile tools/rmg_native_batch_export.py tools/rmg_h3maped_private_state_compare.py tools/rmg_h3maped_final_writeout_authority_report.py (passed)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_batch_export_cli_0x10b8_smoke --controlled-case smoke:small:2:1:land:1:1:1 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; manifest godot_process_started=false)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_py_0x10b8_smoke --controlled-case smoke:small:2:1:land:1:1:1 --emit-phase-snapshot --print-manifest (expected exit 1 blocked; wrapper runner standalone_native_cli_no_godot)",
-      "jq empty ops/progress.json && git diff --check (passed after tracker update)",
-      "python3 tests/validate_repo.py (passed)",
-      "ps -eo pid=,comm= | awk 'tolower($2) ~ /^godot/ {print}' (passed: no Godot process names)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_batch_export_cli_no_godot_runner_smoke --controlled-case smoke:small:2:1:land:1:1:1 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; manifest godot_process_started=false)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_py_no_godot_runner_smoke --controlled-case smoke:small:2:1:land:1:1:1 --emit-phase-snapshot --print-manifest (expected exit 1 blocked; wrapper runner standalone_native_cli_no_godot)",
+      "python3 tools/rmg_native_batch_export.py --runner godot --out .artifacts/rmg_native_batch_export_forbidden_godot_runner_smoke (expected argparse exit 2; no Godot process started)",
+      "ps -eo pid=,comm= | awk 'tolower($2) ~ /^godot/ {print}' (passed: no Godot process names)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)",
+      "python3 tests/validate_repo.py (passed)"
     ],
+    "date": "2026-06-13",
+    "id": "native-rmg-no-godot-runner-removal-and-0x10b8-setup-field-correction-20260613",
     "metrics": {
       "alignment_checkpoints_completed": 3,
       "alignment_checkpoints_pending": 5,
       "checkpoint2_status": "pending",
       "generator_0x10b8_branch_condition_recovered": true,
-      "source_handler_0x44_same_run_capture_ported": false,
-      "synthetic_runtime_zone_append_ported": false,
-      "native_no_appended_zone_exact_claim_removed_when_0x10b8_unknown": true,
       "godot_process_started": false,
+      "godot_runner_removed_from_rmg_export_wrapper": true,
+      "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound",
+      "rmg_setup_object_0x44_same_run_capture_ported": false,
+      "rmg_setup_object_0x44_static_path_recovered": true,
       "standalone_cli_built": true,
-      "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound"
-    }
+      "synthetic_runtime_zone_append_ported": false
+    },
+    "recordedAt": "2026-06-13T16:29:44Z",
+    "remainingWork": "Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "checkpoint2_pending_no_godot_runner_enforced",
+    "summary": "RMG export orchestration now has no Godot runner path in tools/rmg_native_batch_export.py: --runner only accepts native-cli, --runner godot is rejected by argparse, and smoke checks show godot_process_started=false. Checkpoint 2 diagnostics now name the correct generator+0x10b8 source: 0x49ecf2 arg8 comes from the RMG setup object +0x44 passed by 0x4adfe1; 0x4adf88 initializes +0x44 to 3 and 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1. No parity checkpoint was completed.",
+    "validatedAt": "2026-06-13T16:29:44Z"
   },
-  "nextActionGuardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py defaults to the standalone no-Godot bin/rmg_native_batch_export_cli path; the legacy Godot runner requires both explicit --runner godot --allow-godot and RMG_NATIVE_BATCH_EXPORT_ALLOW_GODOT=1 and must not be used for parity work on this host. Defer Windows .dll builds until Linux parity reaches the final boundary.",
+  "latestEvidence": {
+    "artifacts": [
+      "tools/rmg_native_batch_export.py",
+      "src/gdextension/src/h3maped_small_rmg.cpp",
+      "PLAN.md",
+      "docs/rmg-python-validation-workflow.md",
+      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+      ".artifacts/rmg_native_batch_export_cli_no_godot_runner_smoke/manifest.json",
+      ".artifacts/rmg_native_batch_export_py_no_godot_runner_smoke/wrapper_manifest.json"
+    ],
+    "checks": [
+      "python3 -m py_compile tools/rmg_native_batch_export.py tools/rmg_h3maped_private_state_compare.py tools/rmg_h3maped_final_writeout_authority_report.py (passed)",
+      "RMG wrapper/source diagnostic forbidden-token scan over target files (passed: no Godot runner path and no old source-handler +0x44 naming in target files)",
+      "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli --parallel 2 (passed)",
+      "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence --parallel 2 (passed)",
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_batch_export_cli_no_godot_runner_smoke --controlled-case smoke:small:2:1:land:1:1:1 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; manifest godot_process_started=false)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_py_no_godot_runner_smoke --controlled-case smoke:small:2:1:land:1:1:1 --emit-phase-snapshot --print-manifest (expected exit 1 blocked; wrapper runner standalone_native_cli_no_godot)",
+      "python3 tools/rmg_native_batch_export.py --runner godot --out .artifacts/rmg_native_batch_export_forbidden_godot_runner_smoke (expected argparse exit 2; no Godot process started)",
+      "ps -eo pid=,comm= | awk 'tolower($2) ~ /^godot/ {print}' (passed: no Godot process names)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)",
+      "python3 tests/validate_repo.py (passed)"
+    ],
+    "date": "2026-06-13",
+    "id": "native-rmg-no-godot-runner-removal-and-0x10b8-setup-field-correction-20260613",
+    "metrics": {
+      "alignment_checkpoints_completed": 3,
+      "alignment_checkpoints_pending": 5,
+      "checkpoint2_status": "pending",
+      "generator_0x10b8_branch_condition_recovered": true,
+      "godot_process_started": false,
+      "godot_runner_removed_from_rmg_export_wrapper": true,
+      "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound",
+      "rmg_setup_object_0x44_same_run_capture_ported": false,
+      "rmg_setup_object_0x44_static_path_recovered": true,
+      "standalone_cli_built": true,
+      "synthetic_runtime_zone_append_ported": false
+    },
+    "recordedAt": "2026-06-13T16:29:44Z",
+    "remainingWork": "Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
+    "sliceId": "rmg-small-generalization-hardening-10184",
+    "status": "checkpoint2_pending_no_godot_runner_enforced",
+    "summary": "RMG export orchestration now has no Godot runner path in tools/rmg_native_batch_export.py: --runner only accepts native-cli, --runner godot is rejected by argparse, and smoke checks show godot_process_started=false. Checkpoint 2 diagnostics now name the correct generator+0x10b8 source: 0x49ecf2 arg8 comes from the RMG setup object +0x44 passed by 0x4adfe1; 0x4adf88 initializes +0x44 to 3 and 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before 0x4adfe1. No parity checkpoint was completed."
+  },
+  "nextActionGuardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, and the legacy Godot runner has been removed from that wrapper. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. Native export tooling now fails closed through a standalone no-Godot CLI on this host; further native generation comparisons require splitting the H3MapEd RMG generation core out of Godot Variant/RefCounted/FileAccess APIs into plain C++ data structures.",
   "plannedSlices": [
     {
@@ -52902,8 +52914,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Five native RMG alignment checkpoints remain pending; checkpoint 2 now blocks on source-handler +0x44/generator+0x10b8 capture plus 0x4a3b48/0x49b452 synthetic runtime-zone append replay.",
-  "remainingWork": "Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
+  "remainingGap": "Five native RMG alignment checkpoints remain pending; checkpoint 2 now blocks on RMG setup object +0x44/generator+0x10b8 same-run capture plus 0x4a3b48/0x49b452 synthetic runtime-zone append replay, and fresh native export on this host requires the no-Godot core split.",
+  "remainingWork": "Split the H3MapEd RMG generation core out of Godot Dictionary/Array/String, RefCounted, and FileAccess APIs so bin/rmg_native_batch_export_cli can generate/export maps without Godot. Then capture/replay the same-run RMG setup object +0x44 into generator+0x10b8, port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append, and rerun pre-0x4a4c8e owner-surface compares.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -53314,24 +53326,24 @@
       "type": "native_rmg_recovery_checkpoint"
     },
     {
-      "id": "native-rmg-checkpoint2-0x10b8-synthetic-branch-gating-20260613",
-      "timestamp": "2026-06-13T16:16:15Z",
-      "type": "native_rmg_alignment_checkpoint_narrowing",
-      "summary": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed.",
-      "remainingGap": "Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
       "artifact": "PLAN.md",
+      "id": "native-rmg-checkpoint2-0x10b8-synthetic-branch-gating-20260613",
       "metrics": {
         "alignment_checkpoints_completed": 3,
         "alignment_checkpoints_pending": 5,
         "checkpoint2_status": "pending",
         "generator_0x10b8_branch_condition_recovered": true,
-        "source_handler_0x44_same_run_capture_ported": false,
-        "synthetic_runtime_zone_append_ported": false,
-        "native_no_appended_zone_exact_claim_removed_when_0x10b8_unknown": true,
         "godot_process_started": false,
+        "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound",
+        "native_no_appended_zone_exact_claim_removed_when_0x10b8_unknown": true,
+        "source_handler_0x44_same_run_capture_ported": false,
         "standalone_cli_built": true,
-        "native_cli_blocked_reason": "native_rmg_core_still_godot_variant_bound"
-      }
+        "synthetic_runtime_zone_append_ported": false
+      },
+      "remainingGap": "Capture/replay source-handler +0x44 into generator+0x10b8, then port 0x4a3b48 direction scan and 0x49b452 synthetic runtime-zone append before rerunning pre-0x4a4c8e owner-surface compares. Fresh native map generation on this host still requires the no-Godot core split before using export comparisons.",
+      "summary": "Checkpoint 2 owner-surface work is narrowed to a source-backed branch: 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0, and generator+0x10b8 is written by 0x49ecf2 from constructor arg8 supplied by source-handler +0x44 at 0x4adfe1. Native zone_footprint_source_nodes and zone_footprint_finalizer now refuse to mark the no-appended-zone path exact unless that input is known and false. No parity checkpoint was completed.",
+      "timestamp": "2026-06-13T16:16:15Z",
+      "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
   "result": "in_progress_no_godot_cli_boundary_added_core_split_required",

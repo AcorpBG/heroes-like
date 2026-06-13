@@ -1113,6 +1113,9 @@ int32_t h3maped_generator_mode_0x10b8_or_unknown(const Dictionary &normalized_co
 	static const char *FLAT_KEYS[] = {
 		"h3maped_generator_mode_0x10b8",
 		"h3maped_generator_0x10b8",
+		"h3maped_rmg_setup_object_0x44",
+		"h3maped_setup_object_0x44",
+		"h3maped_setup_field_0x44",
 		"generator_mode_0x10b8",
 	};
 	for (const char *key : FLAT_KEYS) {
@@ -1124,7 +1127,8 @@ int32_t h3maped_generator_mode_0x10b8_or_unknown(const Dictionary &normalized_co
 	static const char *NESTED_KEYS[] = {
 		"h3maped_private_state",
 		"h3maped_generator_state",
-		"h3maped_source_handler_state",
+		"h3maped_rmg_setup_state",
+		"h3maped_setup_state",
 	};
 	for (const char *nested_key : NESTED_KEYS) {
 		if (!normalized_config.has(nested_key)) {
@@ -5651,16 +5655,16 @@ Dictionary zone_footprint_source_nodes_phase(const Dictionary &normalized_config
 									  : (synthetic_branch_exact_blocked ? String("blocked_same_level_synthetic_runtime_zone_replay_pending") : String("active_strict_executable_port"));
 	phase["level_count"] = level_count(normalized_config);
 	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
-	phase["generator_mode_0x10b8_source"] = "0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from source-handler+0x44; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0";
+	phase["generator_mode_0x10b8_source"] = "0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0";
 	phase["generator_mode_0x10b8_known"] = generator_mode_0x10b8_known;
-	phase["generator_mode_0x10b8"] = generator_mode_0x10b8_known ? Variant(generator_mode_0x10b8) : Variant(String("unknown_missing_same_run_source_handler_0x44_capture"));
+	phase["generator_mode_0x10b8"] = generator_mode_0x10b8_known ? Variant(generator_mode_0x10b8) : Variant(String("unknown_missing_same_run_rmg_setup_object_0x44_capture"));
 	phase["synthetic_fallback_zone_condition_0x4a3a9d"] = "level_index == 1 || generator+0x10b8 != 0";
-	phase["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = generator_mode_0x10b8_known ? Variant(synthetic_branch_known_allowed) : Variant(String("unknown_until_generator_0x10b8_source_handler_0x44_is_captured"));
+	phase["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = generator_mode_0x10b8_known ? Variant(synthetic_branch_known_allowed) : Variant(String("unknown_until_generator_0x10b8_rmg_setup_object_0x44_is_captured"));
 	phase["synthetic_fallback_zone_status"] = generator_mode_0x10b8_known
 			? (synthetic_branch_known_allowed ? String("blocked_until_0x4a3b48_direction_scan_and_0x49b452_runtime_zone_append_are_ported") : String("skipped_source_condition_false"))
-			: String("blocked_until_source_handler_0x44_generator_mode_and_0x4a3b48_synthetic_runtime_zone_append_are_ported");
+			: String("blocked_until_rmg_setup_object_0x44_generator_mode_and_0x4a3b48_synthetic_runtime_zone_append_are_ported");
 	if (synthetic_branch_exact_blocked) {
-		phase["blocked_next"] = "recover_source_handler_0x44_generator_mode_then_port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append";
+		phase["blocked_next"] = "recover_rmg_setup_object_0x44_generator_mode_then_port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append";
 	}
 	phase["appended_synthetic_runtime_zone_count"] = 0;
 	phase["appended_synthetic_runtime_zone_count_authority"] = "native_materialized_count_only; H3MapEd expected count remains unknown until 0x4a3b48 direction scan and 0x49b452 append replay are ported";
@@ -6173,14 +6177,14 @@ Dictionary zone_footprint_finalizer_phase(const Dictionary &normalized_config, c
 			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
 	phase["level_count"] = level_count(normalized_config);
 	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
-	phase["generator_mode_0x10b8_source"] = "0x49ecf2 constructor arg8 ([EBP+0x24]) -> generator+0x10b8; 0x4adfe1 passes source-handler+0x44 as that arg; 0x4a3a03/0x4a3a9d does not test public water_mode_code here";
+	phase["generator_mode_0x10b8_source"] = "0x49ecf2 constructor arg8 ([EBP+0x24]) -> generator+0x10b8; 0x4adfe1 passes RMG setup object+0x44 as that arg; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a03/0x4a3a9d does not test public water_mode_code here";
 	phase["generator_mode_0x10b8_known"] = generator_mode_0x10b8_known;
-	phase["generator_mode_0x10b8"] = generator_mode_0x10b8_known ? Variant(generator_mode_0x10b8) : Variant(String("unknown_missing_same_run_source_handler_0x44_capture"));
-	phase["synthetic_branch_allowed_by_0x4a3a9d"] = generator_mode_0x10b8_known ? Variant(same_level_synthetic_branch_allowed) : Variant(String("unknown_until_generator_0x10b8_source_handler_0x44_is_captured"));
+	phase["generator_mode_0x10b8"] = generator_mode_0x10b8_known ? Variant(generator_mode_0x10b8) : Variant(String("unknown_missing_same_run_rmg_setup_object_0x44_capture"));
+	phase["synthetic_branch_allowed_by_0x4a3a9d"] = generator_mode_0x10b8_known ? Variant(same_level_synthetic_branch_allowed) : Variant(String("unknown_until_generator_0x10b8_rmg_setup_object_0x44_is_captured"));
 	phase["synthetic_branch_condition_0x4a3a9d"] = "level_index == 1 || generator+0x10b8 != 0";
 	phase["synthetic_branch_creation_status"] = generator_mode_0x10b8_known
 			? (same_level_synthetic_branch_allowed ? String("blocked_until_0x4a3b48_direction_scan_and_0x49b452_runtime_zone_append_are_ported") : String("skipped_source_condition_false"))
-			: String("blocked_until_source_handler_0x44_generator_mode_and_0x4a3b48_synthetic_runtime_zone_append_are_ported");
+			: String("blocked_until_rmg_setup_object_0x44_generator_mode_and_0x4a3b48_synthetic_runtime_zone_append_are_ported");
 	phase["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
 	phase["final_runtime_zone_count"] = final_runtime_zone_count;
 	phase["appended_runtime_zone_count"] = appended_runtime_zone_count;

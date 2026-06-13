@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Export fresh native RMG artifacts through the no-Godot native runner.
 
-The default path is a standalone native executable. The previous Godot scene
-runner is retained only behind a flag plus host-level environment unlock because
-engine launches can OOM memory-constrained hosts and are not allowed for native
-RMG parity work.
+This wrapper never launches Godot. Native RMG parity/export work must use the
+standalone CLI boundary so memory-constrained hosts cannot accidentally start
+the engine.
 """
 
 from __future__ import annotations
@@ -12,7 +11,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -21,22 +19,9 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SCENE = Path("tools/rmg_native_batch_export_native.tscn")
 DEFAULT_NATIVE_CLI = Path("bin/rmg_native_batch_export_cli")
 DEFAULT_ARTIFACT_ROOT = Path(".artifacts")
-ALLOW_GODOT_ENV = "RMG_NATIVE_BATCH_EXPORT_ALLOW_GODOT"
 LOG_NAME = "rmg_native_batch_export.log"
-
-
-def find_godot(explicit: str) -> str:
-    candidates = [explicit, os.environ.get("GODOT_BIN", ""), "godot4", "godot"]
-    for candidate in candidates:
-        if not candidate:
-            continue
-        resolved = shutil.which(candidate) if not Path(candidate).exists() else candidate
-        if resolved:
-            return resolved
-    raise FileNotFoundError("Could not find Godot. Pass --godot or set GODOT_BIN.")
 
 
 def find_native_cli(explicit: str) -> Path:
@@ -195,101 +180,10 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     return 0 if wrapper["status"] == "pass" else 1
 
 
-def run_godot_export(args: argparse.Namespace) -> int:
-    if not args.allow_godot or os.environ.get(ALLOW_GODOT_ENV, "") != "1":
-        raise RuntimeError(
-            "Godot export runner is disabled on this host. Use the default native-cli runner. "
-            f"On a host where engine launches are explicitly permitted, both pass --allow-godot and set {ALLOW_GODOT_ENV}=1."
-        )
-    godot = find_godot(args.godot)
-    output_dir = args.out or default_output_dir()
-    output_dir = output_dir if output_dir.is_absolute() else ROOT / output_dir
-    output_dir.parent.mkdir(parents=True, exist_ok=True)
-    log_path = output_dir.with_suffix("")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    log_file = output_dir / LOG_NAME
-
-    scene = args.scene
-    scene_path = scene if scene.is_absolute() else ROOT / scene
-    if not scene_path.exists():
-        raise FileNotFoundError(f"Missing native export scene: {scene_path}")
-
-    command = [
-        godot,
-        "--headless",
-        "--path",
-        str(ROOT),
-        str(scene),
-        "--",
-        "--out",
-        str(output_dir),
-    ]
-    if args.limit > 0:
-        command.extend(["--limit", str(args.limit)])
-    if args.case:
-        command.extend(["--case", args.case])
-    controlled_cases = list(args.controlled_case)
-    for reference_manifest in args.controlled_reference_manifest:
-        controlled_cases.append(controlled_case_from_reference_manifest(reference_manifest))
-    for controlled_case in controlled_cases:
-        command.extend(["--controlled-case", controlled_case])
-    if args.include_unsupported:
-        command.append("--include-unsupported")
-    if args.emit_phase_snapshot:
-        command.append("--emit-phase-snapshot")
-
-    env = os.environ.copy()
-    env.setdefault("GODOT_SILENCE_ROOT_WARNING", "1")
-    with log_file.open("w", encoding="utf-8") as handle:
-        process = subprocess.run(
-            command,
-            cwd=ROOT,
-            env=env,
-            stdout=handle,
-            stderr=subprocess.STDOUT,
-            text=True,
-            check=False,
-        )
-
-    manifest = load_manifest(output_dir)
-    wrapper = {
-        "schema_id": "rmg_native_batch_export_python_wrapper_v1",
-        "status": "pass" if process.returncode == 0 and manifest.get("status") == "exported" else "fail",
-        "godot": godot,
-        "scene": str(scene),
-        "output_dir": str(output_dir),
-        "log_path": str(log_file),
-        "returncode": process.returncode,
-        "manifest_status": manifest.get("status", ""),
-        "exported_count": manifest.get("exported_count", 0),
-        "failed_count": manifest.get("failed_count", 0),
-        "case_count": manifest.get("case_count", 0),
-        "control_policy": "python_invokes_native_gdextension_node_no_gdscript_exporter",
-        "case_scope": manifest.get("case_scope", ""),
-    }
-    wrapper_path = output_dir / "wrapper_manifest.json"
-    with wrapper_path.open("w", encoding="utf-8") as handle:
-        json.dump(wrapper, handle, indent=2, sort_keys=True)
-
-    print(
-        "RMG_NATIVE_BATCH_EXPORT_PY status={status} output_dir={output_dir} "
-        "exported={exported_count} failed={failed_count} log={log_path}".format(**wrapper)
-    )
-    if args.print_manifest:
-        print(json.dumps(wrapper, indent=2, sort_keys=True))
-    return 0 if wrapper["status"] == "pass" else 1
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--runner", choices=["native-cli", "godot"], default="native-cli", help="Export runner. native-cli is the default and does not launch Godot.")
+    parser.add_argument("--runner", choices=["native-cli"], default="native-cli", help="Export runner. The only supported runner is the standalone native CLI.")
     parser.add_argument("--native-cli", default="", help="Standalone native CLI path, otherwise bin/rmg_native_batch_export_cli.")
-    parser.add_argument(
-        "--allow-godot",
-        action="store_true",
-        help=f"Permit the legacy Godot runner only when {ALLOW_GODOT_ENV}=1 is also set. Do not use on memory-constrained native RMG hosts.",
-    )
-    parser.add_argument("--godot", default="", help="Godot executable path for --runner godot only, otherwise GODOT_BIN/godot4/godot.")
     parser.add_argument("--out", type=Path, default=None, help="Output directory for fresh .amap files and manifests.")
     parser.add_argument("--limit", type=int, default=0, help="Maximum owner cases to export.")
     parser.add_argument("--case", default="", help="Comma-separated case id filter.")
@@ -306,7 +200,6 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help="Build a controlled native case from a h3maped controlled_reference_manifest.json using the observed saved H3M identity.",
     )
-    parser.add_argument("--scene", type=Path, default=DEFAULT_SCENE, help="Native runner scene path.")
     parser.add_argument("--include-unsupported", action="store_true", help="Export unsupported owner cases too; failures are expected for modes outside strict Small/Medium one-level land.")
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
     parser.add_argument("--print-manifest", action="store_true", help="Print wrapper manifest JSON.")
@@ -317,8 +210,6 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
     try:
-        if args.runner == "godot":
-            return run_godot_export(args)
         return run_native_cli_export(args)
     except Exception as exc:
         print(f"RMG_NATIVE_BATCH_EXPORT_PY status=fail error={exc}", file=sys.stderr)
