@@ -1109,6 +1109,43 @@ int32_t decorative_filler_generator_mode_0x08(const Dictionary &normalized_confi
 	return water_mode_code(normalized_config);
 }
 
+int32_t h3maped_generator_mode_0x10b8_or_unknown(const Dictionary &normalized_config, bool &known) {
+	static const char *FLAT_KEYS[] = {
+		"h3maped_generator_mode_0x10b8",
+		"h3maped_generator_0x10b8",
+		"generator_mode_0x10b8",
+	};
+	for (const char *key : FLAT_KEYS) {
+		if (normalized_config.has(key)) {
+			known = true;
+			return int32_t(normalized_config.get(key, 0));
+		}
+	}
+	static const char *NESTED_KEYS[] = {
+		"h3maped_private_state",
+		"h3maped_generator_state",
+		"h3maped_source_handler_state",
+	};
+	for (const char *nested_key : NESTED_KEYS) {
+		if (!normalized_config.has(nested_key)) {
+			continue;
+		}
+		Variant nested_value = normalized_config.get(nested_key, Dictionary());
+		if (nested_value.get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary nested = nested_value;
+		for (const char *key : FLAT_KEYS) {
+			if (nested.has(key)) {
+				known = true;
+				return int32_t(nested.get(key, 0));
+			}
+		}
+	}
+	known = false;
+	return -1;
+}
+
 int32_t size_score(const Dictionary &normalized_config) {
 	int32_t score = int32_t((int64_t(std::max(1, width(normalized_config))) * int64_t(std::max(1, height(normalized_config))) * int64_t(std::max(1, level_count(normalized_config)))) / 0x510);
 	if (water_mode_code(normalized_config) == 2) {
@@ -5605,12 +5642,28 @@ Dictionary zone_footprint_source_nodes_phase(const Dictionary &normalized_config
 
 	Array runtime_zones = runtime_zones_for_footprint(runtime_zone_phase, coordinate_phase);
 	PolygonSourceResult source = build_polygon_source_walks_4ccb64(runtime_zones);
+	bool generator_mode_0x10b8_known = false;
+	const int32_t generator_mode_0x10b8 = h3maped_generator_mode_0x10b8_or_unknown(normalized_config, generator_mode_0x10b8_known);
+	const bool synthetic_branch_known_allowed = generator_mode_0x10b8_known && generator_mode_0x10b8 != 0;
+	const bool synthetic_branch_exact_blocked = !generator_mode_0x10b8_known || synthetic_branch_known_allowed;
 
-	phase["status"] = source.blocked ? String("blocked_during_source_node_split") : String("active_strict_executable_port");
+	phase["status"] = source.blocked ? String("blocked_during_source_node_split")
+									  : (synthetic_branch_exact_blocked ? String("blocked_same_level_synthetic_runtime_zone_replay_pending") : String("active_strict_executable_port"));
 	phase["level_count"] = level_count(normalized_config);
 	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
-	phase["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = false;
+	phase["generator_mode_0x10b8_source"] = "0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from source-handler+0x44; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0";
+	phase["generator_mode_0x10b8_known"] = generator_mode_0x10b8_known;
+	phase["generator_mode_0x10b8"] = generator_mode_0x10b8_known ? Variant(generator_mode_0x10b8) : Variant(String("unknown_missing_same_run_source_handler_0x44_capture"));
+	phase["synthetic_fallback_zone_condition_0x4a3a9d"] = "level_index == 1 || generator+0x10b8 != 0";
+	phase["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = generator_mode_0x10b8_known ? Variant(synthetic_branch_known_allowed) : Variant(String("unknown_until_generator_0x10b8_source_handler_0x44_is_captured"));
+	phase["synthetic_fallback_zone_status"] = generator_mode_0x10b8_known
+			? (synthetic_branch_known_allowed ? String("blocked_until_0x4a3b48_direction_scan_and_0x49b452_runtime_zone_append_are_ported") : String("skipped_source_condition_false"))
+			: String("blocked_until_source_handler_0x44_generator_mode_and_0x4a3b48_synthetic_runtime_zone_append_are_ported");
+	if (synthetic_branch_exact_blocked) {
+		phase["blocked_next"] = "recover_source_handler_0x44_generator_mode_then_port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append";
+	}
 	phase["appended_synthetic_runtime_zone_count"] = 0;
+	phase["appended_synthetic_runtime_zone_count_authority"] = "native_materialized_count_only; H3MapEd expected count remains unknown until 0x4a3b48 direction scan and 0x49b452 append replay are ported";
 	phase["initial_bounds_min_x"] = -200;
 	phase["initial_bounds_min_y"] = -200;
 	phase["initial_bounds_max_x"] = 400;
@@ -6108,7 +6161,9 @@ Dictionary zone_footprint_finalizer_phase(const Dictionary &normalized_config, c
 	const int32_t original_same_level_runtime_zone_count = int32_t(source_node_phase.get("total_matching_runtime_zones", runtime_zone_records.size()));
 	const int32_t final_runtime_zone_count = runtime_zone_records.size();
 	const int32_t appended_runtime_zone_count = std::max(0, final_runtime_zone_count - original_same_level_runtime_zone_count);
-	const bool synthetic_branch_allowed = level_count(normalized_config) > 1 || water_mode_code(normalized_config) != 0;
+	bool generator_mode_0x10b8_known = false;
+	const int32_t generator_mode_0x10b8 = h3maped_generator_mode_0x10b8_or_unknown(normalized_config, generator_mode_0x10b8_known);
+	const bool same_level_synthetic_branch_allowed = generator_mode_0x10b8_known && generator_mode_0x10b8 != 0;
 
 	phase["status"] = appended_runtime_zone_count == 0
 			? String("active_strict_executable_port")
@@ -6118,7 +6173,14 @@ Dictionary zone_footprint_finalizer_phase(const Dictionary &normalized_config, c
 			: String("0x4a3710_appended_zone_adjacency_finalizer_blocked");
 	phase["level_count"] = level_count(normalized_config);
 	phase["h3maped_water_mode_code"] = water_mode_code(normalized_config);
-	phase["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+	phase["generator_mode_0x10b8_source"] = "0x49ecf2 constructor arg8 ([EBP+0x24]) -> generator+0x10b8; 0x4adfe1 passes source-handler+0x44 as that arg; 0x4a3a03/0x4a3a9d does not test public water_mode_code here";
+	phase["generator_mode_0x10b8_known"] = generator_mode_0x10b8_known;
+	phase["generator_mode_0x10b8"] = generator_mode_0x10b8_known ? Variant(generator_mode_0x10b8) : Variant(String("unknown_missing_same_run_source_handler_0x44_capture"));
+	phase["synthetic_branch_allowed_by_0x4a3a9d"] = generator_mode_0x10b8_known ? Variant(same_level_synthetic_branch_allowed) : Variant(String("unknown_until_generator_0x10b8_source_handler_0x44_is_captured"));
+	phase["synthetic_branch_condition_0x4a3a9d"] = "level_index == 1 || generator+0x10b8 != 0";
+	phase["synthetic_branch_creation_status"] = generator_mode_0x10b8_known
+			? (same_level_synthetic_branch_allowed ? String("blocked_until_0x4a3b48_direction_scan_and_0x49b452_runtime_zone_append_are_ported") : String("skipped_source_condition_false"))
+			: String("blocked_until_source_handler_0x44_generator_mode_and_0x4a3b48_synthetic_runtime_zone_append_are_ported");
 	phase["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
 	phase["final_runtime_zone_count"] = final_runtime_zone_count;
 	phase["appended_runtime_zone_count"] = appended_runtime_zone_count;
