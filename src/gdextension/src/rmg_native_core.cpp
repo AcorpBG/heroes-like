@@ -33,6 +33,8 @@ struct H3MapedRng {
 
 struct GeneratorModeResolutionPlain {
 	bool setup_object_0x44_known = false;
+	bool setup_object_0x44_supplied = false;
+	bool setup_object_0x44_defaulted_from_initializer = false;
 	int32_t setup_object_0x44 = 0;
 	bool generator_mode_known = false;
 	int32_t generator_mode_0x10b8 = 0;
@@ -41,6 +43,8 @@ struct GeneratorModeResolutionPlain {
 	uint32_t rng_state_after_0x49ecf2 = 0;
 	int32_t pre_template_rng_call_count = 0;
 };
+
+constexpr int32_t H3MAPED_DEFAULT_RMG_SETUP_OBJECT_0X44_PLAIN = 3;
 
 struct TemplateRecord {
 	int32_t catalog_index = -1;
@@ -1380,14 +1384,13 @@ int32_t size_score_for_case(const ControlledCase &controlled_case) {
 
 GeneratorModeResolutionPlain resolve_generator_mode_0x49ecf2_plain(const ControlledCase &controlled_case) {
 	GeneratorModeResolutionPlain resolution;
-	resolution.setup_object_0x44_known = controlled_case.setup_object_0x44_known;
-	resolution.setup_object_0x44 = controlled_case.setup_object_0x44;
+	resolution.setup_object_0x44_supplied = controlled_case.setup_object_0x44_supplied || controlled_case.setup_object_0x44_known;
+	resolution.setup_object_0x44_known = true;
+	resolution.setup_object_0x44 = resolution.setup_object_0x44_supplied ? controlled_case.setup_object_0x44 : H3MAPED_DEFAULT_RMG_SETUP_OBJECT_0X44_PLAIN;
+	resolution.setup_object_0x44_defaulted_from_initializer = !resolution.setup_object_0x44_supplied;
 	resolution.rng_state_after_0x49ecf2 = controlled_case.seed;
-	if (!controlled_case.setup_object_0x44_known) {
-		return resolution;
-	}
 	resolution.generator_mode_known = true;
-	if (controlled_case.setup_object_0x44 == 3) {
+	if (resolution.setup_object_0x44 == 3) {
 		H3MapedRng rng { controlled_case.seed };
 		resolution.randomized_from_setup_value_3 = true;
 		resolution.randomization_rng_value = rng.next();
@@ -1396,13 +1399,16 @@ GeneratorModeResolutionPlain resolve_generator_mode_0x49ecf2_plain(const Control
 		resolution.pre_template_rng_call_count = 1;
 		return resolution;
 	}
-	resolution.generator_mode_0x10b8 = controlled_case.setup_object_0x44;
+	resolution.generator_mode_0x10b8 = resolution.setup_object_0x44;
 	return resolution;
 }
 
 std::string generator_mode_status_label(const GeneratorModeResolutionPlain &resolution) {
 	if (!resolution.setup_object_0x44_known) {
 		return "unknown_missing_same_run_rmg_setup_object_0x44_capture";
+	}
+	if (resolution.setup_object_0x44_defaulted_from_initializer) {
+		return "defaulted_from_0x4adf88_setup_initializer_value_3_no_same_run_capture_supplied";
 	}
 	if (resolution.randomized_from_setup_value_3) {
 		return "resolved_by_0x49ecf2_rng_percent_3_from_setup_value_3";
@@ -3190,7 +3196,7 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 	return summary;
 }
 
-RuntimeTerrainSelectionSummaryPlain build_runtime_terrain_selection_summary(const ControlledCase &controlled_case, const CoordinateReplaySummary &coordinate_summary) {
+RuntimeTerrainSelectionSummaryPlain build_runtime_terrain_selection_summary(const ControlledCase &controlled_case, const CoordinateReplaySummary &coordinate_summary, const SourceNodeFootprintSummary &source_node_summary) {
 	static constexpr int32_t H3_TOWN_TO_TERRAIN_TABLE_540908[9] = { 2, 2, 3, 7, 0, 0, 5, 4, 2 };
 	RuntimeTerrainSelectionSummaryPlain summary;
 	summary.coordinate_replay_available = coordinate_summary.ok;
@@ -3207,8 +3213,11 @@ RuntimeTerrainSelectionSummaryPlain build_runtime_terrain_selection_summary(cons
 	}
 
 	H3MapedRng rng { summary.rng_state_before_0x49b53d };
-	for (int32_t index = 0; index < int32_t(coordinate_summary.scaled_zone_coordinates.size()); ++index) {
-		const RuntimeZoneRecordPlain &runtime = coordinate_summary.scaled_zone_coordinates[size_t(index)];
+	const std::vector<RuntimeZoneRecordPlain> &terrain_runtime_zones = source_node_summary.runtime_zones_after_synthetic_append.empty()
+			? coordinate_summary.scaled_zone_coordinates
+			: source_node_summary.runtime_zones_after_synthetic_append;
+	for (int32_t index = 0; index < int32_t(terrain_runtime_zones.size()); ++index) {
+		const RuntimeZoneRecordPlain &runtime = terrain_runtime_zones[size_t(index)];
 		RuntimeTerrainSelectionPlain selection;
 		selection.runtime_zone_index = runtime.runtime_index >= 0 ? runtime.runtime_index : index;
 		selection.level = runtime.level_after_bbox_rescale;
@@ -4959,6 +4968,8 @@ void append_source_node_footprint_summary_json(std::ostream &out, const SourceNo
 	out << "    \"materializes_public_output\": false,\n";
 	out << "    \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0\",\n";
 	out << "    \"rmg_setup_object_0x44_known\": " << (summary.generator_mode.setup_object_0x44_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x44_supplied_by_controlled_case\": " << (summary.generator_mode.setup_object_0x44_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x44_defaulted_from_0x4adf88_initializer\": " << (summary.generator_mode.setup_object_0x44_defaulted_from_initializer ? "true" : "false") << ",\n";
 	if (summary.generator_mode.setup_object_0x44_known) {
 		out << "    \"rmg_setup_object_0x44\": " << summary.generator_mode.setup_object_0x44 << ",\n";
 	} else {
@@ -5198,6 +5209,8 @@ void append_runtime_zone_summary_json(std::ostream &out, const RuntimeZoneSummar
 	out << "    \"template_selection_mode\": \"h3maped_exe_rng_original_catalog\",\n";
 	out << "    \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); setup value 3 is randomized through 0x4e7276() % 3 before template selection consumes RNG\",\n";
 	out << "    \"rmg_setup_object_0x44_known\": " << (summary.generator_mode.setup_object_0x44_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x44_supplied_by_controlled_case\": " << (summary.generator_mode.setup_object_0x44_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x44_defaulted_from_0x4adf88_initializer\": " << (summary.generator_mode.setup_object_0x44_defaulted_from_initializer ? "true" : "false") << ",\n";
 	if (summary.generator_mode.setup_object_0x44_known) {
 		out << "    \"rmg_setup_object_0x44\": " << summary.generator_mode.setup_object_0x44 << ",\n";
 	} else {
@@ -6260,6 +6273,7 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 			controlled_case.parse_error = "invalid setup_object_0x44";
 			return controlled_case;
 		}
+		controlled_case.setup_object_0x44_supplied = true;
 	}
 	controlled_case.parse_ok = true;
 	return controlled_case;
@@ -6311,7 +6325,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const CoordinateReplaySummary coordinate_replay_summary = build_coordinate_replay_summary(controlled_case, runtime_zone_summary);
 	const SourceNodeFootprintSummary source_node_summary = build_source_node_footprint_summary(controlled_case, coordinate_replay_summary);
 	const BoundarySpanFillSummary boundary_span_fill_summary = build_boundary_span_fill_summary(controlled_case, coordinate_replay_summary, source_node_summary);
-	const RuntimeTerrainSelectionSummaryPlain runtime_terrain_selection_summary = build_runtime_terrain_selection_summary(controlled_case, coordinate_replay_summary);
+	const RuntimeTerrainSelectionSummaryPlain runtime_terrain_selection_summary = build_runtime_terrain_selection_summary(controlled_case, coordinate_replay_summary, source_node_summary);
 	const TerrainCellWriteoutSummaryPlain terrain_cell_writeout_summary = build_terrain_cell_writeout_summary(boundary_span_fill_summary, runtime_terrain_selection_summary, source_node_summary);
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
@@ -6344,6 +6358,8 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"plain_cpp_generated_cell_grid_stage\": \"post_0x49ecf2_generator_mode_before_runtime_zone_owner_materialization\",\n";
 	out << "  \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0\",\n";
 	out << "  \"rmg_setup_object_0x44_known\": " << (generator_mode.setup_object_0x44_known ? "true" : "false") << ",\n";
+	out << "  \"rmg_setup_object_0x44_supplied_by_controlled_case\": " << (generator_mode.setup_object_0x44_supplied ? "true" : "false") << ",\n";
+	out << "  \"rmg_setup_object_0x44_defaulted_from_0x4adf88_initializer\": " << (generator_mode.setup_object_0x44_defaulted_from_initializer ? "true" : "false") << ",\n";
 	if (generator_mode.setup_object_0x44_known) {
 		out << "  \"rmg_setup_object_0x44\": " << generator_mode.setup_object_0x44 << ",\n";
 	} else {
@@ -6412,8 +6428,8 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"plain_cpp_terrain_live_feedback_summary\": ";
 	append_terrain_live_feedback_summary_json(out, terrain_live_feedback_summary);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"capture_or_default_same_run_setup_0x44_then_run_exact_same_run_pre_0x4a4c8e_generated_cell_compares_after_live_feedback\",\n";
-	out << "  \"next_required_alignment_slice\": \"capture_or_default_same_run_setup_0x44_then_compare_pre_0x4a4c8e_after_live_visual_feedback\"\n";
+	out << "  \"next_required_native_core_slice\": \"resolve_matched_owner_placement_drift_then_port_remaining_word_0x20_0x24_0x28_mutations\",\n";
+	out << "  \"next_required_alignment_slice\": \"compare_matched_h3maped_reference_after_live_feedback_until_generated_cell_words_match_pre_0x4a4c8e\"\n";
 	out << "}\n";
 	return out.str();
 }
