@@ -164,6 +164,11 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         "exported_count": manifest.get("exported_count", 0),
         "failed_count": manifest.get("failed_count", 0),
         "case_count": manifest.get("case_count", 0),
+        "blocked_count": manifest.get("blocked_count", 0),
+        "unsupported_count": manifest.get("unsupported_count", 0),
+        "skipped_count": manifest.get("skipped_count", 0),
+        "generation_core_stage": manifest.get("generation_core_stage", ""),
+        "phase_snapshot_schema_id": manifest.get("phase_snapshot_schema_id", ""),
         "control_policy": "python_invokes_standalone_native_cli_no_godot",
         "case_scope": manifest.get("case_scope", ""),
     }
@@ -191,7 +196,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--controlled-case",
         action="append",
         default=[],
-        help="Explicit native case as id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count]]. Bypasses owner filename inference.",
+        help="Explicit native case as id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44]]]. Bypasses owner filename inference.",
     )
     parser.add_argument(
         "--controlled-reference-manifest",
