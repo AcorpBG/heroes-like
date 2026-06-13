@@ -2999,7 +2999,7 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			}
 			append_line(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
 			summary.boundary_appended_vertex_count += 1;
-			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, source_zone_id, zone_word, border_x, border_y, level, "native_border_wrap_vertex", "native_proxy_for_0x4a2777_border_connection", "native_current_boundary_walk");
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, source_zone_id, zone_word, current_x, current_y, level, "h3maped_wrap_current_vertex", "0x4a2adc", "0x4a2777_current_point_before_wrap_update");
 			current_x = border_x;
 			current_y = border_y;
 			summary.boundary_wrap_segment_count += 1;
@@ -3010,9 +3010,11 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			return;
 		}
 		if (current_x != target_x || current_y != target_y) {
+			const int32_t old_current_x = current_x;
+			const int32_t old_current_y = current_y;
 			append_line(current_x, current_y, target_x, target_y, zone_word, level, false, random_span_limit);
 			summary.boundary_appended_vertex_count += 1;
-			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, source_zone_id, zone_word, target_x, target_y, level, "native_border_final_vertex", "native_proxy_for_0x4a2777_border_connection", "native_current_boundary_walk");
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, source_zone_id, zone_word, old_current_x, old_current_y, level, "h3maped_final_current_vertex", "0x4a2b1e", "0x4a2777_current_point_before_final_update");
 			summary.boundary_final_segment_count += 1;
 			current_x = target_x;
 			current_y = target_y;
@@ -3075,11 +3077,10 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			summary.boundary_fallback_zone_count += 1;
 			continue;
 		}
+		append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, clipped_current.x, clipped_current.y, level, "h3maped_selected_start_vertex", "0x4a2990", "0x4a2777_selected_start_before_owner_gate");
+		summary.boundary_appended_vertex_count += 1;
 		if (source_edge_writer_allowed(source_nodes[size_t(selected_segment_index)])) {
-			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, clipped_current.x, clipped_current.y, level, "native_selected_clipped_source_start", "native_proxy_for_0x4a2990", "native_current_boundary_walk");
 			append_line(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
-			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, clipped_target.x, clipped_target.y, level, "native_selected_clipped_source_target", "native_proxy_for_0x4a2990", "native_current_boundary_walk");
-			summary.boundary_appended_vertex_count += 1;
 			summary.boundary_connector_segment_count += 1;
 		} else {
 			summary.boundary_owner_gate_skipped_segment_count += 1;
@@ -3111,10 +3112,7 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			}
 			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
 				if (source_edge_writer_allowed(from_node)) {
-					append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, from_clip.x, from_clip.y, level, "native_loop_clipped_source_start", "native_proxy_for_0x4a2adc", "native_current_boundary_walk");
 					append_line(from_clip.x, from_clip.y, to_clip.x, to_clip.y, zone_word, level, false, random_span_limit);
-					append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, to_clip.x, to_clip.y, level, "native_loop_clipped_source_target", "native_proxy_for_0x4a2b1e", "native_current_boundary_walk");
-					summary.boundary_appended_vertex_count += 1;
 					summary.boundary_connector_segment_count += 1;
 				} else {
 					summary.boundary_owner_gate_skipped_segment_count += 1;
@@ -5180,7 +5178,7 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
 	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
 	out << "    \"source\": \"plain-C++ checkpoint-2 boundary/span-fill surface over the currently materialized source-node walks\",\n";
-	out << "    \"strict_port_scope\": \"private zone-word and reserved-flag cell buffer plus native boundary-vector proxy trace only; no exact h3maped generator+0x3f4 vector, terrain repaint, generated-cell live feedback, object vectors, package adoption, or public map output\",\n";
+	out << "    \"strict_port_scope\": \"private zone-word and reserved-flag cell buffer plus recovered 0x4a2777 boundary-vector append order over currently materialized source-node walks; no exact same-run h3maped generator+0x3f4 descriptor/vector, terrain repaint, generated-cell live feedback, object vectors, package adoption, or public map output\",\n";
 	out << "    \"coordinate_replay_available\": " << (summary.coordinate_replay_available ? "true" : "false") << ",\n";
 	out << "    \"source_node_walks_available\": " << (summary.source_node_walks_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
@@ -5192,7 +5190,7 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"materializes_exact_h3maped_generator_0x3f4_boundary_vector\": " << (summary.boundary_exact_h3maped_vector_materialized ? "true" : "false") << ",\n";
 	out << "    \"boundary_vector_blocked_reason\": \"" << (summary.boundary_exact_h3maped_vector_materialized
 			? ""
-			: "0x4a2777 generator+0x3f4 vector materialization is still not ported; current trace is native-current proxy evidence only and must not be treated as checkpoint-2 parity") << "\",\n";
+			: "0x4a2777 append order is source-backed, but exact same-run generator+0x3f4 descriptor/vector materialization remains blocked on the 0x4a3a03/0x4cca55/0x4a325d handoff; do not treat this trace as checkpoint-2 parity") << "\",\n";
 	out << "    \"materializes_span_fill\": " << (summary.boundary_span_fill_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"materializes_terrain\": false,\n";
 	out << "    \"materializes_map_cells\": false,\n";
