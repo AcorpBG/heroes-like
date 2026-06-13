@@ -1160,7 +1160,7 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. Native export tooling now fails closed through a standalone no-Godot CLI on this host; checkpoint-2 snapshots now include constructor-default, owner-gated boundary/span-fill, and post-boundary owner-byte generated-cell checkpoints, while full native generation/export still requires splitting the remaining H3MapEd RMG generation core out of Godot Variant/RefCounted/FileAccess APIs into plain C++ data structures.",
+    "notes": "No-Godot checkpoint-2 snapshots now expose source-backed 0x4a2777 boundary-vector append order over the currently materialized native source-node walks: selected-start vertices are recorded at 0x4a2990 before the owner gate, and continuation events record the pre-update current point at 0x4a2adc/0x4a2b1e. The same Medium hc4_comp0 setup 0 private-state compare remains at the prior 475/5184 owner-byte placement mismatch, so this did not regress the owner surface. Checkpoint 2 remains pending because applying the recovered one-endpoint traversal over the current native descriptor regressed the owner-byte surface; exact live grid mutation needs the 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and plain-C++ generation-core split first.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -10773,10 +10773,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "No-Godot checkpoint-2 snapshots now expose native boundary-vector proxy events while explicitly marking the exact H3MapEd 0x4a2777 generator+0x3f4 boundary vector as unported. The matched Medium hc4_comp0 setup 0 comparison uses the same 2SM4d(2) template and still reports matching owner id coverage 0..9 with 475/5184 owner-byte placement mismatches; word_0x20, word_0x24, and word_0x28 also still drift. Checkpoint 2 remains pending; the next implementation target is replacing the native direct boundary/span-fill approximation with source-backed 0x4a2777 vector materialization and the exact 0x4a325d seed/input join.",
+  "currentSliceNotes": "No-Godot checkpoint-2 snapshots now expose source-backed 0x4a2777 boundary-vector append order over the currently materialized native source-node walks: selected-start vertices are recorded at 0x4a2990 before the owner gate, and continuation events record the pre-update current point at 0x4a2adc/0x4a2b1e. The same Medium hc4_comp0 setup 0 private-state compare remains at the prior 475/5184 owner-byte placement mismatch, so this did not regress the owner surface. Checkpoint 2 remains pending because applying the recovered one-endpoint traversal over the current native descriptor regressed the owner-byte surface; exact live grid mutation needs the 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and plain-C++ generation-core split first.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-13T20:40:41Z",
+  "currentSliceUpdatedAt": "2026-06-13T20:53:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12734,123 +12734,95 @@
   },
   "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, refuses to run while Godot is already active, and the Python freshness gate tracks standalone CLI inputs rather than the old in-engine runner or GDExtension shared libraries. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-no-godot-boundary-vector-proxy-20260613",
-    "date": "2026-06-13T20:40:41Z",
-    "recordedAt": "2026-06-13T20:40:41Z",
-    "validatedAt": "2026-06-13T20:40:41Z",
+    "id": "native-rmg-no-godot-4a2777-append-order-20260613",
+    "date": "2026-06-13T20:53:46Z",
+    "recordedAt": "2026-06-13T20:53:46Z",
+    "validatedAt": "2026-06-13T20:53:46Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "checkpoint2_pending_boundary_vector_proxy_trace",
-    "summary": "No-Godot checkpoint-2 snapshots now expose native boundary-vector proxy events while explicitly marking the exact H3MapEd 0x4a2777 generator+0x3f4 boundary vector as unported. The matched Medium hc4_comp0 setup 0 comparison uses the same 2SM4d(2) template and still reports matching owner id coverage 0..9 with 475/5184 owner-byte placement mismatches; word_0x20, word_0x24, and word_0x28 also still drift. Checkpoint 2 remains pending; the next implementation target is replacing the native direct boundary/span-fill approximation with source-backed 0x4a2777 vector materialization and the exact 0x4a325d seed/input join.",
-    "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 boundary vector materialization and the exact 0x4a325d seed/input join, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+    "status": "checkpoint2_pending_4a2777_append_order_diagnostic",
+    "summary": "No-Godot checkpoint-2 snapshots now expose source-backed 0x4a2777 boundary-vector append order over the currently materialized native source-node walks: selected-start vertices are recorded at 0x4a2990 before the owner gate, and continuation events record the pre-update current point at 0x4a2adc/0x4a2b1e. The same Medium hc4_comp0 setup 0 private-state compare remains at the prior 475/5184 owner-byte placement mismatch, so this did not regress the owner surface. Checkpoint 2 remains pending because applying the recovered one-endpoint traversal over the current native descriptor regressed the owner-byte surface; exact live grid mutation needs the 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and plain-C++ generation-core split first.",
+    "remainingWork": "Port the exact same-run 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and split the remaining H3MapEd RMG generation core out of Godot Variant/Dictionary/FileAccess APIs before changing live boundary/span-fill traversal or emitting full .amap exports. Do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
     "artifacts": [
       "src/gdextension/src/rmg_native_core.cpp",
       "bin/rmg_native_batch_export_cli",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/manifest.json",
-      ".artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
+      ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/manifest.json",
+      ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/private_state_compare_hc4_setup0_after_live_feedback.json"
     ],
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4 --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; snapshot written; godot_process_started=false)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --max-mismatches 25 --out .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; mismatch remains visible: owner_byte2_signed_mismatch=475)",
-      "jq boundary-vector summary over .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json (passed; proxy trace true, exact H3MapEd generator+0x3f4 vector false, event_count=51)",
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; snapshot written; godot_process_started=false)",
+      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --max-mismatches 25 --out .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/private_state_compare_hc4_setup0_after_live_feedback.json (ran; mismatch remains visible: owner_byte2_signed_mismatch=475)",
+      "jq plain_cpp_boundary_span_fill_summary over .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json (passed; append-order events 0x4a2990 x10, 0x4a2adc x4, 0x4a2b1e x9; exact H3MapEd vector false)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
-      "pgrep -a -f [g]odot|[g]odot4 || true (passed: no Godot process)",
-      "Windows .dll build intentionally not run; Linux/no-Godot checkpoint-2 inner loop only until Linux parity reaches the final boundary"
+      "pgrep -a -f '[g]odot|[g]odot4' || true (no Godot process)"
     ],
     "metrics": {
-      "alignment_checkpoints_completed": 3,
-      "alignment_checkpoints_pending": 5,
-      "checkpoint2_status": "pending",
       "native_rmg_end_to_end_parity_complete": false,
+      "checkpoint2_complete": false,
       "godot_process_started": false,
-      "amap_generation_available_without_godot": false,
-      "standalone_cli_generation_core_stage": "plain_cpp_controlled_case_checkpoint2_boundary_vector_proxy_surface",
-      "boundary_native_vector_proxy_trace_materialized": true,
-      "boundary_exact_h3maped_generator_0x3f4_vector_materialized": false,
-      "boundary_vector_event_count": 51,
-      "boundary_vector_event_sample_truncated": false,
-      "boundary_vector_events_by_anchor": {
-        "native_proxy_for_0x4a2777_border_connection": 13,
-        "native_proxy_for_0x4a2990": 12,
-        "native_proxy_for_0x4a2adc": 13,
-        "native_proxy_for_0x4a2b1e": 13
-      },
-      "same_template_medium_hc4_setup0_owner_id_coverage_matches": true,
-      "same_template_medium_hc4_setup0_owner_byte2_signed_mismatch": 475,
-      "same_template_medium_hc4_setup0_word_0x20_mismatch": 5184,
-      "same_template_medium_hc4_setup0_word_0x24_mismatch": 4768,
-      "same_template_medium_hc4_setup0_word_0x28_mismatch": 4065,
-      "h3maped_boundary_vector_anchor": "0x4a2777_generator_plus_0x3f4",
-      "h3maped_span_fill_anchor": "0x4a325d",
-      "validate_repo_passed": true,
       "windows_dll_build_deferred": true,
-      "jq_validation_passed": true,
-      "git_diff_check_passed": true,
-      "no_godot_process_detected": true
+      "owner_byte2_signed_mismatch": 475,
+      "word_0x20_mismatch": 5184,
+      "word_0x24_mismatch": 4768,
+      "word_0x28_mismatch": 4065,
+      "boundary_vector_event_count": 23,
+      "boundary_vector_events_by_anchor": {
+        "0x4a2990": 10,
+        "0x4a2adc": 4,
+        "0x4a2b1e": 9
+      },
+      "materializes_exact_h3maped_generator_0x3f4_boundary_vector": false,
+      "rejected_live_grid_one_endpoint_traversal_reason": "Regressed owner_byte2_signed_mismatch from 475 to 3249 when applied over current native descriptor/source-node walk; exact descriptor handoff must be ported first."
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-no-godot-boundary-vector-proxy-20260613",
-    "date": "2026-06-13T20:40:41Z",
-    "recordedAt": "2026-06-13T20:40:41Z",
-    "validatedAt": "2026-06-13T20:40:41Z",
+    "id": "native-rmg-no-godot-4a2777-append-order-20260613",
+    "date": "2026-06-13T20:53:46Z",
+    "recordedAt": "2026-06-13T20:53:46Z",
+    "validatedAt": "2026-06-13T20:53:46Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "status": "checkpoint2_pending_boundary_vector_proxy_trace",
-    "summary": "No-Godot checkpoint-2 snapshots now expose native boundary-vector proxy events while explicitly marking the exact H3MapEd 0x4a2777 generator+0x3f4 boundary vector as unported. The matched Medium hc4_comp0 setup 0 comparison uses the same 2SM4d(2) template and still reports matching owner id coverage 0..9 with 475/5184 owner-byte placement mismatches; word_0x20, word_0x24, and word_0x28 also still drift. Checkpoint 2 remains pending; the next implementation target is replacing the native direct boundary/span-fill approximation with source-backed 0x4a2777 vector materialization and the exact 0x4a325d seed/input join.",
-    "remainingWork": "Port the exact 0x4a2777 generator+0x3f4 boundary vector materialization and the exact 0x4a325d seed/input join, then rerun the same-run pre-0x4a4c8e generated-cell comparison. Do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+    "status": "checkpoint2_pending_4a2777_append_order_diagnostic",
+    "summary": "No-Godot checkpoint-2 snapshots now expose source-backed 0x4a2777 boundary-vector append order over the currently materialized native source-node walks: selected-start vertices are recorded at 0x4a2990 before the owner gate, and continuation events record the pre-update current point at 0x4a2adc/0x4a2b1e. The same Medium hc4_comp0 setup 0 private-state compare remains at the prior 475/5184 owner-byte placement mismatch, so this did not regress the owner surface. Checkpoint 2 remains pending because applying the recovered one-endpoint traversal over the current native descriptor regressed the owner-byte surface; exact live grid mutation needs the 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and plain-C++ generation-core split first.",
+    "remainingWork": "Port the exact same-run 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and split the remaining H3MapEd RMG generation core out of Godot Variant/Dictionary/FileAccess APIs before changing live boundary/span-fill traversal or emitting full .amap exports. Do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
     "artifacts": [
       "src/gdextension/src/rmg_native_core.cpp",
       "bin/rmg_native_batch_export_cli",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/manifest.json",
-      ".artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/private_state_compare_hc4_setup0_after_live_feedback.json"
+      ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/manifest.json",
+      ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/private_state_compare_hc4_setup0_after_live_feedback.json"
     ],
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4 --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; snapshot written; godot_process_started=false)",
-      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --max-mismatches 25 --out .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/private_state_compare_hc4_setup0_after_live_feedback.json (ran; mismatch remains visible: owner_byte2_signed_mismatch=475)",
-      "jq boundary-vector summary over .artifacts/rmg_native_cli_goal_boundary_vector_trace_hc4/medium_4p_seed10_hc4_setup0.phase_snapshot.json (passed; proxy trace true, exact H3MapEd generator+0x3f4 vector false, event_count=51)",
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; snapshot written; godot_process_started=false)",
+      "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --max-mismatches 25 --out .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/private_state_compare_hc4_setup0_after_live_feedback.json (ran; mismatch remains visible: owner_byte2_signed_mismatch=475)",
+      "jq plain_cpp_boundary_span_fill_summary over .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json (passed; append-order events 0x4a2990 x10, 0x4a2adc x4, 0x4a2b1e x9; exact H3MapEd vector false)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)",
-      "pgrep -a -f [g]odot|[g]odot4 || true (passed: no Godot process)",
-      "Windows .dll build intentionally not run; Linux/no-Godot checkpoint-2 inner loop only until Linux parity reaches the final boundary"
+      "pgrep -a -f '[g]odot|[g]odot4' || true (no Godot process)"
     ],
     "metrics": {
-      "alignment_checkpoints_completed": 3,
-      "alignment_checkpoints_pending": 5,
-      "checkpoint2_status": "pending",
       "native_rmg_end_to_end_parity_complete": false,
+      "checkpoint2_complete": false,
       "godot_process_started": false,
-      "amap_generation_available_without_godot": false,
-      "standalone_cli_generation_core_stage": "plain_cpp_controlled_case_checkpoint2_boundary_vector_proxy_surface",
-      "boundary_native_vector_proxy_trace_materialized": true,
-      "boundary_exact_h3maped_generator_0x3f4_vector_materialized": false,
-      "boundary_vector_event_count": 51,
-      "boundary_vector_event_sample_truncated": false,
-      "boundary_vector_events_by_anchor": {
-        "native_proxy_for_0x4a2777_border_connection": 13,
-        "native_proxy_for_0x4a2990": 12,
-        "native_proxy_for_0x4a2adc": 13,
-        "native_proxy_for_0x4a2b1e": 13
-      },
-      "same_template_medium_hc4_setup0_owner_id_coverage_matches": true,
-      "same_template_medium_hc4_setup0_owner_byte2_signed_mismatch": 475,
-      "same_template_medium_hc4_setup0_word_0x20_mismatch": 5184,
-      "same_template_medium_hc4_setup0_word_0x24_mismatch": 4768,
-      "same_template_medium_hc4_setup0_word_0x28_mismatch": 4065,
-      "h3maped_boundary_vector_anchor": "0x4a2777_generator_plus_0x3f4",
-      "h3maped_span_fill_anchor": "0x4a325d",
-      "validate_repo_passed": true,
       "windows_dll_build_deferred": true,
-      "jq_validation_passed": true,
-      "git_diff_check_passed": true,
-      "no_godot_process_detected": true
+      "owner_byte2_signed_mismatch": 475,
+      "word_0x20_mismatch": 5184,
+      "word_0x24_mismatch": 4768,
+      "word_0x28_mismatch": 4065,
+      "boundary_vector_event_count": 23,
+      "boundary_vector_events_by_anchor": {
+        "0x4a2990": 10,
+        "0x4a2adc": 4,
+        "0x4a2b1e": 9
+      },
+      "materializes_exact_h3maped_generator_0x3f4_boundary_vector": false,
+      "rejected_live_grid_one_endpoint_traversal_reason": "Regressed owner_byte2_signed_mismatch from 475 to 3249 when applied over current native descriptor/source-node walk; exact descriptor handoff must be ported first."
     }
   },
   "nextActionGuardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, refuses to run while Godot is already active, and the Python freshness gate tracks standalone CLI inputs rather than the old in-engine runner or GDExtension shared libraries. Defer Windows .dll builds until Linux parity reaches the final boundary.",
@@ -46640,7 +46612,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes recovered runtime terrain selection and private terrain-code writeout checkpoints, but live visual-feedback mutations and exact same-run compares remain open. No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
+      "notes": "No-Godot checkpoint-2 snapshots now expose source-backed 0x4a2777 boundary-vector append order over the currently materialized native source-node walks: selected-start vertices are recorded at 0x4a2990 before the owner gate, and continuation events record the pre-update current point at 0x4a2adc/0x4a2b1e. The same Medium hc4_comp0 setup 0 private-state compare remains at the prior 475/5184 owner-byte placement mismatch, so this did not regress the owner surface. Checkpoint 2 remains pending because applying the recovered one-endpoint traversal over the current native descriptor regressed the owner-byte surface; exact live grid mutation needs the 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and plain-C++ generation-core split first.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -46656,7 +46628,7 @@
       "status": "in_progress",
       "summary": "Native RMG alignment remains in progress. Checkpoint 4, metadata claim correction, is completed: Small seed-58 phase snapshot evidence now shows no true exact/adopted native parity claims for pending checkpoints; object-vector exact_port_claim, complete_object_reward_guard_exact_port_claim, route_container_0x4a8260_active_adoption, route_container_0x4a8260_rng_boundary_exact, and exact_upstream_bit_source_claim all report false while upstream checkpoints remain pending. Seven alignment checkpoints remain pending: final writeout authority, private generated-cell grid, reward/object identity, route replay preconditions, road vector/bit source, connection blocker/guard payloads, and decorative scoring/vector replay.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-13T19:23:23Z",
+      "updatedAt": "2026-06-13T20:53:46Z",
       "validation": {
         "artifacts": [
           ".artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json",
@@ -61838,6 +61810,52 @@
         "jq_validation_passed": true,
         "git_diff_check_passed": true,
         "no_godot_process_detected": true
+      }
+    },
+    {
+      "id": "native-rmg-no-godot-4a2777-append-order-20260613",
+      "date": "2026-06-13T20:53:46Z",
+      "recordedAt": "2026-06-13T20:53:46Z",
+      "validatedAt": "2026-06-13T20:53:46Z",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "checkpoint2_pending_4a2777_append_order_diagnostic",
+      "summary": "No-Godot checkpoint-2 snapshots now expose source-backed 0x4a2777 boundary-vector append order over the currently materialized native source-node walks: selected-start vertices are recorded at 0x4a2990 before the owner gate, and continuation events record the pre-update current point at 0x4a2adc/0x4a2b1e. The same Medium hc4_comp0 setup 0 private-state compare remains at the prior 475/5184 owner-byte placement mismatch, so this did not regress the owner surface. Checkpoint 2 remains pending because applying the recovered one-endpoint traversal over the current native descriptor regressed the owner-byte surface; exact live grid mutation needs the 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and plain-C++ generation-core split first.",
+      "remainingWork": "Port the exact same-run 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor/seed handoff and split the remaining H3MapEd RMG generation core out of Godot Variant/Dictionary/FileAccess APIs before changing live boundary/span-fill traversal or emitting full .amap exports. Do not use Godot/headless Godot, GDScript reports, density scalars, brute-force retries, Windows DLL churn, or final-map delta tuning for this checkpoint.",
+      "artifacts": [
+        "src/gdextension/src/rmg_native_core.cpp",
+        "bin/rmg_native_batch_export_cli",
+        "PLAN.md",
+        ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/manifest.json",
+        ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/private_state_compare_hc4_setup0_after_live_feedback.json"
+      ],
+      "checks": [
+        "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; standalone native CLI only)",
+        "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --emit-phase-snapshot --print-manifest (expected exit 2 blocked; snapshot written; godot_process_started=false)",
+        "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_terrain_live_feedback --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --max-mismatches 25 --out .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/private_state_compare_hc4_setup0_after_live_feedback.json (ran; mismatch remains visible: owner_byte2_signed_mismatch=475)",
+        "jq plain_cpp_boundary_span_fill_summary over .artifacts/rmg_native_cli_4a2777_append_order_hc4_restore/medium_4p_seed10_hc4_setup0.phase_snapshot.json (passed; append-order events 0x4a2990 x10, 0x4a2adc x4, 0x4a2b1e x9; exact H3MapEd vector false)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "pgrep -a -f '[g]odot|[g]odot4' || true (no Godot process)"
+      ],
+      "metrics": {
+        "native_rmg_end_to_end_parity_complete": false,
+        "checkpoint2_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true,
+        "owner_byte2_signed_mismatch": 475,
+        "word_0x20_mismatch": 5184,
+        "word_0x24_mismatch": 4768,
+        "word_0x28_mismatch": 4065,
+        "boundary_vector_event_count": 23,
+        "boundary_vector_events_by_anchor": {
+          "0x4a2990": 10,
+          "0x4a2adc": 4,
+          "0x4a2b1e": 9
+        },
+        "materializes_exact_h3maped_generator_0x3f4_boundary_vector": false,
+        "rejected_live_grid_one_endpoint_traversal_reason": "Regressed owner_byte2_signed_mismatch from 475 to 3249 when applied over current native descriptor/source-node walk; exact descriptor handoff must be ported first."
       }
     }
   ],
