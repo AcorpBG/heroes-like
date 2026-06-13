@@ -18,8 +18,9 @@ supported Small/Medium one-level land cases. Those snapshots now include the
 constructor-default generated-cell words (`0xffff7fbc`, `0x00000548`, and
 bit25|bit27) under the same generated-cell checkpoint schema used by the
 Python private-state compare tools. They also include plain-C++ embedded-catalog
-template selection and selected runtime-zone record summaries. They do not prove
-pre-`0x4a4c8e` parity yet: coordinate replay, runtime-zone owner
+template selection, selected runtime-zone record summaries, link-seed extraction,
+and `0x4a1f3b` coordinate replay summaries. They do not prove pre-`0x4a4c8e`
+parity yet: source-node footprint construction, runtime-zone owner
 materialization, same-level synthetic runtime-zone append, and later
 generated-cell mutations still need to be ported. The CLI still intentionally
 fails closed for `.amap` generation until the H3MapEd RMG generation core is
