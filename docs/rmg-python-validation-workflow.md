@@ -21,12 +21,13 @@ Python private-state compare tools. They also include plain-C++ embedded-catalog
 template selection, selected runtime-zone record summaries, link-seed extraction,
 `0x4a1f3b` coordinate replay summaries, and
 `0x4a3a03/0x4cc788/0x4ccb64/0x4ccdfc` source-node footprint summaries.
-They do not prove pre-`0x4a4c8e` parity yet: boundary/span-fill owner
-materialization, same-level synthetic runtime-zone append, and later
-generated-cell mutations still need to be ported. The CLI still intentionally
-fails closed for `.amap` generation until the H3MapEd RMG generation core is
-split from Godot `Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess`
-APIs into plain C++ data structures.
+They also include a plain-C++ `0x4a2777/0x4a325d` boundary/span-fill owner-word
+summary over the currently materialized source-node walks. They do not prove
+pre-`0x4a4c8e` parity yet: same-level synthetic runtime-zone append and later
+generated-cell mutations still need to be ported and compared. The CLI still
+intentionally fails closed for `.amap` generation until the H3MapEd RMG
+generation core is split from Godot `Dictionary`/`Array`/`String`, `RefCounted`,
+and `FileAccess` APIs into plain C++ data structures.
 
 ## Default Loop
 
