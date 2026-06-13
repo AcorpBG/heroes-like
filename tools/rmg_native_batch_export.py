@@ -24,6 +24,39 @@ DEFAULT_ARTIFACT_ROOT = Path(".artifacts")
 LOG_NAME = "rmg_native_batch_export.log"
 
 
+def godot_processes() -> list[dict[str, str]]:
+    proc_root = Path("/proc")
+    if not proc_root.exists():
+        return []
+    current_pid = os.getpid()
+    matches: list[dict[str, str]] = []
+    for entry in proc_root.iterdir():
+        if not entry.name.isdigit():
+            continue
+        pid = int(entry.name)
+        if pid == current_pid:
+            continue
+        try:
+            comm = (entry / "comm").read_text(encoding="utf-8", errors="ignore").strip()
+            raw_cmdline = (entry / "cmdline").read_bytes()
+        except OSError:
+            continue
+        cmdline_parts = [part.decode("utf-8", errors="ignore") for part in raw_cmdline.split(b"\0") if part]
+        executable = Path(cmdline_parts[0]).name if cmdline_parts else comm
+        marker = f"{comm} {executable}".lower()
+        if "godot" not in marker:
+            continue
+        matches.append(
+            {
+                "pid": str(pid),
+                "comm": comm,
+                "executable": executable,
+                "cmdline": " ".join(cmdline_parts[:8]),
+            }
+        )
+    return matches
+
+
 def find_native_cli(explicit: str) -> Path:
     candidates = [Path(explicit)] if explicit else []
     candidates.extend(
@@ -117,6 +150,35 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     output_dir = output_dir if output_dir.is_absolute() else ROOT / output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     log_file = output_dir / LOG_NAME
+    preexisting_godot = godot_processes()
+    if preexisting_godot:
+        wrapper = {
+            "schema_id": "rmg_native_batch_export_python_wrapper_v3",
+            "status": "failed",
+            "runner": "standalone_native_cli_no_godot",
+            "native_cli": str(native_cli),
+            "godot_process_started": False,
+            "output_dir": str(output_dir),
+            "log_path": str(log_file),
+            "returncode": None,
+            "error": "godot_process_running",
+            "blocked_reason": "refusing_native_rmg_export_while_godot_process_is_running_on_memory_constrained_host",
+            "godot_process_guard": {
+                "status": "fail",
+                "preexisting_processes": preexisting_godot,
+                "post_run_processes": [],
+            },
+            "control_policy": "python_invokes_standalone_native_cli_no_godot_and_refuses_when_godot_is_already_running",
+        }
+        wrapper_path = output_dir / "wrapper_manifest.json"
+        with wrapper_path.open("w", encoding="utf-8") as handle:
+            json.dump(wrapper, handle, indent=2, sort_keys=True)
+        print(
+            "RMG_NATIVE_BATCH_EXPORT_PY status=fail error=godot_process_running "
+            f"output_dir={output_dir} matches={len(preexisting_godot)} log={log_file}",
+            file=sys.stderr,
+        )
+        return 1
 
     command = [
         str(native_cli),
@@ -150,12 +212,14 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         )
 
     manifest = load_manifest(output_dir)
+    post_run_godot = godot_processes()
+    base_status = "pass" if process.returncode == 0 and manifest.get("status") == "exported" else "blocked"
     wrapper = {
-        "schema_id": "rmg_native_batch_export_python_wrapper_v2",
-        "status": "pass" if process.returncode == 0 and manifest.get("status") == "exported" else "blocked",
+        "schema_id": "rmg_native_batch_export_python_wrapper_v3",
+        "status": "failed" if post_run_godot else base_status,
         "runner": "standalone_native_cli_no_godot",
         "native_cli": str(native_cli),
-        "godot_process_started": False,
+        "godot_process_started": bool(post_run_godot),
         "output_dir": str(output_dir),
         "log_path": str(log_file),
         "returncode": process.returncode,
@@ -169,8 +233,13 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         "skipped_count": manifest.get("skipped_count", 0),
         "generation_core_stage": manifest.get("generation_core_stage", ""),
         "phase_snapshot_schema_id": manifest.get("phase_snapshot_schema_id", ""),
-        "control_policy": "python_invokes_standalone_native_cli_no_godot",
+        "control_policy": "python_invokes_standalone_native_cli_no_godot_and_refuses_when_godot_is_already_running",
         "case_scope": manifest.get("case_scope", ""),
+        "godot_process_guard": {
+            "status": "pass" if not post_run_godot else "fail",
+            "preexisting_processes": [],
+            "post_run_processes": post_run_godot,
+        },
     }
     wrapper_path = output_dir / "wrapper_manifest.json"
     with wrapper_path.open("w", encoding="utf-8") as handle:

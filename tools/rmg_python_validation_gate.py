@@ -32,24 +32,17 @@ PYTHON_GATE_MODULES = [
     ROOT / "tools" / "rmg_quick_validation.py",
 ]
 NATIVE_FRESHNESS_SOURCE_INPUTS = [
-    ROOT / "src" / "gdextension" / "include" / "rmg_native_batch_export_runner.hpp",
-    ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg.cpp",
+    ROOT / "src" / "gdextension" / "CMakeLists.txt",
+    ROOT / "src" / "gdextension" / "include" / "rmg_native_core.hpp",
     ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg_embedded_data.cpp",
-    ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp",
+    ROOT / "src" / "gdextension" / "src" / "rmg_native_core.cpp",
     ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_cli.cpp",
-    ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_runner.cpp",
     ROOT / "tools" / "rmg_native_batch_export.py",
-    ROOT / "tools" / "rmg_native_batch_export_native.tscn",
 ]
 NATIVE_FRESHNESS_LINUX_BINARY_INPUTS = [
     ROOT / "bin" / "rmg_native_batch_export_cli",
-    ROOT / "bin" / "libaurelion_map_persistence.linux.template_debug.x86_64.so",
-    ROOT / "bin" / "libaurelion_map_persistence.linux.template_release.x86_64.so",
 ]
-NATIVE_FRESHNESS_WINDOWS_BINARY_INPUTS = [
-    ROOT / "bin" / "aurelion_map_persistence.windows.template_debug.x86_64.dll",
-    ROOT / "bin" / "aurelion_map_persistence.windows.template_release.x86_64.dll",
-]
+NATIVE_FRESHNESS_WINDOWS_BINARY_INPUTS: list[Path] = []
 
 
 def compile_gate_modules() -> list[dict[str, Any]]:
@@ -130,10 +123,10 @@ def native_export_freshness(report: dict[str, Any], include_windows: bool) -> di
         "newest_native_input": str(newest_input.relative_to(ROOT)),
         "newest_native_input_mtime": newest_input_mtime,
         "freshness_policy": (
-            "selected native AMAP batch must be newer than native RMG sources and Linux native binaries; "
-            "Windows DLL freshness is opt-in after Linux parity is verified"
+            "selected native AMAP batch must be newer than the no-Godot native RMG CLI sources and Linux CLI binary; "
+            "Windows CLI/package freshness is opt-in after Linux parity is verified"
             if not include_windows
-            else "selected native AMAP batch must be newer than native RMG sources plus Linux and Windows native binaries"
+            else "selected native AMAP batch must be newer than native RMG sources plus Linux and Windows standalone CLI/package binaries"
         ),
         "windows_native_freshness_included": include_windows,
     }
