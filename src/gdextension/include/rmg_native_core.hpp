@@ -18,6 +18,7 @@ struct ControlledCase {
 	int32_t human_count = 0;
 	int32_t computer_count = 0;
 	bool setup_object_0x44_known = false;
+	bool setup_object_0x44_supplied = false;
 	int32_t setup_object_0x44 = 0;
 	bool parse_ok = false;
 	std::string parse_error;

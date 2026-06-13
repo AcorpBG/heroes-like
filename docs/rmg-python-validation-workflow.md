@@ -26,15 +26,19 @@ runtime-zone record summaries, link-seed extraction, `0x4a1f3b` coordinate
 replay summaries, and
 `0x4a3a03/0x4cc788/0x4ccb64/0x4ccdfc` source-node footprint summaries.
 They also include a plain-C++ `0x4a2777/0x4a325d` boundary/span-fill owner-word
-summary over the currently materialized source-node walks. They also resolve
-the recovered `0x49ecf2` generator mode for controlled cases that supply RMG
-setup object `+0x44`; setup value `3` consumes one `0x4e7276` RNG call and uses
-`rng % 3` before template selection. They also include the recovered
-`0x4a3b48` direction scan and `0x49b452` same-level synthetic runtime-zone
-append replay for supplied setup modes. They do not prove pre-`0x4a4c8e`
-parity yet: exact same-run setup `+0x44` capture/defaulting when not supplied,
-same-run generated-cell comparison, and later generated-cell mutations still
-need to be ported and compared. The CLI still intentionally fails closed for
+summary over the currently materialized source-node walks. They resolve the
+recovered `0x49ecf2` generator mode for controlled cases that supply RMG setup
+object `+0x44`; when the field is omitted, the CLI defaults it to recovered
+H3MapEd setup initializer value `3` and emits explicit provenance fields. Setup
+value `3` consumes one `0x4e7276` RNG call and uses `rng % 3` before template
+selection. They also include the recovered `0x4a3b48` direction scan and
+`0x49b452` same-level synthetic runtime-zone append replay for supplied or
+defaulted setup modes, and `0x49b53d/0x4a3f27` terrain selection/writeout now
+iterates the post-synthetic runtime-zone vector instead of dropping synthetic
+owner cells. They do not prove pre-`0x4a4c8e` parity yet: same-run generated-cell
+comparison still reports owner placement drift and later generated-cell word
+mutations still need to be ported and compared. The CLI still intentionally
+fails closed for
 `.amap` generation until the H3MapEd RMG generation core is split from Godot
 `Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess` APIs into plain
 C++ data structures.
