@@ -30,6 +30,10 @@ add_library(aurelion_map_persistence SHARED
 	src/rmg_data_model.cpp
 )
 
+add_executable(rmg_native_batch_export_cli
+	src/rmg_native_batch_export_cli.cpp
+)
+
 target_include_directories(aurelion_map_persistence PRIVATE
 	include
 )
@@ -80,5 +84,15 @@ foreach(AURELION_CONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
 		LIBRARY_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
 		RUNTIME_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
 		ARCHIVE_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
+	)
+endforeach()
+
+set_target_properties(rmg_native_batch_export_cli PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
+)
+
+foreach(AURELION_CONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
+	set_target_properties(rmg_native_batch_export_cli PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
 	)
 endforeach()

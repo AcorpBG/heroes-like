@@ -3,8 +3,9 @@
 
 This is the default fast loop for validating generated map packages against the
 owner H3M corpus after a native export exists. It deliberately does not start
-Godot; Godot should be reserved for fresh generation/export and runtime/editor
-integration smokes.
+Godot. Fresh native RMG export tooling must use the standalone no-Godot CLI
+boundary; Godot runs are reserved for explicit runtime/editor integration
+smokes on hosts where engine launch is permitted.
 """
 
 from __future__ import annotations
@@ -35,11 +36,13 @@ NATIVE_FRESHNESS_SOURCE_INPUTS = [
     ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg.cpp",
     ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg_embedded_data.cpp",
     ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp",
+    ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_cli.cpp",
     ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_runner.cpp",
     ROOT / "tools" / "rmg_native_batch_export.py",
     ROOT / "tools" / "rmg_native_batch_export_native.tscn",
 ]
 NATIVE_FRESHNESS_LINUX_BINARY_INPUTS = [
+    ROOT / "bin" / "rmg_native_batch_export_cli",
     ROOT / "bin" / "libaurelion_map_persistence.linux.template_debug.x86_64.so",
     ROOT / "bin" / "libaurelion_map_persistence.linux.template_release.x86_64.so",
 ]
