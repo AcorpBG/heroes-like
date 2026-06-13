@@ -39,8 +39,10 @@ defaulted setup modes, and `0x49b53d/0x4a3f27` terrain selection/writeout now
 iterates the post-synthetic runtime-zone vector instead of dropping synthetic
 owner cells. They do not prove pre-`0x4a4c8e` parity yet: same-run generated-cell
 comparison still reports owner placement drift and later generated-cell word
-mutations still need to be ported and compared. The CLI still intentionally
-fails closed for
+mutations still need to be ported and compared. The checkpoint-2 comparator
+now splits `word_0x20` failures into low-word score drift and high-word owner
+drift so native work cannot hide the unported score field behind the broader
+owner-byte mismatch. The CLI still intentionally fails closed for
 `.amap` generation until the H3MapEd RMG generation core is split from Godot
 `Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess` APIs into plain
 C++ data structures.

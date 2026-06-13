@@ -322,6 +322,9 @@ def owner_surface_summary(
 
 def compare_cells(h3_records: list[dict[str, Any]], native_records: dict[int, dict[str, Any]], max_mismatches: int) -> dict[str, Any]:
     mismatch_counts: Counter[str] = Counter()
+    word_0x20_low_word_h3_values: Counter[int] = Counter()
+    word_0x20_low_word_native_values: Counter[int] = Counter()
+    word_0x20_owner_high_confusion: Counter[tuple[int, int]] = Counter()
     mismatches: list[dict[str, Any]] = []
     for h3 in h3_records:
         flat = int(h3["flat"])
@@ -340,24 +343,61 @@ def compare_cells(h3_records: list[dict[str, Any]], native_records: dict[int, di
             if int(h3[field]) != int(native[field]):
                 mismatch_counts[f"{field}_mismatch"] += 1
                 fields.append(field)
+        h3_word_0x20 = as_uint32(h3.get("word_0x20", 0))
+        native_word_0x20 = as_uint32(native.get("word_0x20", 0))
+        h3_low_word = h3_word_0x20 & 0xFFFF
+        native_low_word = native_word_0x20 & 0xFFFF
+        h3_high_word = h3_word_0x20 & 0xFFFF0000
+        native_high_word = native_word_0x20 & 0xFFFF0000
+        if h3_low_word != native_low_word:
+            mismatch_counts["word_0x20_low_word_mismatch"] += 1
+            word_0x20_low_word_h3_values[h3_low_word] += 1
+            word_0x20_low_word_native_values[native_low_word] += 1
+            if int(h3.get("owner_byte2_signed", signed_byte(h3_word_0x20 >> 16))) == int(native.get("owner_byte2_signed", signed_byte(native_word_0x20 >> 16))):
+                mismatch_counts["word_0x20_low_word_mismatch_owner_byte2_same"] += 1
+            else:
+                mismatch_counts["word_0x20_low_word_mismatch_owner_byte2_different"] += 1
+        if h3_high_word != native_high_word:
+            mismatch_counts["word_0x20_high_word_mismatch"] += 1
+            word_0x20_owner_high_confusion[(signed_byte(h3_word_0x20 >> 16), signed_byte(native_word_0x20 >> 16))] += 1
         if "word_0x2c" in h3 and "word_0x2c" not in native:
             mismatch_counts["word_0x2c_native_not_recorded"] += 1
         if fields and len(mismatches) < max_mismatches:
-            mismatches.append(
-                {
-                    "flat": flat,
-                    "x": native.get("x", -1),
-                    "y": native.get("y", -1),
-                    "level": native.get("level", -1),
-                    "fields": fields,
-                    "h3maped": {field: h3.get(field) for field in fields},
-                    "native": {field: native.get(field) for field in fields},
-                    "native_terrain_code": native.get("terrain_code", -1),
+            mismatch: dict[str, Any] = {
+                "flat": flat,
+                "x": native.get("x", -1),
+                "y": native.get("y", -1),
+                "level": native.get("level", -1),
+                "fields": fields,
+                "h3maped": {field: h3.get(field) for field in fields},
+                "native": {field: native.get(field) for field in fields},
+                "native_terrain_code": native.get("terrain_code", -1),
+            }
+            if "word_0x20" in fields:
+                mismatch["word_0x20_parts"] = {
+                    "h3maped_low_word": h3_low_word,
+                    "native_low_word": native_low_word,
+                    "h3maped_high_word": h3_high_word,
+                    "native_high_word": native_high_word,
+                    "h3maped_owner_byte2_signed": signed_byte(h3_word_0x20 >> 16),
+                    "native_owner_byte2_signed": signed_byte(native_word_0x20 >> 16),
+                    "h3maped_owner_byte3_signed": signed_byte(h3_word_0x20 >> 24),
+                    "native_owner_byte3_signed": signed_byte(native_word_0x20 >> 24),
                 }
-            )
+            mismatches.append(mismatch)
+    diagnostic: dict[str, Any] = {}
+    if word_0x20_low_word_h3_values or word_0x20_low_word_native_values:
+        diagnostic["word_0x20_low_word_mismatch_top_h3maped_values"] = top_counts(word_0x20_low_word_h3_values)
+        diagnostic["word_0x20_low_word_mismatch_top_native_values"] = top_counts(word_0x20_low_word_native_values)
+    if word_0x20_owner_high_confusion:
+        diagnostic["word_0x20_owner_byte2_confusion_top"] = [
+            {"h3maped_owner_byte2_signed": key[0], "native_owner_byte2_signed": key[1], "count": count}
+            for key, count in word_0x20_owner_high_confusion.most_common(20)
+        ]
     return {
         "status": "pass" if not mismatch_counts else "mismatch",
         "mismatch_counts": dict(sorted(mismatch_counts.items())),
+        "mismatch_diagnostics": diagnostic,
         "first_mismatches": mismatches,
     }
 
