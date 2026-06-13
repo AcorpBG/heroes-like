@@ -8,9 +8,9 @@ Document role: tactical validation workflow
 RMG correctness checks must not start Godot just to parse, compare, or export
 native RMG evidence on memory-constrained hosts. Test/report/export control
 stays in Python, and fresh native export must go through the standalone
-no-Godot CLI boundary. The legacy Godot runner is retained only behind
-`--allow-godot` plus `RMG_NATIVE_BATCH_EXPORT_ALLOW_GODOT=1` for explicit
-runtime/editor integration smokes on hosts where engine launch is permitted.
+no-Godot CLI boundary. The legacy Godot runner has been removed from
+`tools/rmg_native_batch_export.py`; runtime/editor integration smokes must use a
+separate explicit workflow on a host where engine launch is permitted.
 
 Current blocker: the standalone CLI intentionally fails closed until the
 H3MapEd RMG generation core is split from Godot `Dictionary`/`Array`/`String`,
@@ -36,8 +36,8 @@ python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_expor
 ```
 
 This command currently reports `blocked` until the native RMG core split is
-implemented. Do not add `--runner godot --allow-godot`, and do not set
-`RMG_NATIVE_BATCH_EXPORT_ALLOW_GODOT=1`, for parity work on this host.
+implemented. Do not add Godot flags or restore a Godot runner for parity work
+on this host.
 
 3. After a no-Godot export exists, validate and compare with Python in one pass:
 
