@@ -10548,7 +10548,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Small template selection now uses recovered H3MapEd catalog order instead of the stale 13-template shortcut. The 20-reference 2p Small manifest check passes 20/20, and seed 58 now selects source catalog 46 / 5SB0a with 9 runtime relation records. Reward scheduling now treats runtime byte+0x3c as the 0x4aadd2 town-choice counter input only, not the 0x4aa354 scheduler membership filter; seed 58 now schedules 9/9 relation records and 189 reward attempts versus the recovered source stream 195. Remaining blocker is exact 0x4aa9b7 coordinate/private-cell and selected descriptor/materialization parity before 0x4a8260.",
+  "currentSliceNotes": "Native reward-guard source-order alignment implemented: 0x49cf34/0x49d2e0 now consumes active reward RNG before 0x4aa9b7, source-projected 0x49d69d/0x4aa3e9 guard members are preferred, and post-coordinate native surrogate is fallback only. Linux native build passed; one controlled Small seed native export smoke passed at .artifacts/rmg_native_reward_guard_source_order_smoke_current with 165 source attach RNG calls, 6 source-projected guard records, 4 fallback surrogate records. Not parity yet: descriptor/catalog identity, coordinate/private-cell parity, route adoption, Medium parity, and Windows builds remain open.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-12T15:45:00Z",
@@ -46232,7 +46232,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG parity is still incomplete. Applied the focused 0x4aa9b7 owner-byte alignment so runtime records with source_zone_id use that source-zone id for the expected generated-cell high-owner byte. For Small 2-player seed 58, the source-selected coordinate (4,3,0) already had generated high owner byte 1 while the old expected owner was runtime index 0. The Linux/Python route replay improved the route-entry offset gap from 76 to 10, but the recovered 0x4aa9b7 handoff prefix is still not parity because native accepts earlier proxy reward objects before the source first successful handoff. A candidate guard-attach no-candidate gate was tested and rejected because it worsened the same route offset gap to 550. Windows .dll builds remain deferred until Linux parity is exact.",
+      "notes": "Native reward-guard source-order alignment implemented: 0x49cf34/0x49d2e0 now consumes active reward RNG before 0x4aa9b7, source-projected 0x49d69d/0x4aa3e9 guard members are preferred, and post-coordinate native surrogate is fallback only. Linux native build passed; one controlled Small seed native export smoke passed at .artifacts/rmg_native_reward_guard_source_order_smoke_current with 165 source attach RNG calls, 6 source-projected guard records, 4 fallback surrogate records. Not parity yet: descriptor/catalog identity, coordinate/private-cell parity, route adoption, Medium parity, and Windows builds remain open.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -46248,7 +46248,7 @@
       "status": "in_progress",
       "summary": "Native RMG parity is still incomplete. Corrected the generated-cell owner-byte helper to match recovered 0x4aa9b7/0x4a8c15 shl 8; sar 24 behavior: owner gates now read signed byte2 bits 16..23 from cell+0x20, not the high byte. Fresh Linux/Python seed-58 evidence confirms the route replay still passes recovered H3MapEd route mechanics but native route adoption remains denied with route-entry offset gap 10. The recovered 0x4aa9b7 handoff compare remains 1/8 prefix full matches because native still accepts earlier proxy reward candidates before the source first successful handoff. The reward-guard constructor-gap diagnostic was fixed to handle no-stamp positive guard records and now reports no source-backed active guard-constructor policy matching the 10-call gap. Windows .dll builds were intentionally not run; the inner loop remains Linux .so plus Python parity tooling until Linux parity is exact.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-12T15:45:00Z",
+      "updatedAt": "2026-06-13T13:22:45Z",
       "validation": {
         "id": "native-rmg-small-template-order-reward-stream-membership-20260612",
         "sliceId": "rmg-small-generalization-hardening-10184",
@@ -53222,7 +53222,7 @@
   ],
   "summary": "Native RMG parity is still incomplete. Corrected the generated-cell owner-byte helper to match recovered 0x4aa9b7/0x4a8c15 shl 8; sar 24 behavior: owner gates now read signed byte2 bits 16..23 from cell+0x20, not the high byte. Fresh Linux/Python seed-58 evidence confirms the route replay still passes recovered H3MapEd route mechanics but native route adoption remains denied with route-entry offset gap 10. The recovered 0x4aa9b7 handoff compare remains 1/8 prefix full matches because native still accepts earlier proxy reward candidates before the source first successful handoff. The reward-guard constructor-gap diagnostic was fixed to handle no-stamp positive guard records and now reports no source-backed active guard-constructor policy matching the 10-call gap. Windows .dll builds were intentionally not run; the inner loop remains Linux .so plus Python parity tooling until Linux parity is exact.",
   "taskId": "10184",
-  "updatedAt": "2026-06-12T15:45:00Z",
+  "updatedAt": "2026-06-13T13:22:45Z",
   "validation": {
     "id": "native-rmg-small-template-order-reward-stream-membership-20260612",
     "sliceId": "rmg-small-generalization-hardening-10184",

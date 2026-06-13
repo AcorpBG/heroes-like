@@ -12662,9 +12662,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 									if (guard_descriptor_0x49d2e0_sample_records.size() < 32) {
 										guard_descriptor_0x49d2e0_sample_records.append(record);
 									}
-									record["status"] = guard_descriptor_valid ? String("accepted_by_diagnostic_guard_descriptor_0x49d2e0_filter_behavior_disabled") : String("rejected_by_diagnostic_guard_descriptor_0x49d2e0_filter");
+									record["status"] = guard_descriptor_valid ? String("accepted_by_source_guard_descriptor_0x49d2e0_filter") : String("rejected_by_source_guard_descriptor_0x49d2e0_filter");
 									record["filter_helper"] = "0x49d2e0";
-									record["exactness_blocker"] = "The source passes raw_guard+0x04, the dynamic monster descriptor pointer, into 0x49d2e0. This diagnostic models the recovered type-54 1x1 origin-zero descriptor but does not yet drive 0x49d69d/0x4aa3e9 behavior.";
+									record["exactness_blocker"] = "The source passes raw_guard+0x04, the dynamic monster descriptor pointer, into 0x49d2e0. The recovered type-54 1x1 origin-zero descriptor now feeds 0x49d69d/0x4aa3e9 guard-member behavior; remaining blocker is upstream reward descriptor/catalog parity.";
 								} else {
 									reverse_filter_removed_bit26_clear_count += 1;
 									record["status"] = "would_remove_bit26_clear";
@@ -12704,9 +12704,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							source_guard_object_pointer_shape_probe_0x49d2e0["rejected_49a6f9_count"] = guard_descriptor_0x49d2e0_rejected_49a6f9_count;
 							source_guard_object_pointer_shape_probe_0x49d2e0["rejected_special_no_neighbor_count"] = guard_descriptor_0x49d2e0_rejected_special_no_neighbor_count;
 							source_guard_object_pointer_shape_probe_0x49d2e0["sample_records"] = guard_descriptor_0x49d2e0_sample_records;
-							source_guard_object_pointer_shape_probe_0x49d2e0["exactness_blocker"] = "Guard descriptor candidate filtering is now diagnostic for the recovered type-54 1x1 origin-zero monster descriptor. Behavior still cannot change until 0x49d69d selected-member stamping and 0x4aa3e9 projection are recovered and compared against H3MapEd private state.";
+							source_guard_object_pointer_shape_probe_0x49d2e0["exactness_blocker"] = "Guard descriptor candidate filtering uses the recovered type-54 1x1 origin-zero monster descriptor and now feeds source-order 0x49d69d selected-member stamping plus 0x4aa3e9 projection.";
 							source_guard_constructor_probe_0x4a5c07["source_guard_object_pointer_shape_probe_0x49d2e0"] = source_guard_object_pointer_shape_probe_0x49d2e0;
-							source_guard_constructor_probe_0x4a5c07["exactness_blocker"] = "Need to recover 0x49d69d selected guard member stamping and 0x4aa3e9 projection before the diagnostic 0x49d2e0 accepted-candidate set can drive reward-guard behavior";
+							source_guard_constructor_probe_0x4a5c07["exactness_blocker"] = "0x4a5c07 guard construction now feeds recovered 0x49cf34/0x49d2e0/0x49d69d/0x4aa3e9 source-order behavior; remaining exactness blocker is upstream reward descriptor/catalog parity.";
 							selected_guard_stamp_shape["source_stamp_helper_address"] = "0x49d69d";
 							selected_guard_stamp_shape["source_guard_constructor_probe_0x4a5c07"] = source_guard_constructor_probe_0x4a5c07;
 							selected_guard_stamp_shape["source_random_helper_address"] = "0x4e7276";
@@ -12724,20 +12724,21 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							}
 							selected_guard_stamp_shape["accepted_candidate_order_sample"] = accepted_candidate_order_sample;
 							if (!guard_descriptor_0x49d2e0_accepted_candidates.empty()) {
-								H3MapedRng diagnostic_guard_stamp_rng { reward_preview_rng.state };
-								const int32_t diagnostic_rng_state_before = int32_t(diagnostic_guard_stamp_rng.state);
-								const int32_t diagnostic_rng_value = diagnostic_guard_stamp_rng.next();
-								const int32_t selected_guard_candidate_index = diagnostic_rng_value % int32_t(guard_descriptor_0x49d2e0_accepted_candidates.size());
+								const int32_t source_rng_state_before = int32_t(reward_preview_rng.state);
+								const int32_t source_rng_value = reward_preview_rng.next();
+								reward_guard_attach_rng_call_count_0x49cf34 += 1;
+								const int32_t selected_guard_candidate_index = source_rng_value % int32_t(guard_descriptor_0x49d2e0_accepted_candidates.size());
 								const H3MaskPoint selected_guard_candidate = guard_descriptor_0x49d2e0_accepted_candidates[size_t(selected_guard_candidate_index)];
-								selected_guard_stamp_shape["selected_guard_candidate_rng_state_before_uint32"] = diagnostic_rng_state_before;
-								selected_guard_stamp_shape["selected_guard_candidate_rng_value"] = diagnostic_rng_value;
-								selected_guard_stamp_shape["selected_guard_candidate_rng_state_after_uint32"] = int32_t(diagnostic_guard_stamp_rng.state);
-								selected_guard_stamp_shape["source_rng_state_source"] = "diagnostic copy of reward_preview_rng.state; active adoption is blocked until exact 0x4aa9b7 wrapper candidate state is recovered";
-								selected_guard_stamp_shape["source_rng_behavioral"] = false;
-								selected_guard_stamp_shape["diagnostic_rng_state_before_uint32"] = diagnostic_rng_state_before;
-								selected_guard_stamp_shape["diagnostic_rng_state_source"] = "reward_preview_rng.state at this object-lookup checkpoint; final behavioral adoption must verify exact 0x49cf34 call-time state with 0x4aa9b7 wrapper candidate parity";
-								selected_guard_stamp_shape["diagnostic_rng_value"] = diagnostic_rng_value;
-								selected_guard_stamp_shape["diagnostic_rng_state_after_uint32"] = int32_t(diagnostic_guard_stamp_rng.state);
+								selected_guard_stamp_shape["behavioral"] = true;
+								selected_guard_stamp_shape["selected_guard_candidate_rng_state_before_uint32"] = source_rng_state_before;
+								selected_guard_stamp_shape["selected_guard_candidate_rng_value"] = source_rng_value;
+								selected_guard_stamp_shape["selected_guard_candidate_rng_state_after_uint32"] = int32_t(reward_preview_rng.state);
+								selected_guard_stamp_shape["source_rng_state_source"] = "active reward_preview_rng.state consumed at the recovered 0x49cf34 guard-attach order before 0x4aa9b7 coordinate acceptance";
+								selected_guard_stamp_shape["source_rng_behavioral"] = true;
+								selected_guard_stamp_shape["diagnostic_rng_state_before_uint32"] = source_rng_state_before;
+								selected_guard_stamp_shape["diagnostic_rng_state_source"] = "mirrors the behavioral source-order 0x49cf34 RNG state for report continuity";
+								selected_guard_stamp_shape["diagnostic_rng_value"] = source_rng_value;
+								selected_guard_stamp_shape["diagnostic_rng_state_after_uint32"] = int32_t(reward_preview_rng.state);
 								selected_guard_stamp_shape["selected_candidate_index"] = selected_guard_candidate_index;
 								selected_guard_stamp_shape["selected_candidate_x"] = selected_guard_candidate.dx;
 								selected_guard_stamp_shape["selected_candidate_y"] = selected_guard_candidate.dy;
@@ -12830,7 +12831,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								selected_guard_stamp_shape["post_stamp_ring_source"] = "0x49cf34 calls 0x49a932(true) on valid neighbor cells around the selected guard member before 0x4ae2d0/0x49d6e0/0x49d7c3";
 								source_wrapper_word_after_guard_attach_0x49cf34 = diagnostic_stamp_word_0x28;
 								source_wrapper_word_after_guard_attach_available_0x49cf34 = true;
-								selected_guard_stamp_shape["exactness_blocker"] = "0x49d69d selected-member stamp and post-stamp ring are diagnostic for positive-guard wrappers. Behavioral active-RNG adoption is blocked until exact 0x4aa9b7 wrapper candidate state is recovered.";
+								selected_guard_stamp_shape["exactness_blocker"] = "0x49d69d selected-member stamp and post-stamp ring now consume the active source-order reward RNG before coordinate acceptance. Remaining exactness blocker is exact selected reward descriptor/catalog parity before 0x4aa9b7.";
 							} else {
 								selected_guard_stamp_shape["exactness_blocker"] = "No candidate survives the diagnostic 0x49d2e0 guard-object validation boundary, so 0x49d69d would not stamp a selected guard member in this model";
 							}
@@ -12839,7 +12840,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							probe["source_prefill_helper_address"] = "0x49d7c3";
 								probe["source_candidate_filter_helper_address"] = "0x49d2e0";
 								probe["source_stamp_guard_helper_address"] = "0x49d69d";
-							probe["behavioral"] = false;
+							probe["behavioral"] = source_wrapper_word_after_guard_attach_available_0x49cf34;
 							probe["source_invoked"] = true;
 							probe["wrapper_member_count"] = int32_t(source_wrapper_members_0x49d471.size());
 							probe["source_prefill_candidate_vector_probe_0x49d7c3"] = source_prefill_candidate_vector_probe_0x49d7c3;
@@ -12859,8 +12860,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							probe["source_guard_descriptor_0x49d2e0_rejected_special_no_neighbor_count"] = guard_descriptor_0x49d2e0_rejected_special_no_neighbor_count;
 							probe["source_reverse_candidate_filter_sample_records_0x49cf34"] = reverse_filter_records;
 							probe["source_selected_guard_stamp_shape_0x49d69d"] = selected_guard_stamp_shape;
-							probe["current_native_guard_surface"] = "native_global_single_tile_surrogate_after_reward_coordinate_acceptance";
-							probe["exactness_blocker"] = "0x49cf34 candidate-vector walk, reverse bit26 filter, and guard descriptor 0x49d2e0 acceptance are recovered for positive-guard wrappers, but active 0x49d154 RNG adoption is blocked until exact 0x4aa9b7 wrapper candidate state is recovered";
+							probe["current_native_guard_surface"] = "source_order_guard_attach_before_coordinate_acceptance";
+							probe["exactness_blocker"] = "0x49cf34 candidate-vector walk, reverse bit26 filter, guard descriptor 0x49d2e0 acceptance, and 0x49d154 RNG selection now drive the native reward RNG stream; remaining blocker is exact selected reward descriptor/catalog parity before 0x4aa9b7.";
 							return probe;
 							};
 							const int32_t reward_guard_effective_strength_mode = h3maped_effective_monster_strength_mode_4a960a(normalized_config, runtime);
@@ -13228,15 +13229,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 									}
 								}
 								if (reward_requires_composite_guard) {
-								int32_t guard_candidate_count = 0;
-								SingleTilePlacementCandidate guard_probe;
-								if (!find_reward_guard_vector_candidate_49cf34(x, y, anchor_level, expected_zone_word_id, false, reward_preview_rng, guard_probe, guard_candidate_count)) {
-									rejected_guard_composite_count += 1;
-									append_coordinate_scan_sample(x, y, flat, "guard_composite_candidate_not_found", generated_owner_byte, score, &footprint, nullptr, guard_candidate_count);
-									continue;
+									const int32_t source_guard_candidate_count = int32_t(source_guard_attach_probe_0x49cf34.get("source_guard_descriptor_0x49d2e0_accepted_count", 0));
+									if (!source_guard_attach_success_0x49cf34) {
+										rejected_guard_composite_count += 1;
+										append_coordinate_scan_sample(x, y, flat, "source_guard_attach_0x49cf34_candidate_not_found", generated_owner_byte, score, &footprint, nullptr, source_guard_candidate_count);
+										continue;
+									}
+									guard_composite_candidate_total += source_guard_candidate_count;
 								}
-								guard_composite_candidate_total += guard_candidate_count;
-							}
 							coordinate_candidate_count += 1;
 							append_coordinate_scan_sample(x, y, flat, "accepted_candidate", generated_owner_byte, score, &footprint, nullptr, -1);
 							if (score > best_score) {
@@ -13903,13 +13903,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["reward_guard_base_value_source"] = "0x4aa354_0x4aa1db_composite_total_value";
 					placement_record["reward_guard_global_strength_mode"] = global_monster_strength_mode;
 					placement_record["reward_guard_effective_strength_mode_0x4a960a"] = reward_guard_effective_strength_mode;
-					placement_record["reward_guard_scaled_value"] = reward_guard_value;
+						placement_record["reward_guard_scaled_value"] = reward_guard_value;
 						placement_record["reward_guard_policy"] = "h3maped_0x4aa354_composite_guard_uses_0x4aa1db_selected_candidate_value_before_coordinate_acceptance";
 						placement_record["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
-						placement_record["source_reward_guard_attach_behavioral"] = false;
-						placement_record["source_reward_guard_attach_branch_behavioral"] = !reward_requires_composite_guard;
+						placement_record["source_reward_guard_attach_behavioral"] = reward_requires_composite_guard && source_guard_attach_success_0x49cf34;
+						placement_record["source_reward_guard_attach_branch_behavioral"] = reward_requires_composite_guard;
 						placement_record["source_reward_guard_attach_exactness_blocker"] = reward_requires_composite_guard
-								? String("0x49cf34 positive-guard wrapper attachment remains diagnostic until exact 0x4aa9b7 wrapper candidate state and active RNG order are recovered")
+								? String("0x49cf34 positive-guard wrapper attachment now consumes active source-order RNG before 0x4aa9b7; remaining blocker is exact reward descriptor/catalog parity")
 								: String("not_applicable_source_0x4aa354_skips_0x49cf34_when_guard_value_is_nonpositive_or_candidate_is_dynamic_monster");
 						if (object_selection.candidate.dynamic_monster) {
 							placement_record["reward_guard_status"] = "not_applicable_dynamic_monster_candidate_is_guard_object";
@@ -13917,34 +13917,44 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 							reward_guard_placement_attempt_count += 1;
 							SingleTilePlacementCandidate guard_candidate;
 							int32_t guard_candidate_count = 0;
-							if (find_reward_guard_vector_candidate_49cf34(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level, expected_zone_word_id, true, reward_preview_rng, guard_candidate, guard_candidate_count)) {
-								reward_guard_surrogate_rng_call_count += 1;
-								const int64_t native_surrogate_guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
-								Dictionary source_projected_guard_member_0x4aa3e9;
-								bool source_projected_guard_record_available_0x4aa3e9 = false;
-								int32_t source_projected_guard_x_0x4aa3e9 = -1;
-								int32_t source_projected_guard_y_0x4aa3e9 = -1;
-								int32_t source_projected_guard_level_0x4aa3e9 = selected_coordinate.level;
-								int64_t source_projected_guard_flat_0x4aa3e9 = -1;
-								for (int64_t member_index = 0; member_index < source_final_writer_member_records_0x4aa3e9.size(); ++member_index) {
-									if (Variant(source_final_writer_member_records_0x4aa3e9[member_index]).get_type() != Variant::DICTIONARY) {
-										continue;
-									}
-									Dictionary source_member = source_final_writer_member_records_0x4aa3e9[member_index];
-									if (String(source_member.get("member_role", "")) != String("reward_guard_member")) {
-										continue;
-									}
-									source_projected_guard_x_0x4aa3e9 = int32_t(source_member.get("projected_world_x", -1));
-									source_projected_guard_y_0x4aa3e9 = int32_t(source_member.get("projected_world_y", -1));
-									source_projected_guard_level_0x4aa3e9 = int32_t(source_member.get("projected_world_level", selected_coordinate.level));
-									source_projected_guard_flat_0x4aa3e9 = h3maped_cell_index(map_width, map_height, source_projected_guard_x_0x4aa3e9, source_projected_guard_y_0x4aa3e9, source_projected_guard_level_0x4aa3e9);
-									if (source_projected_guard_flat_0x4aa3e9 >= 0 && source_projected_guard_flat_0x4aa3e9 < expected_cell_count) {
-										source_projected_guard_member_0x4aa3e9 = source_member;
-										source_projected_guard_record_available_0x4aa3e9 = true;
-										break;
-									}
+							Dictionary source_projected_guard_member_0x4aa3e9;
+							bool source_projected_guard_record_available_0x4aa3e9 = false;
+							int32_t source_projected_guard_x_0x4aa3e9 = -1;
+							int32_t source_projected_guard_y_0x4aa3e9 = -1;
+							int32_t source_projected_guard_level_0x4aa3e9 = selected_coordinate.level;
+							int64_t source_projected_guard_flat_0x4aa3e9 = -1;
+							for (int64_t member_index = 0; member_index < source_final_writer_member_records_0x4aa3e9.size(); ++member_index) {
+								if (Variant(source_final_writer_member_records_0x4aa3e9[member_index]).get_type() != Variant::DICTIONARY) {
+									continue;
 								}
-								const bool adopt_source_projected_guard_record_0x4aa3e9 = source_projected_guard_record_available_0x4aa3e9;
+								Dictionary source_member = source_final_writer_member_records_0x4aa3e9[member_index];
+								if (String(source_member.get("member_role", "")) != String("reward_guard_member")) {
+									continue;
+								}
+								source_projected_guard_x_0x4aa3e9 = int32_t(source_member.get("projected_world_x", -1));
+								source_projected_guard_y_0x4aa3e9 = int32_t(source_member.get("projected_world_y", -1));
+								source_projected_guard_level_0x4aa3e9 = int32_t(source_member.get("projected_world_level", selected_coordinate.level));
+								source_projected_guard_flat_0x4aa3e9 = h3maped_cell_index(map_width, map_height, source_projected_guard_x_0x4aa3e9, source_projected_guard_y_0x4aa3e9, source_projected_guard_level_0x4aa3e9);
+								if (source_projected_guard_flat_0x4aa3e9 >= 0 && source_projected_guard_flat_0x4aa3e9 < expected_cell_count) {
+									source_projected_guard_member_0x4aa3e9 = source_member;
+									source_projected_guard_record_available_0x4aa3e9 = true;
+									break;
+								}
+							}
+							const bool adopt_source_projected_guard_record_0x4aa3e9 = source_projected_guard_record_available_0x4aa3e9;
+							bool native_surrogate_guard_record_available_0x49cf34 = false;
+							int64_t native_surrogate_guard_flat = -1;
+							if (!adopt_source_projected_guard_record_0x4aa3e9) {
+								native_surrogate_guard_record_available_0x49cf34 = find_reward_guard_vector_candidate_49cf34(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level, expected_zone_word_id, true, reward_preview_rng, guard_candidate, guard_candidate_count);
+								if (native_surrogate_guard_record_available_0x49cf34) {
+									reward_guard_surrogate_rng_call_count += 1;
+									native_surrogate_guard_flat = h3maped_cell_index(map_width, map_height, guard_candidate.x, guard_candidate.y, guard_candidate.level);
+								}
+							}
+							if (adopt_source_projected_guard_record_0x4aa3e9 || native_surrogate_guard_record_available_0x49cf34) {
+								if (adopt_source_projected_guard_record_0x4aa3e9) {
+									reward_guard_source_projected_record_count_0x4aa3e9 += 1;
+								}
 								const int32_t guard_record_x = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_x_0x4aa3e9 : guard_candidate.x;
 								const int32_t guard_record_y = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_y_0x4aa3e9 : guard_candidate.y;
 								const int32_t guard_record_level = adopt_source_projected_guard_record_0x4aa3e9 ? source_projected_guard_level_0x4aa3e9 : guard_candidate.level;
@@ -13959,6 +13969,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 										? int32_t(private_generated_word_0x20[size_t(guard_record_flat)] & 0xffffU)
 										: guard_candidate.score;
 								const int32_t source_guard_descriptor_candidate_count_0x49cf34 = int32_t(source_guard_attach_probe_0x49cf34.get("source_guard_descriptor_0x49d2e0_accepted_count", -1));
+								const int32_t effective_guard_candidate_count_0x49cf34 = adopt_source_projected_guard_record_0x4aa3e9 ? source_guard_descriptor_candidate_count_0x49cf34 : guard_candidate_count;
+								const bool reward_guard_surrogate_rng_consumed_0x49cf34 = !adopt_source_projected_guard_record_0x4aa3e9 && native_surrogate_guard_record_available_0x49cf34;
 								Dictionary guard_record;
 								guard_record["vector_index"] = town_records.size() + mine_coordinate_records.size() + reward_coordinate_records.size() + reward_guard_records.size();
 								guard_record["record_size_bytes"] = 12;
@@ -13980,8 +13992,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["coordinate_triplet"] = Array::make(guard_record_x, guard_record_y, guard_record_level);
 								guard_record["distance_squared_from_reward"] = guard_record_distance_squared;
 								guard_record["placement_score_low_word"] = guard_record_score;
-								guard_record["candidate_count_0x49cf34"] = guard_candidate_count;
-								guard_record["candidate_count_source"] = "native_surrogate_post_coordinate_guard_vector_until_exact_0x49cf34_active_rng_order_is_adopted";
+								guard_record["candidate_count_0x49cf34"] = effective_guard_candidate_count_0x49cf34;
+								guard_record["candidate_count_source"] = adopt_source_projected_guard_record_0x4aa3e9
+										? String("source_0x49cf34_guard_descriptor_vector_before_coordinate_acceptance")
+										: String("native_surrogate_post_coordinate_guard_vector_fallback");
 								guard_record["source_guard_descriptor_candidate_count_0x49cf34"] = source_guard_descriptor_candidate_count_0x49cf34;
 								guard_record["native_surrogate_x_0x49cf34"] = guard_candidate.x;
 								guard_record["native_surrogate_y_0x49cf34"] = guard_candidate.y;
@@ -14006,22 +14020,26 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 										? String("0x49d69d_selected_member_coordinate_projected_by_0x4aa3e9")
 										: String("0x49cf34_direction_table_and_0x49a09c_single_tile_guard_gate_projected");
 								guard_record["source_reward_guard_attach_probe_0x49cf34"] = source_guard_attach_probe_0x49cf34;
-								guard_record["source_reward_guard_attach_behavioral"] = false;
+								guard_record["source_reward_guard_attach_behavioral"] = reward_requires_composite_guard && source_guard_attach_success_0x49cf34;
 								guard_record["source_reward_guard_record_projection_behavioral_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9;
 								guard_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 								guard_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 								guard_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
-								guard_record["reward_guard_surrogate_rng_consumed"] = true;
-								guard_record["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked";
+								guard_record["reward_guard_surrogate_rng_consumed"] = reward_guard_surrogate_rng_consumed_0x49cf34;
+								guard_record["reward_guard_surrogate_rng_policy"] = reward_guard_surrogate_rng_consumed_0x49cf34
+										? String("native-local post-coordinate surrogate fallback used because no recovered 0x4aa3e9 guard member was available")
+										: String("not_consumed_source_order_0x49cf34_0x49d69d_guard_member_adopted_before_coordinate_acceptance");
 								guard_record["exact_port_claim"] = false;
 								guard_record["exactness_blocker"] = adopt_source_projected_guard_record_0x4aa3e9
-										? String("reward guard record coordinate now adopts recovered 0x49d69d/0x4aa3e9 member projection; exact remaining blocker is active 0x49cf34 RNG/order plus upstream reward catalog parity")
+										? String("reward guard record coordinate adopts recovered 0x49cf34/0x49d69d/0x4aa3e9 source-order member projection; exact remaining blocker is upstream reward descriptor/catalog parity")
 										: String("reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate because no recovered 0x49d69d member projection was available");
 								reward_guard_records.append(guard_record);
 								reward_guard_coordinate_record_count += 1;
 								placement_record["reward_guard_status"] = adopt_source_projected_guard_record_0x4aa3e9 ? String("reward_guard_record_materialized_source_projected_0x4aa3e9") : String("reward_guard_record_materialized");
-								placement_record["reward_guard_surrogate_rng_consumed"] = true;
-								placement_record["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked";
+								placement_record["reward_guard_surrogate_rng_consumed"] = reward_guard_surrogate_rng_consumed_0x49cf34;
+								placement_record["reward_guard_surrogate_rng_policy"] = reward_guard_surrogate_rng_consumed_0x49cf34
+										? String("native-local post-coordinate surrogate fallback used because no recovered 0x4aa3e9 guard member was available")
+										: String("not_consumed_source_order_0x49cf34_0x49d69d_guard_member_adopted_before_coordinate_acceptance");
 								placement_record["source_projected_reward_guard_record_adopted_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9;
 								placement_record["reward_guard_record_coordinate_policy_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9
 										? String("uses_recovered_0x49d69d_member_stored_coordinate_projected_by_0x4aa3e9")
@@ -14176,12 +14194,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["reward_guard_coordinate_record_count"] = reward_guard_coordinate_record_count;
 	reward_scheduler["reward_guard_source_projected_record_count_0x4aa3e9"] = reward_guard_source_projected_record_count_0x4aa3e9;
 	reward_scheduler["reward_guard_surrogate_rng_call_count"] = reward_guard_surrogate_rng_call_count;
-	reward_scheduler["reward_guard_surrogate_rng_policy"] = "native-local post-coordinate surrogate remains active only because full source 0x4a5c07/0x49cf34 active RNG and constructor adoption is still blocked; do not treat this as source parity";
+	reward_scheduler["reward_guard_surrogate_rng_policy"] = "source-order 0x49cf34/0x49d69d guard members are preferred and do not consume a second post-coordinate RNG; native-local surrogate remains fallback only when no recovered 0x4aa3e9 guard member is available";
 	reward_scheduler["reward_guard_attach_source_invocation_count_0x49cf34"] = reward_guard_attach_source_invocation_count_0x49cf34;
 	reward_scheduler["reward_guard_attach_source_skipped_count_0x49cf34"] = reward_guard_attach_source_skipped_count_0x49cf34;
 	reward_scheduler["reward_guard_attach_source_failure_count_0x49cf34"] = reward_guard_attach_source_failure_count_0x49cf34;
 	reward_scheduler["reward_guard_attach_rng_call_count_0x49cf34"] = reward_guard_attach_rng_call_count_0x49cf34;
-	reward_scheduler["reward_guard_attach_source_policy_0x4aa354"] = "source 0x4aa354 calls 0x4a5c07/0x49cf34 only for positive scaled guard values; active 0x49d154 RNG adoption remains blocked until exact 0x4aa9b7 wrapper candidate state is recovered";
+	reward_scheduler["reward_guard_attach_source_policy_0x4aa354"] = "source 0x4aa354 calls 0x4a5c07/0x49cf34 only for positive scaled guard values; active 0x49d154 RNG selection now follows recovered source order before 0x4aa9b7, with descriptor/catalog parity still tracked separately";
 	reward_scheduler["materializes_private_reward_coordinate_records"] = reward_coordinate_records.size() > 0;
 	reward_scheduler["materializes_public_reward_objects"] = false;
 

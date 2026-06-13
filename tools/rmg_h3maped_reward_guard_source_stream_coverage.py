@@ -65,6 +65,18 @@ DEFAULT_ARTIFACTS: dict[str, Path] = {
         ".artifacts/rmg_recovery/direct_generation_49d69d_runtime_trace/"
         "winedbg_recovery_trace_ledger.json"
     ),
+    "seed58_4aa354_source_stream_summary": Path(
+        ".artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/"
+        "4aa354_source_stream_summary.json"
+    ),
+    "seed58_4aa354_ordered_commit_summary": Path(
+        ".artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/"
+        "4aa9b7_ordered_commit_summary.json"
+    ),
+    "seed58_4aa354_attach_order_summary": Path(
+        ".artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/"
+        "reward_attach_order_summary.json"
+    ),
 }
 
 REQUIRED_STREAM_ADDRESSES = [
@@ -103,6 +115,15 @@ def load_json(path: Path) -> dict[str, Any] | None:
 
 
 def requested_seed(data: dict[str, Any]) -> int | None:
+    schema_id = str(data.get("schema_id", ""))
+    if schema_id in {
+        "h3maped_4aa354_source_stream_summary_v1",
+        "h3maped_4aa9b7_ordered_commit_summary_v1",
+        "h3maped_reward_attach_order_summary_v1",
+    }:
+        ledger = str(data.get("ledger", "")).lower()
+        if "seed58" in ledger or "seed_58" in ledger:
+            return 58
     seed_control = data.get("seed_control")
     if not isinstance(seed_control, dict):
         return None
@@ -120,6 +141,28 @@ def address_counts(data: dict[str, Any]) -> Counter[str]:
     for event in data.get("events", []):
         if isinstance(event, dict):
             counts[normalize_address(event.get("address"))] += 1
+    schema_id = str(data.get("schema_id", ""))
+    if schema_id == "h3maped_4aa354_source_stream_summary_v1":
+        counts["0x004aa354"] += int(data.get("call_count", 0) or 0)
+        counts["0x0049cf34"] += int(data.get("guard_attach_call_count_0x49cf34", 0) or 0)
+        call_sequence = data.get("call_sequence")
+        if isinstance(call_sequence, list):
+            reached_count = sum(
+                1 for item in call_sequence
+                if isinstance(item, dict) and item.get("reached_4aa3e9") is True
+            )
+            counts["0x004aa9b7"] += len(call_sequence)
+            counts["0x004aa3e9"] += reached_count
+    elif schema_id == "h3maped_4aa9b7_ordered_commit_summary_v1":
+        counts["0x004aa9b7"] += int(data.get("call_count", 0) or 0)
+        counts["0x004aa3e9"] += int(data.get("success_call_count", 0) or 0)
+    elif schema_id == "h3maped_reward_attach_order_summary_v1":
+        attach = data.get("49cf34_attach")
+        if isinstance(attach, dict):
+            counts["0x0049cf34"] += 1
+        post = data.get("post_attach_4aa9b7")
+        if isinstance(post, dict):
+            counts["0x004aa9b7"] += 1
     return counts
 
 
@@ -130,7 +173,57 @@ def first_indexes(data: dict[str, Any]) -> dict[str, int]:
             continue
         address = normalize_address(event.get("address"))
         indexes.setdefault(address, index)
+    schema_id = str(data.get("schema_id", ""))
+    if schema_id == "h3maped_4aa354_source_stream_summary_v1":
+        indexes.setdefault("0x004aa354", 1)
+        indexes.setdefault("0x004aa9b7", 2)
+        if int(data.get("guard_attach_call_count_0x49cf34", 0) or 0) > 0:
+            indexes.setdefault("0x0049cf34", 3)
+        if int(data.get("successful_handoff_count", 0) or 0) > 0:
+            indexes.setdefault("0x004aa3e9", 4)
+    elif schema_id == "h3maped_4aa9b7_ordered_commit_summary_v1":
+        indexes.setdefault("0x004aa9b7", 1)
+        if int(data.get("success_call_count", 0) or 0) > 0:
+            indexes.setdefault("0x004aa3e9", 2)
+    elif schema_id == "h3maped_reward_attach_order_summary_v1":
+        indexes.setdefault("0x004aa354", 1)
+        indexes.setdefault("0x004aa38f", 2)
+        indexes.setdefault("0x004aa3a8", 3)
+        indexes.setdefault("0x004aa3b6", 4)
+        indexes.setdefault("0x0049cf34", 5)
+        indexes.setdefault("0x004aa3bb", 6)
+        indexes.setdefault("0x004aa9b7", 7)
     return indexes
+
+
+def summarized_source_stream_classification(data: dict[str, Any]) -> str | None:
+    schema_id = str(data.get("schema_id", ""))
+    if schema_id == "h3maped_4aa354_source_stream_summary_v1":
+        invariants = data.get("invariants")
+        call_sequence = data.get("call_sequence")
+        if (
+            requested_seed(data) == 58
+            and isinstance(invariants, dict)
+            and invariants.get("all_aa354_calls_completed") is True
+            and invariants.get("has_successful_handoff") is True
+            and isinstance(call_sequence, list)
+            and len(call_sequence) == int(data.get("call_count", -1))
+        ):
+            return "seed58_same_run_4aa354_callstream_summary_descriptor_state_incomplete"
+    if schema_id == "h3maped_4aa9b7_ordered_commit_summary_v1":
+        invariants = data.get("invariants")
+        if (
+            requested_seed(data) == 58
+            and isinstance(invariants, dict)
+            and invariants.get("has_completed_calls") is True
+            and invariants.get("has_successful_commit_calls") is True
+        ):
+            return "seed58_4aa9b7_ordered_commit_summary_orphan_limited"
+    if schema_id == "h3maped_reward_attach_order_summary_v1":
+        invariants = data.get("invariants")
+        if requested_seed(data) == 58 and isinstance(invariants, dict):
+            return "seed58_reward_attach_order_summary_partial"
+    return None
 
 
 def command_text(data: dict[str, Any]) -> str:
@@ -200,7 +293,7 @@ def artifact_summary(label: str, relative_path: Path) -> dict[str, Any]:
     seed = requested_seed(data)
     dumps_descriptor_vector = any(token in text for token in DESCRIPTOR_VECTOR_FIELDS)
     dumps_selected_descriptor_state = any(token in text for token in SELECTED_DESCRIPTOR_FIELDS)
-    classification = classify_artifact(
+    classification = summarized_source_stream_classification(data) or classify_artifact(
         seed=seed,
         counts=counts,
         indexes=indexes,
@@ -275,6 +368,7 @@ def recursive_artifact_summary(relative_path: Path) -> dict[str, Any]:
         }
     if not isinstance(data.get("events"), list):
         text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        classification = summarized_source_stream_classification(data)
         return {
             "label": str(relative_path),
             "path": str(relative_path),
@@ -283,10 +377,15 @@ def recursive_artifact_summary(relative_path: Path) -> dict[str, Any]:
             "event_count": data.get("event_count"),
             "seed_controlled": requested_seed(data) is not None,
             "requested_seed": requested_seed(data),
+            "call_count": data.get("call_count"),
+            "completed_call_count": data.get("completed_call_count"),
+            "successful_handoff_count": data.get("successful_handoff_count"),
+            "guard_attach_call_count_0x49cf34": data.get("guard_attach_call_count_0x49cf34"),
+            "invariants": data.get("invariants"),
             "summary_text_mentions_0x4aa354": (
                 "0x004aa354" in text or "004aa354" in text or "0x4aa354" in text
             ),
-            "classification": "summary_text_reference_not_event_stream",
+            "classification": classification or "summary_text_reference_not_event_stream",
         }
     return artifact_summary(str(relative_path), relative_path)
 
@@ -306,6 +405,11 @@ def summarize(artifacts: dict[str, Path], recovery_root: Path, output_path: Path
         item
         for item in recursive_summaries
         if item.get("classification") == "candidate_full_seed58_same_run_source_stream"
+    ]
+    recursive_callstream_summaries = [
+        item
+        for item in recursive_summaries
+        if item.get("classification") == "seed58_same_run_4aa354_callstream_summary_descriptor_state_incomplete"
     ]
     recursive_seed58_constructor_ledgers = [
         item
@@ -328,6 +432,11 @@ def summarize(artifacts: dict[str, Path], recovery_root: Path, output_path: Path
         item
         for item in summaries
         if item.get("classification") == "candidate_full_seed58_same_run_source_stream"
+    ]
+    callstream_summaries = [
+        item
+        for item in summaries
+        if item.get("classification") == "seed58_same_run_4aa354_callstream_summary_descriptor_state_incomplete"
     ]
     seed58_constructor_ledgers = [
         item
@@ -373,6 +482,7 @@ def summarize(artifacts: dict[str, Path], recovery_root: Path, output_path: Path
             "text_file_0x4aa354_hit_count": len(text_hit_paths),
             "text_seed58_0x4aa354_hit_files": text_seed58_aa354_paths,
             "event_stream_artifacts": event_stream_summaries,
+            "seed58_same_run_4aa354_callstream_summaries": recursive_callstream_summaries,
             "summary_text_reference_files": [
                 {
                     "path": item["path"],
@@ -387,6 +497,8 @@ def summarize(artifacts: dict[str, Path], recovery_root: Path, output_path: Path
         "invariants": {
             "full_same_run_seed58_source_stream_artifact_found": bool(full_stream_candidates)
             or bool(recursive_full_stream_candidates),
+            "seed58_same_run_4aa354_callstream_summary_found": bool(callstream_summaries)
+            or bool(recursive_callstream_summaries),
             "source_backed_native_rule_available": bool(full_stream_candidates)
             or bool(recursive_full_stream_candidates),
             "seed58_0x4aa354_constructor_ledgers_found": len(seed58_constructor_ledgers),
@@ -397,18 +509,16 @@ def summarize(artifacts: dict[str, Path], recovery_root: Path, output_path: Path
             "recursive_text_seed58_0x4aa354_hit_file_count": len(text_seed58_aa354_paths),
         },
         "exact_blocker": (
-            "Existing recovered artifacts do not contain a full same-run seed58 H3MapEd "
-            "0x4aa354 selected reward/guard source stream with descriptor-vector and selected "
-            "descriptor state. The recursive recovered-corpus scan finds no seed58 0x4aa354 "
-            "event ledger and no raw seed58 text/log hit for 0x4aa354. Available artifacts prove "
-            "route entry, one seed10 attach-order sample, downstream 0x49cf34/0x49d69d mechanics, "
-            "and an unseeded broad reward-chain flow, but they do not justify changing active "
-            "native 0x4a5c07/0x49cf34 behavior for the seed58 route-entry gap."
+            "Recovered artifacts now include a seed58 same-run 0x4aa354 callstream summary "
+            "with completed call ordering, guard-attach counts, and successful 0x4aa9b7/0x4aa3e9 "
+            "handoffs. That summary is not yet a full native behavior authority because it still "
+            "does not expose the descriptor-vector membership and selected descriptor/object "
+            "state required to drive generic 0x4a5c07/0x49cf34 adoption from native code."
         ),
         "next_source_backed_step": (
-            "Provide or produce the same-run seed58 0x4aa354 stream artifact, or a source-backed "
-            "replay artifact that proves the descriptor-vector membership and branch decisions for "
-            "the exact pre-0x4a8260 boundary."
+            "Join the seed58 0x4aa354 callstream summary to selected descriptor/object identity "
+            "and descriptor-vector state, then compare those per-call records against native "
+            "reward selection before enabling active 0x4a5c07/0x49cf34 behavior."
         ),
     }
 
@@ -432,7 +542,9 @@ def main() -> int:
     status = "found" if invariants["full_same_run_seed58_source_stream_artifact_found"] else "missing"
     print(
         "RMG_H3MAPED_REWARD_GUARD_SOURCE_STREAM_COVERAGE "
-        f"status={status} seed58_constructor_ledgers="
+        f"status={status} seed58_callstream_summary_found="
+        f"{str(invariants['seed58_same_run_4aa354_callstream_summary_found']).lower()} "
+        f"seed58_constructor_ledgers="
         f"{invariants['recursive_seed58_0x4aa354_constructor_ledgers_found']} "
         f"recursive_0x4aa354_hits={invariants['recursive_0x4aa354_event_hit_count']} "
         f"seed58_text_hits={invariants['recursive_text_seed58_0x4aa354_hit_file_count']} "
