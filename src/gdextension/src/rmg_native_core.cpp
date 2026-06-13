@@ -86,6 +86,8 @@ struct RuntimeZoneRecordPlain {
 	bool is_player_capable_zone = false;
 	bool has_assigned_start = false;
 	int32_t source_base_size = 0;
+	bool terrain_match_to_town = false;
+	std::vector<int32_t> allowed_h3maped_terrain_ids;
 	std::vector<int32_t> allowed_town_slots;
 	int32_t town_choice_rng_value = -1;
 	int32_t town_choice_index = -1;
@@ -441,6 +443,64 @@ struct FilledZoneGeometryPlain {
 	int32_t centroid_y_0x14 = 0;
 	int32_t centroid_level_0x18 = 0;
 	int32_t relation_type_0x0c = 0;
+};
+
+struct RuntimeTerrainSelectionPlain {
+	int32_t runtime_zone_index = -1;
+	int32_t level = 0;
+	bool terrain_match_to_town = false;
+	int32_t town_choice_index = -1;
+	std::vector<int32_t> eligible_h3maped_terrain_ids;
+	int32_t rng_value = -1;
+	int32_t rng_modulus = 0;
+	int32_t selected_allowed_ordinal = -1;
+	int32_t monster_town_rng_value = -1;
+	int32_t selected_monster_table_ordinal_0x49b4e1 = -1;
+	bool selected_monster_table_value_materialized = false;
+	int32_t selected_h3maped_terrain_id = 0;
+	std::string selected_project_terrain_id;
+	std::string source;
+};
+
+struct RuntimeTerrainSelectionSummaryPlain {
+	bool coordinate_replay_available = false;
+	bool supported_scope = false;
+	bool materializes_runtime_zone_terrain_ids = false;
+	std::string status = "blocked_until_coordinate_replay";
+	std::string blocked_reason = "coordinate_replay_missing";
+	uint32_t rng_state_before_0x49b53d = 0;
+	uint32_t rng_state_after_0x49b53d = 0;
+	int32_t selection_count = 0;
+	int32_t match_to_town_count = 0;
+	int32_t allowed_flag_choice_count = 0;
+	int32_t blank_allowed_mask_count = 0;
+	int32_t forced_subterranean_count = 0;
+	int32_t terrain_rng_call_count = 0;
+	int32_t monster_town_rng_call_count_0x49b4e1 = 0;
+	std::vector<RuntimeTerrainSelectionPlain> selections;
+	std::vector<int32_t> selected_h3maped_terrain_ids;
+};
+
+struct TerrainCellWriteoutSummaryPlain {
+	bool boundary_owner_words_available = false;
+	bool runtime_terrain_selection_available = false;
+	bool materializes_private_terrain_cell_buffer = false;
+	std::string status = "blocked_until_runtime_terrain_selection";
+	std::string blocked_reason = "runtime_terrain_selection_missing";
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t cell_count = 0;
+	int32_t assigned_owner_cell_count = 0;
+	int32_t unassigned_water_cell_count = 0;
+	int32_t selected_runtime_zone_count = 0;
+	std::map<int32_t, int32_t> owner_low_byte_counts;
+	std::map<int32_t, int32_t> terrain_code_counts;
+	std::vector<uint32_t> generated_cell_word_0x20;
+	std::vector<uint32_t> generated_cell_word_0x24;
+	std::vector<uint32_t> generated_cell_word_0x28;
+	std::vector<uint32_t> generated_cell_word_0x2c;
+	std::vector<int32_t> generated_cell_terrain_code;
 };
 
 struct TerrainRelationEligibilitySamplePlain {
@@ -1248,6 +1308,62 @@ int32_t h3maped_town_original_index_from_id_plain(const std::string &town_id) {
 	return -1;
 }
 
+int32_t h3maped_terrain_id_from_name_plain(const std::string &terrain_name) {
+	if (terrain_name == "dirt") {
+		return 0;
+	}
+	if (terrain_name == "sand") {
+		return 1;
+	}
+	if (terrain_name == "grass") {
+		return 2;
+	}
+	if (terrain_name == "snow") {
+		return 3;
+	}
+	if (terrain_name == "swamp") {
+		return 4;
+	}
+	if (terrain_name == "rough") {
+		return 5;
+	}
+	if (terrain_name == "cave") {
+		return 6;
+	}
+	if (terrain_name == "lava") {
+		return 7;
+	}
+	if (terrain_name == "water") {
+		return 8;
+	}
+	return -1;
+}
+
+std::string project_terrain_for_h3maped_id_plain(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return "dirt";
+		case 1:
+			return "sand";
+		case 2:
+			return "grass";
+		case 3:
+			return "snow";
+		case 4:
+			return "swamp";
+		case 5:
+			return "rough";
+		case 6:
+			return "subterranean";
+		case 7:
+			return "lava";
+		case 8:
+			return "water";
+		default:
+			return "unknown";
+	}
+}
+
 std::vector<int32_t> h3maped_allowed_town_slots_plain(const std::vector<std::string> &allowed_towns) {
 	std::array<bool, 9> flags = {};
 	for (const std::string &town_id : allowed_towns) {
@@ -1263,6 +1379,23 @@ std::vector<int32_t> h3maped_allowed_town_slots_plain(const std::vector<std::str
 		}
 	}
 	return slots;
+}
+
+std::vector<int32_t> h3maped_terrain_ids_from_original_names_plain(const std::vector<std::string> &terrain_names) {
+	std::array<bool, 8> flags = {};
+	for (const std::string &terrain_name : terrain_names) {
+		const int32_t terrain_id = h3maped_terrain_id_from_name_plain(terrain_name);
+		if (terrain_id >= 0 && terrain_id < int32_t(flags.size())) {
+			flags[size_t(terrain_id)] = true;
+		}
+	}
+	std::vector<int32_t> ids;
+	for (int32_t terrain_id = 0; terrain_id < int32_t(flags.size()); ++terrain_id) {
+		if (flags[size_t(terrain_id)]) {
+			ids.push_back(terrain_id);
+		}
+	}
+	return ids;
 }
 
 JsonSpan template_catalog_root_span(const char *text, size_t size) {
@@ -1450,6 +1583,13 @@ std::vector<RuntimeZoneRecordPlain> runtime_zone_records_plain(const RuntimeZone
 		record.is_player_capable_zone = record.source_bucket == 0 || record.source_bucket == 1;
 		record.has_assigned_start = record.is_player_capable_zone && record.actual_owner_color >= 0;
 		record.source_base_size = json_int_or(text, zone, "base_size", 0);
+		JsonSpan terrain_policy = object_key_value_span(text, zone, "terrain_policy");
+		record.terrain_match_to_town = json_bool_or(text, zone, "terrain_match_to_town", json_bool_or(text, terrain_policy, "match_to_faction", false));
+		std::vector<std::string> allowed_terrains = json_array_string_values(text, object_key_value_span(text, zone, "allowed_terrains"));
+		if (allowed_terrains.empty()) {
+			allowed_terrains = json_array_string_values(text, object_key_value_span(text, terrain_policy, "allowed"));
+		}
+		record.allowed_h3maped_terrain_ids = h3maped_terrain_ids_from_original_names_plain(allowed_terrains);
 		std::vector<std::string> allowed_towns = json_array_string_values(text, object_key_value_span(text, zone, "allowed_towns"));
 		if (allowed_towns.empty()) {
 			JsonSpan town_policy = object_key_value_span(text, zone, "town_policy");
@@ -2913,6 +3053,165 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 	return summary;
 }
 
+RuntimeTerrainSelectionSummaryPlain build_runtime_terrain_selection_summary(const ControlledCase &controlled_case, const CoordinateReplaySummary &coordinate_summary) {
+	static constexpr int32_t H3_TOWN_TO_TERRAIN_TABLE_540908[9] = { 2, 2, 3, 7, 0, 0, 5, 4, 2 };
+	RuntimeTerrainSelectionSummaryPlain summary;
+	summary.coordinate_replay_available = coordinate_summary.ok;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	summary.rng_state_before_0x49b53d = coordinate_summary.rng_state_after_0x4a218c;
+	summary.rng_state_after_0x49b53d = coordinate_summary.rng_state_after_0x4a218c;
+	if (!summary.coordinate_replay_available) {
+		return summary;
+	}
+	if (!summary.supported_scope) {
+		summary.status = "unsupported_scope";
+		summary.blocked_reason = "unsupported_non_small_medium_one_level_land";
+		return summary;
+	}
+
+	H3MapedRng rng { summary.rng_state_before_0x49b53d };
+	for (int32_t index = 0; index < int32_t(coordinate_summary.scaled_zone_coordinates.size()); ++index) {
+		const RuntimeZoneRecordPlain &runtime = coordinate_summary.scaled_zone_coordinates[size_t(index)];
+		RuntimeTerrainSelectionPlain selection;
+		selection.runtime_zone_index = runtime.runtime_index >= 0 ? runtime.runtime_index : index;
+		selection.level = runtime.level_after_bbox_rescale;
+		selection.terrain_match_to_town = runtime.terrain_match_to_town;
+		selection.town_choice_index = runtime.town_choice_index;
+		int32_t selected_terrain = 0;
+		std::string source = "0x49b57d_0x49b584_no_eligible_flags_defaults_zero";
+		if (runtime.terrain_match_to_town
+				&& runtime.town_choice_index >= 0
+				&& runtime.town_choice_index < int32_t(sizeof(H3_TOWN_TO_TERRAIN_TABLE_540908) / sizeof(H3_TOWN_TO_TERRAIN_TABLE_540908[0]))) {
+			selected_terrain = H3_TOWN_TO_TERRAIN_TABLE_540908[size_t(runtime.town_choice_index)];
+			source = "0x49b54c_0x49b55b_match_to_town_table_0x540908";
+			summary.match_to_town_count += 1;
+		} else {
+			for (const int32_t h3_id : runtime.allowed_h3maped_terrain_ids) {
+				if (h3_id < 0 || h3_id > 7) {
+					continue;
+				}
+				if (h3_id == 6 && runtime.level_after_bbox_rescale != 1) {
+					continue;
+				}
+				selection.eligible_h3maped_terrain_ids.push_back(h3_id);
+			}
+			if (selection.eligible_h3maped_terrain_ids.empty()) {
+				summary.blank_allowed_mask_count += 1;
+			} else {
+				const int32_t rng_value = rng.next();
+				summary.terrain_rng_call_count += 1;
+				const int32_t selected_ordinal = rng_value % int32_t(selection.eligible_h3maped_terrain_ids.size());
+				selected_terrain = selection.eligible_h3maped_terrain_ids[size_t(selected_ordinal)];
+				source = "0x49b586_0x49b5b4_allowed_flag_rng_choice";
+				summary.allowed_flag_choice_count += 1;
+				selection.rng_value = rng_value;
+				selection.rng_modulus = int32_t(selection.eligible_h3maped_terrain_ids.size());
+				selection.selected_allowed_ordinal = selected_ordinal;
+			}
+		}
+		if (runtime.level_after_bbox_rescale == 1 && selected_terrain != 7) {
+			selected_terrain = 6;
+			summary.forced_subterranean_count += 1;
+		}
+
+		if (runtime.town_choice_index == -1) {
+			const int32_t rng_value = rng.next();
+			selection.monster_town_rng_value = rng_value;
+			selection.selected_monster_table_ordinal_0x49b4e1 = rng_value % 4;
+			selection.selected_monster_table_value_materialized = false;
+			summary.monster_town_rng_call_count_0x49b4e1 += 1;
+		} else {
+			selection.selected_monster_table_ordinal_0x49b4e1 = runtime.town_choice_index;
+			selection.selected_monster_table_value_materialized = true;
+		}
+
+		selection.selected_h3maped_terrain_id = selected_terrain;
+		selection.selected_project_terrain_id = project_terrain_for_h3maped_id_plain(selected_terrain);
+		selection.source = source;
+		summary.selections.push_back(selection);
+		summary.selected_h3maped_terrain_ids.push_back(selected_terrain);
+	}
+	summary.selection_count = int32_t(summary.selections.size());
+	summary.rng_state_after_0x49b53d = rng.state;
+	summary.materializes_runtime_zone_terrain_ids = true;
+	summary.status = "active_plain_cpp_runtime_terrain_selection";
+	summary.blocked_reason.clear();
+	return summary;
+}
+
+TerrainCellWriteoutSummaryPlain build_terrain_cell_writeout_summary(const BoundarySpanFillSummary &boundary_summary, const RuntimeTerrainSelectionSummaryPlain &terrain_summary, const SourceNodeFootprintSummary &source_node_summary) {
+	TerrainCellWriteoutSummaryPlain summary;
+	summary.boundary_owner_words_available = boundary_summary.generated_cell_owner_words_materialized;
+	summary.runtime_terrain_selection_available = terrain_summary.materializes_runtime_zone_terrain_ids;
+	summary.width = boundary_summary.width;
+	summary.height = boundary_summary.height;
+	summary.level_count = boundary_summary.level_count;
+	const int32_t level_tile_count = summary.width * summary.height;
+	summary.cell_count = level_tile_count * std::max(1, summary.level_count);
+	const std::vector<RuntimeZoneRecordPlain> &runtime_zones = source_node_summary.runtime_zones_after_synthetic_append;
+	const bool supported = summary.boundary_owner_words_available
+			&& summary.runtime_terrain_selection_available
+			&& boundary_summary.private_zone_words.size() == size_t(summary.cell_count)
+			&& boundary_summary.generated_cell_word_0x20.size() == size_t(summary.cell_count)
+			&& boundary_summary.generated_cell_word_0x24.size() == size_t(summary.cell_count)
+			&& boundary_summary.generated_cell_word_0x28.size() == size_t(summary.cell_count)
+			&& boundary_summary.generated_cell_word_0x2c.size() == size_t(summary.cell_count)
+			&& boundary_summary.generated_cell_terrain_code.size() == size_t(summary.cell_count)
+			&& summary.width > 0
+			&& summary.height > 0
+			&& summary.level_count > 0
+			&& summary.cell_count >= 0;
+	if (!supported) {
+		summary.blocked_reason = "boundary_owner_words_or_runtime_terrain_selection_missing";
+		return summary;
+	}
+
+	std::map<int32_t, int32_t> runtime_index_by_zone_word_id;
+	for (const RuntimeZoneRecordPlain &runtime : runtime_zones) {
+		runtime_index_by_zone_word_id[zone_word_id_for_runtime_zone_plain(runtime)] = runtime.runtime_index;
+	}
+	summary.generated_cell_word_0x20.assign(boundary_summary.generated_cell_word_0x20.size(), 0xffff7fbcU);
+	summary.generated_cell_word_0x24 = boundary_summary.generated_cell_word_0x24;
+	summary.generated_cell_word_0x28 = boundary_summary.generated_cell_word_0x28;
+	summary.generated_cell_word_0x2c = boundary_summary.generated_cell_word_0x2c;
+	summary.generated_cell_terrain_code.assign(boundary_summary.generated_cell_terrain_code.size(), 8);
+	summary.terrain_code_counts[8] = summary.cell_count;
+	for (int32_t flat = 0; flat < summary.cell_count; ++flat) {
+		const uint32_t zone_word = boundary_summary.private_zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD_PLAIN;
+		if (zone_word == H3MAPED_UNASSIGNED_ZONE_WORD_PLAIN) {
+			summary.unassigned_water_cell_count += 1;
+			continue;
+		}
+		const int32_t zone_word_id = int32_t((zone_word >> 16U) & 0xffU);
+		const auto runtime_found = runtime_index_by_zone_word_id.find(zone_word_id);
+		const int32_t runtime_index = runtime_found == runtime_index_by_zone_word_id.end() ? -1 : runtime_found->second;
+		if (runtime_index < 0 || runtime_index >= int32_t(terrain_summary.selected_h3maped_terrain_ids.size())) {
+			continue;
+		}
+		const int32_t terrain_id = terrain_summary.selected_h3maped_terrain_ids[size_t(runtime_index)];
+		summary.generated_cell_word_0x20[size_t(flat)] = (summary.generated_cell_word_0x20[size_t(flat)] & 0xff00ffffU) | zone_word;
+		summary.generated_cell_terrain_code[size_t(flat)] = terrain_id;
+		summary.assigned_owner_cell_count += 1;
+		summary.owner_low_byte_counts[zone_word_id] += 1;
+		if (terrain_id != 8) {
+			summary.terrain_code_counts[8] -= 1;
+			summary.terrain_code_counts[terrain_id] += 1;
+		}
+	}
+	summary.selected_runtime_zone_count = int32_t(terrain_summary.selected_h3maped_terrain_ids.size());
+	for (auto iterator = summary.terrain_code_counts.begin(); iterator != summary.terrain_code_counts.end();) {
+		if (iterator->second == 0) {
+			iterator = summary.terrain_code_counts.erase(iterator);
+		} else {
+			++iterator;
+		}
+	}
+	summary.materializes_private_terrain_cell_buffer = true;
+	summary.status = "active_plain_cpp_terrain_cell_writeout";
+	summary.blocked_reason.clear();
+	return summary;
+}
+
 std::vector<FilledZoneGeometryPlain> filled_zone_geometry_4a2105_4a2ffa_plain(const BoundarySpanFillSummary &boundary_summary, const std::vector<RuntimeZoneRecordPlain> &runtime_zones) {
 	struct Accumulator {
 		FilledZoneGeometryPlain geometry;
@@ -2986,10 +3285,10 @@ std::vector<FilledZoneGeometryPlain> filled_zone_geometry_4a2105_4a2ffa_plain(co
 	return records;
 }
 
-TerrainRelationEligibilitySummaryPlain build_terrain_relation_eligibility_summary(const BoundarySpanFillSummary &boundary_summary, const SourceNodeFootprintSummary &source_node_summary) {
+TerrainRelationEligibilitySummaryPlain build_terrain_relation_eligibility_summary(const BoundarySpanFillSummary &boundary_summary, const TerrainCellWriteoutSummaryPlain &terrain_cell_summary, const SourceNodeFootprintSummary &source_node_summary) {
 	constexpr uint32_t H3MAPED_CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28_PLAIN = 1U << 28U;
 	TerrainRelationEligibilitySummaryPlain summary;
-	summary.boundary_owner_words_available = boundary_summary.generated_cell_owner_words_materialized;
+	summary.boundary_owner_words_available = terrain_cell_summary.materializes_private_terrain_cell_buffer;
 	summary.supported_scope = boundary_summary.supported_scope;
 	summary.width = boundary_summary.width;
 	summary.height = boundary_summary.height;
@@ -3005,11 +3304,11 @@ TerrainRelationEligibilitySummaryPlain build_terrain_relation_eligibility_summar
 			&& summary.level_count > 0
 			&& summary.cell_count >= 0
 			&& boundary_summary.private_zone_words.size() == size_t(summary.cell_count)
-			&& boundary_summary.generated_cell_word_0x20.size() == size_t(summary.cell_count)
-			&& boundary_summary.generated_cell_word_0x24.size() == size_t(summary.cell_count)
-			&& boundary_summary.generated_cell_word_0x28.size() == size_t(summary.cell_count)
-			&& boundary_summary.generated_cell_word_0x2c.size() == size_t(summary.cell_count)
-			&& boundary_summary.generated_cell_terrain_code.size() == size_t(summary.cell_count)
+			&& terrain_cell_summary.generated_cell_word_0x20.size() == size_t(summary.cell_count)
+			&& terrain_cell_summary.generated_cell_word_0x24.size() == size_t(summary.cell_count)
+			&& terrain_cell_summary.generated_cell_word_0x28.size() == size_t(summary.cell_count)
+			&& terrain_cell_summary.generated_cell_word_0x2c.size() == size_t(summary.cell_count)
+			&& terrain_cell_summary.generated_cell_terrain_code.size() == size_t(summary.cell_count)
 			&& !runtime_zones.empty();
 	if (!supported) {
 		summary.blocked_reason = "boundary_owner_words_or_runtime_zones_missing";
@@ -3024,11 +3323,11 @@ TerrainRelationEligibilitySummaryPlain build_terrain_relation_eligibility_summar
 		}
 	}
 	summary.relation_geometry_materialized_plain_cpp = true;
-	summary.generated_cell_word_0x20 = boundary_summary.generated_cell_word_0x20;
-	summary.generated_cell_word_0x24 = boundary_summary.generated_cell_word_0x24;
-	summary.generated_cell_word_0x28 = boundary_summary.generated_cell_word_0x28;
-	summary.generated_cell_word_0x2c = boundary_summary.generated_cell_word_0x2c;
-	summary.generated_cell_terrain_code = boundary_summary.generated_cell_terrain_code;
+	summary.generated_cell_word_0x20 = terrain_cell_summary.generated_cell_word_0x20;
+	summary.generated_cell_word_0x24 = terrain_cell_summary.generated_cell_word_0x24;
+	summary.generated_cell_word_0x28 = terrain_cell_summary.generated_cell_word_0x28;
+	summary.generated_cell_word_0x2c = terrain_cell_summary.generated_cell_word_0x2c;
+	summary.generated_cell_terrain_code = terrain_cell_summary.generated_cell_terrain_code;
 
 	for (int32_t relation_index = 0; relation_index < int32_t(summary.geometry_records.size()); ++relation_index) {
 		const FilledZoneGeometryPlain &relation = summary.geometry_records[size_t(relation_index)];
@@ -3133,6 +3432,10 @@ void append_plain_runtime_records_json(std::ostream &out, const std::vector<Runt
 		out << "\"is_player_capable_zone\":" << (record.is_player_capable_zone ? "true" : "false") << ",";
 		out << "\"has_assigned_start\":" << (record.has_assigned_start ? "true" : "false") << ",";
 		out << "\"source_base_size\":" << record.source_base_size << ",";
+		out << "\"terrain_match_to_town\":" << (record.terrain_match_to_town ? "true" : "false") << ",";
+		out << "\"allowed_h3maped_terrain_ids_for_49b53d\":";
+		append_int_array_json(out, record.allowed_h3maped_terrain_ids);
+		out << ",";
 		out << "\"allowed_original_town_indices_49b3c1\":";
 		append_int_array_json(out, record.allowed_town_slots);
 		out << ",";
@@ -3945,6 +4248,215 @@ void append_boundary_owner_generated_cell_checkpoint_json(std::ostream &out, con
 	out << "  }";
 }
 
+void append_runtime_terrain_selection_summary_json(std::ostream &out, const RuntimeTerrainSelectionSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_runtime_terrain_selection_summary_v1\",\n";
+	out << "    \"phase_id\": \"runtime_terrain_selection\",\n";
+	out << "    \"h3maped_anchor\": \"0x49b53d\",\n";
+	out << "    \"town_to_terrain_table_address\": \"0x540908\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ port of recovered 0x49b53d runtime terrain selection over source allowed-terrain flags and 0x540908 town terrain table\",\n";
+	out << "    \"coordinate_replay_available\": " << (summary.coordinate_replay_available ? "true" : "false") << ",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"materializes_runtime_zone_terrain_ids\": " << (summary.materializes_runtime_zone_terrain_ids ? "true" : "false") << ",\n";
+	out << "    \"rng_state_before_0x49b53d_uint32\": " << summary.rng_state_before_0x49b53d << ",\n";
+	out << "    \"rng_state_after_0x49b53d_uint32\": " << summary.rng_state_after_0x49b53d << ",\n";
+	out << "    \"selection_count\": " << summary.selection_count << ",\n";
+	out << "    \"match_to_town_count\": " << summary.match_to_town_count << ",\n";
+	out << "    \"allowed_flag_choice_count\": " << summary.allowed_flag_choice_count << ",\n";
+	out << "    \"blank_allowed_mask_count\": " << summary.blank_allowed_mask_count << ",\n";
+	out << "    \"forced_subterranean_count\": " << summary.forced_subterranean_count << ",\n";
+	out << "    \"terrain_rng_call_count\": " << summary.terrain_rng_call_count << ",\n";
+	out << "    \"monster_town_rng_call_count_0x49b4e1\": " << summary.monster_town_rng_call_count_0x49b4e1 << ",\n";
+	out << "    \"selected_h3maped_terrain_ids\": ";
+	append_int_array_json(out, summary.selected_h3maped_terrain_ids);
+	out << ",\n";
+	out << "    \"selections\": [";
+	for (size_t index = 0; index < summary.selections.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RuntimeTerrainSelectionPlain &selection = summary.selections[index];
+		out << "{";
+		out << "\"runtime_zone_index\":" << selection.runtime_zone_index << ",";
+		out << "\"level\":" << selection.level << ",";
+		out << "\"terrain_match_to_town\":" << (selection.terrain_match_to_town ? "true" : "false") << ",";
+		out << "\"town_choice_index\":" << selection.town_choice_index << ",";
+		out << "\"eligible_h3maped_terrain_ids\":";
+		append_int_array_json(out, selection.eligible_h3maped_terrain_ids);
+		out << ",";
+		out << "\"rng_value\":" << selection.rng_value << ",";
+		out << "\"rng_modulus\":" << selection.rng_modulus << ",";
+		out << "\"selected_allowed_ordinal\":" << selection.selected_allowed_ordinal << ",";
+		out << "\"monster_town_rng_value\":" << selection.monster_town_rng_value << ",";
+		out << "\"selected_monster_table_ordinal_0x49b4e1\":" << selection.selected_monster_table_ordinal_0x49b4e1 << ",";
+		out << "\"selected_monster_table_value_materialized\":" << (selection.selected_monster_table_value_materialized ? "true" : "false") << ",";
+		out << "\"selected_h3maped_terrain_id\":" << selection.selected_h3maped_terrain_id << ",";
+		out << "\"selected_project_terrain_id\":\"" << json_escape(selection.selected_project_terrain_id) << "\",";
+		out << "\"source\":\"" << json_escape(selection.source) << "\"";
+		out << "}";
+	}
+	out << "],\n";
+	out << "    \"blocked_next\": \"terrain_cell_writeout_0x4a3f27\"\n";
+	out << "  }";
+}
+
+void append_terrain_cell_writeout_summary_json(std::ostream &out, const TerrainCellWriteoutSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_terrain_cell_writeout_summary_v1\",\n";
+	out << "    \"phase_id\": \"terrain_cell_writeout\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a3f27\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ port of recovered private terrain code writeout over the 0x4a325d zone-word buffer and 0x49b53d runtime terrain selections\",\n";
+	out << "    \"strict_port_scope\": \"private generated-cell terrain code and owner-byte materialization only; no visual row selection or public package output\",\n";
+	out << "    \"boundary_owner_words_available\": " << (summary.boundary_owner_words_available ? "true" : "false") << ",\n";
+	out << "    \"runtime_terrain_selection_available\": " << (summary.runtime_terrain_selection_available ? "true" : "false") << ",\n";
+	out << "    \"materializes_private_terrain_cell_buffer\": " << (summary.materializes_private_terrain_cell_buffer ? "true" : "false") << ",\n";
+	out << "    \"map_width\": " << summary.width << ",\n";
+	out << "    \"map_height\": " << summary.height << ",\n";
+	out << "    \"level_count\": " << summary.level_count << ",\n";
+	out << "    \"cell_count\": " << summary.cell_count << ",\n";
+	out << "    \"selected_runtime_zone_count\": " << summary.selected_runtime_zone_count << ",\n";
+	out << "    \"assigned_owner_cell_count\": " << summary.assigned_owner_cell_count << ",\n";
+	out << "    \"unassigned_water_cell_count\": " << summary.unassigned_water_cell_count << ",\n";
+	out << "    \"owner_low_byte_counts\": ";
+	append_int_histogram_json(out, summary.owner_low_byte_counts);
+	out << ",\n";
+	out << "    \"terrain_code_counts\": ";
+	append_int_histogram_json(out, summary.terrain_code_counts);
+	out << ",\n";
+	out << "    \"blocked_next\": \"terrain_relation_eligibility_0x4a2ec3_then_live_visual_feedback_0x4bb74b_0x4bc5f0\"\n";
+	out << "  }";
+}
+
+void append_terrain_cell_writeout_generated_cell_checkpoint_json(std::ostream &out, const TerrainCellWriteoutSummaryPlain &summary) {
+	constexpr uint32_t WORD_0X20_DEFAULT = 0xffff7fbcU;
+	constexpr uint32_t WORD_0X24_DEFAULT = 0x00000548U;
+	constexpr uint32_t WORD_0X28_DEFAULT = (1U << 25U) | (1U << 27U);
+	constexpr int32_t TERRAIN_CODE_DEFAULT = 8;
+	const int64_t cell_count = int64_t(summary.cell_count);
+	const bool supported = summary.materializes_private_terrain_cell_buffer
+			&& summary.width > 0
+			&& summary.height > 0
+			&& summary.level_count > 0
+			&& cell_count >= 0
+			&& summary.generated_cell_word_0x20.size() == size_t(cell_count)
+			&& summary.generated_cell_word_0x24.size() == size_t(cell_count)
+			&& summary.generated_cell_word_0x28.size() == size_t(cell_count)
+			&& summary.generated_cell_terrain_code.size() == size_t(cell_count);
+
+	std::map<int32_t, int32_t> owner_byte2_histogram;
+	std::map<int32_t, int32_t> owner_byte3_histogram;
+	std::map<int32_t, int32_t> word_0x24_terrain_histogram;
+	std::map<int32_t, int32_t> word_0x24_art_histogram;
+	std::map<int32_t, int32_t> word_0x28_top_byte_histogram;
+	std::map<int32_t, int32_t> terrain_code_histogram;
+	int32_t word_0x28_bit22_count = 0;
+	int32_t word_0x28_bit25_count = 0;
+	int32_t word_0x28_bit26_count = 0;
+	int32_t word_0x28_bit27_count = 0;
+	int32_t word_0x28_bit28_count = 0;
+	if (supported) {
+		for (int64_t flat = 0; flat < cell_count; ++flat) {
+			const uint32_t word_0x20 = summary.generated_cell_word_0x20[size_t(flat)];
+			const uint32_t word_0x24 = summary.generated_cell_word_0x24[size_t(flat)];
+			const uint32_t word_0x28 = summary.generated_cell_word_0x28[size_t(flat)];
+			owner_byte2_histogram[i8_from_u32_byte(word_0x20, 16U)] += 1;
+			owner_byte3_histogram[i8_from_u32_byte(word_0x20, 24U)] += 1;
+			word_0x24_terrain_histogram[int32_t(word_0x24 & 0x3fU)] += 1;
+			word_0x24_art_histogram[int32_t((word_0x24 >> 6U) & 0xffU)] += 1;
+			word_0x28_top_byte_histogram[int32_t((word_0x28 >> 24U) & 0xffU)] += 1;
+			terrain_code_histogram[summary.generated_cell_terrain_code[size_t(flat)]] += 1;
+			word_0x28_bit22_count += (word_0x28 & (1U << 22U)) != 0U ? 1 : 0;
+			word_0x28_bit25_count += (word_0x28 & (1U << 25U)) != 0U ? 1 : 0;
+			word_0x28_bit26_count += (word_0x28 & (1U << 26U)) != 0U ? 1 : 0;
+			word_0x28_bit27_count += (word_0x28 & (1U << 27U)) != 0U ? 1 : 0;
+			word_0x28_bit28_count += (word_0x28 & (1U << 28U)) != 0U ? 1 : 0;
+		}
+	}
+
+	out << "{\n";
+	out << "    \"schema_id\": \"h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1\",\n";
+	out << "    \"checkpoint_id\": \"after_runtime_terrain_cell_writeout\",\n";
+	out << "    \"checkpoint_scope\": \"native_generated_cell_private_grid\",\n";
+	out << "    \"h3maped_entry_anchor\": \"0x4a3f27_after_0x49b53d_runtime_terrain_selection_before_0x4a2ec3_and_0x4bb74b\",\n";
+	out << "    \"plain_cpp_stage\": \"after_runtime_terrain_cell_writeout_before_relation_eligibility\",\n";
+	out << "    \"h3maped_cell_base_pointer\": \"generator+0x14\",\n";
+	out << "    \"h3maped_cell_stride_bytes\": 48,\n";
+	out << "    \"h3maped_words_per_cell\": 12,\n";
+	out << "    \"cell_count\": " << (supported ? cell_count : 0) << ",\n";
+	out << "    \"width\": " << (supported ? summary.width : 0) << ",\n";
+	out << "    \"height\": " << (supported ? summary.height : 0) << ",\n";
+	out << "    \"level_count\": " << (supported ? summary.level_count : 0) << ",\n";
+	out << "    \"word_0x20_source\": \"constructor_default_0xffff7fbc with byte2 owner only for runtime zones selected by 0x49b53d terrain ids\",\n";
+	out << "    \"word_0x24_source\": \"constructor_default_0x00000548; terrain visual feedback not yet ported in this checkpoint\",\n";
+	out << "    \"word_0x28_source\": \"constructor_default_bit25_bit27 before recovered 0x4a2ec3 bit28 writes\",\n";
+	out << "    \"word_0x2c_source\": \"not_recorded_for_this_terrain_cell_writeout_checkpoint\",\n";
+	out << "    \"owner_byte2_source\": \"0x4a4ccc sign-extends cell +0x20 byte 2 after terrain selected owner materialization\",\n";
+	out << "    \"status\": \"" << (supported ? "available_plain_cpp_runtime_terrain_cell_writeout" : "blocked_runtime_terrain_cell_writeout_unavailable") << "\",\n";
+	out << "    \"word_0x2c_available\": false,\n";
+	out << "    \"default_word_0x20\": " << WORD_0X20_DEFAULT << ",\n";
+	out << "    \"default_word_0x24\": " << WORD_0X24_DEFAULT << ",\n";
+	out << "    \"default_word_0x28\": " << WORD_0X28_DEFAULT << ",\n";
+	out << "    \"default_terrain_code\": " << TERRAIN_CODE_DEFAULT << ",\n";
+	out << "    \"word_0x20_owner_byte_materialized_count\": " << (supported ? summary.assigned_owner_cell_count : 0) << ",\n";
+	out << "    \"word_0x20_unassigned_sentinel_count\": " << (supported ? summary.unassigned_water_cell_count : 0) << ",\n";
+	out << "    \"word_0x28_bit22_count\": " << word_0x28_bit22_count << ",\n";
+	out << "    \"word_0x28_bit25_count\": " << word_0x28_bit25_count << ",\n";
+	out << "    \"word_0x28_bit26_count\": " << word_0x28_bit26_count << ",\n";
+	out << "    \"word_0x28_bit27_count\": " << word_0x28_bit27_count << ",\n";
+	out << "    \"word_0x28_bit28_count\": " << word_0x28_bit28_count << ",\n";
+	out << "    \"word_0x2c_bit0_count\": 0,\n";
+	out << "    \"owner_byte2_signed_histogram\": ";
+	append_int_histogram_json(out, owner_byte2_histogram);
+	out << ",\n";
+	out << "    \"owner_byte3_signed_histogram\": ";
+	append_int_histogram_json(out, owner_byte3_histogram);
+	out << ",\n";
+	out << "    \"word_0x24_terrain_histogram\": ";
+	append_int_histogram_json(out, word_0x24_terrain_histogram);
+	out << ",\n";
+	out << "    \"word_0x24_art_histogram\": ";
+	append_int_histogram_json(out, word_0x24_art_histogram);
+	out << ",\n";
+	out << "    \"word_0x28_top_byte_histogram\": ";
+	append_int_histogram_json(out, word_0x28_top_byte_histogram);
+	out << ",\n";
+	out << "    \"terrain_code_histogram\": ";
+	append_int_histogram_json(out, terrain_code_histogram);
+	out << ",\n";
+	out << "    \"records\": [";
+	if (supported) {
+		for (int64_t flat = 0; flat < cell_count; ++flat) {
+			if (flat != 0) {
+				out << ",";
+			}
+			const int32_t level_tile_count = summary.width * summary.height;
+			const int32_t level = int32_t(flat / level_tile_count);
+			const int32_t remainder = int32_t(flat % level_tile_count);
+			const uint32_t word_0x20 = summary.generated_cell_word_0x20[size_t(flat)];
+			const uint32_t word_0x24 = summary.generated_cell_word_0x24[size_t(flat)];
+			const uint32_t word_0x28 = summary.generated_cell_word_0x28[size_t(flat)];
+			out << "{";
+			out << "\"flat\":" << flat << ",";
+			out << "\"x\":" << (remainder % summary.width) << ",";
+			out << "\"y\":" << (remainder / summary.width) << ",";
+			out << "\"level\":" << level << ",";
+			out << "\"word_0x20\":" << word_0x20 << ",";
+			out << "\"word_0x24\":" << word_0x24 << ",";
+			out << "\"word_0x28\":" << word_0x28 << ",";
+			out << "\"owner_byte2_signed\":" << i8_from_u32_byte(word_0x20, 16U) << ",";
+			out << "\"owner_byte3_signed\":" << i8_from_u32_byte(word_0x20, 24U) << ",";
+			out << "\"terrain_code\":" << summary.generated_cell_terrain_code[size_t(flat)];
+			out << "}";
+		}
+	}
+	out << "]\n";
+	out << "  }";
+}
+
 void append_filled_zone_geometry_records_json(std::ostream &out, const std::vector<FilledZoneGeometryPlain> &records) {
 	out << "[";
 	for (size_t index = 0; index < records.size(); ++index) {
@@ -4251,7 +4763,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const CoordinateReplaySummary coordinate_replay_summary = build_coordinate_replay_summary(controlled_case, runtime_zone_summary);
 	const SourceNodeFootprintSummary source_node_summary = build_source_node_footprint_summary(controlled_case, coordinate_replay_summary);
 	const BoundarySpanFillSummary boundary_span_fill_summary = build_boundary_span_fill_summary(controlled_case, coordinate_replay_summary, source_node_summary);
-	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, source_node_summary);
+	const RuntimeTerrainSelectionSummaryPlain runtime_terrain_selection_summary = build_runtime_terrain_selection_summary(controlled_case, coordinate_replay_summary);
+	const TerrainCellWriteoutSummaryPlain terrain_cell_writeout_summary = build_terrain_cell_writeout_summary(boundary_span_fill_summary, runtime_terrain_selection_summary, source_node_summary);
+	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
@@ -4313,6 +4827,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"private_state_checkpoint_after_boundary_span_fill_owner_words\": ";
 	append_boundary_owner_generated_cell_checkpoint_json(out, boundary_span_fill_summary);
 	out << ",\n";
+	out << "  \"private_state_checkpoint_after_runtime_terrain_cell_writeout\": ";
+	append_terrain_cell_writeout_generated_cell_checkpoint_json(out, terrain_cell_writeout_summary);
+	out << ",\n";
 	out << "  \"private_state_checkpoint_after_terrain_relation_eligibility\": ";
 	append_terrain_relation_eligibility_generated_cell_checkpoint_json(out, terrain_relation_eligibility_summary);
 	out << ",\n";
@@ -4331,10 +4848,16 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"plain_cpp_boundary_span_fill_summary\": ";
 	append_boundary_span_fill_summary_json(out, boundary_span_fill_summary);
 	out << ",\n";
+	out << "  \"plain_cpp_runtime_terrain_selection_summary\": ";
+	append_runtime_terrain_selection_summary_json(out, runtime_terrain_selection_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_terrain_cell_writeout_summary\": ";
+	append_terrain_cell_writeout_summary_json(out, terrain_cell_writeout_summary);
+	out << ",\n";
 	out << "  \"plain_cpp_terrain_relation_eligibility_summary\": ";
 	append_terrain_relation_eligibility_summary_json(out, terrain_relation_eligibility_summary);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_live_visual_feedback_0x4bb74b_0x4bc5f0_generated_cell_word_0x24_0x28_mutations_after_relation_eligibility\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_live_visual_feedback_0x4bb74b_0x4bc5f0_generated_cell_word_0x24_0x28_mutations_after_runtime_terrain_cell_writeout_and_relation_eligibility\",\n";
 	out << "  \"next_required_alignment_slice\": \"capture_or_default_same_run_setup_0x44_then_compare_pre_0x4a4c8e_after_live_visual_feedback\"\n";
 	out << "}\n";
 	return out.str();

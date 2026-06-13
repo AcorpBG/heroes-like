@@ -8,13 +8,13 @@
         "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "tools/rmg_native_batch_export.py"
       ],
-      "notes": "Plain-C++ controlled-case parsing/filtering, checkpoint-2 snapshots, constructor-default generated-cell grids, owner-gated post-boundary generated-cell checkpoints, post-relation-eligibility bit-28 generated-cell checkpoints, embedded-catalog selected-template/runtime-zone summaries, recovered 0x49ecf2 generator-mode resolution for supplied setup +0x44, link-seed extraction, 0x4a1f3b coordinate replay summaries, 0x4a3a03/0x4cc788/0x4ccb64/0x4ccdfc source-node footprint summaries, 0x4a3b48/0x49b452 same-level synthetic runtime-zone append replay, owner-gated 0x4a2777/0x4a325d boundary/span-fill owner-word summaries, and 0x4a2105/0x4a2ffa/0x4a2ec3 terrain-relation eligibility summaries are now live in bin/rmg_native_batch_export_cli. Remaining core split is live visual-feedback generated-cell mutations, same-run setup +0x44 capture/defaulting when not supplied, object vectors, route/road/connection/decorative state, and .amap/package serialization inputs.",
+      "notes": "Plain-C++ controlled-case parsing/filtering, checkpoint-2 snapshots, constructor-default generated-cell grids, owner-gated post-boundary generated-cell checkpoints, runtime terrain selection/private terrain-code writeout checkpoints, post-relation-eligibility bit-28 generated-cell checkpoints, embedded-catalog selected-template/runtime-zone summaries, recovered 0x49ecf2 generator-mode resolution for supplied setup +0x44, link-seed extraction, 0x4a1f3b coordinate replay summaries, 0x4a3a03/0x4cc788/0x4ccb64/0x4ccdfc source-node footprint summaries, 0x4a3b48/0x49b452 same-level synthetic runtime-zone append replay, owner-gated 0x4a2777/0x4a325d boundary/span-fill owner-word summaries, 0x49b53d/0x540908/0x4a3f27 runtime terrain writeout summaries, and 0x4a2105/0x4a2ffa/0x4a2ec3 terrain-relation eligibility summaries are now live in bin/rmg_native_batch_export_cli. Remaining core split is live visual-feedback generated-cell mutations, same-run setup +0x44 capture/defaulting when not supplied, object vectors, route/road/connection/decorative state, and .amap/package serialization inputs.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Split Native RMG Core From Godot APIs",
-      "updatedAt": "2026-06-13T19:08:55Z"
+      "updatedAt": "2026-06-13T19:23:23Z"
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -473,15 +473,15 @@
         "closureCriteria": "Focused Python compare reports zero unexplained pre-0x4a4c8e generated-cell word drift for the selected references before route/object adoption is treated as valid.",
         "id": "native-rmg-private-generated-cell-grid-alignment-10184",
         "latestEvidenceArtifacts": [
-          ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/manifest.json",
-          ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/manifest.json",
-          ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+          ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+          ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+          ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
         ],
-        "latestEvidenceId": "native-rmg-no-godot-terrain-relation-eligibility-20260613",
-        "latestFinding": "No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
+        "latestEvidenceId": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
+        "latestFinding": "No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
         "status": "pending",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment"
@@ -552,9 +552,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
-    "currentSliceNotes": "No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
-    "currentSliceUpdatedAt": "2026-06-13T19:08:55Z",
+    "currentNotes": "No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
+    "currentSliceNotes": "No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
+    "currentSliceUpdatedAt": "2026-06-13T19:23:23Z",
     "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, and the legacy Godot runner has been removed from that wrapper. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -1189,8 +1189,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Five native RMG alignment checkpoints remain pending; checkpoint 2 now has no-Godot controlled-case snapshots for constructor defaults, supplied setup +0x44 mode resolution, template/runtime-zone records, link seeds, coordinate replay, source-node footprints, same-level synthetic append, owner-gated boundary/span-fill owner words, and recovered 0x4a2ec3 terrain-relation bit-28 generated-cell mutations. Exact pre-0x4a4c8e parity still lacks same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback generated-cell word 0x24/0x28 mutations, same-run H3MapEd compares, and the remaining plain-C++ export split.",
-    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+    "remainingGap": "Five native RMG alignment checkpoints remain pending; checkpoint 2 now has no-Godot controlled-case snapshots for constructor defaults, supplied setup +0x44 mode resolution, template/runtime-zone records, link seeds, coordinate replay, source-node footprints, same-level synthetic append, owner-gated boundary/span-fill owner words, runtime terrain selection, private terrain-code writeout, and recovered 0x4a2ec3 terrain-relation bit-28 generated-cell mutations. Exact pre-0x4a4c8e parity still lacks same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback generated-cell word 0x24/0x28 mutations, same-run H3MapEd compares, and the remaining plain-C++ export split.",
+    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
     "result": "in_progress_no_godot_boundary_owner_gate_ported_core_split_required",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -1213,7 +1213,7 @@
         "summary": "The Python native RMG exporter uses the standalone no-Godot CLI, and the CLI now emits checkpoint-2 constructor-default plus owner-gated post-boundary generated-cell snapshots. It still fails closed for package output because the generation core is still coupled to Godot Variant/RefCounted/FileAccess APIs."
       }
     ],
-    "updatedAt": "2026-06-13T19:08:55Z",
+    "updatedAt": "2026-06-13T19:23:23Z",
     "validation": {
       "id": "native-rmg-no-godot-boundary-owner-gate-20260613",
       "date": "2026-06-13",
@@ -1366,14 +1366,14 @@
         "windows_dll_build_deferred": true
       }
     },
-    "latestEvidenceId": "native-rmg-no-godot-terrain-relation-eligibility-20260613",
+    "latestEvidenceId": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
     "latestEvidenceArtifacts": [
-      ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/manifest.json",
-      ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/manifest.json",
-      ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+      ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+      ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+      ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
     ]
   },
   "completedImplementationEvidence": [
@@ -10826,14 +10826,14 @@
       "summary": "R7 H3MapEd ordered private-state replay is closed. All 18 ordered replay phases are recovered from RMG entrypoint to final map write with phase/private-buffer checkpoints. Fixed recovery score is 100% (25/25). No native RMG behavior changed and no objdump was used."
     }
   ],
-  "currentNotes": "No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
+  "currentNotes": "No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
+  "currentSliceNotes": "No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-13T19:08:55Z",
+  "currentSliceUpdatedAt": "2026-06-13T19:23:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -12731,83 +12731,117 @@
   },
   "guardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, and the legacy Godot runner has been removed from that wrapper. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-no-godot-terrain-relation-eligibility-20260613",
-    "date": "2026-06-13T19:08:55Z",
-    "recordedAt": "2026-06-13T19:08:55Z",
-    "validatedAt": "2026-06-13T19:08:55Z",
+    "id": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
+    "date": "2026-06-13T19:23:23Z",
+    "recordedAt": "2026-06-13T19:23:23Z",
+    "validatedAt": "2026-06-13T19:23:23Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "No-Godot CLI and Python wrapper validation passed for the recovered terrain-relation eligibility generated-cell checkpoint; the broader native RMG alignment remains in progress.",
-    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+    "summary": "No-Godot CLI and Python wrapper validation passed for recovered runtime terrain selection/private terrain-code writeout checkpoints; broader native RMG alignment remains in progress.",
+    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
     "artifacts": {
-      "cli_smoke_manifest": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/manifest.json",
-      "cli_small_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "cli_medium_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
-      "python_wrapper_manifest": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/manifest.json",
-      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+      "cli_smoke_manifest": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+      "cli_small_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "cli_medium_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+      "python_wrapper_manifest": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
     },
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; no Godot)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot --print-manifest (expected blocked exit 2; snapshots written; godot_process_started=false)",
-      "Python assertion over CLI snapshots (passed; after_terrain_relation_eligibility status available; Small bit28=1296, Medium bit28=5183)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
-      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; after_terrain_relation_eligibility present)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 2; snapshots written; godot_process_started=false)",
+      "Python assertion over CLI snapshots (passed; runtime terrain selection, terrain cell writeout, and relation eligibility checkpoints available; terrain histograms non-default)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
+      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; runtime terrain writeout checkpoints present)"
     ],
     "metrics": {
       "native_rmg_end_to_end_parity_complete": false,
       "godot_process_started": false,
       "windows_dll_build_run": false,
       "windows_dll_build_deferred": true,
-      "small_2p_seed58_setup3_bit28_count": 1296,
-      "medium_4p_seed10_setup3_bit28_count": 5183,
-      "small_2p_seed58_setup3_relation_records": 5,
-      "medium_4p_seed10_setup3_relation_records": 15,
-      "checkpoint_id": "after_terrain_relation_eligibility",
-      "h3maped_geometry_anchor": "0x4a2105_0x4a2ffa",
-      "h3maped_mutation_anchor": "0x4a2ec3"
+      "small_2p_seed58_setup3_selected_terrain_ids": [
+        2,
+        0,
+        2,
+        3,
+        7
+      ],
+      "medium_4p_seed10_setup3_selected_terrain_ids": [
+        0,
+        2,
+        2,
+        2,
+        2,
+        7,
+        5
+      ],
+      "small_2p_seed58_setup3_selected_terrain_cell_count": 1296,
+      "medium_4p_seed10_setup3_selected_terrain_cell_count": 1636,
+      "medium_4p_seed10_setup3_default_terrain8_cell_count": 3548,
+      "small_2p_seed58_setup3_relation_bit28_count": 1296,
+      "medium_4p_seed10_setup3_relation_bit28_count": 1636,
+      "checkpoint_id": "after_runtime_terrain_cell_writeout",
+      "h3maped_runtime_terrain_anchor": "0x49b53d_0x540908",
+      "h3maped_terrain_writeout_anchor": "0x4a3f27"
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-no-godot-terrain-relation-eligibility-20260613",
-    "date": "2026-06-13T19:08:55Z",
-    "recordedAt": "2026-06-13T19:08:55Z",
-    "validatedAt": "2026-06-13T19:08:55Z",
+    "id": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
+    "date": "2026-06-13T19:23:23Z",
+    "recordedAt": "2026-06-13T19:23:23Z",
+    "validatedAt": "2026-06-13T19:23:23Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "in_progress",
-    "summary": "No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
-    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+    "summary": "No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
+    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
     "artifacts": {
-      "cli_smoke_manifest": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/manifest.json",
-      "cli_small_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "cli_medium_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
-      "python_wrapper_manifest": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/manifest.json",
-      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+      "cli_smoke_manifest": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+      "cli_small_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "cli_medium_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+      "python_wrapper_manifest": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
     },
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; no Godot)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot --print-manifest (expected blocked exit 2; snapshots written; godot_process_started=false)",
-      "Python assertion over CLI snapshots (passed; after_terrain_relation_eligibility status available; Small bit28=1296, Medium bit28=5183)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
-      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; after_terrain_relation_eligibility present)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 2; snapshots written; godot_process_started=false)",
+      "Python assertion over CLI snapshots (passed; runtime terrain selection, terrain cell writeout, and relation eligibility checkpoints available; terrain histograms non-default)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
+      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; runtime terrain writeout checkpoints present)"
     ],
     "metrics": {
       "native_rmg_end_to_end_parity_complete": false,
       "godot_process_started": false,
       "windows_dll_build_run": false,
       "windows_dll_build_deferred": true,
-      "small_2p_seed58_setup3_bit28_count": 1296,
-      "medium_4p_seed10_setup3_bit28_count": 5183,
-      "small_2p_seed58_setup3_relation_records": 5,
-      "medium_4p_seed10_setup3_relation_records": 15,
-      "checkpoint_id": "after_terrain_relation_eligibility",
-      "h3maped_geometry_anchor": "0x4a2105_0x4a2ffa",
-      "h3maped_mutation_anchor": "0x4a2ec3"
+      "small_2p_seed58_setup3_selected_terrain_ids": [
+        2,
+        0,
+        2,
+        3,
+        7
+      ],
+      "medium_4p_seed10_setup3_selected_terrain_ids": [
+        0,
+        2,
+        2,
+        2,
+        2,
+        7,
+        5
+      ],
+      "small_2p_seed58_setup3_selected_terrain_cell_count": 1296,
+      "medium_4p_seed10_setup3_selected_terrain_cell_count": 1636,
+      "medium_4p_seed10_setup3_default_terrain8_cell_count": 3548,
+      "small_2p_seed58_setup3_relation_bit28_count": 1296,
+      "medium_4p_seed10_setup3_relation_bit28_count": 1636,
+      "checkpoint_id": "after_runtime_terrain_cell_writeout",
+      "h3maped_runtime_terrain_anchor": "0x49b53d_0x540908",
+      "h3maped_terrain_writeout_anchor": "0x4a3f27"
     }
   },
   "nextActionGuardrailNote": "Recovered H3MapEd R1-R7 is the source of truth for this slice. Do not reopen reverse engineering unless Python/Ghidra/Wine evidence disproves the recorded recovery, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export on this memory-constrained host; tools/rmg_native_batch_export.py only supports the standalone no-Godot bin/rmg_native_batch_export_cli path, and the legacy Godot runner has been removed from that wrapper. Defer Windows .dll builds until Linux parity reaches the final boundary.",
-  "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes a recovered post-relation-eligibility generated-cell checkpoint, but live visual-feedback mutations and exact same-run compares remain open.",
+  "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes recovered runtime terrain selection and private terrain-code writeout checkpoints, but live visual-feedback mutations and exact same-run compares remain open.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -46593,7 +46627,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes a recovered post-relation-eligibility generated-cell checkpoint, but live visual-feedback mutations and exact same-run compares remain open. No-Godot checkpoint-2 snapshots now include the recovered 0x4a2105/0x4a2ffa filled-zone geometry and 0x4a2ec3 owner-gated generated-cell word 0x28 bit-28 relation eligibility pass after boundary owner words. Small 2p seed 58 setup 3 writes 1296 bit-28 owner-matched cells; Medium 4p seed 10 setup 3 writes 5183 bit-28 owner-matched cells. This is an intermediate generated-cell mutation checkpoint, not pre-0x4a4c8e parity. Checkpoint 2 remains pending until same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback word 0x24/0x28 terrain mutations, and same-run pre-0x4a4c8e H3MapEd compares pass.",
+      "notes": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes recovered runtime terrain selection and private terrain-code writeout checkpoints, but live visual-feedback mutations and exact same-run compares remain open. No-Godot checkpoint-2 snapshots now include recovered 0x49b53d/0x540908 runtime terrain selection and 0x4a3f27 private terrain-code writeout before relation eligibility. Small 2p seed 58 setup 3 selects terrain ids [2,0,2,3,7] and materializes 1296 selected terrain cells. Medium 4p seed 10 setup 3 selects terrain ids [0,2,2,2,2,7,5], materializes 1636 selected terrain cells, and leaves 3548 cells at default terrain 8 because same-level synthetic/default cells do not have selected terrain ids. The after_terrain_relation_eligibility checkpoint now runs over this terrain-selected owner grid, so Medium bit28 writes drop to the 1636 selected terrain cells instead of the earlier owner-only 5183 cells. This is still an intermediate generated-cell surface, not pre-0x4a4c8e parity.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -46609,7 +46643,7 @@
       "status": "in_progress",
       "summary": "Native RMG alignment remains in progress. Checkpoint 4, metadata claim correction, is completed: Small seed-58 phase snapshot evidence now shows no true exact/adopted native parity claims for pending checkpoints; object-vector exact_port_claim, complete_object_reward_guard_exact_port_claim, route_container_0x4a8260_active_adoption, route_container_0x4a8260_rng_boundary_exact, and exact_upstream_bit_source_claim all report false while upstream checkpoints remain pending. Seven alignment checkpoints remain pending: final writeout authority, private generated-cell grid, reward/object identity, route replay preconditions, road vector/bit source, connection blocker/guard payloads, and decorative scoring/vector replay.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-13T19:08:55Z",
+      "updatedAt": "2026-06-13T19:23:23Z",
       "validation": {
         "artifacts": [
           ".artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json",
@@ -53068,8 +53102,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Five native RMG alignment checkpoints remain pending; checkpoint 2 now has no-Godot controlled-case snapshots for constructor defaults, supplied setup +0x44 mode resolution, template/runtime-zone records, link seeds, coordinate replay, source-node footprints, same-level synthetic append, owner-gated boundary/span-fill owner words, and recovered 0x4a2ec3 terrain-relation bit-28 generated-cell mutations. Exact pre-0x4a4c8e parity still lacks same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback generated-cell word 0x24/0x28 mutations, same-run H3MapEd compares, and the remaining plain-C++ export split.",
-  "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+  "remainingGap": "Five native RMG alignment checkpoints remain pending; checkpoint 2 now has no-Godot controlled-case snapshots for constructor defaults, supplied setup +0x44 mode resolution, template/runtime-zone records, link seeds, coordinate replay, source-node footprints, same-level synthetic append, owner-gated boundary/span-fill owner words, runtime terrain selection, private terrain-code writeout, and recovered 0x4a2ec3 terrain-relation bit-28 generated-cell mutations. Exact pre-0x4a4c8e parity still lacks same-run setup +0x44 capture/defaulting when not supplied, live visual-feedback generated-cell word 0x24/0x28 mutations, same-run H3MapEd compares, and the remaining plain-C++ export split.",
+  "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -53500,7 +53534,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "in_progress_no_godot_terrain_relation_eligibility_checkpoint",
+  "result": "in_progress_no_godot_runtime_terrain_writeout_checkpoint",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -53601,45 +53635,62 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes a recovered post-relation-eligibility generated-cell checkpoint, but live visual-feedback mutations and exact same-run compares remain open.",
+  "summary": "Native RMG alignment remains in progress. Checkpoints 1, 4, and 5 are completed. Five alignment checkpoints remain pending, led by private generated-cell grid parity. The no-Godot CLI now exposes recovered runtime terrain selection and private terrain-code writeout checkpoints, but live visual-feedback mutations and exact same-run compares remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-06-13T19:08:55Z",
+  "updatedAt": "2026-06-13T19:23:23Z",
   "validation": {
-    "id": "native-rmg-no-godot-terrain-relation-eligibility-20260613",
-    "date": "2026-06-13T19:08:55Z",
-    "recordedAt": "2026-06-13T19:08:55Z",
-    "validatedAt": "2026-06-13T19:08:55Z",
+    "id": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
+    "date": "2026-06-13T19:23:23Z",
+    "recordedAt": "2026-06-13T19:23:23Z",
+    "validatedAt": "2026-06-13T19:23:23Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "No-Godot CLI and Python wrapper validation passed for the recovered terrain-relation eligibility generated-cell checkpoint; the broader native RMG alignment remains in progress.",
-    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+    "summary": "No-Godot CLI and Python wrapper validation passed for recovered runtime terrain selection/private terrain-code writeout checkpoints; broader native RMG alignment remains in progress.",
+    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
     "artifacts": {
-      "cli_smoke_manifest": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/manifest.json",
-      "cli_small_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "cli_medium_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
-      "python_wrapper_manifest": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/manifest.json",
-      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+      "cli_smoke_manifest": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+      "cli_small_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "cli_medium_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+      "python_wrapper_manifest": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
     },
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; no Godot)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot --print-manifest (expected blocked exit 2; snapshots written; godot_process_started=false)",
-      "Python assertion over CLI snapshots (passed; after_terrain_relation_eligibility status available; Small bit28=1296, Medium bit28=5183)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
-      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; after_terrain_relation_eligibility present)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 2; snapshots written; godot_process_started=false)",
+      "Python assertion over CLI snapshots (passed; runtime terrain selection, terrain cell writeout, and relation eligibility checkpoints available; terrain histograms non-default)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
+      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; runtime terrain writeout checkpoints present)"
     ],
     "metrics": {
       "native_rmg_end_to_end_parity_complete": false,
       "godot_process_started": false,
       "windows_dll_build_run": false,
       "windows_dll_build_deferred": true,
-      "small_2p_seed58_setup3_bit28_count": 1296,
-      "medium_4p_seed10_setup3_bit28_count": 5183,
-      "small_2p_seed58_setup3_relation_records": 5,
-      "medium_4p_seed10_setup3_relation_records": 15,
-      "checkpoint_id": "after_terrain_relation_eligibility",
-      "h3maped_geometry_anchor": "0x4a2105_0x4a2ffa",
-      "h3maped_mutation_anchor": "0x4a2ec3"
+      "small_2p_seed58_setup3_selected_terrain_ids": [
+        2,
+        0,
+        2,
+        3,
+        7
+      ],
+      "medium_4p_seed10_setup3_selected_terrain_ids": [
+        0,
+        2,
+        2,
+        2,
+        2,
+        7,
+        5
+      ],
+      "small_2p_seed58_setup3_selected_terrain_cell_count": 1296,
+      "medium_4p_seed10_setup3_selected_terrain_cell_count": 1636,
+      "medium_4p_seed10_setup3_default_terrain8_cell_count": 3548,
+      "small_2p_seed58_setup3_relation_bit28_count": 1296,
+      "medium_4p_seed10_setup3_relation_bit28_count": 1636,
+      "checkpoint_id": "after_runtime_terrain_cell_writeout",
+      "h3maped_runtime_terrain_anchor": "0x49b53d_0x540908",
+      "h3maped_terrain_writeout_anchor": "0x4a3f27"
     }
   },
   "validationHistory": [
@@ -61655,44 +61706,116 @@
         "h3maped_geometry_anchor": "0x4a2105_0x4a2ffa",
         "h3maped_mutation_anchor": "0x4a2ec3"
       }
+    },
+    {
+      "id": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
+      "date": "2026-06-13T19:23:23Z",
+      "recordedAt": "2026-06-13T19:23:23Z",
+      "validatedAt": "2026-06-13T19:23:23Z",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "passed",
+      "summary": "No-Godot CLI and Python wrapper validation passed for recovered runtime terrain selection/private terrain-code writeout checkpoints; broader native RMG alignment remains in progress.",
+      "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+      "artifacts": {
+        "cli_smoke_manifest": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+        "cli_small_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        "cli_medium_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+        "python_wrapper_manifest": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+        "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+      },
+      "checks": [
+        "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; no Godot)",
+        "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 2; snapshots written; godot_process_started=false)",
+        "Python assertion over CLI snapshots (passed; runtime terrain selection, terrain cell writeout, and relation eligibility checkpoints available; terrain histograms non-default)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
+        "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; runtime terrain writeout checkpoints present)"
+      ],
+      "metrics": {
+        "native_rmg_end_to_end_parity_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_run": false,
+        "windows_dll_build_deferred": true,
+        "small_2p_seed58_setup3_selected_terrain_ids": [
+          2,
+          0,
+          2,
+          3,
+          7
+        ],
+        "medium_4p_seed10_setup3_selected_terrain_ids": [
+          0,
+          2,
+          2,
+          2,
+          2,
+          7,
+          5
+        ],
+        "small_2p_seed58_setup3_selected_terrain_cell_count": 1296,
+        "medium_4p_seed10_setup3_selected_terrain_cell_count": 1636,
+        "medium_4p_seed10_setup3_default_terrain8_cell_count": 3548,
+        "small_2p_seed58_setup3_relation_bit28_count": 1296,
+        "medium_4p_seed10_setup3_relation_bit28_count": 1636,
+        "checkpoint_id": "after_runtime_terrain_cell_writeout",
+        "h3maped_runtime_terrain_anchor": "0x49b53d_0x540908",
+        "h3maped_terrain_writeout_anchor": "0x4a3f27"
+      }
     }
   ],
   "validationResults": {
-    "id": "native-rmg-no-godot-terrain-relation-eligibility-20260613",
-    "date": "2026-06-13T19:08:55Z",
-    "recordedAt": "2026-06-13T19:08:55Z",
-    "validatedAt": "2026-06-13T19:08:55Z",
+    "id": "native-rmg-no-godot-runtime-terrain-writeout-20260613",
+    "date": "2026-06-13T19:23:23Z",
+    "recordedAt": "2026-06-13T19:23:23Z",
+    "validatedAt": "2026-06-13T19:23:23Z",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed",
-    "summary": "No-Godot CLI and Python wrapper validation passed for the recovered terrain-relation eligibility generated-cell checkpoint; the broader native RMG alignment remains in progress.",
-    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
+    "summary": "No-Godot CLI and Python wrapper validation passed for recovered runtime terrain selection/private terrain-code writeout checkpoints; broader native RMG alignment remains in progress.",
+    "remainingWork": "Next checkpoint-2 work is porting the live visual-feedback path that mutates generated-cell word 0x24/0x28 after runtime terrain writeout and relation eligibility, then capturing/defaulting same-run setup +0x44 when not supplied and rerunning same-run pre-0x4a4c8e generated-cell compares. Do not use Godot, GDScript reports, density scalars, brute-force retries, or final-map delta tuning.",
     "artifacts": {
-      "cli_smoke_manifest": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/manifest.json",
-      "cli_small_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "cli_medium_snapshot": ".artifacts/rmg_native_cli_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
-      "python_wrapper_manifest": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/manifest.json",
-      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_terrain_relation_eligibility_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
+      "cli_smoke_manifest": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/manifest.json",
+      "cli_small_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "cli_medium_snapshot": ".artifacts/rmg_native_cli_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json",
+      "python_wrapper_manifest": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/manifest.json",
+      "python_wrapper_small_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      "python_wrapper_medium_snapshot": ".artifacts/rmg_native_py_runtime_terrain_writeout_smoke/medium_4p_seed10_setup3.phase_snapshot.json"
     },
     "checks": [
       "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2 (passed; no Godot)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot --print-manifest (expected blocked exit 2; snapshots written; godot_process_started=false)",
-      "Python assertion over CLI snapshots (passed; after_terrain_relation_eligibility status available; Small bit28=1296, Medium bit28=5183)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_terrain_relation_eligibility_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
-      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; after_terrain_relation_eligibility present)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 2; snapshots written; godot_process_started=false)",
+      "Python assertion over CLI snapshots (passed; runtime terrain selection, terrain cell writeout, and relation eligibility checkpoints available; terrain histograms non-default)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_py_runtime_terrain_writeout_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --emit-phase-snapshot (expected blocked exit 1 through standalone CLI; godot_process_started=false)",
+      "Python assertion over wrapper manifest/snapshots (passed; standalone_native_cli_no_godot; runtime terrain writeout checkpoints present)"
     ],
     "metrics": {
       "native_rmg_end_to_end_parity_complete": false,
       "godot_process_started": false,
       "windows_dll_build_run": false,
       "windows_dll_build_deferred": true,
-      "small_2p_seed58_setup3_bit28_count": 1296,
-      "medium_4p_seed10_setup3_bit28_count": 5183,
-      "small_2p_seed58_setup3_relation_records": 5,
-      "medium_4p_seed10_setup3_relation_records": 15,
-      "checkpoint_id": "after_terrain_relation_eligibility",
-      "h3maped_geometry_anchor": "0x4a2105_0x4a2ffa",
-      "h3maped_mutation_anchor": "0x4a2ec3"
+      "small_2p_seed58_setup3_selected_terrain_ids": [
+        2,
+        0,
+        2,
+        3,
+        7
+      ],
+      "medium_4p_seed10_setup3_selected_terrain_ids": [
+        0,
+        2,
+        2,
+        2,
+        2,
+        7,
+        5
+      ],
+      "small_2p_seed58_setup3_selected_terrain_cell_count": 1296,
+      "medium_4p_seed10_setup3_selected_terrain_cell_count": 1636,
+      "medium_4p_seed10_setup3_default_terrain8_cell_count": 3548,
+      "small_2p_seed58_setup3_relation_bit28_count": 1296,
+      "medium_4p_seed10_setup3_relation_bit28_count": 1636,
+      "checkpoint_id": "after_runtime_terrain_cell_writeout",
+      "h3maped_runtime_terrain_anchor": "0x49b53d_0x540908",
+      "h3maped_terrain_writeout_anchor": "0x4a3f27"
     }
   }
 }
