@@ -222,7 +222,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"godot_process_started\": false,\n";
 	out << "  \"output_dir\": \"" << json_escape(options.output_dir.string()) << "\",\n";
 	out << "  \"absolute_output_dir\": \"" << json_escape(absolute_output_dir.string()) << "\",\n";
-	out << "  \"case_scope\": \"no_godot_cli_boundary_only_until_core_split\",\n";
+	out << "  \"case_scope\": \"no_godot_cli_checkpoint2_generated_cell_surface_until_core_split\",\n";
 	out << "  \"case_filter\": \"" << json_escape(options.case_filter) << "\",\n";
 	out << "  \"case_limit\": " << options.limit << ",\n";
 	out << "  \"include_unsupported\": " << (options.include_unsupported ? "true" : "false") << ",\n";
@@ -237,7 +237,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"skipped_count\": " << skipped_count << ",\n";
 	out << "  \"exported_count\": 0,\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"plain_cpp_controlled_case_checkpoint2_boundary_span_fill_surface\",\n";
+	out << "  \"generation_core_stage\": \"plain_cpp_controlled_case_checkpoint2_runtime_terrain_writeout_surface\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
 	out << "  \"required_next_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api_before_running_native_exports_on_memory_constrained_hosts\",\n";
 	out << "  \"message\": \"This executable is the no-Godot boundary. It parses and reports controlled Small/Medium one-level land cases, but intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
