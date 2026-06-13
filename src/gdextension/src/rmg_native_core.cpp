@@ -156,6 +156,313 @@ struct CoordinateReplaySummary {
 	std::vector<RuntimeZoneRecordPlain> scaled_zone_coordinates;
 };
 
+struct PolygonPointPlain {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
+struct PolygonModelNodePlain {
+	std::string id;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t payload = 0;
+	bool has_payload = false;
+	int32_t pair = -1;
+	int32_t next = -1;
+	int32_t previous = -1;
+	bool active = true;
+	bool finalized = false;
+	int32_t finalized_x = -1;
+	int32_t finalized_y = -1;
+};
+
+struct SourceSplitStepPlain {
+	int32_t runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	std::string status;
+	int32_t bridge_pair_count = 0;
+	int32_t crossing_cleanup_scan_count = 0;
+	int32_t crossing_test_count = 0;
+	int32_t crossing_collapse_count = 0;
+};
+
+struct SourceCycleNodePlain {
+	int32_t x = 0;
+	int32_t y = 0;
+	bool has_payload = false;
+	int32_t payload = 0;
+	bool next_pair_has_payload = false;
+	int32_t next_pair_payload = 0;
+	bool finalized = false;
+	int32_t finalized_x = -1;
+	int32_t finalized_y = -1;
+};
+
+struct SourceWalkPlain {
+	int32_t runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t start_x = 0;
+	int32_t start_y = 0;
+	std::vector<SourceCycleNodePlain> cycle_nodes;
+};
+
+struct PolygonSourceResultPlain {
+	bool blocked = false;
+	int32_t duplicate_skip_count = 0;
+	int32_t edge_removal_count = 0;
+	int32_t inserted_node_pair_count = 0;
+	int32_t executed_split_count = 0;
+	int32_t inserted_bridge_pair_count = 0;
+	int32_t crossing_scan_count = 0;
+	int32_t crossing_test_count = 0;
+	int32_t crossing_collapse_count = 0;
+	int32_t allocated_node_pair_count = 0;
+	int32_t active_node_pair_count = 0;
+	int32_t finalized_triplet_count = 0;
+	int32_t finalized_node_count = 0;
+	int32_t active_payload_node_count = 0;
+	int32_t source_node_walk_count = 0;
+	int32_t source_node_walk_guard_exhausted_count = 0;
+	std::vector<SourceSplitStepPlain> split_steps;
+	std::vector<SourceWalkPlain> walks;
+};
+
+struct SourceNodeFootprintSummary {
+	bool coordinate_replay_available = false;
+	bool supported_scope = false;
+	bool source_nodes_built = false;
+	bool source_blocked = false;
+	std::string status = "blocked_until_coordinate_replay";
+	std::string blocked_reason = "coordinate_replay_missing";
+	bool generator_mode_0x10b8_known = false;
+	int32_t generator_mode_0x10b8 = 0;
+	bool generator_mode_0x10b8_randomized_pending = false;
+	bool synthetic_branch_allowed = false;
+	int32_t total_matching_runtime_zones = 0;
+	PolygonSourceResultPlain source;
+};
+
+struct PolygonModelPlain {
+	std::vector<PolygonModelNodePlain> nodes;
+	int32_t root = -1;
+
+	int32_t add_pair(const std::string &prefix, int32_t from_x, int32_t from_y, int32_t from_payload, int32_t to_x, int32_t to_y, int32_t to_payload, bool from_has_payload = false, bool to_has_payload = false) {
+		const int32_t primary_index = int32_t(nodes.size());
+		const int32_t paired_index = primary_index + 1;
+		PolygonModelNodePlain primary;
+		primary.id = prefix + "_primary";
+		primary.x = from_x;
+		primary.y = from_y;
+		primary.payload = from_payload;
+		primary.has_payload = from_has_payload;
+		primary.pair = paired_index;
+		primary.next = primary_index;
+		primary.previous = primary_index;
+		PolygonModelNodePlain paired;
+		paired.id = prefix + "_paired";
+		paired.x = to_x;
+		paired.y = to_y;
+		paired.payload = to_payload;
+		paired.has_payload = to_has_payload;
+		paired.pair = primary_index;
+		paired.next = paired_index;
+		paired.previous = paired_index;
+		nodes.push_back(primary);
+		nodes.push_back(paired);
+		return primary_index;
+	}
+
+	void relink_4cc643(int32_t first, int32_t second) {
+		const int32_t first_next = nodes[size_t(first)].next;
+		const int32_t second_next = nodes[size_t(second)].next;
+		std::swap(nodes[size_t(first_next)].previous, nodes[size_t(second_next)].previous);
+		std::swap(nodes[size_t(first)].next, nodes[size_t(second)].next);
+	}
+
+	void edge_swap_4cc670(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		relink_4cc643(node_index, nodes[size_t(node_index)].previous);
+		relink_4cc643(paired, paired_previous);
+	}
+
+	void crossing_collapse_4cc68e(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t previous = nodes[size_t(node_index)].previous;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		edge_swap_4cc670(node_index);
+		const int32_t previous_pair = nodes[size_t(previous)].pair;
+		nodes[size_t(node_index)].payload = nodes[size_t(previous_pair)].payload;
+		nodes[size_t(node_index)].has_payload = nodes[size_t(previous_pair)].has_payload;
+		nodes[size_t(node_index)].x = nodes[size_t(previous_pair)].x;
+		nodes[size_t(node_index)].y = nodes[size_t(previous_pair)].y;
+		const int32_t paired_previous_pair = nodes[size_t(paired_previous)].pair;
+		nodes[size_t(paired)].payload = nodes[size_t(paired_previous_pair)].payload;
+		nodes[size_t(paired)].has_payload = nodes[size_t(paired_previous_pair)].has_payload;
+		nodes[size_t(paired)].x = nodes[size_t(paired_previous_pair)].x;
+		nodes[size_t(paired)].y = nodes[size_t(paired_previous_pair)].y;
+		relink_4cc643(node_index, nodes[size_t(previous_pair)].previous);
+		relink_4cc643(paired, nodes[size_t(paired_previous_pair)].previous);
+	}
+
+	void erase_edge_4cc9cc(int32_t node_index) {
+		edge_swap_4cc670(node_index);
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		nodes[size_t(node_index)].active = false;
+		nodes[size_t(paired)].active = false;
+	}
+
+	int32_t active_node_pair_count() const {
+		int32_t count = 0;
+		for (int32_t index = 0; index + 1 < int32_t(nodes.size()); index += 2) {
+			if (nodes[size_t(index)].active || nodes[size_t(index + 1)].active) {
+				count += 1;
+			}
+		}
+		return count;
+	}
+
+	int32_t bridge_4ccb1f(int32_t old_node, int32_t target_node, const std::string &prefix) {
+		const PolygonModelNodePlain &old_pair = nodes[size_t(nodes[size_t(old_node)].pair)];
+		const PolygonModelNodePlain &target = nodes[size_t(target_node)];
+		const int32_t bridge_primary = add_pair(prefix, old_pair.x, old_pair.y, old_pair.payload, target.x, target.y, target.payload, old_pair.has_payload, target.has_payload);
+		relink_4cc643(bridge_primary, nodes[size_t(nodes[size_t(old_node)].pair)].previous);
+		relink_4cc643(nodes[size_t(bridge_primary)].pair, target_node);
+		return bridge_primary;
+	}
+
+	int64_t side_4cca55(int32_t from_node, int32_t to_node, int32_t x, int32_t y) const {
+		const PolygonModelNodePlain &from = nodes[size_t(from_node)];
+		const PolygonModelNodePlain &to = nodes[size_t(to_node)];
+		return int64_t(to.y - from.y) * int64_t(x - from.x) - int64_t(to.x - from.x) * int64_t(y - from.y);
+	}
+
+	int32_t locate_4cca55(int32_t x, int32_t y) const {
+		int32_t current = root;
+		for (int32_t guard = 0; guard < 512 && current >= 0 && current < int32_t(nodes.size()); ++guard) {
+			const PolygonModelNodePlain &current_node = nodes[size_t(current)];
+			if (current_node.x == x && current_node.y == y) {
+				return current;
+			}
+			const int32_t paired = current_node.pair;
+			const PolygonModelNodePlain &paired_node = nodes[size_t(paired)];
+			if (paired_node.x == x && paired_node.y == y) {
+				return paired;
+			}
+			if (side_4cca55(current, paired, x, y) > 0) {
+				current = paired;
+				continue;
+			}
+			const int32_t next = current_node.next;
+			if (side_4cca55(next, nodes[size_t(next)].pair, x, y) <= 0) {
+				current = next;
+				continue;
+			}
+			const int32_t nested = nodes[size_t(nodes[size_t(paired)].previous)].pair;
+			if (side_4cca55(nested, nodes[size_t(nested)].pair, x, y) > 0) {
+				return current;
+			}
+			current = nested;
+		}
+		return -1;
+	}
+
+	bool edge_side_test_4cc6f2(int32_t node_index, int32_t x, int32_t y) const {
+		const PolygonModelNodePlain &node = nodes[size_t(node_index)];
+		const PolygonModelNodePlain &paired = nodes[size_t(node.pair)];
+		const int64_t edge_dx = int64_t(node.x) - int64_t(paired.x);
+		const int64_t edge_dy = int64_t(node.y) - int64_t(paired.y);
+		const int64_t edge_distance_sq = edge_dx * edge_dx + edge_dy * edge_dy;
+		const int64_t node_dx = int64_t(x) - int64_t(node.x);
+		const int64_t node_dy = int64_t(y) - int64_t(node.y);
+		if (node_dx * node_dx + node_dy * node_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t paired_dx = int64_t(x) - int64_t(paired.x);
+		const int64_t paired_dy = int64_t(y) - int64_t(paired.y);
+		if (paired_dx * paired_dx + paired_dy * paired_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t expression = int64_t(node.y) * int64_t(paired.x - node.x)
+				- int64_t(node.x) * int64_t(paired.y - node.y)
+				- int64_t(y) * int64_t(paired.x - node.x)
+				+ int64_t(x) * int64_t(paired.y - node.y);
+		return expression == 0;
+	}
+
+	bool crossing_test_4ccc7a(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, int32_t x4, int32_t y4) const {
+		const int64_t v1 = int64_t(y4 - y2) * int64_t(x3 - x2) - int64_t(x4 - x2) * int64_t(y3 - y2);
+		const int64_t v2 = int64_t(x2 - x1) * int64_t(y3 - y1) - int64_t(y2 - y1) * int64_t(x3 - x1);
+		const int64_t v3 = int64_t(y4 - y1) * int64_t(x3 - x1) - int64_t(x4 - x1) * int64_t(y3 - y1);
+		const int64_t v4 = int64_t(y4 - y1) * int64_t(x2 - x1) - int64_t(x4 - x1) * int64_t(y2 - y1);
+		const int64_t p1 = int64_t(x1) * int64_t(x1) + int64_t(y1) * int64_t(y1);
+		const int64_t p2 = int64_t(x2) * int64_t(x2) + int64_t(y2) * int64_t(y2);
+		const int64_t p3 = int64_t(x3) * int64_t(x3) + int64_t(y3) * int64_t(y3);
+		const int64_t p4 = int64_t(x4) * int64_t(x4) + int64_t(y4) * int64_t(y4);
+		return (p1 * v1 - p4 * v2 - p2 * v3 + p3 * v4) > 0;
+	}
+
+	bool crossing_orientation_gate_4ccb64(int32_t node_index) const {
+		const PolygonModelNodePlain &node = nodes[size_t(node_index)];
+		const PolygonModelNodePlain &paired = nodes[size_t(node.pair)];
+		const PolygonModelNodePlain &previous_pair = nodes[size_t(nodes[size_t(node.previous)].pair)];
+		const int64_t value = int64_t(paired.y - node.y) * int64_t(previous_pair.x - node.x)
+				- int64_t(paired.x - node.x) * int64_t(previous_pair.y - node.y);
+		return value > 0;
+	}
+
+	static int64_t idiv_truncate(int64_t numerator, int64_t denominator) {
+		if (denominator == 0) {
+			return 0;
+		}
+		return numerator / denominator;
+	}
+
+	static int32_t half_truncate_4ccd69(int64_t value) {
+		return int32_t(value / 2);
+	}
+
+	static PolygonPointPlain intersection_4ccd69(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3) {
+		const int64_t term = int64_t(y3 - y2) * int64_t(y1 - y3) + int64_t(x1 - x3) * int64_t(x3 - x2);
+		const int64_t denominator = int64_t(x1 - x3) * int64_t(y1 - y2) + int64_t(y1 - y3) * int64_t(x2 - x1);
+		const int64_t x_adjust = idiv_truncate(int64_t(y1 - y2) * term, denominator);
+		const int64_t y_adjust = idiv_truncate(int64_t(x2 - x1) * term, denominator);
+		return PolygonPointPlain {
+			x1 + half_truncate_4ccd69(int64_t(x2 - x1) + x_adjust),
+			y1 + half_truncate_4ccd69(int64_t(y2 - y1) + y_adjust)
+		};
+	}
+
+	void write_finalized_4ccdfc(int32_t node_index, const PolygonPointPlain &point) {
+		nodes[size_t(node_index)].finalized_x = point.x;
+		nodes[size_t(node_index)].finalized_y = point.y;
+		nodes[size_t(node_index)].finalized = true;
+	}
+
+	int32_t finalize_4ccdfc() {
+		int32_t finalized_triplets = 0;
+		for (int32_t index = 0; index < int32_t(nodes.size()); ++index) {
+			PolygonModelNodePlain &node = nodes[size_t(index)];
+			if (!node.active || !node.has_payload || node.finalized) {
+				continue;
+			}
+			const int32_t next_pair = nodes[size_t(node.next)].pair;
+			const PolygonModelNodePlain &paired = nodes[size_t(node.pair)];
+			const PolygonModelNodePlain &next_pair_node = nodes[size_t(next_pair)];
+			const PolygonPointPlain point = intersection_4ccd69(node.x, node.y, paired.x, paired.y, next_pair_node.x, next_pair_node.y);
+			write_finalized_4ccdfc(index, point);
+			write_finalized_4ccdfc(next_pair, point);
+			const int32_t nested = nodes[size_t(next_pair)].next;
+			const int32_t nested_pair = nodes[size_t(nested)].pair;
+			write_finalized_4ccdfc(nested_pair, point);
+			finalized_triplets += 1;
+		}
+		return finalized_triplets;
+	}
+};
+
 std::string trim(const std::string &value) {
 	size_t begin = 0;
 	while (begin < value.size() && std::isspace(static_cast<unsigned char>(value[begin])) != 0) {
@@ -1256,6 +1563,219 @@ CoordinateReplaySummary build_coordinate_replay_summary(const ControlledCase &co
 	return summary;
 }
 
+PolygonSourceResultPlain build_polygon_source_walks_4ccb64_plain(const std::vector<RuntimeZoneRecordPlain> &runtime_zones) {
+	PolygonSourceResultPlain result;
+	PolygonModelPlain model;
+	const int32_t p0 = model.add_pair("initial_pair_0", -200, -200, 0, 400, -200, 0);
+	const int32_t p1 = model.add_pair("initial_pair_1", 400, -200, 0, 400, 400, 0);
+	const int32_t p2 = model.add_pair("initial_pair_2", 400, 400, 0, -200, 400, 0);
+	const int32_t p3 = model.add_pair("initial_pair_3", -200, 400, 0, -200, -200, 0);
+	model.relink_4cc643(model.nodes[size_t(p0)].pair, p1);
+	model.relink_4cc643(model.nodes[size_t(p1)].pair, p2);
+	model.relink_4cc643(model.nodes[size_t(p2)].pair, p3);
+	model.relink_4cc643(model.nodes[size_t(p3)].pair, p0);
+	model.bridge_4ccb1f(p3, p2, "initial_bridge_pair_0");
+	model.root = p0;
+
+	for (int32_t runtime_index = 0; runtime_index < int32_t(runtime_zones.size()); ++runtime_index) {
+		const RuntimeZoneRecordPlain &runtime = runtime_zones[size_t(runtime_index)];
+		if (runtime.level_after_bbox_rescale != 0) {
+			continue;
+		}
+		const int32_t zone_index = runtime.runtime_index >= 0 ? runtime.runtime_index : runtime_index;
+		const int32_t x = runtime.x_after_bbox_rescale;
+		const int32_t y = runtime.y_after_bbox_rescale;
+		SourceSplitStepPlain step;
+		step.runtime_zone_index = zone_index;
+		step.source_zone_id = runtime.source_zone_id;
+		step.x = x;
+		step.y = y;
+		int32_t located = model.locate_4cca55(x, y);
+		if (located < 0) {
+			step.status = "0x4cca55_locator_guard_failed";
+			result.blocked = true;
+			result.split_steps.push_back(step);
+			break;
+		}
+		if ((model.nodes[size_t(located)].x == x && model.nodes[size_t(located)].y == y)
+				|| (model.nodes[size_t(model.nodes[size_t(located)].pair)].x == x && model.nodes[size_t(model.nodes[size_t(located)].pair)].y == y)) {
+			step.status = "0x4ccb64_duplicate_point_skipped";
+			result.duplicate_skip_count += 1;
+			result.split_steps.push_back(step);
+			continue;
+		}
+		if (model.edge_side_test_4cc6f2(located, x, y)) {
+			located = model.nodes[size_t(located)].previous;
+			const int32_t erased = model.nodes[size_t(located)].next;
+			model.erase_edge_4cc9cc(erased);
+			result.edge_removal_count += 1;
+		}
+		const PolygonModelNodePlain &located_node = model.nodes[size_t(located)];
+		const int32_t split_primary = model.add_pair("split_" + std::to_string(zone_index), located_node.x, located_node.y, located_node.payload, x, y, zone_index, located_node.has_payload, true);
+		model.relink_4cc643(split_primary, located);
+		model.root = split_primary;
+		result.inserted_node_pair_count += 1;
+		result.executed_split_count += 1;
+		int32_t bridge_pair_count = 0;
+		int32_t current_bridge = split_primary;
+		int32_t bridge_source = located;
+		for (int32_t guard = 0; guard < 64; ++guard) {
+			current_bridge = model.bridge_4ccb1f(bridge_source, model.nodes[size_t(current_bridge)].pair, "split_" + std::to_string(zone_index) + "_bridge_" + std::to_string(bridge_pair_count));
+			bridge_pair_count += 1;
+			result.inserted_bridge_pair_count += 1;
+			bridge_source = model.nodes[size_t(current_bridge)].previous;
+			const int32_t bridge_source_pair = model.nodes[size_t(bridge_source)].pair;
+			if (model.nodes[size_t(bridge_source_pair)].previous == model.root) {
+				break;
+			}
+			if (guard == 63) {
+				result.blocked = true;
+				step.status = "0x4ccb64_bridge_loop_guard_failed";
+			}
+		}
+		int32_t cleanup_scan_count = 0;
+		int32_t cleanup_test_count = 0;
+		int32_t cleanup_collapse_count = 0;
+		int32_t cleanup_cursor = bridge_source;
+		for (int32_t guard = 0; guard < 256; ++guard) {
+			cleanup_scan_count += 1;
+			result.crossing_scan_count += 1;
+			if (model.crossing_orientation_gate_4ccb64(cleanup_cursor)) {
+				const PolygonModelNodePlain &cursor = model.nodes[size_t(cleanup_cursor)];
+				const PolygonModelNodePlain &previous_pair = model.nodes[size_t(model.nodes[size_t(cursor.previous)].pair)];
+				const PolygonModelNodePlain &paired = model.nodes[size_t(cursor.pair)];
+				cleanup_test_count += 1;
+				result.crossing_test_count += 1;
+				if (model.crossing_test_4ccc7a(cursor.x, cursor.y, previous_pair.x, previous_pair.y, paired.x, paired.y, x, y)) {
+					model.crossing_collapse_4cc68e(cleanup_cursor);
+					cleanup_collapse_count += 1;
+					result.crossing_collapse_count += 1;
+					cleanup_cursor = model.nodes[size_t(cleanup_cursor)].previous;
+					continue;
+				}
+			}
+			cleanup_cursor = model.nodes[size_t(cleanup_cursor)].next;
+			if (cleanup_cursor == model.root) {
+				break;
+			}
+			cleanup_cursor = model.nodes[size_t(model.nodes[size_t(cleanup_cursor)].next)].pair;
+			if (guard == 255) {
+				result.blocked = true;
+				step.status = "0x4ccb64_crossing_cleanup_guard_failed";
+			}
+		}
+		step.bridge_pair_count = bridge_pair_count;
+		step.crossing_cleanup_scan_count = cleanup_scan_count;
+		step.crossing_test_count = cleanup_test_count;
+		step.crossing_collapse_count = cleanup_collapse_count;
+		if (step.status.empty()) {
+			step.status = result.blocked ? "0x4ccb64_guard_failed" : "0x4ccb64_pre_crossing_inserted";
+		}
+		result.split_steps.push_back(step);
+		if (result.blocked) {
+			break;
+		}
+	}
+
+	result.allocated_node_pair_count = int32_t(model.nodes.size() / 2);
+	result.active_node_pair_count = model.active_node_pair_count();
+	result.finalized_triplet_count = result.blocked ? 0 : model.finalize_4ccdfc();
+	for (const PolygonModelNodePlain &node : model.nodes) {
+		if (!node.active) {
+			continue;
+		}
+		if (node.has_payload) {
+			result.active_payload_node_count += 1;
+		}
+		if (node.finalized) {
+			result.finalized_node_count += 1;
+		}
+	}
+
+	for (int32_t runtime_index = 0; runtime_index < int32_t(runtime_zones.size()); ++runtime_index) {
+		const RuntimeZoneRecordPlain &runtime = runtime_zones[size_t(runtime_index)];
+		if (runtime.level_after_bbox_rescale != 0) {
+			continue;
+		}
+		SourceWalkPlain walk;
+		walk.runtime_zone_index = runtime.runtime_index >= 0 ? runtime.runtime_index : runtime_index;
+		walk.source_zone_id = runtime.source_zone_id;
+		walk.start_x = runtime.x_after_bbox_rescale;
+		walk.start_y = runtime.y_after_bbox_rescale;
+		const int32_t located = result.blocked ? -1 : model.locate_4cca55(walk.start_x, walk.start_y);
+		if (located >= 0) {
+			int32_t current = located;
+			bool guard_exhausted = false;
+			for (int32_t guard = 0; guard < 96; ++guard) {
+				const PolygonModelNodePlain &node = model.nodes[size_t(current)];
+				const int32_t next = node.next;
+				const int32_t next_pair = next >= 0 && next < int32_t(model.nodes.size()) ? model.nodes[size_t(next)].pair : -1;
+				const PolygonModelNodePlain *next_pair_node = next_pair >= 0 && next_pair < int32_t(model.nodes.size()) ? &model.nodes[size_t(next_pair)] : nullptr;
+				SourceCycleNodePlain source_node;
+				source_node.x = node.x;
+				source_node.y = node.y;
+				source_node.has_payload = node.has_payload;
+				source_node.payload = node.payload;
+				source_node.next_pair_has_payload = next_pair_node != nullptr && next_pair_node->has_payload;
+				source_node.next_pair_payload = next_pair_node != nullptr ? next_pair_node->payload : 0;
+				source_node.finalized = node.finalized;
+				source_node.finalized_x = node.finalized_x;
+				source_node.finalized_y = node.finalized_y;
+				walk.cycle_nodes.push_back(source_node);
+				current = node.next;
+				if (current == located) {
+					break;
+				}
+				if (guard == 95) {
+					guard_exhausted = true;
+				}
+			}
+			if (guard_exhausted) {
+				result.source_node_walk_guard_exhausted_count += 1;
+			}
+		}
+		result.walks.push_back(walk);
+		result.source_node_walk_count += 1;
+	}
+	return result;
+}
+
+SourceNodeFootprintSummary build_source_node_footprint_summary(const ControlledCase &controlled_case, const CoordinateReplaySummary &coordinate_summary) {
+	SourceNodeFootprintSummary summary;
+	summary.coordinate_replay_available = coordinate_summary.ok;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	if (!summary.coordinate_replay_available) {
+		summary.blocked_reason = "blocked_until_coordinate_replay";
+		return summary;
+	}
+	if (!summary.supported_scope) {
+		summary.status = "unsupported_scope";
+		summary.blocked_reason = "unsupported_non_small_medium_one_level_land";
+		return summary;
+	}
+	summary.source = build_polygon_source_walks_4ccb64_plain(coordinate_summary.scaled_zone_coordinates);
+	summary.source_blocked = summary.source.blocked;
+	summary.source_nodes_built = !summary.source.blocked;
+	summary.total_matching_runtime_zones = int32_t(coordinate_summary.scaled_zone_coordinates.size());
+	summary.generator_mode_0x10b8_known = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 != 3;
+	summary.generator_mode_0x10b8_randomized_pending = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 == 3;
+	if (summary.generator_mode_0x10b8_known) {
+		summary.generator_mode_0x10b8 = controlled_case.setup_object_0x44;
+		summary.synthetic_branch_allowed = controlled_case.setup_object_0x44 != 0;
+	}
+	if (summary.source_blocked) {
+		summary.status = "blocked_during_source_node_split";
+		summary.blocked_reason = "0x4ccb64_source_node_split_guard_failed";
+	} else if (!summary.generator_mode_0x10b8_known || summary.synthetic_branch_allowed) {
+		summary.status = "blocked_same_level_synthetic_runtime_zone_replay_pending";
+		summary.blocked_reason = "recover_rmg_setup_object_0x44_generator_mode_then_port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append";
+	} else {
+		summary.status = "active_plain_cpp_source_node_footprint_summary";
+		summary.blocked_reason.clear();
+	}
+	return summary;
+}
+
 void append_int_array_json(std::ostream &out, const std::vector<int32_t> &values) {
 	out << "[";
 	for (size_t index = 0; index < values.size(); ++index) {
@@ -1470,6 +1990,133 @@ void append_coordinate_replay_summary_json(std::ostream &out, const CoordinateRe
 	append_plain_runtime_records_json(out, summary.scaled_zone_coordinates, true);
 	out << ",\n";
 	out << "    \"blocked_next\": \"zone_footprint_source_nodes_0x4a3a03_0x4cc788_then_0x4a325d_owner_materialization\"\n";
+	out << "  }";
+}
+
+void append_source_split_steps_json(std::ostream &out, const std::vector<SourceSplitStepPlain> &steps) {
+	out << "[";
+	for (size_t index = 0; index < steps.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SourceSplitStepPlain &step = steps[index];
+		out << "{";
+		out << "\"runtime_zone_index\":" << step.runtime_zone_index << ",";
+		out << "\"source_zone_id\":" << step.source_zone_id << ",";
+		out << "\"x\":" << step.x << ",";
+		out << "\"y\":" << step.y << ",";
+		out << "\"status\":\"" << json_escape(step.status) << "\",";
+		out << "\"bridge_pair_count\":" << step.bridge_pair_count << ",";
+		out << "\"crossing_cleanup_scan_count\":" << step.crossing_cleanup_scan_count << ",";
+		out << "\"crossing_test_count\":" << step.crossing_test_count << ",";
+		out << "\"crossing_collapse_count\":" << step.crossing_collapse_count;
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_source_walks_json(std::ostream &out, const std::vector<SourceWalkPlain> &walks) {
+	out << "[";
+	for (size_t walk_index = 0; walk_index < walks.size(); ++walk_index) {
+		if (walk_index != 0) {
+			out << ",";
+		}
+		const SourceWalkPlain &walk = walks[walk_index];
+		out << "{";
+		out << "\"runtime_zone_index\":" << walk.runtime_zone_index << ",";
+		out << "\"source_zone_id\":" << walk.source_zone_id << ",";
+		out << "\"start_x\":" << walk.start_x << ",";
+		out << "\"start_y\":" << walk.start_y << ",";
+		out << "\"nodes\":[";
+		for (size_t node_index = 0; node_index < walk.cycle_nodes.size(); ++node_index) {
+			if (node_index != 0) {
+				out << ",";
+			}
+			const SourceCycleNodePlain &node = walk.cycle_nodes[node_index];
+			out << "{";
+			out << "\"x\":" << node.x << ",";
+			out << "\"y\":" << node.y << ",";
+			out << "\"has_payload\":" << (node.has_payload ? "true" : "false") << ",";
+			out << "\"payload\":" << node.payload << ",";
+			out << "\"next_pair_has_payload\":" << (node.next_pair_has_payload ? "true" : "false") << ",";
+			out << "\"next_pair_payload\":" << node.next_pair_payload << ",";
+			out << "\"finalized\":" << (node.finalized ? "true" : "false") << ",";
+			out << "\"finalized_x\":" << node.finalized_x << ",";
+			out << "\"finalized_y\":" << node.finalized_y;
+			out << "}";
+		}
+		out << "]";
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_source_node_footprint_summary_json(std::ostream &out, const SourceNodeFootprintSummary &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_source_node_footprint_summary_v1\",\n";
+	out << "    \"phase_id\": \"zone_footprint_source_nodes\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a3a03\",\n";
+	out << "    \"polygon_constructor_anchor\": \"0x4cc788\",\n";
+	out << "    \"polygon_node_constructor_anchor\": \"0x4cc955\",\n";
+	out << "    \"polygon_split_anchor\": \"0x4ccb64\",\n";
+	out << "    \"polygon_finalize_anchor\": \"0x4ccdfc\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"strict_port_scope\": \"source-node rectangle, split insertion, crossing cleanup, and finalized source-node cycles only; no boundary/span fill, terrain, map cells, or public output\",\n";
+	out << "    \"source\": \"h3maped 0x4a3a03 small-land source-node setup through 0x4cc788, 0x4cc955, 0x4ccb64, and 0x4ccdfc over the coordinate replay output\",\n";
+	out << "    \"coordinate_replay_available\": " << (summary.coordinate_replay_available ? "true" : "false") << ",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"source_node_construction_ported_plain_cpp\": " << (summary.source_nodes_built ? "true" : "false") << ",\n";
+	out << "    \"materializes_private_zone_cell_buffer\": false,\n";
+	out << "    \"materializes_boundary_trace\": false,\n";
+	out << "    \"materializes_span_fill\": false,\n";
+	out << "    \"materializes_terrain\": false,\n";
+	out << "    \"materializes_map_cells\": false,\n";
+	out << "    \"materializes_public_output\": false,\n";
+	out << "    \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0\",\n";
+	out << "    \"generator_mode_0x10b8_known\": " << (summary.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
+	if (summary.generator_mode_0x10b8_known) {
+		out << "    \"generator_mode_0x10b8\": " << summary.generator_mode_0x10b8 << ",\n";
+	} else if (summary.generator_mode_0x10b8_randomized_pending) {
+		out << "    \"generator_mode_0x10b8\": \"pending_0x49ecf2_rng_percent_3_replay_for_setup_value_3\",\n";
+	} else {
+		out << "    \"generator_mode_0x10b8\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
+	}
+	if (summary.generator_mode_0x10b8_known) {
+		out << "    \"synthetic_fallback_zone_allowed_by_0x4a3a9d\": " << (summary.synthetic_branch_allowed ? "true" : "false") << ",\n";
+	} else {
+		out << "    \"synthetic_fallback_zone_allowed_by_0x4a3a9d\": \"unknown_until_generator_0x10b8_rmg_setup_object_0x44_is_captured\",\n";
+	}
+	out << "    \"appended_synthetic_runtime_zone_count\": 0,\n";
+	out << "    \"appended_synthetic_runtime_zone_count_authority\": \"native_materialized_count_only; H3MapEd expected count remains unknown until 0x4a3b48 direction scan and 0x49b452 append replay are ported\",\n";
+	out << "    \"initial_bounds_min_x\": -200,\n";
+	out << "    \"initial_bounds_min_y\": -200,\n";
+	out << "    \"initial_bounds_max_x\": 400,\n";
+	out << "    \"initial_bounds_max_y\": 400,\n";
+	out << "    \"initial_node_pair_count\": 5,\n";
+	out << "    \"total_matching_runtime_zones\": " << summary.total_matching_runtime_zones << ",\n";
+	out << "    \"total_polygon_split_calls\": " << summary.source.executed_split_count << ",\n";
+	out << "    \"duplicate_skip_count\": " << summary.source.duplicate_skip_count << ",\n";
+	out << "    \"edge_removal_branch_count\": " << summary.source.edge_removal_count << ",\n";
+	out << "    \"pre_crossing_inserted_node_pair_count\": " << summary.source.inserted_node_pair_count << ",\n";
+	out << "    \"pre_crossing_inserted_bridge_pair_count\": " << summary.source.inserted_bridge_pair_count << ",\n";
+	out << "    \"crossing_cleanup_scan_count\": " << summary.source.crossing_scan_count << ",\n";
+	out << "    \"crossing_test_count\": " << summary.source.crossing_test_count << ",\n";
+	out << "    \"crossing_collapse_count\": " << summary.source.crossing_collapse_count << ",\n";
+	out << "    \"post_crossing_cleanup_allocated_node_pair_count\": " << summary.source.allocated_node_pair_count << ",\n";
+	out << "    \"post_crossing_cleanup_active_node_pair_count\": " << summary.source.active_node_pair_count << ",\n";
+	out << "    \"finalized_triplet_count\": " << summary.source.finalized_triplet_count << ",\n";
+	out << "    \"finalized_node_count\": " << summary.source.finalized_node_count << ",\n";
+	out << "    \"active_payload_node_count\": " << summary.source.active_payload_node_count << ",\n";
+	out << "    \"source_node_walk_count\": " << summary.source.source_node_walk_count << ",\n";
+	out << "    \"source_node_walk_guard_exhausted_count\": " << summary.source.source_node_walk_guard_exhausted_count << ",\n";
+	out << "    \"split_steps\": ";
+	append_source_split_steps_json(out, summary.source.split_steps);
+	out << ",\n";
+	out << "    \"source_node_walk_previews\": ";
+	append_source_walks_json(out, summary.source.walks);
+	out << ",\n";
+	out << "    \"blocked_next\": \"zone_boundary_and_span_fill_0x4a2777_0x4a325d_0x4a3710_and_same_level_synthetic_runtime_zone_append\"\n";
 	out << "  }";
 }
 
@@ -1743,6 +2390,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const bool synthetic_branch_allowed = generator_mode_known && controlled_case.setup_object_0x44 != 0;
 	const RuntimeZoneSummary runtime_zone_summary = build_runtime_zone_summary(controlled_case);
 	const CoordinateReplaySummary coordinate_replay_summary = build_coordinate_replay_summary(controlled_case, runtime_zone_summary);
+	const SourceNodeFootprintSummary source_node_summary = build_source_node_footprint_summary(controlled_case, coordinate_replay_summary);
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
@@ -1803,8 +2451,11 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"plain_cpp_coordinate_replay_summary\": ";
 	append_coordinate_replay_summary_json(out, coordinate_replay_summary);
 	out << ",\n";
+	out << "  \"plain_cpp_source_node_footprint_summary\": ";
+	append_source_node_footprint_summary_json(out, source_node_summary);
+	out << ",\n";
 	out << "  \"next_required_native_core_slice\": \"port_runtime_zone_owner_materialization_and_generated_cell_mutation_steps_after_constructor_defaults\",\n";
-	out << "  \"next_required_alignment_slice\": \"port_zone_footprint_source_nodes_0x4a3a03_0x4cc788_then_0x4a325d_owner_materialization_and_capture_rmg_setup_object_0x44\"\n";
+	out << "  \"next_required_alignment_slice\": \"port_zone_boundary_span_fill_0x4a2777_0x4a325d_owner_materialization_and_capture_rmg_setup_object_0x44\"\n";
 	out << "}\n";
 	return out.str();
 }
