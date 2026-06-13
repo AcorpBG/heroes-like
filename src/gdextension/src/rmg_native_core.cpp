@@ -747,6 +747,39 @@ struct TerrainLiveFeedbackSummaryPlain {
 	std::vector<int32_t> generated_cell_terrain_code;
 };
 
+struct GeneratedCellBitHelperSummaryPlain {
+	bool terrain_live_feedback_available = false;
+	bool supported_scope = false;
+	bool helper_contracts_ported_plain_cpp = false;
+	bool diagnostic_only = true;
+	bool live_grid_mutation_adopted = false;
+	std::string status = "blocked_until_terrain_live_feedback";
+	std::string blocked_reason = "terrain_live_feedback_missing";
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t cell_count = 0;
+	int32_t valid_0x49a1d8_count = 0;
+	int32_t invalid_0x49a1d8_count = 0;
+	int32_t invalid_0x49a1d8_bit25_clear_count = 0;
+	int32_t invalid_0x49a1d8_terrain9_count = 0;
+	int32_t word_0x2c_bit0_lock_count = 0;
+	int32_t source_bit26_count = 0;
+	int32_t source_bit27_count = 0;
+	int32_t terrain_8_9_occupied_scan_count = 0;
+	int32_t terrain_8_9_occupied_set_count_0x49a932 = 0;
+	int32_t terrain_8_9_0x2c_skip_count = 0;
+	int32_t candidate_0x49a962_call_count = 0;
+	int32_t candidate_0x49a962_center_set_count = 0;
+	int32_t candidate_0x49a962_neighbor_scan_count = 0;
+	int32_t candidate_0x49a962_neighbor_bit22_skip_count = 0;
+	int32_t candidate_0x49a962_neighbor_invalid_skip_count = 0;
+	int32_t candidate_0x49a962_neighbor_terrain8_skip_count = 0;
+	int32_t candidate_0x49a962_neighbor_clear_count_0x49a932 = 0;
+	int32_t diagnostic_final_bit26_count = 0;
+	int32_t diagnostic_final_bit27_count = 0;
+};
+
 struct PolygonModelPlain {
 	std::vector<PolygonModelNodePlain> nodes;
 	int32_t root = -1;
@@ -2603,11 +2636,68 @@ uint32_t zone_word_4a325d_plain(uint32_t existing_word, int32_t zone_id) {
 }
 
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD_PLAIN = 0x00ff0000U;
+constexpr uint32_t H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN = 1U << 22U;
+constexpr uint32_t H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN = 1U << 26U;
 constexpr uint32_t H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN = 1U << 27U;
 constexpr uint32_t H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN = 1U << 25U;
 constexpr uint32_t H3MAPED_CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28_PLAIN = 1U << 28U;
 constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6_PLAIN = 15U;
 constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_MASK_0X49ACF6_PLAIN = 0x03U << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6_PLAIN;
+
+bool h3maped_generated_cell_index_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
+	return flat >= 0
+			&& flat < int64_t(word_0x28.size())
+			&& flat < int64_t(word_0x24.size());
+}
+
+bool h3maped_generated_cell_49a1d8_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
+	if (!h3maped_generated_cell_index_valid_plain(word_0x28, word_0x24, flat)) {
+		return false;
+	}
+	return (word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN) != 0U
+			&& (word_0x24[size_t(flat)] & 0x3fU) != 9U;
+}
+
+bool h3maped_generated_cell_49aa63_plain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_candidate) {
+	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
+		return false;
+	}
+	if ((word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+		return false;
+	}
+	const bool was_set = (word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U;
+	if (set_candidate) {
+		word_0x28[size_t(flat)] |= H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
+		word_0x28[size_t(flat)] &= ~H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
+		return !was_set;
+	}
+	word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
+	return was_set;
+}
+
+bool h3maped_generated_cell_49a932_plain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_occupied) {
+	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
+		return false;
+	}
+	if ((word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+		return false;
+	}
+	const bool was_set = (word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN) != 0U;
+	if (set_occupied) {
+		word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
+		word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
+		return !was_set;
+	}
+	word_0x28[size_t(flat)] &= ~H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
+	return was_set;
+}
+
+int64_t h3maped_generated_cell_flat_plain(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	if (width <= 0 || height <= 0 || x < 0 || y < 0 || x >= width || y >= height || level < 0) {
+		return -1;
+	}
+	return int64_t(level) * int64_t(width) * int64_t(height) + int64_t(y) * int64_t(width) + int64_t(x);
+}
 
 bool span_cell_in_bounds_4a325d_plain(int32_t width, int32_t height, int32_t level_count, const SpanRecordPlain &span) {
 	return span.x >= 0 && span.x < width && span.y >= 0 && span.y < height && span.level >= 0 && span.level < level_count;
@@ -4912,6 +5002,124 @@ TerrainLiveFeedbackSummaryPlain build_terrain_live_feedback_summary(const Terrai
 	return summary;
 }
 
+GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const TerrainLiveFeedbackSummaryPlain &terrain_summary) {
+	GeneratedCellBitHelperSummaryPlain summary;
+	summary.terrain_live_feedback_available = terrain_summary.materializes_private_generated_cell_words;
+	summary.width = terrain_summary.width;
+	summary.height = terrain_summary.height;
+	summary.level_count = terrain_summary.level_count;
+	summary.cell_count = terrain_summary.cell_count;
+	summary.supported_scope = terrain_summary.width > 0
+			&& terrain_summary.height > 0
+			&& terrain_summary.level_count == 1
+			&& terrain_summary.cell_count > 0;
+	const bool supported = summary.terrain_live_feedback_available
+			&& summary.supported_scope
+			&& terrain_summary.generated_cell_word_0x20.size() == size_t(summary.cell_count)
+			&& terrain_summary.generated_cell_word_0x24.size() == size_t(summary.cell_count)
+			&& terrain_summary.generated_cell_word_0x28.size() == size_t(summary.cell_count)
+			&& terrain_summary.generated_cell_word_0x2c.size() == size_t(summary.cell_count)
+			&& terrain_summary.generated_cell_terrain_code.size() == size_t(summary.cell_count);
+	if (!supported) {
+		summary.status = "blocked_generated_cell_bit_helpers_missing_live_grid";
+		summary.blocked_reason = "terrain_live_feedback_generated_cell_words_missing_or_unsupported_scope";
+		return summary;
+	}
+
+	summary.helper_contracts_ported_plain_cpp = true;
+	std::vector<uint32_t> diagnostic_word_0x28 = terrain_summary.generated_cell_word_0x28;
+	const std::vector<uint32_t> &word_0x24 = terrain_summary.generated_cell_word_0x24;
+	const std::vector<uint32_t> &word_0x2c = terrain_summary.generated_cell_word_0x2c;
+	for (int32_t flat = 0; flat < summary.cell_count; ++flat) {
+		const uint32_t word28 = diagnostic_word_0x28[size_t(flat)];
+		const uint32_t word24 = word_0x24[size_t(flat)];
+		const uint32_t word2c = word_0x2c[size_t(flat)];
+		if ((word2c & 0x1U) != 0U) {
+			summary.word_0x2c_bit0_lock_count += 1;
+		}
+		if ((word28 & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U) {
+			summary.source_bit26_count += 1;
+		}
+		if ((word28 & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN) != 0U) {
+			summary.source_bit27_count += 1;
+		}
+		if (h3maped_generated_cell_49a1d8_valid_plain(diagnostic_word_0x28, word_0x24, flat)) {
+			summary.valid_0x49a1d8_count += 1;
+		} else {
+			summary.invalid_0x49a1d8_count += 1;
+			if ((word28 & H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN) == 0U) {
+				summary.invalid_0x49a1d8_bit25_clear_count += 1;
+			}
+			if ((word24 & 0x3fU) == 9U) {
+				summary.invalid_0x49a1d8_terrain9_count += 1;
+			}
+		}
+	}
+
+	for (int32_t level = 0; level < summary.level_count; ++level) {
+		for (int32_t y = 0; y < summary.height; ++y) {
+			for (int32_t x = 0; x < summary.width; ++x) {
+				const int64_t flat64 = h3maped_generated_cell_flat_plain(summary.width, summary.height, x, y, level);
+				if (flat64 < 0 || flat64 >= summary.cell_count) {
+					continue;
+				}
+				const int32_t flat = int32_t(flat64);
+				const uint32_t terrain_id = word_0x24[size_t(flat)] & 0x3fU;
+				if (terrain_id == 8U || terrain_id == 9U) {
+					summary.terrain_8_9_occupied_scan_count += 1;
+					if ((word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+						summary.terrain_8_9_0x2c_skip_count += 1;
+					} else if (h3maped_generated_cell_49a932_plain(diagnostic_word_0x28, word_0x2c, flat, true)) {
+						summary.terrain_8_9_occupied_set_count_0x49a932 += 1;
+					}
+				}
+				if ((diagnostic_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) == 0U) {
+					continue;
+				}
+				summary.candidate_0x49a962_call_count += 1;
+				if (h3maped_generated_cell_49aa63_plain(diagnostic_word_0x28, word_0x2c, flat, true)) {
+					summary.candidate_0x49a962_center_set_count += 1;
+				}
+				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(summary.height, y + 2); ++local_y) {
+					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(summary.width, x + 2); ++local_x) {
+						const int64_t neighbor_flat = h3maped_generated_cell_flat_plain(summary.width, summary.height, local_x, local_y, level);
+						if (neighbor_flat < 0 || neighbor_flat >= summary.cell_count) {
+							continue;
+						}
+						summary.candidate_0x49a962_neighbor_scan_count += 1;
+						if ((diagnostic_word_0x28[size_t(neighbor_flat)] & H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN) != 0U) {
+							summary.candidate_0x49a962_neighbor_bit22_skip_count += 1;
+							continue;
+						}
+						if (!h3maped_generated_cell_49a1d8_valid_plain(diagnostic_word_0x28, word_0x24, neighbor_flat)) {
+							summary.candidate_0x49a962_neighbor_invalid_skip_count += 1;
+							continue;
+						}
+						if ((word_0x24[size_t(neighbor_flat)] & 0x3fU) == 8U) {
+							summary.candidate_0x49a962_neighbor_terrain8_skip_count += 1;
+							continue;
+						}
+						if (h3maped_generated_cell_49a932_plain(diagnostic_word_0x28, word_0x2c, neighbor_flat, false)) {
+							summary.candidate_0x49a962_neighbor_clear_count_0x49a932 += 1;
+						}
+					}
+				}
+			}
+		}
+	}
+	for (uint32_t word : diagnostic_word_0x28) {
+		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U) {
+			summary.diagnostic_final_bit26_count += 1;
+		}
+		if ((word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN) != 0U) {
+			summary.diagnostic_final_bit27_count += 1;
+		}
+	}
+	summary.status = "diagnostic_plain_cpp_generated_cell_bit_helpers_ported";
+	summary.blocked_reason = "live_grid_mutation_not_adopted_until_exact_object_reference_vectors_and_0x4a8260_route_rng_boundary_are_ported";
+	return summary;
+}
+
 void append_int_array_json(std::ostream &out, const std::vector<int32_t> &values) {
 	out << "[";
 	for (size_t index = 0; index < values.size(); ++index) {
@@ -6464,6 +6672,47 @@ void append_terrain_live_feedback_summary_json(std::ostream &out, const TerrainL
 	out << "  }";
 }
 
+void append_generated_cell_bit_helper_summary_json(std::ostream &out, const GeneratedCellBitHelperSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_generated_cell_bit_helper_summary_v1\",\n";
+	out << "    \"phase_id\": \"generated_cell_bit_helper_contracts\",\n";
+	out << "    \"h3maped_anchor\": \"0x49a1d8_0x49aa63_0x49a932_0x49a962\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ port of recovered generated-cell validity and bit26/bit27 helper contracts; diagnostic-only until exact object-reference vectors and 0x4a8260 route RNG boundary are ported\",\n";
+	out << "    \"strict_port_scope\": \"helper contracts and copied-grid diagnostic surface only; no live generated-cell adoption, package objects, roads, guards, blockers, or public output\",\n";
+	out << "    \"terrain_live_feedback_available\": " << (summary.terrain_live_feedback_available ? "true" : "false") << ",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"helper_contracts_ported_plain_cpp\": " << (summary.helper_contracts_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"live_grid_mutation_adopted\": " << (summary.live_grid_mutation_adopted ? "true" : "false") << ",\n";
+	out << "    \"map_width\": " << summary.width << ",\n";
+	out << "    \"map_height\": " << summary.height << ",\n";
+	out << "    \"level_count\": " << summary.level_count << ",\n";
+	out << "    \"cell_count\": " << summary.cell_count << ",\n";
+	out << "    \"valid_0x49a1d8_count\": " << summary.valid_0x49a1d8_count << ",\n";
+	out << "    \"invalid_0x49a1d8_count\": " << summary.invalid_0x49a1d8_count << ",\n";
+	out << "    \"invalid_0x49a1d8_bit25_clear_count\": " << summary.invalid_0x49a1d8_bit25_clear_count << ",\n";
+	out << "    \"invalid_0x49a1d8_terrain9_count\": " << summary.invalid_0x49a1d8_terrain9_count << ",\n";
+	out << "    \"word_0x2c_bit0_lock_count\": " << summary.word_0x2c_bit0_lock_count << ",\n";
+	out << "    \"source_bit26_count\": " << summary.source_bit26_count << ",\n";
+	out << "    \"source_bit27_count\": " << summary.source_bit27_count << ",\n";
+	out << "    \"terrain_8_9_occupied_scan_count\": " << summary.terrain_8_9_occupied_scan_count << ",\n";
+	out << "    \"terrain_8_9_occupied_set_count_0x49a932\": " << summary.terrain_8_9_occupied_set_count_0x49a932 << ",\n";
+	out << "    \"terrain_8_9_0x2c_skip_count\": " << summary.terrain_8_9_0x2c_skip_count << ",\n";
+	out << "    \"candidate_0x49a962_call_count\": " << summary.candidate_0x49a962_call_count << ",\n";
+	out << "    \"candidate_0x49a962_center_set_count_0x49aa63\": " << summary.candidate_0x49a962_center_set_count << ",\n";
+	out << "    \"candidate_0x49a962_neighbor_scan_count\": " << summary.candidate_0x49a962_neighbor_scan_count << ",\n";
+	out << "    \"candidate_0x49a962_neighbor_bit22_skip_count\": " << summary.candidate_0x49a962_neighbor_bit22_skip_count << ",\n";
+	out << "    \"candidate_0x49a962_neighbor_invalid_skip_count\": " << summary.candidate_0x49a962_neighbor_invalid_skip_count << ",\n";
+	out << "    \"candidate_0x49a962_neighbor_terrain8_skip_count\": " << summary.candidate_0x49a962_neighbor_terrain8_skip_count << ",\n";
+	out << "    \"candidate_0x49a962_neighbor_clear_count_0x49a932\": " << summary.candidate_0x49a962_neighbor_clear_count_0x49a932 << ",\n";
+	out << "    \"diagnostic_final_bit26_count\": " << summary.diagnostic_final_bit26_count << ",\n";
+	out << "    \"diagnostic_final_bit27_count\": " << summary.diagnostic_final_bit27_count << ",\n";
+	out << "    \"adoption_blocker\": \"exact_object_reference_vectors_plus_0x4a8260_route_rng_boundary_then_live_grid_compare_pre_0x4a4c8e\"\n";
+	out << "  }";
+}
+
 void append_terrain_live_feedback_generated_cell_checkpoint_json(std::ostream &out, const TerrainLiveFeedbackSummaryPlain &summary) {
 	constexpr uint32_t WORD_0X20_DEFAULT = 0xffff7fbcU;
 	constexpr uint32_t WORD_0X24_DEFAULT = 0x00000548U;
@@ -6703,6 +6952,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainCellWriteoutSummaryPlain terrain_cell_writeout_summary = build_terrain_cell_writeout_summary(boundary_span_fill_summary, runtime_terrain_selection_summary, source_node_summary);
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
+	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
@@ -6801,6 +7051,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_terrain_live_feedback_summary\": ";
 	append_terrain_live_feedback_summary_json(out, terrain_live_feedback_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_generated_cell_bit_helper_summary\": ";
+	append_generated_cell_bit_helper_summary_json(out, generated_cell_bit_helper_summary);
 	out << ",\n";
 	out << "  \"next_required_native_core_slice\": \"resolve_matched_owner_placement_drift_then_port_remaining_word_0x20_0x24_0x28_mutations\",\n";
 	out << "  \"next_required_alignment_slice\": \"compare_matched_h3maped_reference_after_live_feedback_until_generated_cell_words_match_pre_0x4a4c8e\"\n";
