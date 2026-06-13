@@ -116,12 +116,14 @@ def parse_h3maped_generated_cell_dump(path: Path, expected_cell_count: int, base
         word_0x20 = words[base + 8]
         word_0x24 = words[base + 9]
         word_0x28 = words[base + 10]
+        word_0x2c = words[base + 11]
         records.append(
             {
                 "flat": flat,
                 "word_0x20": word_0x20,
                 "word_0x24": word_0x24,
                 "word_0x28": word_0x28,
+                "word_0x2c": word_0x2c,
                 "owner_byte2_signed": signed_byte(word_0x20 >> 16),
                 "owner_byte3_signed": signed_byte(word_0x20 >> 24),
             }
@@ -213,6 +215,8 @@ def normalize_native_cells(checkpoint: dict[str, Any]) -> dict[int, dict[str, An
             "y": int(record.get("y", -1)),
             "level": int(record.get("level", -1)),
         }
+        if "word_0x2c" in record:
+            result[flat]["word_0x2c"] = as_uint32(record.get("word_0x2c", 0))
     return result
 
 
@@ -237,6 +241,7 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
     bit26 = 0
     bit27 = 0
     bit28 = 0
+    word_0x2c_bit0 = 0
     count = 0
     for record in values:
         if not isinstance(record, dict):
@@ -245,6 +250,7 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
         word_0x20 = as_uint32(record.get("word_0x20", 0))
         word_0x24 = as_uint32(record.get("word_0x24", 0))
         word_0x28 = as_uint32(record.get("word_0x28", 0))
+        word_0x2c = as_uint32(record.get("word_0x2c", 0))
         owner_byte2[int(record.get("owner_byte2_signed", signed_byte(word_0x20 >> 16)))] += 1
         owner_byte3[int(record.get("owner_byte3_signed", signed_byte(word_0x20 >> 24)))] += 1
         terrain_bits[word_0x24 & 0x3F] += 1
@@ -257,6 +263,7 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
         bit26 += 1 if word_0x28 & (1 << 26) else 0
         bit27 += 1 if word_0x28 & (1 << 27) else 0
         bit28 += 1 if word_0x28 & (1 << 28) else 0
+        word_0x2c_bit0 += 1 if word_0x2c & 0x1 else 0
     return {
         "cell_count": count,
         "word_0x28_bit22_count": bit22,
@@ -264,6 +271,7 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
         "word_0x28_bit26_count": bit26,
         "word_0x28_bit27_count": bit27,
         "word_0x28_bit28_count": bit28,
+        "word_0x2c_bit0_count": word_0x2c_bit0,
         "owner_byte2_signed_histogram": string_key_histogram(owner_byte2),
         "owner_byte3_signed_histogram": string_key_histogram(owner_byte3),
         "word_0x24_terrain_histogram": string_key_histogram(terrain_bits),
@@ -273,6 +281,43 @@ def summarize_cells(records: list[dict[str, Any]] | dict[int, dict[str, Any]]) -
         "top_owner_byte2_signed": top_counts(owner_byte2),
         "top_word_0x28_top_byte": top_counts(word_0x28_top_byte),
     }
+
+
+def owner_surface_summary(
+    native_summary: dict[str, Any],
+    h3_summary: dict[str, Any] | None,
+    expected_template_zone_count: int,
+) -> dict[str, Any]:
+    def owner_values(summary: dict[str, Any] | None) -> list[int]:
+        if not isinstance(summary, dict):
+            return []
+        histogram = summary.get("owner_byte2_signed_histogram", {})
+        if not isinstance(histogram, dict):
+            return []
+        return sorted(int(owner) for owner, count in histogram.items() if int(owner) >= 0 and int(count) > 0)
+
+    native_owners = owner_values(native_summary)
+    h3_owners = owner_values(h3_summary)
+    result: dict[str, Any] = {
+        "native_non_negative_owner_ids": native_owners,
+        "native_non_negative_owner_id_count": len(native_owners),
+        "native_max_non_negative_owner_id": max(native_owners) if native_owners else -1,
+        "h3maped_non_negative_owner_ids": h3_owners,
+        "h3maped_non_negative_owner_id_count": len(h3_owners),
+        "h3maped_max_non_negative_owner_id": max(h3_owners) if h3_owners else -1,
+        "expected_template_zone_count": expected_template_zone_count,
+    }
+    if expected_template_zone_count > 0:
+        result["native_owner_ids_above_template_zone_count"] = [owner for owner in native_owners if owner >= expected_template_zone_count]
+        result["h3maped_owner_ids_above_template_zone_count"] = [owner for owner in h3_owners if owner >= expected_template_zone_count]
+        result["h3maped_owner_surface_exceeds_template_zone_count"] = len(h3_owners) > expected_template_zone_count or any(owner >= expected_template_zone_count for owner in h3_owners)
+        result["native_owner_surface_exceeds_template_zone_count"] = len(native_owners) > expected_template_zone_count or any(owner >= expected_template_zone_count for owner in native_owners)
+        result["native_missing_h3maped_owner_ids"] = [owner for owner in h3_owners if owner not in native_owners]
+        result["h3maped_missing_native_owner_ids"] = [owner for owner in native_owners if owner not in h3_owners]
+    else:
+        result["template_zone_count_known"] = False
+    result["status"] = "owner_surface_mismatch" if h3_owners and native_owners != h3_owners else "diagnostic"
+    return result
 
 
 def compare_cells(h3_records: list[dict[str, Any]], native_records: dict[int, dict[str, Any]], max_mismatches: int) -> dict[str, Any]:
@@ -288,7 +333,10 @@ def compare_cells(h3_records: list[dict[str, Any]], native_records: dict[int, di
             continue
 
         fields: list[str] = []
-        for field in ("word_0x20", "word_0x24", "word_0x28", "owner_byte2_signed", "owner_byte3_signed"):
+        fields_to_compare = ["word_0x20", "word_0x24", "word_0x28", "owner_byte2_signed", "owner_byte3_signed"]
+        if "word_0x2c" in h3 and "word_0x2c" in native:
+            fields_to_compare.append("word_0x2c")
+        for field in fields_to_compare:
             if int(h3[field]) != int(native[field]):
                 mismatch_counts[f"{field}_mismatch"] += 1
                 fields.append(field)
@@ -380,6 +428,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         report["generated_cells"] = compare_cells(h3_cells, native_cells, args.max_mismatches)
         report["generated_cells"]["h3maped_summary"] = summarize_cells(h3_cells)
         report["generated_cells"]["native_summary"] = native_summary
+        report["generated_cells"]["owner_surface"] = owner_surface_summary(native_summary, report["generated_cells"]["h3maped_summary"], args.expected_template_zone_count)
         report["h3maped_input_kind"] = "cell_dump"
     elif args.h3maped_final_ledger:
         h3_cells = parse_h3maped_generated_cell_final_ledger(args.h3maped_final_ledger, expected_cell_count)
@@ -388,10 +437,12 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         report["generated_cells"] = compare_cells(h3_cells, native_cells, args.max_mismatches)
         report["generated_cells"]["h3maped_summary"] = summarize_cells(h3_cells)
         report["generated_cells"]["native_summary"] = native_summary
+        report["generated_cells"]["owner_surface"] = owner_surface_summary(native_summary, report["generated_cells"]["h3maped_summary"], args.expected_template_zone_count)
     else:
         report["generated_cells"] = {
             "status": "h3_cell_dump_missing",
             "native_summary": native_summary,
+            "owner_surface": owner_surface_summary(native_summary, None, args.expected_template_zone_count),
         }
 
     h3_relations: Any | None = None
@@ -411,6 +462,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--h3maped-final-ledger", type=Path, default=None, help="Wine trace ledger containing the final 0x49b2b6/0x4ad251 generated-cell grid dump.")
     parser.add_argument("--h3maped-relations-json", type=Path, default=None, help="Optional parsed H3MapEd relation records, if available.")
     parser.add_argument("--expected-cell-count", type=int, default=0, help="Expected generated-cell count; defaults to native checkpoint cell_count.")
+    parser.add_argument("--expected-template-zone-count", type=int, default=0, help="Optional selected-template source zone count used to diagnose appended/synthetic owner surfaces.")
     parser.add_argument("--max-mismatches", type=int, default=50, help="Maximum mismatching cell records to include.")
     parser.add_argument("--out", type=Path, required=True, help="JSON report path.")
     return parser
@@ -458,6 +510,18 @@ def main() -> int:
                 bit27=h3_summary.get("word_0x28_bit27_count"),
                 bit28=h3_summary.get("word_0x28_bit28_count"),
                 owner2=h3_summary.get("top_owner_byte2_signed", [])[:5],
+            )
+        )
+    owner_surface = generated.get("owner_surface") if isinstance(generated, dict) else None
+    if isinstance(owner_surface, dict):
+        print(
+            "owner_surface status={status} template_zones={template_zones} "
+            "native_owner_count={native_count} h3_owner_count={h3_count} h3_above_template={h3_above}".format(
+                status=owner_surface.get("status", ""),
+                template_zones=owner_surface.get("expected_template_zone_count", 0),
+                native_count=owner_surface.get("native_non_negative_owner_id_count", 0),
+                h3_count=owner_surface.get("h3maped_non_negative_owner_id_count", 0),
+                h3_above=owner_surface.get("h3maped_owner_ids_above_template_zone_count", []),
             )
         )
     return 0

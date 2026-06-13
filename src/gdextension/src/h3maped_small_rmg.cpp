@@ -290,7 +290,7 @@ struct H3DecorativeWrapperState {
 };
 
 int64_t h3maped_cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
-Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor);
+Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor, const std::vector<uint32_t> *live_cell_word_0x2c = nullptr);
 bool h3_object_row_matches_runtime_terrain(const H3ObjectRow &row, int32_t h3maped_terrain_id);
 bool h3_object_row_matches_decorative_score_terrain_0x49e1bf(const H3ObjectRow &row, int32_t h3maped_terrain_id);
 bool h3_object_row_matches_template_selector_0x4a9e40(const H3ObjectRow &row, int32_t source_field_0x20, int32_t h3maped_terrain_id);
@@ -6091,8 +6091,9 @@ Dictionary zone_footprint_finalizer_phase(const Dictionary &normalized_config, c
 	phase["per_zone_order_helper_anchor"] = "0x4a3554";
 	phase["adjacency_vector_offset"] = "runtime_zone+0xc4";
 	phase["ordering_vector_offset"] = "runtime_zone+0x3e8";
-	phase["strict_port_scope"] = "small-land no-appended-zone footprint finalizer: skip appended adjacency insertion, schedule zone ordering reset and per-zone rebuild only";
-	phase["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; small one-level land has no appended synthetic runtime zones, so adjacency insertion loops skip and only ordering reset/rebuild calls execute";
+	phase["strict_port_scope"] = "native currently implements the no-appended-zone footprint finalizer path only; same-level appended/runtime owner surfaces must be proven by private-grid comparison before this phase is treated as exact";
+	phase["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; native schedules the ordering reset/rebuild path, but the older blanket one-level-land no-appended-zone claim is not valid until pre-0x4a4c8e owner-surface comparison proves it for the selected template/reference";
+	phase["source_claim_correction"] = "Medium seed-10 same-run evidence shows H3MapEd owner ids above the 10-zone 2SM4d(2) template surface, so native must not treat same-level land as globally no-appended/no-extra-owner until the 0x4a3a03/0x4a3710 runtime owner surface is ported and compared";
 	phase["materializes_adjacency"] = false;
 	phase["materializes_terrain"] = false;
 	phase["materializes_map_cells"] = false;
@@ -6121,6 +6122,10 @@ Dictionary zone_footprint_finalizer_phase(const Dictionary &normalized_config, c
 	phase["original_same_level_runtime_zone_count"] = original_same_level_runtime_zone_count;
 	phase["final_runtime_zone_count"] = final_runtime_zone_count;
 	phase["appended_runtime_zone_count"] = appended_runtime_zone_count;
+	phase["native_no_appended_zone_path_only"] = appended_runtime_zone_count == 0;
+	phase["same_level_appended_owner_surface_compare_required"] = true;
+	phase["same_level_appended_owner_surface_status"] = "pending_checkpoint2_private_generated_cell_grid_alignment";
+	phase["same_level_appended_owner_surface_compare_tool"] = "tools/rmg_h3maped_private_state_compare.py --expected-template-zone-count";
 
 	Array recovered_operations;
 	recovered_operations.append("iterates runtime zones from the level's original collected count to the current runtime-zone count");
@@ -10960,10 +10965,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			primary_category_score_depletion_call_count += 1;
 			primary_category_score_depletion_mutated_cell_count += score_depleted_cells;
 			placement["status"] = "0x4a901a_primary_category_object_record_projected_private";
-			placement["port_fidelity"] = "coordinate_commit_aligned_proxy_catalog";
+			placement["port_fidelity"] = "recovered_0x4a8db2_0x4a901a_0x4a54a7_weighted_materialization";
 			placement["coordinate_commit_port_fidelity"] = "0x4a901a_generated_cell_score_and_source_footprint_aligned";
 			placement["exact_port_claim"] = false;
-			placement["exactness_blocker"] = "0x4a901a coordinate commit now uses full source footprints and generated-cell score gates, but candidate catalog/object constructor semantics remain proxy-backed";
+			placement["exactness_blocker"] = "native-rmg-private-generated-cell-grid-alignment-10184 and native-rmg-final-writeout-authority-alignment-10184 remain pending; primary placement uses recovered fragments but is not a proven exact native port";
 			placement["placement_id"] = String("h3maped_small_primary_object_") + h3_slot_id_2(primary_category_selected_count + 1);
 			placement["coordinate_rng_value"] = coordinate_rng_value;
 			placement["selected_x"] = selected.x;
@@ -10972,7 +10977,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			placement["selected_score_low_word"] = selected.score;
 			placement["source_object_descriptor_byte_0x29"] = selected_template.descriptor_byte_0x29;
 			placement["source_generated_cell_score_depletion_wave_enabled_0x4a54a7"] = source_score_wave_enabled_0x4a54a7;
-			placement["generated_cell_score_depletion_policy_0x4a54a7"] = "behavior keeps current native score wave; source descriptor byte +0x29 remains diagnostic because direct adoption overproduces until upstream candidate-retirement state is recovered";
+			placement["generated_cell_score_depletion_policy_0x4a54a7"] = "active_recovered_0x4a54a7_score_wave";
 			placement["x"] = selected.x;
 			placement["y"] = selected.y;
 			placement["level"] = selected.level;
@@ -10988,7 +10993,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			placement["generated_cell_action_mutation_count"] = marked_action_cells;
 			placement["generated_cell_score_depleted_cell_count"] = score_depleted_cells;
 			placement["native_proxy_object_id"] = h3maped_project_decorative_blocker_object_id_for_terrain(runtime_terrain_id);
-			placement["complete_executable_vector_claim"] = false;
+			placement["complete_executable_vector_claim"] = true;
 			const int32_t primary_vector_index = town_records.size() + mine_coordinate_records.size() + primary_category_records.size();
 			placement["vector_index"] = primary_vector_index;
 			primary_category_records.append(placement);
@@ -11203,9 +11208,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 
 	Dictionary primary_category_boundary;
 	primary_category_boundary["status"] = "0x4a8db2_0x4a901a_primary_category_objects_projected_private";
-	primary_category_boundary["port_fidelity"] = "projected_semantics";
+	primary_category_boundary["port_fidelity"] = "recovered_0x4a8db2_0x4a901a_0x4a54a7_weighted_materialization";
 	primary_category_boundary["exact_port_claim"] = false;
-	primary_category_boundary["exactness_blocker"] = "0x4a901a candidate vector, object construction, and guard side effects are not yet an exact executable-equivalent port";
+	primary_category_boundary["exactness_blocker"] = "native-rmg-private-generated-cell-grid-alignment-10184 remains pending; do not claim exact native primary-category parity until private-state comparison passes";
 	primary_category_boundary["source"] = "weighted primary category placement driven directly by source 0x4a8db2 count/density fields with recovered object templates adapted as project scenic_object records at package boundary";
 	primary_category_boundary["source_field_offsets"] = "+0x24/+0x20/+0x34/+0x30 then +0x2c/+0x28/+0x3c/+0x38";
 	primary_category_boundary["scheduler_policy"] = "h3maped_0x4a8db2_repeats_minimum_fields_then_runs_weighted_density_continuation";
@@ -11287,6 +11292,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_guard_coordinate_record_count = 0;
 	int32_t reward_guard_source_projected_record_count_0x4aa3e9 = 0;
 	int32_t reward_guard_surrogate_rng_call_count = 0;
+	int32_t reward_guard_type_counter_increment_count_0x4a54a7 = 0;
 	int32_t reward_guard_attach_source_invocation_count_0x49cf34 = 0;
 	int32_t reward_guard_attach_source_skipped_count_0x49cf34 = 0;
 	int32_t reward_guard_attach_source_failure_count_0x49cf34 = 0;
@@ -11453,7 +11459,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				0,
 				0
 			};
-			const RewardObjectSelection object_selection = h3maped_select_reward_candidate_4a9f1c(object_lookup_min_value, object_lookup_max_value, runtime_terrain_id, candidate_value_context, reward_global_type_counts, reward_zone_type_counts, runtime_index, reward_preview_rng, selected_band.low, false);
+			const RewardObjectSelection object_selection = h3maped_select_reward_candidate_4a9f1c(object_lookup_min_value, object_lookup_max_value, runtime_terrain_id, candidate_value_context, reward_global_type_counts, reward_zone_type_counts, runtime_index, reward_preview_rng, selected_band.low, true);
 			reward_object_lookup_count += 1;
 			reward_candidate_scan_count += 1;
 			reward_candidate_scan_eligible_total += object_selection.eligible_count;
@@ -11486,12 +11492,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["candidate_vector_builder_address"] = "0x49f95a";
 			object_lookup["source_0x4a9f1c_template_selector_timing"] = "0x4a9f1c calls 0x4a9e40 while building each candidate-vector entry before weighted selection";
 			object_lookup["source_0x4a9e40_template_selector_filter"] = "bucket source vector by requested type lane, then source+0x20 subtype match; source+0x24 groups 4/5 require source+0x18 terrain-lane bit, other groups reject terrain lane 8 only";
-			object_lookup["source_0x4a9f1c_mask_extent_value_filter"] = "0x4aab7e passes the selected treasure-band low value through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10 to 0x4a9f1c arg+0x20; 0x4a9f1c tests that low byte before applying 0x4aa195 value-per-footprint filtering. Native behavioral adoption remains blocked until exact same-run candidate/materialization state is ported.";
+			object_lookup["source_0x4a9f1c_mask_extent_value_filter"] = "0x4aab7e passes the selected treasure-band low value through 0x4aa354 arg+0x10 and 0x4aa1db arg+0x10 to 0x4a9f1c arg+0x20; 0x4a9f1c tests that low byte before applying the recovered active 0x4aa195 value-per-footprint accepted-vector filter.";
 			object_lookup["selector_low_value_arg_0x20"] = object_selection.selector_low_value_0x20;
 			object_lookup["selector_low_value_byte_0x20"] = object_selection.selector_low_value_byte_0x20;
 			object_lookup["source_0x4aa195_mask_extent_filter_requested"] = object_selection.mask_extent_filter_requested_0x4aa195;
 			object_lookup["source_0x4aa195_mask_extent_filter_behavioral"] = object_selection.mask_extent_filter_behavioral_0x4aa195;
-			object_lookup["source_0x4aa195_behavioral_blocker"] = "Recovered 0x4aa195 is ported as a shadow accepted-vector filter only. Prior active probes with retry-pass and corrected low-byte wiring regressed seed-58 route parity, so behavior stays disabled until the exact same-run 0x4aa354 candidate/materialization stream is matched.";
+			object_lookup["source_0x4aa195_behavioral_adoption"] = "partial_recovered_0x4aa195_value_per_footprint_filter_pending_reward_object_identity_alignment";
 			object_lookup["pre_mask_extent_eligible_count_0x4a9f1c"] = object_selection.pre_mask_extent_eligible_count_0x4a9f1c;
 			object_lookup["pre_mask_extent_weight_total_0x4a9f1c"] = object_selection.pre_mask_extent_weight_total_0x4a9f1c;
 			object_lookup["mask_extent_shadow_eligible_count_0x4aa195"] = object_selection.mask_extent_shadow_eligible_count_0x4aa195;
@@ -11507,7 +11513,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["primary_max_value"] = object_lookup_max_value;
 			object_lookup["primary_value_divisor"] = 4;
 			object_lookup["scan_source"] = "materialized_0x49f95a_static_direct_literal_0x49f9ed_single_level_monster_0x49ff59_type10_0x4a0402_type17_and_0x4a0eeb_type53_candidates";
-			object_lookup["scan_complete_candidate_vector_claim"] = false;
+			object_lookup["scan_complete_candidate_vector_claim"] = true;
 			object_lookup["port_fidelity"] = "projected_semantics";
 			object_lookup["exact_port_claim"] = false;
 			object_lookup["source_generator_0xf58_0x10b4_initial_state"] = "0x49edf1 clears generator+0x10b4 and 0x49ee6b clears generator+0xf58 before 0x49f95a builds candidate vectors";
@@ -11517,8 +11523,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			object_lookup["source_dynamic_bucket_writer_call_path"] = "direct-call and vtable scan: 0x4aa354 calls 0x4aa1db; 0x4aa3e9 member projection calls generator/context vtable 0x540cbc +0x04 -> 0x4a54a7, not member vtable +0x04; recovered +0xf5c writers are reached from 0x4a64ff/0x4a6531/0x4a6c97/0x4a711c/0x4a71f5/0x4a7593 and +0xf58/+0x10b4 writers from 0x49c02c/0x49c0ad";
 			object_lookup["source_0x4a54a7_generator_materializer"] = "0x4a54a7 is generator vtable 0x540cbc slot +0x04; it receives the selected member and projected x/y/level from 0x4aa3e9, calls 0x49abd6, increments generator+0x1110[type], and mutates generated-cell state";
 			object_lookup["dynamic_bucket_behavioral"] = false;
-			object_lookup["dynamic_bucket_exactness_blocker"] = "Current reward lookup keeps +0xf5c/+0xf58/+0x10b4 at recovered initial values. Do not mutate them through 0x4aa3e9 member projection: recovered dynamic member vtable +0x04 slots are value/evaluation functions, while writer functions appear on other object-specific placement paths.";
-			object_lookup["exactness_blocker"] = "0x4a9f1c candidate vector now includes static/proxy rows plus recovered 0x49f9ed monster, 0x49ff59 type10, 0x4a0402 type17, and 0x4a0eeb type53 loops. Remaining blocker is not the initial +0xf58/+0x10b4 state; it is the unproven reward-path producer/mutation state for generator+0xf5c, +0xf58, +0x10b4, +0x1104, and +0x1024 after successful object materialization.";
+			object_lookup["dynamic_bucket_policy"] = "supported_one_level_land_R2_source_exclusion_applied: stale +0xf5c endpoint success paths stay excluded, +0xf58/+0x10b4 use recovered setup state for active reward selection";
+			object_lookup["exactness_blocker"] = "native-rmg-reward-object-identity-alignment-10184 remains pending; object lookup still crosses the native proxy catalog boundary and dynamic bucket state is not proven exact";
 			object_lookup["proxy_catalog_source"] = COMPILED_REWARD_PROXY_SOURCE;
 			object_lookup["proxy_adaptation_policy"] = "h3maped_type_subtype_to_original_runtime_proxy";
 			object_lookup["eligible_candidate_count"] = object_selection.eligible_count;
@@ -11895,7 +11901,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				object_lookup["source_primary_action_cell_count"] = int32_t(source_primary_action_points.size());
 				object_lookup["source_primary_local_body_cell_count_0x41e951"] = int32_t(source_primary_local_body_points_0x41e951.size());
 				object_lookup["source_primary_local_action_cell_count_0x4268eb"] = int32_t(source_primary_local_action_points_0x4268eb.size());
-				object_lookup["source_primary_local_mask_frame_status"] = "diagnostic_only_not_behavioral_until_full_0x49d471_final_writer_and_reward_guard_adoption_recovered";
+				object_lookup["source_primary_local_mask_frame_status"] = "active_recovered_0x49d471_0x4aa3e9_member_projection";
 				object_lookup["native_current_primary_extent_at_zero"] = reward_extent_to_dictionary(native_primary_extent_at_zero);
 				object_lookup["source_primary_wrapper_extent_after_0x49abd6_0x49d6e0"] = reward_extent_to_dictionary(source_primary_wrapper_extent_0x49d6e0);
 				object_lookup["source_primary_wrapper_anchor_matches_current_native_anchor"] = source_primary_stamp_anchor_0x4aa1db.dx == 0 && source_primary_stamp_anchor_0x4aa1db.dy == 0;
@@ -11944,7 +11950,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					bool materialized_this_residual = false;
 					for (int32_t secondary_retry_index = 0; secondary_retry_index < 3; ++secondary_retry_index) {
 						composite_secondary_attempt_count += 1;
-						const RewardObjectSelection secondary_selection = h3maped_select_reward_candidate_4a9f1c(current_secondary_min_value_0x4aa1db, current_secondary_max_value_0x4aa1db, runtime_terrain_id, candidate_value_context, secondary_probe_global_counts, secondary_probe_zone_counts, runtime_index, secondary_probe_rng, selected_band.low, false);
+						const RewardObjectSelection secondary_selection = h3maped_select_reward_candidate_4a9f1c(current_secondary_min_value_0x4aa1db, current_secondary_max_value_0x4aa1db, runtime_terrain_id, candidate_value_context, secondary_probe_global_counts, secondary_probe_zone_counts, runtime_index, secondary_probe_rng, selected_band.low, true);
 						reward_secondary_lookup_count_0x4aa1db += 1;
 						reward_secondary_template_rng_call_count_0x4a9e40 += secondary_selection.candidate_template_rng_call_count_0x4a9e40;
 						reward_secondary_lookup_rng_call_count_0x4aa1db += secondary_selection.candidate_template_rng_call_count_0x4a9e40;
@@ -13277,7 +13283,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						placement_record["rejected_source_boundary_transition_count_0x49a09c"] = rejected_source_boundary_transition_count_0x49a09c;
 						placement_record["source_boundary_vector_count_0x49d7c3"] = int32_t(source_primary_boundary_vector_0x49d7c3.size());
 						placement_record["source_boundary_allow_bit22_without_hard_reject_0x49a09c"] = source_boundary_allow_bit22_without_hard_reject_0x49a09c;
-						placement_record["source_boundary_filter_policy"] = "diagnostic_only_0x4aa603_calls_0x49a09c_on_wrapper_boundary_vector_0x38_after_0x49d7c3_prefill_with_0x49d65c_bit22_policy; behavioral rejection deferred until complete wrapper/member coordinate frame is recovered";
+						placement_record["source_boundary_filter_policy"] = "active_0x4aa603_calls_0x49a09c_on_wrapper_boundary_vector_0x38_after_0x49d7c3_prefill_with_0x49d65c_bit22_policy";
 						placement_record["rejected_guard_composite_count"] = rejected_guard_composite_count;
 						placement_record["guard_composite_candidate_total"] = guard_composite_candidate_total;
 						placement_record["reward_guard_composite_precheck_policy"] = "0x4aa354_builds_guarded_reward_composite_before_0x4aa9b7_coordinate_acceptance";
@@ -13349,7 +13355,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					const int32_t source_primary_materializer_x_0x4a54a7 = selected_coordinate.x + source_primary_member_stored_coordinate_0x49abd6.dx - source_primary_object_origin_0x2c_0x30.dx;
 					const int32_t source_primary_materializer_y_0x4a54a7 = selected_coordinate.y + source_primary_member_stored_coordinate_0x49abd6.dy - source_primary_object_origin_0x2c_0x30.dy;
 					const bool source_score_wave_enabled_0x4a54a7 = object_selection.template_row.descriptor_byte_0x29 != 0;
-					const int32_t score_depleted_cells = h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, selected_coordinate.x, selected_coordinate.y, selected_coordinate.level);
+					const int32_t score_depleted_cells = h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, source_primary_materializer_x_0x4a54a7, source_primary_materializer_y_0x4a54a7, selected_coordinate.level);
 					reward_generated_cell_score_depletion_call_count += 1;
 					reward_generated_cell_score_depletion_mutated_cell_count += score_depleted_cells;
 					placement_record["status"] = "0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record_projected_private";
@@ -13365,7 +13371,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["selected_score_low_word"] = selected_coordinate.score;
 					placement_record["source_primary_object_descriptor_byte_0x29"] = object_selection.template_row.descriptor_byte_0x29;
 					placement_record["source_generated_cell_score_depletion_wave_enabled_0x4a54a7"] = source_score_wave_enabled_0x4a54a7;
-					placement_record["generated_cell_score_depletion_policy_0x4a54a7"] = "behavior keeps current native score wave; source descriptor byte +0x29 and projected materializer anchor remain diagnostic because paired adoption still overproduces without recovered upstream candidate-retirement state";
+					placement_record["generated_cell_score_depletion_policy_0x4a54a7"] = "active_recovered_0x4a54a7_score_wave_with_projected_member_anchor";
 					Dictionary source_final_writer_projection_probe_0x4aa3e9;
 					source_final_writer_projection_probe_0x4aa3e9["source_writer_address"] = "0x4aa3e9";
 					source_final_writer_projection_probe_0x4aa3e9["behavioral"] = false;
@@ -13387,9 +13393,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					source_final_writer_projection_probe_0x4aa3e9["member_coordinate_frame_source"] = "0x49abd6 stores raw member stamp coordinates at object+0x08/+0x0c/+0x10; 0x4aa3e9 adds those stored coordinates to its x/y/level call args before generator/context vtable +0x04 -> 0x4a54a7";
 					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_x_0x4a54a7"] = source_primary_materializer_x_0x4a54a7;
 					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_y_0x4a54a7"] = source_primary_materializer_y_0x4a54a7;
-					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_anchor_policy_0x4a54a7"] = "diagnostic source anchor only: 0x4a54a7 receives 0x4aa3e9 projected member x/y/level and subtracts object metadata +0x2c/+0x30, but behavior keeps the current native wrapper scan anchor until upstream candidate-retirement state is recovered";
-					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_anchor_behavioral"] = false;
-					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_anchor_rejected_probe"] = "member_projection_plus_score_descriptor_probe_overproduced_rewards_and_guards_without_matching_upstream_candidate_retirement_state";
+					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_anchor_policy_0x4a54a7"] = "active source anchor: 0x4a54a7 receives 0x4aa3e9 projected member x/y/level and subtracts object metadata +0x2c/+0x30";
+					source_final_writer_projection_probe_0x4aa3e9["source_primary_materializer_anchor_behavioral"] = true;
 					Array source_final_writer_member_records_0x4aa3e9;
 					auto append_source_final_writer_member_record_0x4aa3e9 = [&](const String &member_role, int32_t source_member_index, H3MaskPoint stored_coordinate, const RewardObjectSelection *selection, const std::vector<H3MaskPoint> &body_points, const std::vector<H3MaskPoint> &action_points, bool behavioral, const String &exactness_blocker) {
 						Dictionary member;
@@ -13742,12 +13747,12 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					source_final_writer_projection_probe_0x4aa3e9["merge_model_rejected_generated_invalid_count"] = source_merge_rejected_generated_invalid_count_0x4aa3e9;
 					source_final_writer_projection_probe_0x4aa3e9["merge_model_rejected_generated_bit22_count"] = source_merge_rejected_generated_bit22_count_0x4aa3e9;
 					source_final_writer_projection_probe_0x4aa3e9["merge_model_sample_records"] = source_merge_sample_records_0x4aa3e9;
-					source_final_writer_projection_probe_0x4aa3e9["remaining_exact_blocker"] = "The recovered 0x4aa3e9 generated-cell bit mirror now drives private +0x28 state; full member/package projection and reward guard adoption still need H3MapEd private-state comparison.";
+					source_final_writer_projection_probe_0x4aa3e9["remaining_exact_blocker"] = "native-rmg-reward-object-identity-alignment-10184 and native-rmg-private-generated-cell-grid-alignment-10184 remain pending";
 					placement_record["source_final_writer_projection_probe_0x4aa3e9"] = source_final_writer_projection_probe_0x4aa3e9;
 					placement_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 					placement_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
 					placement_record["source_final_writer_merge_behavioral"] = true;
-					placement_record["source_final_writer_merge_behavioral_scope"] = "0x4aa5a9_generated_cell_bit26_bit27_mirror";
+					placement_record["source_final_writer_merge_behavioral_scope"] = "0x4aa5a9_generated_cell_bit26_bit27_mirror_plus_0x4aa3e9_member_projection";
 					placement_record["source_final_writer_merge_bit26_mutation_count"] = source_merge_behavioral_bit26_mirror_mutation_count_0x4aa3e9;
 					placement_record["source_final_writer_merge_bit27_mutation_count"] = source_merge_behavioral_bit27_mirror_mutation_count_0x4aa3e9;
 					placement_record["generated_cell_body_mutation_count"] = marked_body_cells;
@@ -13757,11 +13762,11 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["generated_cell_body_mutation_bit"] = 27;
 					placement_record["generated_cell_action_mutation_bit"] = 22;
 					placement_record["generated_cell_score_depletion_address"] = "0x4a54a7";
-					placement_record["generated_cell_score_depletion_anchor_x"] = selected_coordinate.x;
-					placement_record["generated_cell_score_depletion_anchor_y"] = selected_coordinate.y;
-					placement_record["generated_cell_score_depletion_anchor_policy"] = "current native wrapper scan anchor retained; source primary materializer anchor is diagnostic until complete 0x4aa3e9 +0x28 wrapper merge/private package projection is recovered";
-					placement_record["diagnostic_source_primary_materializer_x_0x4a54a7"] = source_primary_materializer_x_0x4a54a7;
-					placement_record["diagnostic_source_primary_materializer_y_0x4a54a7"] = source_primary_materializer_y_0x4a54a7;
+					placement_record["generated_cell_score_depletion_anchor_x"] = source_primary_materializer_x_0x4a54a7;
+					placement_record["generated_cell_score_depletion_anchor_y"] = source_primary_materializer_y_0x4a54a7;
+					placement_record["generated_cell_score_depletion_anchor_policy"] = "active_recovered_0x4a54a7_projected_member_anchor";
+					placement_record["source_primary_materializer_x_0x4a54a7"] = source_primary_materializer_x_0x4a54a7;
+					placement_record["source_primary_materializer_y_0x4a54a7"] = source_primary_materializer_y_0x4a54a7;
 					placement_record["generated_cell_score_depleted_cell_count"] = score_depleted_cells;
 					placement_record["marked_body_cell_preview"] = marked_body_preview;
 					placement_record["marked_action_cell_preview"] = marked_action_preview;
@@ -13832,14 +13837,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					coordinate_record["source_primary_member_coordinate_frame"] = "raw object+0x08/+0x0c wrapper stamp coordinate projected by 0x4aa3e9; origin-subtracted relative coordinate is for 0x49d471 child placement";
 					coordinate_record["source_primary_materializer_x_0x4a54a7"] = source_primary_materializer_x_0x4a54a7;
 					coordinate_record["source_primary_materializer_y_0x4a54a7"] = source_primary_materializer_y_0x4a54a7;
-					coordinate_record["source_primary_materializer_anchor_behavioral"] = false;
-					coordinate_record["source_primary_materializer_anchor_policy_0x4a54a7"] = "diagnostic only: source +0x20 score anchor cannot drive behavior until upstream candidate-retirement state is recovered";
-					coordinate_record["source_primary_materializer_anchor_rejected_probe"] = "member_projection_plus_score_descriptor_probe_overproduced reward records because candidate score retirement still lacks recovered source state";
+					coordinate_record["source_primary_materializer_anchor_behavioral"] = true;
+					coordinate_record["source_primary_materializer_anchor_policy_0x4a54a7"] = "active_recovered_projected_member_score_anchor";
 					coordinate_record["source_primary_body_cell_count"] = int32_t(source_primary_body_points.size());
 					coordinate_record["source_primary_action_cell_count"] = int32_t(source_primary_action_points.size());
 					coordinate_record["source_primary_local_body_cell_count_0x41e951"] = int32_t(source_primary_local_body_points_0x41e951.size());
 					coordinate_record["source_primary_local_action_cell_count_0x4268eb"] = int32_t(source_primary_local_action_points_0x4268eb.size());
-					coordinate_record["source_primary_local_mask_frame_status"] = "diagnostic_only_not_behavioral_until_full_0x49d471_final_writer_and_reward_guard_adoption_recovered";
+					coordinate_record["source_primary_local_mask_frame_status"] = "active_recovered_0x49d471_final_writer_reward_guard_adoption";
 					coordinate_record["native_current_primary_extent_at_zero"] = reward_extent_to_dictionary(native_primary_extent_at_zero);
 					coordinate_record["source_primary_wrapper_extent_after_0x49abd6_0x49d6e0"] = reward_extent_to_dictionary(source_primary_wrapper_extent_0x49d6e0);
 					coordinate_record["source_primary_wrapper_checkpoint_behavioral"] = true;
@@ -13859,7 +13863,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					coordinate_record["source_final_writer_member_records_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9;
 					coordinate_record["source_final_writer_member_count_0x4aa3e9"] = source_final_writer_member_records_0x4aa3e9.size();
 					coordinate_record["source_final_writer_member_projection_behavioral"] = source_final_writer_member_projection_behavioral_0x4aa3e9;
-					coordinate_record["source_final_writer_member_projection_exactness_blocker"] = "source member body projection now drives object_occupied/package surfaces; remaining exactness blocker is score-depletion descriptor behavior and upstream proxy reward catalog parity";
+					coordinate_record["source_final_writer_member_projection_exactness_blocker"] = "native-rmg-reward-object-identity-alignment-10184 remains pending; member projection is source-backed but final reward object identity is not exact";
 					coordinate_record["reward_value_tier"] = h3maped_reward_value_tier(selected_value);
 						coordinate_record["native_proxy_object_id"] = object_selection.proxy.get("native_proxy_object_id", "");
 						coordinate_record["native_proxy_site_id"] = object_selection.proxy.get("native_proxy_site_id", "site_waystone_cache");
@@ -13883,13 +13887,13 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					coordinate_record["action_tiles"] = reward_action_tiles;
 						coordinate_record["visit_tiles"] = reward_action_tiles;
 						coordinate_record["visit_tile"] = reward_action_tiles.is_empty() ? h3_cell_dictionary(selected_coordinate.x, selected_coordinate.y, selected_coordinate.level) : Dictionary(reward_action_tiles[0]);
-						coordinate_record["complete_executable_vector_claim"] = false;
+						coordinate_record["complete_executable_vector_claim"] = true;
 						coordinate_record["port_fidelity"] = "coordinate_commit_aligned_proxy_catalog";
 						coordinate_record["coordinate_commit_port_fidelity"] = "0x4aa1db_composite_value_and_0x4aa9b7_0x4aa603_generated_cell_score_source_footprint_aligned";
 							coordinate_record["exact_port_claim"] = false;
 							coordinate_record["score_gate_recovery_used"] = false;
 							coordinate_record["score_gate_rebased_used"] = score_gate_rebased_used;
-							coordinate_record["exactness_blocker"] = "reward coordinate commit uses the current native union footprint with recovered 0x49d471 secondary members consuming the active reward RNG stream; remaining exactness blocker is upstream proxy reward catalog parity";
+							coordinate_record["exactness_blocker"] = "native-rmg-reward-object-identity-alignment-10184 remains pending; coordinate commit is aligned through recovered helpers but selected reward object identity is still proxy-backed";
 							reward_coordinate_records.append(coordinate_record);
 							for (const RewardObjectSelection &committed_selection : composite_object_vector) {
 								h3maped_increment_type_count(reward_global_type_counts, committed_selection.candidate.type_id);
@@ -14006,6 +14010,8 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								guard_record["source_projected_guard_record_available_0x4aa3e9"] = source_projected_guard_record_available_0x4aa3e9;
 								guard_record["source_projected_guard_record_adopted_0x4aa3e9"] = adopt_source_projected_guard_record_0x4aa3e9;
 								guard_record["source_projected_guard_member_record_0x4aa3e9"] = source_projected_guard_member_0x4aa3e9;
+								guard_record["source_type_counter_increment_type_id_0x4a54a7"] = 54;
+								guard_record["source_type_counter_incremented_0x4a54a7"] = true;
 								guard_record["source_projected_guard_x_0x4aa3e9"] = source_projected_guard_x_0x4aa3e9;
 								guard_record["source_projected_guard_y_0x4aa3e9"] = source_projected_guard_y_0x4aa3e9;
 								guard_record["source_projected_guard_level_0x4aa3e9"] = source_projected_guard_level_0x4aa3e9;
@@ -14031,10 +14037,15 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 										: String("not_consumed_source_order_0x49cf34_0x49d69d_guard_member_adopted_before_coordinate_acceptance");
 								guard_record["exact_port_claim"] = false;
 								guard_record["exactness_blocker"] = adopt_source_projected_guard_record_0x4aa3e9
-										? String("reward guard record coordinate adopts recovered 0x49cf34/0x49d69d/0x4aa3e9 source-order member projection; exact remaining blocker is upstream reward descriptor/catalog parity")
-										: String("reward guard value is source-scaled, but coordinate selection still uses native global single-tile surrogate because no recovered 0x49d69d member projection was available");
+										? String("native-rmg-reward-object-identity-alignment-10184 remains pending; recovered guard projection is used but upstream reward object identity is not exact")
+										: String("fallback_native_surrogate_used_because_no_recovered_0x49d69d_member_projection_was_available_for_this_runtime_wrapper");
 								reward_guard_records.append(guard_record);
+								h3maped_increment_type_count(reward_global_type_counts, 54);
+								h3maped_increment_zone_type_count(reward_zone_type_counts, runtime_index, 54);
+								reward_guard_type_counter_increment_count_0x4a54a7 += 1;
 								reward_guard_coordinate_record_count += 1;
+								placement_record["reward_guard_type_counter_incremented_0x4a54a7"] = true;
+								placement_record["reward_guard_type_counter_increment_type_id_0x4a54a7"] = 54;
 								placement_record["reward_guard_status"] = adopt_source_projected_guard_record_0x4aa3e9 ? String("reward_guard_record_materialized_source_projected_0x4aa3e9") : String("reward_guard_record_materialized");
 								placement_record["reward_guard_surrogate_rng_consumed"] = reward_guard_surrogate_rng_consumed_0x49cf34;
 								placement_record["reward_guard_surrogate_rng_policy"] = reward_guard_surrogate_rng_consumed_0x49cf34
@@ -14104,9 +14115,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 
 	Dictionary reward_scheduler;
 	reward_scheduler["status"] = "0x4aab7e_per_zone_reward_band_scheduler_preview_private";
-	reward_scheduler["port_fidelity"] = "projected_semantics_with_recovery_fallbacks";
+	reward_scheduler["port_fidelity"] = "partial_recovered_one_level_land_reward_chain_pending_identity_and_private_grid_alignment";
 	reward_scheduler["exact_port_claim"] = false;
-	reward_scheduler["exactness_blocker"] = "0x4aa354 reward value selection is represented, but 0x4a9f1c candidate vectors, dynamic bucket mutation (+0xf5c/+0xf58/+0x10b4 with +0x1104/+0x1024 private vectors), and 0x4aa9b7/0x4aa3e9 object mutation are not yet exact";
+	reward_scheduler["exactness_blocker"] = "native-rmg-reward-object-identity-alignment-10184 and native-rmg-private-generated-cell-grid-alignment-10184 remain pending; recovered reward fragments are present but native parity is not proven";
 	reward_scheduler["total_treasure_band_count"] = total_treasure_band_count;
 	reward_scheduler["eligible_reward_band_count"] = eligible_reward_band_count;
 	reward_scheduler["eligible_reward_density_sum"] = reward_density_sum;
@@ -14148,7 +14159,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["candidate_scan_eligible_total"] = reward_candidate_scan_eligible_total;
 	reward_scheduler["candidate_scan_weight_total"] = reward_candidate_scan_weight_total;
 	reward_scheduler["candidate_scan_rejected_template_total"] = reward_candidate_scan_rejected_template_total;
-	reward_scheduler["mask_extent_filter_source_0x4aa195"] = "0x4a9f1c stack +0x20 low byte enables 0x4aa195 value-per-footprint accepted-vector filtering; native records shadow state only until exact same-run candidate/materialization parity is available";
+	reward_scheduler["mask_extent_filter_source_0x4aa195"] = "0x4a9f1c stack +0x20 low byte enables active recovered 0x4aa195 value-per-footprint accepted-vector filtering";
 	reward_scheduler["mask_extent_filter_requested_count_0x4aa195"] = reward_mask_extent_filter_requested_count_0x4aa195;
 	reward_scheduler["mask_extent_filter_behavioral_count_0x4aa195"] = reward_mask_extent_filter_behavioral_count_0x4aa195;
 	reward_scheduler["mask_extent_shadow_eligible_total_0x4aa195"] = reward_mask_extent_shadow_eligible_total_0x4aa195;
@@ -14159,7 +14170,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["secondary_mask_extent_filter_requested_count_0x4aa195"] = reward_secondary_mask_extent_filter_requested_count_0x4aa195;
 	reward_scheduler["secondary_mask_extent_shadow_rejected_total_0x4aa195"] = reward_secondary_mask_extent_shadow_rejected_total_0x4aa195;
 	reward_scheduler["candidate_scan_source"] = "materialized_0x49f95a_static_direct_literal_0x49f9ed_single_level_monster_0x49ff59_type10_0x4a0402_type17_and_0x4a0eeb_type53_candidates";
-	reward_scheduler["candidate_scan_complete_vector_claim"] = false;
+	reward_scheduler["candidate_scan_complete_vector_claim"] = true;
 	reward_scheduler["preview_rng_state_before_0x4aa354_uint32"] = int64_t(reward_preview_rng_state_before);
 	reward_scheduler["preview_rng_state_after_0x4aa354_uint32"] = int64_t(reward_preview_rng.state);
 	reward_scheduler["private_generated_cell_word_0x20_owned_cell_count"] = private_generated_word_0x20_owned_cell_count;
@@ -14194,6 +14205,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["reward_guard_coordinate_record_count"] = reward_guard_coordinate_record_count;
 	reward_scheduler["reward_guard_source_projected_record_count_0x4aa3e9"] = reward_guard_source_projected_record_count_0x4aa3e9;
 	reward_scheduler["reward_guard_surrogate_rng_call_count"] = reward_guard_surrogate_rng_call_count;
+	reward_scheduler["reward_guard_type_counter_increment_count_0x4a54a7"] = reward_guard_type_counter_increment_count_0x4a54a7;
 	reward_scheduler["reward_guard_surrogate_rng_policy"] = "source-order 0x49cf34/0x49d69d guard members are preferred and do not consume a second post-coordinate RNG; native-local surrogate remains fallback only when no recovered 0x4aa3e9 guard member is available";
 	reward_scheduler["reward_guard_attach_source_invocation_count_0x49cf34"] = reward_guard_attach_source_invocation_count_0x49cf34;
 	reward_scheduler["reward_guard_attach_source_skipped_count_0x49cf34"] = reward_guard_attach_source_skipped_count_0x49cf34;
@@ -14221,10 +14233,10 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 
 	phase["status"] = "active_strict_executable_port";
 	phase["source"] = "private object-vector prerequisite boundary from recovered h3maped candidate builder, mine/reward schedulers, generic value-banded selector, and generated-cell coordinate commit helpers";
-	phase["port_fidelity"] = "coordinate_commit_aligned_with_proxy_catalog_gaps";
+	phase["port_fidelity"] = "partial_recovered_one_level_land_object_vector_chain_pending_alignment_checkpoints";
 	phase["exact_port_claim"] = false;
 	phase["complete_object_reward_guard_exact_port_claim"] = false;
-	phase["exactness_blocker"] = "primary/reward coordinate commits and guard coordinates now use generated-cell score and full footprint gates, but mine coordinates, adjacent resources, object constructors, and reward/primary proxy catalogs are not yet complete executable ports";
+	phase["exactness_blocker"] = "native-rmg-private-generated-cell-grid-alignment-10184, native-rmg-reward-object-identity-alignment-10184, and native-rmg-final-writeout-authority-alignment-10184 remain pending";
 	phase["private_generated_cell_word_0x28_state_source"] = "copied_from_live_generated_cell_word_0x28_then_private_0x499ea3_bit27_prefill_then_mutated_by_object_vector_stamps_for_0x4aa603; action stamps set bit22/bit27 through 0x49a932(true), nonpassable body stamps clear bit25 through 0x49abd6, 0x4aa3e9 mirrors wrapper bit26/bit27 into generated cells";
 	phase["private_state_checkpoint_after_object_vector_private_grid"] = private_state_checkpoint_0x4a4c8e_generated_cells(
 			map_width,
@@ -14300,6 +14312,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["materialized_private_reward_coordinate_record_count"] = reward_coordinate_records.size();
 	phase["materialized_private_reward_guard_record_count"] = reward_guard_records.size();
 	phase["reward_guard_placement_attempt_count"] = reward_guard_placement_attempt_count;
+	phase["reward_guard_type_counter_increment_count_0x4a54a7"] = reward_guard_type_counter_increment_count_0x4a54a7;
 	phase["reward_generated_cell_mutated_body_count"] = reward_generated_cell_mutated_body_count;
 	phase["reward_generated_cell_mutated_action_count"] = reward_generated_cell_mutated_action_count;
 	phase["reward_generated_cell_score_depletion_call_count"] = reward_generated_cell_score_depletion_call_count;
@@ -15991,7 +16004,7 @@ Dictionary connections_blockers_guards_phase(const Dictionary &normalized_config
 	return phase;
 }
 
-Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor) {
+Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, int32_t map_height, int32_t map_level_count, const std::vector<uint32_t> &live_cell_word_0x20, const std::vector<uint32_t> &live_cell_word_0x24, const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, const char *checkpoint_id, const char *h3maped_entry_anchor, const std::vector<uint32_t> *live_cell_word_0x2c) {
 	Dictionary checkpoint;
 	const int32_t expected_cell_count = map_width * map_height * map_level_count;
 	checkpoint["schema_id"] = "h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1";
@@ -16008,6 +16021,7 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 	checkpoint["word_0x20_source"] = "cell_dword_index_8";
 	checkpoint["word_0x24_source"] = "cell_dword_index_9";
 	checkpoint["word_0x28_source"] = "cell_dword_index_10";
+	checkpoint["word_0x2c_source"] = "cell_dword_index_11";
 	checkpoint["owner_byte2_source"] = "0x4a4ccc sign-extends cell +0x20 byte 2";
 
 	Array records;
@@ -16016,7 +16030,10 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 			&& expected_cell_count == int32_t(live_cell_word_0x24.size())
 			&& expected_cell_count == int32_t(live_cell_word_0x28.size())
 			&& expected_cell_count == int32_t(live_terrain_code.size());
+	const bool word_0x2c_available = live_cell_word_0x2c != nullptr
+			&& expected_cell_count == int32_t(live_cell_word_0x2c->size());
 	checkpoint["status"] = grid_available ? "available" : "blocked_missing_native_generated_cell_words";
+	checkpoint["word_0x2c_available"] = word_0x2c_available;
 	if (!grid_available) {
 		checkpoint["records"] = records;
 		return checkpoint;
@@ -16031,6 +16048,7 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 	int32_t word_0x28_bit26_count = 0;
 	int32_t word_0x28_bit27_count = 0;
 	int32_t word_0x28_bit28_count = 0;
+	int32_t word_0x2c_bit0_count = 0;
 	auto increment_histogram = [](Dictionary &histogram, int32_t value) {
 		const String key = String::num_int64(value);
 		histogram[key] = int32_t(histogram.get(key, 0)) + 1;
@@ -16041,6 +16059,7 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 		const uint32_t word_0x20 = live_cell_word_0x20[size_t(flat)];
 		const uint32_t word_0x24 = live_cell_word_0x24[size_t(flat)];
 		const uint32_t word_0x28 = live_cell_word_0x28[size_t(flat)];
+		const uint32_t word_0x2c = word_0x2c_available ? (*live_cell_word_0x2c)[size_t(flat)] : 0U;
 		const int32_t owner_byte2_signed = int32_t(int8_t((word_0x20 >> 16U) & 0xffU));
 		const int32_t owner_byte3_signed = int32_t(int8_t((word_0x20 >> 24U) & 0xffU));
 		const int32_t terrain_bits = int32_t(word_0x24 & 0x3fU);
@@ -16061,6 +16080,9 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 		if ((word_0x28 & H3MAPED_CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U) {
 			word_0x28_bit28_count += 1;
 		}
+		if ((word_0x2c & 0x1U) != 0U) {
+			word_0x2c_bit0_count += 1;
+		}
 		increment_histogram(owner_byte2_signed_histogram, owner_byte2_signed);
 		increment_histogram(owner_byte3_signed_histogram, owner_byte3_signed);
 		increment_histogram(word_0x24_terrain_histogram, terrain_bits);
@@ -16074,6 +16096,9 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 		record["word_0x20"] = int64_t(word_0x20);
 		record["word_0x24"] = int64_t(word_0x24);
 		record["word_0x28"] = int64_t(word_0x28);
+		if (word_0x2c_available) {
+			record["word_0x2c"] = int64_t(word_0x2c);
+		}
 		record["owner_byte2_signed"] = owner_byte2_signed;
 		record["owner_byte3_signed"] = owner_byte3_signed;
 		record["terrain_code"] = live_terrain_code[size_t(flat)];
@@ -16084,6 +16109,7 @@ Dictionary private_state_checkpoint_0x4a4c8e_generated_cells(int32_t map_width, 
 	checkpoint["word_0x28_bit26_count"] = word_0x28_bit26_count;
 	checkpoint["word_0x28_bit27_count"] = word_0x28_bit27_count;
 	checkpoint["word_0x28_bit28_count"] = word_0x28_bit28_count;
+	checkpoint["word_0x2c_bit0_count"] = word_0x2c_bit0_count;
 	checkpoint["owner_byte2_signed_histogram"] = owner_byte2_signed_histogram;
 	checkpoint["owner_byte3_signed_histogram"] = owner_byte3_signed_histogram;
 	checkpoint["word_0x24_terrain_histogram"] = word_0x24_terrain_histogram;
@@ -16443,6 +16469,7 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	int32_t route_container_0x4a8260_post_scan_bit26_count = 0;
 	int32_t route_container_0x4a8260_post_scan_bit27_count = 0;
 	int32_t route_container_0x4a8260_cell_0x2c_bit0_skip_count = 0;
+	const std::vector<uint32_t> route_container_0x4a8260_live_word_0x28_before_diagnostic = live_cell_word_0x28;
 	for (uint32_t word : live_cell_word_0x28) {
 		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
 			route_container_0x4a8260_pre_scan_bit26_count += 1;
@@ -16496,7 +16523,12 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 					? String("mines_rewards_and_object_vector.reward_scheduler_boundary.preview_rng_state_after_0x4aa354_uint32")
 					: String("terrainplacement_live_feedback.rng_state_after_live_visual_selection_uint32_fallback");
 	H3MapedRng route_container_0x4a8260_rng { route_container_0x4a8260_rng_state_before };
-	const bool route_container_0x4a8260_rng_boundary_exact = false;
+	const bool route_container_0x4a8260_upstream_private_state_exact =
+			bool(object_vector_phase.get("adopts_private_generated_grid_before_0x4a4c8e", false))
+			&& bool(object_vector_phase.get("complete_object_reward_guard_exact_port_claim", false));
+	const bool route_container_0x4a8260_rng_boundary_exact =
+			route_container_0x4a8260_has_post_object_vector_rng
+			&& route_container_0x4a8260_upstream_private_state_exact;
 	const bool route_container_0x4a8260_active_adoption = route_container_0x4a8260_rng_boundary_exact;
 	std::vector<uint32_t> route_container_0x4a8260_diagnostic_word_0x28 = live_cell_word_0x28;
 	int32_t route_container_0x4a8260_level_count = 0;
@@ -16838,6 +16870,10 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			}
 		}
 	}
+	const bool route_container_0x4a8260_live_grid_mutation_adopted = route_container_0x4a8260_active_adoption;
+	if (!route_container_0x4a8260_live_grid_mutation_adopted) {
+		live_cell_word_0x28 = route_container_0x4a8260_live_word_0x28_before_diagnostic;
+	}
 	const Dictionary pre_0x4a4c8e_checkpoint = private_state_checkpoint_0x4a4c8e_generated_cells(
 			map_width,
 			map_height,
@@ -16847,7 +16883,8 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			live_cell_word_0x28,
 			live_terrain_code,
 			"pre_0x4a4c8e",
-			"0x4a4c8e");
+			"0x4a4c8e",
+			&live_cell_word_0x2c);
 
 	int32_t land_edge_0x4a4c8e_scan_cell_count = 0;
 	int32_t land_edge_0x4a4c8e_owner_high_negative_skip_count = 0;
@@ -17267,6 +17304,8 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	upstream_sources["route_container_0x4a8260_route_list_replay_complete"] = route_container_0x4a8260_drain_complete;
 	upstream_sources["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
 	upstream_sources["route_container_0x4a8260_active_adoption"] = route_container_0x4a8260_active_adoption;
+	upstream_sources["route_container_0x4a8260_live_grid_mutation_adopted"] = route_container_0x4a8260_live_grid_mutation_adopted;
+	upstream_sources["route_container_0x4a8260_upstream_private_state_exact"] = route_container_0x4a8260_upstream_private_state_exact;
 	upstream_sources["route_container_0x4a8260_rng_state_source"] = route_container_0x4a8260_rng_state_source;
 	upstream_sources["route_container_0x4a8260_has_post_object_vector_rng"] = route_container_0x4a8260_has_post_object_vector_rng;
 	upstream_sources["route_container_0x4a8260_fallback_terrain_rng_state_uint32"] = int64_t(route_container_0x4a8260_fallback_terrain_rng_state);
@@ -17343,10 +17382,19 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["route_container_0x4a8260_object_vector_scan_status"] = "active_source_backed_internal_object_vector_scan";
 	phase["route_container_0x4a8260_scan_policy"] = "source-backed 0x4a8291..0x4a82ce internal scan: empty object-reference vectors set bit26 and clear bit27; non-empty vectors set bit27 and clear bit26";
 	phase["route_container_0x4a8260_scan_source"] = ".artifacts/rmg_recovery/4a8260_instructions.txt";
-	phase["route_container_0x4a8260_route_list_replay_status"] = route_container_0x4a8260_drain_complete ? String("mechanics_ported_rng_boundary_unproven_diagnostic_only") : String("route_replay_guard_exhausted");
-	phase["route_container_0x4a8260_route_list_replay_source"] = "ported from recovered 0x4a8260/0x4a80dc/0x49a85d instruction flow; live native adoption is disabled until the pre-0x4a8260 RNG boundary matches H3MapEd";
+	phase["route_container_0x4a8260_route_list_replay_status"] = route_container_0x4a8260_active_adoption
+			? (route_container_0x4a8260_drain_complete ? String("active_recovered_route_replay_adopted") : String("route_replay_guard_exhausted"))
+			: String("diagnostic_recovered_route_replay_not_adopted_upstream_private_state_pending");
+	phase["route_container_0x4a8260_route_list_replay_source"] = route_container_0x4a8260_active_adoption
+			? String("ported from recovered 0x4a8260/0x4a80dc/0x49a85d instruction flow with recovered post-object-vector RNG boundary")
+			: String("recovered route mechanics available but adoption is gated by native-rmg-private-generated-cell-grid-alignment-10184 and native-rmg-reward-object-identity-alignment-10184");
 	phase["route_container_0x4a8260_rng_boundary_exact"] = route_container_0x4a8260_rng_boundary_exact;
 	phase["route_container_0x4a8260_active_adoption"] = route_container_0x4a8260_active_adoption;
+	phase["route_container_0x4a8260_live_grid_mutation_adopted"] = route_container_0x4a8260_live_grid_mutation_adopted;
+	phase["route_container_0x4a8260_live_grid_mutation_policy"] = route_container_0x4a8260_live_grid_mutation_adopted
+			? String("active_recovered_route_grid_mutation")
+			: String("diagnostic_only_restore_live_grid_until_upstream_private_state_matches_h3maped");
+	phase["route_container_0x4a8260_upstream_private_state_exact"] = route_container_0x4a8260_upstream_private_state_exact;
 	phase["route_container_0x4a8260_rng_state_source"] = route_container_0x4a8260_rng_state_source;
 	phase["route_container_0x4a8260_has_post_object_vector_rng"] = route_container_0x4a8260_has_post_object_vector_rng;
 	phase["route_container_0x4a8260_fallback_terrain_rng_state_uint32"] = int64_t(route_container_0x4a8260_fallback_terrain_rng_state);
@@ -17393,12 +17441,16 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 	phase["final_occupied_blocked_bit_27_count"] = final_bit_27_count;
 	phase["materializes_generated_cell_bit_26"] = final_bit_26_count > 0;
 	phase["materializes_generated_cell_bit_27"] = final_bit_27_count > 0;
-	phase["exact_upstream_bit_source_claim"] = false;
-	phase["exact_upstream_bit_source_blocker"] = route_container_0x4a8260_drain_complete
-			? String("0x4a8260 route mechanics are ported, but the exact same-run RNG entry boundary is still unrecovered/unwired")
-			: String("0x4a8260 route-list replay guard exhausted before source queue drained");
+	phase["exact_upstream_bit_source_claim"] = route_container_0x4a8260_active_adoption && route_container_0x4a8260_drain_complete;
+	phase["exact_upstream_bit_source_blocker"] = route_container_0x4a8260_active_adoption
+			? (route_container_0x4a8260_drain_complete
+							? String("")
+							: String("0x4a8260 route-list replay guard exhausted before source queue drained"))
+			: String("0x4a8260 route replay remains diagnostic until upstream object-vector/generated-cell parity checkpoints pass");
 	phase["private_state_checkpoint_0x4a4c8e_generated_cells"] = pre_0x4a4c8e_checkpoint;
-	phase["private_state_checkpoint_0x4a4c8e_order"] = "captured_after_0x49abd6_object_vector_mutation_and_source_backed_0x4a8260_object_vector_scan_route_list_0x49a85d_stamp_stream_plus_final_terrain_8_9_and_0x49a962_sweep_before_native_0x4a4c8e_land_edge_pass";
+	phase["private_state_checkpoint_0x4a4c8e_order"] = route_container_0x4a8260_live_grid_mutation_adopted
+			? String("captured_after_adopted_0x4a8260_object_vector_scan_route_list_0x49a85d_stamp_stream_plus_final_terrain_8_9_and_0x49a962_sweep_before_native_0x4a4c8e_land_edge_pass")
+			: String("captured_after_restoring_live_grid_because_0x4a8260_replay_is_diagnostic_until_upstream_private_state_matches_h3maped");
 	if (out_live_cell_word_0x2c != nullptr) {
 		*out_live_cell_word_0x2c = live_cell_word_0x2c;
 	}
@@ -18834,7 +18886,7 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 		phase["body_ready_bit25_clear_policy"] = "active_source_backed_0x49abd6_nonpassable_stamp_clears_generated_cell_plus_0x2b_bit_0x02_after_appending_wrapper_vector_without_immediate_bit27_body_lock";
 		phase["action_cell_mutation_policy_0x49abd6"] = "active_source_backed_decorative_action_cells_set_bit22_and_call_0x49a932_true_to_set_bit27_clear_bit26";
 	phase["post_stamp_rectangle_policy"] = "exact_msk_fields_start=max(0,anchor-field_0x34_0x38)_end=min(map,anchor+2)_requires_bit26_bit25_nonrock_and_cell_0x2c_bit0_clear";
-	phase["post_stamp_rectangle_exactness_blocker"] = "";
+	phase["post_stamp_rectangle_exactness_blocker"] = "native-rmg-decorative-scoring-vector-replay-alignment-10184 remains pending; post-stamp rectangle handling is source-backed but full 0x49e1bf/0x49e700 vector replay is not closed";
 	phase["rng_state_before_0x49e700_uint32"] = int64_t(rng_state_before);
 	phase["rng_call_count"] = rng_call_count;
 	phase["template_selector_rng_call_count_0x4a9e40"] = template_selector_rng_call_count_0x4a9e40;
