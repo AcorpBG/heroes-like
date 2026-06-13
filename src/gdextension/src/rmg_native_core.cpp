@@ -833,6 +833,9 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool projection_write_coordinates_materialized = false;
 	bool sampled_4a54a7_commit_mutation_samples_match = false;
 	bool sampled_4a56b6_projection_write_samples_match = false;
+	bool sampled_4a56b6_projection_write_full_stream_materialized = false;
+	bool sampled_4a56b6_projection_write_unique_cell_count_matches = false;
+	bool sampled_4a56b6_projection_write_ordinals_cover_stream = false;
 	bool recovered_reference_case_matches = false;
 	std::string status = "blocked_until_generated_cell_bit_helpers";
 	std::string blocked_reason = "generated_cell_bit_helpers_missing";
@@ -862,6 +865,9 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	int32_t sampled_4aa3e9_projection_write_unique_cell_count = 90;
 	int32_t sampled_4a56b6_projection_write_sample_count = 0;
 	int32_t sampled_4a56b6_projection_write_matched_sample_count = 0;
+	int32_t sampled_4a56b6_projection_write_unique_cell_count = 0;
+	int32_t sampled_4a56b6_projection_write_ordinal_min = 0;
+	int32_t sampled_4a56b6_projection_write_ordinal_max = 0;
 	int32_t sampled_4a79a3_initial_object_vector_count = 7;
 	int32_t sampled_4a79a3_positive_append_count = 6;
 	int32_t sampled_4a79a3_final_object_vector_count = 13;
@@ -895,9 +901,11 @@ struct ObjectVectorCommitMutationSamplePlain {
 
 struct ObjectVectorProjectionWriteSamplePlain {
 	int32_t ordinal = 0;
+	uint32_t recovered_cell_pointer = 0;
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	uint32_t before_word_0x1c = 0;
 	uint32_t before_word_0x20 = 0;
 	uint32_t before_word_0x24 = 0;
 	uint32_t before_word_0x28 = 0;
@@ -918,6 +926,9 @@ struct ObjectVectorCommitMutationSummaryPlain {
 	bool live_grid_mutation_adopted = false;
 	bool recovered_samples_match = false;
 	bool projection_write_recovered_samples_match = false;
+	bool projection_write_full_stream_materialized_plain_cpp = false;
+	bool projection_write_unique_cell_count_matches_recovered = false;
+	bool projection_write_ordinals_cover_recovered_stream = false;
 	std::string status = "blocked_until_terrain_live_feedback";
 	std::string blocked_reason = "terrain_live_feedback_missing";
 	int32_t width = 0;
@@ -932,6 +943,9 @@ struct ObjectVectorCommitMutationSummaryPlain {
 	int32_t sampled_4aa3e9_projection_write_unique_cell_count = 90;
 	int32_t projection_write_sample_count = 0;
 	int32_t projection_write_matched_sample_count = 0;
+	int32_t projection_write_unique_cell_count = 0;
+	int32_t projection_write_ordinal_min = 0;
+	int32_t projection_write_ordinal_max = 0;
 	int32_t sampled_4a61bc_min_projection_write_count = 74;
 	int32_t sampled_4a61bc_max_projection_write_count = 105;
 	std::vector<ObjectVectorCommitMutationSamplePlain> samples;
@@ -5361,21 +5375,25 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 	auto reward_word20 = [](uint32_t word_0x20, uint32_t lowered_low_word) {
 		return h3maped_generated_cell_word20_set_low_word_plain(word_0x20, lowered_low_word);
 	};
-	auto add_projection_write_sample = [&](int32_t ordinal,
-			int32_t x,
-			int32_t y,
-			int32_t level,
-			uint32_t before_word_0x20,
-			uint32_t before_word_0x24,
-			uint32_t before_word_0x28,
+		auto add_projection_write_sample = [&](int32_t ordinal,
+				uint32_t recovered_cell_pointer,
+				int32_t x,
+				int32_t y,
+				int32_t level,
+				uint32_t before_word_0x1c,
+				uint32_t before_word_0x20,
+				uint32_t before_word_0x24,
+				uint32_t before_word_0x28,
 			uint32_t before_word_0x2c,
 			uint32_t expected_word_0x20) {
-		ObjectVectorProjectionWriteSamplePlain sample;
-		sample.ordinal = ordinal;
-		sample.x = x;
-		sample.y = y;
-		sample.level = level;
-		sample.before_word_0x20 = before_word_0x20;
+			ObjectVectorProjectionWriteSamplePlain sample;
+			sample.ordinal = ordinal;
+			sample.recovered_cell_pointer = recovered_cell_pointer;
+			sample.x = x;
+			sample.y = y;
+			sample.level = level;
+			sample.before_word_0x1c = before_word_0x1c;
+			sample.before_word_0x20 = before_word_0x20;
 		sample.before_word_0x24 = before_word_0x24;
 		sample.before_word_0x28 = before_word_0x28;
 		sample.before_word_0x2c = before_word_0x2c;
@@ -5415,30 +5433,116 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 			reward_word20(0x0400000eU, 2U), h3maped_generated_cell_4aa3e9_reward_word28_plain(0x16005000U));
 
 	summary.projection_write_helpers_ported_plain_cpp = true;
-	add_projection_write_sample(4, 38, 62, 0, 0x0400000eU, 0x00000cc7U, 0x14005000U, 0U, 0x04000002U);
-	add_projection_write_sample(5, 36, 65, 0, 0x04000010U, 0x00000d07U, 0x12005000U, 0U, 0x04000003U);
-	add_projection_write_sample(6, 36, 65, 0, 0x0400000fU, 0x00000d07U, 0x12005000U, 0U, 0x04000002U);
-	add_projection_write_sample(7, 36, 65, 0, 0x0400000eU, 0x00001087U, 0x1a005000U, 0U, 0x04000003U);
-	add_projection_write_sample(8, 35, 64, 0, 0x0400000cU, 0x00000c47U, 0x1a005000U, 0U, 0x04000002U);
-	add_projection_write_sample(9, 35, 63, 0, 0x0400000aU, 0x00000cc7U, 0x12005000U, 0U, 0x04000003U);
-	add_projection_write_sample(10, 35, 63, 0, 0x0400000bU, 0x00000dc7U, 0x12005000U, 0U, 0x04000002U);
-	add_projection_write_sample(11, 38, 61, 0, 0x0400000cU, 0x00000e07U, 0x16005000U, 0U, 0x04000003U);
-	add_projection_write_sample(12, 38, 62, 0, 0x0500000fU, 0x00000d87U, 0x16007000U, 0U, 0x05000004U);
-	add_projection_write_sample(13, 39, 63, 0, 0x05000011U, 0x000011c7U, 0x16007000U, 0U, 0x05000005U);
-	add_projection_write_sample(14, 39, 61, 0, 0x0500000dU, 0x00000e87U, 0x12007000U, 0U, 0x05000005U);
-	add_projection_write_sample(15, 38, 66, 0, 0x04000011U, 0x00000d87U, 0x12005000U, 0U, 0x04000005U);
-	add_projection_write_sample(82, 38, 69, 0, 0x05000018U, 0x00000e07U, 0x12006000U, 0U, 0x05000011U);
-	add_projection_write_sample(83, 37, 70, 0, 0x05000015U, 0x00000c47U, 0x1a007000U, 0U, 0x05000011U);
-	add_projection_write_sample(84, 37, 70, 0, 0x05000013U, 0x00000d87U, 0x1a007000U, 0U, 0x05000010U);
-	add_projection_write_sample(85, 43, 68, 0, 0x05000013U, 0x00001187U, 0x16005000U, 0U, 0x05000012U);
-	add_projection_write_sample(86, 39, 69, 0, 0x05000017U, 0x00000e47U, 0x12005000U, 0U, 0x05000012U);
-	add_projection_write_sample(87, 37, 70, 0, 0x05000017U, 0x00000c87U, 0x1a006000U, 0U, 0x05000012U);
-	add_projection_write_sample(88, 40, 69, 0, 0x05000016U, 0x00000d07U, 0x16005000U, 0U, 0x05000013U);
-	add_projection_write_sample(89, 38, 70, 0, 0x05000019U, 0x00001087U, 0x12005000U, 0U, 0x05000013U);
-	add_projection_write_sample(90, 41, 69, 0, 0x05000015U, 0x00000d47U, 0x16007000U, 0U, 0x05000014U);
-	add_projection_write_sample(91, 39, 70, 0, 0x05000019U, 0x00000d87U, 0x16005000U, 0U, 0x05000014U);
-	add_projection_write_sample(92, 40, 70, 0, 0x05000018U, 0x00000e07U, 0x16007000U, 0U, 0x05000015U);
-	add_projection_write_sample(93, 41, 70, 0, 0x05000017U, 0x00000d87U, 0x16006000U, 0U, 0x05000016U);
+	struct ProjectionWriteRow {
+		int32_t ordinal = 0;
+		uint32_t recovered_cell_pointer = 0;
+		int32_t x = 0;
+		int32_t y = 0;
+		int32_t level = 0;
+		uint32_t before_word_0x1c = 0;
+		uint32_t before_word_0x20 = 0;
+		uint32_t before_word_0x24 = 0;
+		uint32_t before_word_0x28 = 0;
+		uint32_t before_word_0x2c = 0;
+		uint32_t expected_word_0x20 = 0;
+	};
+	const std::array<ProjectionWriteRow, 90> kRecovered4aa3e9ProjectionWrites = {{
+			{4, 0x018c1044U, 38, 62, 0, 0x00350002U, 0x0400000eU, 0x00000cc7U, 0x14005000U, 0x00000000U, 0x04000002U},
+			{5, 0x018c1dc4U, 36, 65, 0, 0x00360001U, 0x04000010U, 0x00000d07U, 0x12005000U, 0x00000000U, 0x04000003U},
+			{6, 0x018c1d94U, 36, 65, 0, 0x00350001U, 0x0400000fU, 0x00000d07U, 0x12005000U, 0x00000000U, 0x04000002U},
+			{7, 0x018c1d64U, 36, 65, 0, 0x002c0000U, 0x0400000eU, 0x00001087U, 0x1a005000U, 0x00000000U, 0x04000003U},
+			{8, 0x018c0fe4U, 35, 64, 0, 0x002b0000U, 0x0400000cU, 0x00000c47U, 0x1a005000U, 0x00000000U, 0x04000002U},
+			{9, 0x018c0264U, 35, 63, 0, 0x00220001U, 0x0400000aU, 0x00000cc7U, 0x12005000U, 0x00000000U, 0x04000003U},
+			{10, 0x018c0294U, 35, 63, 0, 0x002b0001U, 0x0400000bU, 0x00000dc7U, 0x12005000U, 0x00000000U, 0x04000002U},
+			{11, 0x018c02c4U, 38, 61, 0, 0x002c0002U, 0x0400000cU, 0x00000e07U, 0x16005000U, 0x00000000U, 0x04000003U},
+			{12, 0x018c1074U, 38, 62, 0, 0x00350002U, 0x0500000fU, 0x00000d87U, 0x16007000U, 0x00000000U, 0x05000004U},
+			{13, 0x018c1df4U, 39, 63, 0, 0x00360002U, 0x05000011U, 0x000011c7U, 0x16007000U, 0x00000000U, 0x05000005U},
+			{14, 0x018c02f4U, 39, 61, 0, 0x00350001U, 0x0500000dU, 0x00000e87U, 0x12007000U, 0x00000000U, 0x05000005U},
+			{15, 0x018c2b44U, 38, 66, 0, 0x003f0001U, 0x04000011U, 0x00000d87U, 0x12005000U, 0x00000000U, 0x04000005U},
+			{16, 0x018c2b14U, 37, 66, 0, 0x00360000U, 0x0400000fU, 0x00000d07U, 0x1a005000U, 0x00000000U, 0x04000004U},
+			{17, 0x018c2ae4U, 36, 65, 0, 0x00350000U, 0x0400000dU, 0x00000c47U, 0x1a005000U, 0x00000000U, 0x04000005U},
+			{18, 0x018c1d34U, 35, 64, 0, 0x002b0001U, 0x0400000cU, 0x00000d47U, 0x12005000U, 0x00000000U, 0x04000005U},
+			{19, 0x018c0fb4U, 35, 64, 0, 0x00220000U, 0x0400000cU, 0x000011c7U, 0x1a005000U, 0x00000000U, 0x04000004U},
+			{20, 0x018c0234U, 35, 63, 0, 0x00210000U, 0x0400000aU, 0x00000d87U, 0x1a005000U, 0x00000000U, 0x04000005U},
+			{21, 0x018bf4e4U, 34, 62, 0, 0x00210001U, 0x04000008U, 0x00000c47U, 0x12005000U, 0x00000000U, 0x04000005U},
+			{22, 0x018bf514U, 37, 60, 0, 0x00220002U, 0x04000009U, 0x00000d47U, 0x16005000U, 0x00000000U, 0x04000004U},
+			{23, 0x018bf544U, 37, 60, 0, 0x002c0002U, 0x0400000aU, 0x00001207U, 0x16004000U, 0x00000000U, 0x04000005U},
+			{24, 0x018c2b74U, 39, 66, 0, 0x00400001U, 0x04000012U, 0x00000d07U, 0x12005000U, 0x00000000U, 0x04000006U},
+			{25, 0x018c2ab4U, 35, 64, 0, 0x00350001U, 0x0400000bU, 0x00000c47U, 0x12005000U, 0x00000000U, 0x04000006U},
+			{26, 0x018bf4b4U, 34, 62, 0, 0x00180001U, 0x04000008U, 0x00000e07U, 0x12005000U, 0x00000000U, 0x04000006U},
+			{27, 0x018bf574U, 39, 60, 0, 0x00340001U, 0x0500000bU, 0x00000d87U, 0x12007000U, 0x00000000U, 0x05000006U},
+			{28, 0x018c10a4U, 40, 62, 0, 0x002c0001U, 0x0500000eU, 0x00001187U, 0x12007000U, 0x00000000U, 0x05000006U},
+			{29, 0x018c1e24U, 40, 63, 0, 0x00360001U, 0x0500000fU, 0x00000cc7U, 0x12006000U, 0x00000000U, 0x05000007U},
+			{30, 0x018c0324U, 39, 61, 0, 0x002b0001U, 0x0500000dU, 0x00000c87U, 0x12007000U, 0x00000000U, 0x05000007U},
+			{31, 0x018c38c4U, 38, 66, 0, 0x00400000U, 0x04000010U, 0x00000e07U, 0x1a005000U, 0x00000000U, 0x04000007U},
+			{32, 0x018c3894U, 37, 66, 0, 0x003f0000U, 0x0400000eU, 0x00000f07U, 0x1a005000U, 0x00000000U, 0x04000006U},
+			{33, 0x018c3864U, 36, 65, 0, 0x003f0000U, 0x0400000cU, 0x00000e47U, 0x1a005000U, 0x00000000U, 0x04000007U},
+			{34, 0x018c1d04U, 34, 63, 0, 0x002b0001U, 0x0400000aU, 0x00000d87U, 0x12005000U, 0x00000000U, 0x04000007U},
+			{35, 0x018c0f84U, 34, 63, 0, 0x00210001U, 0x0400000bU, 0x00000d07U, 0x12005000U, 0x00000000U, 0x04000006U},
+			{36, 0x018c0204U, 34, 63, 0, 0x00180001U, 0x0400000bU, 0x00000f47U, 0x12005000U, 0x00000000U, 0x04000007U},
+			{37, 0x018be794U, 37, 59, 0, 0x00220002U, 0x04000007U, 0x00000c87U, 0x16004000U, 0x00000000U, 0x04000006U},
+			{38, 0x018be7c4U, 38, 59, 0, 0x002c0001U, 0x04000008U, 0x00000e07U, 0x12005000U, 0x00000000U, 0x04000007U},
+			{39, 0x018c2ba4U, 40, 64, 0, 0x003c0001U, 0x05000010U, 0x00000c87U, 0x12007000U, 0x00000000U, 0x05000008U},
+			{40, 0x018bf5a4U, 39, 60, 0, 0x002b0000U, 0x0500000cU, 0x00000d07U, 0x1a007000U, 0x00000000U, 0x05000008U},
+			{41, 0x018c38f4U, 39, 66, 0, 0x00460000U, 0x05000012U, 0x00000c47U, 0x1a007000U, 0x00000000U, 0x05000008U},
+			{42, 0x018c3834U, 35, 65, 0, 0x003e0001U, 0x0400000aU, 0x00000d47U, 0x12005000U, 0x00000000U, 0x04000008U},
+			{43, 0x018c2a84U, 34, 64, 0, 0x00340002U, 0x04000009U, 0x00000f47U, 0x16005000U, 0x00000000U, 0x04000008U},
+			{44, 0x018bf484U, 34, 62, 0, 0x00170001U, 0x04000009U, 0x00000cc7U, 0x12005000U, 0x00000000U, 0x04000008U},
+			{45, 0x018be7f4U, 38, 59, 0, 0x002b0001U, 0x05000009U, 0x00000cc7U, 0x12007000U, 0x00000000U, 0x05000008U},
+			{46, 0x018c3924U, 40, 65, 0, 0x003c0000U, 0x05000011U, 0x00001007U, 0x1a007000U, 0x00000000U, 0x05000009U},
+			{47, 0x018be824U, 38, 59, 0, 0x002a0000U, 0x0500000bU, 0x00001107U, 0x1a007000U, 0x00000000U, 0x05000009U},
+			{48, 0x018c10d4U, 40, 62, 0, 0x002c0000U, 0x0500000cU, 0x00000e07U, 0x1a006000U, 0x00000000U, 0x05000008U},
+			{49, 0x018c1e54U, 40, 63, 0, 0x00320000U, 0x0500000dU, 0x00001107U, 0x1a007000U, 0x00000000U, 0x05000009U},
+			{50, 0x018c0354U, 39, 61, 0, 0x00220000U, 0x0500000bU, 0x00000d87U, 0x1a007000U, 0x00000000U, 0x05000009U},
+			{51, 0x018c4644U, 38, 66, 0, 0x00490001U, 0x04000011U, 0x00000f87U, 0x12005000U, 0x00000000U, 0x04000009U},
+			{52, 0x018c4614U, 37, 66, 0, 0x00490001U, 0x0400000fU, 0x00000d87U, 0x12005000U, 0x00000000U, 0x04000008U},
+			{53, 0x018c45e4U, 36, 66, 0, 0x00480001U, 0x0400000dU, 0x00000d07U, 0x12005000U, 0x00000000U, 0x04000009U},
+			{54, 0x018c0f54U, 33, 62, 0, 0x00210002U, 0x04000009U, 0x00000cc7U, 0x12005000U, 0x00000000U, 0x04000008U},
+			{55, 0x018c01d4U, 33, 62, 0, 0x00170002U, 0x0400000bU, 0x00000c47U, 0x12005000U, 0x00000000U, 0x04000009U},
+			{56, 0x018c2bd4U, 40, 64, 0, 0x00320000U, 0x0500000eU, 0x00000c87U, 0x1a007000U, 0x00000000U, 0x0500000aU},
+			{57, 0x018c4674U, 39, 66, 0, 0x00460000U, 0x05000013U, 0x00001087U, 0x1a007000U, 0x00000000U, 0x0500000aU},
+			{58, 0x018c45b4U, 35, 66, 0, 0x003f0001U, 0x0400000bU, 0x00000c47U, 0x12005000U, 0x00000000U, 0x0400000aU},
+			{59, 0x018c3954U, 40, 65, 0, 0x00320000U, 0x0500000fU, 0x00000ec7U, 0x1a007000U, 0x00000000U, 0x0500000bU},
+			{60, 0x018c46a4U, 39, 66, 0, 0x003c0000U, 0x05000012U, 0x00000dc7U, 0x1a007000U, 0x00000000U, 0x0500000bU},
+			{61, 0x018c53c4U, 38, 67, 0, 0x00500001U, 0x05000012U, 0x00000c47U, 0x12007000U, 0x00000000U, 0x0500000bU},
+			{62, 0x018c5394U, 37, 67, 0, 0x00520002U, 0x04000010U, 0x00001007U, 0x16005000U, 0x00000000U, 0x0400000aU},
+			{63, 0x018c5364U, 36, 67, 0, 0x00490002U, 0x0400000eU, 0x00000c47U, 0x16005000U, 0x00000000U, 0x0400000bU},
+			{64, 0x018c46d4U, 39, 66, 0, 0x00330001U, 0x05000011U, 0x00000f87U, 0x12007000U, 0x00000000U, 0x0500000cU},
+			{65, 0x018c53f4U, 38, 67, 0, 0x00460000U, 0x05000014U, 0x00000dc7U, 0x1a007000U, 0x00000000U, 0x0500000cU},
+			{66, 0x018c3984U, 40, 65, 0, 0x00290000U, 0x0500000eU, 0x00000e07U, 0x1a007000U, 0x00000000U, 0x0500000dU},
+			{67, 0x018c5424U, 38, 67, 0, 0x003d0000U, 0x05000014U, 0x00000d07U, 0x1a007000U, 0x00000000U, 0x0500000dU},
+			{68, 0x018c6144U, 38, 68, 0, 0x00500001U, 0x05000013U, 0x00000f47U, 0x12007000U, 0x00000000U, 0x0500000dU},
+			{69, 0x018c6114U, 37, 70, 0, 0x00530001U, 0x04000011U, 0x00000d87U, 0x12005000U, 0x00000000U, 0x0400000cU},
+			{70, 0x018c60e4U, 36, 69, 0, 0x00530002U, 0x0400000fU, 0x00001207U, 0x16005000U, 0x00000000U, 0x0400000dU},
+			{71, 0x018c4704U, 40, 66, 0, 0x002a0001U, 0x05000010U, 0x00000d87U, 0x12007000U, 0x00000000U, 0x0500000eU},
+			{72, 0x018c5454U, 39, 67, 0, 0x00340001U, 0x05000013U, 0x00000d07U, 0x12007000U, 0x00000000U, 0x0500000eU},
+			{73, 0x018c6174U, 38, 68, 0, 0x00470000U, 0x05000015U, 0x00000c47U, 0x1a007000U, 0x00000000U, 0x0500000eU},
+			{74, 0x018c5484U, 40, 67, 0, 0x00340002U, 0x05000012U, 0x00000e07U, 0x16006000U, 0x00000000U, 0x0500000fU},
+			{75, 0x018c61a4U, 38, 68, 0, 0x003e0000U, 0x05000016U, 0x00001187U, 0x1a007000U, 0x00000000U, 0x0500000fU},
+			{76, 0x018c6ec4U, 38, 69, 0, 0x00510000U, 0x05000014U, 0x00000d87U, 0x1a007000U, 0x00000000U, 0x0500000fU},
+			{77, 0x018c6e94U, 37, 70, 0, 0x005a0001U, 0x05000012U, 0x00000c47U, 0x12007000U, 0x00000000U, 0x0500000eU},
+			{78, 0x018c6e64U, 36, 71, 0, 0x005d0001U, 0x04000010U, 0x00000dc7U, 0x12005000U, 0x00000000U, 0x0400000fU},
+			{79, 0x018c61d4U, 39, 68, 0, 0x003e0001U, 0x05000015U, 0x00000d47U, 0x12006000U, 0x00000000U, 0x05000010U},
+			{80, 0x018c6ef4U, 38, 69, 0, 0x00480000U, 0x05000016U, 0x00001207U, 0x1a007000U, 0x00000000U, 0x05000010U},
+			{81, 0x018c6204U, 40, 68, 0, 0x003e0002U, 0x05000014U, 0x00000d87U, 0x16005000U, 0x00000000U, 0x05000011U},
+			{82, 0x018c6f24U, 38, 69, 0, 0x00480001U, 0x05000018U, 0x00000e07U, 0x12006000U, 0x00000000U, 0x05000011U},
+			{83, 0x018c7c44U, 37, 70, 0, 0x00520000U, 0x05000015U, 0x00000c47U, 0x1a007000U, 0x00000000U, 0x05000011U},
+			{84, 0x018c7c14U, 37, 70, 0, 0x005b0000U, 0x05000013U, 0x00000d87U, 0x1a007000U, 0x00000000U, 0x05000010U},
+			{85, 0x018c6234U, 43, 68, 0, 0x003e0002U, 0x05000013U, 0x00001187U, 0x16005000U, 0x00000000U, 0x05000012U},
+			{86, 0x018c6f54U, 39, 69, 0, 0x00480001U, 0x05000017U, 0x00000e47U, 0x12005000U, 0x00000000U, 0x05000012U},
+			{87, 0x018c7c74U, 37, 70, 0, 0x00520000U, 0x05000017U, 0x00000c87U, 0x1a006000U, 0x00000000U, 0x05000012U},
+			{88, 0x018c6f84U, 40, 69, 0, 0x00480002U, 0x05000016U, 0x00000d07U, 0x16005000U, 0x00000000U, 0x05000013U},
+			{89, 0x018c7ca4U, 38, 70, 0, 0x00520001U, 0x05000019U, 0x00001087U, 0x12005000U, 0x00000000U, 0x05000013U},
+			{90, 0x018c6fb4U, 41, 69, 0, 0x00480003U, 0x05000015U, 0x00000d47U, 0x16007000U, 0x00000000U, 0x05000014U},
+			{91, 0x018c7cd4U, 39, 70, 0, 0x00520002U, 0x05000019U, 0x00000d87U, 0x16005000U, 0x00000000U, 0x05000014U},
+			{92, 0x018c7d04U, 40, 70, 0, 0x00520002U, 0x05000018U, 0x00000e07U, 0x16007000U, 0x00000000U, 0x05000015U},
+			{93, 0x018c7d34U, 41, 70, 0, 0x00520003U, 0x05000017U, 0x00000d87U, 0x16006000U, 0x00000000U, 0x05000016U},
+	}};
+	for (const ProjectionWriteRow &row : kRecovered4aa3e9ProjectionWrites) {
+		add_projection_write_sample(row.ordinal, row.recovered_cell_pointer, row.x, row.y, row.level,
+				row.before_word_0x1c, row.before_word_0x20, row.before_word_0x24, row.before_word_0x28,
+				row.before_word_0x2c, row.expected_word_0x20);
+	}
 
 	summary.sample_count = int32_t(summary.samples.size());
 	for (const ObjectVectorCommitMutationSamplePlain &sample : summary.samples) {
@@ -5453,13 +5557,33 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 		}
 	}
 	summary.projection_write_sample_count = int32_t(summary.projection_write_samples.size());
+	std::set<uint32_t> projection_write_cell_pointers;
 	for (const ObjectVectorProjectionWriteSamplePlain &sample : summary.projection_write_samples) {
+		projection_write_cell_pointers.insert(sample.recovered_cell_pointer);
+		if (summary.projection_write_ordinal_min == 0 || sample.ordinal < summary.projection_write_ordinal_min) {
+			summary.projection_write_ordinal_min = sample.ordinal;
+		}
+		if (sample.ordinal > summary.projection_write_ordinal_max) {
+			summary.projection_write_ordinal_max = sample.ordinal;
+		}
 		if (sample.match) {
 			summary.projection_write_matched_sample_count += 1;
 		}
 	}
+	summary.projection_write_unique_cell_count = int32_t(projection_write_cell_pointers.size());
+	summary.projection_write_unique_cell_count_matches_recovered =
+			summary.projection_write_unique_cell_count == summary.sampled_4aa3e9_projection_write_unique_cell_count;
+	summary.projection_write_ordinals_cover_recovered_stream =
+			summary.projection_write_ordinal_min == 4
+			&& summary.projection_write_ordinal_max == 93
+			&& summary.projection_write_sample_count == summary.sampled_4aa3e9_projection_write_count;
+	summary.projection_write_full_stream_materialized_plain_cpp =
+			summary.projection_write_sample_count == summary.sampled_4aa3e9_projection_write_count
+			&& summary.projection_write_unique_cell_count_matches_recovered
+			&& summary.projection_write_ordinals_cover_recovered_stream;
 	summary.projection_write_recovered_samples_match = summary.projection_write_sample_count > 0
-			&& summary.projection_write_matched_sample_count == summary.projection_write_sample_count;
+			&& summary.projection_write_matched_sample_count == summary.projection_write_sample_count
+			&& summary.projection_write_full_stream_materialized_plain_cpp;
 	summary.recovered_samples_match = summary.sample_count > 0
 			&& summary.matched_sample_count == summary.sample_count
 			&& summary.projection_write_recovered_samples_match;
@@ -5497,11 +5621,20 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.sampled_4a54a7_commit_mutation_samples_match = commit_summary.sample_count > 0
 			&& commit_summary.matched_sample_count == commit_summary.sample_count;
 	summary.sampled_4a56b6_projection_write_samples_match = commit_summary.projection_write_recovered_samples_match;
+	summary.sampled_4a56b6_projection_write_full_stream_materialized =
+			commit_summary.projection_write_full_stream_materialized_plain_cpp;
+	summary.sampled_4a56b6_projection_write_unique_cell_count_matches =
+			commit_summary.projection_write_unique_cell_count_matches_recovered;
+	summary.sampled_4a56b6_projection_write_ordinals_cover_stream =
+			commit_summary.projection_write_ordinals_cover_recovered_stream;
 	summary.sampled_4a54a7_commit_mutation_sample_count = commit_summary.sample_count;
 	summary.sampled_4a54a7_endpoint_clear_sample_count = commit_summary.endpoint_clear_sample_count;
 	summary.sampled_4aa3e9_reward_lower_sample_count = commit_summary.reward_lower_sample_count;
 	summary.sampled_4a56b6_projection_write_sample_count = commit_summary.projection_write_sample_count;
 	summary.sampled_4a56b6_projection_write_matched_sample_count = commit_summary.projection_write_matched_sample_count;
+	summary.sampled_4a56b6_projection_write_unique_cell_count = commit_summary.projection_write_unique_cell_count;
+	summary.sampled_4a56b6_projection_write_ordinal_min = commit_summary.projection_write_ordinal_min;
+	summary.sampled_4a56b6_projection_write_ordinal_max = commit_summary.projection_write_ordinal_max;
 	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
 			&& summary.width == summary.expected_reference_width
 			&& summary.height == summary.expected_reference_height
@@ -7188,13 +7321,15 @@ void append_object_vector_projection_write_samples_json(std::ostream &out, const
 		if (index != 0) {
 			out << ",";
 		}
-		const ObjectVectorProjectionWriteSamplePlain &sample = samples[index];
-		out << "{";
-		out << "\"ordinal\":" << sample.ordinal << ",";
-		out << "\"x\":" << sample.x << ",";
-		out << "\"y\":" << sample.y << ",";
-		out << "\"level\":" << sample.level << ",";
-		out << "\"before_word_0x20\":" << sample.before_word_0x20 << ",";
+			const ObjectVectorProjectionWriteSamplePlain &sample = samples[index];
+			out << "{";
+			out << "\"ordinal\":" << sample.ordinal << ",";
+			out << "\"recovered_cell_pointer\":" << sample.recovered_cell_pointer << ",";
+			out << "\"x\":" << sample.x << ",";
+			out << "\"y\":" << sample.y << ",";
+			out << "\"level\":" << sample.level << ",";
+			out << "\"before_word_0x1c\":" << sample.before_word_0x1c << ",";
+			out << "\"before_word_0x20\":" << sample.before_word_0x20 << ",";
 		out << "\"before_word_0x24\":" << sample.before_word_0x24 << ",";
 		out << "\"before_word_0x28\":" << sample.before_word_0x28 << ",";
 		out << "\"before_word_0x2c\":" << sample.before_word_0x2c << ",";
@@ -7215,8 +7350,8 @@ void append_object_vector_commit_mutation_summary_json(std::ostream &out, const 
 	out << "    \"h3maped_anchor\": \"0x4a54a7_0x4a61bc_0x4a7605_0x4aa3e9_0x4aa44d\",\n";
 	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
 	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
-	out << "    \"source\": \"plain-C++ replay of recovered 0x4a54a7 target-cell mutation samples from medium_seed10_4a54a7_afterstate_summary_20260608.json, 4a61bc_4a54a7_dynamic_aggregate_summary_20260609.json, and 4aa3e9_4a54a7_dynamic_summary_20260610.json\",\n";
-	out << "    \"strict_port_scope\": \"mutation helper sample replay only; no live generated-cell adoption, no object-vector adoption, no package objects, roads, guards, blockers, or public output\",\n";
+	out << "    \"source\": \"plain-C++ replay of recovered 0x4a54a7 target-cell mutation samples from medium_seed10_4a54a7_afterstate_summary_20260608.json and 4a61bc_4a54a7_dynamic_aggregate_summary_20260609.json, plus the full 90-write 0x4aa3e9 -> 0x4aa44d -> 0x4a54a7 projection stream from 4aa3e9_4a54a7_dynamic_trace_20260610/winedbg_4aa3e9_4a54a7_dynamic_trace_ledger.json\",\n";
+	out << "    \"strict_port_scope\": \"mutation helper and recovered projection-write stream replay only; no live generated-cell adoption, no object-vector adoption, no package objects, roads, guards, blockers, or public output\",\n";
 	out << "    \"terrain_live_feedback_available\": " << (summary.terrain_live_feedback_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
 	out << "    \"commit_mutation_helpers_ported_plain_cpp\": " << (summary.commit_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
@@ -7225,6 +7360,9 @@ void append_object_vector_commit_mutation_summary_json(std::ostream &out, const 
 	out << "    \"live_grid_mutation_adopted\": " << (summary.live_grid_mutation_adopted ? "true" : "false") << ",\n";
 	out << "    \"recovered_samples_match\": " << (summary.recovered_samples_match ? "true" : "false") << ",\n";
 	out << "    \"projection_write_recovered_samples_match\": " << (summary.projection_write_recovered_samples_match ? "true" : "false") << ",\n";
+	out << "    \"projection_write_full_stream_materialized_plain_cpp\": " << (summary.projection_write_full_stream_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"projection_write_unique_cell_count_matches_recovered\": " << (summary.projection_write_unique_cell_count_matches_recovered ? "true" : "false") << ",\n";
+	out << "    \"projection_write_ordinals_cover_recovered_stream\": " << (summary.projection_write_ordinals_cover_recovered_stream ? "true" : "false") << ",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
 	out << "    \"map_height\": " << summary.height << ",\n";
 	out << "    \"level_count\": " << summary.level_count << ",\n";
@@ -7237,6 +7375,9 @@ void append_object_vector_commit_mutation_summary_json(std::ostream &out, const 
 	out << "    \"sampled_4aa3e9_projection_write_unique_cell_count\": " << summary.sampled_4aa3e9_projection_write_unique_cell_count << ",\n";
 	out << "    \"projection_write_sample_count\": " << summary.projection_write_sample_count << ",\n";
 	out << "    \"projection_write_matched_sample_count\": " << summary.projection_write_matched_sample_count << ",\n";
+	out << "    \"projection_write_unique_cell_count\": " << summary.projection_write_unique_cell_count << ",\n";
+	out << "    \"projection_write_ordinal_min\": " << summary.projection_write_ordinal_min << ",\n";
+	out << "    \"projection_write_ordinal_max\": " << summary.projection_write_ordinal_max << ",\n";
 	out << "    \"sampled_4a61bc_min_projection_write_count\": " << summary.sampled_4a61bc_min_projection_write_count << ",\n";
 	out << "    \"sampled_4a61bc_max_projection_write_count\": " << summary.sampled_4a61bc_max_projection_write_count << ",\n";
 	out << "    \"samples\": ";
@@ -7270,6 +7411,9 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"projection_write_coordinates_materialized\": " << (summary.projection_write_coordinates_materialized ? "true" : "false") << ",\n";
 	out << "    \"sampled_4a54a7_commit_mutation_samples_match\": " << (summary.sampled_4a54a7_commit_mutation_samples_match ? "true" : "false") << ",\n";
 	out << "    \"sampled_4a56b6_projection_write_samples_match\": " << (summary.sampled_4a56b6_projection_write_samples_match ? "true" : "false") << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_full_stream_materialized\": " << (summary.sampled_4a56b6_projection_write_full_stream_materialized ? "true" : "false") << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_unique_cell_count_matches\": " << (summary.sampled_4a56b6_projection_write_unique_cell_count_matches ? "true" : "false") << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_ordinals_cover_stream\": " << (summary.sampled_4a56b6_projection_write_ordinals_cover_stream ? "true" : "false") << ",\n";
 	out << "    \"recovered_reference_case_matches\": " << (summary.recovered_reference_case_matches ? "true" : "false") << ",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
 	out << "    \"map_height\": " << summary.height << ",\n";
@@ -7297,6 +7441,9 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"sampled_4aa3e9_projection_write_unique_cell_count\": " << summary.sampled_4aa3e9_projection_write_unique_cell_count << ",\n";
 	out << "    \"sampled_4a56b6_projection_write_sample_count\": " << summary.sampled_4a56b6_projection_write_sample_count << ",\n";
 	out << "    \"sampled_4a56b6_projection_write_matched_sample_count\": " << summary.sampled_4a56b6_projection_write_matched_sample_count << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_unique_cell_count\": " << summary.sampled_4a56b6_projection_write_unique_cell_count << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_ordinal_min\": " << summary.sampled_4a56b6_projection_write_ordinal_min << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_ordinal_max\": " << summary.sampled_4a56b6_projection_write_ordinal_max << ",\n";
 	out << "    \"sampled_4a79a3_initial_object_vector_count\": " << summary.sampled_4a79a3_initial_object_vector_count << ",\n";
 	out << "    \"sampled_4a79a3_positive_append_count\": " << summary.sampled_4a79a3_positive_append_count << ",\n";
 	out << "    \"sampled_4a79a3_final_object_vector_count\": " << summary.sampled_4a79a3_final_object_vector_count << ",\n";
