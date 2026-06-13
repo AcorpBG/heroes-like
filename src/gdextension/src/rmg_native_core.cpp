@@ -373,12 +373,27 @@ struct ZoneSpanFillSummaryPlain {
 	int32_t blocked_initial_span_count = 0;
 };
 
+struct BoundaryVectorEventPlain {
+	int32_t runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t zone_word_id = -1;
+	int32_t vector_index = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	std::string event_kind;
+	std::string h3maped_anchor;
+	std::string native_source;
+};
+
 struct BoundarySpanFillSummary {
 	bool coordinate_replay_available = false;
 	bool source_node_walks_available = false;
 	bool supported_scope = false;
 	bool boundary_span_fill_materialized_plain_cpp = false;
 	bool private_zone_cell_buffer_materialized = false;
+	bool boundary_native_vector_trace_materialized = false;
+	bool boundary_exact_h3maped_vector_materialized = false;
 	bool same_level_synthetic_runtime_zone_append_ported = false;
 	bool same_level_synthetic_runtime_zone_branch_allowed = false;
 	int32_t same_level_synthetic_runtime_zone_count = 0;
@@ -406,6 +421,12 @@ struct BoundarySpanFillSummary {
 	int32_t boundary_randomized_rng_call_count = 0;
 	int32_t boundary_randomized_inserted_midpoint_count = 0;
 	int32_t boundary_randomized_max_pending_point_count = 0;
+	int32_t boundary_vector_event_count = 0;
+	int32_t boundary_vector_event_sample_limit = 512;
+	bool boundary_vector_event_sample_truncated = false;
+	std::map<std::string, int32_t> boundary_vector_events_by_anchor;
+	std::map<std::string, int32_t> boundary_vector_events_by_kind;
+	std::vector<BoundaryVectorEventPlain> boundary_vector_events;
 	int32_t boundary_trace_write_count = 0;
 	int32_t boundary_unique_cell_count = 0;
 	int32_t boundary_out_of_bounds_write_count = 0;
@@ -2865,6 +2886,28 @@ SeedRelocationPlain seed_relocation_4a325d_plain(const SourceWalkPlain *walk, co
 	return relocation;
 }
 
+void append_boundary_vector_event_4a2777_plain(BoundarySpanFillSummary &summary, int32_t runtime_zone_index, int32_t source_zone_id, int32_t zone_word_id, int32_t x, int32_t y, int32_t level, const std::string &event_kind, const std::string &h3maped_anchor, const std::string &native_source) {
+	summary.boundary_vector_event_count += 1;
+	summary.boundary_vector_events_by_anchor[h3maped_anchor] += 1;
+	summary.boundary_vector_events_by_kind[event_kind] += 1;
+	if (int32_t(summary.boundary_vector_events.size()) >= summary.boundary_vector_event_sample_limit) {
+		summary.boundary_vector_event_sample_truncated = true;
+		return;
+	}
+	BoundaryVectorEventPlain event;
+	event.runtime_zone_index = runtime_zone_index;
+	event.source_zone_id = source_zone_id;
+	event.zone_word_id = zone_word_id;
+	event.vector_index = summary.boundary_vector_event_count - 1;
+	event.x = x;
+	event.y = y;
+	event.level = level;
+	event.event_kind = event_kind;
+	event.h3maped_anchor = h3maped_anchor;
+	event.native_source = native_source;
+	summary.boundary_vector_events.push_back(event);
+}
+
 BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &controlled_case, const CoordinateReplaySummary &coordinate_summary, const SourceNodeFootprintSummary &source_node_summary) {
 	BoundarySpanFillSummary summary;
 	summary.coordinate_replay_available = coordinate_summary.ok;
@@ -2926,7 +2969,7 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
 	};
 
-	auto append_border_connection = [&](int32_t &current_x, int32_t &current_y, int32_t target_x, int32_t target_y, int32_t zone_word, int32_t level, int32_t random_span_limit) {
+	auto append_border_connection = [&](int32_t &current_x, int32_t &current_y, int32_t target_x, int32_t target_y, int32_t zone_word, int32_t level, int32_t random_span_limit, int32_t runtime_zone_index, int32_t source_zone_id) {
 		if (current_x == target_x && current_y == target_y) {
 			return;
 		}
@@ -2956,6 +2999,7 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			}
 			append_line(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
 			summary.boundary_appended_vertex_count += 1;
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, source_zone_id, zone_word, border_x, border_y, level, "native_border_wrap_vertex", "native_proxy_for_0x4a2777_border_connection", "native_current_boundary_walk");
 			current_x = border_x;
 			current_y = border_y;
 			summary.boundary_wrap_segment_count += 1;
@@ -2968,6 +3012,7 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		if (current_x != target_x || current_y != target_y) {
 			append_line(current_x, current_y, target_x, target_y, zone_word, level, false, random_span_limit);
 			summary.boundary_appended_vertex_count += 1;
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, source_zone_id, zone_word, target_x, target_y, level, "native_border_final_vertex", "native_proxy_for_0x4a2777_border_connection", "native_current_boundary_walk");
 			summary.boundary_final_segment_count += 1;
 			current_x = target_x;
 			current_y = target_y;
@@ -3031,7 +3076,9 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			continue;
 		}
 		if (source_edge_writer_allowed(source_nodes[size_t(selected_segment_index)])) {
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, clipped_current.x, clipped_current.y, level, "native_selected_clipped_source_start", "native_proxy_for_0x4a2990", "native_current_boundary_walk");
 			append_line(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, clipped_target.x, clipped_target.y, level, "native_selected_clipped_source_target", "native_proxy_for_0x4a2990", "native_current_boundary_walk");
 			summary.boundary_appended_vertex_count += 1;
 			summary.boundary_connector_segment_count += 1;
 		} else {
@@ -3058,13 +3105,15 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 				summary.boundary_skipped_out_of_bounds_clip_count += 1;
 				continue;
 			}
-			append_border_connection(current_x, current_y, from_clip.x, from_clip.y, zone_word, level, random_span_limit);
+			append_border_connection(current_x, current_y, from_clip.x, from_clip.y, zone_word, level, random_span_limit, runtime_zone_index, zone.source_zone_id);
 			if (summary.boundary_loop_guard_exhausted) {
 				break;
 			}
 			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
 				if (source_edge_writer_allowed(from_node)) {
+					append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, from_clip.x, from_clip.y, level, "native_loop_clipped_source_start", "native_proxy_for_0x4a2adc", "native_current_boundary_walk");
 					append_line(from_clip.x, from_clip.y, to_clip.x, to_clip.y, zone_word, level, false, random_span_limit);
+					append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, to_clip.x, to_clip.y, level, "native_loop_clipped_source_target", "native_proxy_for_0x4a2b1e", "native_current_boundary_walk");
 					summary.boundary_appended_vertex_count += 1;
 					summary.boundary_connector_segment_count += 1;
 				} else {
@@ -3082,6 +3131,8 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 
 	summary.boundary_unique_cell_count = int32_t(boundary_unique_cells.size());
 	summary.rng_state_after_0x4a2777 = rng.state;
+	summary.boundary_native_vector_trace_materialized = true;
+	summary.boundary_exact_h3maped_vector_materialized = false;
 	std::map<int64_t, bool> real_unique_filled_cells;
 	for (const RuntimeZoneRecordPlain &zone : runtime_zones) {
 		const SourceWalkPlain *matching_walk = nullptr;
@@ -5128,8 +5179,8 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"span_fill_anchor\": \"0x4a325d\",\n";
 	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
 	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
-	out << "    \"source\": \"plain-C++ port of recovered h3maped 0x4a2777 source-node boundary traversal and 0x4a325d span fill over the currently materialized source-node walks\",\n";
-	out << "    \"strict_port_scope\": \"private zone-word and reserved-flag cell buffer only; no terrain repaint, generated-cell live feedback, object vectors, package adoption, or public map output\",\n";
+	out << "    \"source\": \"plain-C++ checkpoint-2 boundary/span-fill surface over the currently materialized source-node walks\",\n";
+	out << "    \"strict_port_scope\": \"private zone-word and reserved-flag cell buffer plus native boundary-vector proxy trace only; no exact h3maped generator+0x3f4 vector, terrain repaint, generated-cell live feedback, object vectors, package adoption, or public map output\",\n";
 	out << "    \"coordinate_replay_available\": " << (summary.coordinate_replay_available ? "true" : "false") << ",\n";
 	out << "    \"source_node_walks_available\": " << (summary.source_node_walks_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
@@ -5137,6 +5188,11 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"materializes_private_zone_cell_buffer\": " << (summary.private_zone_cell_buffer_materialized ? "true" : "false") << ",\n";
 	out << "    \"materializes_private_generated_cell_owner_words\": " << (summary.generated_cell_owner_words_materialized ? "true" : "false") << ",\n";
 	out << "    \"materializes_boundary_trace\": " << (summary.boundary_span_fill_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"materializes_native_boundary_vector_proxy_trace\": " << (summary.boundary_native_vector_trace_materialized ? "true" : "false") << ",\n";
+	out << "    \"materializes_exact_h3maped_generator_0x3f4_boundary_vector\": " << (summary.boundary_exact_h3maped_vector_materialized ? "true" : "false") << ",\n";
+	out << "    \"boundary_vector_blocked_reason\": \"" << (summary.boundary_exact_h3maped_vector_materialized
+			? ""
+			: "0x4a2777 generator+0x3f4 vector materialization is still not ported; current trace is native-current proxy evidence only and must not be treated as checkpoint-2 parity") << "\",\n";
 	out << "    \"materializes_span_fill\": " << (summary.boundary_span_fill_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"materializes_terrain\": false,\n";
 	out << "    \"materializes_map_cells\": false,\n";
@@ -5169,6 +5225,15 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"boundary_randomized_rng_call_count\": " << summary.boundary_randomized_rng_call_count << ",\n";
 	out << "    \"boundary_randomized_inserted_midpoint_count\": " << summary.boundary_randomized_inserted_midpoint_count << ",\n";
 	out << "    \"boundary_randomized_max_pending_point_count\": " << summary.boundary_randomized_max_pending_point_count << ",\n";
+	out << "    \"boundary_vector_event_count\": " << summary.boundary_vector_event_count << ",\n";
+	out << "    \"boundary_vector_event_sample_limit\": " << summary.boundary_vector_event_sample_limit << ",\n";
+	out << "    \"boundary_vector_event_sample_truncated\": " << (summary.boundary_vector_event_sample_truncated ? "true" : "false") << ",\n";
+	out << "    \"boundary_vector_events_by_anchor\": ";
+	append_string_histogram_json(out, summary.boundary_vector_events_by_anchor);
+	out << ",\n";
+	out << "    \"boundary_vector_events_by_kind\": ";
+	append_string_histogram_json(out, summary.boundary_vector_events_by_kind);
+	out << ",\n";
 	out << "    \"boundary_trace_write_count\": " << summary.boundary_trace_write_count << ",\n";
 	out << "    \"boundary_unique_cell_count\": " << summary.boundary_unique_cell_count << ",\n";
 	out << "    \"boundary_out_of_bounds_write_count\": " << summary.boundary_out_of_bounds_write_count << ",\n";
@@ -5190,6 +5255,26 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"cells_by_zone_word\": ";
 	append_cells_by_zone_word_json(out, summary.cells_by_zone_word);
 	out << ",\n";
+	out << "    \"boundary_vector_events\": [";
+	for (size_t index = 0; index < summary.boundary_vector_events.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const BoundaryVectorEventPlain &event = summary.boundary_vector_events[index];
+		out << "{";
+		out << "\"runtime_zone_index\":" << event.runtime_zone_index << ",";
+		out << "\"source_zone_id\":" << event.source_zone_id << ",";
+		out << "\"zone_word_id\":" << event.zone_word_id << ",";
+		out << "\"vector_index\":" << event.vector_index << ",";
+		out << "\"x\":" << event.x << ",";
+		out << "\"y\":" << event.y << ",";
+		out << "\"level\":" << event.level << ",";
+		out << "\"event_kind\":\"" << json_escape(event.event_kind) << "\",";
+		out << "\"h3maped_anchor\":\"" << json_escape(event.h3maped_anchor) << "\",";
+		out << "\"native_source\":\"" << json_escape(event.native_source) << "\"";
+		out << "}";
+	}
+	out << "],\n";
 	out << "    \"zone_fills\": ";
 	append_zone_span_fill_summaries_json(out, summary.zone_fills);
 	out << ",\n";
