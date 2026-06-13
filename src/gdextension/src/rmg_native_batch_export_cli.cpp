@@ -23,6 +23,7 @@ struct Options {
 	int limit = 0;
 	bool include_unsupported = false;
 	bool emit_phase_snapshot = false;
+	bool phase_snapshot_only = false;
 	bool print_manifest = false;
 };
 
@@ -143,6 +144,9 @@ Options parse_options(int argc, char **argv) {
 			options.include_unsupported = true;
 		} else if (arg == "--emit-phase-snapshot") {
 			options.emit_phase_snapshot = true;
+		} else if (arg == "--phase-snapshot-only") {
+			options.phase_snapshot_only = true;
+			options.emit_phase_snapshot = true;
 		} else if (arg == "--print-manifest") {
 			options.print_manifest = true;
 		}
@@ -181,6 +185,9 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		} else if (!supported) {
 			report.status = "unsupported_scope";
 			report.blocked_reason = "standalone_cli_currently_scopes_only_small_medium_one_level_land";
+		} else if (options.phase_snapshot_only) {
+			report.status = "phase_snapshot_exported";
+			report.blocked_reason = "";
 		} else {
 			report.status = "blocked";
 			report.blocked_reason = "native_rmg_core_still_godot_variant_bound";
@@ -205,19 +212,34 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 std::string manifest_json(const Options &options, const std::filesystem::path &absolute_output_dir, const std::vector<CaseReport> &case_reports, int skipped_count) {
 	int failed_count = 0;
 	int unsupported_count = 0;
+	int phase_snapshot_exported_count = 0;
+	int phase_snapshot_failed_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
 		} else if (report.status == "unsupported_scope") {
 			++unsupported_count;
+		} else if (report.status == "phase_snapshot_exported") {
+			++phase_snapshot_exported_count;
+			if (!report.phase_snapshot_written) {
+				++phase_snapshot_failed_count;
+			}
 		}
 	}
-	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count;
+	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - phase_snapshot_exported_count;
+	const bool phase_snapshot_pass = options.phase_snapshot_only
+			&& phase_snapshot_exported_count > 0
+			&& failed_count == 0
+			&& unsupported_count == 0
+			&& blocked_count == 0
+			&& phase_snapshot_failed_count == 0;
+	const std::string status = phase_snapshot_pass ? "phase_snapshot_exported" : "blocked";
+	const std::string blocked_reason = phase_snapshot_pass ? "" : "native_rmg_core_still_godot_variant_bound";
 	std::ostringstream out;
 	out << "{\n";
-	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v2\",\n";
-	out << "  \"status\": \"blocked\",\n";
-	out << "  \"blocked_reason\": \"native_rmg_core_still_godot_variant_bound\",\n";
+	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v3\",\n";
+	out << "  \"status\": \"" << status << "\",\n";
+	out << "  \"blocked_reason\": \"" << blocked_reason << "\",\n";
 	out << "  \"runner\": \"standalone_native_cli_no_godot\",\n";
 	out << "  \"godot_process_started\": false,\n";
 	out << "  \"output_dir\": \"" << json_escape(options.output_dir.string()) << "\",\n";
@@ -227,6 +249,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"case_limit\": " << options.limit << ",\n";
 	out << "  \"include_unsupported\": " << (options.include_unsupported ? "true" : "false") << ",\n";
 	out << "  \"emit_phase_snapshot\": " << (options.emit_phase_snapshot ? "true" : "false") << ",\n";
+	out << "  \"phase_snapshot_only\": " << (options.phase_snapshot_only ? "true" : "false") << ",\n";
 	out << "  \"controlled_case_count\": " << options.controlled_cases.size() << ",\n";
 	out << "  \"controlled_cases\": ";
 	append_json_string_array(out, options.controlled_cases);
@@ -236,11 +259,13 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"unsupported_count\": " << unsupported_count << ",\n";
 	out << "  \"skipped_count\": " << skipped_count << ",\n";
 	out << "  \"exported_count\": 0,\n";
+	out << "  \"phase_snapshot_exported_count\": " << phase_snapshot_exported_count << ",\n";
+	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
 	out << "  \"generation_core_stage\": \"plain_cpp_controlled_case_checkpoint2_setup_default_postsynthetic_live_feedback_surface\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
 	out << "  \"required_next_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api_before_running_native_exports_on_memory_constrained_hosts\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. It parses and reports controlled Small/Medium one-level land cases, but intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes controlled Small/Medium one-level land private-state snapshots and exits successfully without Godot. It still intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
@@ -275,8 +300,39 @@ int main(int argc, char **argv) {
 	if (options.print_manifest) {
 		std::cout << manifest;
 	}
+	int failed_count = 0;
+	int unsupported_count = 0;
+	int blocked_count = 0;
+	int phase_snapshot_exported_count = 0;
+	int phase_snapshot_failed_count = 0;
+	for (const CaseReport &report : case_reports) {
+		if (report.status == "failed") {
+			++failed_count;
+		} else if (report.status == "unsupported_scope") {
+			++unsupported_count;
+		} else if (report.status == "phase_snapshot_exported") {
+			++phase_snapshot_exported_count;
+			if (!report.phase_snapshot_written) {
+				++phase_snapshot_failed_count;
+			}
+		} else if (report.status == "blocked") {
+			++blocked_count;
+		}
+	}
+	const bool phase_snapshot_pass = options.phase_snapshot_only
+			&& phase_snapshot_exported_count > 0
+			&& failed_count == 0
+			&& unsupported_count == 0
+			&& blocked_count == 0
+			&& phase_snapshot_failed_count == 0;
+	if (phase_snapshot_pass) {
+		std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=phase_snapshot_exported output_dir=" << absolute_output_dir.string()
+				  << " cases=" << case_reports.size()
+				  << " phase_snapshots=" << phase_snapshot_exported_count << "\n";
+		return 0;
+	}
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " reason=native_rmg_core_still_godot_variant_bound\n";
-	return 2;
+	return failed_count > 0 ? 1 : 2;
 }

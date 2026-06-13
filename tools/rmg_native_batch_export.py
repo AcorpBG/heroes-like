@@ -196,6 +196,8 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         command.extend(["--controlled-case", controlled_case])
     if args.include_unsupported:
         command.append("--include-unsupported")
+    if args.phase_snapshot_only:
+        command.append("--phase-snapshot-only")
     if args.emit_phase_snapshot:
         command.append("--emit-phase-snapshot")
     if args.print_manifest:
@@ -213,7 +215,8 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
 
     manifest = load_manifest(output_dir)
     post_run_godot = godot_processes()
-    base_status = "pass" if process.returncode == 0 and manifest.get("status") == "exported" else "blocked"
+    pass_statuses = {"exported", "phase_snapshot_exported"}
+    base_status = "pass" if process.returncode == 0 and manifest.get("status") in pass_statuses else "blocked"
     wrapper = {
         "schema_id": "rmg_native_batch_export_python_wrapper_v3",
         "status": "failed" if post_run_godot else base_status,
@@ -231,6 +234,9 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         "blocked_count": manifest.get("blocked_count", 0),
         "unsupported_count": manifest.get("unsupported_count", 0),
         "skipped_count": manifest.get("skipped_count", 0),
+        "phase_snapshot_only": manifest.get("phase_snapshot_only", False),
+        "phase_snapshot_exported_count": manifest.get("phase_snapshot_exported_count", 0),
+        "phase_snapshot_failed_count": manifest.get("phase_snapshot_failed_count", 0),
         "generation_core_stage": manifest.get("generation_core_stage", ""),
         "phase_snapshot_schema_id": manifest.get("phase_snapshot_schema_id", ""),
         "control_policy": "python_invokes_standalone_native_cli_no_godot_and_refuses_when_godot_is_already_running",
@@ -247,7 +253,8 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
 
     print(
         "RMG_NATIVE_BATCH_EXPORT_PY status={status} output_dir={output_dir} "
-        "exported={exported_count} failed={failed_count} log={log_path}".format(**wrapper)
+        "exported={exported_count} phase_snapshots={phase_snapshot_exported_count} "
+        "failed={failed_count} log={log_path}".format(**wrapper)
     )
     if args.print_manifest:
         print(json.dumps(wrapper, indent=2, sort_keys=True))
@@ -258,7 +265,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runner", choices=["native-cli"], default="native-cli", help="Export runner. The only supported runner is the standalone native CLI.")
     parser.add_argument("--native-cli", default="", help="Standalone native CLI path, otherwise bin/rmg_native_batch_export_cli.")
-    parser.add_argument("--out", type=Path, default=None, help="Output directory for fresh .amap files and manifests.")
+    parser.add_argument("--out", type=Path, default=None, help="Output directory for native no-Godot artifacts and manifests.")
     parser.add_argument("--limit", type=int, default=0, help="Maximum owner cases to export.")
     parser.add_argument("--case", default="", help="Comma-separated case id filter.")
     parser.add_argument(
@@ -276,6 +283,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--include-unsupported", action="store_true", help="Export unsupported owner cases too; failures are expected for modes outside strict Small/Medium one-level land.")
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
+    parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case private-state snapshots through the standalone CLI and exit successfully without attempting .amap generation.")
     parser.add_argument("--print-manifest", action="store_true", help="Print wrapper manifest JSON.")
     return parser
 
