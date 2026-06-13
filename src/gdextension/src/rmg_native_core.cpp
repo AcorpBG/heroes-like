@@ -355,6 +355,8 @@ struct ZoneSpanFillSummaryPlain {
 	int32_t zone_word_id = -1;
 	std::string status;
 	std::string seed_relocation_status;
+	std::string seed_descriptor_handoff_status;
+	std::string seed_descriptor_source;
 	int32_t seed_x = 0;
 	int32_t seed_y = 0;
 	int32_t seed_level = 0;
@@ -363,6 +365,14 @@ struct ZoneSpanFillSummaryPlain {
 	int32_t effective_seed_level = 0;
 	bool seed_relocated = false;
 	bool seed_in_bounds = false;
+	bool exact_seed_descriptor_handoff_ported = false;
+	bool seed_descriptor_proxy_available = false;
+	int32_t seed_descriptor_candidate_scan_count = 0;
+	int32_t seed_descriptor_candidate_interior_count = 0;
+	int32_t seed_descriptor_best_x = -1;
+	int32_t seed_descriptor_best_y = -1;
+	int32_t seed_descriptor_best_clearance = -1;
+	std::string seed_descriptor_clip_branch;
 	bool seed_unassigned_before_fill = false;
 	int32_t filled_cell_count = 0;
 	int32_t unique_filled_cell_count = 0;
@@ -435,6 +445,14 @@ struct BoundarySpanFillSummary {
 	int32_t span_fill_filled_zone_count = 0;
 	int32_t span_fill_seed_blocked_count = 0;
 	int32_t span_fill_seed_relocated_count = 0;
+	bool span_fill_exact_seed_descriptor_handoff_materialized = false;
+	int32_t span_fill_seed_out_of_bounds_count = 0;
+	int32_t span_fill_seed_descriptor_handoff_unported_count = 0;
+	int32_t span_fill_seed_descriptor_proxy_available_count = 0;
+	int32_t span_fill_seed_descriptor_proxy_candidate_scan_count = 0;
+	int32_t span_fill_seed_descriptor_proxy_interior_candidate_count = 0;
+	int32_t span_fill_seed_descriptor_proxy_relocated_count = 0;
+	int32_t span_fill_seed_descriptor_proxy_no_candidate_count = 0;
 	int32_t span_fill_unique_filled_cell_count = 0;
 	int32_t span_fill_boundary_or_filled_cell_count = 0;
 	int32_t span_fill_remaining_unassigned_cell_count = 0;
@@ -2837,7 +2855,18 @@ SpanFillResultPlain span_fill_4a325d_plain(std::vector<uint32_t> &zone_words, st
 
 struct SeedRelocationPlain {
 	std::string status = "0x4a325d_seed_in_bounds_relocation_not_used";
+	std::string handoff_status = "0x4a325d_seed_descriptor_handoff_not_used_for_in_bounds_seed";
+	std::string descriptor_source = "not_used_seed_already_in_bounds";
 	bool relocated = false;
+	bool seed_in_bounds = false;
+	bool exact_descriptor_handoff_ported = false;
+	bool descriptor_proxy_available = false;
+	int32_t candidate_scan_count = 0;
+	int32_t interior_candidate_count = 0;
+	int32_t best_candidate_x = -1;
+	int32_t best_candidate_y = -1;
+	int32_t best_candidate_clearance = -1;
+	std::string clip_branch;
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
@@ -2848,18 +2877,25 @@ SeedRelocationPlain seed_relocation_4a325d_plain(const SourceWalkPlain *walk, co
 	relocation.x = seed.x;
 	relocation.y = seed.y;
 	relocation.level = seed.level;
-	const bool seed_in_bounds = seed.x >= 0 && seed.x < width && seed.y >= 0 && seed.y < height && seed.level >= 0 && seed.level < level_count;
-	if (seed_in_bounds) {
+	relocation.seed_in_bounds = seed.x >= 0 && seed.x < width && seed.y >= 0 && seed.y < height && seed.level >= 0 && seed.level < level_count;
+	if (relocation.seed_in_bounds) {
 		return relocation;
 	}
+	relocation.status = "0x4a325d_seed_out_of_bounds_exact_descriptor_handoff_unported";
+	relocation.handoff_status = "0x4a325d_out_of_bounds_descriptor_scan_required_but_exact_0x4a3a03_0x4cca55_descriptor_handoff_unported";
+	relocation.descriptor_source = "unported_h3maped_descriptor_argument_ebp_plus_0x0c";
 	int32_t best_x = -1;
 	int32_t best_y = -1;
 	int32_t best_clearance = -1;
 	if (walk != nullptr) {
+		relocation.descriptor_proxy_available = true;
+		relocation.descriptor_source = "native_current_source_cycle_walk_proxy_not_exact_ebp_plus_0x0c_descriptor";
 		for (const SourceCycleNodePlain &node : walk->cycle_nodes) {
+			relocation.candidate_scan_count += 1;
 			const int32_t x = node.x;
 			const int32_t y = node.y;
 			if (x >= 1 && x < width - 1 && y >= 1 && y < height - 1) {
+				relocation.interior_candidate_count += 1;
 				const int32_t clearance = std::min<int32_t>(std::min<int32_t>(x, width - x - 1), std::min<int32_t>(y, height - y - 1));
 				if (clearance > best_clearance) {
 					best_clearance = clearance;
@@ -2869,8 +2905,14 @@ SeedRelocationPlain seed_relocation_4a325d_plain(const SourceWalkPlain *walk, co
 			}
 		}
 	}
+	relocation.best_candidate_x = best_x;
+	relocation.best_candidate_y = best_y;
+	relocation.best_candidate_clearance = best_clearance;
 	if (best_x < 0 || best_y < 0) {
-		relocation.status = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+		relocation.status = "0x4a325d_seed_out_of_bounds_exact_descriptor_handoff_unported_no_proxy_candidate";
+		relocation.handoff_status = relocation.descriptor_proxy_available
+				? "0x4a325d_current_cycle_proxy_scanned_but_no_interior_candidate"
+				: "0x4a325d_exact_descriptor_handoff_unported_and_no_native_proxy_walk";
 		return relocation;
 	}
 	ClipBoundsPlain bounds;
@@ -2879,8 +2921,10 @@ SeedRelocationPlain seed_relocation_4a325d_plain(const SourceWalkPlain *walk, co
 	bounds.max_x = width;
 	bounds.max_y = height;
 	const ClipResultPlain clipped = clip_point_4a2b33_plain(seed.x, seed.y, best_x, best_y, bounds);
-	relocation.status = "0x4a325d_seed_out_of_bounds_relocated_with_0x4a2b33";
+	relocation.status = "0x4a325d_seed_out_of_bounds_current_cycle_proxy_relocated_with_0x4a2b33_exact_descriptor_handoff_unported";
+	relocation.handoff_status = "0x4a325d_proxy_matches_recovered_best-clearance_formula_but_not_exact_descriptor_argument";
 	relocation.relocated = true;
+	relocation.clip_branch = clipped.branch;
 	relocation.x = clipped.x;
 	relocation.y = clipped.y;
 	return relocation;
@@ -3150,12 +3194,39 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		SpanRecordPlain seed { zone_fill.seed_x, zone_fill.seed_y, zone_fill.seed_level };
 		SeedRelocationPlain relocation = seed_relocation_4a325d_plain(matching_walk, seed, summary.width, summary.height, summary.level_count);
 		zone_fill.seed_relocation_status = relocation.status;
+		zone_fill.seed_descriptor_handoff_status = relocation.handoff_status;
+		zone_fill.seed_descriptor_source = relocation.descriptor_source;
+		zone_fill.exact_seed_descriptor_handoff_ported = relocation.exact_descriptor_handoff_ported;
+		zone_fill.seed_descriptor_proxy_available = relocation.descriptor_proxy_available;
+		zone_fill.seed_descriptor_candidate_scan_count = relocation.candidate_scan_count;
+		zone_fill.seed_descriptor_candidate_interior_count = relocation.interior_candidate_count;
+		zone_fill.seed_descriptor_best_x = relocation.best_candidate_x;
+		zone_fill.seed_descriptor_best_y = relocation.best_candidate_y;
+		zone_fill.seed_descriptor_best_clearance = relocation.best_candidate_clearance;
+		zone_fill.seed_descriptor_clip_branch = relocation.clip_branch;
+		if (!relocation.seed_in_bounds) {
+			summary.span_fill_seed_out_of_bounds_count += 1;
+			if (!relocation.exact_descriptor_handoff_ported) {
+				summary.span_fill_seed_descriptor_handoff_unported_count += 1;
+			}
+		}
+		if (relocation.descriptor_proxy_available) {
+			summary.span_fill_seed_descriptor_proxy_available_count += 1;
+			summary.span_fill_seed_descriptor_proxy_candidate_scan_count += relocation.candidate_scan_count;
+			summary.span_fill_seed_descriptor_proxy_interior_candidate_count += relocation.interior_candidate_count;
+			if (relocation.best_candidate_x < 0 || relocation.best_candidate_y < 0) {
+				summary.span_fill_seed_descriptor_proxy_no_candidate_count += 1;
+			}
+		}
 		if (relocation.relocated) {
 			seed.x = relocation.x;
 			seed.y = relocation.y;
 			seed.level = relocation.level;
 			zone_fill.seed_relocated = true;
 			summary.span_fill_seed_relocated_count += 1;
+			if (relocation.descriptor_proxy_available && !relocation.exact_descriptor_handoff_ported) {
+				summary.span_fill_seed_descriptor_proxy_relocated_count += 1;
+			}
 		}
 		zone_fill.effective_seed_x = seed.x;
 		zone_fill.effective_seed_y = seed.y;
@@ -5103,6 +5174,8 @@ void append_zone_span_fill_summaries_json(std::ostream &out, const std::vector<Z
 		out << "\"zone_word_id\":" << zone.zone_word_id << ",";
 		out << "\"status\":\"" << json_escape(zone.status) << "\",";
 		out << "\"seed_relocation_status\":\"" << json_escape(zone.seed_relocation_status) << "\",";
+		out << "\"seed_descriptor_handoff_status\":\"" << json_escape(zone.seed_descriptor_handoff_status) << "\",";
+		out << "\"seed_descriptor_source\":\"" << json_escape(zone.seed_descriptor_source) << "\",";
 		out << "\"seed_x\":" << zone.seed_x << ",";
 		out << "\"seed_y\":" << zone.seed_y << ",";
 		out << "\"seed_level\":" << zone.seed_level << ",";
@@ -5111,6 +5184,14 @@ void append_zone_span_fill_summaries_json(std::ostream &out, const std::vector<Z
 		out << "\"effective_seed_level\":" << zone.effective_seed_level << ",";
 		out << "\"seed_relocated\":" << (zone.seed_relocated ? "true" : "false") << ",";
 		out << "\"seed_in_bounds\":" << (zone.seed_in_bounds ? "true" : "false") << ",";
+		out << "\"exact_seed_descriptor_handoff_ported\":" << (zone.exact_seed_descriptor_handoff_ported ? "true" : "false") << ",";
+		out << "\"seed_descriptor_proxy_available\":" << (zone.seed_descriptor_proxy_available ? "true" : "false") << ",";
+		out << "\"seed_descriptor_candidate_scan_count\":" << zone.seed_descriptor_candidate_scan_count << ",";
+		out << "\"seed_descriptor_candidate_interior_count\":" << zone.seed_descriptor_candidate_interior_count << ",";
+		out << "\"seed_descriptor_best_x\":" << zone.seed_descriptor_best_x << ",";
+		out << "\"seed_descriptor_best_y\":" << zone.seed_descriptor_best_y << ",";
+		out << "\"seed_descriptor_best_clearance\":" << zone.seed_descriptor_best_clearance << ",";
+		out << "\"seed_descriptor_clip_branch\":\"" << json_escape(zone.seed_descriptor_clip_branch) << "\",";
 		out << "\"seed_unassigned_before_fill\":" << (zone.seed_unassigned_before_fill ? "true" : "false") << ",";
 		out << "\"filled_cell_count\":" << zone.filled_cell_count << ",";
 		out << "\"unique_filled_cell_count\":" << zone.unique_filled_cell_count << ",";
@@ -5240,6 +5321,17 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"span_fill_filled_zone_count\": " << summary.span_fill_filled_zone_count << ",\n";
 	out << "    \"span_fill_seed_blocked_count\": " << summary.span_fill_seed_blocked_count << ",\n";
 	out << "    \"span_fill_seed_relocated_count\": " << summary.span_fill_seed_relocated_count << ",\n";
+	out << "    \"materializes_exact_0x4a325d_descriptor_seed_handoff\": " << (summary.span_fill_exact_seed_descriptor_handoff_materialized ? "true" : "false") << ",\n";
+	out << "    \"span_fill_seed_handoff_blocked_reason\": \"" << (summary.span_fill_exact_seed_descriptor_handoff_materialized
+			? ""
+			: "0x4a325d reads the out-of-bounds relocation candidate list from its EBP+0x0c descriptor argument; native still uses current source-cycle walks as a labeled proxy until the exact 0x4a3a03 -> 0x4cca55 -> 0x4a325d descriptor handoff is ported") << "\",\n";
+	out << "    \"span_fill_seed_out_of_bounds_count\": " << summary.span_fill_seed_out_of_bounds_count << ",\n";
+	out << "    \"span_fill_seed_descriptor_handoff_unported_count\": " << summary.span_fill_seed_descriptor_handoff_unported_count << ",\n";
+	out << "    \"span_fill_seed_descriptor_proxy_available_count\": " << summary.span_fill_seed_descriptor_proxy_available_count << ",\n";
+	out << "    \"span_fill_seed_descriptor_proxy_candidate_scan_count\": " << summary.span_fill_seed_descriptor_proxy_candidate_scan_count << ",\n";
+	out << "    \"span_fill_seed_descriptor_proxy_interior_candidate_count\": " << summary.span_fill_seed_descriptor_proxy_interior_candidate_count << ",\n";
+	out << "    \"span_fill_seed_descriptor_proxy_relocated_count\": " << summary.span_fill_seed_descriptor_proxy_relocated_count << ",\n";
+	out << "    \"span_fill_seed_descriptor_proxy_no_candidate_count\": " << summary.span_fill_seed_descriptor_proxy_no_candidate_count << ",\n";
 	out << "    \"span_fill_unique_filled_cell_count\": " << summary.span_fill_unique_filled_cell_count << ",\n";
 	out << "    \"span_fill_boundary_or_filled_cell_count\": " << summary.span_fill_boundary_or_filled_cell_count << ",\n";
 	out << "    \"span_fill_remaining_unassigned_cell_count\": " << summary.span_fill_remaining_unassigned_cell_count << ",\n";
