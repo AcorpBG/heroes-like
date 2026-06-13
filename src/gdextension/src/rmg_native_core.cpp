@@ -3230,6 +3230,22 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		auto source_edge_writer_allowed = [&](const SourceCycleNodePlain &from_node) {
 			return !(from_node.next_pair_has_payload && from_node.next_pair_payload <= zone_word);
 		};
+		auto append_fallback_rectangle = [&]() {
+			const int32_t left_x = bounds.min_x;
+			const int32_t top_y = bounds.min_y;
+			const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
+			const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
+			append_line(right_x, bottom_y, right_x, top_y, zone_word, level, false, random_span_limit);
+			append_line(right_x, top_y, left_x, top_y, zone_word, level, false, random_span_limit);
+			append_line(left_x, top_y, left_x, bottom_y, zone_word, level, false, random_span_limit);
+			append_line(left_x, bottom_y, right_x, bottom_y, zone_word, level, false, random_span_limit);
+
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, right_x, bottom_y, level, "h3maped_fallback_rectangle_vertex", "0x4a28c8", "0x4a2777_fallback_rectangle_bottom_right");
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, right_x, top_y, level, "h3maped_fallback_rectangle_vertex", "0x4a28dc", "0x4a2777_fallback_rectangle_top_right");
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, left_x, top_y, level, "h3maped_fallback_rectangle_vertex", "0x4a28f3", "0x4a2777_fallback_rectangle_top_left");
+			append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, left_x, bottom_y, level, "h3maped_fallback_rectangle_vertex", "0x4a2907", "0x4a2777_fallback_rectangle_bottom_left");
+			summary.boundary_appended_vertex_count += 4;
+		};
 		int32_t selected_segment_index = -1;
 		ClipResultPlain clipped_current;
 		ClipResultPlain clipped_target;
@@ -3254,7 +3270,9 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			break;
 		}
 		if (selected_segment_index < 0) {
+			append_fallback_rectangle();
 			summary.boundary_fallback_zone_count += 1;
+			summary.boundary_runtime_zone_walk_count += 1;
 			continue;
 		}
 		append_boundary_vector_event_4a2777_plain(summary, runtime_zone_index, zone.source_zone_id, zone_word, clipped_current.x, clipped_current.y, level, "h3maped_selected_start_vertex", "0x4a2990", "0x4a2777_selected_start_before_owner_gate");
