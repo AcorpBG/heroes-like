@@ -12,7 +12,11 @@ no-Godot CLI boundary. The legacy Godot runner has been removed from
 `tools/rmg_native_batch_export.py`; runtime/editor integration smokes must use a
 separate explicit workflow on a host where engine launch is permitted.
 The wrapper now also refuses to run while any Godot process is already active
-on the host and records that refusal in `wrapper_manifest.json`.
+on the host and records that refusal in `wrapper_manifest.json`. Full `.amap`
+export is not a normal mode on this host yet: unless a caller passes the
+diagnostic override `--allow-blocked-full-export-probe`, the wrapper refuses
+before spawning the native process and tells the caller to use
+`--phase-snapshot-only`.
 
 Current blocker: the standalone CLI owns plain-C++ controlled-case
 parsing/filtering and can write checkpoint-2 blocker phase snapshots for
@@ -49,26 +53,33 @@ C++ data structures.
 
 ## Default Loop
 
-1. Rebuild the native extension after C++ changes:
+1. Rebuild the standalone native CLI after C++ changes:
 
 ```bash
-cmake --build .artifacts/map_persistence_native_build --parallel 2
+cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2
 ```
 
-For native RMG parity work this is the Linux `.so` inner-loop build. Do not
-cross-build Windows DLLs on every probe. Run the Windows native builds only once
-the Linux `.so` export and Python parity evidence are green for the boundary
-being changed.
+For native RMG parity work this is the Linux standalone no-Godot inner-loop
+build. Do not cross-build Windows DLLs on every probe. Run the Linux
+GDExtension `.so` and Windows native builds only once the standalone CLI and
+Python parity evidence are green for the boundary being changed.
 
-2. Try the no-Godot export boundary for only the cases affected by the change:
+2. Emit no-Godot phase snapshots for only the cases affected by the change:
 
 ```bash
-python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_probe --case xl_islands_2levels,xl_water_2levels
+python3 tools/rmg_native_batch_export.py \
+  --out .artifacts/rmg_native_phase_snapshot_probe \
+  --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 \
+  --phase-snapshot-only --emit-phase-snapshot --print-manifest
 ```
 
-This command currently reports `blocked` with per-case counts and optional
-phase snapshots until the native RMG core split is implemented. Do not add
-Godot flags or restore a Godot runner for parity work on this host.
+This is the supported successful no-Godot trigger while the native RMG core
+split is incomplete. A plain `python3 tools/rmg_native_batch_export.py --out
+...` full-export attempt now fails before spawning the CLI with
+`full_export_plain_cpp_core_not_available`. Use
+`--allow-blocked-full-export-probe` only when intentionally testing that
+blocked boundary. Do not add Godot flags or restore a Godot runner for parity
+work on this host.
 
 For checkpoint-2 phase snapshots, controlled cases may include the recovered
 setup `+0x44` as the optional ninth field:
@@ -78,7 +89,7 @@ bin/rmg_native_batch_export_cli \
   --out .artifacts/rmg_native_cli_boundary_owner_gate_smoke \
   --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 \
   --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 \
-  --emit-phase-snapshot --print-manifest
+  --phase-snapshot-only --emit-phase-snapshot --print-manifest
 ```
 
 Expected snapshot shape for that focused smoke:

@@ -150,10 +150,41 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     output_dir = output_dir if output_dir.is_absolute() else ROOT / output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     log_file = output_dir / LOG_NAME
+    if not args.phase_snapshot_only and not args.allow_blocked_full_export_probe:
+        wrapper = {
+            "schema_id": "rmg_native_batch_export_python_wrapper_v4",
+            "status": "blocked",
+            "runner": "standalone_native_cli_no_godot",
+            "native_cli": str(native_cli),
+            "godot_process_started": False,
+            "output_dir": str(output_dir),
+            "log_path": str(log_file),
+            "returncode": None,
+            "error": "full_export_plain_cpp_core_not_available",
+            "blocked_reason": "full_native_amap_export_requires_splitting_h3maped_rmg_generation_and_package_writeout_from_godot_dictionary_refcounted_fileaccess_apis",
+            "required_mode": "--phase-snapshot-only",
+            "override_for_diagnostics": "--allow-blocked-full-export-probe",
+            "control_policy": "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host",
+            "godot_process_guard": {
+                "status": "not_checked_full_export_refused_before_spawn",
+                "preexisting_processes": [],
+                "post_run_processes": [],
+            },
+        }
+        wrapper_path = output_dir / "wrapper_manifest.json"
+        with wrapper_path.open("w", encoding="utf-8") as handle:
+            json.dump(wrapper, handle, indent=2, sort_keys=True)
+        print(
+            "RMG_NATIVE_BATCH_EXPORT_PY status=blocked error=full_export_plain_cpp_core_not_available "
+            f"output_dir={output_dir} required_mode=--phase-snapshot-only log={log_file}",
+            file=sys.stderr,
+        )
+        return 1
+
     preexisting_godot = godot_processes()
     if preexisting_godot:
         wrapper = {
-            "schema_id": "rmg_native_batch_export_python_wrapper_v3",
+            "schema_id": "rmg_native_batch_export_python_wrapper_v4",
             "status": "failed",
             "runner": "standalone_native_cli_no_godot",
             "native_cli": str(native_cli),
@@ -218,7 +249,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     pass_statuses = {"exported", "phase_snapshot_exported"}
     base_status = "pass" if process.returncode == 0 and manifest.get("status") in pass_statuses else "blocked"
     wrapper = {
-        "schema_id": "rmg_native_batch_export_python_wrapper_v3",
+        "schema_id": "rmg_native_batch_export_python_wrapper_v4",
         "status": "failed" if post_run_godot else base_status,
         "runner": "standalone_native_cli_no_godot",
         "native_cli": str(native_cli),
@@ -284,6 +315,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--include-unsupported", action="store_true", help="Export unsupported owner cases too; failures are expected for modes outside strict Small/Medium one-level land.")
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
     parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case private-state snapshots through the standalone CLI and exit successfully without attempting .amap generation.")
+    parser.add_argument(
+        "--allow-blocked-full-export-probe",
+        action="store_true",
+        help="Diagnostic override: spawn the standalone CLI in its currently blocked full-export mode. Normal RMG work on this host must use --phase-snapshot-only.",
+    )
     parser.add_argument("--print-manifest", action="store_true", help="Print wrapper manifest JSON.")
     return parser
 
