@@ -25,12 +25,15 @@ They also include a plain-C++ `0x4a2777/0x4a325d` boundary/span-fill owner-word
 summary over the currently materialized source-node walks. They also resolve
 the recovered `0x49ecf2` generator mode for controlled cases that supply RMG
 setup object `+0x44`; setup value `3` consumes one `0x4e7276` RNG call and uses
-`rng % 3` before template selection. They do not prove pre-`0x4a4c8e` parity
-yet: same-level synthetic runtime-zone append and later generated-cell
-mutations still need to be ported and compared. The CLI still intentionally
-fails closed for `.amap` generation until the H3MapEd RMG generation core is
-split from Godot `Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess`
-APIs into plain C++ data structures.
+`rng % 3` before template selection. They also include the recovered
+`0x4a3b48` direction scan and `0x49b452` same-level synthetic runtime-zone
+append replay for supplied setup modes. They do not prove pre-`0x4a4c8e`
+parity yet: exact same-run setup `+0x44` capture/defaulting when not supplied,
+same-run generated-cell comparison, and later generated-cell mutations still
+need to be ported and compared. The CLI still intentionally fails closed for
+`.amap` generation until the H3MapEd RMG generation core is split from Godot
+`Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess` APIs into plain
+C++ data structures.
 
 ## Default Loop
 
@@ -60,11 +63,20 @@ setup `+0x44` as the optional ninth field:
 
 ```bash
 bin/rmg_native_batch_export_cli \
-  --out .artifacts/rmg_native_cli_generator_mode_smoke \
+  --out .artifacts/rmg_native_cli_synthetic_append_smoke \
   --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 \
   --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 \
   --emit-phase-snapshot --print-manifest
 ```
+
+Expected snapshot shape for that focused smoke:
+
+- Small 2p seed 58 with setup `3` resolves generator mode `0`, skips the
+  synthetic branch, and runs boundary/span fill over the original runtime-zone
+  vector.
+- Medium 4p seed 10 with setup `3` resolves generator mode `2`, scans 56
+  `0x4a3b48` candidate directions, appends 8 `0x49b452` synthetic runtime
+  zones, and runs boundary/span fill over the augmented 15-zone vector.
 
 3. After a no-Godot export exists, validate and compare with Python in one pass:
 
