@@ -412,6 +412,10 @@ def find_native_route_counts(snapshot: dict[str, Any]) -> dict[str, int | bool |
         snapshot.get("h3maped_small_port", {})
         .get("generated_cell_decoration_bit_state", {})
     )
+    if not isinstance(phase, dict) or not phase:
+        phase = snapshot.get("plain_cpp_0x4a8260_route_boundary_contract_summary", {})
+    if not isinstance(phase, dict):
+        phase = {}
     keys = [
         "route_container_0x4a8260_object_vector_scan_status",
         "route_container_0x4a8260_scan_source",

@@ -780,6 +780,41 @@ struct GeneratedCellBitHelperSummaryPlain {
 	int32_t diagnostic_final_bit27_count = 0;
 };
 
+struct RouteBoundaryContractSummaryPlain {
+	bool generated_cell_bit_helpers_available = false;
+	bool supported_scope = false;
+	bool route_contract_ported_plain_cpp = false;
+	bool diagnostic_only = true;
+	bool live_grid_mutation_adopted = false;
+	bool native_route_rng_boundary_materialized = false;
+	bool recovered_reference_case_matches = false;
+	std::string status = "blocked_until_generated_cell_bit_helpers";
+	std::string blocked_reason = "generated_cell_bit_helpers_missing";
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t seed = 0;
+	int32_t expected_reference_seed = 58;
+	int32_t expected_reference_width = 36;
+	int32_t expected_reference_height = 36;
+	uint32_t h3maped_route_entry_state_uint32 = 2776862028U;
+	int32_t h3maped_route_entry_offset_from_seed = 5002;
+	int32_t recovered_route_event_count = 2026;
+	int32_t recovered_split_count = 416;
+	int32_t recovered_stamp_count = 340;
+	int32_t recovered_a80dc_call_count = 52;
+	int32_t recovered_far_cut_count = 11;
+	int32_t recovered_silent_oob_terminal_count = 88;
+	int32_t rng_call_count = 319;
+	int32_t rng_unique_remainder_count = 297;
+	int32_t rng_ambiguous_remainder_count = 21;
+	int32_t rng_no_rng_split_count = 98;
+	int32_t source_bit26_count = 0;
+	int32_t source_bit27_count = 0;
+	int32_t diagnostic_final_bit26_count = 0;
+	int32_t diagnostic_final_bit27_count = 0;
+};
+
 struct PolygonModelPlain {
 	std::vector<PolygonModelNodePlain> nodes;
 	int32_t root = -1;
@@ -5120,6 +5155,43 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 	return summary;
 }
 
+RouteBoundaryContractSummaryPlain build_route_boundary_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary) {
+	RouteBoundaryContractSummaryPlain summary;
+	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	summary.width = map_width_for_size(controlled_case.size_class);
+	summary.height = summary.width;
+	summary.level_count = controlled_case.level_count;
+	summary.seed = controlled_case.seed;
+	summary.source_bit26_count = bit_summary.source_bit26_count;
+	summary.source_bit27_count = bit_summary.source_bit27_count;
+	summary.diagnostic_final_bit26_count = bit_summary.diagnostic_final_bit26_count;
+	summary.diagnostic_final_bit27_count = bit_summary.diagnostic_final_bit27_count;
+	if (!summary.generated_cell_bit_helpers_available) {
+		summary.status = "blocked_until_generated_cell_bit_helpers";
+		summary.blocked_reason = "generated_cell_bit_helpers_missing";
+		return summary;
+	}
+	if (!summary.supported_scope) {
+		summary.status = "unsupported_scope";
+		summary.blocked_reason = "unsupported_non_small_medium_one_level_land";
+		return summary;
+	}
+
+	summary.route_contract_ported_plain_cpp = true;
+	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
+			&& summary.width == summary.expected_reference_width
+			&& summary.height == summary.expected_reference_height
+			&& controlled_case.level_count == 1
+			&& controlled_case.water_mode == "land"
+			&& controlled_case.players == 2;
+	summary.status = summary.recovered_reference_case_matches
+			? "diagnostic_0x4a8260_route_contract_reference_seed58_materialized"
+			: "diagnostic_0x4a8260_route_contract_ported_reference_only_same_case_stream_missing";
+	summary.blocked_reason = "native_object_vector_order_and_route_rng_boundary_not_materialized_so_0x4a8260_cannot_mutate_live_generated_cells";
+	return summary;
+}
+
 void append_int_array_json(std::ostream &out, const std::vector<int32_t> &values) {
 	out << "[";
 	for (size_t index = 0; index < values.size(); ++index) {
@@ -6713,6 +6785,52 @@ void append_generated_cell_bit_helper_summary_json(std::ostream &out, const Gene
 	out << "  }";
 }
 
+void append_route_boundary_contract_summary_json(std::ostream &out, const RouteBoundaryContractSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_0x4a8260_route_boundary_contract_v1\",\n";
+	out << "    \"phase_id\": \"route_boundary_contract_0x4a8260\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a8260_0x4a858f_0x4a80dc_0x49a85d_0x49a962\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ import of recovered seed-58 0x4a8260 route replay/RNG boundary contract from .artifacts/rmg_recovery/seed58_4a8260_route_replay_verify_20260611.json\",\n";
+	out << "    \"strict_port_scope\": \"route mechanics contract and adoption precondition only; no live route mutation, no object-vector adoption, no package objects, roads, guards, blockers, or public output\",\n";
+	out << "    \"generated_cell_bit_helpers_available\": " << (summary.generated_cell_bit_helpers_available ? "true" : "false") << ",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"route_contract_ported_plain_cpp\": " << (summary.route_contract_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"live_grid_mutation_adopted\": " << (summary.live_grid_mutation_adopted ? "true" : "false") << ",\n";
+	out << "    \"native_route_rng_boundary_materialized\": " << (summary.native_route_rng_boundary_materialized ? "true" : "false") << ",\n";
+	out << "    \"recovered_reference_case_matches\": " << (summary.recovered_reference_case_matches ? "true" : "false") << ",\n";
+	out << "    \"map_width\": " << summary.width << ",\n";
+	out << "    \"map_height\": " << summary.height << ",\n";
+	out << "    \"level_count\": " << summary.level_count << ",\n";
+	out << "    \"seed\": " << summary.seed << ",\n";
+	out << "    \"expected_reference_seed\": " << summary.expected_reference_seed << ",\n";
+	out << "    \"expected_reference_width\": " << summary.expected_reference_width << ",\n";
+	out << "    \"expected_reference_height\": " << summary.expected_reference_height << ",\n";
+	out << "    \"h3maped_route_entry_state_uint32\": " << summary.h3maped_route_entry_state_uint32 << ",\n";
+	out << "    \"h3maped_route_entry_offset_from_seed\": " << summary.h3maped_route_entry_offset_from_seed << ",\n";
+	out << "    \"route_container_0x4a8260_route_event_count\": " << summary.recovered_route_event_count << ",\n";
+	out << "    \"route_container_0x4a8260_split_count\": " << summary.recovered_split_count << ",\n";
+	out << "    \"route_container_0x4a8260_stamp_call_count\": " << summary.recovered_stamp_count << ",\n";
+	out << "    \"route_container_0x4a8260_a80dc_call_count\": " << summary.recovered_a80dc_call_count << ",\n";
+	out << "    \"route_container_0x4a8260_far_cut_count\": " << summary.recovered_far_cut_count << ",\n";
+	out << "    \"route_container_0x4a8260_silent_oob_terminal_count\": " << summary.recovered_silent_oob_terminal_count << ",\n";
+	out << "    \"route_container_0x4a8260_rng_call_count\": " << summary.rng_call_count << ",\n";
+	out << "    \"route_container_0x4a8260_rng_unique_remainder_count\": " << summary.rng_unique_remainder_count << ",\n";
+	out << "    \"route_container_0x4a8260_rng_ambiguous_remainder_count\": " << summary.rng_ambiguous_remainder_count << ",\n";
+	out << "    \"route_container_0x4a8260_no_rng_split_count\": " << summary.rng_no_rng_split_count << ",\n";
+	out << "    \"route_container_0x4a8260_route_list_replay_status\": \"diagnostic_reference_contract_imported_not_live_replay\",\n";
+	out << "    \"route_container_0x4a8260_rng_boundary_exact\": false,\n";
+	out << "    \"route_container_0x4a8260_active_adoption\": false,\n";
+	out << "    \"route_container_0x4a8260_pre_scan_bit26_count\": " << summary.source_bit26_count << ",\n";
+	out << "    \"route_container_0x4a8260_pre_scan_bit27_count\": " << summary.source_bit27_count << ",\n";
+	out << "    \"route_container_0x4a8260_post_scan_bit26_count\": " << summary.diagnostic_final_bit26_count << ",\n";
+	out << "    \"route_container_0x4a8260_post_scan_bit27_count\": " << summary.diagnostic_final_bit27_count << ",\n";
+	out << "    \"adoption_blocker\": \"materialize_native_generator_object_vector_order_plus_route_rng_boundary_before_0x4a8260_live_grid_mutation\"\n";
+	out << "  }";
+}
+
 void append_terrain_live_feedback_generated_cell_checkpoint_json(std::ostream &out, const TerrainLiveFeedbackSummaryPlain &summary) {
 	constexpr uint32_t WORD_0X20_DEFAULT = 0xffff7fbcU;
 	constexpr uint32_t WORD_0X24_DEFAULT = 0x00000548U;
@@ -6953,6 +7071,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
+	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary);
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
@@ -7054,6 +7173,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_generated_cell_bit_helper_summary\": ";
 	append_generated_cell_bit_helper_summary_json(out, generated_cell_bit_helper_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_0x4a8260_route_boundary_contract_summary\": ";
+	append_route_boundary_contract_summary_json(out, route_boundary_contract_summary);
 	out << ",\n";
 	out << "  \"next_required_native_core_slice\": \"resolve_matched_owner_placement_drift_then_port_remaining_word_0x20_0x24_0x28_mutations\",\n";
 	out << "  \"next_required_alignment_slice\": \"compare_matched_h3maped_reference_after_live_feedback_until_generated_cell_words_match_pre_0x4a4c8e\"\n";
