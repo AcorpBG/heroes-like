@@ -67,7 +67,7 @@ setup `+0x44` as the optional ninth field:
 
 ```bash
 bin/rmg_native_batch_export_cli \
-  --out .artifacts/rmg_native_cli_synthetic_append_smoke \
+  --out .artifacts/rmg_native_cli_boundary_owner_gate_smoke \
   --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 \
   --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 \
   --emit-phase-snapshot --print-manifest
@@ -77,12 +77,14 @@ Expected snapshot shape for that focused smoke:
 
 - Small 2p seed 58 with setup `3` resolves generator mode `0`, skips the
   synthetic branch, and runs boundary/span fill over the original runtime-zone
-  vector. Its `after_boundary_span_fill_owner_words` checkpoint records 1266
-  owner-materialized generated cells and 5 non-negative owner IDs.
+  vector. Its recovered owner-gated `0x4a2777` boundary replay skips 7 source
+  edge writes, and its `after_boundary_span_fill_owner_words` checkpoint
+  records 1296 owner-materialized generated cells and 5 non-negative owner IDs.
 - Medium 4p seed 10 with setup `3` resolves generator mode `2`, scans 56
   `0x4a3b48` candidate directions, appends 8 `0x49b452` synthetic runtime
   zones, and runs boundary/span fill over the augmented 15-zone vector. Its
-  `after_boundary_span_fill_owner_words` checkpoint records 4116
+  recovered owner-gated `0x4a2777` boundary replay skips 33 source edge writes,
+  and its `after_boundary_span_fill_owner_words` checkpoint records 5183
   owner-materialized generated cells and 15 non-negative owner IDs.
 
 3. After a no-Godot export exists, validate and compare with Python in one pass:
