@@ -136,6 +136,10 @@ std::string json_escape(const std::string &value) {
 	return out;
 }
 
+int32_t i8_from_u32_byte(uint32_t value, uint32_t shift) {
+	return int32_t(int8_t((value >> shift) & 0xffU));
+}
+
 int32_t map_width_for_size(const std::string &size_class) {
 	if (size_class == "medium") {
 		return 72;
@@ -151,6 +155,78 @@ bool supported_one_level_land_scope(const ControlledCase &controlled_case) {
 			&& (controlled_case.size_class == "small" || controlled_case.size_class == "medium")
 			&& controlled_case.water_mode == "land"
 			&& controlled_case.level_count == 1;
+}
+
+void append_initialized_generated_cell_checkpoint_json(std::ostream &out, const ControlledCase &controlled_case) {
+	constexpr uint32_t WORD_0X20_DEFAULT = 0xffff7fbcU;
+	constexpr uint32_t WORD_0X24_DEFAULT = 0x00000548U;
+	constexpr uint32_t WORD_0X28_DEFAULT = (1U << 25U) | (1U << 27U);
+	constexpr int32_t TERRAIN_CODE_DEFAULT = 8;
+	const int32_t map_width = map_width_for_size(controlled_case.size_class);
+	const int32_t map_height = map_width;
+	const int32_t map_level_count = controlled_case.level_count;
+	const int64_t cell_count = int64_t(map_width) * int64_t(map_height) * int64_t(map_level_count);
+	const bool supported = supported_one_level_land_scope(controlled_case) && map_width > 0 && cell_count >= 0;
+	out << "{\n";
+	out << "    \"schema_id\": \"h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1\",\n";
+	out << "    \"checkpoint_id\": \"plain_cpp_initial_generated_cell_defaults\",\n";
+	out << "    \"checkpoint_scope\": \"native_generated_cell_private_grid\",\n";
+	out << "    \"h3maped_entry_anchor\": \"0x49ecf2_constructor_defaults_before_0x4a325d_owner_write\",\n";
+	out << "    \"plain_cpp_stage\": \"constructor_default_words_only_before_runtime_zone_owner_materialization\",\n";
+	out << "    \"h3maped_cell_base_pointer\": \"generator+0x14\",\n";
+	out << "    \"h3maped_cell_stride_bytes\": 48,\n";
+	out << "    \"h3maped_words_per_cell\": 12,\n";
+	out << "    \"cell_count\": " << (supported ? cell_count : 0) << ",\n";
+	out << "    \"width\": " << (supported ? map_width : 0) << ",\n";
+	out << "    \"height\": " << (supported ? map_height : 0) << ",\n";
+	out << "    \"level_count\": " << (supported ? map_level_count : 0) << ",\n";
+	out << "    \"word_0x20_source\": \"cell_dword_index_8\",\n";
+	out << "    \"word_0x24_source\": \"cell_dword_index_9\",\n";
+	out << "    \"word_0x28_source\": \"cell_dword_index_10\",\n";
+	out << "    \"word_0x2c_source\": \"cell_dword_index_11\",\n";
+	out << "    \"owner_byte2_source\": \"0x4a4ccc sign-extends cell +0x20 byte 2\",\n";
+	out << "    \"status\": \"" << (supported ? "available_constructor_defaults_only" : "blocked_unsupported_or_invalid_scope") << "\",\n";
+	out << "    \"word_0x2c_available\": false,\n";
+	out << "    \"default_word_0x20\": " << WORD_0X20_DEFAULT << ",\n";
+	out << "    \"default_word_0x24\": " << WORD_0X24_DEFAULT << ",\n";
+	out << "    \"default_word_0x28\": " << WORD_0X28_DEFAULT << ",\n";
+	out << "    \"default_terrain_code\": " << TERRAIN_CODE_DEFAULT << ",\n";
+	out << "    \"word_0x28_bit22_count\": 0,\n";
+	out << "    \"word_0x28_bit25_count\": " << (supported ? cell_count : 0) << ",\n";
+	out << "    \"word_0x28_bit26_count\": 0,\n";
+	out << "    \"word_0x28_bit27_count\": " << (supported ? cell_count : 0) << ",\n";
+	out << "    \"word_0x28_bit28_count\": 0,\n";
+	out << "    \"word_0x2c_bit0_count\": 0,\n";
+	out << "    \"owner_byte2_signed_histogram\": {\"-1\": " << (supported ? cell_count : 0) << "},\n";
+	out << "    \"owner_byte3_signed_histogram\": {\"-1\": " << (supported ? cell_count : 0) << "},\n";
+	out << "    \"word_0x24_terrain_histogram\": {\"8\": " << (supported ? cell_count : 0) << "},\n";
+	out << "    \"word_0x24_art_histogram\": {\"21\": " << (supported ? cell_count : 0) << "},\n";
+	out << "    \"word_0x28_top_byte_histogram\": {\"10\": " << (supported ? cell_count : 0) << "},\n";
+	out << "    \"records\": [";
+	if (supported) {
+		for (int64_t flat = 0; flat < cell_count; ++flat) {
+			if (flat != 0) {
+				out << ",";
+			}
+			const int32_t level_tile_count = map_width * map_height;
+			const int32_t level = int32_t(flat / level_tile_count);
+			const int32_t remainder = int32_t(flat % level_tile_count);
+			out << "{";
+			out << "\"flat\":" << flat << ",";
+			out << "\"x\":" << (remainder % map_width) << ",";
+			out << "\"y\":" << (remainder / map_width) << ",";
+			out << "\"level\":" << level << ",";
+			out << "\"word_0x20\":" << WORD_0X20_DEFAULT << ",";
+			out << "\"word_0x24\":" << WORD_0X24_DEFAULT << ",";
+			out << "\"word_0x28\":" << WORD_0X28_DEFAULT << ",";
+			out << "\"owner_byte2_signed\":" << i8_from_u32_byte(WORD_0X20_DEFAULT, 16U) << ",";
+			out << "\"owner_byte3_signed\":" << i8_from_u32_byte(WORD_0X20_DEFAULT, 24U) << ",";
+			out << "\"terrain_code\":" << TERRAIN_CODE_DEFAULT;
+			out << "}";
+		}
+	}
+	out << "]\n";
+	out << "  }";
 }
 
 } // namespace
@@ -276,6 +352,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"generation_output_written\": false,\n";
 	out << "  \"amap_written\": false,\n";
 	out << "  \"phase_checkpoint\": \"native-rmg-private-generated-cell-grid-alignment-10184\",\n";
+	out << "  \"plain_cpp_generated_cell_grid_stage\": \"constructor_defaults_before_runtime_zone_owner_materialization\",\n";
 	out << "  \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0\",\n";
 	out << "  \"rmg_setup_object_0x44_known\": " << (controlled_case.setup_object_0x44_known ? "true" : "false") << ",\n";
 	if (controlled_case.setup_object_0x44_known) {
@@ -297,7 +374,10 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	} else {
 		out << "  \"synthetic_branch_allowed_by_0x4a3a9d\": \"unknown_until_generator_0x10b8_rmg_setup_object_0x44_is_captured\",\n";
 	}
-	out << "  \"next_required_native_core_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api\",\n";
+	out << "  \"private_state_checkpoint_initial_generated_cells\": ";
+	append_initialized_generated_cell_checkpoint_json(out, controlled_case);
+	out << ",\n";
+	out << "  \"next_required_native_core_slice\": \"port_runtime_zone_owner_materialization_and_generated_cell_mutation_steps_after_constructor_defaults\",\n";
 	out << "  \"next_required_alignment_slice\": \"capture_rmg_setup_object_0x44_then_port_0x4a3b48_direction_scan_and_0x49b452_runtime_zone_append\"\n";
 	out << "}\n";
 	return out.str();
