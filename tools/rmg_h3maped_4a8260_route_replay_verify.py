@@ -432,6 +432,10 @@ def find_native_route_counts(snapshot: dict[str, Any]) -> dict[str, int | bool |
         "route_container_0x4a8260_route_list_replay_status",
         "route_container_0x4a8260_rng_boundary_exact",
         "route_container_0x4a8260_active_adoption",
+        "object_vector_prerequisite_available",
+        "native_object_vector_order_materialized",
+        "same_run_descriptor_state_complete",
+        "generated_cell_mutation_replay_complete",
         "route_container_0x4a8260_orientation_rng_call_count",
         "route_container_0x4a8260_split_rng_call_count",
         "route_container_0x4a8260_split_count",
@@ -488,6 +492,10 @@ def build_native_adoption_gate(
     route_events_match = all(event_count_matches.values())
     native_phase_claims_exact = native_counts.get("route_container_0x4a8260_rng_boundary_exact") is True
     native_active_adoption = native_counts.get("route_container_0x4a8260_active_adoption") is True
+    native_object_vector_prerequisite_available = native_counts.get("object_vector_prerequisite_available") is True
+    native_object_vector_ready = native_counts.get("native_object_vector_order_materialized") is True
+    native_descriptor_state_complete = native_counts.get("same_run_descriptor_state_complete") is True
+    native_generated_cell_mutation_replay_complete = native_counts.get("generated_cell_mutation_replay_complete") is True
     native_adoption_allowed = (
         route_entry_state is not None
         and route_entry_offset is not None
@@ -495,6 +503,10 @@ def build_native_adoption_gate(
         and route_events_match
         and native_phase_claims_exact
         and native_active_adoption
+        and native_object_vector_prerequisite_available
+        and native_object_vector_ready
+        and native_descriptor_state_complete
+        and native_generated_cell_mutation_replay_complete
     )
 
     denial_reasons: list[str] = []
@@ -508,6 +520,14 @@ def build_native_adoption_gate(
         denial_reasons.append("native_phase_does_not_claim_exact_0x4a8260_rng_boundary")
     if not native_active_adoption:
         denial_reasons.append("native_route_adoption_is_disabled")
+    if not native_object_vector_prerequisite_available:
+        denial_reasons.append("object_vector_prerequisite_contract_missing")
+    if not native_object_vector_ready:
+        denial_reasons.append("native_object_vector_order_not_materialized")
+    if not native_descriptor_state_complete:
+        denial_reasons.append("same_run_descriptor_state_incomplete")
+    if not native_generated_cell_mutation_replay_complete:
+        denial_reasons.append("generated_cell_mutation_replay_incomplete")
 
     return {
         "native_adoption_allowed": native_adoption_allowed,
@@ -520,6 +540,10 @@ def build_native_adoption_gate(
         "native_route_entry_state_uint32": native_states.get("route_container_0x4a8260_rng_state_before_uint32"),
         "route_event_count_matches": event_count_matches,
         "route_events_match_h3maped": route_events_match,
+        "object_vector_prerequisite_available": native_object_vector_prerequisite_available,
+        "native_object_vector_order_materialized": native_object_vector_ready,
+        "same_run_descriptor_state_complete": native_descriptor_state_complete,
+        "generated_cell_mutation_replay_complete": native_generated_cell_mutation_replay_complete,
         "required_source_stream_before_enabling_adoption": REQUIRED_SOURCE_STREAM,
         "source_backed_native_rule_available": native_adoption_allowed,
         "native_behavior_changed": False,

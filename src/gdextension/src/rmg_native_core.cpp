@@ -783,9 +783,13 @@ struct GeneratedCellBitHelperSummaryPlain {
 struct RouteBoundaryContractSummaryPlain {
 	bool generated_cell_bit_helpers_available = false;
 	bool supported_scope = false;
+	bool object_vector_prerequisite_available = false;
 	bool route_contract_ported_plain_cpp = false;
 	bool diagnostic_only = true;
 	bool live_grid_mutation_adopted = false;
+	bool native_object_vector_order_materialized = false;
+	bool same_run_descriptor_state_complete = false;
+	bool generated_cell_mutation_replay_complete = false;
 	bool native_route_rng_boundary_materialized = false;
 	bool recovered_reference_case_matches = false;
 	std::string status = "blocked_until_generated_cell_bit_helpers";
@@ -813,6 +817,45 @@ struct RouteBoundaryContractSummaryPlain {
 	int32_t source_bit27_count = 0;
 	int32_t diagnostic_final_bit26_count = 0;
 	int32_t diagnostic_final_bit27_count = 0;
+};
+
+struct ObjectVectorPrerequisiteContractSummaryPlain {
+	bool generated_cell_bit_helpers_available = false;
+	bool supported_scope = false;
+	bool object_vector_contract_ported_plain_cpp = false;
+	bool diagnostic_only = true;
+	bool native_object_vector_order_materialized = false;
+	bool same_run_descriptor_state_complete = false;
+	bool generated_cell_mutation_replay_complete = false;
+	bool recovered_reference_case_matches = false;
+	std::string status = "blocked_until_generated_cell_bit_helpers";
+	std::string blocked_reason = "generated_cell_bit_helpers_missing";
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t seed = 0;
+	int32_t expected_reference_seed = 58;
+	int32_t expected_reference_width = 36;
+	int32_t expected_reference_height = 36;
+	int32_t seed58_4aa354_call_count = 195;
+	int32_t seed58_4aa354_49cf34_call_count = 150;
+	int32_t seed58_4aa354_4aa9b7_call_count = 195;
+	int32_t seed58_4aa354_4aa3e9_call_count = 14;
+	bool seed58_source_stream_has_4aa354_to_49cf34_attach_order = false;
+	bool seed58_source_stream_has_4aa9b7_to_4aa3e9_handoff = true;
+	bool seed58_source_stream_dumps_generator_descriptor_vector_0x398_0x39c = false;
+	bool seed58_source_stream_dumps_selected_descriptor_state_0x94_0x95 = false;
+	bool object_vector_static_contract_recovered = true;
+	bool object_vector_producer_surface_recovered = true;
+	bool object_vector_cleanup_surfaces_recovered = true;
+	bool object_vector_phase_consumer_surface_recovered = true;
+	int32_t sampled_4a79a3_initial_object_vector_count = 7;
+	int32_t sampled_4a79a3_positive_append_count = 6;
+	int32_t sampled_4a79a3_final_object_vector_count = 13;
+	int32_t sampled_4a79a3_payload_loop_count = 19;
+	int32_t sampled_4a79a3_later_49eb8d_handoff_count = 107;
+	bool sampled_4a79a3_filter_hits_4a696b = true;
+	bool sampled_4a79a3_filter_hits_4a7605 = true;
 };
 
 struct PolygonModelPlain {
@@ -5155,10 +5198,44 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 	return summary;
 }
 
-RouteBoundaryContractSummaryPlain build_route_boundary_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary) {
+ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary) {
+	ObjectVectorPrerequisiteContractSummaryPlain summary;
+	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	summary.width = map_width_for_size(controlled_case.size_class);
+	summary.height = summary.width;
+	summary.level_count = controlled_case.level_count;
+	summary.seed = controlled_case.seed;
+	if (!summary.generated_cell_bit_helpers_available) {
+		summary.status = "blocked_until_generated_cell_bit_helpers";
+		summary.blocked_reason = "generated_cell_bit_helpers_missing";
+		return summary;
+	}
+	if (!summary.supported_scope) {
+		summary.status = "unsupported_scope";
+		summary.blocked_reason = "unsupported_non_small_medium_one_level_land";
+		return summary;
+	}
+
+	summary.object_vector_contract_ported_plain_cpp = true;
+	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
+			&& summary.width == summary.expected_reference_width
+			&& summary.height == summary.expected_reference_height
+			&& controlled_case.level_count == 1
+			&& controlled_case.water_mode == "land"
+			&& controlled_case.players == 2;
+	summary.status = summary.recovered_reference_case_matches
+			? "diagnostic_object_vector_prerequisite_reference_seed58_descriptor_state_incomplete"
+			: "diagnostic_object_vector_prerequisite_contract_ported_reference_only_same_case_stream_missing";
+	summary.blocked_reason = "same_run_4aa354_descriptor_vector_and_selected_descriptor_state_missing_plus_4a79a3_generated_cell_mutation_replay_not_materialized";
+	return summary;
+}
+
+RouteBoundaryContractSummaryPlain build_route_boundary_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorPrerequisiteContractSummaryPlain &object_vector_summary) {
 	RouteBoundaryContractSummaryPlain summary;
 	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
 	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	summary.object_vector_prerequisite_available = object_vector_summary.object_vector_contract_ported_plain_cpp;
 	summary.width = map_width_for_size(controlled_case.size_class);
 	summary.height = summary.width;
 	summary.level_count = controlled_case.level_count;
@@ -5179,6 +5256,9 @@ RouteBoundaryContractSummaryPlain build_route_boundary_contract_summary(const Co
 	}
 
 	summary.route_contract_ported_plain_cpp = true;
+	summary.native_object_vector_order_materialized = object_vector_summary.native_object_vector_order_materialized;
+	summary.same_run_descriptor_state_complete = object_vector_summary.same_run_descriptor_state_complete;
+	summary.generated_cell_mutation_replay_complete = object_vector_summary.generated_cell_mutation_replay_complete;
 	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
 			&& summary.width == summary.expected_reference_width
 			&& summary.height == summary.expected_reference_height
@@ -5188,7 +5268,7 @@ RouteBoundaryContractSummaryPlain build_route_boundary_contract_summary(const Co
 	summary.status = summary.recovered_reference_case_matches
 			? "diagnostic_0x4a8260_route_contract_reference_seed58_materialized"
 			: "diagnostic_0x4a8260_route_contract_ported_reference_only_same_case_stream_missing";
-	summary.blocked_reason = "native_object_vector_order_and_route_rng_boundary_not_materialized_so_0x4a8260_cannot_mutate_live_generated_cells";
+	summary.blocked_reason = "native_object_vector_order_or_descriptor_state_not_materialized_so_0x4a8260_cannot_mutate_live_generated_cells";
 	return summary;
 }
 
@@ -6785,6 +6865,53 @@ void append_generated_cell_bit_helper_summary_json(std::ostream &out, const Gene
 	out << "  }";
 }
 
+void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, const ObjectVectorPrerequisiteContractSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_object_vector_prerequisite_contract_v1\",\n";
+	out << "    \"phase_id\": \"object_vector_prerequisite_contract\",\n";
+	out << "    \"h3maped_anchor\": \"0x4aa354_0x49cf34_0x4aa9b7_0x4aa3e9_0x4a79a3\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ contract from .artifacts/rmg_recovery/reward_guard_source_stream_coverage_summary_current.json, object_vector_surface_summary.json, 4a79a3_object_vector_trace_summary.json, 4a79a3_internal_growth_summary_20260609.json, 4a79a3_payload_trace_summary.json, and 4a79a3_filter_dispatch_summary.json\",\n";
+	out << "    \"strict_port_scope\": \"object-vector prerequisite contract only; no live generated-cell adoption, package objects, roads, guards, blockers, or public output\",\n";
+	out << "    \"generated_cell_bit_helpers_available\": " << (summary.generated_cell_bit_helpers_available ? "true" : "false") << ",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"object_vector_contract_ported_plain_cpp\": " << (summary.object_vector_contract_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
+	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"recovered_reference_case_matches\": " << (summary.recovered_reference_case_matches ? "true" : "false") << ",\n";
+	out << "    \"map_width\": " << summary.width << ",\n";
+	out << "    \"map_height\": " << summary.height << ",\n";
+	out << "    \"level_count\": " << summary.level_count << ",\n";
+	out << "    \"seed\": " << summary.seed << ",\n";
+	out << "    \"expected_reference_seed\": " << summary.expected_reference_seed << ",\n";
+	out << "    \"expected_reference_width\": " << summary.expected_reference_width << ",\n";
+	out << "    \"expected_reference_height\": " << summary.expected_reference_height << ",\n";
+	out << "    \"seed58_4aa354_call_count\": " << summary.seed58_4aa354_call_count << ",\n";
+	out << "    \"seed58_4aa354_49cf34_call_count\": " << summary.seed58_4aa354_49cf34_call_count << ",\n";
+	out << "    \"seed58_4aa354_4aa9b7_call_count\": " << summary.seed58_4aa354_4aa9b7_call_count << ",\n";
+	out << "    \"seed58_4aa354_4aa3e9_call_count\": " << summary.seed58_4aa354_4aa3e9_call_count << ",\n";
+	out << "    \"seed58_source_stream_has_4aa354_to_49cf34_attach_order\": " << (summary.seed58_source_stream_has_4aa354_to_49cf34_attach_order ? "true" : "false") << ",\n";
+	out << "    \"seed58_source_stream_has_4aa9b7_to_4aa3e9_handoff\": " << (summary.seed58_source_stream_has_4aa9b7_to_4aa3e9_handoff ? "true" : "false") << ",\n";
+	out << "    \"seed58_source_stream_dumps_generator_descriptor_vector_0x398_0x39c\": " << (summary.seed58_source_stream_dumps_generator_descriptor_vector_0x398_0x39c ? "true" : "false") << ",\n";
+	out << "    \"seed58_source_stream_dumps_selected_descriptor_state_0x94_0x95\": " << (summary.seed58_source_stream_dumps_selected_descriptor_state_0x94_0x95 ? "true" : "false") << ",\n";
+	out << "    \"object_vector_static_contract_recovered\": " << (summary.object_vector_static_contract_recovered ? "true" : "false") << ",\n";
+	out << "    \"object_vector_producer_surface_recovered\": " << (summary.object_vector_producer_surface_recovered ? "true" : "false") << ",\n";
+	out << "    \"object_vector_cleanup_surfaces_recovered\": " << (summary.object_vector_cleanup_surfaces_recovered ? "true" : "false") << ",\n";
+	out << "    \"object_vector_phase_consumer_surface_recovered\": " << (summary.object_vector_phase_consumer_surface_recovered ? "true" : "false") << ",\n";
+	out << "    \"sampled_4a79a3_initial_object_vector_count\": " << summary.sampled_4a79a3_initial_object_vector_count << ",\n";
+	out << "    \"sampled_4a79a3_positive_append_count\": " << summary.sampled_4a79a3_positive_append_count << ",\n";
+	out << "    \"sampled_4a79a3_final_object_vector_count\": " << summary.sampled_4a79a3_final_object_vector_count << ",\n";
+	out << "    \"sampled_4a79a3_payload_loop_count\": " << summary.sampled_4a79a3_payload_loop_count << ",\n";
+	out << "    \"sampled_4a79a3_later_49eb8d_handoff_count\": " << summary.sampled_4a79a3_later_49eb8d_handoff_count << ",\n";
+	out << "    \"sampled_4a79a3_filter_hits_4a696b\": " << (summary.sampled_4a79a3_filter_hits_4a696b ? "true" : "false") << ",\n";
+	out << "    \"sampled_4a79a3_filter_hits_4a7605\": " << (summary.sampled_4a79a3_filter_hits_4a7605 ? "true" : "false") << ",\n";
+	out << "    \"adoption_blocker\": \"same_run_4aa354_descriptor_state_plus_4a79a3_generated_cell_mutation_replay_before_0x4a8260\"\n";
+	out << "  }";
+}
+
 void append_route_boundary_contract_summary_json(std::ostream &out, const RouteBoundaryContractSummaryPlain &summary) {
 	out << "{\n";
 	out << "    \"schema_id\": \"rmg_native_cli_0x4a8260_route_boundary_contract_v1\",\n";
@@ -6796,9 +6923,13 @@ void append_route_boundary_contract_summary_json(std::ostream &out, const RouteB
 	out << "    \"strict_port_scope\": \"route mechanics contract and adoption precondition only; no live route mutation, no object-vector adoption, no package objects, roads, guards, blockers, or public output\",\n";
 	out << "    \"generated_cell_bit_helpers_available\": " << (summary.generated_cell_bit_helpers_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"object_vector_prerequisite_available\": " << (summary.object_vector_prerequisite_available ? "true" : "false") << ",\n";
 	out << "    \"route_contract_ported_plain_cpp\": " << (summary.route_contract_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
 	out << "    \"live_grid_mutation_adopted\": " << (summary.live_grid_mutation_adopted ? "true" : "false") << ",\n";
+	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
+	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
 	out << "    \"native_route_rng_boundary_materialized\": " << (summary.native_route_rng_boundary_materialized ? "true" : "false") << ",\n";
 	out << "    \"recovered_reference_case_matches\": " << (summary.recovered_reference_case_matches ? "true" : "false") << ",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
@@ -7071,7 +7202,8 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
-	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary);
+	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary);
+	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_prerequisite_contract_summary);
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
@@ -7173,6 +7305,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_generated_cell_bit_helper_summary\": ";
 	append_generated_cell_bit_helper_summary_json(out, generated_cell_bit_helper_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_object_vector_prerequisite_contract_summary\": ";
+	append_object_vector_prerequisite_contract_summary_json(out, object_vector_prerequisite_contract_summary);
 	out << ",\n";
 	out << "  \"plain_cpp_0x4a8260_route_boundary_contract_summary\": ";
 	append_route_boundary_contract_summary_json(out, route_boundary_contract_summary);
