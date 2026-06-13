@@ -790,6 +790,7 @@ struct RouteBoundaryContractSummaryPlain {
 	bool native_object_vector_order_materialized = false;
 	bool same_run_descriptor_state_complete = false;
 	bool generated_cell_mutation_replay_complete = false;
+	bool projection_write_coordinates_materialized = false;
 	bool native_route_rng_boundary_materialized = false;
 	bool recovered_reference_case_matches = false;
 	std::string status = "blocked_until_generated_cell_bit_helpers";
@@ -824,11 +825,14 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool supported_scope = false;
 	bool object_vector_contract_ported_plain_cpp = false;
 	bool object_vector_commit_mutation_helpers_ported_plain_cpp = false;
+	bool object_vector_projection_write_helpers_ported_plain_cpp = false;
 	bool diagnostic_only = true;
 	bool native_object_vector_order_materialized = false;
 	bool same_run_descriptor_state_complete = false;
 	bool generated_cell_mutation_replay_complete = false;
+	bool projection_write_coordinates_materialized = false;
 	bool sampled_4a54a7_commit_mutation_samples_match = false;
+	bool sampled_4a56b6_projection_write_samples_match = false;
 	bool recovered_reference_case_matches = false;
 	std::string status = "blocked_until_generated_cell_bit_helpers";
 	std::string blocked_reason = "generated_cell_bit_helpers_missing";
@@ -855,6 +859,9 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	int32_t sampled_4a54a7_endpoint_clear_sample_count = 0;
 	int32_t sampled_4aa3e9_reward_lower_sample_count = 0;
 	int32_t sampled_4aa3e9_projection_write_count = 90;
+	int32_t sampled_4aa3e9_projection_write_unique_cell_count = 90;
+	int32_t sampled_4a56b6_projection_write_sample_count = 0;
+	int32_t sampled_4a56b6_projection_write_matched_sample_count = 0;
 	int32_t sampled_4a79a3_initial_object_vector_count = 7;
 	int32_t sampled_4a79a3_positive_append_count = 6;
 	int32_t sampled_4a79a3_final_object_vector_count = 13;
@@ -886,13 +893,31 @@ struct ObjectVectorCommitMutationSamplePlain {
 	bool match = false;
 };
 
+struct ObjectVectorProjectionWriteSamplePlain {
+	int32_t ordinal = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	uint32_t before_word_0x20 = 0;
+	uint32_t before_word_0x24 = 0;
+	uint32_t before_word_0x28 = 0;
+	uint32_t before_word_0x2c = 0;
+	uint32_t expected_word_0x20 = 0;
+	uint32_t replay_word_0x20 = 0;
+	bool high_word_preserved = false;
+	bool low_word_lowered = false;
+	bool match = false;
+};
+
 struct ObjectVectorCommitMutationSummaryPlain {
 	bool terrain_live_feedback_available = false;
 	bool supported_scope = false;
 	bool commit_mutation_helpers_ported_plain_cpp = false;
+	bool projection_write_helpers_ported_plain_cpp = false;
 	bool diagnostic_only = true;
 	bool live_grid_mutation_adopted = false;
 	bool recovered_samples_match = false;
+	bool projection_write_recovered_samples_match = false;
 	std::string status = "blocked_until_terrain_live_feedback";
 	std::string blocked_reason = "terrain_live_feedback_missing";
 	int32_t width = 0;
@@ -904,9 +929,13 @@ struct ObjectVectorCommitMutationSummaryPlain {
 	int32_t endpoint_clear_sample_count = 0;
 	int32_t reward_lower_sample_count = 0;
 	int32_t sampled_4aa3e9_projection_write_count = 90;
+	int32_t sampled_4aa3e9_projection_write_unique_cell_count = 90;
+	int32_t projection_write_sample_count = 0;
+	int32_t projection_write_matched_sample_count = 0;
 	int32_t sampled_4a61bc_min_projection_write_count = 74;
 	int32_t sampled_4a61bc_max_projection_write_count = 105;
 	std::vector<ObjectVectorCommitMutationSamplePlain> samples;
+	std::vector<ObjectVectorProjectionWriteSamplePlain> projection_write_samples;
 };
 
 struct PolygonModelPlain {
@@ -2783,6 +2812,10 @@ uint32_t h3maped_generated_cell_4a54a7_endpoint_word28_plain(uint32_t word_0x28)
 
 uint32_t h3maped_generated_cell_4aa3e9_reward_word28_plain(uint32_t word_0x28) {
 	return word_0x28 & ~H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN;
+}
+
+uint32_t h3maped_generated_cell_4a56b6_projection_word20_plain(uint32_t word_0x20, uint32_t lowered_low_word) {
+	return h3maped_generated_cell_word20_set_low_word_plain(word_0x20, lowered_low_word);
 }
 
 bool h3maped_generated_cell_index_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
@@ -5328,6 +5361,33 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 	auto reward_word20 = [](uint32_t word_0x20, uint32_t lowered_low_word) {
 		return h3maped_generated_cell_word20_set_low_word_plain(word_0x20, lowered_low_word);
 	};
+	auto add_projection_write_sample = [&](int32_t ordinal,
+			int32_t x,
+			int32_t y,
+			int32_t level,
+			uint32_t before_word_0x20,
+			uint32_t before_word_0x24,
+			uint32_t before_word_0x28,
+			uint32_t before_word_0x2c,
+			uint32_t expected_word_0x20) {
+		ObjectVectorProjectionWriteSamplePlain sample;
+		sample.ordinal = ordinal;
+		sample.x = x;
+		sample.y = y;
+		sample.level = level;
+		sample.before_word_0x20 = before_word_0x20;
+		sample.before_word_0x24 = before_word_0x24;
+		sample.before_word_0x28 = before_word_0x28;
+		sample.before_word_0x2c = before_word_0x2c;
+		sample.expected_word_0x20 = expected_word_0x20;
+		sample.replay_word_0x20 = h3maped_generated_cell_4a56b6_projection_word20_plain(before_word_0x20, expected_word_0x20 & 0x0000ffffU);
+		sample.high_word_preserved = (before_word_0x20 & 0xffff0000U) == (sample.replay_word_0x20 & 0xffff0000U);
+		sample.low_word_lowered = (sample.replay_word_0x20 & 0x0000ffffU) < (before_word_0x20 & 0x0000ffffU);
+		sample.match = sample.replay_word_0x20 == sample.expected_word_0x20
+				&& sample.high_word_preserved
+				&& sample.low_word_lowered;
+		summary.projection_write_samples.push_back(sample);
+	};
 
 	add_sample("4a61bc_stream0_target_cell", "0x4a61bc_0x4a54a7", "endpoint_clear_low_word_set_bit22_bit27", 24, 9, 0,
 			0x00010006U, 0U, 0x1a003000U, 0U,
@@ -5354,6 +5414,32 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 			0x04000002U, 0x00000cc7U, 0x14005000U, 0U,
 			reward_word20(0x0400000eU, 2U), h3maped_generated_cell_4aa3e9_reward_word28_plain(0x16005000U));
 
+	summary.projection_write_helpers_ported_plain_cpp = true;
+	add_projection_write_sample(4, 38, 62, 0, 0x0400000eU, 0x00000cc7U, 0x14005000U, 0U, 0x04000002U);
+	add_projection_write_sample(5, 36, 65, 0, 0x04000010U, 0x00000d07U, 0x12005000U, 0U, 0x04000003U);
+	add_projection_write_sample(6, 36, 65, 0, 0x0400000fU, 0x00000d07U, 0x12005000U, 0U, 0x04000002U);
+	add_projection_write_sample(7, 36, 65, 0, 0x0400000eU, 0x00001087U, 0x1a005000U, 0U, 0x04000003U);
+	add_projection_write_sample(8, 35, 64, 0, 0x0400000cU, 0x00000c47U, 0x1a005000U, 0U, 0x04000002U);
+	add_projection_write_sample(9, 35, 63, 0, 0x0400000aU, 0x00000cc7U, 0x12005000U, 0U, 0x04000003U);
+	add_projection_write_sample(10, 35, 63, 0, 0x0400000bU, 0x00000dc7U, 0x12005000U, 0U, 0x04000002U);
+	add_projection_write_sample(11, 38, 61, 0, 0x0400000cU, 0x00000e07U, 0x16005000U, 0U, 0x04000003U);
+	add_projection_write_sample(12, 38, 62, 0, 0x0500000fU, 0x00000d87U, 0x16007000U, 0U, 0x05000004U);
+	add_projection_write_sample(13, 39, 63, 0, 0x05000011U, 0x000011c7U, 0x16007000U, 0U, 0x05000005U);
+	add_projection_write_sample(14, 39, 61, 0, 0x0500000dU, 0x00000e87U, 0x12007000U, 0U, 0x05000005U);
+	add_projection_write_sample(15, 38, 66, 0, 0x04000011U, 0x00000d87U, 0x12005000U, 0U, 0x04000005U);
+	add_projection_write_sample(82, 38, 69, 0, 0x05000018U, 0x00000e07U, 0x12006000U, 0U, 0x05000011U);
+	add_projection_write_sample(83, 37, 70, 0, 0x05000015U, 0x00000c47U, 0x1a007000U, 0U, 0x05000011U);
+	add_projection_write_sample(84, 37, 70, 0, 0x05000013U, 0x00000d87U, 0x1a007000U, 0U, 0x05000010U);
+	add_projection_write_sample(85, 43, 68, 0, 0x05000013U, 0x00001187U, 0x16005000U, 0U, 0x05000012U);
+	add_projection_write_sample(86, 39, 69, 0, 0x05000017U, 0x00000e47U, 0x12005000U, 0U, 0x05000012U);
+	add_projection_write_sample(87, 37, 70, 0, 0x05000017U, 0x00000c87U, 0x1a006000U, 0U, 0x05000012U);
+	add_projection_write_sample(88, 40, 69, 0, 0x05000016U, 0x00000d07U, 0x16005000U, 0U, 0x05000013U);
+	add_projection_write_sample(89, 38, 70, 0, 0x05000019U, 0x00001087U, 0x12005000U, 0U, 0x05000013U);
+	add_projection_write_sample(90, 41, 69, 0, 0x05000015U, 0x00000d47U, 0x16007000U, 0U, 0x05000014U);
+	add_projection_write_sample(91, 39, 70, 0, 0x05000019U, 0x00000d87U, 0x16005000U, 0U, 0x05000014U);
+	add_projection_write_sample(92, 40, 70, 0, 0x05000018U, 0x00000e07U, 0x16007000U, 0U, 0x05000015U);
+	add_projection_write_sample(93, 41, 70, 0, 0x05000017U, 0x00000d87U, 0x16006000U, 0U, 0x05000016U);
+
 	summary.sample_count = int32_t(summary.samples.size());
 	for (const ObjectVectorCommitMutationSamplePlain &sample : summary.samples) {
 		if (sample.match) {
@@ -5366,7 +5452,17 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 			summary.reward_lower_sample_count += 1;
 		}
 	}
-	summary.recovered_samples_match = summary.sample_count > 0 && summary.matched_sample_count == summary.sample_count;
+	summary.projection_write_sample_count = int32_t(summary.projection_write_samples.size());
+	for (const ObjectVectorProjectionWriteSamplePlain &sample : summary.projection_write_samples) {
+		if (sample.match) {
+			summary.projection_write_matched_sample_count += 1;
+		}
+	}
+	summary.projection_write_recovered_samples_match = summary.projection_write_sample_count > 0
+			&& summary.projection_write_matched_sample_count == summary.projection_write_sample_count;
+	summary.recovered_samples_match = summary.sample_count > 0
+			&& summary.matched_sample_count == summary.sample_count
+			&& summary.projection_write_recovered_samples_match;
 	summary.status = summary.recovered_samples_match
 			? "diagnostic_plain_cpp_4a54a7_commit_mutation_helpers_ported"
 			: "blocked_4a54a7_commit_mutation_sample_replay_mismatch";
@@ -5397,10 +5493,15 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 
 	summary.object_vector_contract_ported_plain_cpp = true;
 	summary.object_vector_commit_mutation_helpers_ported_plain_cpp = commit_summary.commit_mutation_helpers_ported_plain_cpp;
-	summary.sampled_4a54a7_commit_mutation_samples_match = commit_summary.recovered_samples_match;
+	summary.object_vector_projection_write_helpers_ported_plain_cpp = commit_summary.projection_write_helpers_ported_plain_cpp;
+	summary.sampled_4a54a7_commit_mutation_samples_match = commit_summary.sample_count > 0
+			&& commit_summary.matched_sample_count == commit_summary.sample_count;
+	summary.sampled_4a56b6_projection_write_samples_match = commit_summary.projection_write_recovered_samples_match;
 	summary.sampled_4a54a7_commit_mutation_sample_count = commit_summary.sample_count;
 	summary.sampled_4a54a7_endpoint_clear_sample_count = commit_summary.endpoint_clear_sample_count;
 	summary.sampled_4aa3e9_reward_lower_sample_count = commit_summary.reward_lower_sample_count;
+	summary.sampled_4a56b6_projection_write_sample_count = commit_summary.projection_write_sample_count;
+	summary.sampled_4a56b6_projection_write_matched_sample_count = commit_summary.projection_write_matched_sample_count;
 	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
 			&& summary.width == summary.expected_reference_width
 			&& summary.height == summary.expected_reference_height
@@ -5442,6 +5543,7 @@ RouteBoundaryContractSummaryPlain build_route_boundary_contract_summary(const Co
 	summary.native_object_vector_order_materialized = object_vector_summary.native_object_vector_order_materialized;
 	summary.same_run_descriptor_state_complete = object_vector_summary.same_run_descriptor_state_complete;
 	summary.generated_cell_mutation_replay_complete = object_vector_summary.generated_cell_mutation_replay_complete;
+	summary.projection_write_coordinates_materialized = object_vector_summary.projection_write_coordinates_materialized;
 	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
 			&& summary.width == summary.expected_reference_width
 			&& summary.height == summary.expected_reference_height
@@ -7080,6 +7182,32 @@ void append_object_vector_commit_mutation_samples_json(std::ostream &out, const 
 	out << "]";
 }
 
+void append_object_vector_projection_write_samples_json(std::ostream &out, const std::vector<ObjectVectorProjectionWriteSamplePlain> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const ObjectVectorProjectionWriteSamplePlain &sample = samples[index];
+		out << "{";
+		out << "\"ordinal\":" << sample.ordinal << ",";
+		out << "\"x\":" << sample.x << ",";
+		out << "\"y\":" << sample.y << ",";
+		out << "\"level\":" << sample.level << ",";
+		out << "\"before_word_0x20\":" << sample.before_word_0x20 << ",";
+		out << "\"before_word_0x24\":" << sample.before_word_0x24 << ",";
+		out << "\"before_word_0x28\":" << sample.before_word_0x28 << ",";
+		out << "\"before_word_0x2c\":" << sample.before_word_0x2c << ",";
+		out << "\"expected_word_0x20\":" << sample.expected_word_0x20 << ",";
+		out << "\"replay_word_0x20\":" << sample.replay_word_0x20 << ",";
+		out << "\"high_word_preserved\":" << (sample.high_word_preserved ? "true" : "false") << ",";
+		out << "\"low_word_lowered\":" << (sample.low_word_lowered ? "true" : "false") << ",";
+		out << "\"match\":" << (sample.match ? "true" : "false");
+		out << "}";
+	}
+	out << "]";
+}
+
 void append_object_vector_commit_mutation_summary_json(std::ostream &out, const ObjectVectorCommitMutationSummaryPlain &summary) {
 	out << "{\n";
 	out << "    \"schema_id\": \"rmg_native_cli_object_vector_commit_mutation_summary_v1\",\n";
@@ -7092,9 +7220,11 @@ void append_object_vector_commit_mutation_summary_json(std::ostream &out, const 
 	out << "    \"terrain_live_feedback_available\": " << (summary.terrain_live_feedback_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
 	out << "    \"commit_mutation_helpers_ported_plain_cpp\": " << (summary.commit_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"projection_write_helpers_ported_plain_cpp\": " << (summary.projection_write_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
 	out << "    \"live_grid_mutation_adopted\": " << (summary.live_grid_mutation_adopted ? "true" : "false") << ",\n";
 	out << "    \"recovered_samples_match\": " << (summary.recovered_samples_match ? "true" : "false") << ",\n";
+	out << "    \"projection_write_recovered_samples_match\": " << (summary.projection_write_recovered_samples_match ? "true" : "false") << ",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
 	out << "    \"map_height\": " << summary.height << ",\n";
 	out << "    \"level_count\": " << summary.level_count << ",\n";
@@ -7104,10 +7234,16 @@ void append_object_vector_commit_mutation_summary_json(std::ostream &out, const 
 	out << "    \"endpoint_clear_sample_count\": " << summary.endpoint_clear_sample_count << ",\n";
 	out << "    \"reward_lower_sample_count\": " << summary.reward_lower_sample_count << ",\n";
 	out << "    \"sampled_4aa3e9_projection_write_count\": " << summary.sampled_4aa3e9_projection_write_count << ",\n";
+	out << "    \"sampled_4aa3e9_projection_write_unique_cell_count\": " << summary.sampled_4aa3e9_projection_write_unique_cell_count << ",\n";
+	out << "    \"projection_write_sample_count\": " << summary.projection_write_sample_count << ",\n";
+	out << "    \"projection_write_matched_sample_count\": " << summary.projection_write_matched_sample_count << ",\n";
 	out << "    \"sampled_4a61bc_min_projection_write_count\": " << summary.sampled_4a61bc_min_projection_write_count << ",\n";
 	out << "    \"sampled_4a61bc_max_projection_write_count\": " << summary.sampled_4a61bc_max_projection_write_count << ",\n";
 	out << "    \"samples\": ";
 	append_object_vector_commit_mutation_samples_json(out, summary.samples);
+	out << ",\n";
+	out << "    \"projection_write_samples\": ";
+	append_object_vector_projection_write_samples_json(out, summary.projection_write_samples);
 	out << ",\n";
 	out << "    \"adoption_blocker\": \"ordered_native_object_vector_records_and_projection_write_coordinates_before_live_generated_cell_mutation\"\n";
 	out << "  }";
@@ -7126,11 +7262,14 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
 	out << "    \"object_vector_contract_ported_plain_cpp\": " << (summary.object_vector_contract_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_commit_mutation_helpers_ported_plain_cpp\": " << (summary.object_vector_commit_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"object_vector_projection_write_helpers_ported_plain_cpp\": " << (summary.object_vector_projection_write_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
 	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
 	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"projection_write_coordinates_materialized\": " << (summary.projection_write_coordinates_materialized ? "true" : "false") << ",\n";
 	out << "    \"sampled_4a54a7_commit_mutation_samples_match\": " << (summary.sampled_4a54a7_commit_mutation_samples_match ? "true" : "false") << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_samples_match\": " << (summary.sampled_4a56b6_projection_write_samples_match ? "true" : "false") << ",\n";
 	out << "    \"recovered_reference_case_matches\": " << (summary.recovered_reference_case_matches ? "true" : "false") << ",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
 	out << "    \"map_height\": " << summary.height << ",\n";
@@ -7155,6 +7294,9 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"sampled_4a54a7_endpoint_clear_sample_count\": " << summary.sampled_4a54a7_endpoint_clear_sample_count << ",\n";
 	out << "    \"sampled_4aa3e9_reward_lower_sample_count\": " << summary.sampled_4aa3e9_reward_lower_sample_count << ",\n";
 	out << "    \"sampled_4aa3e9_projection_write_count\": " << summary.sampled_4aa3e9_projection_write_count << ",\n";
+	out << "    \"sampled_4aa3e9_projection_write_unique_cell_count\": " << summary.sampled_4aa3e9_projection_write_unique_cell_count << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_sample_count\": " << summary.sampled_4a56b6_projection_write_sample_count << ",\n";
+	out << "    \"sampled_4a56b6_projection_write_matched_sample_count\": " << summary.sampled_4a56b6_projection_write_matched_sample_count << ",\n";
 	out << "    \"sampled_4a79a3_initial_object_vector_count\": " << summary.sampled_4a79a3_initial_object_vector_count << ",\n";
 	out << "    \"sampled_4a79a3_positive_append_count\": " << summary.sampled_4a79a3_positive_append_count << ",\n";
 	out << "    \"sampled_4a79a3_final_object_vector_count\": " << summary.sampled_4a79a3_final_object_vector_count << ",\n";
@@ -7184,6 +7326,7 @@ void append_route_boundary_contract_summary_json(std::ostream &out, const RouteB
 	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
 	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"projection_write_coordinates_materialized\": " << (summary.projection_write_coordinates_materialized ? "true" : "false") << ",\n";
 	out << "    \"native_route_rng_boundary_materialized\": " << (summary.native_route_rng_boundary_materialized ? "true" : "false") << ",\n";
 	out << "    \"recovered_reference_case_matches\": " << (summary.recovered_reference_case_matches ? "true" : "false") << ",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";

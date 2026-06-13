@@ -436,6 +436,7 @@ def find_native_route_counts(snapshot: dict[str, Any]) -> dict[str, int | bool |
         "native_object_vector_order_materialized",
         "same_run_descriptor_state_complete",
         "generated_cell_mutation_replay_complete",
+        "projection_write_coordinates_materialized",
         "route_container_0x4a8260_orientation_rng_call_count",
         "route_container_0x4a8260_split_rng_call_count",
         "route_container_0x4a8260_split_count",
@@ -496,6 +497,7 @@ def build_native_adoption_gate(
     native_object_vector_ready = native_counts.get("native_object_vector_order_materialized") is True
     native_descriptor_state_complete = native_counts.get("same_run_descriptor_state_complete") is True
     native_generated_cell_mutation_replay_complete = native_counts.get("generated_cell_mutation_replay_complete") is True
+    native_projection_write_coordinates_materialized = native_counts.get("projection_write_coordinates_materialized") is True
     native_adoption_allowed = (
         route_entry_state is not None
         and route_entry_offset is not None
@@ -507,6 +509,7 @@ def build_native_adoption_gate(
         and native_object_vector_ready
         and native_descriptor_state_complete
         and native_generated_cell_mutation_replay_complete
+        and native_projection_write_coordinates_materialized
     )
 
     denial_reasons: list[str] = []
@@ -528,6 +531,8 @@ def build_native_adoption_gate(
         denial_reasons.append("same_run_descriptor_state_incomplete")
     if not native_generated_cell_mutation_replay_complete:
         denial_reasons.append("generated_cell_mutation_replay_incomplete")
+    if not native_projection_write_coordinates_materialized:
+        denial_reasons.append("projection_write_coordinates_not_materialized")
 
     return {
         "native_adoption_allowed": native_adoption_allowed,
@@ -544,6 +549,7 @@ def build_native_adoption_gate(
         "native_object_vector_order_materialized": native_object_vector_ready,
         "same_run_descriptor_state_complete": native_descriptor_state_complete,
         "generated_cell_mutation_replay_complete": native_generated_cell_mutation_replay_complete,
+        "projection_write_coordinates_materialized": native_projection_write_coordinates_materialized,
         "required_source_stream_before_enabling_adoption": REQUIRED_SOURCE_STREAM,
         "source_backed_native_rule_available": native_adoption_allowed,
         "native_behavior_changed": False,
