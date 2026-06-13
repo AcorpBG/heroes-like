@@ -393,6 +393,7 @@ struct BoundarySpanFillSummary {
 	int32_t boundary_appended_vertex_count = 0;
 	int32_t boundary_skipped_unfinalized_node_count = 0;
 	int32_t boundary_skipped_out_of_bounds_clip_count = 0;
+	int32_t boundary_owner_gate_skipped_segment_count = 0;
 	int32_t boundary_flagged_writer_segment_count = 0;
 	int32_t boundary_deterministic_writer_segment_count = 0;
 	int32_t boundary_randomized_rng_call_count = 0;
@@ -2589,6 +2590,54 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
 	};
 
+	auto append_border_connection = [&](int32_t &current_x, int32_t &current_y, int32_t target_x, int32_t target_y, int32_t zone_word, int32_t level, int32_t random_span_limit) {
+		if (current_x == target_x && current_y == target_y) {
+			return;
+		}
+		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
+		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
+		int32_t wrap_guard = 0;
+		while (current_x != target_x && current_y != target_y && point_on_clip_border(current_x, current_y) && point_on_clip_border(target_x, target_y) && wrap_guard < 8) {
+			int32_t border_x = current_x;
+			int32_t border_y = current_y;
+			if (current_x == bounds.min_x) {
+				if (current_y == bounds.min_y) {
+					border_x = right_x;
+					border_y = bounds.min_y;
+				} else {
+					border_x = bounds.min_x;
+					border_y = bounds.min_y;
+				}
+			} else if (current_y == bounds.min_y) {
+				border_x = right_x;
+				border_y = bounds.min_y;
+			} else if (current_x == right_x && current_y != bottom_y) {
+				border_x = right_x;
+				border_y = bottom_y;
+			} else {
+				border_x = bounds.min_x;
+				border_y = bottom_y;
+			}
+			append_line(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
+			summary.boundary_appended_vertex_count += 1;
+			current_x = border_x;
+			current_y = border_y;
+			summary.boundary_wrap_segment_count += 1;
+			wrap_guard += 1;
+		}
+		if (wrap_guard >= 8 && current_x != target_x && current_y != target_y) {
+			summary.boundary_loop_guard_exhausted = true;
+			return;
+		}
+		if (current_x != target_x || current_y != target_y) {
+			append_line(current_x, current_y, target_x, target_y, zone_word, level, false, random_span_limit);
+			summary.boundary_appended_vertex_count += 1;
+			summary.boundary_final_segment_count += 1;
+			current_x = target_x;
+			current_y = target_y;
+		}
+	};
+
 	for (const SourceWalkPlain &walk : source_node_summary.source.walks) {
 		const int32_t runtime_zone_index = walk.runtime_zone_index;
 		if (runtime_zone_index < 0 || runtime_zone_index >= int32_t(runtime_zones.size())) {
@@ -2600,24 +2649,30 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		const int32_t level = zone.level_after_bbox_rescale;
 		const bool flagged_branch = !(summary.level_count == 2 && level != 1);
 		const int32_t random_span_limit = std::max<int32_t>(1, zone.runtime_size_after_bbox_rescale > 0 ? zone.runtime_size_after_bbox_rescale : zone.source_base_size);
-		std::vector<PolygonPointPlain> finalized_points;
+		std::vector<SourceCycleNodePlain> source_nodes;
 		for (const SourceCycleNodePlain &node : walk.cycle_nodes) {
 			if (!node.finalized) {
 				summary.boundary_skipped_unfinalized_node_count += 1;
 				continue;
 			}
-			finalized_points.push_back(PolygonPointPlain { node.finalized_x, node.finalized_y });
+			source_nodes.push_back(node);
 		}
-		if (finalized_points.size() < 2) {
+		if (source_nodes.size() < 2) {
 			summary.boundary_blocked_zone_count += 1;
 			continue;
 		}
+		auto node_point = [](const SourceCycleNodePlain &node) {
+			return PolygonPointPlain { node.finalized_x, node.finalized_y };
+		};
+		auto source_edge_writer_allowed = [&](const SourceCycleNodePlain &from_node) {
+			return !(from_node.next_pair_has_payload && from_node.next_pair_payload <= zone_word);
+		};
 		int32_t selected_segment_index = -1;
 		ClipResultPlain clipped_current;
 		ClipResultPlain clipped_target;
-		for (int32_t index = 0; index < int32_t(finalized_points.size()); ++index) {
-			const PolygonPointPlain from = finalized_points[size_t(index)];
-			const PolygonPointPlain to = finalized_points[size_t((index + 1) % int32_t(finalized_points.size()))];
+		for (int32_t index = 0; index < int32_t(source_nodes.size()); ++index) {
+			const PolygonPointPlain from = node_point(source_nodes[size_t(index)]);
+			const PolygonPointPlain to = node_point(source_nodes[size_t((index + 1) % int32_t(source_nodes.size()))]);
 			if (from.x == to.x && from.y == to.y) {
 				continue;
 			}
@@ -2639,69 +2694,48 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 			summary.boundary_fallback_zone_count += 1;
 			continue;
 		}
-		summary.boundary_appended_vertex_count += 1;
-		append_line(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
-		summary.boundary_connector_segment_count += 1;
+		if (source_edge_writer_allowed(source_nodes[size_t(selected_segment_index)])) {
+			append_line(clipped_current.x, clipped_current.y, clipped_target.x, clipped_target.y, zone_word, level, flagged_branch, random_span_limit);
+			summary.boundary_appended_vertex_count += 1;
+			summary.boundary_connector_segment_count += 1;
+		} else {
+			summary.boundary_owner_gate_skipped_segment_count += 1;
+		}
 		int32_t current_x = clipped_target.x;
 		int32_t current_y = clipped_target.y;
-		const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
-		const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
-		int32_t source_index = (selected_segment_index + 1) % int32_t(finalized_points.size());
-		for (int32_t guard = 0; guard < int32_t(finalized_points.size()) + 4; ++guard) {
-			const int32_t next_source_index = (source_index + 1) % int32_t(finalized_points.size());
+		int32_t source_index = (selected_segment_index + 1) % int32_t(source_nodes.size());
+		for (int32_t guard = 0; guard < int32_t(source_nodes.size()) + 4; ++guard) {
+			const int32_t next_source_index = (source_index + 1) % int32_t(source_nodes.size());
 			if (source_index == selected_segment_index) {
 				break;
 			}
-			const PolygonPointPlain from = finalized_points[size_t(source_index)];
-			const PolygonPointPlain to = finalized_points[size_t(next_source_index)];
+			const SourceCycleNodePlain &from_node = source_nodes[size_t(source_index)];
+			const PolygonPointPlain from = node_point(from_node);
+			const PolygonPointPlain to = node_point(source_nodes[size_t(next_source_index)]);
 			source_index = next_source_index;
 			if (from.x == to.x && from.y == to.y) {
 				continue;
 			}
-			const ClipResultPlain next_clip = clip_point_4a2b33_plain(to.x, to.y, from.x, from.y, bounds);
-			if (!point_inside_bounds_4a2777_plain(next_clip, bounds)) {
+			const ClipResultPlain from_clip = clip_point_4a2b33_plain(from.x, from.y, to.x, to.y, bounds);
+			const ClipResultPlain to_clip = clip_point_4a2b33_plain(to.x, to.y, from.x, from.y, bounds);
+			if (!point_inside_bounds_4a2777_plain(from_clip, bounds) || !point_inside_bounds_4a2777_plain(to_clip, bounds)) {
 				summary.boundary_skipped_out_of_bounds_clip_count += 1;
 				continue;
 			}
-			int32_t wrap_guard = 0;
-			while (current_x != next_clip.x && current_y != next_clip.y && point_on_clip_border(current_x, current_y) && point_on_clip_border(next_clip.x, next_clip.y) && wrap_guard < 8) {
-				int32_t border_x = current_x;
-				int32_t border_y = current_y;
-				if (current_x == bounds.min_x) {
-					if (current_y == bounds.min_y) {
-						border_x = right_x;
-						border_y = bounds.min_y;
-					} else {
-						border_x = bounds.min_x;
-						border_y = bounds.min_y;
-					}
-				} else if (current_y == bounds.min_y) {
-					border_x = right_x;
-					border_y = bounds.min_y;
-				} else if (current_x == right_x && current_y != bottom_y) {
-					border_x = right_x;
-					border_y = bottom_y;
-				} else {
-					border_x = bounds.min_x;
-					border_y = bottom_y;
-				}
-				append_line(current_x, current_y, border_x, border_y, zone_word, level, false, random_span_limit);
-				summary.boundary_appended_vertex_count += 1;
-				current_x = border_x;
-				current_y = border_y;
-				summary.boundary_wrap_segment_count += 1;
-				wrap_guard += 1;
-			}
-			if (wrap_guard >= 8 && current_x != next_clip.x && current_y != next_clip.y) {
-				summary.boundary_loop_guard_exhausted = true;
+			append_border_connection(current_x, current_y, from_clip.x, from_clip.y, zone_word, level, random_span_limit);
+			if (summary.boundary_loop_guard_exhausted) {
 				break;
 			}
-			if (current_x != next_clip.x || current_y != next_clip.y) {
-				append_line(current_x, current_y, next_clip.x, next_clip.y, zone_word, level, false, random_span_limit);
-				summary.boundary_appended_vertex_count += 1;
-				summary.boundary_final_segment_count += 1;
-				current_x = next_clip.x;
-				current_y = next_clip.y;
+			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
+				if (source_edge_writer_allowed(from_node)) {
+					append_line(from_clip.x, from_clip.y, to_clip.x, to_clip.y, zone_word, level, false, random_span_limit);
+					summary.boundary_appended_vertex_count += 1;
+					summary.boundary_connector_segment_count += 1;
+				} else {
+					summary.boundary_owner_gate_skipped_segment_count += 1;
+				}
+				current_x = to_clip.x;
+				current_y = to_clip.y;
 			}
 			if (source_index == selected_segment_index) {
 				break;
@@ -3331,6 +3365,7 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"boundary_appended_vertex_count\": " << summary.boundary_appended_vertex_count << ",\n";
 	out << "    \"boundary_skipped_unfinalized_node_count\": " << summary.boundary_skipped_unfinalized_node_count << ",\n";
 	out << "    \"boundary_skipped_out_of_bounds_clip_count\": " << summary.boundary_skipped_out_of_bounds_clip_count << ",\n";
+	out << "    \"boundary_owner_gate_skipped_segment_count\": " << summary.boundary_owner_gate_skipped_segment_count << ",\n";
 	out << "    \"boundary_flagged_writer_segment_count\": " << summary.boundary_flagged_writer_segment_count << ",\n";
 	out << "    \"boundary_deterministic_writer_segment_count\": " << summary.boundary_deterministic_writer_segment_count << ",\n";
 	out << "    \"boundary_randomized_rng_call_count\": " << summary.boundary_randomized_rng_call_count << ",\n";
@@ -3859,8 +3894,8 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"plain_cpp_boundary_span_fill_summary\": ";
 	append_boundary_span_fill_summary_json(out, boundary_span_fill_summary);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_runtime_zone_owner_materialization_and_generated_cell_mutation_steps_after_constructor_defaults\",\n";
-	out << "  \"next_required_alignment_slice\": \"port_same_level_synthetic_runtime_zone_append_0x4a3b48_0x49b452_before_pre_0x4a4c8e_compare\"\n";
+	out << "  \"next_required_native_core_slice\": \"port_terrain_live_feedback_generated_cell_mutations_after_boundary_owner_words\",\n";
+	out << "  \"next_required_alignment_slice\": \"capture_or_default_same_run_setup_0x44_then_compare_pre_0x4a4c8e_after_terrain_live_feedback\"\n";
 	out << "}\n";
 	return out.str();
 }
