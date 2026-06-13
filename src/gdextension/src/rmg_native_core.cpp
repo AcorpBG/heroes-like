@@ -2,8 +2,10 @@
 #include "h3maped_small_rmg_embedded_data.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cctype>
 #include <cerrno>
+#include <cmath>
 #include <cstring>
 #include <cstdlib>
 #include <limits>
@@ -60,6 +62,98 @@ struct RuntimeZoneSummary {
 	std::vector<int32_t> mapped_slots;
 	std::vector<int32_t> assignment_source_owners;
 	std::vector<JsonSpan> selected_zone_spans;
+};
+
+struct RuntimeZoneRecordPlain {
+	int32_t runtime_index = -1;
+	int32_t source_zone_id = -1;
+	std::string role;
+	int32_t source_bucket = -1;
+	int32_t source_owner_index = -1;
+	int32_t actual_owner_color = -1;
+	bool is_player_capable_zone = false;
+	bool has_assigned_start = false;
+	int32_t source_base_size = 0;
+	std::vector<int32_t> allowed_town_slots;
+	int32_t town_choice_rng_value = -1;
+	int32_t town_choice_index = -1;
+	int32_t town_choice_selected_allowed_ordinal = -1;
+	int32_t x_after_bbox_rescale = 0;
+	int32_t y_after_bbox_rescale = 0;
+	int32_t level_after_bbox_rescale = 0;
+	int32_t runtime_size_after_bbox_rescale = 0;
+};
+
+struct RuntimeLinkSeedPlain {
+	int32_t link_index = -1;
+	int32_t source_row = -1;
+	int32_t source_zone_a = -1;
+	int32_t source_zone_b = -1;
+	int32_t runtime_a = -1;
+	int32_t runtime_b = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+};
+
+struct CoordCandidate {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct PlacementStepPlain {
+	std::string pass_id;
+	int32_t runtime_zone_index = -1;
+	std::vector<int32_t> visible_runtime_zone_indices;
+	std::string candidate_source;
+	int32_t explicit_link_base_count = 0;
+	int32_t fallback_base_count = 0;
+	int32_t candidate_count_before_4a1ad8 = 0;
+	int32_t candidate_count_after_4a1ad8 = 0;
+	std::vector<CoordCandidate> candidate_preview_before_4a1ad8;
+	std::vector<CoordCandidate> candidate_preview_after_4a1ad8;
+	bool blocked = false;
+	std::string blocked_reason;
+	int32_t rng_value = -1;
+	int32_t selected_candidate_index = -1;
+	CoordCandidate selected_candidate;
+};
+
+struct RngEventPlain {
+	std::string consumer;
+	int32_t runtime_zone_index = -1;
+	std::string pass_id;
+	int32_t value = 0;
+	int32_t modulus = 0;
+	int32_t selected_index = -1;
+	std::vector<int32_t> allowed_original_town_indices;
+};
+
+struct CoordinateReplaySummary {
+	bool ok = false;
+	std::string blocked_reason;
+	int32_t minimum_source_base_size = 0;
+	int32_t coordinate_prune_divisor_4a218c = 5;
+	int32_t coordinate_prune_span_budget_4a218c = 0;
+	int32_t coordinate_rng_calls = 0;
+	int32_t town_choice_rng_calls = 0;
+	uint32_t rng_state_after_0x4a218c = 0;
+	int32_t bbox_min_y = 0;
+	int32_t bbox_min_x = 0;
+	int32_t bbox_max_y = 0;
+	int32_t bbox_max_x = 0;
+	int32_t bbox_height = 0;
+	int32_t bbox_width = 0;
+	int32_t bbox_span = 0;
+	int32_t map_span = 0;
+	int32_t offset_y = 0;
+	int32_t offset_x = 0;
+	std::vector<RuntimeZoneRecordPlain> runtime_records_after_0x49b3c1;
+	std::vector<RuntimeLinkSeedPlain> link_seeds;
+	std::vector<PlacementStepPlain> placement_steps;
+	std::vector<RngEventPlain> rng_events;
+	std::vector<RuntimeZoneRecordPlain> scaled_zone_coordinates;
 };
 
 std::string trim(const std::string &value) {
@@ -407,6 +501,32 @@ std::string json_string_or(const char *text, JsonSpan object, const char *key, c
 	return fallback;
 }
 
+bool json_bool_or(const char *text, JsonSpan object, const char *key, bool fallback) {
+	JsonSpan span = object_key_value_span(text, object, key);
+	if (!span.ok) {
+		return fallback;
+	}
+	size_t begin = skip_ws(text, span.begin, span.end);
+	size_t end = span.end;
+	while (end > begin && std::isspace(static_cast<unsigned char>(text[end - 1])) != 0) {
+		--end;
+	}
+	if (end > begin) {
+		const std::string raw(text + begin, text + end);
+		if (raw == "true") {
+			return true;
+		}
+		if (raw == "false") {
+			return false;
+		}
+	}
+	int32_t value = 0;
+	if (parse_json_int(text, span, value)) {
+		return value != 0;
+	}
+	return fallback;
+}
+
 std::pair<int32_t, int32_t> json_i32_pair_or(const char *text, JsonSpan object, const char *key, std::pair<int32_t, int32_t> fallback) {
 	JsonSpan span = object_key_value_span(text, object, key);
 	if (!span.ok || span.begin >= span.end || text[skip_ws(text, span.begin, span.end)] != '[') {
@@ -464,6 +584,36 @@ std::vector<JsonSpan> json_array_object_spans(const char *text, JsonSpan array_s
 	return spans;
 }
 
+std::vector<std::string> json_array_string_values(const char *text, JsonSpan array_span) {
+	std::vector<std::string> values;
+	if (!array_span.ok) {
+		return values;
+	}
+	size_t pos = skip_ws(text, array_span.begin, array_span.end);
+	if (pos >= array_span.end || text[pos] != '[') {
+		return values;
+	}
+	++pos;
+	while (pos < array_span.end) {
+		pos = skip_ws(text, pos, array_span.end);
+		if (pos >= array_span.end || text[pos] == ']') {
+			break;
+		}
+		if (text[pos] == '"') {
+			std::string value;
+			size_t after_value = pos;
+			if (!parse_json_string_at(text, pos, array_span.end, value, &after_value)) {
+				break;
+			}
+			values.push_back(value);
+			pos = after_value;
+			continue;
+		}
+		++pos;
+	}
+	return values;
+}
+
 int32_t bit_count_u8(uint8_t mask) {
 	int32_t count = 0;
 	for (int32_t index = 0; index < 8; ++index) {
@@ -501,6 +651,43 @@ std::vector<int32_t> owner_indices_from_mask(uint8_t mask) {
 		}
 	}
 	return indices;
+}
+
+int32_t h3maped_town_original_index_from_id_plain(const std::string &town_id) {
+	static constexpr const char *ALLOWED_TOWNS[] = {
+		"castle",
+		"rampart",
+		"tower",
+		"inferno",
+		"necropolis",
+		"dungeon",
+		"stronghold",
+		"fortress",
+		"elemental",
+	};
+	for (int32_t index = 0; index < 9; ++index) {
+		if (town_id == ALLOWED_TOWNS[size_t(index)]) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+std::vector<int32_t> h3maped_allowed_town_slots_plain(const std::vector<std::string> &allowed_towns) {
+	std::array<bool, 9> flags = {};
+	for (const std::string &town_id : allowed_towns) {
+		const int32_t town_index = h3maped_town_original_index_from_id_plain(town_id);
+		if (town_index >= 0 && town_index < int32_t(flags.size())) {
+			flags[size_t(town_index)] = true;
+		}
+	}
+	std::vector<int32_t> slots;
+	for (int32_t index = 0; index < int32_t(flags.size()); ++index) {
+		if (flags[size_t(index)]) {
+			slots.push_back(index);
+		}
+	}
+	return slots;
 }
 
 JsonSpan template_catalog_root_span(const char *text, size_t size) {
@@ -635,6 +822,440 @@ int32_t json_nested_int_or(const char *text, JsonSpan object, const char *nested
 	return json_int_or(text, nested, key, fallback);
 }
 
+int32_t h3maped_distance_truncate_plain(int32_t ax, int32_t ay, int32_t bx, int32_t by) {
+	const int64_t dx = int64_t(ax) - int64_t(bx);
+	const int64_t dy = int64_t(ay) - int64_t(by);
+	return int32_t(std::trunc(std::sqrt(double(dx * dx + dy * dy))));
+}
+
+int32_t ftol_truncate_plain(double value) {
+	return int32_t(std::trunc(value));
+}
+
+std::vector<RuntimeZoneRecordPlain> runtime_zone_records_plain(const RuntimeZoneSummary &summary) {
+	std::vector<RuntimeZoneRecordPlain> records;
+	if (!summary.ok) {
+		return records;
+	}
+	const char *text = godot::h3maped_small_rmg::embedded_data::random_map_template_catalog_json();
+	for (size_t index = 0; index < summary.selected_zone_spans.size(); ++index) {
+		JsonSpan zone = summary.selected_zone_spans[index];
+		RuntimeZoneRecordPlain record;
+		record.runtime_index = int32_t(index);
+		record.source_zone_id = json_int_or(text, zone, "id", int32_t(index + 1));
+		record.role = json_string_or(text, zone, "type", "");
+		record.source_bucket = json_int_or(text, zone, "bucket", -1);
+		record.source_owner_index = json_int_or(text, zone, "ownership", -2);
+		record.actual_owner_color = record.source_owner_index >= 0 && record.source_owner_index < int32_t(summary.mapped_slots.size())
+				? summary.mapped_slots[size_t(record.source_owner_index)]
+				: -1;
+		record.is_player_capable_zone = record.source_bucket == 0 || record.source_bucket == 1;
+		record.has_assigned_start = record.is_player_capable_zone && record.actual_owner_color >= 0;
+		record.source_base_size = json_int_or(text, zone, "base_size", 0);
+		std::vector<std::string> allowed_towns = json_array_string_values(text, object_key_value_span(text, zone, "allowed_towns"));
+		if (allowed_towns.empty()) {
+			JsonSpan town_policy = object_key_value_span(text, zone, "town_policy");
+			allowed_towns = json_array_string_values(text, object_key_value_span(text, town_policy, "allowed_faction_ids"));
+		}
+		record.allowed_town_slots = h3maped_allowed_town_slots_plain(allowed_towns);
+		records.push_back(record);
+	}
+	return records;
+}
+
+std::vector<RuntimeLinkSeedPlain> link_seeds_plain(const ControlledCase &controlled_case, const RuntimeZoneSummary &summary) {
+	std::vector<RuntimeLinkSeedPlain> seeds;
+	if (!summary.ok) {
+		return seeds;
+	}
+	const char *text = godot::h3maped_small_rmg::embedded_data::random_map_template_catalog_json();
+	const std::vector<JsonSpan> links = json_array_object_spans(text, summary.selected.connections_span);
+	std::map<int32_t, int32_t> runtime_index_by_source_zone_id;
+	for (size_t index = 0; index < summary.selected_zone_spans.size(); ++index) {
+		JsonSpan zone = summary.selected_zone_spans[index];
+		const int32_t source_zone_id = json_int_or(text, zone, "id", int32_t(index + 1));
+		if (source_zone_id > 0) {
+			runtime_index_by_source_zone_id[source_zone_id] = int32_t(index);
+		}
+	}
+	for (JsonSpan link : links) {
+		if (!player_filter_allows_plain(text, object_key_value_span(text, link, "player_filter"), controlled_case.human_count, controlled_case.players)) {
+			continue;
+		}
+		JsonSpan endpoints = object_key_value_span(text, link, "source_endpoints");
+		const int32_t source_zone_a = json_int_or(text, link, "zone1", json_int_or(text, endpoints, "zone1", 0));
+		const int32_t source_zone_b = json_int_or(text, link, "zone2", json_int_or(text, endpoints, "zone2", 0));
+		if (source_zone_a <= 0 || source_zone_b <= 0) {
+			continue;
+		}
+		JsonSpan guard = object_key_value_span(text, link, "guard");
+		JsonSpan grammar_source = object_key_value_span(text, link, "grammar_source");
+		RuntimeLinkSeedPlain seed;
+		seed.link_index = int32_t(seeds.size());
+		seed.source_row = json_int_or(text, link, "row", json_int_or(text, grammar_source, "source_row", -1));
+		seed.source_zone_a = source_zone_a;
+		seed.source_zone_b = source_zone_b;
+		const auto found_a = runtime_index_by_source_zone_id.find(source_zone_a);
+		const auto found_b = runtime_index_by_source_zone_id.find(source_zone_b);
+		seed.runtime_a = found_a != runtime_index_by_source_zone_id.end() ? found_a->second : source_zone_a - 1;
+		seed.runtime_b = found_b != runtime_index_by_source_zone_id.end() ? found_b->second : source_zone_b - 1;
+		seed.guard_value = json_int_or(text, link, "value", json_int_or(text, link, "guard_value", json_int_or(text, guard, "value", 0)));
+		seed.wide = json_bool_or(text, link, "wide", false);
+		seed.border_guard = json_bool_or(text, link, "border_guard", false);
+		seeds.push_back(seed);
+	}
+	return seeds;
+}
+
+bool candidate_valid_4a1701_plain(const RuntimeZoneRecordPlain &current, const CoordCandidate &candidate, const std::vector<CoordCandidate> &zone_positions, const std::vector<RuntimeZoneRecordPlain> &zones, const std::vector<int32_t> &visible_runtime_indices) {
+	if ((current.source_bucket == 0 || current.source_bucket == 1)
+			&& candidate.level == 1
+			&& current.actual_owner_color != 3
+			&& current.actual_owner_color != 4
+			&& current.actual_owner_color != 5) {
+		return false;
+	}
+	for (const int32_t other_index : visible_runtime_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size()) || other_index >= int32_t(zone_positions.size())) {
+			continue;
+		}
+		const RuntimeZoneRecordPlain &other = zones[size_t(other_index)];
+		const CoordCandidate other_position = zone_positions[size_t(other_index)];
+		if (other.runtime_index == current.runtime_index || other_position.level != candidate.level) {
+			continue;
+		}
+		const int32_t distance = h3maped_distance_truncate_plain(candidate.x, candidate.y, other_position.x, other_position.y);
+		const int32_t minimum_tenths = (other.source_base_size + current.source_base_size) * 8;
+		if (distance * 10 < minimum_tenths) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool zones_connectable_49b6e2_plain(const RuntimeZoneRecordPlain &first, const CoordCandidate &first_position, const RuntimeZoneRecordPlain &second, const CoordCandidate &second_position) {
+	const int32_t distance = h3maped_distance_truncate_plain(first_position.x, first_position.y, second_position.x, second_position.y);
+	const int32_t size_sum = first.source_base_size + second.source_base_size;
+	if (first_position.level != second_position.level) {
+		if (size_sum < distance) {
+			return false;
+		}
+		return (size_sum - distance) > (std::min(first.source_base_size, second.source_base_size) / 2);
+	}
+	return size_sum * 11 >= distance * 10;
+}
+
+int32_t link_acceptance_count_4a1967_plain(const RuntimeZoneRecordPlain &current, const CoordCandidate &current_position, const std::vector<RuntimeZoneRecordPlain> &zones, const std::vector<CoordCandidate> &zone_positions, const std::vector<int32_t> &visible_runtime_indices, const std::vector<RuntimeLinkSeedPlain> &links) {
+	int32_t accepted = 0;
+	for (const RuntimeLinkSeedPlain &link : links) {
+		int32_t other_index = -1;
+		if (link.runtime_a == current.runtime_index) {
+			other_index = link.runtime_b;
+		} else if (link.runtime_b == current.runtime_index) {
+			other_index = link.runtime_a;
+		}
+		if (other_index < 0 || other_index >= int32_t(zones.size()) || other_index >= int32_t(zone_positions.size())) {
+			continue;
+		}
+		if (std::find(visible_runtime_indices.begin(), visible_runtime_indices.end(), other_index) == visible_runtime_indices.end()) {
+			continue;
+		}
+		if (zones_connectable_49b6e2_plain(zones[size_t(other_index)], zone_positions[size_t(other_index)], current, current_position)) {
+			accepted += 1;
+		}
+	}
+	return accepted;
+}
+
+void append_angle_candidates_4a17f5_plain(const RuntimeZoneRecordPlain &base, const CoordCandidate &base_position, const RuntimeZoneRecordPlain &current, const std::vector<RuntimeZoneRecordPlain> &zones, const std::vector<CoordCandidate> &zone_positions, const std::vector<int32_t> &visible_runtime_indices, std::vector<CoordCandidate> &candidates) {
+	static constexpr double X_TABLE[32] = {
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+	};
+	static constexpr double Y_TABLE[32] = {
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+	};
+	const int32_t combined_size = base.source_base_size + current.source_base_size;
+	for (int32_t direction = 0; direction < 32; ++direction) {
+		CoordCandidate candidate;
+		candidate.x = ftol_truncate_plain(double(combined_size) * X_TABLE[direction] + double(base_position.x));
+		candidate.y = ftol_truncate_plain(double(combined_size) * Y_TABLE[direction] + double(base_position.y));
+		candidate.level = base_position.level;
+		if (candidate_valid_4a1701_plain(current, candidate, zone_positions, zones, visible_runtime_indices)) {
+			candidates.push_back(candidate);
+		}
+	}
+}
+
+void prune_candidates_4a1ad8_plain(const RuntimeZoneRecordPlain &current, const std::vector<RuntimeZoneRecordPlain> &zones, const std::vector<CoordCandidate> &zone_positions, const std::vector<int32_t> &visible_runtime_indices, const std::vector<RuntimeLinkSeedPlain> &links, int32_t coordinate_prune_span_budget, std::vector<CoordCandidate> &candidates) {
+	if (candidates.empty()) {
+		return;
+	}
+	int32_t best_link_count = 0;
+	for (const CoordCandidate &candidate : candidates) {
+		best_link_count = std::max(best_link_count, link_acceptance_count_4a1967_plain(current, candidate, zones, zone_positions, visible_runtime_indices, links));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
+		return link_acceptance_count_4a1967_plain(current, candidate, zones, zone_positions, visible_runtime_indices, links) < best_link_count;
+	}), candidates.end());
+	if (candidates.empty()) {
+		return;
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (const int32_t other_index : visible_runtime_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size()) || other_index >= int32_t(zone_positions.size()) || other_index == current.runtime_index) {
+			continue;
+		}
+		const RuntimeZoneRecordPlain &other = zones[size_t(other_index)];
+		const CoordCandidate other_position = zone_positions[size_t(other_index)];
+		min_y = std::min(other_position.y - other.source_base_size, min_y);
+		min_x = std::min(other_position.x - other.source_base_size, min_x);
+		max_y = std::max(other_position.y + other.source_base_size + 1, max_y);
+		max_x = std::max(other_position.x + other.source_base_size + 1, max_x);
+	}
+
+	auto candidate_span_metric = [&](const CoordCandidate &candidate) {
+		const int32_t candidate_min_y = std::min(candidate.y - current.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current.source_base_size + 1, max_x);
+		const int32_t height = candidate_max_y - candidate_min_y;
+		const int32_t width = candidate_max_x - candidate_min_x;
+		return std::max(coordinate_prune_span_budget, std::max(height, width));
+	};
+
+	int32_t best_metric = 0x7d00;
+	for (const CoordCandidate &candidate : candidates) {
+		best_metric = std::min(best_metric, candidate_span_metric(candidate));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
+		return best_metric < candidate_span_metric(candidate);
+	}), candidates.end());
+}
+
+std::vector<CoordCandidate> coord_preview(const std::vector<CoordCandidate> &candidates, int32_t limit = 8) {
+	const size_t count = std::min<size_t>(candidates.size(), size_t(std::max(0, limit)));
+	return std::vector<CoordCandidate>(candidates.begin(), candidates.begin() + count);
+}
+
+CoordinateReplaySummary build_coordinate_replay_summary(const ControlledCase &controlled_case, const RuntimeZoneSummary &runtime_zone_summary) {
+	CoordinateReplaySummary summary;
+	if (!runtime_zone_summary.ok) {
+		summary.blocked_reason = "blocked_until_runtime_zone_summary";
+		return summary;
+	}
+	if (!supported_one_level_land_scope(controlled_case)) {
+		summary.blocked_reason = "blocked_unsupported_non_small_medium_one_level_land_scope";
+		return summary;
+	}
+	std::vector<RuntimeZoneRecordPlain> zones = runtime_zone_records_plain(runtime_zone_summary);
+	std::vector<CoordCandidate> zone_positions(zones.size(), CoordCandidate {});
+	summary.link_seeds = link_seeds_plain(controlled_case, runtime_zone_summary);
+	summary.runtime_records_after_0x49b3c1 = zones;
+	int32_t minimum_source_base_size = std::numeric_limits<int32_t>::max();
+	for (const RuntimeZoneRecordPlain &zone : zones) {
+		if (zone.source_base_size > 0) {
+			minimum_source_base_size = std::min(minimum_source_base_size, zone.source_base_size);
+		}
+	}
+	if (minimum_source_base_size == std::numeric_limits<int32_t>::max()) {
+		minimum_source_base_size = 0;
+	}
+	summary.minimum_source_base_size = minimum_source_base_size;
+	const int32_t map_width = map_width_for_size(controlled_case.size_class);
+	const int32_t map_height = map_width;
+	summary.coordinate_prune_divisor_4a218c = 5;
+	summary.coordinate_prune_span_budget_4a218c = std::min(minimum_source_base_size * map_width, minimum_source_base_size * map_height) / summary.coordinate_prune_divisor_4a218c;
+	H3MapedRng rng { runtime_zone_summary.rng_state_after_selection };
+
+	auto append_rng_event = [&](const RngEventPlain &event) {
+		summary.rng_events.push_back(event);
+	};
+
+	auto apply_runtime_initializer_rng = [&](int32_t zone_index) {
+		if (zone_index < 0 || zone_index >= int32_t(zones.size())) {
+			return;
+		}
+		RuntimeZoneRecordPlain &runtime = zones[size_t(zone_index)];
+		if (runtime.allowed_town_slots.empty()) {
+			return;
+		}
+		const int32_t rng_value = rng.next();
+		const int32_t selected_allowed_ordinal = rng_value % int32_t(runtime.allowed_town_slots.size());
+		const int32_t town_choice_index = runtime.allowed_town_slots[size_t(selected_allowed_ordinal)];
+		runtime.town_choice_rng_value = rng_value;
+		runtime.town_choice_selected_allowed_ordinal = selected_allowed_ordinal;
+		runtime.town_choice_index = town_choice_index;
+		summary.runtime_records_after_0x49b3c1[size_t(zone_index)] = runtime;
+		++summary.town_choice_rng_calls;
+		RngEventPlain event;
+		event.consumer = "0x49b3c1";
+		event.runtime_zone_index = zone_index;
+		event.value = rng_value;
+		event.modulus = int32_t(runtime.allowed_town_slots.size());
+		event.selected_index = town_choice_index;
+		event.allowed_original_town_indices = runtime.allowed_town_slots;
+		append_rng_event(event);
+	};
+
+	bool complete = true;
+	auto place_zone = [&](int32_t zone_index, const std::string &pass_id, const std::vector<int32_t> &visible_runtime_indices) {
+		std::vector<CoordCandidate> candidates;
+		PlacementStepPlain step;
+		step.pass_id = pass_id;
+		step.runtime_zone_index = zone_index;
+		step.visible_runtime_zone_indices = visible_runtime_indices;
+		if (zone_index < 0 || zone_index >= int32_t(zones.size())) {
+			step.blocked = true;
+			step.blocked_reason = "runtime_zone_index_out_of_range";
+			complete = false;
+			summary.placement_steps.push_back(step);
+			return;
+		}
+
+		if (visible_runtime_indices.empty()) {
+			candidates.push_back(CoordCandidate { 0, 0, 0 });
+			step.candidate_source = "0x4a1f7b_empty_runtime_vector_origin";
+		} else {
+			int32_t explicit_base_count = 0;
+			for (const RuntimeLinkSeedPlain &link : summary.link_seeds) {
+				int32_t other_index = -1;
+				if (link.runtime_a == zone_index) {
+					other_index = link.runtime_b;
+				} else if (link.runtime_b == zone_index) {
+					other_index = link.runtime_a;
+				}
+				if (other_index < 0 || other_index >= int32_t(zones.size()) || std::find(visible_runtime_indices.begin(), visible_runtime_indices.end(), other_index) == visible_runtime_indices.end()) {
+					continue;
+				}
+				++explicit_base_count;
+				append_angle_candidates_4a17f5_plain(zones[size_t(other_index)], zone_positions[size_t(other_index)], zones[size_t(zone_index)], zones, zone_positions, visible_runtime_indices, candidates);
+			}
+			step.explicit_link_base_count = explicit_base_count;
+			if (candidates.empty()) {
+				for (const int32_t other_index : visible_runtime_indices) {
+					if (other_index >= 0 && other_index < int32_t(zones.size())) {
+						append_angle_candidates_4a17f5_plain(zones[size_t(other_index)], zone_positions[size_t(other_index)], zones[size_t(zone_index)], zones, zone_positions, visible_runtime_indices, candidates);
+					}
+				}
+				step.candidate_source = "0x4a2069_existing_runtime_zone_fallback";
+				step.fallback_base_count = int32_t(visible_runtime_indices.size());
+			} else {
+				step.candidate_source = "0x4a200c_explicit_source_link_endpoint";
+			}
+		}
+
+		step.candidate_count_before_4a1ad8 = int32_t(candidates.size());
+		step.candidate_preview_before_4a1ad8 = coord_preview(candidates);
+		prune_candidates_4a1ad8_plain(zones[size_t(zone_index)], zones, zone_positions, visible_runtime_indices, summary.link_seeds, summary.coordinate_prune_span_budget_4a218c, candidates);
+		step.candidate_count_after_4a1ad8 = int32_t(candidates.size());
+		step.candidate_preview_after_4a1ad8 = coord_preview(candidates);
+		if (candidates.empty()) {
+			step.blocked = true;
+			step.blocked_reason = "0x4a1f3b produced no coordinate candidates";
+			complete = false;
+			summary.placement_steps.push_back(step);
+			return;
+		}
+		const int32_t rng_value = rng.next();
+		++summary.coordinate_rng_calls;
+		const int32_t selected_index = rng_value % int32_t(candidates.size());
+		const CoordCandidate selected = candidates[size_t(selected_index)];
+		zone_positions[size_t(zone_index)] = selected;
+		step.rng_value = rng_value;
+		step.selected_candidate_index = selected_index;
+		step.selected_candidate = selected;
+		RngEventPlain event;
+		event.consumer = "0x4a1f3b_candidate_selection";
+		event.runtime_zone_index = zone_index;
+		event.pass_id = pass_id;
+		event.value = rng_value;
+		event.modulus = int32_t(candidates.size());
+		event.selected_index = selected_index;
+		append_rng_event(event);
+		summary.placement_steps.push_back(step);
+	};
+
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		std::vector<int32_t> visible;
+		for (int32_t visible_index = 0; visible_index < zone_index; ++visible_index) {
+			visible.push_back(visible_index);
+		}
+		apply_runtime_initializer_rng(zone_index);
+		place_zone(zone_index, "0x4a2226_initial_runtime_zone_insertion", visible);
+	}
+	std::vector<int32_t> all_visible;
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		all_visible.push_back(zone_index);
+	}
+	for (int32_t pass = 0; pass < 2; ++pass) {
+		for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+			place_zone(zone_index, pass == 0 ? "0x4a22b3_refinement_pass_1" : "0x4a22b3_refinement_pass_2", all_visible);
+		}
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (size_t index = 0; index < zones.size(); ++index) {
+		const RuntimeZoneRecordPlain &zone = zones[index];
+		const CoordCandidate position = zone_positions[index];
+		min_y = std::min(position.y - zone.source_base_size, min_y);
+		min_x = std::min(position.x - zone.source_base_size, min_x);
+		max_y = std::max(position.y + zone.source_base_size + 1, max_y);
+		max_x = std::max(position.x + zone.source_base_size + 1, max_x);
+	}
+	summary.bbox_min_y = min_y;
+	summary.bbox_min_x = min_x;
+	summary.bbox_max_y = max_y;
+	summary.bbox_max_x = max_x;
+	summary.bbox_height = max_y - min_y;
+	summary.bbox_width = max_x - min_x;
+	summary.bbox_span = std::max(summary.bbox_height, summary.bbox_width);
+	summary.map_span = std::min(map_width, map_height);
+	summary.offset_y = (min_y - summary.bbox_span + max_y) / 2;
+	summary.offset_x = (min_x - summary.bbox_span + max_x) / 2;
+	for (size_t index = 0; index < zones.size(); ++index) {
+		RuntimeZoneRecordPlain scaled = zones[index];
+		CoordCandidate position = zone_positions[index];
+		int32_t scaled_size = scaled.source_base_size;
+		if (summary.bbox_span > 0) {
+			position.x = ((position.x - summary.offset_x) * summary.map_span) / summary.bbox_span;
+			position.y = ((position.y - summary.offset_y) * summary.map_span) / summary.bbox_span;
+			scaled_size = (scaled.source_base_size * summary.map_span) / summary.bbox_span;
+		}
+		scaled.x_after_bbox_rescale = position.x;
+		scaled.y_after_bbox_rescale = position.y;
+		scaled.level_after_bbox_rescale = position.level;
+		scaled.runtime_size_after_bbox_rescale = scaled_size;
+		summary.scaled_zone_coordinates.push_back(scaled);
+	}
+	summary.rng_state_after_0x4a218c = rng.state;
+	summary.ok = complete;
+	if (!summary.ok) {
+		summary.blocked_reason = "coordinate_candidate_replay_incomplete";
+	}
+	return summary;
+}
+
 void append_int_array_json(std::ostream &out, const std::vector<int32_t> &values) {
 	out << "[";
 	for (size_t index = 0; index < values.size(); ++index) {
@@ -644,6 +1265,212 @@ void append_int_array_json(std::ostream &out, const std::vector<int32_t> &values
 		out << values[index];
 	}
 	out << "]";
+}
+
+void append_coord_json(std::ostream &out, const CoordCandidate &coord) {
+	out << "{";
+	out << "\"x\":" << coord.x << ",";
+	out << "\"y\":" << coord.y << ",";
+	out << "\"level\":" << coord.level;
+	out << "}";
+}
+
+void append_coord_array_json(std::ostream &out, const std::vector<CoordCandidate> &coords) {
+	out << "[";
+	for (size_t index = 0; index < coords.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		append_coord_json(out, coords[index]);
+	}
+	out << "]";
+}
+
+void append_plain_runtime_records_json(std::ostream &out, const std::vector<RuntimeZoneRecordPlain> &records, bool include_scaled_coordinates) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RuntimeZoneRecordPlain &record = records[index];
+		out << "{";
+		out << "\"runtime_index\":" << record.runtime_index << ",";
+		out << "\"source_zone_id\":" << record.source_zone_id << ",";
+		out << "\"role\":\"" << json_escape(record.role) << "\",";
+		out << "\"source_bucket\":" << record.source_bucket << ",";
+		out << "\"source_owner_index\":" << record.source_owner_index << ",";
+		out << "\"actual_owner_color\":" << record.actual_owner_color << ",";
+		out << "\"is_player_capable_zone\":" << (record.is_player_capable_zone ? "true" : "false") << ",";
+		out << "\"has_assigned_start\":" << (record.has_assigned_start ? "true" : "false") << ",";
+		out << "\"source_base_size\":" << record.source_base_size << ",";
+		out << "\"allowed_original_town_indices_49b3c1\":";
+		append_int_array_json(out, record.allowed_town_slots);
+		out << ",";
+		out << "\"town_choice_rng_value_49b3c1\":" << record.town_choice_rng_value << ",";
+		out << "\"town_choice_index_49b3c1\":" << record.town_choice_index << ",";
+		out << "\"town_choice_selected_allowed_ordinal_49b3c1\":" << record.town_choice_selected_allowed_ordinal;
+		if (include_scaled_coordinates) {
+			out << ",";
+			out << "\"x_after_bbox_rescale\":" << record.x_after_bbox_rescale << ",";
+			out << "\"y_after_bbox_rescale\":" << record.y_after_bbox_rescale << ",";
+			out << "\"level\":" << record.level_after_bbox_rescale << ",";
+			out << "\"runtime_size_after_bbox_rescale\":" << record.runtime_size_after_bbox_rescale;
+		}
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_link_seed_records_json(std::ostream &out, const std::vector<RuntimeLinkSeedPlain> &links) {
+	out << "[";
+	for (size_t index = 0; index < links.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RuntimeLinkSeedPlain &link = links[index];
+		out << "{";
+		out << "\"link_index\":" << link.link_index << ",";
+		out << "\"source_row\":" << link.source_row << ",";
+		out << "\"source_zone_a\":" << link.source_zone_a << ",";
+		out << "\"source_zone_b\":" << link.source_zone_b << ",";
+		out << "\"runtime_zone_a\":" << link.runtime_a << ",";
+		out << "\"runtime_zone_b\":" << link.runtime_b << ",";
+		out << "\"guard_value\":" << link.guard_value << ",";
+		out << "\"wide\":" << (link.wide ? "true" : "false") << ",";
+		out << "\"border_guard\":" << (link.border_guard ? "true" : "false");
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_link_seed_summary_json(std::ostream &out, const CoordinateReplaySummary &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_link_seed_summary_v1\",\n";
+	out << "    \"phase_id\": \"link_seed_setup\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a1f3b\",\n";
+	out << "    \"status\": \"" << (summary.link_seeds.empty() && !summary.ok ? "blocked" : "active_plain_cpp_link_seed_summary") << "\",\n";
+	out << "    \"source\": \"original recovered h3maped template connections consumed by 0x4a1f3b\",\n";
+	out << "    \"link_seed_count\": " << summary.link_seeds.size() << ",\n";
+	out << "    \"materializes_coordinates\": false,\n";
+	out << "    \"materializes_connection_guards\": false,\n";
+	out << "    \"link_seeds\": ";
+	append_link_seed_records_json(out, summary.link_seeds);
+	out << "\n";
+	out << "  }";
+}
+
+void append_rng_events_json(std::ostream &out, const std::vector<RngEventPlain> &events) {
+	out << "[";
+	for (size_t index = 0; index < events.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RngEventPlain &event = events[index];
+		out << "{";
+		out << "\"consumer\":\"" << json_escape(event.consumer) << "\",";
+		out << "\"runtime_zone_index\":" << event.runtime_zone_index << ",";
+		if (!event.pass_id.empty()) {
+			out << "\"pass\":\"" << json_escape(event.pass_id) << "\",";
+		}
+		out << "\"value\":" << event.value << ",";
+		out << "\"modulus\":" << event.modulus << ",";
+		out << "\"selected_index\":" << event.selected_index;
+		if (!event.allowed_original_town_indices.empty()) {
+			out << ",\"allowed_original_town_indices\":";
+			append_int_array_json(out, event.allowed_original_town_indices);
+		}
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_placement_steps_json(std::ostream &out, const std::vector<PlacementStepPlain> &steps) {
+	out << "[";
+	for (size_t index = 0; index < steps.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const PlacementStepPlain &step = steps[index];
+		out << "{";
+		out << "\"pass\":\"" << json_escape(step.pass_id) << "\",";
+		out << "\"runtime_zone_index\":" << step.runtime_zone_index << ",";
+		out << "\"runtime_vector_count_before_call\":" << step.visible_runtime_zone_indices.size() << ",";
+		out << "\"visible_runtime_zone_indices\":";
+		append_int_array_json(out, step.visible_runtime_zone_indices);
+		out << ",";
+		out << "\"candidate_source\":\"" << json_escape(step.candidate_source) << "\",";
+		out << "\"explicit_link_base_count\":" << step.explicit_link_base_count << ",";
+		out << "\"fallback_base_count\":" << step.fallback_base_count << ",";
+		out << "\"candidate_count_before_4a1ad8\":" << step.candidate_count_before_4a1ad8 << ",";
+		out << "\"candidate_preview_before_4a1ad8\":";
+		append_coord_array_json(out, step.candidate_preview_before_4a1ad8);
+		out << ",";
+		out << "\"candidate_count_after_4a1ad8\":" << step.candidate_count_after_4a1ad8 << ",";
+		out << "\"candidate_preview_after_4a1ad8\":";
+		append_coord_array_json(out, step.candidate_preview_after_4a1ad8);
+		out << ",";
+		out << "\"blocked\":" << (step.blocked ? "true" : "false") << ",";
+		out << "\"blocked_reason\":\"" << json_escape(step.blocked_reason) << "\",";
+		out << "\"rng_value\":" << step.rng_value << ",";
+		out << "\"selected_candidate_index\":" << step.selected_candidate_index << ",";
+		out << "\"selected_candidate\":";
+		append_coord_json(out, step.selected_candidate);
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_coordinate_replay_summary_json(std::ostream &out, const CoordinateReplaySummary &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_coordinate_replay_summary_v1\",\n";
+	out << "    \"phase_id\": \"coordinate_replay\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a218c\",\n";
+	out << "    \"link_endpoint_consumer_anchor\": \"0x4a1f3b\",\n";
+	out << "    \"candidate_generator_anchor\": \"0x4a17f5\",\n";
+	out << "    \"distance_validation_anchor\": \"0x4a1701\",\n";
+	out << "    \"candidate_prune_anchor\": \"0x4a1ad8\",\n";
+	out << "    \"bbox_rescale_anchor\": \"0x4a19ed\",\n";
+	out << "    \"status\": \"" << (summary.ok ? "active_plain_cpp_coordinate_replay_summary" : "blocked_coordinate_candidate_replay") << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"h3maped 0x4a218c interleaved runtime initializer, 0x4a1f3b endpoint walking, 0x4a17f5 candidates, 0x4a1701 spacing validation, 0x4a1ad8 pruning, and 0x4a19ed bbox rescale\",\n";
+	out << "    \"materializes_zone_footprints\": false,\n";
+	out << "    \"materializes_private_generated_cell_owner_words\": false,\n";
+	out << "    \"placement_step_count\": " << summary.placement_steps.size() << ",\n";
+	out << "    \"blanket_refinement_pass_count\": 2,\n";
+	out << "    \"minimum_source_base_size\": " << summary.minimum_source_base_size << ",\n";
+	out << "    \"coordinate_prune_span_budget_4a218c\": " << summary.coordinate_prune_span_budget_4a218c << ",\n";
+	out << "    \"coordinate_prune_divisor_4a218c\": " << summary.coordinate_prune_divisor_4a218c << ",\n";
+	out << "    \"coordinate_rng_calls_during_0x4a1f3b\": " << summary.coordinate_rng_calls << ",\n";
+	out << "    \"town_choice_rng_calls_during_0x4a218c\": " << summary.town_choice_rng_calls << ",\n";
+	out << "    \"total_interleaved_rng_calls_during_0x4a218c\": " << (summary.coordinate_rng_calls + summary.town_choice_rng_calls) << ",\n";
+	out << "    \"rng_event_count\": " << summary.rng_events.size() << ",\n";
+	out << "    \"rng_state_after_0x4a218c_replay_uint32\": " << summary.rng_state_after_0x4a218c << ",\n";
+	out << "    \"runtime_zone_records_after_0x49b3c1\": ";
+	append_plain_runtime_records_json(out, summary.runtime_records_after_0x49b3c1, false);
+	out << ",\n";
+	out << "    \"placement_steps\": ";
+	append_placement_steps_json(out, summary.placement_steps);
+	out << ",\n";
+	out << "    \"rng_events\": ";
+	append_rng_events_json(out, summary.rng_events);
+	out << ",\n";
+	out << "    \"bounding_box_rescale\": {";
+	out << "\"min_y_before_rescale\":" << summary.bbox_min_y << ",";
+	out << "\"min_x_before_rescale\":" << summary.bbox_min_x << ",";
+	out << "\"max_y_before_rescale\":" << summary.bbox_max_y << ",";
+	out << "\"max_x_before_rescale\":" << summary.bbox_max_x << ",";
+	out << "\"height_before_rescale\":" << summary.bbox_height << ",";
+	out << "\"width_before_rescale\":" << summary.bbox_width << ",";
+	out << "\"selected_span_before_rescale\":" << summary.bbox_span << ",";
+	out << "\"map_span\":" << summary.map_span << ",";
+	out << "\"offset_y\":" << summary.offset_y << ",";
+	out << "\"offset_x\":" << summary.offset_x;
+	out << "},\n";
+	out << "    \"scaled_zone_coordinates\": ";
+	append_plain_runtime_records_json(out, summary.scaled_zone_coordinates, true);
+	out << ",\n";
+	out << "    \"blocked_next\": \"zone_footprint_source_nodes_0x4a3a03_0x4cc788_then_0x4a325d_owner_materialization\"\n";
+	out << "  }";
 }
 
 void append_runtime_zone_summary_json(std::ostream &out, const RuntimeZoneSummary &summary) {
@@ -915,6 +1742,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const bool generator_mode_randomized = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 == 3;
 	const bool synthetic_branch_allowed = generator_mode_known && controlled_case.setup_object_0x44 != 0;
 	const RuntimeZoneSummary runtime_zone_summary = build_runtime_zone_summary(controlled_case);
+	const CoordinateReplaySummary coordinate_replay_summary = build_coordinate_replay_summary(controlled_case, runtime_zone_summary);
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
@@ -969,8 +1797,14 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"plain_cpp_runtime_zone_template_summary\": ";
 	append_runtime_zone_summary_json(out, runtime_zone_summary);
 	out << ",\n";
+	out << "  \"plain_cpp_link_seed_summary\": ";
+	append_link_seed_summary_json(out, coordinate_replay_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_coordinate_replay_summary\": ";
+	append_coordinate_replay_summary_json(out, coordinate_replay_summary);
+	out << ",\n";
 	out << "  \"next_required_native_core_slice\": \"port_runtime_zone_owner_materialization_and_generated_cell_mutation_steps_after_constructor_defaults\",\n";
-	out << "  \"next_required_alignment_slice\": \"capture_rmg_setup_object_0x44_then_port_0x4a3b48_direction_scan_and_0x49b452_runtime_zone_append\"\n";
+	out << "  \"next_required_alignment_slice\": \"port_zone_footprint_source_nodes_0x4a3a03_0x4cc788_then_0x4a325d_owner_materialization_and_capture_rmg_setup_object_0x44\"\n";
 	out << "}\n";
 	return out.str();
 }
