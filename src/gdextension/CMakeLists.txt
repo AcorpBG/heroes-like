@@ -31,6 +31,7 @@ add_library(aurelion_map_persistence SHARED
 )
 
 add_executable(rmg_native_batch_export_cli
+	src/h3maped_small_rmg_embedded_data.cpp
 	src/rmg_native_core.cpp
 	src/rmg_native_batch_export_cli.cpp
 )
