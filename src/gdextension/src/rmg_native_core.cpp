@@ -30,6 +30,17 @@ struct H3MapedRng {
 	}
 };
 
+struct GeneratorModeResolutionPlain {
+	bool setup_object_0x44_known = false;
+	int32_t setup_object_0x44 = 0;
+	bool generator_mode_known = false;
+	int32_t generator_mode_0x10b8 = 0;
+	bool randomized_from_setup_value_3 = false;
+	int32_t randomization_rng_value = -1;
+	uint32_t rng_state_after_0x49ecf2 = 0;
+	int32_t pre_template_rng_call_count = 0;
+};
+
 struct TemplateRecord {
 	int32_t catalog_index = -1;
 	std::string id;
@@ -54,6 +65,7 @@ struct TemplateRecord {
 struct RuntimeZoneSummary {
 	bool ok = false;
 	std::string blocked_reason;
+	GeneratorModeResolutionPlain generator_mode;
 	int32_t accepted_template_count = 0;
 	int32_t template_selection_rng_value = 0;
 	uint32_t rng_state_after_selection = 0;
@@ -236,9 +248,9 @@ struct SourceNodeFootprintSummary {
 	bool source_blocked = false;
 	std::string status = "blocked_until_coordinate_replay";
 	std::string blocked_reason = "coordinate_replay_missing";
+	GeneratorModeResolutionPlain generator_mode;
 	bool generator_mode_0x10b8_known = false;
 	int32_t generator_mode_0x10b8 = 0;
-	bool generator_mode_0x10b8_randomized_pending = false;
 	bool synthetic_branch_allowed = false;
 	int32_t total_matching_runtime_zones = 0;
 	PolygonSourceResultPlain source;
@@ -1074,6 +1086,38 @@ int32_t size_score_for_case(const ControlledCase &controlled_case) {
 	return int32_t((int64_t(map_width) * int64_t(map_width) * int64_t(levels)) / 0x510);
 }
 
+GeneratorModeResolutionPlain resolve_generator_mode_0x49ecf2_plain(const ControlledCase &controlled_case) {
+	GeneratorModeResolutionPlain resolution;
+	resolution.setup_object_0x44_known = controlled_case.setup_object_0x44_known;
+	resolution.setup_object_0x44 = controlled_case.setup_object_0x44;
+	resolution.rng_state_after_0x49ecf2 = controlled_case.seed;
+	if (!controlled_case.setup_object_0x44_known) {
+		return resolution;
+	}
+	resolution.generator_mode_known = true;
+	if (controlled_case.setup_object_0x44 == 3) {
+		H3MapedRng rng { controlled_case.seed };
+		resolution.randomized_from_setup_value_3 = true;
+		resolution.randomization_rng_value = rng.next();
+		resolution.generator_mode_0x10b8 = resolution.randomization_rng_value % 3;
+		resolution.rng_state_after_0x49ecf2 = rng.state;
+		resolution.pre_template_rng_call_count = 1;
+		return resolution;
+	}
+	resolution.generator_mode_0x10b8 = controlled_case.setup_object_0x44;
+	return resolution;
+}
+
+std::string generator_mode_status_label(const GeneratorModeResolutionPlain &resolution) {
+	if (!resolution.setup_object_0x44_known) {
+		return "unknown_missing_same_run_rmg_setup_object_0x44_capture";
+	}
+	if (resolution.randomized_from_setup_value_3) {
+		return "resolved_by_0x49ecf2_rng_percent_3_from_setup_value_3";
+	}
+	return "resolved_directly_from_rmg_setup_object_0x44";
+}
+
 std::vector<int32_t> owner_indices_from_mask(uint8_t mask) {
 	std::vector<int32_t> indices;
 	for (int32_t index = 0; index < 8; ++index) {
@@ -1210,13 +1254,14 @@ RuntimeZoneSummary build_runtime_zone_summary(const ControlledCase &controlled_c
 		summary.blocked_reason = controlled_case.parse_error;
 		return summary;
 	}
+	summary.generator_mode = resolve_generator_mode_0x49ecf2_plain(controlled_case);
 	std::vector<TemplateRecord> accepted = accepted_templates_for_case(controlled_case);
 	summary.accepted_template_count = int32_t(accepted.size());
 	if (accepted.empty()) {
 		summary.blocked_reason = "no_accepted_h3maped_templates_for_case";
 		return summary;
 	}
-	H3MapedRng rng { controlled_case.seed };
+	H3MapedRng rng { summary.generator_mode.rng_state_after_0x49ecf2 };
 	summary.template_selection_rng_value = rng.next();
 	summary.rng_state_after_selection = rng.state;
 	summary.selected_vector_index = summary.template_selection_rng_value % int32_t(accepted.size());
@@ -1881,18 +1926,20 @@ SourceNodeFootprintSummary build_source_node_footprint_summary(const ControlledC
 	summary.source_blocked = summary.source.blocked;
 	summary.source_nodes_built = !summary.source.blocked;
 	summary.total_matching_runtime_zones = int32_t(coordinate_summary.scaled_zone_coordinates.size());
-	summary.generator_mode_0x10b8_known = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 != 3;
-	summary.generator_mode_0x10b8_randomized_pending = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 == 3;
+	summary.generator_mode = resolve_generator_mode_0x49ecf2_plain(controlled_case);
+	summary.generator_mode_0x10b8_known = summary.generator_mode.generator_mode_known;
 	if (summary.generator_mode_0x10b8_known) {
-		summary.generator_mode_0x10b8 = controlled_case.setup_object_0x44;
-		summary.synthetic_branch_allowed = controlled_case.setup_object_0x44 != 0;
+		summary.generator_mode_0x10b8 = summary.generator_mode.generator_mode_0x10b8;
+		summary.synthetic_branch_allowed = summary.generator_mode.generator_mode_0x10b8 != 0;
 	}
 	if (summary.source_blocked) {
 		summary.status = "blocked_during_source_node_split";
 		summary.blocked_reason = "0x4ccb64_source_node_split_guard_failed";
 	} else if (!summary.generator_mode_0x10b8_known || summary.synthetic_branch_allowed) {
 		summary.status = "blocked_same_level_synthetic_runtime_zone_replay_pending";
-		summary.blocked_reason = "recover_rmg_setup_object_0x44_generator_mode_then_port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append";
+		summary.blocked_reason = summary.generator_mode_0x10b8_known
+				? "port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append"
+				: "capture_or_supply_rmg_setup_object_0x44_then_port_0x4a3b48_direction_scan_and_0x49b452_synthetic_runtime_zone_append";
 	} else {
 		summary.status = "active_plain_cpp_source_node_footprint_summary";
 		summary.blocked_reason.clear();
@@ -2549,7 +2596,9 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 	summary.boundary_span_fill_materialized_plain_cpp = true;
 	if (source_node_summary.status == "blocked_same_level_synthetic_runtime_zone_replay_pending") {
 		summary.status = source_node_summary.status;
-		summary.blocked_reason = "boundary_and_span_fill_materialized_for_current_source_walks_but_same_level_synthetic_runtime_zone_append_and_setup_object_0x44_capture_remain_pending";
+		summary.blocked_reason = source_node_summary.generator_mode.generator_mode_known
+				? "boundary_and_span_fill_materialized_for_current_source_walks_but_same_level_synthetic_runtime_zone_append_remains_pending"
+				: "boundary_and_span_fill_materialized_for_current_source_walks_but_same_level_synthetic_runtime_zone_append_and_setup_object_0x44_capture_remain_pending";
 	} else if (summary.boundary_loop_guard_exhausted) {
 		summary.status = "blocked_boundary_loop_guard_exhausted";
 		summary.blocked_reason = "0x4a2777_boundary_wrap_loop_guard_exhausted";
@@ -2858,14 +2907,27 @@ void append_source_node_footprint_summary_json(std::ostream &out, const SourceNo
 	out << "    \"materializes_map_cells\": false,\n";
 	out << "    \"materializes_public_output\": false,\n";
 	out << "    \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0\",\n";
+	out << "    \"rmg_setup_object_0x44_known\": " << (summary.generator_mode.setup_object_0x44_known ? "true" : "false") << ",\n";
+	if (summary.generator_mode.setup_object_0x44_known) {
+		out << "    \"rmg_setup_object_0x44\": " << summary.generator_mode.setup_object_0x44 << ",\n";
+	} else {
+		out << "    \"rmg_setup_object_0x44\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
+	}
 	out << "    \"generator_mode_0x10b8_known\": " << (summary.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
 	if (summary.generator_mode_0x10b8_known) {
 		out << "    \"generator_mode_0x10b8\": " << summary.generator_mode_0x10b8 << ",\n";
-	} else if (summary.generator_mode_0x10b8_randomized_pending) {
-		out << "    \"generator_mode_0x10b8\": \"pending_0x49ecf2_rng_percent_3_replay_for_setup_value_3\",\n";
 	} else {
 		out << "    \"generator_mode_0x10b8\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
 	}
+	out << "    \"generator_mode_0x10b8_status\": \"" << json_escape(generator_mode_status_label(summary.generator_mode)) << "\",\n";
+	out << "    \"generator_mode_randomized_from_setup_value_3\": " << (summary.generator_mode.randomized_from_setup_value_3 ? "true" : "false") << ",\n";
+	if (summary.generator_mode.randomized_from_setup_value_3) {
+		out << "    \"generator_mode_randomization_rng_value_0x4e7276\": " << summary.generator_mode.randomization_rng_value << ",\n";
+	} else {
+		out << "    \"generator_mode_randomization_rng_value_0x4e7276\": null,\n";
+	}
+	out << "    \"generator_mode_rng_state_after_0x49ecf2_uint32\": " << summary.generator_mode.rng_state_after_0x49ecf2 << ",\n";
+	out << "    \"template_preselection_rng_call_count\": " << summary.generator_mode.pre_template_rng_call_count << ",\n";
 	if (summary.generator_mode_0x10b8_known) {
 		out << "    \"synthetic_fallback_zone_allowed_by_0x4a3a9d\": " << (summary.synthetic_branch_allowed ? "true" : "false") << ",\n";
 	} else {
@@ -2978,7 +3040,7 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"materializes_map_cells\": false,\n";
 	out << "    \"materializes_public_output\": false,\n";
 	out << "    \"same_level_synthetic_runtime_zone_append_ported\": false,\n";
-	out << "    \"same_level_synthetic_runtime_zone_blocker\": \"RMG setup object +0x44/generator+0x10b8 and 0x4a3b48 direction scan -> 0x49b452 append replay remain required before this checkpoint can be called exact parity\",\n";
+	out << "    \"same_level_synthetic_runtime_zone_blocker\": \"generator+0x10b8 can be resolved from supplied RMG setup object +0x44, including setup value 3 via 0x4e7276() % 3; exact 0x4a3b48 direction scan -> 0x49b452 append replay remains required before this checkpoint can be called exact parity\",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
 	out << "    \"map_height\": " << summary.height << ",\n";
 	out << "    \"level_count\": " << summary.level_count << ",\n";
@@ -3021,7 +3083,7 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"zone_fills\": ";
 	append_zone_span_fill_summaries_json(out, summary.zone_fills);
 	out << ",\n";
-	out << "    \"blocked_next\": \"capture_rmg_setup_object_0x44_generator_mode_0x10b8_and_port_same_level_synthetic_runtime_zone_append_before_pre_0x4a4c8e_generated_cell_compare\"\n";
+	out << "    \"blocked_next\": \"port_same_level_synthetic_runtime_zone_append_0x4a3b48_0x49b452_before_pre_0x4a4c8e_generated_cell_compare\"\n";
 	out << "  }";
 }
 
@@ -3035,6 +3097,28 @@ void append_runtime_zone_summary_json(std::ostream &out, const RuntimeZoneSummar
 	out << "    \"status\": \"" << (summary.ok ? "active_plain_cpp_template_runtime_zone_summary" : "blocked") << "\",\n";
 	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
 	out << "    \"template_selection_mode\": \"h3maped_exe_rng_original_catalog\",\n";
+	out << "    \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); setup value 3 is randomized through 0x4e7276() % 3 before template selection consumes RNG\",\n";
+	out << "    \"rmg_setup_object_0x44_known\": " << (summary.generator_mode.setup_object_0x44_known ? "true" : "false") << ",\n";
+	if (summary.generator_mode.setup_object_0x44_known) {
+		out << "    \"rmg_setup_object_0x44\": " << summary.generator_mode.setup_object_0x44 << ",\n";
+	} else {
+		out << "    \"rmg_setup_object_0x44\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
+	}
+	out << "    \"generator_mode_0x10b8_known\": " << (summary.generator_mode.generator_mode_known ? "true" : "false") << ",\n";
+	if (summary.generator_mode.generator_mode_known) {
+		out << "    \"generator_mode_0x10b8\": " << summary.generator_mode.generator_mode_0x10b8 << ",\n";
+	} else {
+		out << "    \"generator_mode_0x10b8\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
+	}
+	out << "    \"generator_mode_0x10b8_status\": \"" << json_escape(generator_mode_status_label(summary.generator_mode)) << "\",\n";
+	out << "    \"generator_mode_randomized_from_setup_value_3\": " << (summary.generator_mode.randomized_from_setup_value_3 ? "true" : "false") << ",\n";
+	if (summary.generator_mode.randomized_from_setup_value_3) {
+		out << "    \"generator_mode_randomization_rng_value_0x4e7276\": " << summary.generator_mode.randomization_rng_value << ",\n";
+	} else {
+		out << "    \"generator_mode_randomization_rng_value_0x4e7276\": null,\n";
+	}
+	out << "    \"generator_mode_rng_state_after_0x49ecf2_uint32\": " << summary.generator_mode.rng_state_after_0x49ecf2 << ",\n";
+	out << "    \"template_preselection_rng_call_count\": " << summary.generator_mode.pre_template_rng_call_count << ",\n";
 	out << "    \"accepted_template_count\": " << summary.accepted_template_count << ",\n";
 	out << "    \"template_selection_rng_value\": " << summary.template_selection_rng_value << ",\n";
 	out << "    \"rng_state_after_selection_uint32\": " << summary.rng_state_after_selection << ",\n";
@@ -3290,9 +3374,8 @@ std::string safe_case_filename(const std::string &case_id) {
 std::string case_phase_snapshot_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason) {
 	const bool supported = supported_one_level_land_scope(controlled_case);
 	const int32_t width = map_width_for_size(controlled_case.size_class);
-	const bool generator_mode_known = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 != 3;
-	const bool generator_mode_randomized = controlled_case.setup_object_0x44_known && controlled_case.setup_object_0x44 == 3;
-	const bool synthetic_branch_allowed = generator_mode_known && controlled_case.setup_object_0x44 != 0;
+	const GeneratorModeResolutionPlain generator_mode = resolve_generator_mode_0x49ecf2_plain(controlled_case);
+	const bool synthetic_branch_allowed = generator_mode.generator_mode_known && generator_mode.generator_mode_0x10b8 != 0;
 	const RuntimeZoneSummary runtime_zone_summary = build_runtime_zone_summary(controlled_case);
 	const CoordinateReplaySummary coordinate_replay_summary = build_coordinate_replay_summary(controlled_case, runtime_zone_summary);
 	const SourceNodeFootprintSummary source_node_summary = build_source_node_footprint_summary(controlled_case, coordinate_replay_summary);
@@ -3323,24 +3406,31 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << "  \"generation_output_written\": false,\n";
 	out << "  \"amap_written\": false,\n";
 	out << "  \"phase_checkpoint\": \"native-rmg-private-generated-cell-grid-alignment-10184\",\n";
-	out << "  \"plain_cpp_generated_cell_grid_stage\": \"constructor_defaults_before_runtime_zone_owner_materialization\",\n";
+	out << "  \"plain_cpp_generated_cell_grid_stage\": \"post_0x49ecf2_generator_mode_before_runtime_zone_owner_materialization\",\n";
 	out << "  \"generator_mode_0x10b8_source\": \"0x49ecf2 writes generator+0x10b8 from constructor arg8 ([EBP+0x24]); 0x4adfe1 supplies that arg from RMG setup object+0x44; 0x4adf88 initializes setup+0x44 to 3, then 0x4602c1 overwrites stack setup [EBP-0x80]+0x44 from [EDI+0xac]+0x10 before calling 0x4adfe1; 0x4a3a9d tests level_index == 1 || generator+0x10b8 != 0\",\n";
-	out << "  \"rmg_setup_object_0x44_known\": " << (controlled_case.setup_object_0x44_known ? "true" : "false") << ",\n";
-	if (controlled_case.setup_object_0x44_known) {
-		out << "  \"rmg_setup_object_0x44\": " << controlled_case.setup_object_0x44 << ",\n";
+	out << "  \"rmg_setup_object_0x44_known\": " << (generator_mode.setup_object_0x44_known ? "true" : "false") << ",\n";
+	if (generator_mode.setup_object_0x44_known) {
+		out << "  \"rmg_setup_object_0x44\": " << generator_mode.setup_object_0x44 << ",\n";
 	} else {
 		out << "  \"rmg_setup_object_0x44\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
 	}
-	out << "  \"generator_mode_0x10b8_known\": " << (generator_mode_known ? "true" : "false") << ",\n";
-	if (generator_mode_known) {
-		out << "  \"generator_mode_0x10b8\": " << controlled_case.setup_object_0x44 << ",\n";
-	} else if (generator_mode_randomized) {
-		out << "  \"generator_mode_0x10b8\": \"pending_0x49ecf2_rng_percent_3_replay_for_setup_value_3\",\n";
+	out << "  \"generator_mode_0x10b8_known\": " << (generator_mode.generator_mode_known ? "true" : "false") << ",\n";
+	if (generator_mode.generator_mode_known) {
+		out << "  \"generator_mode_0x10b8\": " << generator_mode.generator_mode_0x10b8 << ",\n";
 	} else {
 		out << "  \"generator_mode_0x10b8\": \"unknown_missing_same_run_rmg_setup_object_0x44_capture\",\n";
 	}
+	out << "  \"generator_mode_0x10b8_status\": \"" << json_escape(generator_mode_status_label(generator_mode)) << "\",\n";
+	out << "  \"generator_mode_randomized_from_setup_value_3\": " << (generator_mode.randomized_from_setup_value_3 ? "true" : "false") << ",\n";
+	if (generator_mode.randomized_from_setup_value_3) {
+		out << "  \"generator_mode_randomization_rng_value_0x4e7276\": " << generator_mode.randomization_rng_value << ",\n";
+	} else {
+		out << "  \"generator_mode_randomization_rng_value_0x4e7276\": null,\n";
+	}
+	out << "  \"generator_mode_rng_state_after_0x49ecf2_uint32\": " << generator_mode.rng_state_after_0x49ecf2 << ",\n";
+	out << "  \"template_preselection_rng_call_count\": " << generator_mode.pre_template_rng_call_count << ",\n";
 	out << "  \"synthetic_branch_condition_0x4a3a9d\": \"level_index == 1 || generator+0x10b8 != 0\",\n";
-	if (generator_mode_known) {
+	if (generator_mode.generator_mode_known) {
 		out << "  \"synthetic_branch_allowed_by_0x4a3a9d\": " << (synthetic_branch_allowed ? "true" : "false") << ",\n";
 	} else {
 		out << "  \"synthetic_branch_allowed_by_0x4a3a9d\": \"unknown_until_generator_0x10b8_rmg_setup_object_0x44_is_captured\",\n";
@@ -3364,7 +3454,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	append_boundary_span_fill_summary_json(out, boundary_span_fill_summary);
 	out << ",\n";
 	out << "  \"next_required_native_core_slice\": \"port_runtime_zone_owner_materialization_and_generated_cell_mutation_steps_after_constructor_defaults\",\n";
-	out << "  \"next_required_alignment_slice\": \"capture_rmg_setup_object_0x44_generator_mode_0x10b8_and_port_same_level_synthetic_runtime_zone_append_before_pre_0x4a4c8e_compare\"\n";
+	out << "  \"next_required_alignment_slice\": \"port_same_level_synthetic_runtime_zone_append_0x4a3b48_0x49b452_before_pre_0x4a4c8e_compare\"\n";
 	out << "}\n";
 	return out.str();
 }

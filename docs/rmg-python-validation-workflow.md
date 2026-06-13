@@ -22,12 +22,15 @@ template selection, selected runtime-zone record summaries, link-seed extraction
 `0x4a1f3b` coordinate replay summaries, and
 `0x4a3a03/0x4cc788/0x4ccb64/0x4ccdfc` source-node footprint summaries.
 They also include a plain-C++ `0x4a2777/0x4a325d` boundary/span-fill owner-word
-summary over the currently materialized source-node walks. They do not prove
-pre-`0x4a4c8e` parity yet: same-level synthetic runtime-zone append and later
-generated-cell mutations still need to be ported and compared. The CLI still
-intentionally fails closed for `.amap` generation until the H3MapEd RMG
-generation core is split from Godot `Dictionary`/`Array`/`String`, `RefCounted`,
-and `FileAccess` APIs into plain C++ data structures.
+summary over the currently materialized source-node walks. They also resolve
+the recovered `0x49ecf2` generator mode for controlled cases that supply RMG
+setup object `+0x44`; setup value `3` consumes one `0x4e7276` RNG call and uses
+`rng % 3` before template selection. They do not prove pre-`0x4a4c8e` parity
+yet: same-level synthetic runtime-zone append and later generated-cell
+mutations still need to be ported and compared. The CLI still intentionally
+fails closed for `.amap` generation until the H3MapEd RMG generation core is
+split from Godot `Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess`
+APIs into plain C++ data structures.
 
 ## Default Loop
 
@@ -51,6 +54,17 @@ python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_expor
 This command currently reports `blocked` with per-case counts and optional
 phase snapshots until the native RMG core split is implemented. Do not add
 Godot flags or restore a Godot runner for parity work on this host.
+
+For checkpoint-2 phase snapshots, controlled cases may include the recovered
+setup `+0x44` as the optional ninth field:
+
+```bash
+bin/rmg_native_batch_export_cli \
+  --out .artifacts/rmg_native_cli_generator_mode_smoke \
+  --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 \
+  --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 \
+  --emit-phase-snapshot --print-manifest
+```
 
 3. After a no-Godot export exists, validate and compare with Python in one pass:
 
