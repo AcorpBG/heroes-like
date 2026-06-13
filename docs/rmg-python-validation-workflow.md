@@ -11,6 +11,8 @@ stays in Python, and fresh native export must go through the standalone
 no-Godot CLI boundary. The legacy Godot runner has been removed from
 `tools/rmg_native_batch_export.py`; runtime/editor integration smokes must use a
 separate explicit workflow on a host where engine launch is permitted.
+The wrapper now also refuses to run while any Godot process is already active
+on the host and records that refusal in `wrapper_manifest.json`.
 
 Current blocker: the standalone CLI owns plain-C++ controlled-case
 parsing/filtering and can write checkpoint-2 blocker phase snapshots for
@@ -122,9 +124,13 @@ python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .
 The full gate is unavailable on this host until the no-Godot native export path
 produces packages without the engine.
 
-`tools/rmg_python_validation_gate.py` checks Linux native binary freshness by
-default. Add `--include-windows-native-freshness` only for a final
-cross-platform checkpoint after Linux parity is verified.
+`tools/rmg_python_validation_gate.py` checks standalone no-Godot CLI freshness
+by default: the CLI sources, embedded H3MapEd catalog data, and
+`bin/rmg_native_batch_export_cli`. It intentionally does not use the old
+in-engine runner scene, Godot-bound runner source, or GDExtension `.so` files as
+freshness inputs for native RMG parity/export on this host. Add
+`--include-windows-native-freshness` only for a final cross-platform checkpoint
+after Linux parity is verified and a Windows standalone/package boundary exists.
 
 ## Boundary
 
