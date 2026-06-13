@@ -207,7 +207,27 @@ struct SourceSplitStepPlain {
 	int32_t crossing_collapse_count = 0;
 };
 
+struct SourceDescriptorNodePlain {
+	int32_t model_node_index = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	bool has_payload = false;
+	int32_t payload = 0;
+	int32_t pair_index = -1;
+	int32_t next_index = -1;
+	int32_t previous_index = -1;
+	bool active = false;
+	bool finalized = false;
+	int32_t finalized_x = -1;
+	int32_t finalized_y = -1;
+};
+
 struct SourceCycleNodePlain {
+	int32_t model_node_index = -1;
+	int32_t pair_index = -1;
+	int32_t next_index = -1;
+	int32_t previous_index = -1;
+	int32_t next_pair_index = -1;
 	int32_t x = 0;
 	int32_t y = 0;
 	bool has_payload = false;
@@ -224,6 +244,8 @@ struct SourceWalkPlain {
 	int32_t source_zone_id = -1;
 	int32_t start_x = 0;
 	int32_t start_y = 0;
+	int32_t locator_node_index = -1;
+	std::string locator_status;
 	std::vector<SourceCycleNodePlain> cycle_nodes;
 };
 
@@ -244,7 +266,11 @@ struct PolygonSourceResultPlain {
 	int32_t active_payload_node_count = 0;
 	int32_t source_node_walk_count = 0;
 	int32_t source_node_walk_guard_exhausted_count = 0;
+	int32_t source_descriptor_node_count = 0;
+	int32_t source_descriptor_active_node_count = 0;
+	int32_t source_descriptor_finalized_node_count = 0;
 	std::vector<SourceSplitStepPlain> split_steps;
+	std::vector<SourceDescriptorNodePlain> descriptor_nodes;
 	std::vector<SourceWalkPlain> walks;
 };
 
@@ -417,6 +443,12 @@ struct BoundarySpanFillSummary {
 	uint32_t rng_state_before_0x4a2777 = 0;
 	uint32_t rng_state_after_0x4a2777 = 0;
 	int32_t boundary_runtime_zone_walk_count = 0;
+	bool boundary_source_descriptor_handoff_materialized = false;
+	int32_t boundary_descriptor_handoff_walk_count = 0;
+	int32_t boundary_descriptor_handoff_node_count = 0;
+	int32_t boundary_descriptor_handoff_missing_count = 0;
+	int32_t boundary_descriptor_handoff_inactive_or_invalid_count = 0;
+	int32_t boundary_descriptor_handoff_guard_exhausted_count = 0;
 	int32_t boundary_blocked_zone_count = 0;
 	int32_t boundary_fallback_zone_count = 0;
 	int32_t boundary_connector_segment_count = 0;
@@ -2279,6 +2311,30 @@ PolygonSourceResultPlain build_polygon_source_walks_4ccb64_plain(const std::vect
 			result.finalized_node_count += 1;
 		}
 	}
+	for (int32_t node_index = 0; node_index < int32_t(model.nodes.size()); ++node_index) {
+		const PolygonModelNodePlain &node = model.nodes[size_t(node_index)];
+		SourceDescriptorNodePlain descriptor;
+		descriptor.model_node_index = node_index;
+		descriptor.x = node.x;
+		descriptor.y = node.y;
+		descriptor.has_payload = node.has_payload;
+		descriptor.payload = node.payload;
+		descriptor.pair_index = node.pair;
+		descriptor.next_index = node.next;
+		descriptor.previous_index = node.previous;
+		descriptor.active = node.active;
+		descriptor.finalized = node.finalized;
+		descriptor.finalized_x = node.finalized_x;
+		descriptor.finalized_y = node.finalized_y;
+		result.descriptor_nodes.push_back(descriptor);
+		result.source_descriptor_node_count += 1;
+		if (descriptor.active) {
+			result.source_descriptor_active_node_count += 1;
+		}
+		if (descriptor.finalized) {
+			result.source_descriptor_finalized_node_count += 1;
+		}
+	}
 
 	for (int32_t runtime_index = 0; runtime_index < int32_t(runtime_zones.size()); ++runtime_index) {
 		const RuntimeZoneRecordPlain &runtime = runtime_zones[size_t(runtime_index)];
@@ -2291,6 +2347,10 @@ PolygonSourceResultPlain build_polygon_source_walks_4ccb64_plain(const std::vect
 		walk.start_x = runtime.x_after_bbox_rescale;
 		walk.start_y = runtime.y_after_bbox_rescale;
 		const int32_t located = result.blocked ? -1 : model.locate_4cca55(walk.start_x, walk.start_y);
+		walk.locator_node_index = located;
+		walk.locator_status = located >= 0
+				? "0x4cca55_runtime_zone_descriptor_handoff_materialized"
+				: "0x4cca55_runtime_zone_descriptor_handoff_missing";
 		if (located >= 0) {
 			int32_t current = located;
 			bool guard_exhausted = false;
@@ -2300,6 +2360,11 @@ PolygonSourceResultPlain build_polygon_source_walks_4ccb64_plain(const std::vect
 				const int32_t next_pair = next >= 0 && next < int32_t(model.nodes.size()) ? model.nodes[size_t(next)].pair : -1;
 				const PolygonModelNodePlain *next_pair_node = next_pair >= 0 && next_pair < int32_t(model.nodes.size()) ? &model.nodes[size_t(next_pair)] : nullptr;
 				SourceCycleNodePlain source_node;
+				source_node.model_node_index = current;
+				source_node.pair_index = node.pair;
+				source_node.next_index = node.next;
+				source_node.previous_index = node.previous;
+				source_node.next_pair_index = next_pair;
 				source_node.x = node.x;
 				source_node.y = node.y;
 				source_node.has_payload = node.has_payload;
@@ -2889,7 +2954,9 @@ SeedRelocationPlain seed_relocation_4a325d_plain(const SourceWalkPlain *walk, co
 	int32_t best_clearance = -1;
 	if (walk != nullptr) {
 		relocation.descriptor_proxy_available = true;
-		relocation.descriptor_source = "native_current_source_cycle_walk_proxy_not_exact_ebp_plus_0x0c_descriptor";
+		relocation.descriptor_source = walk->locator_node_index >= 0
+				? "native_source_descriptor_cycle_from_0x4cca55_handoff_not_exact_0x4a325d_relocation_replay"
+				: "native_current_source_cycle_walk_proxy_missing_0x4cca55_locator_index";
 		for (const SourceCycleNodePlain &node : walk->cycle_nodes) {
 			relocation.candidate_scan_count += 1;
 			const int32_t x = node.x;
@@ -2950,6 +3017,60 @@ void append_boundary_vector_event_4a2777_plain(BoundarySpanFillSummary &summary,
 	event.h3maped_anchor = h3maped_anchor;
 	event.native_source = native_source;
 	summary.boundary_vector_events.push_back(event);
+}
+
+bool source_descriptor_node_valid_plain(const std::vector<SourceDescriptorNodePlain> &nodes, int32_t node_index) {
+	return node_index >= 0 && node_index < int32_t(nodes.size()) && nodes[size_t(node_index)].active;
+}
+
+SourceCycleNodePlain source_cycle_node_from_descriptor_plain(const std::vector<SourceDescriptorNodePlain> &nodes, const SourceDescriptorNodePlain &node) {
+	SourceCycleNodePlain source_node;
+	source_node.model_node_index = node.model_node_index;
+	source_node.pair_index = node.pair_index;
+	source_node.next_index = node.next_index;
+	source_node.previous_index = node.previous_index;
+	source_node.next_pair_index = source_descriptor_node_valid_plain(nodes, node.next_index) ? nodes[size_t(node.next_index)].pair_index : -1;
+	source_node.x = node.x;
+	source_node.y = node.y;
+	source_node.has_payload = node.has_payload;
+	source_node.payload = node.payload;
+	if (source_descriptor_node_valid_plain(nodes, source_node.next_pair_index)) {
+		const SourceDescriptorNodePlain &next_pair = nodes[size_t(source_node.next_pair_index)];
+		source_node.next_pair_has_payload = next_pair.has_payload;
+		source_node.next_pair_payload = next_pair.payload;
+	}
+	source_node.finalized = node.finalized;
+	source_node.finalized_x = node.finalized_x;
+	source_node.finalized_y = node.finalized_y;
+	return source_node;
+}
+
+std::vector<SourceCycleNodePlain> descriptor_cycle_from_locator_plain(const std::vector<SourceDescriptorNodePlain> &nodes, int32_t locator_node_index, bool &guard_exhausted, int32_t &inactive_or_invalid_count) {
+	std::vector<SourceCycleNodePlain> cycle;
+	guard_exhausted = false;
+	inactive_or_invalid_count = 0;
+	if (!source_descriptor_node_valid_plain(nodes, locator_node_index)) {
+		inactive_or_invalid_count += 1;
+		return cycle;
+	}
+	int32_t current = locator_node_index;
+	const int32_t guard_limit = std::max<int32_t>(16, int32_t(nodes.size()) + 4);
+	for (int32_t guard = 0; guard < guard_limit; ++guard) {
+		if (!source_descriptor_node_valid_plain(nodes, current)) {
+			inactive_or_invalid_count += 1;
+			break;
+		}
+		const SourceDescriptorNodePlain &node = nodes[size_t(current)];
+		cycle.push_back(source_cycle_node_from_descriptor_plain(nodes, node));
+		current = node.next_index;
+		if (current == locator_node_index) {
+			break;
+		}
+		if (guard == guard_limit - 1) {
+			guard_exhausted = true;
+		}
+	}
+	return cycle;
 }
 
 BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &controlled_case, const CoordinateReplaySummary &coordinate_summary, const SourceNodeFootprintSummary &source_node_summary) {
@@ -3076,8 +3197,23 @@ BoundarySpanFillSummary build_boundary_span_fill_summary(const ControlledCase &c
 		const int32_t level = zone.level_after_bbox_rescale;
 		const bool flagged_branch = !(summary.level_count == 2 && level != 1);
 		const int32_t random_span_limit = std::max<int32_t>(1, zone.runtime_size_after_bbox_rescale > 0 ? zone.runtime_size_after_bbox_rescale : zone.source_base_size);
+		bool descriptor_guard_exhausted = false;
+		int32_t descriptor_inactive_or_invalid_count = 0;
+		std::vector<SourceCycleNodePlain> walk_descriptor_nodes = descriptor_cycle_from_locator_plain(source_node_summary.source.descriptor_nodes, walk.locator_node_index, descriptor_guard_exhausted, descriptor_inactive_or_invalid_count);
+		std::vector<SourceCycleNodePlain> replay_nodes = walk_descriptor_nodes.empty() ? walk.cycle_nodes : walk_descriptor_nodes;
+		if (!walk_descriptor_nodes.empty()) {
+			summary.boundary_source_descriptor_handoff_materialized = true;
+			summary.boundary_descriptor_handoff_walk_count += 1;
+			summary.boundary_descriptor_handoff_node_count += int32_t(walk_descriptor_nodes.size());
+		} else {
+			summary.boundary_descriptor_handoff_missing_count += 1;
+		}
+		if (descriptor_guard_exhausted) {
+			summary.boundary_descriptor_handoff_guard_exhausted_count += 1;
+		}
+		summary.boundary_descriptor_handoff_inactive_or_invalid_count += descriptor_inactive_or_invalid_count;
 		std::vector<SourceCycleNodePlain> source_nodes;
-		for (const SourceCycleNodePlain &node : walk.cycle_nodes) {
+		for (const SourceCycleNodePlain &node : replay_nodes) {
 			if (!node.finalized) {
 				summary.boundary_skipped_unfinalized_node_count += 1;
 				continue;
@@ -5013,6 +5149,8 @@ void append_source_walks_json(std::ostream &out, const std::vector<SourceWalkPla
 		out << "\"source_zone_id\":" << walk.source_zone_id << ",";
 		out << "\"start_x\":" << walk.start_x << ",";
 		out << "\"start_y\":" << walk.start_y << ",";
+		out << "\"locator_node_index\":" << walk.locator_node_index << ",";
+		out << "\"locator_status\":\"" << json_escape(walk.locator_status) << "\",";
 		out << "\"nodes\":[";
 		for (size_t node_index = 0; node_index < walk.cycle_nodes.size(); ++node_index) {
 			if (node_index != 0) {
@@ -5020,6 +5158,11 @@ void append_source_walks_json(std::ostream &out, const std::vector<SourceWalkPla
 			}
 			const SourceCycleNodePlain &node = walk.cycle_nodes[node_index];
 			out << "{";
+			out << "\"model_node_index\":" << node.model_node_index << ",";
+			out << "\"pair_index\":" << node.pair_index << ",";
+			out << "\"next_index\":" << node.next_index << ",";
+			out << "\"previous_index\":" << node.previous_index << ",";
+			out << "\"next_pair_index\":" << node.next_pair_index << ",";
 			out << "\"x\":" << node.x << ",";
 			out << "\"y\":" << node.y << ",";
 			out << "\"has_payload\":" << (node.has_payload ? "true" : "false") << ",";
@@ -5032,6 +5175,31 @@ void append_source_walks_json(std::ostream &out, const std::vector<SourceWalkPla
 			out << "}";
 		}
 		out << "]";
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_source_descriptor_nodes_json(std::ostream &out, const std::vector<SourceDescriptorNodePlain> &nodes) {
+	out << "[";
+	for (size_t index = 0; index < nodes.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SourceDescriptorNodePlain &node = nodes[index];
+		out << "{";
+		out << "\"model_node_index\":" << node.model_node_index << ",";
+		out << "\"x\":" << node.x << ",";
+		out << "\"y\":" << node.y << ",";
+		out << "\"has_payload\":" << (node.has_payload ? "true" : "false") << ",";
+		out << "\"payload\":" << node.payload << ",";
+		out << "\"pair_index\":" << node.pair_index << ",";
+		out << "\"next_index\":" << node.next_index << ",";
+		out << "\"previous_index\":" << node.previous_index << ",";
+		out << "\"active\":" << (node.active ? "true" : "false") << ",";
+		out << "\"finalized\":" << (node.finalized ? "true" : "false") << ",";
+		out << "\"finalized_x\":" << node.finalized_x << ",";
+		out << "\"finalized_y\":" << node.finalized_y;
 		out << "}";
 	}
 	out << "]";
@@ -5151,6 +5319,13 @@ void append_source_node_footprint_summary_json(std::ostream &out, const SourceNo
 	out << "    \"active_payload_node_count\": " << summary.source.active_payload_node_count << ",\n";
 	out << "    \"source_node_walk_count\": " << summary.source.source_node_walk_count << ",\n";
 	out << "    \"source_node_walk_guard_exhausted_count\": " << summary.source.source_node_walk_guard_exhausted_count << ",\n";
+	out << "    \"source_descriptor_node_table_materialized\": true,\n";
+	out << "    \"source_descriptor_node_count\": " << summary.source.source_descriptor_node_count << ",\n";
+	out << "    \"source_descriptor_active_node_count\": " << summary.source.source_descriptor_active_node_count << ",\n";
+	out << "    \"source_descriptor_finalized_node_count\": " << summary.source.source_descriptor_finalized_node_count << ",\n";
+	out << "    \"source_descriptor_nodes\": ";
+	append_source_descriptor_nodes_json(out, summary.source.descriptor_nodes);
+	out << ",\n";
 	out << "    \"split_steps\": ";
 	append_source_split_steps_json(out, summary.source.split_steps);
 	out << ",\n";
@@ -5267,11 +5442,12 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"materializes_private_zone_cell_buffer\": " << (summary.private_zone_cell_buffer_materialized ? "true" : "false") << ",\n";
 	out << "    \"materializes_private_generated_cell_owner_words\": " << (summary.generated_cell_owner_words_materialized ? "true" : "false") << ",\n";
 	out << "    \"materializes_boundary_trace\": " << (summary.boundary_span_fill_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"materializes_source_descriptor_handoff_replay\": " << (summary.boundary_source_descriptor_handoff_materialized ? "true" : "false") << ",\n";
 	out << "    \"materializes_native_boundary_vector_proxy_trace\": " << (summary.boundary_native_vector_trace_materialized ? "true" : "false") << ",\n";
 	out << "    \"materializes_exact_h3maped_generator_0x3f4_boundary_vector\": " << (summary.boundary_exact_h3maped_vector_materialized ? "true" : "false") << ",\n";
 	out << "    \"boundary_vector_blocked_reason\": \"" << (summary.boundary_exact_h3maped_vector_materialized
 			? ""
-			: "0x4a2777 append order is source-backed, but exact same-run generator+0x3f4 descriptor/vector materialization remains blocked on the 0x4a3a03/0x4cca55/0x4a325d handoff; do not treat this trace as checkpoint-2 parity") << "\",\n";
+			: "0x4a3a03 -> 0x4cca55 descriptor-node handoff is materialized and consumed in plain C++; exact generator+0x3f4 byte/vector parity remains blocked on completing the 0x4a2777 fallback/append record layout, so do not treat this trace as checkpoint-2 parity") << "\",\n";
 	out << "    \"materializes_span_fill\": " << (summary.boundary_span_fill_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"materializes_terrain\": false,\n";
 	out << "    \"materializes_map_cells\": false,\n";
@@ -5290,6 +5466,11 @@ void append_boundary_span_fill_summary_json(std::ostream &out, const BoundarySpa
 	out << "    \"rng_state_before_0x4a2777_uint32\": " << summary.rng_state_before_0x4a2777 << ",\n";
 	out << "    \"rng_state_after_0x4a2777_uint32\": " << summary.rng_state_after_0x4a2777 << ",\n";
 	out << "    \"boundary_runtime_zone_walk_count\": " << summary.boundary_runtime_zone_walk_count << ",\n";
+	out << "    \"boundary_descriptor_handoff_walk_count\": " << summary.boundary_descriptor_handoff_walk_count << ",\n";
+	out << "    \"boundary_descriptor_handoff_node_count\": " << summary.boundary_descriptor_handoff_node_count << ",\n";
+	out << "    \"boundary_descriptor_handoff_missing_count\": " << summary.boundary_descriptor_handoff_missing_count << ",\n";
+	out << "    \"boundary_descriptor_handoff_inactive_or_invalid_count\": " << summary.boundary_descriptor_handoff_inactive_or_invalid_count << ",\n";
+	out << "    \"boundary_descriptor_handoff_guard_exhausted_count\": " << summary.boundary_descriptor_handoff_guard_exhausted_count << ",\n";
 	out << "    \"boundary_blocked_zone_count\": " << summary.boundary_blocked_zone_count << ",\n";
 	out << "    \"boundary_fallback_zone_count\": " << summary.boundary_fallback_zone_count << ",\n";
 	out << "    \"boundary_connector_segment_count\": " << summary.boundary_connector_segment_count << ",\n";
