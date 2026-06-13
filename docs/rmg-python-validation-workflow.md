@@ -16,10 +16,14 @@ Current blocker: the standalone CLI owns plain-C++ controlled-case
 parsing/filtering and can write checkpoint-2 blocker phase snapshots for
 supported Small/Medium one-level land cases. Those snapshots now include the
 constructor-default generated-cell words (`0xffff7fbc`, `0x00000548`, and
-bit25|bit27) under the same generated-cell checkpoint schema used by the
-Python private-state compare tools. They also include plain-C++ embedded-catalog
-template selection, selected runtime-zone record summaries, link-seed extraction,
-`0x4a1f3b` coordinate replay summaries, and
+bit25|bit27) and an `after_boundary_span_fill_owner_words` generated-cell
+checkpoint under the same schema used by the Python private-state compare
+tools. The post-boundary checkpoint materializes the recovered
+`0x4a2777/0x4a325d` owner byte-2 writes over the generated-cell word `0x20`
+defaults, while leaving later terrain/live-feedback mutations unclaimed.
+Snapshots also include plain-C++ embedded-catalog template selection, selected
+runtime-zone record summaries, link-seed extraction, `0x4a1f3b` coordinate
+replay summaries, and
 `0x4a3a03/0x4cc788/0x4ccb64/0x4ccdfc` source-node footprint summaries.
 They also include a plain-C++ `0x4a2777/0x4a325d` boundary/span-fill owner-word
 summary over the currently materialized source-node walks. They also resolve
@@ -73,10 +77,13 @@ Expected snapshot shape for that focused smoke:
 
 - Small 2p seed 58 with setup `3` resolves generator mode `0`, skips the
   synthetic branch, and runs boundary/span fill over the original runtime-zone
-  vector.
+  vector. Its `after_boundary_span_fill_owner_words` checkpoint records 1266
+  owner-materialized generated cells and 5 non-negative owner IDs.
 - Medium 4p seed 10 with setup `3` resolves generator mode `2`, scans 56
   `0x4a3b48` candidate directions, appends 8 `0x49b452` synthetic runtime
-  zones, and runs boundary/span fill over the augmented 15-zone vector.
+  zones, and runs boundary/span fill over the augmented 15-zone vector. Its
+  `after_boundary_span_fill_owner_words` checkpoint records 4116
+  owner-materialized generated cells and 15 non-negative owner IDs.
 
 3. After a no-Godot export exists, validate and compare with Python in one pass:
 
