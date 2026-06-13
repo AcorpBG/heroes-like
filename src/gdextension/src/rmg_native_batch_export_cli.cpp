@@ -1,5 +1,6 @@
+#include "rmg_native_core.hpp"
+
 #include <algorithm>
-#include <cctype>
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
@@ -11,6 +12,9 @@
 #include <vector>
 
 namespace {
+
+using aurelion::rmg_native_core::CaseReport;
+using aurelion::rmg_native_core::ControlledCase;
 
 struct Options {
 	std::filesystem::path output_dir = ".artifacts/rmg_native_batch_export_cli";
@@ -74,6 +78,26 @@ void append_json_string_array(std::ostream &out, const std::vector<std::string> 
 	out << "]";
 }
 
+void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &reports) {
+	out << "[";
+	for (size_t index = 0; index < reports.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const CaseReport &report = reports[index];
+		out << "{";
+		out << "\"case_id\":\"" << json_escape(report.input.id) << "\",";
+		out << "\"raw_controlled_case\":\"" << json_escape(report.input.raw) << "\",";
+		out << "\"status\":\"" << json_escape(report.status) << "\",";
+		out << "\"blocked_reason\":\"" << json_escape(report.blocked_reason) << "\",";
+		out << "\"supported_scope\":" << (report.supported_scope ? "true" : "false") << ",";
+		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
+		out << "\"phase_snapshot_path\":\"" << json_escape(report.phase_snapshot_path.string()) << "\"";
+		out << "}";
+	}
+	out << "]";
+}
+
 bool parse_int(const std::string &raw, int &out_value) {
 	char *end = nullptr;
 	errno = 0;
@@ -126,10 +150,72 @@ Options parse_options(int argc, char **argv) {
 	return options;
 }
 
-std::string manifest_json(const Options &options, const std::filesystem::path &absolute_output_dir) {
+bool supported_case_scope(const ControlledCase &controlled_case) {
+	return controlled_case.parse_ok
+			&& (controlled_case.size_class == "small" || controlled_case.size_class == "medium")
+			&& controlled_case.water_mode == "land"
+			&& controlled_case.level_count == 1;
+}
+
+std::vector<CaseReport> build_case_reports(const Options &options, const std::filesystem::path &absolute_output_dir, int &skipped_count) {
+	std::vector<CaseReport> reports;
+	const std::vector<std::string> filters = aurelion::rmg_native_core::split_case_filter(options.case_filter);
+	skipped_count = 0;
+	for (const std::string &raw_case : options.controlled_cases) {
+		ControlledCase controlled_case = aurelion::rmg_native_core::parse_controlled_case(raw_case);
+		if (!aurelion::rmg_native_core::case_matches_filter(controlled_case, filters)) {
+			++skipped_count;
+			continue;
+		}
+		const bool supported = supported_case_scope(controlled_case);
+		if (!supported && !options.include_unsupported) {
+			++skipped_count;
+			continue;
+		}
+		CaseReport report;
+		report.input = controlled_case;
+		report.supported_scope = supported;
+		if (!controlled_case.parse_ok) {
+			report.status = "failed";
+			report.blocked_reason = controlled_case.parse_error;
+		} else if (!supported) {
+			report.status = "unsupported_scope";
+			report.blocked_reason = "standalone_cli_currently_scopes_only_small_medium_one_level_land";
+		} else {
+			report.status = "blocked";
+			report.blocked_reason = "native_rmg_core_still_godot_variant_bound";
+		}
+		if (options.emit_phase_snapshot) {
+			const std::filesystem::path snapshot_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".phase_snapshot.json");
+			std::ofstream snapshot(snapshot_path, std::ios::binary);
+			if (snapshot) {
+				snapshot << aurelion::rmg_native_core::case_phase_snapshot_json(controlled_case, report.status, report.blocked_reason);
+				report.phase_snapshot_written = true;
+				report.phase_snapshot_path = snapshot_path;
+			}
+		}
+		reports.push_back(report);
+		if (options.limit > 0 && int(reports.size()) >= options.limit) {
+			break;
+		}
+	}
+	return reports;
+}
+
+std::string manifest_json(const Options &options, const std::filesystem::path &absolute_output_dir, const std::vector<CaseReport> &case_reports, int skipped_count) {
+	int failed_count = 0;
+	int unsupported_count = 0;
+	for (const CaseReport &report : case_reports) {
+		if (report.status == "failed") {
+			++failed_count;
+		} else if (report.status == "unsupported_scope") {
+			++unsupported_count;
+		}
+	}
+	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count;
 	std::ostringstream out;
 	out << "{\n";
-	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v1\",\n";
+	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v2\",\n";
 	out << "  \"status\": \"blocked\",\n";
 	out << "  \"blocked_reason\": \"native_rmg_core_still_godot_variant_bound\",\n";
 	out << "  \"runner\": \"standalone_native_cli_no_godot\",\n";
@@ -145,11 +231,19 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"controlled_cases\": ";
 	append_json_string_array(out, options.controlled_cases);
 	out << ",\n";
-	out << "  \"case_count\": 0,\n";
+	out << "  \"case_count\": " << case_reports.size() << ",\n";
+	out << "  \"blocked_count\": " << blocked_count << ",\n";
+	out << "  \"unsupported_count\": " << unsupported_count << ",\n";
+	out << "  \"skipped_count\": " << skipped_count << ",\n";
 	out << "  \"exported_count\": 0,\n";
-	out << "  \"failed_count\": 0,\n";
+	out << "  \"failed_count\": " << failed_count << ",\n";
+	out << "  \"generation_core_stage\": \"plain_cpp_controlled_case_and_checkpoint2_surface\",\n";
+	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
 	out << "  \"required_next_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api_before_running_native_exports_on_memory_constrained_hosts\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. It intentionally refuses map generation until the native RMG core is available through plain C++ data structures instead of Godot engine APIs.\"\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary. It parses and reports controlled Small/Medium one-level land cases, but intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
+	out << "  \"cases\": ";
+	append_case_report_array(out, case_reports);
+	out << "\n";
 	out << "}\n";
 	return out.str();
 }
@@ -166,7 +260,9 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	const std::string manifest = manifest_json(options, absolute_output_dir);
+	int skipped_count = 0;
+	const std::vector<CaseReport> case_reports = build_case_reports(options, absolute_output_dir, skipped_count);
+	const std::string manifest = manifest_json(options, absolute_output_dir, case_reports, skipped_count);
 	const std::filesystem::path manifest_path = absolute_output_dir / "manifest.json";
 	std::ofstream file(manifest_path, std::ios::binary);
 	if (!file) {
@@ -180,6 +276,7 @@ int main(int argc, char **argv) {
 		std::cout << manifest;
 	}
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
+			  << " cases=" << case_reports.size()
 			  << " reason=native_rmg_core_still_godot_variant_bound\n";
 	return 2;
 }

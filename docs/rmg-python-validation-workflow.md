@@ -12,9 +12,12 @@ no-Godot CLI boundary. The legacy Godot runner has been removed from
 `tools/rmg_native_batch_export.py`; runtime/editor integration smokes must use a
 separate explicit workflow on a host where engine launch is permitted.
 
-Current blocker: the standalone CLI intentionally fails closed until the
-H3MapEd RMG generation core is split from Godot `Dictionary`/`Array`/`String`,
-`RefCounted`, and `FileAccess` APIs into plain C++ data structures.
+Current blocker: the standalone CLI owns plain-C++ controlled-case
+parsing/filtering and can write checkpoint-2 blocker phase snapshots for
+supported Small/Medium one-level land cases. It still intentionally fails closed
+for `.amap` generation until the H3MapEd RMG generation core is split from
+Godot `Dictionary`/`Array`/`String`, `RefCounted`, and `FileAccess` APIs into
+plain C++ data structures.
 
 ## Default Loop
 
@@ -35,9 +38,9 @@ being changed.
 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_probe --case xl_islands_2levels,xl_water_2levels
 ```
 
-This command currently reports `blocked` until the native RMG core split is
-implemented. Do not add Godot flags or restore a Godot runner for parity work
-on this host.
+This command currently reports `blocked` with per-case counts and optional
+phase snapshots until the native RMG core split is implemented. Do not add
+Godot flags or restore a Godot runner for parity work on this host.
 
 3. After a no-Godot export exists, validate and compare with Python in one pass:
 

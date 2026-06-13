@@ -31,10 +31,15 @@ add_library(aurelion_map_persistence SHARED
 )
 
 add_executable(rmg_native_batch_export_cli
+	src/rmg_native_core.cpp
 	src/rmg_native_batch_export_cli.cpp
 )
 
 target_include_directories(aurelion_map_persistence PRIVATE
+	include
+)
+
+target_include_directories(rmg_native_batch_export_cli PRIVATE
 	include
 )
 
