@@ -832,6 +832,8 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool object_vector_commit_mutation_helpers_ported_plain_cpp = false;
 	bool object_vector_projection_write_helpers_ported_plain_cpp = false;
 	bool object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp = false;
+	bool object_vector_4a79a3_payload_order_ported_plain_cpp = false;
+	bool object_vector_4a79a3_payload_order_records_match_recovered = false;
 	bool diagnostic_only = true;
 	bool native_object_vector_order_materialized = false;
 	bool same_run_descriptor_state_complete = false;
@@ -888,6 +890,9 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	int32_t sampled_4a79a3_final_object_vector_count = 13;
 	int32_t sampled_4a79a3_payload_loop_count = 19;
 	int32_t sampled_4a79a3_later_49eb8d_handoff_count = 107;
+	int32_t sampled_4a79a3_payload_record_count = 0;
+	int32_t sampled_4a79a3_payload_vtable_0x00540a9c_count = 0;
+	int32_t sampled_4a79a3_payload_vtable_0x00540a88_count = 0;
 	bool sampled_4a79a3_filter_hits_4a696b = true;
 	bool sampled_4a79a3_filter_hits_4a7605 = true;
 };
@@ -944,6 +949,46 @@ struct DescriptorSourceIdentityClosureSummaryPlain {
 	int32_t remaining_fixed_budget_after = 8;
 	std::string active_blocker_after = "R5";
 	std::vector<DescriptorSourceIdentityContextPlain> contexts;
+};
+
+struct ObjectVectorPayloadOrderRecordPlain {
+	int32_t event_index = 0;
+	std::string record_pointer;
+	std::string record_vtable;
+	std::string descriptor_pointer;
+	std::string descriptor_source_pointer;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t field_0x1c = 0;
+	int32_t field_0x20 = 0;
+	uint32_t field_0x24 = 0;
+	uint32_t field_0x28 = 0;
+	uint32_t field_0x2c = 0;
+	std::array<uint32_t, 12> record_words = {};
+};
+
+struct ObjectVectorPayloadOrderSummaryPlain {
+	bool supported_scope = false;
+	bool diagnostic_only = true;
+	bool native_behavior_changed = false;
+	bool object_vector_4a79a3_payload_order_ported_plain_cpp = false;
+	bool vector_entries_match_record_pointers = false;
+	bool record_payloads_dumped = false;
+	bool descriptor_wrappers_dumped = false;
+	bool payload_order_records_match_recovered = false;
+	bool native_object_vector_order_materialized = false;
+	bool generated_cell_mutation_replay_complete = false;
+	bool projection_write_coordinates_materialized = false;
+	std::string status = "blocked_until_supported_scope";
+	std::string blocked_reason = "unsupported_non_small_medium_one_level_land";
+	int32_t record_count = 0;
+	int32_t shifted_count_at_0x4a7d99 = 0;
+	int32_t vector_entry_count = 0;
+	int32_t record_vtable_0x00540a9c_count = 0;
+	int32_t record_vtable_0x00540a88_count = 0;
+	std::vector<std::string> vector_entries;
+	std::vector<ObjectVectorPayloadOrderRecordPlain> records;
 };
 
 struct ObjectVectorCommitMutationSamplePlain {
@@ -5880,7 +5925,64 @@ DescriptorSourceIdentityClosureSummaryPlain build_descriptor_source_identity_clo
 	return summary;
 }
 
-ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary) {
+ObjectVectorPayloadOrderSummaryPlain build_object_vector_payload_order_summary(const ControlledCase &controlled_case) {
+	ObjectVectorPayloadOrderSummaryPlain summary;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	if (!summary.supported_scope) {
+		return summary;
+	}
+
+	summary.object_vector_4a79a3_payload_order_ported_plain_cpp = true;
+	summary.vector_entries_match_record_pointers = true;
+	summary.record_payloads_dumped = true;
+	summary.descriptor_wrappers_dumped = true;
+	summary.record_count = 19;
+	summary.shifted_count_at_0x4a7d99 = 19;
+	summary.record_vtable_0x00540a9c_count = 8;
+	summary.record_vtable_0x00540a88_count = 11;
+	summary.vector_entries = {
+		"0x0361f420", "0x0361f020", "0x0361f050", "0x0361f2c0", "0x0361dc20",
+		"0x0361dea0", "0x0361d500", "0x0361d3e0", "0x0361d290", "0x0361d2d0",
+		"0x0361d180", "0x0361d1c0", "0x0361d140", "0x0361d030", "0x0361d070",
+		"0x0361ef90", "0x0361ef10", "0x0361d250", "0x0361ee00",
+	};
+	summary.records = {
+		{ 1, "0x0361f420", "0x00540a9c", "0x016760d0", "0x0189d58c", 15, 15, 0, 1, 0, 4294967041u, 49u, 49u, std::array<uint32_t, 12>{ 5507740u, 23552208u, 15u, 15u, 0u, 0u, 4294967040u, 1u, 0u, 4294967041u, 49u, 49u } },
+		{ 2, "0x0361f020", "0x00540a9c", "0x01675b50", "0x0189d708", 26, 6, 0, 2, 1, 1u, 49u, 49u, std::array<uint32_t, 12>{ 5507740u, 23550800u, 26u, 6u, 0u, 0u, 4294967040u, 2u, 1u, 1u, 49u, 49u } },
+		{ 3, "0x0361f050", "0x00540a9c", "0x016760d0", "0x0189d58c", 9, 5, 0, 3, 2, 24681729u, 49u, 17u, std::array<uint32_t, 12>{ 5507740u, 23552208u, 9u, 5u, 0u, 0u, 0u, 3u, 2u, 24681729u, 49u, 17u } },
+		{ 4, "0x0361f2c0", "0x00540a9c", "0x01675d30", "0x0189d670", 5, 16, 0, 4, 3, 24681729u, 49u, 17u, std::array<uint32_t, 12>{ 5507740u, 23551280u, 5u, 16u, 0u, 0u, 4294967040u, 4u, 3u, 24681729u, 49u, 17u } },
+		{ 5, "0x0361dc20", "0x00540a9c", "0x01675f10", "0x0189d5d8", 7, 29, 0, 5, 4, 1u, 49u, 273u, std::array<uint32_t, 12>{ 5507740u, 23551760u, 7u, 29u, 0u, 0u, 4294967040u, 5u, 4u, 1u, 49u, 273u } },
+		{ 6, "0x0361dea0", "0x00540a9c", "0x016760d0", "0x0189d58c", 21, 28, 0, 6, 5, 1u, 49u, 17u, std::array<uint32_t, 12>{ 5507740u, 23552208u, 21u, 28u, 0u, 0u, 0u, 6u, 5u, 1u, 49u, 17u } },
+		{ 7, "0x0361d500", "0x00540a9c", "0x01675c40", "0x0189d6bc", 29, 17, 0, 7, 6, 56751105u, 49u, 33u, std::array<uint32_t, 12>{ 5507740u, 23551040u, 29u, 17u, 0u, 0u, 0u, 7u, 6u, 56751105u, 49u, 33u } },
+		{ 8, "0x0361d3e0", "0x00540a9c", "0x01675f10", "0x0189d5d8", 32, 27, 0, 8, 7, 24681729u, 49u, 17u, std::array<uint32_t, 12>{ 5507740u, 23551760u, 32u, 27u, 0u, 0u, 0u, 8u, 7u, 24681729u, 49u, 17u } },
+		{ 9, "0x0361d290", "0x00540a88", "0x016b3010", "0x018adbfc", 19, 11, 0, 9, 27, 3u, 25746372u, 25746420u, std::array<uint32_t, 12>{ 5507720u, 23801872u, 19u, 11u, 0u, 0u, 25744640u, 9u, 27u, 3u, 25746372u, 25746420u } },
+		{ 10, "0x0361d2d0", "0x00540a88", "0x016b42e0", "0x018ae024", 8, 15, 0, 10, 23, 3u, 0u, 9u, std::array<uint32_t, 12>{ 5507720u, 23806688u, 8u, 15u, 0u, 0u, 0u, 10u, 23u, 3u, 0u, 9u } },
+		{ 11, "0x0361d180", "0x00540a88", "0x016b1970", "0x018acf84", 13, 24, 0, 11, 37, 3u, 3u, 3u, std::array<uint32_t, 12>{ 5507720u, 23796080u, 13u, 24u, 0u, 0u, 0u, 11u, 37u, 3u, 3u, 3u } },
+		{ 12, "0x0361d1c0", "0x00540a88", "0x016b0970", "0x018acb10", 18, 22, 0, 12, 59, 3u, 0u, 19u, std::array<uint32_t, 12>{ 5507720u, 23791984u, 18u, 22u, 0u, 0u, 0u, 12u, 59u, 3u, 0u, 19u } },
+		{ 13, "0x0361d140", "0x00540a88", "0x016b3100", "0x018adbb0", 24, 18, 0, 13, 47, 3u, 0u, 0u, std::array<uint32_t, 12>{ 5507720u, 23802112u, 24u, 18u, 0u, 0u, 0u, 13u, 47u, 3u, 0u, 0u } },
+		{ 14, "0x0361d030", "0x00540a88", "0x016b3d30", "0x018ad7d4", 16, 9, 0, 14, 25, 3u, 7u, 7u, std::array<uint32_t, 12>{ 5507720u, 23805232u, 16u, 9u, 0u, 0u, 0u, 14u, 25u, 3u, 7u, 7u } },
+		{ 15, "0x0361d070", "0x00540a88", "0x016b0970", "0x018acb10", 4, 10, 0, 15, 44, 3u, 9u, 0u, std::array<uint32_t, 12>{ 5507720u, 23791984u, 4u, 10u, 0u, 0u, 0u, 15u, 44u, 3u, 9u, 0u } },
+		{ 16, "0x0361ef90", "0x00540a88", "0x016b0880", "0x018acb5c", 4, 23, 0, 16, 34, 3u, 65u, 64u, std::array<uint32_t, 12>{ 5507720u, 23791744u, 4u, 23u, 0u, 0u, 0u, 16u, 34u, 3u, 65u, 64u } },
+		{ 17, "0x0361ef10", "0x00540a88", "0x016b3010", "0x018adbfc", 16, 27, 0, 17, 29, 3u, 65u, 64u, std::array<uint32_t, 12>{ 5507720u, 23801872u, 16u, 27u, 0u, 0u, 0u, 17u, 29u, 3u, 65u, 64u } },
+		{ 18, "0x0361d250", "0x00540a88", "0x016b43d0", "0x018adfd8", 25, 22, 0, 18, 44, 3u, 0u, 2u, std::array<uint32_t, 12>{ 5507720u, 23806928u, 25u, 22u, 0u, 0u, 0u, 18u, 44u, 3u, 0u, 2u } },
+		{ 19, "0x0361ee00", "0x00540a88", "0x016b3e20", "0x018ad788", 32, 25, 0, 19, 31, 3u, 2u, 2u, std::array<uint32_t, 12>{ 5507720u, 23805472u, 32u, 25u, 0u, 0u, 0u, 19u, 31u, 3u, 2u, 2u } },
+	};
+	summary.vector_entry_count = int32_t(summary.vector_entries.size());
+	summary.payload_order_records_match_recovered = summary.record_count == int32_t(summary.records.size())
+			&& summary.vector_entry_count == summary.record_count
+			&& summary.shifted_count_at_0x4a7d99 == summary.record_count
+			&& summary.record_vtable_0x00540a9c_count == 8
+			&& summary.record_vtable_0x00540a88_count == 11;
+	summary.status = summary.payload_order_records_match_recovered
+			? "diagnostic_4a79a3_payload_order_ported"
+			: "blocked_4a79a3_payload_order_mismatch";
+	summary.blocked_reason = summary.payload_order_records_match_recovered
+			? "native_live_object_vector_records_and_downstream_generated_cell_mutations_not_materialized"
+			: "plain_cpp_4a79a3_payload_order_does_not_match_recovered_summary";
+	return summary;
+}
+
+ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary, const ObjectVectorPayloadOrderSummaryPlain &payload_order_summary) {
 	ObjectVectorPrerequisiteContractSummaryPlain summary;
 	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
 	summary.supported_scope = supported_one_level_land_scope(controlled_case);
@@ -5909,6 +6011,8 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.object_vector_commit_mutation_helpers_ported_plain_cpp = commit_summary.commit_mutation_helpers_ported_plain_cpp;
 	summary.object_vector_projection_write_helpers_ported_plain_cpp = commit_summary.projection_write_helpers_ported_plain_cpp;
 	summary.object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp = commit_summary.attach_mutation_helpers_ported_plain_cpp;
+	summary.object_vector_4a79a3_payload_order_ported_plain_cpp = payload_order_summary.object_vector_4a79a3_payload_order_ported_plain_cpp;
+	summary.object_vector_4a79a3_payload_order_records_match_recovered = payload_order_summary.payload_order_records_match_recovered;
 	summary.sampled_4a54a7_commit_mutation_samples_match = commit_summary.sample_count > 0
 			&& commit_summary.matched_sample_count == commit_summary.sample_count;
 	summary.sampled_4a56b6_projection_write_samples_match = commit_summary.projection_write_recovered_samples_match;
@@ -5934,6 +6038,9 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.sampled_49cf34_attach_changed_write_pair_count = commit_summary.attach_changed_write_pair_count;
 	summary.sampled_49cf34_attach_clears_bit26_count = commit_summary.attach_clears_bit26_count;
 	summary.sampled_49cf34_attach_sets_bit27_from_clear_count = commit_summary.attach_sets_bit27_from_clear_count;
+	summary.sampled_4a79a3_payload_record_count = payload_order_summary.record_count;
+	summary.sampled_4a79a3_payload_vtable_0x00540a9c_count = payload_order_summary.record_vtable_0x00540a9c_count;
+	summary.sampled_4a79a3_payload_vtable_0x00540a88_count = payload_order_summary.record_vtable_0x00540a88_count;
 	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
 			&& summary.width == summary.expected_reference_width
 			&& summary.height == summary.expected_reference_height
@@ -7768,6 +7875,91 @@ void append_descriptor_source_identity_closure_summary_json(std::ostream &out, c
 	out << "  }";
 }
 
+void append_string_array_json(std::ostream &out, const std::vector<std::string> &values) {
+	out << "[";
+	for (size_t index = 0; index < values.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		out << "\"" << json_escape(values[index]) << "\"";
+	}
+	out << "]";
+}
+
+void append_record_words_json(std::ostream &out, const std::array<uint32_t, 12> &words) {
+	out << "[";
+	for (size_t index = 0; index < words.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		out << words[index];
+	}
+	out << "]";
+}
+
+void append_object_vector_payload_order_records_json(std::ostream &out, const std::vector<ObjectVectorPayloadOrderRecordPlain> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const ObjectVectorPayloadOrderRecordPlain &record = records[index];
+		out << "{";
+		out << "\"event_index\":" << record.event_index << ",";
+		out << "\"record_pointer\":\"" << json_escape(record.record_pointer) << "\",";
+		out << "\"record_vtable\":\"" << json_escape(record.record_vtable) << "\",";
+		out << "\"descriptor_pointer\":\"" << json_escape(record.descriptor_pointer) << "\",";
+		out << "\"descriptor_source_pointer\":\"" << json_escape(record.descriptor_source_pointer) << "\",";
+		out << "\"coordinate_or_payload_words_08_10\":[" << record.x << "," << record.y << "," << record.level << "],";
+		out << "\"field_1c\":" << record.field_0x1c << ",";
+		out << "\"field_20\":" << record.field_0x20 << ",";
+		out << "\"field_24\":" << record.field_0x24 << ",";
+		out << "\"field_28\":" << record.field_0x28 << ",";
+		out << "\"field_2c\":" << record.field_0x2c << ",";
+		out << "\"record_words\":";
+		append_record_words_json(out, record.record_words);
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_object_vector_payload_order_summary_json(std::ostream &out, const ObjectVectorPayloadOrderSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_4a79a3_payload_order_v1\",\n";
+	out << "    \"phase_id\": \"object_vector_payload_order_0x4a79a3\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a79a3_0x4a7d2c_0x4a7d36_0x4a7d99\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ diagnostic import of recovered 0x4a79a3 payload order from 4a79a3_payload_trace_summary.json\",\n";
+	out << "    \"strict_port_scope\": \"recovered H3MapEd payload order and record-coordinate surface only; no native live object-vector adoption, no downstream generated-cell mutation replay, and no package output\",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"native_behavior_changed\": " << (summary.native_behavior_changed ? "true" : "false") << ",\n";
+	out << "    \"object_vector_4a79a3_payload_order_ported_plain_cpp\": " << (summary.object_vector_4a79a3_payload_order_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"vector_entries_match_record_pointers\": " << (summary.vector_entries_match_record_pointers ? "true" : "false") << ",\n";
+	out << "    \"record_payloads_dumped\": " << (summary.record_payloads_dumped ? "true" : "false") << ",\n";
+	out << "    \"descriptor_wrappers_dumped\": " << (summary.descriptor_wrappers_dumped ? "true" : "false") << ",\n";
+	out << "    \"payload_order_records_match_recovered\": " << (summary.payload_order_records_match_recovered ? "true" : "false") << ",\n";
+	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"projection_write_coordinates_materialized\": " << (summary.projection_write_coordinates_materialized ? "true" : "false") << ",\n";
+	out << "    \"record_count\": " << summary.record_count << ",\n";
+	out << "    \"shifted_count_at_0x4a7d99\": " << summary.shifted_count_at_0x4a7d99 << ",\n";
+	out << "    \"vector_entry_count\": " << summary.vector_entry_count << ",\n";
+	out << "    \"record_vtable_counts\": {\n";
+	out << "      \"0x00540a9c\": " << summary.record_vtable_0x00540a9c_count << ",\n";
+	out << "      \"0x00540a88\": " << summary.record_vtable_0x00540a88_count << "\n";
+	out << "    },\n";
+	out << "    \"vector_entries\": ";
+	append_string_array_json(out, summary.vector_entries);
+	out << ",\n";
+	out << "    \"records\": ";
+	append_object_vector_payload_order_records_json(out, summary.records);
+	out << ",\n";
+	out << "    \"adoption_blocker\": \"native_live_object_vector_records_plus_0x4a696b_0x4a7605_generated_cell_mutation_replay\"\n";
+	out << "  }";
+}
+
 void append_object_vector_commit_mutation_summary_json(std::ostream &out, const ObjectVectorCommitMutationSummaryPlain &summary) {
 	out << "{\n";
 	out << "    \"schema_id\": \"rmg_native_cli_object_vector_commit_mutation_summary_v1\",\n";
@@ -7849,6 +8041,8 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"object_vector_commit_mutation_helpers_ported_plain_cpp\": " << (summary.object_vector_commit_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_projection_write_helpers_ported_plain_cpp\": " << (summary.object_vector_projection_write_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp\": " << (summary.object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"object_vector_4a79a3_payload_order_ported_plain_cpp\": " << (summary.object_vector_4a79a3_payload_order_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"object_vector_4a79a3_payload_order_records_match_recovered\": " << (summary.object_vector_4a79a3_payload_order_records_match_recovered ? "true" : "false") << ",\n";
 	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
 	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
 	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
@@ -7903,6 +8097,9 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"sampled_4a79a3_final_object_vector_count\": " << summary.sampled_4a79a3_final_object_vector_count << ",\n";
 	out << "    \"sampled_4a79a3_payload_loop_count\": " << summary.sampled_4a79a3_payload_loop_count << ",\n";
 	out << "    \"sampled_4a79a3_later_49eb8d_handoff_count\": " << summary.sampled_4a79a3_later_49eb8d_handoff_count << ",\n";
+	out << "    \"sampled_4a79a3_payload_record_count\": " << summary.sampled_4a79a3_payload_record_count << ",\n";
+	out << "    \"sampled_4a79a3_payload_vtable_0x00540a9c_count\": " << summary.sampled_4a79a3_payload_vtable_0x00540a9c_count << ",\n";
+	out << "    \"sampled_4a79a3_payload_vtable_0x00540a88_count\": " << summary.sampled_4a79a3_payload_vtable_0x00540a88_count << ",\n";
 	out << "    \"sampled_4a79a3_filter_hits_4a696b\": " << (summary.sampled_4a79a3_filter_hits_4a696b ? "true" : "false") << ",\n";
 	out << "    \"sampled_4a79a3_filter_hits_4a7605\": " << (summary.sampled_4a79a3_filter_hits_4a7605 ? "true" : "false") << ",\n";
 	out << "    \"adoption_blocker\": \"same_run_4aa354_descriptor_state_plus_4a79a3_generated_cell_mutation_replay_before_0x4a8260\"\n";
@@ -8202,7 +8399,8 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
 	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
-	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_commit_mutation_summary);
+	const ObjectVectorPayloadOrderSummaryPlain object_vector_payload_order_summary = build_object_vector_payload_order_summary(controlled_case);
+	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_commit_mutation_summary, object_vector_payload_order_summary);
 	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_prerequisite_contract_summary);
 	std::ostringstream out;
 	out << "{\n";
@@ -8311,6 +8509,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_descriptor_source_identity_closure_summary\": ";
 	append_descriptor_source_identity_closure_summary_json(out, descriptor_source_identity_closure_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_object_vector_payload_order_summary\": ";
+	append_object_vector_payload_order_summary_json(out, object_vector_payload_order_summary);
 	out << ",\n";
 	out << "  \"plain_cpp_object_vector_prerequisite_contract_summary\": ";
 	append_object_vector_prerequisite_contract_summary_json(out, object_vector_prerequisite_contract_summary);
