@@ -780,6 +780,48 @@ struct GeneratedCellBitHelperSummaryPlain {
 	int32_t diagnostic_final_bit27_count = 0;
 };
 
+struct RelationNormalizationContractSummaryPlain {
+	bool terrain_live_feedback_available = false;
+	bool supported_scope = false;
+	bool relation_normalization_contract_ported_plain_cpp = false;
+	bool static_surface_markers_recovered = false;
+	bool r6_semantic_surface_recovered = false;
+	bool diagnostic_only = true;
+	bool native_behavior_changed = false;
+	bool used_objdump = false;
+	bool runtime_ordered_replay_materialized = false;
+	bool generated_cell_word_0x20_low_word_propagation_materialized = false;
+	bool generated_cell_word_0x1c_projection_gate_materialized = false;
+	bool generated_cell_projection_triple_materialized = false;
+	bool object_reference_vector_filter_materialized = false;
+	bool descriptor_policy_table_materialized = false;
+	bool relation_vector_runtime_order_materialized = false;
+	bool generated_cell_mutation_replay_complete = false;
+	std::string status = "blocked_until_terrain_live_feedback";
+	std::string blocked_reason = "terrain_live_feedback_missing";
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t seed = 0;
+	int32_t cell_count = 0;
+	int32_t static_marker_count = 50;
+	int32_t static_present_marker_count = 50;
+	int32_t static_missing_marker_count = 0;
+	int32_t normalizer_0x4a5767_marker_count = 21;
+	int32_t normalizer_0x4a5767_present_marker_count = 21;
+	int32_t normalizer_0x4a5767_reference_marker_count = 3;
+	int32_t normalizer_0x4a5767_reference_present_marker_count = 3;
+	int32_t propagation_0x49a318_marker_count = 23;
+	int32_t propagation_0x49a318_present_marker_count = 23;
+	int32_t propagation_0x49a318_reference_marker_count = 3;
+	int32_t propagation_0x49a318_reference_present_marker_count = 3;
+	int32_t source_bit26_count = 0;
+	int32_t source_bit27_count = 0;
+	int32_t diagnostic_final_bit26_count = 0;
+	int32_t diagnostic_final_bit27_count = 0;
+	std::string working_name = "relation_local_generated_cell_normalizer_and_owner_projection_propagation";
+};
+
 struct RouteBoundaryContractSummaryPlain {
 	bool generated_cell_bit_helpers_available = false;
 	bool supported_scope = false;
@@ -837,6 +879,12 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool object_vector_endpoint_dispatch_exclusion_ported_plain_cpp = false;
 	bool endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land = false;
 	bool endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending = false;
+	bool relation_normalization_contract_ported_plain_cpp = false;
+	bool relation_normalization_runtime_replay_pending = false;
+	bool relation_normalization_word20_low_word_propagation_pending = false;
+	bool relation_normalization_projection_gate_pending = false;
+	bool relation_normalization_projection_triple_pending = false;
+	bool relation_normalization_object_reference_filter_pending = false;
 	bool diagnostic_only = true;
 	bool native_object_vector_order_materialized = false;
 	bool same_run_descriptor_state_complete = false;
@@ -5510,6 +5558,47 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 	return summary;
 }
 
+RelationNormalizationContractSummaryPlain build_relation_normalization_contract_summary(const ControlledCase &controlled_case, const TerrainLiveFeedbackSummaryPlain &terrain_summary, const GeneratedCellBitHelperSummaryPlain &bit_summary) {
+	RelationNormalizationContractSummaryPlain summary;
+	summary.terrain_live_feedback_available = terrain_summary.materializes_private_generated_cell_words;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	summary.width = map_width_for_size(controlled_case.size_class);
+	summary.height = summary.width;
+	summary.level_count = controlled_case.level_count;
+	summary.seed = controlled_case.seed;
+	summary.cell_count = terrain_summary.cell_count;
+	summary.source_bit26_count = bit_summary.source_bit26_count;
+	summary.source_bit27_count = bit_summary.source_bit27_count;
+	summary.diagnostic_final_bit26_count = bit_summary.diagnostic_final_bit26_count;
+	summary.diagnostic_final_bit27_count = bit_summary.diagnostic_final_bit27_count;
+	if (!summary.terrain_live_feedback_available) {
+		summary.status = "blocked_until_terrain_live_feedback";
+		summary.blocked_reason = "terrain_live_feedback_missing";
+		return summary;
+	}
+	if (!summary.supported_scope) {
+		summary.status = "unsupported_scope";
+		summary.blocked_reason = "unsupported_non_small_medium_one_level_land";
+		return summary;
+	}
+
+	summary.relation_normalization_contract_ported_plain_cpp = true;
+	summary.static_surface_markers_recovered = summary.static_present_marker_count == summary.static_marker_count
+			&& summary.static_missing_marker_count == 0;
+	summary.r6_semantic_surface_recovered = true;
+	summary.runtime_ordered_replay_materialized = false;
+	summary.generated_cell_word_0x20_low_word_propagation_materialized = false;
+	summary.generated_cell_word_0x1c_projection_gate_materialized = false;
+	summary.generated_cell_projection_triple_materialized = false;
+	summary.object_reference_vector_filter_materialized = false;
+	summary.descriptor_policy_table_materialized = false;
+	summary.relation_vector_runtime_order_materialized = false;
+	summary.generated_cell_mutation_replay_complete = false;
+	summary.status = "diagnostic_relation_normalization_contract_ported_runtime_replay_pending";
+	summary.blocked_reason = "0x4a5767_0x49a318_static_and_semantic_surfaces_recovered_but_native_runtime_ordered_replay_word20_low_word_projection_gate_projection_triples_object_reference_filters_and_descriptor_policy_table_not_materialized";
+	return summary;
+}
+
 ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summary(const ControlledCase &controlled_case, const TerrainLiveFeedbackSummaryPlain &terrain_summary) {
 	ObjectVectorCommitMutationSummaryPlain summary;
 	summary.terrain_live_feedback_available = terrain_summary.materializes_private_generated_cell_words;
@@ -6084,7 +6173,7 @@ ObjectVectorEndpointDispatchSummaryPlain build_object_vector_endpoint_dispatch_s
 	return summary;
 }
 
-ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary, const ObjectVectorPayloadOrderSummaryPlain &payload_order_summary, const ObjectVectorEndpointDispatchSummaryPlain &endpoint_dispatch_summary) {
+ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const RelationNormalizationContractSummaryPlain &relation_normalization_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary, const ObjectVectorPayloadOrderSummaryPlain &payload_order_summary, const ObjectVectorEndpointDispatchSummaryPlain &endpoint_dispatch_summary) {
 	ObjectVectorPrerequisiteContractSummaryPlain summary;
 	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
 	summary.supported_scope = supported_one_level_land_scope(controlled_case);
@@ -6120,6 +6209,18 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 			endpoint_dispatch_summary.target_mode_4a696b_direct_mutation_excluded_supported_land;
 	summary.endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending =
 			!endpoint_dispatch_summary.delegated_4a7605_afterstate_materialized;
+	summary.relation_normalization_contract_ported_plain_cpp =
+			relation_normalization_summary.relation_normalization_contract_ported_plain_cpp;
+	summary.relation_normalization_runtime_replay_pending =
+			!relation_normalization_summary.runtime_ordered_replay_materialized;
+	summary.relation_normalization_word20_low_word_propagation_pending =
+			!relation_normalization_summary.generated_cell_word_0x20_low_word_propagation_materialized;
+	summary.relation_normalization_projection_gate_pending =
+			!relation_normalization_summary.generated_cell_word_0x1c_projection_gate_materialized;
+	summary.relation_normalization_projection_triple_pending =
+			!relation_normalization_summary.generated_cell_projection_triple_materialized;
+	summary.relation_normalization_object_reference_filter_pending =
+			!relation_normalization_summary.object_reference_vector_filter_materialized;
 	summary.sampled_4a54a7_commit_mutation_samples_match = commit_summary.sample_count > 0
 			&& commit_summary.matched_sample_count == commit_summary.sample_count;
 	summary.sampled_4a56b6_projection_write_samples_match = commit_summary.projection_write_recovered_samples_match;
@@ -6165,7 +6266,7 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.status = summary.recovered_reference_case_matches
 			? "diagnostic_object_vector_prerequisite_reference_seed58_descriptor_runtime_state_incomplete"
 			: "diagnostic_object_vector_prerequisite_contract_ported_reference_only_same_case_stream_missing";
-	summary.blocked_reason = "r4_descriptor_source_identity_crosswalk_and_4a79a3_endpoint_dispatch_exclusion_ported_but_same_run_4aa354_descriptor_vector_0x398_0x39c_selected_descriptor_state_0x94_0x95_native_live_object_vector_records_and_delegated_4a7605_afterstate_not_materialized";
+	summary.blocked_reason = "r4_descriptor_source_identity_crosswalk_relation_normalization_contract_and_4a79a3_endpoint_dispatch_exclusion_ported_but_0x4a5767_0x49a318_runtime_replay_same_run_4aa354_descriptor_vector_0x398_0x39c_selected_descriptor_state_0x94_0x95_native_live_object_vector_records_and_delegated_4a7605_afterstate_not_materialized";
 	return summary;
 }
 
@@ -7804,6 +7905,63 @@ void append_generated_cell_bit_helper_summary_json(std::ostream &out, const Gene
 	out << "  }";
 }
 
+void append_relation_normalization_contract_summary_json(std::ostream &out, const RelationNormalizationContractSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_relation_normalization_contract_v1\",\n";
+	out << "    \"phase_id\": \"relation_normalization_contract_0x4a5767_0x49a318\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a5767_0x49a318_0x4a59e2_0x49a932_0x4a5a23\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ diagnostic import of recovered relation_normalization_summary_20260610.json and r6_relation_scoring_semantic_closure_summary_20260611.json; this is a no-Godot phase-snapshot contract, not a map-output mutation\",\n";
+	out << "    \"strict_port_scope\": \"relation-normalization adoption precondition only; no live generated-cell adoption, no density scalar, no gate tuning, no package objects, roads, guards, blockers, or public output\",\n";
+	out << "    \"working_name\": \"" << json_escape(summary.working_name) << "\",\n";
+	out << "    \"terrain_live_feedback_available\": " << (summary.terrain_live_feedback_available ? "true" : "false") << ",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_contract_ported_plain_cpp\": " << (summary.relation_normalization_contract_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"static_surface_markers_recovered\": " << (summary.static_surface_markers_recovered ? "true" : "false") << ",\n";
+	out << "    \"r6_semantic_surface_recovered\": " << (summary.r6_semantic_surface_recovered ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"native_behavior_changed\": " << (summary.native_behavior_changed ? "true" : "false") << ",\n";
+	out << "    \"used_objdump\": " << (summary.used_objdump ? "true" : "false") << ",\n";
+	out << "    \"runtime_ordered_replay_materialized\": " << (summary.runtime_ordered_replay_materialized ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_word_0x20_low_word_propagation_materialized\": " << (summary.generated_cell_word_0x20_low_word_propagation_materialized ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_word_0x1c_projection_gate_materialized\": " << (summary.generated_cell_word_0x1c_projection_gate_materialized ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_projection_triple_materialized\": " << (summary.generated_cell_projection_triple_materialized ? "true" : "false") << ",\n";
+	out << "    \"object_reference_vector_filter_materialized\": " << (summary.object_reference_vector_filter_materialized ? "true" : "false") << ",\n";
+	out << "    \"descriptor_policy_table_materialized\": " << (summary.descriptor_policy_table_materialized ? "true" : "false") << ",\n";
+	out << "    \"relation_vector_runtime_order_materialized\": " << (summary.relation_vector_runtime_order_materialized ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"map_width\": " << summary.width << ",\n";
+	out << "    \"map_height\": " << summary.height << ",\n";
+	out << "    \"level_count\": " << summary.level_count << ",\n";
+	out << "    \"seed\": " << summary.seed << ",\n";
+	out << "    \"cell_count\": " << summary.cell_count << ",\n";
+	out << "    \"static_marker_count\": " << summary.static_marker_count << ",\n";
+	out << "    \"static_present_marker_count\": " << summary.static_present_marker_count << ",\n";
+	out << "    \"static_missing_marker_count\": " << summary.static_missing_marker_count << ",\n";
+	out << "    \"normalizer_0x4a5767_marker_count\": " << summary.normalizer_0x4a5767_marker_count << ",\n";
+	out << "    \"normalizer_0x4a5767_present_marker_count\": " << summary.normalizer_0x4a5767_present_marker_count << ",\n";
+	out << "    \"normalizer_0x4a5767_reference_marker_count\": " << summary.normalizer_0x4a5767_reference_marker_count << ",\n";
+	out << "    \"normalizer_0x4a5767_reference_present_marker_count\": " << summary.normalizer_0x4a5767_reference_present_marker_count << ",\n";
+	out << "    \"propagation_0x49a318_marker_count\": " << summary.propagation_0x49a318_marker_count << ",\n";
+	out << "    \"propagation_0x49a318_present_marker_count\": " << summary.propagation_0x49a318_present_marker_count << ",\n";
+	out << "    \"propagation_0x49a318_reference_marker_count\": " << summary.propagation_0x49a318_reference_marker_count << ",\n";
+	out << "    \"propagation_0x49a318_reference_present_marker_count\": " << summary.propagation_0x49a318_reference_present_marker_count << ",\n";
+	out << "    \"source_bit26_count\": " << summary.source_bit26_count << ",\n";
+	out << "    \"source_bit27_count\": " << summary.source_bit27_count << ",\n";
+	out << "    \"diagnostic_final_bit26_count\": " << summary.diagnostic_final_bit26_count << ",\n";
+	out << "    \"diagnostic_final_bit27_count\": " << summary.diagnostic_final_bit27_count << ",\n";
+	out << "    \"recovered_state_surface\": {\n";
+	out << "      \"0x4a5767\": \"resets generated cells, walks generator+0x10e4..+0x10e8 relation vector, filters owner byte2, terrain, object-reference occupancy, bit27, and 0x49a1d8, calls 0x49a932, 0x49a318, and 0x4a5a23\",\n";
+	out << "      \"0x49a318\": \"propagates generated-cell +0x1c, +0x20, +0x28, and +0x10/+0x14/+0x18 through direction offsets and descriptor policy table 0x57c648\",\n";
+	out << "      \"generated_cell_0x20\": \"source-owner relation index plus projection distance or local score\",\n";
+	out << "      \"generated_cell_0x1c\": \"projection/local gate word rewritten by reset and propagation\",\n";
+	out << "      \"projection_triple\": \"generated-cell +0x10/+0x14/+0x18 coordinate triple\"\n";
+	out << "    },\n";
+	out << "    \"adoption_blocker\": \"materialize_ordered_0x4a5767_0x49a318_runtime_replay_before_object_vector_route_road_or_package_generation_claims\"\n";
+	out << "  }";
+}
+
 void append_object_vector_commit_mutation_samples_json(std::ostream &out, const std::vector<ObjectVectorCommitMutationSamplePlain> &samples) {
 	out << "[";
 	for (size_t index = 0; index < samples.size(); ++index) {
@@ -8214,6 +8372,12 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"object_vector_endpoint_dispatch_exclusion_ported_plain_cpp\": " << (summary.object_vector_endpoint_dispatch_exclusion_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land\": " << (summary.endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land ? "true" : "false") << ",\n";
 	out << "    \"endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending\": " << (summary.endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_contract_ported_plain_cpp\": " << (summary.relation_normalization_contract_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_runtime_replay_pending\": " << (summary.relation_normalization_runtime_replay_pending ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_word20_low_word_propagation_pending\": " << (summary.relation_normalization_word20_low_word_propagation_pending ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_projection_gate_pending\": " << (summary.relation_normalization_projection_gate_pending ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_projection_triple_pending\": " << (summary.relation_normalization_projection_triple_pending ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_object_reference_filter_pending\": " << (summary.relation_normalization_object_reference_filter_pending ? "true" : "false") << ",\n";
 	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
 	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
 	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
@@ -8573,11 +8737,12 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
+	const RelationNormalizationContractSummaryPlain relation_normalization_contract_summary = build_relation_normalization_contract_summary(controlled_case, terrain_live_feedback_summary, generated_cell_bit_helper_summary);
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
 	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
 	const ObjectVectorPayloadOrderSummaryPlain object_vector_payload_order_summary = build_object_vector_payload_order_summary(controlled_case);
 	const ObjectVectorEndpointDispatchSummaryPlain object_vector_endpoint_dispatch_summary = build_object_vector_endpoint_dispatch_summary(controlled_case);
-	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_commit_mutation_summary, object_vector_payload_order_summary, object_vector_endpoint_dispatch_summary);
+	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, relation_normalization_contract_summary, object_vector_commit_mutation_summary, object_vector_payload_order_summary, object_vector_endpoint_dispatch_summary);
 	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_prerequisite_contract_summary);
 	std::ostringstream out;
 	out << "{\n";
@@ -8680,6 +8845,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_generated_cell_bit_helper_summary\": ";
 	append_generated_cell_bit_helper_summary_json(out, generated_cell_bit_helper_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_relation_normalization_contract_summary\": ";
+	append_relation_normalization_contract_summary_json(out, relation_normalization_contract_summary);
 	out << ",\n";
 	out << "  \"plain_cpp_object_vector_commit_mutation_summary\": ";
 	append_object_vector_commit_mutation_summary_json(out, object_vector_commit_mutation_summary);
