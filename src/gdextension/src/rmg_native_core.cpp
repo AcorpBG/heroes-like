@@ -814,13 +814,30 @@ struct RelationNormalizationContractSummaryPlain {
 	bool descriptor_policy_table_materialized = false;
 	bool relation_vector_runtime_order_materialized = false;
 	bool generated_cell_mutation_replay_complete = false;
+	bool selected_template_vector_profile_available = false;
+	bool same_run_h3maped_hc4_seed10_template_vector_validated = false;
+	bool flat_template_link_seeds_are_runtime_relation_vector = false;
+	bool generator_0x10e4_relation_pointer_records_materialized = false;
+	bool generator_0x10e8_relation_pointer_end_materialized = false;
 	std::string status = "blocked_until_terrain_live_feedback";
 	std::string blocked_reason = "terrain_live_feedback_missing";
+	std::string relation_vector_blocked_reason = "blocked_until_runtime_zone_summary";
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
 	int32_t seed = 0;
 	int32_t cell_count = 0;
+	int32_t selected_template_vector_candidate_count = 0;
+	int32_t selected_template_vector_selected_index = -1;
+	int32_t selected_template_vector_rng_value = -1;
+	uint32_t selected_template_vector_rng_state_after_selection = 0;
+	int32_t selected_template_source_catalog_index = -1;
+	std::string selected_template_id;
+	std::string selected_template_source_name;
+	int32_t selected_template_zone_count = 0;
+	int32_t selected_template_connection_count = 0;
+	int32_t flat_template_link_seed_count = 0;
+	int32_t flat_template_link_seed_border_guard_count = 0;
 	int32_t static_marker_count = 50;
 	int32_t static_present_marker_count = 50;
 	int32_t static_missing_marker_count = 0;
@@ -5616,7 +5633,12 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 	return summary;
 }
 
-RelationNormalizationContractSummaryPlain build_relation_normalization_contract_summary(const ControlledCase &controlled_case, const TerrainLiveFeedbackSummaryPlain &terrain_summary, const GeneratedCellBitHelperSummaryPlain &bit_summary) {
+RelationNormalizationContractSummaryPlain build_relation_normalization_contract_summary(
+		const ControlledCase &controlled_case,
+		const RuntimeZoneSummary &runtime_zone_summary,
+		const CoordinateReplaySummary &coordinate_summary,
+		const TerrainLiveFeedbackSummaryPlain &terrain_summary,
+		const GeneratedCellBitHelperSummaryPlain &bit_summary) {
 	RelationNormalizationContractSummaryPlain summary;
 	summary.terrain_live_feedback_available = terrain_summary.materializes_private_generated_cell_words;
 	summary.supported_scope = supported_one_level_land_scope(controlled_case);
@@ -5629,6 +5651,49 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 	summary.source_bit27_count = bit_summary.source_bit27_count;
 	summary.diagnostic_final_bit26_count = bit_summary.diagnostic_final_bit26_count;
 	summary.diagnostic_final_bit27_count = bit_summary.diagnostic_final_bit27_count;
+	if (runtime_zone_summary.ok) {
+		summary.selected_template_vector_profile_available = true;
+		summary.selected_template_vector_candidate_count = runtime_zone_summary.accepted_template_count;
+		summary.selected_template_vector_selected_index = runtime_zone_summary.selected_vector_index;
+		summary.selected_template_vector_rng_value = runtime_zone_summary.template_selection_rng_value;
+		summary.selected_template_vector_rng_state_after_selection = runtime_zone_summary.rng_state_after_selection;
+		summary.selected_template_source_catalog_index = runtime_zone_summary.selected.catalog_index;
+		summary.selected_template_id = runtime_zone_summary.selected.id;
+		summary.selected_template_source_name = runtime_zone_summary.selected.name;
+		summary.selected_template_zone_count = runtime_zone_summary.selected.filtered_zone_count;
+		summary.selected_template_connection_count = runtime_zone_summary.selected.filtered_connection_count;
+		summary.flat_template_link_seed_count = int32_t(coordinate_summary.link_seeds.size());
+		for (const RuntimeLinkSeedPlain &seed : coordinate_summary.link_seeds) {
+			if (seed.border_guard) {
+				summary.flat_template_link_seed_border_guard_count += 1;
+			}
+		}
+		summary.same_run_h3maped_hc4_seed10_template_vector_validated =
+				controlled_case.size_class == "medium"
+				&& controlled_case.players == 4
+				&& controlled_case.human_count == 4
+				&& controlled_case.computer_count == 0
+				&& controlled_case.seed == 10U
+				&& controlled_case.water_mode == "land"
+				&& controlled_case.level_count == 1
+				&& controlled_case.setup_object_0x44_known
+				&& controlled_case.setup_object_0x44 == 0
+				&& summary.selected_template_vector_candidate_count == 23
+				&& summary.selected_template_vector_selected_index == 2
+				&& summary.selected_template_vector_rng_value == 71
+				&& summary.selected_template_source_catalog_index == 15
+				&& summary.selected_template_source_name == "2SM4d(2)"
+				&& summary.selected_template_zone_count == 10
+				&& summary.selected_template_connection_count == 15;
+		summary.flat_template_link_seeds_are_runtime_relation_vector = false;
+		summary.generator_0x10e4_relation_pointer_records_materialized = false;
+		summary.generator_0x10e8_relation_pointer_end_materialized = false;
+		summary.relation_vector_blocked_reason =
+				"selected_template_vector_matches_same_run_h3maped_hc4_seed10_trace_for_23_candidates_index_2_template_2SM4d2; "
+				"remaining_blocker_is_materializing_generator_plus_0x10e4_to_0x10e8_runtime_relation_pointer_records_and_the_0x49a318_descriptor_policy_object_reference_filters";
+	} else {
+		summary.relation_vector_blocked_reason = "blocked_until_runtime_zone_summary";
+	}
 	if (!summary.terrain_live_feedback_available) {
 		summary.status = "blocked_until_terrain_live_feedback";
 		summary.blocked_reason = "terrain_live_feedback_missing";
@@ -8067,6 +8132,23 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"descriptor_policy_table_materialized\": " << (summary.descriptor_policy_table_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_vector_runtime_order_materialized\": " << (summary.relation_vector_runtime_order_materialized ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"selected_template_vector_profile_available\": " << (summary.selected_template_vector_profile_available ? "true" : "false") << ",\n";
+	out << "    \"same_run_h3maped_hc4_seed10_template_vector_validated\": " << (summary.same_run_h3maped_hc4_seed10_template_vector_validated ? "true" : "false") << ",\n";
+	out << "    \"selected_template_vector_candidate_count\": " << summary.selected_template_vector_candidate_count << ",\n";
+	out << "    \"selected_template_vector_selected_index\": " << summary.selected_template_vector_selected_index << ",\n";
+	out << "    \"selected_template_vector_rng_value\": " << summary.selected_template_vector_rng_value << ",\n";
+	out << "    \"selected_template_vector_rng_state_after_selection_uint32\": " << summary.selected_template_vector_rng_state_after_selection << ",\n";
+	out << "    \"selected_template_source_catalog_index\": " << summary.selected_template_source_catalog_index << ",\n";
+	out << "    \"selected_template_id\": \"" << json_escape(summary.selected_template_id) << "\",\n";
+	out << "    \"selected_template_source_name\": \"" << json_escape(summary.selected_template_source_name) << "\",\n";
+	out << "    \"selected_template_zone_count\": " << summary.selected_template_zone_count << ",\n";
+	out << "    \"selected_template_connection_count\": " << summary.selected_template_connection_count << ",\n";
+	out << "    \"flat_template_link_seed_count\": " << summary.flat_template_link_seed_count << ",\n";
+	out << "    \"flat_template_link_seed_border_guard_count\": " << summary.flat_template_link_seed_border_guard_count << ",\n";
+	out << "    \"flat_template_link_seeds_are_runtime_relation_vector\": " << (summary.flat_template_link_seeds_are_runtime_relation_vector ? "true" : "false") << ",\n";
+	out << "    \"generator_0x10e4_relation_pointer_records_materialized\": " << (summary.generator_0x10e4_relation_pointer_records_materialized ? "true" : "false") << ",\n";
+	out << "    \"generator_0x10e8_relation_pointer_end_materialized\": " << (summary.generator_0x10e8_relation_pointer_end_materialized ? "true" : "false") << ",\n";
+	out << "    \"relation_vector_blocked_reason\": \"" << json_escape(summary.relation_vector_blocked_reason) << "\",\n";
 	out << "    \"map_width\": " << summary.width << ",\n";
 	out << "    \"map_height\": " << summary.height << ",\n";
 	out << "    \"level_count\": " << summary.level_count << ",\n";
@@ -8904,7 +8986,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
-	const RelationNormalizationContractSummaryPlain relation_normalization_contract_summary = build_relation_normalization_contract_summary(controlled_case, terrain_live_feedback_summary, generated_cell_bit_helper_summary);
+	const RelationNormalizationContractSummaryPlain relation_normalization_contract_summary = build_relation_normalization_contract_summary(controlled_case, runtime_zone_summary, coordinate_replay_summary, terrain_live_feedback_summary, generated_cell_bit_helper_summary);
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
 	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
 	const ObjectVectorPayloadOrderSummaryPlain object_vector_payload_order_summary = build_object_vector_payload_order_summary(controlled_case);
