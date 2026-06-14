@@ -195,8 +195,8 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 			report.status = "unsupported_scope";
 			report.blocked_reason = "standalone_cli_currently_scopes_only_small_medium_one_level_land";
 		} else if (options.native_map_json_only) {
-			report.status = "native_map_json_exported";
-			report.blocked_reason = "";
+			report.status = "blocked";
+			report.blocked_reason = "native_map_json_disabled_until_shared_h3maped_rmg_core_owns_final_payload";
 		} else if (options.phase_snapshot_only) {
 			report.status = "phase_snapshot_exported";
 			report.blocked_reason = "";
@@ -213,7 +213,7 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 				report.phase_snapshot_path = snapshot_path;
 			}
 		}
-		if (options.emit_native_map_json) {
+		if (options.emit_native_map_json && report.status == "native_map_json_exported") {
 			const std::filesystem::path native_map_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".native_map.json");
 			std::ofstream native_map(native_map_path, std::ios::binary);
 			if (native_map) {
@@ -304,7 +304,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
 	out << "  \"native_map_json_schema_id\": \"rmg_native_cli_plain_cpp_map_artifact_v1\",\n";
 	out << "  \"required_next_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api_before_running_native_exports_on_memory_constrained_hosts\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes controlled Small/Medium one-level land private-state snapshots and exits successfully without Godot. In --native-map-json-only mode it writes native plain-C++ JSON map artifacts and exits successfully without Godot. It still intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes controlled Small/Medium one-level land private-state snapshots and exits successfully without Godot. Native map JSON and .amap output intentionally fail closed until final payload generation is owned by the shared recovered H3MapEd RMG core instead of the duplicate CLI surface.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";

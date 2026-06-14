@@ -19193,8 +19193,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         for required_token in (
             'choices=["native-cli"]',
             "if not args.phase_snapshot_only:",
-            "full_export_plain_cpp_core_not_available",
-            "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host_no_override",
+            "native_output_plain_cpp_core_not_available",
+            "python_wrapper_refuses_native_output_before_spawning_cli_until_shared_recovered_core_owns_final_payload_generation",
             "godot_processes()",
             "subprocess.run(",
             '"--phase-snapshot-only"',
@@ -19232,17 +19232,17 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     if plan_path.exists():
         plan_text = plan_path.read_text(encoding="utf-8")
         ensure(
-            "the wrapper unconditionally refuses full `.amap` export attempts before spawning the CLI" in plan_text,
+            "the wrapper unconditionally refuses native map JSON/full `.amap` output attempts before spawning the CLI" in plan_text,
             errors,
-            "PLAN.md does not record the unconditional no-Godot full-export refusal",
+            "PLAN.md does not record the unconditional no-Godot native-output refusal",
         )
 
     if progress_path.exists():
         progress_text = progress_path.read_text(encoding="utf-8")
         ensure(
-            "unconditionally refuses full .amap export attempts before spawning the CLI" in progress_text,
+            "unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI" in progress_text,
             errors,
-            "ops/progress.json does not record the unconditional no-Godot full-export refusal",
+            "ops/progress.json does not record the unconditional no-Godot native-output refusal",
         )
 
 

@@ -1,5 +1,6 @@
 #include "h3maped_small_rmg.hpp"
 #include "h3maped_small_rmg_embedded_data.hpp"
+#include "h3maped_rmg_core.hpp"
 
 #include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -4024,11 +4025,7 @@ bool h3maped_49a1d8_cell_valid(const std::vector<uint8_t> &cell_flags, const std
 }
 
 bool h3maped_49a1d8_generated_cell_valid(const std::vector<uint32_t> &live_cell_word_0x28, const std::vector<int32_t> &live_terrain_code, int64_t flat) {
-	if (flat < 0 || flat >= int64_t(live_cell_word_0x28.size()) || flat >= int64_t(live_terrain_code.size())) {
-		return false;
-	}
-	return (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U
-			&& (live_terrain_code[size_t(flat)] & 0x3f) != 9;
+	return aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_terrain(live_cell_word_0x28, live_terrain_code, flat);
 }
 
 H3FootprintGateResult h3maped_49a09c_circular_mask_gate(const std::vector<H3MaskPoint> &mask_points, const std::vector<uint32_t> &zone_words, const std::vector<uint8_t> &cell_flags, const std::vector<int32_t> &live_terrain_code, const std::vector<uint8_t> &object_occupied, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level, int32_t expected_zone_word_id, bool object_is_water_type) {
@@ -4295,77 +4292,7 @@ H3FootprintGateResult h3maped_4aa603_reward_mask_gate_proxy(const std::vector<H3
 }
 
 int32_t h3maped_4a54a7_deplete_generated_cell_scores(std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level) {
-	static constexpr std::array<std::array<int32_t, 2>, 8> DIRECTION_TABLE_0x5A2658 = { {
-		{ 1, 0 },
-		{ 1, 1 },
-		{ 0, 1 },
-		{ -1, 1 },
-		{ -1, 0 },
-		{ -1, -1 },
-		{ 0, -1 },
-		{ 1, -1 },
-	} };
-	if (width <= 0 || height <= 0 || level_count <= 0 || anchor_level < 0 || anchor_level >= level_count || generated_cell_word_0x20.empty()) {
-		return 0;
-	}
-	const int64_t anchor_flat = h3maped_cell_index(width, height, anchor_x, anchor_y, anchor_level);
-	if (anchor_flat < 0 || anchor_flat >= int64_t(generated_cell_word_0x20.size())) {
-		return 0;
-	}
-
-	int32_t mutation_count = 0;
-	if ((generated_cell_word_0x20[size_t(anchor_flat)] & 0xffffU) != 0U) {
-		mutation_count += 1;
-	}
-	generated_cell_word_0x20[size_t(anchor_flat)] &= 0xffff0000U;
-
-	struct ScoreFrontierNode {
-		int32_t score = 0;
-		CoordCandidate coord;
-	};
-	struct ScoreFrontierCompare {
-		bool operator()(const ScoreFrontierNode &left, const ScoreFrontierNode &right) const {
-			return left.score > right.score;
-		}
-	};
-	std::priority_queue<ScoreFrontierNode, std::vector<ScoreFrontierNode>, ScoreFrontierCompare> frontier;
-	frontier.push(ScoreFrontierNode { 0, CoordCandidate { anchor_x, anchor_y, anchor_level } });
-	while (!frontier.empty()) {
-		const ScoreFrontierNode node = frontier.top();
-		frontier.pop();
-		const CoordCandidate current = node.coord;
-		const int64_t current_flat = h3maped_cell_index(width, height, current.x, current.y, current.level);
-		if (current_flat < 0 || current_flat >= int64_t(generated_cell_word_0x20.size())) {
-			continue;
-		}
-		const int32_t base_score = int32_t(generated_cell_word_0x20[size_t(current_flat)] & 0xffffU);
-		if (node.score != base_score) {
-			continue;
-		}
-		for (int32_t direction_index = 0; direction_index < int32_t(DIRECTION_TABLE_0x5A2658.size()); ++direction_index) {
-			const int32_t next_x = current.x + DIRECTION_TABLE_0x5A2658[size_t(direction_index)][0];
-			const int32_t next_y = current.y + DIRECTION_TABLE_0x5A2658[size_t(direction_index)][1];
-			const int64_t next_flat = h3maped_cell_index(width, height, next_x, next_y, current.level);
-			if (next_flat < 0 || next_flat >= int64_t(generated_cell_word_0x20.size())) {
-				continue;
-			}
-				// 0x4a54a7 rebuilds placement pressure with a very small
-				// low-word wave: current + 2 for cardinal steps and + 3 for
-				// diagonal steps. Larger movement-style costs keep cells above
-				// the 0x4aa9b7 reward threshold and prevent natural band
-				// retirement.
-				const int32_t candidate_score = base_score + ((direction_index & 1) != 0 ? 3 : 2);
-			const uint32_t next_word = generated_cell_word_0x20[size_t(next_flat)];
-			const int32_t current_score = int32_t(next_word & 0xffffU);
-			if (candidate_score >= current_score || candidate_score > 0xffff) {
-				continue;
-			}
-			generated_cell_word_0x20[size_t(next_flat)] = (next_word & 0xffff0000U) | uint32_t(candidate_score);
-			frontier.push(ScoreFrontierNode { candidate_score, CoordCandidate { next_x, next_y, current.level } });
-			mutation_count += 1;
-		}
-	}
-	return mutation_count;
+	return aurelion::h3maped_rmg_core::deplete_generated_cell_scores_4a54a7(generated_cell_word_0x20, width, height, level_count, anchor_x, anchor_y, anchor_level);
 }
 
 String h3maped_reward_value_tier(int32_t value) {

@@ -1,5 +1,6 @@
 #include "rmg_native_core.hpp"
 #include "h3maped_small_rmg_embedded_data.hpp"
+#include "h3maped_rmg_core.hpp"
 
 #include <algorithm>
 #include <array>
@@ -3175,23 +3176,23 @@ constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6_PLAIN = 15U;
 constexpr uint32_t H3MAPED_CELL_TERRAIN_FLAG_MASK_0X49ACF6_PLAIN = 0x03U << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6_PLAIN;
 
 uint32_t h3maped_generated_cell_word20_set_low_word_plain(uint32_t word_0x20, uint32_t low_word) {
-	return (word_0x20 & 0xffff0000U) | (low_word & 0x0000ffffU);
+	return aurelion::h3maped_rmg_core::generated_cell_word20_set_low_word(word_0x20, low_word);
 }
 
 uint32_t h3maped_generated_cell_4a54a7_endpoint_word28_plain(uint32_t word_0x28) {
-	return word_0x28 | H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN | H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
+	return aurelion::h3maped_rmg_core::generated_cell_4a54a7_endpoint_word28(word_0x28);
 }
 
 uint32_t h3maped_generated_cell_4aa3e9_reward_word28_plain(uint32_t word_0x28) {
-	return word_0x28 & ~H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN;
+	return aurelion::h3maped_rmg_core::generated_cell_4aa3e9_reward_word28(word_0x28);
 }
 
 uint32_t h3maped_generated_cell_49cf34_attach_word28_plain(uint32_t word_0x28) {
-	return (word_0x28 | H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN) & ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
+	return aurelion::h3maped_rmg_core::generated_cell_49cf34_attach_word28(word_0x28);
 }
 
 uint32_t h3maped_generated_cell_4a56b6_projection_word20_plain(uint32_t word_0x20, uint32_t lowered_low_word) {
-	return h3maped_generated_cell_word20_set_low_word_plain(word_0x20, lowered_low_word);
+	return aurelion::h3maped_rmg_core::generated_cell_4a56b6_projection_word20(word_0x20, lowered_low_word);
 }
 
 constexpr uint32_t H3MAPED_RELATION_RESET_WORD_0X1C_PLAIN = 0x7d007d00U;
@@ -3225,58 +3226,23 @@ uint32_t h3maped_generated_cell_49a318_clear_source_word_0x1c_plain(uint32_t wor
 }
 
 bool h3maped_generated_cell_index_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
-	return flat >= 0
-			&& flat < int64_t(word_0x28.size())
-			&& flat < int64_t(word_0x24.size());
+	return aurelion::h3maped_rmg_core::generated_cell_index_valid(word_0x28, word_0x24, flat);
 }
 
 bool h3maped_generated_cell_49a1d8_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
-	if (!h3maped_generated_cell_index_valid_plain(word_0x28, word_0x24, flat)) {
-		return false;
-	}
-	return (word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN) != 0U
-			&& (word_0x24[size_t(flat)] & 0x3fU) != 9U;
+	return aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_word24(word_0x28, word_0x24, flat);
 }
 
 bool h3maped_generated_cell_49aa63_plain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_candidate) {
-	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
-		return false;
-	}
-	if ((word_0x2c[size_t(flat)] & 0x1U) != 0U) {
-		return false;
-	}
-	const bool was_set = (word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U;
-	if (set_candidate) {
-		word_0x28[size_t(flat)] |= H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
-		word_0x28[size_t(flat)] &= ~H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
-		return !was_set;
-	}
-	word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
-	return was_set;
+	return aurelion::h3maped_rmg_core::generated_cell_49aa63(word_0x28, word_0x2c, flat, set_candidate);
 }
 
 bool h3maped_generated_cell_49a932_plain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_occupied) {
-	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
-		return false;
-	}
-	if ((word_0x2c[size_t(flat)] & 0x1U) != 0U) {
-		return false;
-	}
-	const bool was_set = (word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN) != 0U;
-	if (set_occupied) {
-		word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
-		word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
-		return !was_set;
-	}
-	word_0x28[size_t(flat)] &= ~H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
-	return was_set;
+	return aurelion::h3maped_rmg_core::generated_cell_49a932(word_0x28, word_0x2c, flat, set_occupied);
 }
 
 int64_t h3maped_generated_cell_flat_plain(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
-	if (width <= 0 || height <= 0 || x < 0 || y < 0 || x >= width || y >= height || level < 0) {
-		return -1;
-	}
-	return int64_t(level) * int64_t(width) * int64_t(height) + int64_t(y) * int64_t(width) + int64_t(x);
+	return aurelion::h3maped_rmg_core::cell_index(width, height, x, y, level);
 }
 
 bool span_cell_in_bounds_4a325d_plain(int32_t width, int32_t height, int32_t level_count, const SpanRecordPlain &span) {
@@ -4607,7 +4573,7 @@ uint32_t h3maped_scratch_word_4bad0f_plain(int32_t terrain_id, int32_t selected_
 }
 
 uint32_t h3maped_generated_cell_terrain_flags_0x49acf6_plain(int32_t flag_a, int32_t flag_b) {
-	return (((uint32_t(flag_a) & 0x01U) | ((uint32_t(flag_b) & 0x01U) << 1U)) << H3MAPED_CELL_TERRAIN_FLAG_SHIFT_0X49ACF6_PLAIN);
+	return aurelion::h3maped_rmg_core::generated_cell_terrain_flags_0x49acf6(flag_a, flag_b);
 }
 
 int32_t h3maped_scratch_terrain_id_plain(uint32_t scratch_word) {
