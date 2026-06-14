@@ -49,6 +49,8 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Update `ops/progress.json` whenever a step starts, completes, or is blocked.
 - If you make a major architectural choice, record it clearly in `project.md`.
 - Prefer clear folder structure and production-minded tooling over clever hacks.
+- Do not treat contracts, diagnostics, reports, gates, audits, metadata surfaces, or verifier wiring as implementation progress by themselves. They are allowed only when they directly support or validate a source-backed behavior change in the same slice, or when the slice is explicitly documentation/tooling-only.
+- Do not land metadata-only or report-only changes as a substitute for real game/runtime/native behavior. If a diagnostic exposes missing implementation, name the missing function/data structure/behavior as the blocker instead of presenting the diagnostic as progress.
 - For native RMG work, follow `docs/lessons-learned.md`: prove recovered H3MapEd behavior through phase/private-state parity before changing generation rules, and do not replace missing recovery with density scalars, gates, brute-force retries, or final-map report tuning.
 
 ## Completion marker
