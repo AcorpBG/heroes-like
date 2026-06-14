@@ -19,6 +19,7 @@ from typing import Any
 
 import rmg_export_timing_summary
 import rmg_fast_validation
+import rmg_no_godot_guard
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +29,7 @@ PYTHON_GATE_MODULES = [
     ROOT / "tools" / "rmg_fast_validation.py",
     ROOT / "tools" / "rmg_export_timing_summary.py",
     ROOT / "tools" / "rmg_native_batch_export.py",
+    ROOT / "tools" / "rmg_no_godot_guard.py",
     ROOT / "tools" / "rmg_production_gap_audit.py",
     ROOT / "tools" / "rmg_quick_validation.py",
 ]
@@ -261,6 +263,28 @@ def main() -> int:
 
     compile_results = [] if args.skip_py_compile else compile_gate_modules()
     compile_ok = all(result.get("status") == "pass" for result in compile_results)
+    godot_guard = rmg_no_godot_guard.guard_report("rmg_python_validation_gate")
+    if godot_guard.get("status") != "pass":
+        combined = {
+            "schema_id": "rmg_python_validation_gate_v1",
+            "status": "fail",
+            "compile": {
+                "enabled": not args.skip_py_compile,
+                "status": "pass" if compile_ok else "fail",
+                "modules": compile_results,
+            },
+            "godot_process_guard": godot_guard,
+            "fast_validation": {},
+            "native_export_freshness": {},
+            "timing": {},
+        }
+        write_report(args.report_json, combined)
+        print("RMG_PYTHON_VALIDATION_GATE status=fail")
+        print("checks python_compile=%s fast_validation=skipped" % combined["compile"]["status"])
+        print("report_json=%s" % args.report_json)
+        rmg_no_godot_guard.print_failure(godot_guard)
+        return 0 if args.allow_failures else 1
+
     report = rmg_fast_validation.build_report(validation_args(args))
     freshness = native_export_freshness(report, args.include_windows_native_freshness)
     timing = timing_summary_for_validation(report, args.timing_limit, not args.skip_timing_summary)
@@ -275,6 +299,7 @@ def main() -> int:
             "status": "pass" if compile_ok else "fail",
             "modules": compile_results,
         },
+        "godot_process_guard": godot_guard,
         "fast_validation": report,
         "native_export_freshness": freshness,
         "timing": timing,

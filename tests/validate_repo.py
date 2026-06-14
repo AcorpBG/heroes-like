@@ -19168,13 +19168,25 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
 
 
 def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
+    guard_path = ROOT / "tools" / "rmg_no_godot_guard.py"
     wrapper_path = ROOT / "tools" / "rmg_native_batch_export.py"
+    quick_path = ROOT / "tools" / "rmg_quick_validation.py"
+    gate_path = ROOT / "tools" / "rmg_python_validation_gate.py"
     workflow_path = ROOT / "docs" / "rmg-python-validation-workflow.md"
     plan_path = ROOT / "PLAN.md"
     progress_path = ROOT / "ops" / "progress.json"
 
-    for path in (wrapper_path, workflow_path, plan_path, progress_path):
+    for path in (guard_path, wrapper_path, quick_path, gate_path, workflow_path, plan_path, progress_path):
         ensure(path.exists(), errors, f"Missing native RMG no-Godot boundary file: {path.relative_to(ROOT)}")
+
+    if guard_path.exists():
+        guard_text = guard_path.read_text(encoding="utf-8")
+        for required_token in (
+            "def active_godot_processes()",
+            "native_rmg_python_tools_refuse_to_run_while_godot_is_active_on_memory_constrained_hosts",
+            "RMG_NO_GODOT_GUARD",
+        ):
+            ensure(required_token in guard_text, errors, f"RMG no-Godot guard is missing required token: {required_token}")
 
     if wrapper_path.exists():
         wrapper_text = wrapper_path.read_text(encoding="utf-8")
@@ -19196,6 +19208,15 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ):
             ensure(forbidden_token not in wrapper_text, errors, f"RMG native batch wrapper must not expose Godot/full-export probe token: {forbidden_token}")
 
+    for path in (quick_path, gate_path):
+        if path.exists():
+            text = path.read_text(encoding="utf-8")
+            for required_token in (
+                "rmg_no_godot_guard.guard_report",
+                "godot_process_guard",
+            ):
+                ensure(required_token in text, errors, f"{path.relative_to(ROOT)} is missing no-Godot guard token: {required_token}")
+
     if workflow_path.exists():
         workflow_text = workflow_path.read_text(encoding="utf-8")
         for required_text in (
@@ -19203,6 +19224,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "export is not a mode on this host yet",
             "Do not add Godot flags, restore a",
             "Godot runner, or add a full-export probe override",
+            "`tools/rmg_no_godot_guard.py` process guard",
         ):
             ensure(required_text in workflow_text, errors, f"RMG Python workflow doc is missing no-Godot boundary text: {required_text}")
         ensure("--allow-blocked-full-export-probe" not in workflow_text, errors, "RMG Python workflow doc still mentions blocked full-export probe override")

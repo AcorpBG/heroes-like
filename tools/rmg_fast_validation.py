@@ -3,8 +3,9 @@
 
 Use this after a native batch export has produced `.amap` packages. The script
 parses owner `.h3m` evidence and native `.amap` packages directly, then applies
-structural RMG rules and owner-baseline diagnostics. Godot should only be needed
-for fresh native generation/export and engine/editor integration smokes.
+structural RMG rules and owner-baseline diagnostics. Fresh native RMG evidence
+must come from the standalone no-Godot CLI; engine/editor integration smokes are
+separate workflows for hosts where Godot launch is explicitly permitted.
 """
 
 from __future__ import annotations
