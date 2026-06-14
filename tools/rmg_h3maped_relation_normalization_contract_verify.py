@@ -74,6 +74,9 @@ def verify(
     reset_samples = native.get("reset_samples")
     if not isinstance(reset_samples, list):
         raise ValueError("native relation summary missing reset_samples")
+    source_clear_samples = native.get("source_clear_samples")
+    if not isinstance(source_clear_samples, list):
+        raise ValueError("native relation summary missing source_clear_samples")
     reset_sample_checks = []
     for sample in reset_samples:
         if not isinstance(sample, dict):
@@ -86,6 +89,21 @@ def verify(
             and sample.get("word_0x1c") == 0x7D007D00
             and (int(sample.get("word_0x20", 0)) & 0xFF000000) == 0xFF000000
             and (int(sample.get("word_0x28", 0)) & (0x7 << 12)) == 0
+        )
+    source_clear_sample_checks = []
+    for sample in source_clear_samples:
+        if not isinstance(sample, dict):
+            source_clear_sample_checks.append(False)
+            continue
+        source_clear_sample_checks.append(
+            sample.get("before_word_0x1c") == 0x7D007D00
+            and sample.get("after_word_0x1c") == 0x7D000000
+            and sample.get("after_word_0x10") == 0xFFFFFFFF
+            and sample.get("after_word_0x14") == 0xFFFFFFFF
+            and sample.get("after_word_0x18") == 0xFFFFFFFF
+            and sample.get("low_word_cleared") is True
+            and sample.get("high_word_preserved") is True
+            and sample.get("projection_triple_minus_one") is True
         )
 
     normalizer_count, normalizer_present = _file_marker_counts(relation_source, "normalizer_0x4a5767")
@@ -165,6 +183,18 @@ def verify(
             "full_grid_reset_0x4a5767_materialized_plain_cpp"
         )
         is True,
+        "native_49a318_source_cell_clear_primitive_materialized": native.get(
+            "propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp"
+        )
+        is True,
+        "native_49a318_source_cell_projection_triple_primitive_materialized": native.get(
+            "propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp"
+        )
+        is True,
+        "native_keeps_49a318_source_cell_clear_live_application_pending": native.get(
+            "propagation_source_cell_clear_live_application_pending"
+        )
+        is True,
         "native_reset_projection_gate_materialized": native.get(
             "generated_cell_word_0x1c_reset_gate_materialized"
         )
@@ -193,6 +223,26 @@ def verify(
         == native_cell_count,
         "native_reset_samples_present": 0 < len(reset_samples) <= 8,
         "native_reset_samples_match_reset_words": all(reset_sample_checks),
+        "native_49a318_source_clear_samples_present": 0 < len(source_clear_samples) <= 8,
+        "native_49a318_source_clear_sample_count_matches": int(
+            native.get("propagation_source_cell_clear_sample_count", -1)
+        )
+        == len(source_clear_samples),
+        "native_49a318_source_clear_low_word_zero_count_matches": int(
+            native.get("propagation_source_cell_clear_low_word_zero_count", -1)
+        )
+        == len(source_clear_samples),
+        "native_49a318_source_clear_high_word_preserved_count_matches": int(
+            native.get("propagation_source_cell_clear_high_word_preserved_count", -1)
+        )
+        == len(source_clear_samples),
+        "native_49a318_source_clear_projection_triple_count_matches": int(
+            native.get("propagation_source_cell_projection_triple_minus_one_sample_count", -1)
+        )
+        == len(source_clear_samples),
+        "native_49a318_source_clear_samples_match_recovered_primitive": all(
+            source_clear_sample_checks
+        ),
         "native_static_surface_recovered": native.get("static_surface_markers_recovered") is True,
         "native_r6_surface_recovered": native.get("r6_semantic_surface_recovered") is True,
         "native_diagnostic_only": native.get("diagnostic_only") is True,
@@ -287,6 +337,18 @@ def verify(
         is True,
         "prerequisite_exposes_full_grid_reset": prerequisite.get(
             "relation_normalization_full_grid_reset_materialized_plain_cpp"
+        )
+        is True,
+        "prerequisite_exposes_49a318_source_cell_clear_primitive": prerequisite.get(
+            "relation_normalization_source_cell_clear_0x49a318_primitive_materialized"
+        )
+        is True,
+        "prerequisite_exposes_49a318_source_cell_projection_triple_primitive": prerequisite.get(
+            "relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized"
+        )
+        is True,
+        "prerequisite_keeps_49a318_source_cell_clear_live_application_pending": prerequisite.get(
+            "relation_normalization_source_cell_clear_live_application_pending"
         )
         is True,
         "prerequisite_exposes_projection_gate_reset": prerequisite.get(
@@ -454,9 +516,21 @@ def verify(
         "native_full_grid_reset_0x4a5767_materialized": native.get(
             "full_grid_reset_0x4a5767_materialized_plain_cpp"
         ),
+        "native_49a318_source_cell_clear_primitive_materialized": native.get(
+            "propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp"
+        ),
+        "native_49a318_source_cell_projection_triple_primitive_materialized": native.get(
+            "propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp"
+        ),
+        "native_49a318_source_cell_clear_live_application_pending": native.get(
+            "propagation_source_cell_clear_live_application_pending"
+        ),
         "native_reset_cell_count": native.get("reset_cell_count"),
         "native_reset_word_0x1c_0x7d007d00_count": native.get(
             "reset_word_0x1c_0x7d007d00_count"
+        ),
+        "native_49a318_source_cell_clear_sample_count": native.get(
+            "propagation_source_cell_clear_sample_count"
         ),
         "native_word20_low_word_propagation_materialized": native.get(
             "generated_cell_word_0x20_low_word_propagation_materialized"

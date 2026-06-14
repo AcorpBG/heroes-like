@@ -793,12 +793,30 @@ struct RelationNormalizationResetSamplePlain {
 	uint32_t word_0x28 = 0;
 };
 
+struct RelationNormalizationSourceClearSamplePlain {
+	int32_t flat = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	uint32_t before_word_0x1c = 0;
+	uint32_t after_word_0x1c = 0;
+	uint32_t after_word_0x10 = 0;
+	uint32_t after_word_0x14 = 0;
+	uint32_t after_word_0x18 = 0;
+	bool low_word_cleared = false;
+	bool high_word_preserved = false;
+	bool projection_triple_minus_one = false;
+};
+
 struct RelationNormalizationContractSummaryPlain {
 	bool terrain_live_feedback_available = false;
 	bool supported_scope = false;
 	bool relation_normalization_contract_ported_plain_cpp = false;
 	bool helper_0x4a59e2_pack_materialized_plain_cpp = false;
 	bool full_grid_reset_0x4a5767_materialized_plain_cpp = false;
+	bool propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp = false;
+	bool propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp = false;
+	bool propagation_source_cell_clear_live_application_pending = true;
 	bool generated_cell_word_0x1c_reset_gate_materialized = false;
 	bool generated_cell_projection_triple_reset_materialized = false;
 	bool static_surface_markers_recovered = false;
@@ -870,6 +888,10 @@ struct RelationNormalizationContractSummaryPlain {
 	int32_t reset_projection_triple_minus_one_count = 0;
 	int32_t reset_word_0x20_byte3_minus_one_count = 0;
 	int32_t reset_word_0x28_bits_12_14_zero_count = 0;
+	int32_t propagation_source_cell_clear_sample_count = 0;
+	int32_t propagation_source_cell_clear_low_word_zero_count = 0;
+	int32_t propagation_source_cell_clear_high_word_preserved_count = 0;
+	int32_t propagation_source_cell_projection_triple_minus_one_sample_count = 0;
 	std::vector<uint32_t> reset_word_0x10;
 	std::vector<uint32_t> reset_word_0x14;
 	std::vector<uint32_t> reset_word_0x18;
@@ -877,6 +899,7 @@ struct RelationNormalizationContractSummaryPlain {
 	std::vector<uint32_t> reset_word_0x20;
 	std::vector<uint32_t> reset_word_0x28;
 	std::vector<RelationNormalizationResetSamplePlain> reset_samples;
+	std::vector<RelationNormalizationSourceClearSamplePlain> source_clear_samples;
 	std::string working_name = "relation_local_generated_cell_normalizer_and_owner_projection_propagation";
 };
 
@@ -940,6 +963,9 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool relation_normalization_contract_ported_plain_cpp = false;
 	bool relation_normalization_4a59e2_pack_materialized_plain_cpp = false;
 	bool relation_normalization_full_grid_reset_materialized_plain_cpp = false;
+	bool relation_normalization_source_cell_clear_0x49a318_primitive_materialized = false;
+	bool relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized = false;
+	bool relation_normalization_source_cell_clear_live_application_pending = true;
 	bool relation_normalization_projection_gate_reset_materialized = false;
 	bool relation_normalization_projection_triple_reset_materialized = false;
 	bool relation_normalization_runtime_replay_pending = false;
@@ -3167,6 +3193,11 @@ uint32_t h3maped_generated_cell_4a59e2_pack_word_0x28_plain(uint32_t word_0x28, 
 uint32_t h3maped_generated_cell_4a5767_reset_force_word_0x1c_plain(uint32_t word_0x1c_after_4a59e2) {
 	return (word_0x1c_after_4a59e2 & 0xffff0000U)
 			| (((word_0x1c_after_4a59e2 & 0x0000ffffU) & 0x7d00U) | 0x7d00U);
+}
+
+uint32_t h3maped_generated_cell_49a318_clear_source_word_0x1c_plain(uint32_t word_0x1c) {
+	// 0x49a3a2: AND word ptr [ESI + 0x1c], DI after EDI was zeroed at 0x49a32b.
+	return word_0x1c & 0xffff0000U;
 }
 
 bool h3maped_generated_cell_index_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
@@ -5760,6 +5791,7 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 		summary.reset_word_0x20.assign(size_t(summary.cell_count), 0U);
 		summary.reset_word_0x28.assign(size_t(summary.cell_count), 0U);
 		summary.reset_samples.reserve(std::min<int32_t>(summary.cell_count, 8));
+		summary.source_clear_samples.reserve(std::min<int32_t>(summary.cell_count, 8));
 		for (int32_t flat = 0; flat < summary.cell_count; ++flat) {
 			uint32_t word_0x1c = 0U;
 			uint32_t word_0x20 = terrain_summary.generated_cell_word_0x20[size_t(flat)];
@@ -5807,7 +5839,45 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 				sample.word_0x28 = word_0x28;
 				summary.reset_samples.push_back(sample);
 			}
+			if (summary.source_clear_samples.size() < 8U) {
+				RelationNormalizationSourceClearSamplePlain sample;
+				sample.flat = flat;
+				const int32_t cells_per_level = summary.width * summary.height;
+				sample.level = cells_per_level > 0 ? flat / cells_per_level : 0;
+				const int32_t local_flat = cells_per_level > 0 ? flat % cells_per_level : flat;
+				sample.x = summary.width > 0 ? local_flat % summary.width : 0;
+				sample.y = summary.width > 0 ? local_flat / summary.width : 0;
+				sample.before_word_0x1c = word_0x1c;
+				sample.after_word_0x1c = h3maped_generated_cell_49a318_clear_source_word_0x1c_plain(word_0x1c);
+				sample.after_word_0x10 = H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
+				sample.after_word_0x14 = H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
+				sample.after_word_0x18 = H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
+				sample.low_word_cleared = (sample.after_word_0x1c & 0x0000ffffU) == 0U;
+				sample.high_word_preserved = (sample.after_word_0x1c & 0xffff0000U) == (sample.before_word_0x1c & 0xffff0000U);
+				sample.projection_triple_minus_one =
+						sample.after_word_0x10 == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN
+						&& sample.after_word_0x14 == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN
+						&& sample.after_word_0x18 == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
+				if (sample.low_word_cleared) {
+					summary.propagation_source_cell_clear_low_word_zero_count += 1;
+				}
+				if (sample.high_word_preserved) {
+					summary.propagation_source_cell_clear_high_word_preserved_count += 1;
+				}
+				if (sample.projection_triple_minus_one) {
+					summary.propagation_source_cell_projection_triple_minus_one_sample_count += 1;
+				}
+				summary.source_clear_samples.push_back(sample);
+			}
 		}
+		summary.propagation_source_cell_clear_sample_count = int32_t(summary.source_clear_samples.size());
+		summary.propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp =
+				summary.propagation_source_cell_clear_sample_count > 0
+				&& summary.propagation_source_cell_clear_low_word_zero_count == summary.propagation_source_cell_clear_sample_count
+				&& summary.propagation_source_cell_clear_high_word_preserved_count == summary.propagation_source_cell_clear_sample_count;
+		summary.propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp =
+				summary.propagation_source_cell_clear_sample_count > 0
+				&& summary.propagation_source_cell_projection_triple_minus_one_sample_count == summary.propagation_source_cell_clear_sample_count;
 	}
 	summary.runtime_ordered_replay_materialized = false;
 	summary.generated_cell_word_0x20_low_word_propagation_materialized = false;
@@ -6438,6 +6508,12 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 			relation_normalization_summary.helper_0x4a59e2_pack_materialized_plain_cpp;
 	summary.relation_normalization_full_grid_reset_materialized_plain_cpp =
 			relation_normalization_summary.full_grid_reset_0x4a5767_materialized_plain_cpp;
+	summary.relation_normalization_source_cell_clear_0x49a318_primitive_materialized =
+			relation_normalization_summary.propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp;
+	summary.relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized =
+			relation_normalization_summary.propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp;
+	summary.relation_normalization_source_cell_clear_live_application_pending =
+			relation_normalization_summary.propagation_source_cell_clear_live_application_pending;
 	summary.relation_normalization_projection_gate_reset_materialized =
 			relation_normalization_summary.generated_cell_word_0x1c_reset_gate_materialized;
 	summary.relation_normalization_projection_triple_reset_materialized =
@@ -8151,6 +8227,9 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"relation_normalization_contract_ported_plain_cpp\": " << (summary.relation_normalization_contract_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"helper_0x4a59e2_pack_materialized_plain_cpp\": " << (summary.helper_0x4a59e2_pack_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"full_grid_reset_0x4a5767_materialized_plain_cpp\": " << (summary.full_grid_reset_0x4a5767_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp\": " << (summary.propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp\": " << (summary.propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"propagation_source_cell_clear_live_application_pending\": " << (summary.propagation_source_cell_clear_live_application_pending ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_word_0x1c_reset_gate_materialized\": " << (summary.generated_cell_word_0x1c_reset_gate_materialized ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_projection_triple_reset_materialized\": " << (summary.generated_cell_projection_triple_reset_materialized ? "true" : "false") << ",\n";
 	out << "    \"static_surface_markers_recovered\": " << (summary.static_surface_markers_recovered ? "true" : "false") << ",\n";
@@ -8210,6 +8289,10 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"reset_projection_triple_minus_one_count\": " << summary.reset_projection_triple_minus_one_count << ",\n";
 	out << "    \"reset_word_0x20_byte3_minus_one_count\": " << summary.reset_word_0x20_byte3_minus_one_count << ",\n";
 	out << "    \"reset_word_0x28_bits_12_14_zero_count\": " << summary.reset_word_0x28_bits_12_14_zero_count << ",\n";
+	out << "    \"propagation_source_cell_clear_sample_count\": " << summary.propagation_source_cell_clear_sample_count << ",\n";
+	out << "    \"propagation_source_cell_clear_low_word_zero_count\": " << summary.propagation_source_cell_clear_low_word_zero_count << ",\n";
+	out << "    \"propagation_source_cell_clear_high_word_preserved_count\": " << summary.propagation_source_cell_clear_high_word_preserved_count << ",\n";
+	out << "    \"propagation_source_cell_projection_triple_minus_one_sample_count\": " << summary.propagation_source_cell_projection_triple_minus_one_sample_count << ",\n";
 	out << "    \"static_marker_count\": " << summary.static_marker_count << ",\n";
 	out << "    \"static_present_marker_count\": " << summary.static_present_marker_count << ",\n";
 	out << "    \"static_missing_marker_count\": " << summary.static_missing_marker_count << ",\n";
@@ -8250,6 +8333,29 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 		out << "\"word_0x1c\":" << sample.word_0x1c << ",";
 		out << "\"word_0x20\":" << sample.word_0x20 << ",";
 		out << "\"word_0x28\":" << sample.word_0x28;
+		out << "}";
+	}
+	out << "],\n";
+	out << "    \"source_clear_sample_limit\": 8,\n";
+	out << "    \"source_clear_samples\": [";
+	for (size_t index = 0; index < summary.source_clear_samples.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RelationNormalizationSourceClearSamplePlain &sample = summary.source_clear_samples[index];
+		out << "{";
+		out << "\"flat\":" << sample.flat << ",";
+		out << "\"x\":" << sample.x << ",";
+		out << "\"y\":" << sample.y << ",";
+		out << "\"level\":" << sample.level << ",";
+		out << "\"before_word_0x1c\":" << sample.before_word_0x1c << ",";
+		out << "\"after_word_0x1c\":" << sample.after_word_0x1c << ",";
+		out << "\"after_word_0x10\":" << sample.after_word_0x10 << ",";
+		out << "\"after_word_0x14\":" << sample.after_word_0x14 << ",";
+		out << "\"after_word_0x18\":" << sample.after_word_0x18 << ",";
+		out << "\"low_word_cleared\":" << (sample.low_word_cleared ? "true" : "false") << ",";
+		out << "\"high_word_preserved\":" << (sample.high_word_preserved ? "true" : "false") << ",";
+		out << "\"projection_triple_minus_one\":" << (sample.projection_triple_minus_one ? "true" : "false");
 		out << "}";
 	}
 	out << "],\n";
@@ -8670,6 +8776,9 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"relation_normalization_contract_ported_plain_cpp\": " << (summary.relation_normalization_contract_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_4a59e2_pack_materialized_plain_cpp\": " << (summary.relation_normalization_4a59e2_pack_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_full_grid_reset_materialized_plain_cpp\": " << (summary.relation_normalization_full_grid_reset_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_source_cell_clear_0x49a318_primitive_materialized\": " << (summary.relation_normalization_source_cell_clear_0x49a318_primitive_materialized ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized\": " << (summary.relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_source_cell_clear_live_application_pending\": " << (summary.relation_normalization_source_cell_clear_live_application_pending ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_projection_gate_reset_materialized\": " << (summary.relation_normalization_projection_gate_reset_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_projection_triple_reset_materialized\": " << (summary.relation_normalization_projection_triple_reset_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_runtime_replay_pending\": " << (summary.relation_normalization_runtime_replay_pending ? "true" : "false") << ",\n";
