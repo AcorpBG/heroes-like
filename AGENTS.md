@@ -24,6 +24,14 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - This is not a toy prototype and not a fake MVP. Build toward a shippable product from day one.
 - Still work in staged slices. Each slice should strengthen the final architecture, not create throwaway code.
 
+## Implementation progress discipline
+- Real implementation progress means one of these changed in the repo: live game behavior, native/runtime behavior, shipped content, production tooling required by the selected slice, or a source-backed recovery artifact that directly unblocks a named implementation step.
+- Contracts, diagnostics, reports, gates, audits, metadata surfaces, verifier wiring, snapshots, comparison tables, and progress-file edits are not implementation progress by themselves. They are support work only.
+- Do not spend a turn creating new evidence surfaces when the selected work needs runtime/native implementation, unless the user explicitly asks for an audit/report or the evidence is required to validate a same-slice behavior change.
+- Do not mark a gameplay, AI, balance, native RMG, save/load, UI, content, or packaging slice complete unless the implemented behavior is present and the relevant validation has passed. If only a diagnostic changed, the slice is still pending or blocked.
+- If implementation is blocked, state the exact missing function, data structure, runtime behavior, source file, or recovered-state proof. Do not describe being "closer", "green", "wired", or "done" when the actual behavior still does not exist.
+- For native RMG specifically, checkpoint progress requires native generated state or final map payload behavior to match the recovered H3MapEd private-state/final-writeout comparison for the selected phase. New checkers, exporters, contracts, snapshots, and reports do not count as checkpoint progress unless they accompany that behavior change.
+
 ## Engineering rules
 - Default engine assumption: Godot 4 unless a documented decision in `project.md` changes it.
 - Mandatory platform target: the game is both Windows and Linux, not Linux-only. Any engine, native/GDExtension, build, packaging, file-path, save/load, tooling, or validation work must consider both platforms up front.
@@ -49,7 +57,7 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Update `ops/progress.json` whenever a step starts, completes, or is blocked.
 - If you make a major architectural choice, record it clearly in `project.md`.
 - Prefer clear folder structure and production-minded tooling over clever hacks.
-- Do not treat contracts, diagnostics, reports, gates, audits, metadata surfaces, or verifier wiring as implementation progress by themselves. They are allowed only when they directly support or validate a source-backed behavior change in the same slice, or when the slice is explicitly documentation/tooling-only.
+- Do not treat contracts, diagnostics, reports, gates, audits, metadata surfaces, verifier wiring, snapshots, or comparison tables as implementation progress by themselves. They are allowed only when they directly support or validate a source-backed behavior change in the same slice, or when the slice is explicitly documentation/tooling-only.
 - Do not land metadata-only or report-only changes as a substitute for real game/runtime/native behavior. If a diagnostic exposes missing implementation, name the missing function/data structure/behavior as the blocker instead of presenting the diagnostic as progress.
 - For native RMG work, follow `docs/lessons-learned.md`: prove recovered H3MapEd behavior through phase/private-state parity before changing generation rules, and do not replace missing recovery with density scalars, gates, brute-force retries, or final-map report tuning.
 
