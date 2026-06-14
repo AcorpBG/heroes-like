@@ -834,6 +834,9 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp = false;
 	bool object_vector_4a79a3_payload_order_ported_plain_cpp = false;
 	bool object_vector_4a79a3_payload_order_records_match_recovered = false;
+	bool object_vector_endpoint_dispatch_exclusion_ported_plain_cpp = false;
+	bool endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land = false;
+	bool endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending = false;
 	bool diagnostic_only = true;
 	bool native_object_vector_order_materialized = false;
 	bool same_run_descriptor_state_complete = false;
@@ -895,6 +898,11 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	int32_t sampled_4a79a3_payload_vtable_0x00540a88_count = 0;
 	bool sampled_4a79a3_filter_hits_4a696b = true;
 	bool sampled_4a79a3_filter_hits_4a7605 = true;
+	int32_t sampled_endpoint_dispatch_4a696b_entry_count = 0;
+	int32_t sampled_endpoint_dispatch_4a7605_entry_count = 0;
+	int32_t sampled_endpoint_dispatch_4a696b_source_relation_match_hits = 0;
+	int32_t sampled_endpoint_dispatch_4a696b_direct_mutation_hits = 0;
+	int32_t sampled_endpoint_dispatch_4a7605_endpoint_policy_count = 0;
 };
 
 struct DescriptorSourceIdentityContextPlain {
@@ -989,6 +997,51 @@ struct ObjectVectorPayloadOrderSummaryPlain {
 	int32_t record_vtable_0x00540a88_count = 0;
 	std::vector<std::string> vector_entries;
 	std::vector<ObjectVectorPayloadOrderRecordPlain> records;
+};
+
+struct ObjectVectorEndpointDispatchSummaryPlain {
+	bool supported_scope = false;
+	bool diagnostic_only = true;
+	bool native_behavior_changed = false;
+	bool endpoint_dispatch_contract_ported_plain_cpp = false;
+	bool filter_dispatch_summary_recovered = false;
+	bool static_4a696b_direct_mutation_surface_recovered = false;
+	bool static_4a7605_fallback_coordinator_surface_recovered = false;
+	bool target_mode_4a696b_direct_mutation_excluded_supported_land = false;
+	bool multi_seed_4a696b_pair_gate_recovered = false;
+	bool live_4a696b_direct_mutation_sites_not_hit = false;
+	bool hit_4a696b_from_4a79a3 = false;
+	bool hit_4a7605_from_4a79a3 = false;
+	bool hit_pair_mark_sites = false;
+	bool direct_4a696b_mutation_adopted = false;
+	bool delegated_4a7605_afterstate_materialized = false;
+	bool generated_cell_mutation_replay_complete = false;
+	std::string status = "blocked_until_supported_scope";
+	std::string blocked_reason = "unsupported_non_small_medium_one_level_land";
+	int32_t dispatch_4a696b_from_4a79a3_count = 0;
+	int32_t dispatch_4a7605_from_4a79a3_count = 0;
+	int32_t source_4a696b_combined_entries = 0;
+	int32_t source_4a696b_source_relation_match_hits = 0;
+	int32_t source_4a696b_candidate_append_hits = 0;
+	int32_t source_4a696b_direct_mutation_hits = 0;
+	int32_t source_4a696b_complete_grid_scan_count = 0;
+	int32_t source_4a696b_zero_owner_relation_pair_match_scan_count = 0;
+	int32_t source_4a696b_scanned_cell_total = 0;
+	int32_t source_4a696b_seed_count = 0;
+	int32_t source_4a696b_byte2_only_or_any_match_total = 0;
+	int32_t source_4a696b_byte3_only_or_any_match_total = 0;
+	int32_t trace_4a696b_entry_count = 0;
+	int32_t trace_4a7605_entry_count = 0;
+	int32_t trace_4a7312_call_count = 0;
+	int32_t trace_4a7312_vtable_commit_count = 0;
+	int32_t trace_4a696b_direct_mutation_site_hit_count = 0;
+	int32_t static_4a7605_endpoint_policy_4a7312_count = 0;
+	int32_t static_4a7605_endpoint_writer_4a746b_count = 0;
+	int32_t static_4a7605_materializer_4a5e03_count = 0;
+	int32_t static_4a7605_record_initializer_49ba89_count = 0;
+	int32_t static_4a7605_coordinate_append_40bb15_count = 0;
+	int32_t static_4a7605_coordinate_merge_40bb26_count = 0;
+	int32_t static_4a7605_direct_generated_cell_28_write_count = 0;
 };
 
 struct ObjectVectorCommitMutationSamplePlain {
@@ -5982,7 +6035,56 @@ ObjectVectorPayloadOrderSummaryPlain build_object_vector_payload_order_summary(c
 	return summary;
 }
 
-ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary, const ObjectVectorPayloadOrderSummaryPlain &payload_order_summary) {
+ObjectVectorEndpointDispatchSummaryPlain build_object_vector_endpoint_dispatch_summary(const ControlledCase &controlled_case) {
+	ObjectVectorEndpointDispatchSummaryPlain summary;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	if (!summary.supported_scope) {
+		return summary;
+	}
+
+	summary.endpoint_dispatch_contract_ported_plain_cpp = true;
+	summary.filter_dispatch_summary_recovered = true;
+	summary.static_4a696b_direct_mutation_surface_recovered = true;
+	summary.static_4a7605_fallback_coordinator_surface_recovered = true;
+	summary.target_mode_4a696b_direct_mutation_excluded_supported_land = true;
+	summary.multi_seed_4a696b_pair_gate_recovered = true;
+	summary.live_4a696b_direct_mutation_sites_not_hit = true;
+	summary.hit_4a696b_from_4a79a3 = true;
+	summary.hit_4a7605_from_4a79a3 = true;
+	summary.hit_pair_mark_sites = true;
+	summary.direct_4a696b_mutation_adopted = false;
+	summary.delegated_4a7605_afterstate_materialized = false;
+	summary.generated_cell_mutation_replay_complete = false;
+	summary.dispatch_4a696b_from_4a79a3_count = 1;
+	summary.dispatch_4a7605_from_4a79a3_count = 1;
+	summary.source_4a696b_combined_entries = 150;
+	summary.source_4a696b_source_relation_match_hits = 0;
+	summary.source_4a696b_candidate_append_hits = 0;
+	summary.source_4a696b_direct_mutation_hits = 0;
+	summary.source_4a696b_complete_grid_scan_count = 6;
+	summary.source_4a696b_zero_owner_relation_pair_match_scan_count = 6;
+	summary.source_4a696b_scanned_cell_total = 5752;
+	summary.source_4a696b_seed_count = 3;
+	summary.source_4a696b_byte2_only_or_any_match_total = 3639;
+	summary.source_4a696b_byte3_only_or_any_match_total = 33;
+	summary.trace_4a696b_entry_count = 4;
+	summary.trace_4a7605_entry_count = 1;
+	summary.trace_4a7312_call_count = 2;
+	summary.trace_4a7312_vtable_commit_count = 2;
+	summary.trace_4a696b_direct_mutation_site_hit_count = 0;
+	summary.static_4a7605_endpoint_policy_4a7312_count = 4;
+	summary.static_4a7605_endpoint_writer_4a746b_count = 2;
+	summary.static_4a7605_materializer_4a5e03_count = 2;
+	summary.static_4a7605_record_initializer_49ba89_count = 4;
+	summary.static_4a7605_coordinate_append_40bb15_count = 4;
+	summary.static_4a7605_coordinate_merge_40bb26_count = 3;
+	summary.static_4a7605_direct_generated_cell_28_write_count = 0;
+	summary.status = "diagnostic_4a79a3_endpoint_dispatch_exclusion_ported";
+	summary.blocked_reason = "delegated_0x4a7605_afterstate_and_native_live_object_vector_records_not_materialized";
+	return summary;
+}
+
+ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary, const ObjectVectorPayloadOrderSummaryPlain &payload_order_summary, const ObjectVectorEndpointDispatchSummaryPlain &endpoint_dispatch_summary) {
 	ObjectVectorPrerequisiteContractSummaryPlain summary;
 	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
 	summary.supported_scope = supported_one_level_land_scope(controlled_case);
@@ -6013,6 +6115,11 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp = commit_summary.attach_mutation_helpers_ported_plain_cpp;
 	summary.object_vector_4a79a3_payload_order_ported_plain_cpp = payload_order_summary.object_vector_4a79a3_payload_order_ported_plain_cpp;
 	summary.object_vector_4a79a3_payload_order_records_match_recovered = payload_order_summary.payload_order_records_match_recovered;
+	summary.object_vector_endpoint_dispatch_exclusion_ported_plain_cpp = endpoint_dispatch_summary.endpoint_dispatch_contract_ported_plain_cpp;
+	summary.endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land =
+			endpoint_dispatch_summary.target_mode_4a696b_direct_mutation_excluded_supported_land;
+	summary.endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending =
+			!endpoint_dispatch_summary.delegated_4a7605_afterstate_materialized;
 	summary.sampled_4a54a7_commit_mutation_samples_match = commit_summary.sample_count > 0
 			&& commit_summary.matched_sample_count == commit_summary.sample_count;
 	summary.sampled_4a56b6_projection_write_samples_match = commit_summary.projection_write_recovered_samples_match;
@@ -6041,6 +6148,14 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.sampled_4a79a3_payload_record_count = payload_order_summary.record_count;
 	summary.sampled_4a79a3_payload_vtable_0x00540a9c_count = payload_order_summary.record_vtable_0x00540a9c_count;
 	summary.sampled_4a79a3_payload_vtable_0x00540a88_count = payload_order_summary.record_vtable_0x00540a88_count;
+	summary.sampled_endpoint_dispatch_4a696b_entry_count = endpoint_dispatch_summary.trace_4a696b_entry_count;
+	summary.sampled_endpoint_dispatch_4a7605_entry_count = endpoint_dispatch_summary.trace_4a7605_entry_count;
+	summary.sampled_endpoint_dispatch_4a696b_source_relation_match_hits =
+			endpoint_dispatch_summary.source_4a696b_source_relation_match_hits;
+	summary.sampled_endpoint_dispatch_4a696b_direct_mutation_hits =
+			endpoint_dispatch_summary.source_4a696b_direct_mutation_hits;
+	summary.sampled_endpoint_dispatch_4a7605_endpoint_policy_count =
+			endpoint_dispatch_summary.static_4a7605_endpoint_policy_4a7312_count;
 	summary.recovered_reference_case_matches = controlled_case.seed == summary.expected_reference_seed
 			&& summary.width == summary.expected_reference_width
 			&& summary.height == summary.expected_reference_height
@@ -6050,7 +6165,7 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	summary.status = summary.recovered_reference_case_matches
 			? "diagnostic_object_vector_prerequisite_reference_seed58_descriptor_runtime_state_incomplete"
 			: "diagnostic_object_vector_prerequisite_contract_ported_reference_only_same_case_stream_missing";
-	summary.blocked_reason = "r4_descriptor_source_identity_crosswalk_ported_but_same_run_4aa354_descriptor_vector_0x398_0x39c_and_selected_descriptor_state_0x94_0x95_missing_plus_4a79a3_generated_cell_mutation_replay_not_materialized";
+	summary.blocked_reason = "r4_descriptor_source_identity_crosswalk_and_4a79a3_endpoint_dispatch_exclusion_ported_but_same_run_4aa354_descriptor_vector_0x398_0x39c_selected_descriptor_state_0x94_0x95_native_live_object_vector_records_and_delegated_4a7605_afterstate_not_materialized";
 	return summary;
 }
 
@@ -7960,6 +8075,59 @@ void append_object_vector_payload_order_summary_json(std::ostream &out, const Ob
 	out << "  }";
 }
 
+void append_object_vector_endpoint_dispatch_summary_json(std::ostream &out, const ObjectVectorEndpointDispatchSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_4a79a3_endpoint_dispatch_exclusion_v1\",\n";
+	out << "    \"phase_id\": \"object_vector_endpoint_dispatch_0x4a79a3_0x4a696b_0x4a7605\",\n";
+	out << "    \"h3maped_anchor\": \"0x4a79a3_0x4a696b_0x4a7605_0x4a7312_0x4a746b_0x4a5e03\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ diagnostic import from 4a79a3_filter_dispatch_summary.json, 696b_7605_static_surface_summary.json, 4a696b_target_mode_reachability_summary_20260610.json, medium_4a696b_grid_scan_aggregate_summary_20260610.json, and 4a696b_cell_mutation_trace_summary_20260608.json\",\n";
+	out << "    \"strict_port_scope\": \"endpoint-dispatch exclusion/delegation contract only; no native live grid mutation, no direct 0x4a696b adoption, no delegated 0x4a7605 after-state adoption, and no package output\",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"native_behavior_changed\": " << (summary.native_behavior_changed ? "true" : "false") << ",\n";
+	out << "    \"endpoint_dispatch_contract_ported_plain_cpp\": " << (summary.endpoint_dispatch_contract_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"filter_dispatch_summary_recovered\": " << (summary.filter_dispatch_summary_recovered ? "true" : "false") << ",\n";
+	out << "    \"static_4a696b_direct_mutation_surface_recovered\": " << (summary.static_4a696b_direct_mutation_surface_recovered ? "true" : "false") << ",\n";
+	out << "    \"static_4a7605_fallback_coordinator_surface_recovered\": " << (summary.static_4a7605_fallback_coordinator_surface_recovered ? "true" : "false") << ",\n";
+	out << "    \"target_mode_4a696b_direct_mutation_excluded_supported_land\": " << (summary.target_mode_4a696b_direct_mutation_excluded_supported_land ? "true" : "false") << ",\n";
+	out << "    \"multi_seed_4a696b_pair_gate_recovered\": " << (summary.multi_seed_4a696b_pair_gate_recovered ? "true" : "false") << ",\n";
+	out << "    \"live_4a696b_direct_mutation_sites_not_hit\": " << (summary.live_4a696b_direct_mutation_sites_not_hit ? "true" : "false") << ",\n";
+	out << "    \"hit_4a696b_from_4a79a3\": " << (summary.hit_4a696b_from_4a79a3 ? "true" : "false") << ",\n";
+	out << "    \"hit_4a7605_from_4a79a3\": " << (summary.hit_4a7605_from_4a79a3 ? "true" : "false") << ",\n";
+	out << "    \"hit_pair_mark_sites\": " << (summary.hit_pair_mark_sites ? "true" : "false") << ",\n";
+	out << "    \"direct_4a696b_mutation_adopted\": " << (summary.direct_4a696b_mutation_adopted ? "true" : "false") << ",\n";
+	out << "    \"delegated_4a7605_afterstate_materialized\": " << (summary.delegated_4a7605_afterstate_materialized ? "true" : "false") << ",\n";
+	out << "    \"generated_cell_mutation_replay_complete\": " << (summary.generated_cell_mutation_replay_complete ? "true" : "false") << ",\n";
+	out << "    \"dispatch_4a696b_from_4a79a3_count\": " << summary.dispatch_4a696b_from_4a79a3_count << ",\n";
+	out << "    \"dispatch_4a7605_from_4a79a3_count\": " << summary.dispatch_4a7605_from_4a79a3_count << ",\n";
+	out << "    \"source_4a696b_combined_entries\": " << summary.source_4a696b_combined_entries << ",\n";
+	out << "    \"source_4a696b_source_relation_match_hits\": " << summary.source_4a696b_source_relation_match_hits << ",\n";
+	out << "    \"source_4a696b_candidate_append_hits\": " << summary.source_4a696b_candidate_append_hits << ",\n";
+	out << "    \"source_4a696b_direct_mutation_hits\": " << summary.source_4a696b_direct_mutation_hits << ",\n";
+	out << "    \"source_4a696b_complete_grid_scan_count\": " << summary.source_4a696b_complete_grid_scan_count << ",\n";
+	out << "    \"source_4a696b_zero_owner_relation_pair_match_scan_count\": " << summary.source_4a696b_zero_owner_relation_pair_match_scan_count << ",\n";
+	out << "    \"source_4a696b_scanned_cell_total\": " << summary.source_4a696b_scanned_cell_total << ",\n";
+	out << "    \"source_4a696b_seed_count\": " << summary.source_4a696b_seed_count << ",\n";
+	out << "    \"source_4a696b_byte2_only_or_any_match_total\": " << summary.source_4a696b_byte2_only_or_any_match_total << ",\n";
+	out << "    \"source_4a696b_byte3_only_or_any_match_total\": " << summary.source_4a696b_byte3_only_or_any_match_total << ",\n";
+	out << "    \"trace_4a696b_entry_count\": " << summary.trace_4a696b_entry_count << ",\n";
+	out << "    \"trace_4a7605_entry_count\": " << summary.trace_4a7605_entry_count << ",\n";
+	out << "    \"trace_4a7312_call_count\": " << summary.trace_4a7312_call_count << ",\n";
+	out << "    \"trace_4a7312_vtable_commit_count\": " << summary.trace_4a7312_vtable_commit_count << ",\n";
+	out << "    \"trace_4a696b_direct_mutation_site_hit_count\": " << summary.trace_4a696b_direct_mutation_site_hit_count << ",\n";
+	out << "    \"static_4a7605_endpoint_policy_4a7312_count\": " << summary.static_4a7605_endpoint_policy_4a7312_count << ",\n";
+	out << "    \"static_4a7605_endpoint_writer_4a746b_count\": " << summary.static_4a7605_endpoint_writer_4a746b_count << ",\n";
+	out << "    \"static_4a7605_materializer_4a5e03_count\": " << summary.static_4a7605_materializer_4a5e03_count << ",\n";
+	out << "    \"static_4a7605_record_initializer_49ba89_count\": " << summary.static_4a7605_record_initializer_49ba89_count << ",\n";
+	out << "    \"static_4a7605_coordinate_append_40bb15_count\": " << summary.static_4a7605_coordinate_append_40bb15_count << ",\n";
+	out << "    \"static_4a7605_coordinate_merge_40bb26_count\": " << summary.static_4a7605_coordinate_merge_40bb26_count << ",\n";
+	out << "    \"static_4a7605_direct_generated_cell_28_write_count\": " << summary.static_4a7605_direct_generated_cell_28_write_count << ",\n";
+	out << "    \"adoption_blocker\": \"delegated_0x4a7605_afterstate_plus_native_live_object_vector_records_before_generated_cell_mutation_replay\"\n";
+	out << "  }";
+}
+
 void append_object_vector_commit_mutation_summary_json(std::ostream &out, const ObjectVectorCommitMutationSummaryPlain &summary) {
 	out << "{\n";
 	out << "    \"schema_id\": \"rmg_native_cli_object_vector_commit_mutation_summary_v1\",\n";
@@ -8043,6 +8211,9 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp\": " << (summary.object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_4a79a3_payload_order_ported_plain_cpp\": " << (summary.object_vector_4a79a3_payload_order_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_4a79a3_payload_order_records_match_recovered\": " << (summary.object_vector_4a79a3_payload_order_records_match_recovered ? "true" : "false") << ",\n";
+	out << "    \"object_vector_endpoint_dispatch_exclusion_ported_plain_cpp\": " << (summary.object_vector_endpoint_dispatch_exclusion_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land\": " << (summary.endpoint_dispatch_4a696b_direct_mutation_excluded_supported_land ? "true" : "false") << ",\n";
+	out << "    \"endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending\": " << (summary.endpoint_dispatch_4a7605_delegated_materialization_afterstate_pending ? "true" : "false") << ",\n";
 	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
 	out << "    \"native_object_vector_order_materialized\": " << (summary.native_object_vector_order_materialized ? "true" : "false") << ",\n";
 	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
@@ -8102,6 +8273,11 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"sampled_4a79a3_payload_vtable_0x00540a88_count\": " << summary.sampled_4a79a3_payload_vtable_0x00540a88_count << ",\n";
 	out << "    \"sampled_4a79a3_filter_hits_4a696b\": " << (summary.sampled_4a79a3_filter_hits_4a696b ? "true" : "false") << ",\n";
 	out << "    \"sampled_4a79a3_filter_hits_4a7605\": " << (summary.sampled_4a79a3_filter_hits_4a7605 ? "true" : "false") << ",\n";
+	out << "    \"sampled_endpoint_dispatch_4a696b_entry_count\": " << summary.sampled_endpoint_dispatch_4a696b_entry_count << ",\n";
+	out << "    \"sampled_endpoint_dispatch_4a7605_entry_count\": " << summary.sampled_endpoint_dispatch_4a7605_entry_count << ",\n";
+	out << "    \"sampled_endpoint_dispatch_4a696b_source_relation_match_hits\": " << summary.sampled_endpoint_dispatch_4a696b_source_relation_match_hits << ",\n";
+	out << "    \"sampled_endpoint_dispatch_4a696b_direct_mutation_hits\": " << summary.sampled_endpoint_dispatch_4a696b_direct_mutation_hits << ",\n";
+	out << "    \"sampled_endpoint_dispatch_4a7605_endpoint_policy_count\": " << summary.sampled_endpoint_dispatch_4a7605_endpoint_policy_count << ",\n";
 	out << "    \"adoption_blocker\": \"same_run_4aa354_descriptor_state_plus_4a79a3_generated_cell_mutation_replay_before_0x4a8260\"\n";
 	out << "  }";
 }
@@ -8400,7 +8576,8 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
 	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
 	const ObjectVectorPayloadOrderSummaryPlain object_vector_payload_order_summary = build_object_vector_payload_order_summary(controlled_case);
-	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_commit_mutation_summary, object_vector_payload_order_summary);
+	const ObjectVectorEndpointDispatchSummaryPlain object_vector_endpoint_dispatch_summary = build_object_vector_endpoint_dispatch_summary(controlled_case);
+	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_commit_mutation_summary, object_vector_payload_order_summary, object_vector_endpoint_dispatch_summary);
 	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_prerequisite_contract_summary);
 	std::ostringstream out;
 	out << "{\n";
@@ -8512,6 +8689,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_object_vector_payload_order_summary\": ";
 	append_object_vector_payload_order_summary_json(out, object_vector_payload_order_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_object_vector_endpoint_dispatch_summary\": ";
+	append_object_vector_endpoint_dispatch_summary_json(out, object_vector_endpoint_dispatch_summary);
 	out << ",\n";
 	out << "  \"plain_cpp_object_vector_prerequisite_contract_summary\": ";
 	append_object_vector_prerequisite_contract_summary_json(out, object_vector_prerequisite_contract_summary);
