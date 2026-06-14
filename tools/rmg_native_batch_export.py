@@ -150,7 +150,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     output_dir = output_dir if output_dir.is_absolute() else ROOT / output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     log_file = output_dir / LOG_NAME
-    if not args.phase_snapshot_only and not args.allow_blocked_full_export_probe:
+    if not args.phase_snapshot_only:
         wrapper = {
             "schema_id": "rmg_native_batch_export_python_wrapper_v4",
             "status": "blocked",
@@ -163,8 +163,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
             "error": "full_export_plain_cpp_core_not_available",
             "blocked_reason": "full_native_amap_export_requires_splitting_h3maped_rmg_generation_and_package_writeout_from_godot_dictionary_refcounted_fileaccess_apis",
             "required_mode": "--phase-snapshot-only",
-            "override_for_diagnostics": "--allow-blocked-full-export-probe",
-            "control_policy": "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host",
+            "control_policy": "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host_no_override",
             "godot_process_guard": {
                 "status": "not_checked_full_export_refused_before_spawn",
                 "preexisting_processes": [],
@@ -315,11 +314,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--include-unsupported", action="store_true", help="Export unsupported owner cases too; failures are expected for modes outside strict Small/Medium one-level land.")
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
     parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case private-state snapshots through the standalone CLI and exit successfully without attempting .amap generation.")
-    parser.add_argument(
-        "--allow-blocked-full-export-probe",
-        action="store_true",
-        help="Diagnostic override: spawn the standalone CLI in its currently blocked full-export mode. Normal RMG work on this host must use --phase-snapshot-only.",
-    )
     parser.add_argument("--print-manifest", action="store_true", help="Print wrapper manifest JSON.")
     return parser
 

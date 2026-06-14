@@ -19167,6 +19167,63 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
             ensure(required_text in doc_text, errors, f"Native RMG HoMM3 gate report doc is missing required text: {required_text}")
 
 
+def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
+    wrapper_path = ROOT / "tools" / "rmg_native_batch_export.py"
+    workflow_path = ROOT / "docs" / "rmg-python-validation-workflow.md"
+    plan_path = ROOT / "PLAN.md"
+    progress_path = ROOT / "ops" / "progress.json"
+
+    for path in (wrapper_path, workflow_path, plan_path, progress_path):
+        ensure(path.exists(), errors, f"Missing native RMG no-Godot boundary file: {path.relative_to(ROOT)}")
+
+    if wrapper_path.exists():
+        wrapper_text = wrapper_path.read_text(encoding="utf-8")
+        for required_token in (
+            'choices=["native-cli"]',
+            "if not args.phase_snapshot_only:",
+            "full_export_plain_cpp_core_not_available",
+            "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host_no_override",
+            "godot_processes()",
+            "subprocess.run(",
+            '"--phase-snapshot-only"',
+        ):
+            ensure(required_token in wrapper_text, errors, f"RMG native batch wrapper is missing no-Godot boundary token: {required_token}")
+        for forbidden_token in (
+            "--allow-blocked-full-export-probe",
+            "rmg_native_batch_export_runner",
+            "--headless",
+            "GODOT_BIN",
+        ):
+            ensure(forbidden_token not in wrapper_text, errors, f"RMG native batch wrapper must not expose Godot/full-export probe token: {forbidden_token}")
+
+    if workflow_path.exists():
+        workflow_text = workflow_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Full `.amap`",
+            "export is not a mode on this host yet",
+            "Do not add Godot flags, restore a",
+            "Godot runner, or add a full-export probe override",
+        ):
+            ensure(required_text in workflow_text, errors, f"RMG Python workflow doc is missing no-Godot boundary text: {required_text}")
+        ensure("--allow-blocked-full-export-probe" not in workflow_text, errors, "RMG Python workflow doc still mentions blocked full-export probe override")
+
+    if plan_path.exists():
+        plan_text = plan_path.read_text(encoding="utf-8")
+        ensure(
+            "the wrapper unconditionally refuses full `.amap` export attempts before spawning the CLI" in plan_text,
+            errors,
+            "PLAN.md does not record the unconditional no-Godot full-export refusal",
+        )
+
+    if progress_path.exists():
+        progress_text = progress_path.read_text(encoding="utf-8")
+        ensure(
+            "unconditionally refuses full .amap export attempts before spawning the CLI" in progress_text,
+            errors,
+            "ops/progress.json does not record the unconditional no-Godot full-export refusal",
+        )
+
+
 def validate_random_map_generated_setup_pending_retry_surface(errors: list[str]) -> None:
     for path in (
         RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH,
@@ -22293,6 +22350,7 @@ def main() -> int:
     validate_town_defense_battle_flow(errors)
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
+    validate_native_rmg_no_godot_export_boundary(errors)
     validate_random_map_generated_setup_pending_retry_surface(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
