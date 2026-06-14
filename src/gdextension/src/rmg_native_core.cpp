@@ -808,6 +808,14 @@ struct RelationNormalizationSourceClearSamplePlain {
 	bool projection_triple_minus_one = false;
 };
 
+struct RelationNormalizationDirectionEntryPlain {
+	int32_t index = 0;
+	std::string address;
+	int32_t dx = 0;
+	int32_t dy = 0;
+	bool matches_recovered = false;
+};
+
 struct RelationNormalizationContractSummaryPlain {
 	bool terrain_live_feedback_available = false;
 	bool supported_scope = false;
@@ -817,6 +825,8 @@ struct RelationNormalizationContractSummaryPlain {
 	bool propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp = false;
 	bool propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp = false;
 	bool propagation_source_cell_clear_live_application_pending = true;
+	bool propagation_direction_table_0x5a2658_materialized_plain_cpp = false;
+	bool propagation_direction_table_live_application_pending = true;
 	bool generated_cell_word_0x1c_reset_gate_materialized = false;
 	bool generated_cell_projection_triple_reset_materialized = false;
 	bool static_surface_markers_recovered = false;
@@ -892,6 +902,10 @@ struct RelationNormalizationContractSummaryPlain {
 	int32_t propagation_source_cell_clear_low_word_zero_count = 0;
 	int32_t propagation_source_cell_clear_high_word_preserved_count = 0;
 	int32_t propagation_source_cell_projection_triple_minus_one_sample_count = 0;
+	int32_t propagation_direction_table_entry_count = 0;
+	int32_t propagation_direction_table_unique_entry_count = 0;
+	int32_t propagation_direction_table_cardinal_entry_count = 0;
+	int32_t propagation_direction_table_diagonal_entry_count = 0;
 	std::vector<uint32_t> reset_word_0x10;
 	std::vector<uint32_t> reset_word_0x14;
 	std::vector<uint32_t> reset_word_0x18;
@@ -900,6 +914,7 @@ struct RelationNormalizationContractSummaryPlain {
 	std::vector<uint32_t> reset_word_0x28;
 	std::vector<RelationNormalizationResetSamplePlain> reset_samples;
 	std::vector<RelationNormalizationSourceClearSamplePlain> source_clear_samples;
+	std::vector<RelationNormalizationDirectionEntryPlain> direction_table_entries;
 	std::string working_name = "relation_local_generated_cell_normalizer_and_owner_projection_propagation";
 };
 
@@ -966,6 +981,8 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool relation_normalization_source_cell_clear_0x49a318_primitive_materialized = false;
 	bool relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized = false;
 	bool relation_normalization_source_cell_clear_live_application_pending = true;
+	bool relation_normalization_direction_table_0x5a2658_materialized = false;
+	bool relation_normalization_direction_table_live_application_pending = true;
 	bool relation_normalization_projection_gate_reset_materialized = false;
 	bool relation_normalization_projection_triple_reset_materialized = false;
 	bool relation_normalization_runtime_replay_pending = false;
@@ -2309,6 +2326,13 @@ constexpr double H3MAPED_DIRECTION_Y_TABLE[32] = {
 	-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
 	-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
 	-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+};
+
+constexpr int32_t H3MAPED_RELATION_DIRECTION_DX_0X5A2658_PLAIN[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+constexpr int32_t H3MAPED_RELATION_DIRECTION_DY_0X5A2658_PLAIN[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+constexpr const char *H3MAPED_RELATION_DIRECTION_ADDRESS_0X5A2658_PLAIN[8] = {
+	"0x5a2658", "0x5a2660", "0x5a2668", "0x5a2670",
+	"0x5a2678", "0x5a2680", "0x5a2688", "0x5a2690"
 };
 
 std::vector<RuntimeZoneRecordPlain> runtime_zone_records_plain(const RuntimeZoneSummary &summary) {
@@ -5774,6 +5798,45 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 	summary.static_surface_markers_recovered = summary.static_present_marker_count == summary.static_marker_count
 			&& summary.static_missing_marker_count == 0;
 	summary.r6_semantic_surface_recovered = true;
+	summary.direction_table_entries.reserve(8);
+	for (int32_t index = 0; index < 8; ++index) {
+		RelationNormalizationDirectionEntryPlain entry;
+		entry.index = index;
+		entry.address = H3MAPED_RELATION_DIRECTION_ADDRESS_0X5A2658_PLAIN[index];
+		entry.dx = H3MAPED_RELATION_DIRECTION_DX_0X5A2658_PLAIN[index];
+		entry.dy = H3MAPED_RELATION_DIRECTION_DY_0X5A2658_PLAIN[index];
+		entry.matches_recovered =
+				!entry.address.empty()
+				&& entry.dx >= -1
+				&& entry.dx <= 1
+				&& entry.dy >= -1
+				&& entry.dy <= 1
+				&& !(entry.dx == 0 && entry.dy == 0);
+		if (entry.matches_recovered) {
+			bool duplicate = false;
+			for (const RelationNormalizationDirectionEntryPlain &existing : summary.direction_table_entries) {
+				if (existing.dx == entry.dx && existing.dy == entry.dy) {
+					duplicate = true;
+					break;
+				}
+			}
+			if (!duplicate) {
+				summary.propagation_direction_table_unique_entry_count += 1;
+			}
+			if (entry.dx == 0 || entry.dy == 0) {
+				summary.propagation_direction_table_cardinal_entry_count += 1;
+			} else {
+				summary.propagation_direction_table_diagonal_entry_count += 1;
+			}
+		}
+		summary.direction_table_entries.push_back(entry);
+	}
+	summary.propagation_direction_table_entry_count = int32_t(summary.direction_table_entries.size());
+	summary.propagation_direction_table_0x5a2658_materialized_plain_cpp =
+			summary.propagation_direction_table_entry_count == 8
+			&& summary.propagation_direction_table_unique_entry_count == 8
+			&& summary.propagation_direction_table_cardinal_entry_count == 4
+			&& summary.propagation_direction_table_diagonal_entry_count == 4;
 	const bool reset_source_words_available =
 			summary.cell_count > 0
 			&& terrain_summary.generated_cell_word_0x20.size() == size_t(summary.cell_count)
@@ -6514,6 +6577,10 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 			relation_normalization_summary.propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp;
 	summary.relation_normalization_source_cell_clear_live_application_pending =
 			relation_normalization_summary.propagation_source_cell_clear_live_application_pending;
+	summary.relation_normalization_direction_table_0x5a2658_materialized =
+			relation_normalization_summary.propagation_direction_table_0x5a2658_materialized_plain_cpp;
+	summary.relation_normalization_direction_table_live_application_pending =
+			relation_normalization_summary.propagation_direction_table_live_application_pending;
 	summary.relation_normalization_projection_gate_reset_materialized =
 			relation_normalization_summary.generated_cell_word_0x1c_reset_gate_materialized;
 	summary.relation_normalization_projection_triple_reset_materialized =
@@ -8230,6 +8297,8 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp\": " << (summary.propagation_source_cell_clear_0x49a318_primitive_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp\": " << (summary.propagation_source_cell_projection_triple_minus_one_primitive_materialized_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"propagation_source_cell_clear_live_application_pending\": " << (summary.propagation_source_cell_clear_live_application_pending ? "true" : "false") << ",\n";
+	out << "    \"propagation_direction_table_0x5a2658_materialized_plain_cpp\": " << (summary.propagation_direction_table_0x5a2658_materialized_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"propagation_direction_table_live_application_pending\": " << (summary.propagation_direction_table_live_application_pending ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_word_0x1c_reset_gate_materialized\": " << (summary.generated_cell_word_0x1c_reset_gate_materialized ? "true" : "false") << ",\n";
 	out << "    \"generated_cell_projection_triple_reset_materialized\": " << (summary.generated_cell_projection_triple_reset_materialized ? "true" : "false") << ",\n";
 	out << "    \"static_surface_markers_recovered\": " << (summary.static_surface_markers_recovered ? "true" : "false") << ",\n";
@@ -8293,6 +8362,10 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"propagation_source_cell_clear_low_word_zero_count\": " << summary.propagation_source_cell_clear_low_word_zero_count << ",\n";
 	out << "    \"propagation_source_cell_clear_high_word_preserved_count\": " << summary.propagation_source_cell_clear_high_word_preserved_count << ",\n";
 	out << "    \"propagation_source_cell_projection_triple_minus_one_sample_count\": " << summary.propagation_source_cell_projection_triple_minus_one_sample_count << ",\n";
+	out << "    \"propagation_direction_table_entry_count\": " << summary.propagation_direction_table_entry_count << ",\n";
+	out << "    \"propagation_direction_table_unique_entry_count\": " << summary.propagation_direction_table_unique_entry_count << ",\n";
+	out << "    \"propagation_direction_table_cardinal_entry_count\": " << summary.propagation_direction_table_cardinal_entry_count << ",\n";
+	out << "    \"propagation_direction_table_diagonal_entry_count\": " << summary.propagation_direction_table_diagonal_entry_count << ",\n";
 	out << "    \"static_marker_count\": " << summary.static_marker_count << ",\n";
 	out << "    \"static_present_marker_count\": " << summary.static_present_marker_count << ",\n";
 	out << "    \"static_missing_marker_count\": " << summary.static_missing_marker_count << ",\n";
@@ -8311,6 +8384,7 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"recovered_state_surface\": {\n";
 	out << "      \"0x4a5767\": \"resets generated cells, walks generator+0x10e4..+0x10e8 relation vector, filters owner byte2, terrain, object-reference occupancy, bit27, and 0x49a1d8, calls 0x49a932, 0x49a318, and 0x4a5a23\",\n";
 	out << "      \"0x49a318\": \"propagates generated-cell +0x1c, +0x20, +0x28, and +0x10/+0x14/+0x18 through direction offsets and descriptor policy table 0x57c648\",\n";
+	out << "      \"0x5a2658\": \"8-neighbor integer direction table consumed by 0x49a318, initialized by 0x499db3..0x499e20\",\n";
 	out << "      \"generated_cell_0x20\": \"source-owner relation index plus projection distance or local score\",\n";
 	out << "      \"generated_cell_0x1c\": \"projection/local gate word rewritten by reset and propagation\",\n";
 	out << "      \"projection_triple\": \"generated-cell +0x10/+0x14/+0x18 coordinate triple\"\n";
@@ -8356,6 +8430,21 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 		out << "\"low_word_cleared\":" << (sample.low_word_cleared ? "true" : "false") << ",";
 		out << "\"high_word_preserved\":" << (sample.high_word_preserved ? "true" : "false") << ",";
 		out << "\"projection_triple_minus_one\":" << (sample.projection_triple_minus_one ? "true" : "false");
+		out << "}";
+	}
+	out << "],\n";
+	out << "    \"direction_table_entries\": [";
+	for (size_t index = 0; index < summary.direction_table_entries.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RelationNormalizationDirectionEntryPlain &entry = summary.direction_table_entries[index];
+		out << "{";
+		out << "\"index\":" << entry.index << ",";
+		out << "\"address\":\"" << json_escape(entry.address) << "\",";
+		out << "\"dx\":" << entry.dx << ",";
+		out << "\"dy\":" << entry.dy << ",";
+		out << "\"matches_recovered\":" << (entry.matches_recovered ? "true" : "false");
 		out << "}";
 	}
 	out << "],\n";
@@ -8779,6 +8868,8 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"relation_normalization_source_cell_clear_0x49a318_primitive_materialized\": " << (summary.relation_normalization_source_cell_clear_0x49a318_primitive_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized\": " << (summary.relation_normalization_source_cell_projection_triple_minus_one_primitive_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_source_cell_clear_live_application_pending\": " << (summary.relation_normalization_source_cell_clear_live_application_pending ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_direction_table_0x5a2658_materialized\": " << (summary.relation_normalization_direction_table_0x5a2658_materialized ? "true" : "false") << ",\n";
+	out << "    \"relation_normalization_direction_table_live_application_pending\": " << (summary.relation_normalization_direction_table_live_application_pending ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_projection_gate_reset_materialized\": " << (summary.relation_normalization_projection_gate_reset_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_projection_triple_reset_materialized\": " << (summary.relation_normalization_projection_triple_reset_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_normalization_runtime_replay_pending\": " << (summary.relation_normalization_runtime_replay_pending ? "true" : "false") << ",\n";

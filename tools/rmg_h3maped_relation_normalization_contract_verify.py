@@ -77,6 +77,9 @@ def verify(
     source_clear_samples = native.get("source_clear_samples")
     if not isinstance(source_clear_samples, list):
         raise ValueError("native relation summary missing source_clear_samples")
+    direction_table_entries = native.get("direction_table_entries")
+    if not isinstance(direction_table_entries, list):
+        raise ValueError("native relation summary missing direction_table_entries")
     reset_sample_checks = []
     for sample in reset_samples:
         if not isinstance(sample, dict):
@@ -104,6 +107,29 @@ def verify(
             and sample.get("low_word_cleared") is True
             and sample.get("high_word_preserved") is True
             and sample.get("projection_triple_minus_one") is True
+        )
+    expected_direction_table = [
+        (0, "0x5a2658", 1, 0),
+        (1, "0x5a2660", 1, 1),
+        (2, "0x5a2668", 0, 1),
+        (3, "0x5a2670", -1, 1),
+        (4, "0x5a2678", -1, 0),
+        (5, "0x5a2680", -1, -1),
+        (6, "0x5a2688", 0, -1),
+        (7, "0x5a2690", 1, -1),
+    ]
+    direction_table_checks = []
+    for expected, entry in zip(expected_direction_table, direction_table_entries):
+        if not isinstance(entry, dict):
+            direction_table_checks.append(False)
+            continue
+        expected_index, expected_address, expected_dx, expected_dy = expected
+        direction_table_checks.append(
+            int(entry.get("index", -1)) == expected_index
+            and entry.get("address") == expected_address
+            and int(entry.get("dx", 99)) == expected_dx
+            and int(entry.get("dy", 99)) == expected_dy
+            and entry.get("matches_recovered") is True
         )
 
     normalizer_count, normalizer_present = _file_marker_counts(relation_source, "normalizer_0x4a5767")
@@ -195,6 +221,33 @@ def verify(
             "propagation_source_cell_clear_live_application_pending"
         )
         is True,
+        "native_49a318_direction_table_materialized": native.get(
+            "propagation_direction_table_0x5a2658_materialized_plain_cpp"
+        )
+        is True,
+        "native_keeps_49a318_direction_table_live_application_pending": native.get(
+            "propagation_direction_table_live_application_pending"
+        )
+        is True,
+        "native_49a318_direction_table_entry_count": int(
+            native.get("propagation_direction_table_entry_count", -1)
+        )
+        == 8,
+        "native_49a318_direction_table_unique_entry_count": int(
+            native.get("propagation_direction_table_unique_entry_count", -1)
+        )
+        == 8,
+        "native_49a318_direction_table_cardinal_entry_count": int(
+            native.get("propagation_direction_table_cardinal_entry_count", -1)
+        )
+        == 4,
+        "native_49a318_direction_table_diagonal_entry_count": int(
+            native.get("propagation_direction_table_diagonal_entry_count", -1)
+        )
+        == 4,
+        "native_49a318_direction_table_entries_present": len(direction_table_entries) == 8,
+        "native_49a318_direction_table_entries_match_recovered": all(direction_table_checks)
+        and len(direction_table_checks) == 8,
         "native_reset_projection_gate_materialized": native.get(
             "generated_cell_word_0x1c_reset_gate_materialized"
         )
@@ -349,6 +402,14 @@ def verify(
         is True,
         "prerequisite_keeps_49a318_source_cell_clear_live_application_pending": prerequisite.get(
             "relation_normalization_source_cell_clear_live_application_pending"
+        )
+        is True,
+        "prerequisite_exposes_49a318_direction_table": prerequisite.get(
+            "relation_normalization_direction_table_0x5a2658_materialized"
+        )
+        is True,
+        "prerequisite_keeps_49a318_direction_table_live_application_pending": prerequisite.get(
+            "relation_normalization_direction_table_live_application_pending"
         )
         is True,
         "prerequisite_exposes_projection_gate_reset": prerequisite.get(
@@ -524,6 +585,15 @@ def verify(
         ),
         "native_49a318_source_cell_clear_live_application_pending": native.get(
             "propagation_source_cell_clear_live_application_pending"
+        ),
+        "native_49a318_direction_table_materialized": native.get(
+            "propagation_direction_table_0x5a2658_materialized_plain_cpp"
+        ),
+        "native_49a318_direction_table_live_application_pending": native.get(
+            "propagation_direction_table_live_application_pending"
+        ),
+        "native_49a318_direction_table_entry_count": native.get(
+            "propagation_direction_table_entry_count"
         ),
         "native_reset_cell_count": native.get("reset_cell_count"),
         "native_reset_word_0x1c_0x7d007d00_count": native.get(
