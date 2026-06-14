@@ -80,6 +80,21 @@ split is incomplete. A plain `python3 tools/rmg_native_batch_export.py --out
 `full_export_plain_cpp_core_not_available`. Do not add Godot flags, restore a
 Godot runner, or add a full-export probe override for parity work on this host.
 
+When a concrete native map artifact is needed on this memory-constrained host,
+use the standalone JSON artifact mode instead of Godot:
+
+```bash
+python3 tools/rmg_native_batch_export.py \
+  --out .artifacts/rmg_native_plain_cpp_map_probe \
+  --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 \
+  --native-map-json-only --print-manifest
+```
+
+This writes `<case>.native_map.json` through the native CLI and exits
+successfully without Godot. The artifact embeds the current plain-C++ private
+state snapshot and is useful for parity inspection; it is not a playable
+`.amap` package until the Godot-bound package writer is split.
+
 For checkpoint-2 phase snapshots, controlled cases may include the recovered
 setup `+0x44` as the optional ninth field:
 

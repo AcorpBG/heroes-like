@@ -124,39 +124,40 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     log_file = output_dir / LOG_NAME
     if not args.phase_snapshot_only:
-        wrapper = {
-            "schema_id": "rmg_native_batch_export_python_wrapper_v4",
-            "status": "blocked",
-            "runner": "standalone_native_cli_no_godot",
-            "native_cli": str(native_cli),
-            "godot_process_started": False,
-            "output_dir": str(output_dir),
-            "log_path": str(log_file),
-            "returncode": None,
-            "error": "full_export_plain_cpp_core_not_available",
-            "blocked_reason": "full_native_amap_export_requires_splitting_h3maped_rmg_generation_and_package_writeout_from_godot_dictionary_refcounted_fileaccess_apis",
-            "required_mode": "--phase-snapshot-only",
-            "control_policy": "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host_no_override",
-            "godot_process_guard": {
-                "status": "not_checked_full_export_refused_before_spawn",
-                "preexisting_processes": [],
-                "post_run_processes": [],
-            },
-        }
-        wrapper_path = output_dir / "wrapper_manifest.json"
-        with wrapper_path.open("w", encoding="utf-8") as handle:
-            json.dump(wrapper, handle, indent=2, sort_keys=True)
-        print(
-            "RMG_NATIVE_BATCH_EXPORT_PY status=blocked error=full_export_plain_cpp_core_not_available "
-            f"output_dir={output_dir} required_mode=--phase-snapshot-only log={log_file}",
-            file=sys.stderr,
-        )
-        return 1
+        if not args.native_map_json_only:
+            wrapper = {
+                "schema_id": "rmg_native_batch_export_python_wrapper_v5",
+                "status": "blocked",
+                "runner": "standalone_native_cli_no_godot",
+                "native_cli": str(native_cli),
+                "godot_process_started": False,
+                "output_dir": str(output_dir),
+                "log_path": str(log_file),
+                "returncode": None,
+                "error": "full_export_plain_cpp_core_not_available",
+                "blocked_reason": "full_native_amap_export_requires_splitting_h3maped_rmg_generation_and_package_writeout_from_godot_dictionary_refcounted_fileaccess_apis",
+                "required_mode": "--phase-snapshot-only or --native-map-json-only",
+                "control_policy": "python_wrapper_refuses_full_export_before_spawning_native_cli_on_memory_constrained_host_no_override",
+                "godot_process_guard": {
+                    "status": "not_checked_full_export_refused_before_spawn",
+                    "preexisting_processes": [],
+                    "post_run_processes": [],
+                },
+            }
+            wrapper_path = output_dir / "wrapper_manifest.json"
+            with wrapper_path.open("w", encoding="utf-8") as handle:
+                json.dump(wrapper, handle, indent=2, sort_keys=True)
+            print(
+                "RMG_NATIVE_BATCH_EXPORT_PY status=blocked error=full_export_plain_cpp_core_not_available "
+                f"output_dir={output_dir} required_mode=--phase-snapshot-only_or_--native-map-json-only log={log_file}",
+                file=sys.stderr,
+            )
+            return 1
 
     preexisting_godot = godot_processes()
     if preexisting_godot:
         wrapper = {
-            "schema_id": "rmg_native_batch_export_python_wrapper_v4",
+            "schema_id": "rmg_native_batch_export_python_wrapper_v5",
             "status": "failed",
             "runner": "standalone_native_cli_no_godot",
             "native_cli": str(native_cli),
@@ -201,8 +202,12 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         command.append("--include-unsupported")
     if args.phase_snapshot_only:
         command.append("--phase-snapshot-only")
+    if args.native_map_json_only:
+        command.append("--native-map-json-only")
     if args.emit_phase_snapshot:
         command.append("--emit-phase-snapshot")
+    if args.emit_native_map_json:
+        command.append("--emit-native-map-json")
     if args.print_manifest:
         command.append("--print-manifest")
 
@@ -218,10 +223,10 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
 
     manifest = load_manifest(output_dir)
     post_run_godot = godot_processes()
-    pass_statuses = {"exported", "phase_snapshot_exported"}
+    pass_statuses = {"exported", "phase_snapshot_exported", "native_map_json_exported"}
     base_status = "pass" if process.returncode == 0 and manifest.get("status") in pass_statuses else "blocked"
     wrapper = {
-        "schema_id": "rmg_native_batch_export_python_wrapper_v4",
+        "schema_id": "rmg_native_batch_export_python_wrapper_v5",
         "status": "failed" if post_run_godot else base_status,
         "runner": "standalone_native_cli_no_godot",
         "native_cli": str(native_cli),
@@ -238,10 +243,14 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         "unsupported_count": manifest.get("unsupported_count", 0),
         "skipped_count": manifest.get("skipped_count", 0),
         "phase_snapshot_only": manifest.get("phase_snapshot_only", False),
+        "native_map_json_only": manifest.get("native_map_json_only", False),
+        "native_map_json_exported_count": manifest.get("native_map_json_exported_count", 0),
+        "native_map_json_failed_count": manifest.get("native_map_json_failed_count", 0),
         "phase_snapshot_exported_count": manifest.get("phase_snapshot_exported_count", 0),
         "phase_snapshot_failed_count": manifest.get("phase_snapshot_failed_count", 0),
         "generation_core_stage": manifest.get("generation_core_stage", ""),
         "phase_snapshot_schema_id": manifest.get("phase_snapshot_schema_id", ""),
+        "native_map_json_schema_id": manifest.get("native_map_json_schema_id", ""),
         "control_policy": "python_invokes_standalone_native_cli_no_godot_and_refuses_when_godot_is_already_running",
         "case_scope": manifest.get("case_scope", ""),
         "godot_process_guard": {
@@ -256,7 +265,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
 
     print(
         "RMG_NATIVE_BATCH_EXPORT_PY status={status} output_dir={output_dir} "
-        "exported={exported_count} phase_snapshots={phase_snapshot_exported_count} "
+        "exported={exported_count} native_map_json={native_map_json_exported_count} phase_snapshots={phase_snapshot_exported_count} "
         "failed={failed_count} log={log_path}".format(**wrapper)
     )
     if args.print_manifest:
@@ -287,6 +296,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--include-unsupported", action="store_true", help="Export unsupported owner cases too; failures are expected for modes outside strict Small/Medium one-level land.")
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
     parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case private-state snapshots through the standalone CLI and exit successfully without attempting .amap generation.")
+    parser.add_argument("--emit-native-map-json", action="store_true", help="Ask the native runner to write per-case plain-C++ native map JSON artifacts without Godot.")
+    parser.add_argument("--native-map-json-only", action="store_true", help="Write supported controlled-case plain-C++ native map JSON artifacts through the standalone CLI and exit successfully without attempting .amap generation.")
     parser.add_argument("--print-manifest", action="store_true", help="Print wrapper manifest JSON.")
     return parser
 
