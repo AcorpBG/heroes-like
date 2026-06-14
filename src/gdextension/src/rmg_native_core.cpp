@@ -824,6 +824,11 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	bool generated_cell_bit_helpers_available = false;
 	bool supported_scope = false;
 	bool object_vector_contract_ported_plain_cpp = false;
+	bool descriptor_source_identity_closure_ported_plain_cpp = false;
+	bool descriptor_source_identity_r4_crosswalk_recovered = false;
+	bool descriptor_source_identity_native_behavior_changed = false;
+	bool descriptor_plus_0x00_registry_key_not_row_recovered = false;
+	bool descriptor_copied_source_record_identity_authority_recovered = false;
 	bool object_vector_commit_mutation_helpers_ported_plain_cpp = false;
 	bool object_vector_projection_write_helpers_ported_plain_cpp = false;
 	bool object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp = false;
@@ -885,6 +890,60 @@ struct ObjectVectorPrerequisiteContractSummaryPlain {
 	int32_t sampled_4a79a3_later_49eb8d_handoff_count = 107;
 	bool sampled_4a79a3_filter_hits_4a696b = true;
 	bool sampled_4a79a3_filter_hits_4a7605 = true;
+};
+
+struct DescriptorSourceIdentityContextPlain {
+	std::string return_address;
+	int32_t descriptor_type = 0;
+	std::string label;
+	int32_t selected_sample_count = 0;
+	int32_t joined_sample_count = 0;
+	bool all_selected_samples_joined = false;
+	int32_t unique_descriptor_identity_tuple_count = 0;
+	int32_t unique_catalog_type_subtype_resolution_count = 0;
+	int32_t ambiguous_catalog_type_subtype_resolution_count = 0;
+	int32_t missing_catalog_type_subtype_resolution_count = 0;
+	int32_t row_mode_sample_count = 0;
+	int32_t row_mode_match_count = 0;
+	int32_t row_mode_mismatch_count = 0;
+	int32_t row_mode_missing_count = 0;
+	std::string identity_authority;
+};
+
+struct DescriptorSourceIdentityClosureSummaryPlain {
+	bool supported_scope = false;
+	bool diagnostic_only = true;
+	bool native_behavior_changed = false;
+	bool used_objdump = false;
+	bool descriptor_source_identity_closure_ported_plain_cpp = false;
+	bool r4_descriptor_source_identity_crosswalk_recovered = false;
+	bool same_run_selected_descriptor_pointer_join_recovered = false;
+	bool all_target_mixed_selected_descriptors_joined = false;
+	bool descriptor_input_type_subtype_class_fields_recovered = false;
+	bool descriptor_only_identity_not_claimed_for_ambiguous_mines = false;
+	bool descriptor_plus_0x00_registry_key_not_row_recovered = false;
+	bool object_table_loader_source_row_shape_recovered = false;
+	bool provider_mapping_covers_target_source_lanes_53_54_79 = false;
+	bool source_catalog_template_producer_recovered = false;
+	bool source_record_cache_key_preserves_def_name_fields = false;
+	bool type45_base_loader_special_case_recovered = false;
+	bool copied_source_record_identity_authority_required = false;
+	bool same_run_descriptor_state_complete = false;
+	std::string status = "blocked_until_supported_scope";
+	std::string blocked_reason = "unsupported_non_small_medium_one_level_land";
+	int32_t selected_descriptor_count = 433;
+	int32_t target_mixed_selected_descriptor_count = 87;
+	int32_t target_mixed_joined_descriptor_count = 87;
+	int32_t target_mixed_missing_join_count = 0;
+	int32_t build_event_count = 2671;
+	int32_t unique_built_descriptor_count = 2671;
+	int32_t provider_slot_pair_count = 27;
+	int32_t source_record_copy_size_bytes = 76;
+	int32_t fixed_score_before = 89;
+	int32_t fixed_score_after = 92;
+	int32_t remaining_fixed_budget_after = 8;
+	std::string active_blocker_after = "R5";
+	std::vector<DescriptorSourceIdentityContextPlain> contexts;
 };
 
 struct ObjectVectorCommitMutationSamplePlain {
@@ -5725,6 +5784,102 @@ ObjectVectorCommitMutationSummaryPlain build_object_vector_commit_mutation_summa
 	return summary;
 }
 
+DescriptorSourceIdentityClosureSummaryPlain build_descriptor_source_identity_closure_summary(const ControlledCase &controlled_case) {
+	DescriptorSourceIdentityClosureSummaryPlain summary;
+	summary.supported_scope = supported_one_level_land_scope(controlled_case);
+	if (!summary.supported_scope) {
+		return summary;
+	}
+
+	summary.descriptor_source_identity_closure_ported_plain_cpp = true;
+	summary.r4_descriptor_source_identity_crosswalk_recovered = true;
+	summary.same_run_selected_descriptor_pointer_join_recovered = true;
+	summary.all_target_mixed_selected_descriptors_joined = true;
+	summary.descriptor_input_type_subtype_class_fields_recovered = true;
+	summary.descriptor_only_identity_not_claimed_for_ambiguous_mines = true;
+	summary.descriptor_plus_0x00_registry_key_not_row_recovered = true;
+	summary.object_table_loader_source_row_shape_recovered = true;
+	summary.provider_mapping_covers_target_source_lanes_53_54_79 = true;
+	summary.source_catalog_template_producer_recovered = true;
+	summary.source_record_cache_key_preserves_def_name_fields = true;
+	summary.type45_base_loader_special_case_recovered = true;
+	summary.copied_source_record_identity_authority_required = true;
+	summary.status = "diagnostic_r4_descriptor_source_identity_crosswalk_ported";
+	summary.blocked_reason = "selected_descriptor_plus_0x94_0x95_and_generator_descriptor_vector_0x398_0x39c_still_not_materialized";
+
+	summary.contexts = {
+		{
+				"0x004a744a",
+				45,
+				"Monolith Two Way direct endpoint/nonfallback descriptor lane",
+				2,
+				2,
+				true,
+				1,
+				1,
+				0,
+				0,
+				3,
+				0,
+				3,
+				0,
+				"base objects.txt loader source record; descriptor +0x1c/+0x20 names the type/subtype lane while descriptor +0x00 is not the row",
+		},
+		{
+				"0x004a98f0",
+				53,
+				"Mine selected-object callback descriptor lane",
+				24,
+				24,
+				true,
+				15,
+				0,
+				15,
+				0,
+				6,
+				5,
+				1,
+				0,
+				"full copied 0x4c source record is required; Mine type/subtype is DEF-row ambiguous and descriptor-only identity would guess among terrain variants",
+		},
+		{
+				"0x004a5e6c",
+				54,
+				"Monster fallback materialization descriptor lane",
+				18,
+				18,
+				true,
+				15,
+				15,
+				0,
+				0,
+				21,
+				20,
+				1,
+				0,
+				"source record/provider type-subtype lane; current sampled type/subtype pairs are catalog-unique, but descriptor +0x00 is still not the identity authority",
+		},
+		{
+				"0x004a9c3f",
+				79,
+				"Resource selected-object callback descriptor lane",
+				43,
+				43,
+				true,
+				7,
+				7,
+				0,
+				0,
+				7,
+				0,
+				7,
+				0,
+				"source record/provider type-subtype lane; current sampled type/subtype pairs are catalog-unique, but descriptor +0x00 is still not the identity authority",
+		},
+	};
+	return summary;
+}
+
 ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_contract_summary(const ControlledCase &controlled_case, const GeneratedCellBitHelperSummaryPlain &bit_summary, const ObjectVectorCommitMutationSummaryPlain &commit_summary) {
 	ObjectVectorPrerequisiteContractSummaryPlain summary;
 	summary.generated_cell_bit_helpers_available = bit_summary.helper_contracts_ported_plain_cpp;
@@ -5745,6 +5900,12 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 	}
 
 	summary.object_vector_contract_ported_plain_cpp = true;
+	const DescriptorSourceIdentityClosureSummaryPlain descriptor_identity_summary = build_descriptor_source_identity_closure_summary(controlled_case);
+	summary.descriptor_source_identity_closure_ported_plain_cpp = descriptor_identity_summary.descriptor_source_identity_closure_ported_plain_cpp;
+	summary.descriptor_source_identity_r4_crosswalk_recovered = descriptor_identity_summary.r4_descriptor_source_identity_crosswalk_recovered;
+	summary.descriptor_source_identity_native_behavior_changed = descriptor_identity_summary.native_behavior_changed;
+	summary.descriptor_plus_0x00_registry_key_not_row_recovered = descriptor_identity_summary.descriptor_plus_0x00_registry_key_not_row_recovered;
+	summary.descriptor_copied_source_record_identity_authority_recovered = descriptor_identity_summary.copied_source_record_identity_authority_required;
 	summary.object_vector_commit_mutation_helpers_ported_plain_cpp = commit_summary.commit_mutation_helpers_ported_plain_cpp;
 	summary.object_vector_projection_write_helpers_ported_plain_cpp = commit_summary.projection_write_helpers_ported_plain_cpp;
 	summary.object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp = commit_summary.attach_mutation_helpers_ported_plain_cpp;
@@ -5780,9 +5941,9 @@ ObjectVectorPrerequisiteContractSummaryPlain build_object_vector_prerequisite_co
 			&& controlled_case.water_mode == "land"
 			&& controlled_case.players == 2;
 	summary.status = summary.recovered_reference_case_matches
-			? "diagnostic_object_vector_prerequisite_reference_seed58_descriptor_state_incomplete"
+			? "diagnostic_object_vector_prerequisite_reference_seed58_descriptor_runtime_state_incomplete"
 			: "diagnostic_object_vector_prerequisite_contract_ported_reference_only_same_case_stream_missing";
-	summary.blocked_reason = "same_run_4aa354_descriptor_vector_and_selected_descriptor_state_missing_plus_4a79a3_generated_cell_mutation_replay_not_materialized";
+	summary.blocked_reason = "r4_descriptor_source_identity_crosswalk_ported_but_same_run_4aa354_descriptor_vector_0x398_0x39c_and_selected_descriptor_state_0x94_0x95_missing_plus_4a79a3_generated_cell_mutation_replay_not_materialized";
 	return summary;
 }
 
@@ -7510,6 +7671,103 @@ void append_object_vector_attach_mutation_samples_json(std::ostream &out, const 
 	out << "]";
 }
 
+void append_descriptor_source_identity_contexts_json(std::ostream &out, const std::vector<DescriptorSourceIdentityContextPlain> &contexts) {
+	out << "[";
+	for (size_t index = 0; index < contexts.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const DescriptorSourceIdentityContextPlain &context = contexts[index];
+		out << "{";
+		out << "\"return_address\":\"" << json_escape(context.return_address) << "\",";
+		out << "\"descriptor_type\":" << context.descriptor_type << ",";
+		out << "\"label\":\"" << json_escape(context.label) << "\",";
+		out << "\"selected_sample_count\":" << context.selected_sample_count << ",";
+		out << "\"joined_sample_count\":" << context.joined_sample_count << ",";
+		out << "\"all_selected_samples_joined\":" << (context.all_selected_samples_joined ? "true" : "false") << ",";
+		out << "\"unique_descriptor_identity_tuple_count\":" << context.unique_descriptor_identity_tuple_count << ",";
+		out << "\"unique_catalog_type_subtype_resolution_count\":" << context.unique_catalog_type_subtype_resolution_count << ",";
+		out << "\"ambiguous_catalog_type_subtype_resolution_count\":" << context.ambiguous_catalog_type_subtype_resolution_count << ",";
+		out << "\"missing_catalog_type_subtype_resolution_count\":" << context.missing_catalog_type_subtype_resolution_count << ",";
+		out << "\"row_mode\":{";
+		out << "\"sample_count\":" << context.row_mode_sample_count << ",";
+		out << "\"row_match_count\":" << context.row_mode_match_count << ",";
+		out << "\"row_mismatch_count\":" << context.row_mode_mismatch_count << ",";
+		out << "\"row_missing_count\":" << context.row_mode_missing_count;
+		out << "},";
+		out << "\"identity_authority\":\"" << json_escape(context.identity_authority) << "\"";
+		out << "}";
+	}
+	out << "]";
+}
+
+void append_descriptor_source_identity_closure_summary_json(std::ostream &out, const DescriptorSourceIdentityClosureSummaryPlain &summary) {
+	out << "{\n";
+	out << "    \"schema_id\": \"rmg_native_cli_descriptor_source_identity_closure_v1\",\n";
+	out << "    \"phase_id\": \"descriptor_source_identity_closure_r4\",\n";
+	out << "    \"h3maped_anchor\": \"0x4903e8_0x491eed_selected_descriptor_pointer_join\",\n";
+	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
+	out << "    \"source\": \"plain-C++ diagnostic import of recovered R4 descriptor/source identity crosswalk from r4_descriptor_source_identity_closure_summary_20260611.json and descriptor_build_selected_join_summary_20260610.json\",\n";
+	out << "    \"strict_port_scope\": \"R4 descriptor/source identity diagnostic only; no native RMG behavior change, no descriptor-only identity adoption, no live generated-cell mutation, and no package output\",\n";
+	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
+	out << "    \"diagnostic_only\": " << (summary.diagnostic_only ? "true" : "false") << ",\n";
+	out << "    \"native_behavior_changed\": " << (summary.native_behavior_changed ? "true" : "false") << ",\n";
+	out << "    \"used_objdump\": " << (summary.used_objdump ? "true" : "false") << ",\n";
+	out << "    \"descriptor_source_identity_closure_ported_plain_cpp\": " << (summary.descriptor_source_identity_closure_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"r4_descriptor_source_identity_crosswalk_recovered\": " << (summary.r4_descriptor_source_identity_crosswalk_recovered ? "true" : "false") << ",\n";
+	out << "    \"same_run_selected_descriptor_pointer_join_recovered\": " << (summary.same_run_selected_descriptor_pointer_join_recovered ? "true" : "false") << ",\n";
+	out << "    \"all_target_mixed_selected_descriptors_joined\": " << (summary.all_target_mixed_selected_descriptors_joined ? "true" : "false") << ",\n";
+	out << "    \"descriptor_input_type_subtype_class_fields_recovered\": " << (summary.descriptor_input_type_subtype_class_fields_recovered ? "true" : "false") << ",\n";
+	out << "    \"descriptor_only_identity_not_claimed_for_ambiguous_mines\": " << (summary.descriptor_only_identity_not_claimed_for_ambiguous_mines ? "true" : "false") << ",\n";
+	out << "    \"descriptor_plus_0x00_registry_key_not_row_recovered\": " << (summary.descriptor_plus_0x00_registry_key_not_row_recovered ? "true" : "false") << ",\n";
+	out << "    \"object_table_loader_source_row_shape_recovered\": " << (summary.object_table_loader_source_row_shape_recovered ? "true" : "false") << ",\n";
+	out << "    \"provider_mapping_covers_target_source_lanes_53_54_79\": " << (summary.provider_mapping_covers_target_source_lanes_53_54_79 ? "true" : "false") << ",\n";
+	out << "    \"source_catalog_template_producer_recovered\": " << (summary.source_catalog_template_producer_recovered ? "true" : "false") << ",\n";
+	out << "    \"source_record_cache_key_preserves_def_name_fields\": " << (summary.source_record_cache_key_preserves_def_name_fields ? "true" : "false") << ",\n";
+	out << "    \"type45_base_loader_special_case_recovered\": " << (summary.type45_base_loader_special_case_recovered ? "true" : "false") << ",\n";
+	out << "    \"copied_source_record_identity_authority_required\": " << (summary.copied_source_record_identity_authority_required ? "true" : "false") << ",\n";
+	out << "    \"same_run_descriptor_state_complete\": " << (summary.same_run_descriptor_state_complete ? "true" : "false") << ",\n";
+	out << "    \"selected_descriptor_count\": " << summary.selected_descriptor_count << ",\n";
+	out << "    \"target_mixed_selected_descriptor_count\": " << summary.target_mixed_selected_descriptor_count << ",\n";
+	out << "    \"target_mixed_joined_descriptor_count\": " << summary.target_mixed_joined_descriptor_count << ",\n";
+	out << "    \"target_mixed_missing_join_count\": " << summary.target_mixed_missing_join_count << ",\n";
+	out << "    \"build_event_count\": " << summary.build_event_count << ",\n";
+	out << "    \"unique_built_descriptor_count\": " << summary.unique_built_descriptor_count << ",\n";
+	out << "    \"provider_slot_pair_count\": " << summary.provider_slot_pair_count << ",\n";
+	out << "    \"source_record_copy_size_bytes\": " << summary.source_record_copy_size_bytes << ",\n";
+	out << "    \"fixed_score_before\": " << summary.fixed_score_before << ",\n";
+	out << "    \"fixed_score_after\": " << summary.fixed_score_after << ",\n";
+	out << "    \"remaining_fixed_budget_after\": " << summary.remaining_fixed_budget_after << ",\n";
+	out << "    \"active_blocker_after\": \"" << json_escape(summary.active_blocker_after) << "\",\n";
+	out << "    \"invariants\": {\n";
+	out << "      \"no_native_behavior_change\": " << (!summary.native_behavior_changed ? "true" : "false") << ",\n";
+	out << "      \"no_objdump_used\": " << (!summary.used_objdump ? "true" : "false") << ",\n";
+	out << "      \"same_run_selected_descriptor_pointer_join_recovered\": " << (summary.same_run_selected_descriptor_pointer_join_recovered ? "true" : "false") << ",\n";
+	out << "      \"all_target_mixed_selected_descriptors_joined\": " << (summary.all_target_mixed_selected_descriptors_joined ? "true" : "false") << ",\n";
+	out << "      \"descriptor_input_type_subtype_class_fields_recovered\": " << (summary.descriptor_input_type_subtype_class_fields_recovered ? "true" : "false") << ",\n";
+	out << "      \"descriptor_only_identity_not_claimed_for_ambiguous_mines\": " << (summary.descriptor_only_identity_not_claimed_for_ambiguous_mines ? "true" : "false") << ",\n";
+	out << "      \"descriptor_plus_0x00_registry_key_not_row_recovered\": " << (summary.descriptor_plus_0x00_registry_key_not_row_recovered ? "true" : "false") << ",\n";
+	out << "      \"object_table_loader_source_row_shape_recovered\": " << (summary.object_table_loader_source_row_shape_recovered ? "true" : "false") << ",\n";
+	out << "      \"provider_mapping_covers_target_source_lanes_53_54_79\": " << (summary.provider_mapping_covers_target_source_lanes_53_54_79 ? "true" : "false") << ",\n";
+	out << "      \"source_catalog_template_producer_recovered\": " << (summary.source_catalog_template_producer_recovered ? "true" : "false") << ",\n";
+	out << "      \"source_record_cache_key_preserves_def_name_fields\": " << (summary.source_record_cache_key_preserves_def_name_fields ? "true" : "false") << ",\n";
+	out << "      \"type45_base_loader_special_case_recovered\": " << (summary.type45_base_loader_special_case_recovered ? "true" : "false") << "\n";
+	out << "    },\n";
+	out << "    \"target_contexts\": ";
+	append_descriptor_source_identity_contexts_json(out, summary.contexts);
+	out << ",\n";
+	out << "    \"source_record_identity_rule\": {\n";
+	out << "      \"descriptor_plus_0x00\": \"Registry/source-key value returned by 0x491eed and copied into the descriptor by 0x4903e8; it is not a universal objects.txt row id.\",\n";
+	out << "      \"descriptor_plus_0x1c\": \"Descriptor type/counter lane. For R4 mixed lanes this names 45, 53, 54, or 79.\",\n";
+	out << "      \"descriptor_plus_0x20\": \"Subtype/source object id used with the copied source record and provider filters.\",\n";
+	out << "      \"descriptor_plus_0x24\": \"Class/group-like selector used by resolver filters.\",\n";
+	out << "      \"source_record\": \"The copied 0x4c source record is the catalog identity authority; descriptor-only identity is insufficient for ambiguous lanes such as mines.\"\n";
+	out << "    },\n";
+	out << "    \"adoption_blocker\": \"same_run_4aa354_descriptor_vector_0x398_0x39c_and_selected_descriptor_state_0x94_0x95_before_object_vector_identity_adoption\"\n";
+	out << "  }";
+}
+
 void append_object_vector_commit_mutation_summary_json(std::ostream &out, const ObjectVectorCommitMutationSummaryPlain &summary) {
 	out << "{\n";
 	out << "    \"schema_id\": \"rmg_native_cli_object_vector_commit_mutation_summary_v1\",\n";
@@ -7583,6 +7841,11 @@ void append_object_vector_prerequisite_contract_summary_json(std::ostream &out, 
 	out << "    \"generated_cell_bit_helpers_available\": " << (summary.generated_cell_bit_helpers_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
 	out << "    \"object_vector_contract_ported_plain_cpp\": " << (summary.object_vector_contract_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"descriptor_source_identity_closure_ported_plain_cpp\": " << (summary.descriptor_source_identity_closure_ported_plain_cpp ? "true" : "false") << ",\n";
+	out << "    \"descriptor_source_identity_r4_crosswalk_recovered\": " << (summary.descriptor_source_identity_r4_crosswalk_recovered ? "true" : "false") << ",\n";
+	out << "    \"descriptor_source_identity_native_behavior_changed\": " << (summary.descriptor_source_identity_native_behavior_changed ? "true" : "false") << ",\n";
+	out << "    \"descriptor_plus_0x00_registry_key_not_row_recovered\": " << (summary.descriptor_plus_0x00_registry_key_not_row_recovered ? "true" : "false") << ",\n";
+	out << "    \"descriptor_copied_source_record_identity_authority_recovered\": " << (summary.descriptor_copied_source_record_identity_authority_recovered ? "true" : "false") << ",\n";
 	out << "    \"object_vector_commit_mutation_helpers_ported_plain_cpp\": " << (summary.object_vector_commit_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_projection_write_helpers_ported_plain_cpp\": " << (summary.object_vector_projection_write_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
 	out << "    \"object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp\": " << (summary.object_vector_49cf34_attach_mutation_helpers_ported_plain_cpp ? "true" : "false") << ",\n";
@@ -7938,6 +8201,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
+	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
 	const ObjectVectorPrerequisiteContractSummaryPlain object_vector_prerequisite_contract_summary = build_object_vector_prerequisite_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_commit_mutation_summary);
 	const RouteBoundaryContractSummaryPlain route_boundary_contract_summary = build_route_boundary_contract_summary(controlled_case, generated_cell_bit_helper_summary, object_vector_prerequisite_contract_summary);
 	std::ostringstream out;
@@ -8044,6 +8308,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	out << ",\n";
 	out << "  \"plain_cpp_object_vector_commit_mutation_summary\": ";
 	append_object_vector_commit_mutation_summary_json(out, object_vector_commit_mutation_summary);
+	out << ",\n";
+	out << "  \"plain_cpp_descriptor_source_identity_closure_summary\": ";
+	append_descriptor_source_identity_closure_summary_json(out, descriptor_source_identity_closure_summary);
 	out << ",\n";
 	out << "  \"plain_cpp_object_vector_prerequisite_contract_summary\": ";
 	append_object_vector_prerequisite_contract_summary_json(out, object_vector_prerequisite_contract_summary);
