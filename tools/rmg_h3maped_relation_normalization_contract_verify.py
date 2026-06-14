@@ -66,6 +66,23 @@ def verify(
     mismatch_counts = generated_cells.get("mismatch_counts")
     if not isinstance(mismatch_counts, dict):
         raise ValueError("private-state compare missing generated_cells.mismatch_counts")
+    native_cell_count = int(native.get("cell_count", -1))
+    reset_samples = native.get("reset_samples")
+    if not isinstance(reset_samples, list):
+        raise ValueError("native relation summary missing reset_samples")
+    reset_sample_checks = []
+    for sample in reset_samples:
+        if not isinstance(sample, dict):
+            reset_sample_checks.append(False)
+            continue
+        reset_sample_checks.append(
+            sample.get("word_0x10") == 0xFFFFFFFF
+            and sample.get("word_0x14") == 0xFFFFFFFF
+            and sample.get("word_0x18") == 0xFFFFFFFF
+            and sample.get("word_0x1c") == 0x7D007D00
+            and (int(sample.get("word_0x20", 0)) & 0xFF000000) == 0xFF000000
+            and (int(sample.get("word_0x28", 0)) & (0x7 << 12)) == 0
+        )
 
     normalizer_count, normalizer_present = _file_marker_counts(relation_source, "normalizer_0x4a5767")
     normalizer_ref_count, normalizer_ref_present = _file_marker_counts(
@@ -136,6 +153,42 @@ def verify(
         "native_status_diagnostic": native.get("status")
         == "diagnostic_relation_normalization_contract_ported_runtime_replay_pending",
         "native_contract_ported": native.get("relation_normalization_contract_ported_plain_cpp") is True,
+        "native_4a59e2_pack_materialized": native.get(
+            "helper_0x4a59e2_pack_materialized_plain_cpp"
+        )
+        is True,
+        "native_4a5767_full_grid_reset_materialized": native.get(
+            "full_grid_reset_0x4a5767_materialized_plain_cpp"
+        )
+        is True,
+        "native_reset_projection_gate_materialized": native.get(
+            "generated_cell_word_0x1c_reset_gate_materialized"
+        )
+        is True,
+        "native_reset_projection_triple_materialized": native.get(
+            "generated_cell_projection_triple_reset_materialized"
+        )
+        is True,
+        "native_reset_cell_count_matches": int(native.get("reset_cell_count", -1))
+        == native_cell_count,
+        "native_reset_word_0x1c_all_cells": int(
+            native.get("reset_word_0x1c_0x7d007d00_count", -1)
+        )
+        == native_cell_count,
+        "native_reset_projection_triple_all_cells": int(
+            native.get("reset_projection_triple_minus_one_count", -1)
+        )
+        == native_cell_count,
+        "native_reset_word_0x20_byte3_all_cells": int(
+            native.get("reset_word_0x20_byte3_minus_one_count", -1)
+        )
+        == native_cell_count,
+        "native_reset_word_0x28_bits_12_14_zero_all_cells": int(
+            native.get("reset_word_0x28_bits_12_14_zero_count", -1)
+        )
+        == native_cell_count,
+        "native_reset_samples_present": 0 < len(reset_samples) <= 8,
+        "native_reset_samples_match_reset_words": all(reset_sample_checks),
         "native_static_surface_recovered": native.get("static_surface_markers_recovered") is True,
         "native_r6_surface_recovered": native.get("r6_semantic_surface_recovered") is True,
         "native_diagnostic_only": native.get("diagnostic_only") is True,
@@ -168,6 +221,22 @@ def verify(
     prerequisite_checks = {
         "prerequisite_exposes_relation_contract": prerequisite.get(
             "relation_normalization_contract_ported_plain_cpp"
+        )
+        is True,
+        "prerequisite_exposes_4a59e2_pack": prerequisite.get(
+            "relation_normalization_4a59e2_pack_materialized_plain_cpp"
+        )
+        is True,
+        "prerequisite_exposes_full_grid_reset": prerequisite.get(
+            "relation_normalization_full_grid_reset_materialized_plain_cpp"
+        )
+        is True,
+        "prerequisite_exposes_projection_gate_reset": prerequisite.get(
+            "relation_normalization_projection_gate_reset_materialized"
+        )
+        is True,
+        "prerequisite_exposes_projection_triple_reset": prerequisite.get(
+            "relation_normalization_projection_triple_reset_materialized"
         )
         is True,
         "prerequisite_keeps_runtime_replay_pending": prerequisite.get(
@@ -233,6 +302,13 @@ def verify(
         "failed_checks": failed_checks,
         "native_runtime_ordered_replay_materialized": native.get(
             "runtime_ordered_replay_materialized"
+        ),
+        "native_full_grid_reset_0x4a5767_materialized": native.get(
+            "full_grid_reset_0x4a5767_materialized_plain_cpp"
+        ),
+        "native_reset_cell_count": native.get("reset_cell_count"),
+        "native_reset_word_0x1c_0x7d007d00_count": native.get(
+            "reset_word_0x1c_0x7d007d00_count"
         ),
         "native_word20_low_word_propagation_materialized": native.get(
             "generated_cell_word_0x20_low_word_propagation_materialized"
