@@ -13,10 +13,8 @@ no-Godot CLI boundary. The legacy Godot runner has been removed from
 separate explicit workflow on a host where engine launch is permitted.
 The wrapper now also refuses to run while any Godot process is already active
 on the host and records that refusal in `wrapper_manifest.json`. Full `.amap`
-export is not a normal mode on this host yet: unless a caller passes the
-diagnostic override `--allow-blocked-full-export-probe`, the wrapper refuses
-before spawning the native process and tells the caller to use
-`--phase-snapshot-only`.
+export is not a mode on this host yet: the wrapper refuses before spawning the
+native process and tells the caller to use `--phase-snapshot-only`.
 
 Current blocker: the standalone CLI owns plain-C++ controlled-case
 parsing/filtering and can write checkpoint-2 blocker phase snapshots for
@@ -76,10 +74,8 @@ python3 tools/rmg_native_batch_export.py \
 This is the supported successful no-Godot trigger while the native RMG core
 split is incomplete. A plain `python3 tools/rmg_native_batch_export.py --out
 ...` full-export attempt now fails before spawning the CLI with
-`full_export_plain_cpp_core_not_available`. Use
-`--allow-blocked-full-export-probe` only when intentionally testing that
-blocked boundary. Do not add Godot flags or restore a Godot runner for parity
-work on this host.
+`full_export_plain_cpp_core_not_available`. Do not add Godot flags, restore a
+Godot runner, or add a full-export probe override for parity work on this host.
 
 For checkpoint-2 phase snapshots, controlled cases may include the recovered
 setup `+0x44` as the optional ninth field:
