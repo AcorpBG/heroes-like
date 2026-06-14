@@ -217,6 +217,60 @@ def verify(
             "generated_cell_mutation_replay_complete"
         )
         is False,
+        "native_selected_template_vector_profile_available": native.get(
+            "selected_template_vector_profile_available"
+        )
+        is True,
+        "native_hc4_seed10_template_vector_validated": native.get(
+            "same_run_h3maped_hc4_seed10_template_vector_validated"
+        )
+        is True,
+        "native_selected_template_vector_candidate_count": int(
+            native.get("selected_template_vector_candidate_count", -1)
+        )
+        == 23,
+        "native_selected_template_vector_selected_index": int(
+            native.get("selected_template_vector_selected_index", -1)
+        )
+        == 2,
+        "native_selected_template_vector_rng_value": int(
+            native.get("selected_template_vector_rng_value", -1)
+        )
+        == 71,
+        "native_selected_template_source_catalog_index": int(
+            native.get("selected_template_source_catalog_index", -1)
+        )
+        == 15,
+        "native_selected_template_source_name": native.get("selected_template_source_name")
+        == "2SM4d(2)",
+        "native_selected_template_zone_count": int(native.get("selected_template_zone_count", -1))
+        == 10,
+        "native_selected_template_connection_count": int(
+            native.get("selected_template_connection_count", -1)
+        )
+        == 15,
+        "native_flat_template_link_seed_count": int(native.get("flat_template_link_seed_count", -1))
+        == 15,
+        "native_flat_template_link_seed_border_guard_count": int(
+            native.get("flat_template_link_seed_border_guard_count", -1)
+        )
+        == 0,
+        "native_flat_link_seeds_not_relation_vector": native.get(
+            "flat_template_link_seeds_are_runtime_relation_vector"
+        )
+        is False,
+        "native_generator_0x10e4_relation_records_pending": native.get(
+            "generator_0x10e4_relation_pointer_records_materialized"
+        )
+        is False,
+        "native_generator_0x10e8_relation_end_pending": native.get(
+            "generator_0x10e8_relation_pointer_end_materialized"
+        )
+        is False,
+        "native_relation_vector_blocker_names_0x10e4": "generator_plus_0x10e4"
+        in str(native.get("relation_vector_blocked_reason", "")),
+        "native_relation_vector_blocker_names_0x49a318": "0x49a318"
+        in str(native.get("relation_vector_blocked_reason", "")),
     }
     prerequisite_checks = {
         "prerequisite_exposes_relation_contract": prerequisite.get(
@@ -313,6 +367,21 @@ def verify(
         "native_word20_low_word_propagation_materialized": native.get(
             "generated_cell_word_0x20_low_word_propagation_materialized"
         ),
+        "native_hc4_seed10_template_vector_validated": native.get(
+            "same_run_h3maped_hc4_seed10_template_vector_validated"
+        ),
+        "native_selected_template_vector_candidate_count": native.get(
+            "selected_template_vector_candidate_count"
+        ),
+        "native_selected_template_vector_selected_index": native.get(
+            "selected_template_vector_selected_index"
+        ),
+        "native_selected_template_vector_rng_value": native.get(
+            "selected_template_vector_rng_value"
+        ),
+        "native_selected_template_source_name": native.get("selected_template_source_name"),
+        "native_flat_template_link_seed_count": native.get("flat_template_link_seed_count"),
+        "native_relation_vector_blocked_reason": native.get("relation_vector_blocked_reason"),
         "private_word20_low_word_mismatch_count": mismatch_counts.get(
             "word_0x20_low_word_mismatch"
         ),
