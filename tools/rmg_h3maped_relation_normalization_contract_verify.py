@@ -50,11 +50,15 @@ def verify(
     relation_normalization_path: Path,
     r6_summary_path: Path,
     private_state_compare_path: Path,
+    selected_candidate_relation_path: Path | None = None,
 ) -> dict[str, Any]:
     snapshot = _load_json(snapshot_path)
     relation_source = _load_json(relation_normalization_path)
     r6_source = _load_json(r6_summary_path)
     private_compare = _load_json(private_state_compare_path)
+    selected_candidate_relation = (
+        _load_json(selected_candidate_relation_path) if selected_candidate_relation_path else None
+    )
 
     native = _native_relation_summary(snapshot)
     prerequisite = _native_prerequisite(snapshot)
@@ -335,6 +339,94 @@ def verify(
         "private_compare_word28_mismatch_present": int(mismatch_counts.get("word_0x28_mismatch", 0))
         > 0,
     }
+    selected_candidate_relation_checks: dict[str, bool] = {}
+    selected_candidate_relation_summary: dict[str, Any] = {}
+    if isinstance(selected_candidate_relation, dict):
+        owners = selected_candidate_relation.get("owners")
+        if not isinstance(owners, list):
+            raise ValueError("selected-candidate relation summary missing owners")
+        owner_record_counts = [
+            int((owner.get("relation_vector") or {}).get("count", len(owner.get("records", []))))
+            for owner in owners
+            if isinstance(owner, dict)
+        ]
+        owner_border_counts = [
+            int(owner.get("border_guard_record_count", 0))
+            for owner in owners
+            if isinstance(owner, dict)
+        ]
+        selected_total = int(selected_candidate_relation.get("total_relation_record_count", -1))
+        selected_border = int(
+            selected_candidate_relation.get("border_guard_relation_record_count", -1)
+        )
+        selected_stride = int(
+            (selected_candidate_relation.get("invariants") or {}).get(
+                "relation_record_stride_bytes", -1
+            )
+        )
+        selected_candidate_relation_summary = {
+            "path": str(selected_candidate_relation_path),
+            "status": selected_candidate_relation.get("status", ""),
+            "owner_count": len(owners),
+            "total_record_count": selected_total,
+            "border_guard_record_count": selected_border,
+            "record_stride_bytes": selected_stride,
+            "owner_record_counts": owner_record_counts,
+            "owner_border_guard_counts": owner_border_counts,
+        }
+        selected_candidate_relation_checks = {
+            "selected_candidate_relation_source_status": selected_candidate_relation.get("status")
+            == "selected_candidate_has_border_guard_records",
+            "selected_candidate_relation_source_stride": selected_stride == 28,
+            "native_selected_candidate_relation_profile_available": native.get(
+                "selected_candidate_relation_record_profile_available"
+            )
+            is True,
+            "native_selected_candidate_relation_topology_recorded": native.get(
+                "same_run_h3maped_hc4_seed10_selected_candidate_relation_topology_recorded"
+            )
+            is True,
+            "native_selected_candidate_relation_owner_count": int(
+                native.get("selected_candidate_relation_owner_count", -1)
+            )
+            == len(owners),
+            "native_selected_candidate_relation_total_count": int(
+                native.get("selected_candidate_relation_total_record_count", -1)
+            )
+            == selected_total,
+            "native_selected_candidate_relation_border_count": int(
+                native.get("selected_candidate_relation_border_guard_record_count", -1)
+            )
+            == selected_border,
+            "native_selected_candidate_relation_stride": int(
+                native.get("selected_candidate_relation_record_stride_bytes", -1)
+            )
+            == selected_stride,
+            "native_selected_candidate_relation_owner_counts": native.get(
+                "selected_candidate_relation_owner_record_counts"
+            )
+            == owner_record_counts,
+            "native_selected_candidate_relation_owner_border_counts": native.get(
+                "selected_candidate_relation_owner_border_guard_counts"
+            )
+            == owner_border_counts,
+            "native_flat_template_link_seed_delta_records": int(
+                native.get("template_vs_selected_candidate_relation_record_count_delta", 999)
+            )
+            == int(native.get("flat_template_link_seed_count", 0)) - selected_total,
+            "native_flat_template_link_seed_delta_border_guards": int(
+                native.get("template_vs_selected_candidate_border_guard_record_count_delta", 999)
+            )
+            == int(native.get("flat_template_link_seed_border_guard_count", 0)) - selected_border,
+            "native_flat_template_link_seed_surface_not_selected_candidate_relation_records": native.get(
+                "flat_template_link_seed_surface_matches_selected_candidate_relation_records"
+            )
+            is False,
+            "native_selected_candidate_relation_not_generator_0x10e4_vector": native.get(
+                "selected_candidate_relation_records_are_generator_0x10e4_runtime_vector"
+            )
+            is False,
+        }
 
     all_checks = {
         **relation_source_status_checks,
@@ -342,6 +434,7 @@ def verify(
         **native_contract_checks,
         **prerequisite_checks,
         **private_state_checks,
+        **selected_candidate_relation_checks,
     }
     failed_checks = [key for key, passed in all_checks.items() if not passed]
     status = "pass" if not failed_checks else "mismatch"
@@ -352,6 +445,7 @@ def verify(
         "relation_normalization_summary": str(relation_normalization_path),
         "r6_summary": str(r6_summary_path),
         "private_state_compare": str(private_state_compare_path),
+        "selected_candidate_relation_summary": selected_candidate_relation_summary,
         "checks": all_checks,
         "failed_checks": failed_checks,
         "native_runtime_ordered_replay_materialized": native.get(
@@ -381,6 +475,18 @@ def verify(
         ),
         "native_selected_template_source_name": native.get("selected_template_source_name"),
         "native_flat_template_link_seed_count": native.get("flat_template_link_seed_count"),
+        "native_selected_candidate_relation_total_record_count": native.get(
+            "selected_candidate_relation_total_record_count"
+        ),
+        "native_selected_candidate_relation_border_guard_record_count": native.get(
+            "selected_candidate_relation_border_guard_record_count"
+        ),
+        "native_template_vs_selected_candidate_relation_record_count_delta": native.get(
+            "template_vs_selected_candidate_relation_record_count_delta"
+        ),
+        "native_template_vs_selected_candidate_border_guard_record_count_delta": native.get(
+            "template_vs_selected_candidate_border_guard_record_count_delta"
+        ),
         "native_relation_vector_blocked_reason": native.get("relation_vector_blocked_reason"),
         "private_word20_low_word_mismatch_count": mismatch_counts.get(
             "word_0x20_low_word_mismatch"
@@ -399,6 +505,7 @@ def main() -> int:
     parser.add_argument("--relation-normalization-summary", type=Path, required=True)
     parser.add_argument("--r6-summary", type=Path, required=True)
     parser.add_argument("--private-state-compare", type=Path, required=True)
+    parser.add_argument("--selected-candidate-relation-summary", type=Path)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
 
@@ -407,6 +514,7 @@ def main() -> int:
         args.relation_normalization_summary,
         args.r6_summary,
         args.private_state_compare,
+        args.selected_candidate_relation_summary,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8") as handle:
