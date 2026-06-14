@@ -816,7 +816,11 @@ struct RelationNormalizationContractSummaryPlain {
 	bool generated_cell_mutation_replay_complete = false;
 	bool selected_template_vector_profile_available = false;
 	bool same_run_h3maped_hc4_seed10_template_vector_validated = false;
+	bool selected_candidate_relation_record_profile_available = false;
+	bool same_run_h3maped_hc4_seed10_selected_candidate_relation_topology_recorded = false;
 	bool flat_template_link_seeds_are_runtime_relation_vector = false;
+	bool flat_template_link_seed_surface_matches_selected_candidate_relation_records = false;
+	bool selected_candidate_relation_records_are_generator_0x10e4_runtime_vector = false;
 	bool generator_0x10e4_relation_pointer_records_materialized = false;
 	bool generator_0x10e8_relation_pointer_end_materialized = false;
 	std::string status = "blocked_until_terrain_live_feedback";
@@ -838,6 +842,14 @@ struct RelationNormalizationContractSummaryPlain {
 	int32_t selected_template_connection_count = 0;
 	int32_t flat_template_link_seed_count = 0;
 	int32_t flat_template_link_seed_border_guard_count = 0;
+	int32_t selected_candidate_relation_owner_count = 0;
+	int32_t selected_candidate_relation_total_record_count = 0;
+	int32_t selected_candidate_relation_border_guard_record_count = 0;
+	int32_t selected_candidate_relation_record_stride_bytes = 0;
+	int32_t template_vs_selected_candidate_relation_record_count_delta = 0;
+	int32_t template_vs_selected_candidate_border_guard_record_count_delta = 0;
+	std::vector<int32_t> selected_candidate_relation_owner_record_counts;
+	std::vector<int32_t> selected_candidate_relation_owner_border_guard_counts;
 	int32_t static_marker_count = 50;
 	int32_t static_present_marker_count = 50;
 	int32_t static_missing_marker_count = 0;
@@ -5688,8 +5700,30 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 		summary.flat_template_link_seeds_are_runtime_relation_vector = false;
 		summary.generator_0x10e4_relation_pointer_records_materialized = false;
 		summary.generator_0x10e8_relation_pointer_end_materialized = false;
+		if (summary.same_run_h3maped_hc4_seed10_template_vector_validated) {
+			// Same-run H3MapEd selected-candidate relation topology from
+			// .artifacts/rmg_recovery/medium_selected_candidate_relation_scan_20260608_medium_seed10_runtime.
+			// This is not the final generator+0x10e4 runtime pointer vector.
+			summary.selected_candidate_relation_record_profile_available = true;
+			summary.same_run_h3maped_hc4_seed10_selected_candidate_relation_topology_recorded = true;
+			summary.selected_candidate_relation_owner_count = 8;
+			summary.selected_candidate_relation_total_record_count = 14;
+			summary.selected_candidate_relation_border_guard_record_count = 4;
+			summary.selected_candidate_relation_record_stride_bytes = 28;
+			summary.selected_candidate_relation_owner_record_counts = { 2, 2, 2, 1, 6, 1, 1, 1 };
+			summary.selected_candidate_relation_owner_border_guard_counts = { 0, 0, 0, 1, 1, 1, 1, 0 };
+			summary.template_vs_selected_candidate_relation_record_count_delta =
+					summary.flat_template_link_seed_count - summary.selected_candidate_relation_total_record_count;
+			summary.template_vs_selected_candidate_border_guard_record_count_delta =
+					summary.flat_template_link_seed_border_guard_count - summary.selected_candidate_relation_border_guard_record_count;
+			summary.flat_template_link_seed_surface_matches_selected_candidate_relation_records =
+					summary.template_vs_selected_candidate_relation_record_count_delta == 0
+					&& summary.template_vs_selected_candidate_border_guard_record_count_delta == 0;
+			summary.selected_candidate_relation_records_are_generator_0x10e4_runtime_vector = false;
+		}
 		summary.relation_vector_blocked_reason =
 				"selected_template_vector_matches_same_run_h3maped_hc4_seed10_trace_for_23_candidates_index_2_template_2SM4d2; "
+				"flat_template_link_seeds_do_not_match_the_same_run_selected_candidate_relation_topology_when_available; "
 				"remaining_blocker_is_materializing_generator_plus_0x10e4_to_0x10e8_runtime_relation_pointer_records_and_the_0x49a318_descriptor_policy_object_reference_filters";
 	} else {
 		summary.relation_vector_blocked_reason = "blocked_until_runtime_zone_summary";
@@ -8145,7 +8179,23 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"selected_template_connection_count\": " << summary.selected_template_connection_count << ",\n";
 	out << "    \"flat_template_link_seed_count\": " << summary.flat_template_link_seed_count << ",\n";
 	out << "    \"flat_template_link_seed_border_guard_count\": " << summary.flat_template_link_seed_border_guard_count << ",\n";
+	out << "    \"selected_candidate_relation_record_profile_available\": " << (summary.selected_candidate_relation_record_profile_available ? "true" : "false") << ",\n";
+	out << "    \"same_run_h3maped_hc4_seed10_selected_candidate_relation_topology_recorded\": " << (summary.same_run_h3maped_hc4_seed10_selected_candidate_relation_topology_recorded ? "true" : "false") << ",\n";
+	out << "    \"selected_candidate_relation_owner_count\": " << summary.selected_candidate_relation_owner_count << ",\n";
+	out << "    \"selected_candidate_relation_total_record_count\": " << summary.selected_candidate_relation_total_record_count << ",\n";
+	out << "    \"selected_candidate_relation_border_guard_record_count\": " << summary.selected_candidate_relation_border_guard_record_count << ",\n";
+	out << "    \"selected_candidate_relation_record_stride_bytes\": " << summary.selected_candidate_relation_record_stride_bytes << ",\n";
+	out << "    \"selected_candidate_relation_owner_record_counts\": ";
+	append_int_array_json(out, summary.selected_candidate_relation_owner_record_counts);
+	out << ",\n";
+	out << "    \"selected_candidate_relation_owner_border_guard_counts\": ";
+	append_int_array_json(out, summary.selected_candidate_relation_owner_border_guard_counts);
+	out << ",\n";
+	out << "    \"template_vs_selected_candidate_relation_record_count_delta\": " << summary.template_vs_selected_candidate_relation_record_count_delta << ",\n";
+	out << "    \"template_vs_selected_candidate_border_guard_record_count_delta\": " << summary.template_vs_selected_candidate_border_guard_record_count_delta << ",\n";
 	out << "    \"flat_template_link_seeds_are_runtime_relation_vector\": " << (summary.flat_template_link_seeds_are_runtime_relation_vector ? "true" : "false") << ",\n";
+	out << "    \"flat_template_link_seed_surface_matches_selected_candidate_relation_records\": " << (summary.flat_template_link_seed_surface_matches_selected_candidate_relation_records ? "true" : "false") << ",\n";
+	out << "    \"selected_candidate_relation_records_are_generator_0x10e4_runtime_vector\": " << (summary.selected_candidate_relation_records_are_generator_0x10e4_runtime_vector ? "true" : "false") << ",\n";
 	out << "    \"generator_0x10e4_relation_pointer_records_materialized\": " << (summary.generator_0x10e4_relation_pointer_records_materialized ? "true" : "false") << ",\n";
 	out << "    \"generator_0x10e8_relation_pointer_end_materialized\": " << (summary.generator_0x10e8_relation_pointer_end_materialized ? "true" : "false") << ",\n";
 	out << "    \"relation_vector_blocked_reason\": \"" << json_escape(summary.relation_vector_blocked_reason) << "\",\n";
