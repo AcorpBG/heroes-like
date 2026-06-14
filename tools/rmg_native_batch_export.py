@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import rmg_no_godot_guard
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_NATIVE_CLI = Path("bin/rmg_native_batch_export_cli")
@@ -25,36 +27,7 @@ LOG_NAME = "rmg_native_batch_export.log"
 
 
 def godot_processes() -> list[dict[str, str]]:
-    proc_root = Path("/proc")
-    if not proc_root.exists():
-        return []
-    current_pid = os.getpid()
-    matches: list[dict[str, str]] = []
-    for entry in proc_root.iterdir():
-        if not entry.name.isdigit():
-            continue
-        pid = int(entry.name)
-        if pid == current_pid:
-            continue
-        try:
-            comm = (entry / "comm").read_text(encoding="utf-8", errors="ignore").strip()
-            raw_cmdline = (entry / "cmdline").read_bytes()
-        except OSError:
-            continue
-        cmdline_parts = [part.decode("utf-8", errors="ignore") for part in raw_cmdline.split(b"\0") if part]
-        executable = Path(cmdline_parts[0]).name if cmdline_parts else comm
-        marker = f"{comm} {executable}".lower()
-        if "godot" not in marker:
-            continue
-        matches.append(
-            {
-                "pid": str(pid),
-                "comm": comm,
-                "executable": executable,
-                "cmdline": " ".join(cmdline_parts[:8]),
-            }
-        )
-    return matches
+    return rmg_no_godot_guard.active_godot_processes()
 
 
 def find_native_cli(explicit: str) -> Path:

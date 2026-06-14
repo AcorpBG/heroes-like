@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 import rmg_fast_validation
+import rmg_no_godot_guard
 import rmg_production_gap_audit
 
 
@@ -127,6 +128,22 @@ def main() -> int:
     args = parser.parse_args()
 
     started = time.perf_counter()
+    godot_guard = rmg_no_godot_guard.guard_report("rmg_quick_validation")
+    if godot_guard.get("status") != "pass":
+        report = {
+            "schema_id": "rmg_quick_validation_v1",
+            "status": "fail",
+            "production_ready": False,
+            "elapsed_seconds": round(time.perf_counter() - started, 3),
+            "godot_process_guard": godot_guard,
+            "fast_validation": {},
+            "production_gap_audit": {},
+        }
+        write_report(args.report_json, report)
+        rmg_no_godot_guard.print_failure(godot_guard)
+        print("report_json=%s" % args.report_json)
+        return 0 if args.allow_failures else 1
+
     fast_report = rmg_fast_validation.build_report(validation_args(args))
     production_report = build_production_report(fast_report, args)
     elapsed_seconds = round(time.perf_counter() - started, 3)
@@ -136,6 +153,7 @@ def main() -> int:
         "status": status,
         "production_ready": bool(production_report.get("production_ready", False)),
         "elapsed_seconds": elapsed_seconds,
+        "godot_process_guard": godot_guard,
         "fast_validation": fast_report,
         "production_gap_audit": production_report,
     }

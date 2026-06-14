@@ -3,8 +3,8 @@
 
 This tool parses HoMM3 `.h3m` owner evidence and native `.amap` JSON packages
 directly. It is intended for the tight RMG audit loop; Godot report scenes
-should remain integration smokes for generation, package adoption, and editor
-loading.
+should remain integration smokes for package adoption and editor loading on
+hosts where engine launch is explicitly permitted.
 """
 
 from __future__ import annotations

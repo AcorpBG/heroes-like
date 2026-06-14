@@ -12,9 +12,12 @@ no-Godot CLI boundary. The legacy Godot runner has been removed from
 `tools/rmg_native_batch_export.py`; runtime/editor integration smokes must use a
 separate explicit workflow on a host where engine launch is permitted.
 The wrapper now also refuses to run while any Godot process is already active
-on the host and records that refusal in `wrapper_manifest.json`. Full `.amap`
-export is not a mode on this host yet: the wrapper refuses before spawning the
-native process and tells the caller to use `--phase-snapshot-only`.
+on the host and records that refusal in `wrapper_manifest.json`. The shared
+`tools/rmg_no_godot_guard.py` process guard is also wired into the Python
+quick-validation and validation-gate commands, so native RMG validation fails
+fast instead of parsing large artifacts while the engine is consuming memory.
+Full `.amap` export is not a mode on this host yet: the wrapper refuses before
+spawning the native process and tells the caller to use `--phase-snapshot-only`.
 
 Current blocker: the standalone CLI owns plain-C++ controlled-case
 parsing/filtering and can write checkpoint-2 blocker phase snapshots for
@@ -117,6 +120,9 @@ correctness gate and the production-gap comparison. Use
 `tools/rmg_python_validation_gate.py` when you explicitly want the standalone
 syntax-compile gate, and `tools/rmg_production_gap_audit.py` when you only need
 the broader readiness checklist.
+Both quick validation and the validation gate record `godot_process_guard`; if
+the guard fails, the command writes its report and exits before artifact parsing
+or comparison work begins.
 
 ## Full Gate
 
