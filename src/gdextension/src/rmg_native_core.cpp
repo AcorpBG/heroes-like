@@ -9172,4 +9172,44 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	return out.str();
 }
 
+std::string case_native_map_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason) {
+	const bool supported = supported_one_level_land_scope(controlled_case);
+	const int32_t width = map_width_for_size(controlled_case.size_class);
+	std::ostringstream out;
+	out << "{\n";
+	out << "  \"schema_id\": \"rmg_native_cli_plain_cpp_map_artifact_v1\",\n";
+	out << "  \"runner\": \"standalone_native_cli_no_godot\",\n";
+	out << "  \"godot_process_started\": false,\n";
+	out << "  \"status\": \"" << json_escape(status) << "\",\n";
+	out << "  \"blocked_reason\": \"" << json_escape(blocked_reason) << "\",\n";
+	out << "  \"case_id\": \"" << json_escape(controlled_case.id) << "\",\n";
+	out << "  \"raw_controlled_case\": \"" << json_escape(controlled_case.raw) << "\",\n";
+	out << "  \"format_kind\": \"plain_cpp_native_rmg_json_artifact_not_godot_amap\",\n";
+	out << "  \"amap_written\": false,\n";
+	out << "  \"playable_package_written\": false,\n";
+	out << "  \"supported_one_level_land_scope\": " << (supported ? "true" : "false") << ",\n";
+	out << "  \"normalized_config\": {\n";
+	out << "    \"size_class\": \"" << json_escape(controlled_case.size_class) << "\",\n";
+	out << "    \"width\": " << width << ",\n";
+	out << "    \"height\": " << width << ",\n";
+	out << "    \"players\": " << controlled_case.players << ",\n";
+	out << "    \"seed\": " << controlled_case.seed << ",\n";
+	out << "    \"water_mode\": \"" << json_escape(controlled_case.water_mode) << "\",\n";
+	out << "    \"level_count\": " << controlled_case.level_count << ",\n";
+	out << "    \"human_count\": " << controlled_case.human_count << ",\n";
+	out << "    \"computer_count\": " << controlled_case.computer_count << "\n";
+	out << "  },\n";
+	out << "  \"native_artifact_boundary\": {\n";
+	out << "    \"successful_without_godot\": true,\n";
+	out << "    \"uses_godot_dictionary_array_string_refcounted_or_fileaccess\": false,\n";
+	out << "    \"contains_phase_private_state\": true,\n";
+	out << "    \"contains_playable_package_payload\": false,\n";
+	out << "    \"playable_package_blocked_reason\": \"full_native_amap_export_requires_splitting_h3maped_rmg_generation_and_package_writeout_from_godot_dictionary_refcounted_fileaccess_apis\"\n";
+	out << "  },\n";
+	out << "  \"native_phase_snapshot\": ";
+	out << case_phase_snapshot_json(controlled_case, status, blocked_reason);
+	out << "}\n";
+	return out.str();
+}
+
 } // namespace aurelion::rmg_native_core

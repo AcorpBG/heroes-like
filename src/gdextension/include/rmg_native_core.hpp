@@ -31,12 +31,15 @@ struct CaseReport {
 	bool supported_scope = false;
 	bool phase_snapshot_written = false;
 	std::filesystem::path phase_snapshot_path;
+	bool native_map_json_written = false;
+	std::filesystem::path native_map_json_path;
 };
 
 ControlledCase parse_controlled_case(const std::string &raw);
 std::vector<std::string> split_case_filter(const std::string &case_filter);
 bool case_matches_filter(const ControlledCase &controlled_case, const std::vector<std::string> &filters);
 std::string case_phase_snapshot_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason);
+std::string case_native_map_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason);
 std::string safe_case_filename(const std::string &case_id);
 
 } // namespace aurelion::rmg_native_core

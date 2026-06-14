@@ -24,6 +24,8 @@ struct Options {
 	bool include_unsupported = false;
 	bool emit_phase_snapshot = false;
 	bool phase_snapshot_only = false;
+	bool emit_native_map_json = false;
+	bool native_map_json_only = false;
 	bool print_manifest = false;
 };
 
@@ -93,7 +95,9 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"blocked_reason\":\"" << json_escape(report.blocked_reason) << "\",";
 		out << "\"supported_scope\":" << (report.supported_scope ? "true" : "false") << ",";
 		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
-		out << "\"phase_snapshot_path\":\"" << json_escape(report.phase_snapshot_path.string()) << "\"";
+		out << "\"phase_snapshot_path\":\"" << json_escape(report.phase_snapshot_path.string()) << "\",";
+		out << "\"native_map_json_written\":" << (report.native_map_json_written ? "true" : "false") << ",";
+		out << "\"native_map_json_path\":\"" << json_escape(report.native_map_json_path.string()) << "\"";
 		out << "}";
 	}
 	out << "]";
@@ -147,6 +151,11 @@ Options parse_options(int argc, char **argv) {
 		} else if (arg == "--phase-snapshot-only") {
 			options.phase_snapshot_only = true;
 			options.emit_phase_snapshot = true;
+		} else if (arg == "--emit-native-map-json") {
+			options.emit_native_map_json = true;
+		} else if (arg == "--native-map-json-only") {
+			options.native_map_json_only = true;
+			options.emit_native_map_json = true;
 		} else if (arg == "--print-manifest") {
 			options.print_manifest = true;
 		}
@@ -185,6 +194,9 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		} else if (!supported) {
 			report.status = "unsupported_scope";
 			report.blocked_reason = "standalone_cli_currently_scopes_only_small_medium_one_level_land";
+		} else if (options.native_map_json_only) {
+			report.status = "native_map_json_exported";
+			report.blocked_reason = "";
 		} else if (options.phase_snapshot_only) {
 			report.status = "phase_snapshot_exported";
 			report.blocked_reason = "";
@@ -201,6 +213,15 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 				report.phase_snapshot_path = snapshot_path;
 			}
 		}
+		if (options.emit_native_map_json) {
+			const std::filesystem::path native_map_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".native_map.json");
+			std::ofstream native_map(native_map_path, std::ios::binary);
+			if (native_map) {
+				native_map << aurelion::rmg_native_core::case_native_map_json(controlled_case, report.status, report.blocked_reason);
+				report.native_map_json_written = true;
+				report.native_map_json_path = native_map_path;
+			}
+		}
 		reports.push_back(report);
 		if (options.limit > 0 && int(reports.size()) >= options.limit) {
 			break;
@@ -212,6 +233,8 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 std::string manifest_json(const Options &options, const std::filesystem::path &absolute_output_dir, const std::vector<CaseReport> &case_reports, int skipped_count) {
 	int failed_count = 0;
 	int unsupported_count = 0;
+	int native_map_json_exported_count = 0;
+	int native_map_json_failed_count = 0;
 	int phase_snapshot_exported_count = 0;
 	int phase_snapshot_failed_count = 0;
 	for (const CaseReport &report : case_reports) {
@@ -219,6 +242,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			++failed_count;
 		} else if (report.status == "unsupported_scope") {
 			++unsupported_count;
+		} else if (report.status == "native_map_json_exported") {
+			++native_map_json_exported_count;
+			if (!report.native_map_json_written) {
+				++native_map_json_failed_count;
+			}
 		} else if (report.status == "phase_snapshot_exported") {
 			++phase_snapshot_exported_count;
 			if (!report.phase_snapshot_written) {
@@ -226,18 +254,24 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			}
 		}
 	}
-	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - phase_snapshot_exported_count;
+	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count - phase_snapshot_exported_count;
 	const bool phase_snapshot_pass = options.phase_snapshot_only
 			&& phase_snapshot_exported_count > 0
 			&& failed_count == 0
 			&& unsupported_count == 0
 			&& blocked_count == 0
 			&& phase_snapshot_failed_count == 0;
-	const std::string status = phase_snapshot_pass ? "phase_snapshot_exported" : "blocked";
-	const std::string blocked_reason = phase_snapshot_pass ? "" : "native_rmg_core_still_godot_variant_bound";
+	const bool native_map_json_pass = options.native_map_json_only
+			&& native_map_json_exported_count > 0
+			&& failed_count == 0
+			&& unsupported_count == 0
+			&& blocked_count == 0
+			&& native_map_json_failed_count == 0;
+	const std::string status = native_map_json_pass ? "native_map_json_exported" : (phase_snapshot_pass ? "phase_snapshot_exported" : "blocked");
+	const std::string blocked_reason = (native_map_json_pass || phase_snapshot_pass) ? "" : "native_rmg_core_still_godot_variant_bound";
 	std::ostringstream out;
 	out << "{\n";
-	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v3\",\n";
+	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
 	out << "  \"status\": \"" << status << "\",\n";
 	out << "  \"blocked_reason\": \"" << blocked_reason << "\",\n";
 	out << "  \"runner\": \"standalone_native_cli_no_godot\",\n";
@@ -250,6 +284,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"include_unsupported\": " << (options.include_unsupported ? "true" : "false") << ",\n";
 	out << "  \"emit_phase_snapshot\": " << (options.emit_phase_snapshot ? "true" : "false") << ",\n";
 	out << "  \"phase_snapshot_only\": " << (options.phase_snapshot_only ? "true" : "false") << ",\n";
+	out << "  \"emit_native_map_json\": " << (options.emit_native_map_json ? "true" : "false") << ",\n";
+	out << "  \"native_map_json_only\": " << (options.native_map_json_only ? "true" : "false") << ",\n";
 	out << "  \"controlled_case_count\": " << options.controlled_cases.size() << ",\n";
 	out << "  \"controlled_cases\": ";
 	append_json_string_array(out, options.controlled_cases);
@@ -258,14 +294,17 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"blocked_count\": " << blocked_count << ",\n";
 	out << "  \"unsupported_count\": " << unsupported_count << ",\n";
 	out << "  \"skipped_count\": " << skipped_count << ",\n";
-	out << "  \"exported_count\": 0,\n";
+	out << "  \"exported_count\": " << native_map_json_exported_count << ",\n";
+	out << "  \"native_map_json_exported_count\": " << native_map_json_exported_count << ",\n";
+	out << "  \"native_map_json_failed_count\": " << native_map_json_failed_count << ",\n";
 	out << "  \"phase_snapshot_exported_count\": " << phase_snapshot_exported_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
 	out << "  \"generation_core_stage\": \"plain_cpp_controlled_case_checkpoint2_setup_default_postsynthetic_live_feedback_surface\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
+	out << "  \"native_map_json_schema_id\": \"rmg_native_cli_plain_cpp_map_artifact_v1\",\n";
 	out << "  \"required_next_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api_before_running_native_exports_on_memory_constrained_hosts\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes controlled Small/Medium one-level land private-state snapshots and exits successfully without Godot. It still intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes controlled Small/Medium one-level land private-state snapshots and exits successfully without Godot. In --native-map-json-only mode it writes native plain-C++ JSON map artifacts and exits successfully without Godot. It still intentionally refuses .amap generation until recovered RMG generation state is available through plain C++ data structures instead of Godot engine APIs.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
@@ -303,6 +342,8 @@ int main(int argc, char **argv) {
 	int failed_count = 0;
 	int unsupported_count = 0;
 	int blocked_count = 0;
+	int native_map_json_exported_count = 0;
+	int native_map_json_failed_count = 0;
 	int phase_snapshot_exported_count = 0;
 	int phase_snapshot_failed_count = 0;
 	for (const CaseReport &report : case_reports) {
@@ -310,6 +351,11 @@ int main(int argc, char **argv) {
 			++failed_count;
 		} else if (report.status == "unsupported_scope") {
 			++unsupported_count;
+		} else if (report.status == "native_map_json_exported") {
+			++native_map_json_exported_count;
+			if (!report.native_map_json_written) {
+				++native_map_json_failed_count;
+			}
 		} else if (report.status == "phase_snapshot_exported") {
 			++phase_snapshot_exported_count;
 			if (!report.phase_snapshot_written) {
@@ -325,6 +371,18 @@ int main(int argc, char **argv) {
 			&& unsupported_count == 0
 			&& blocked_count == 0
 			&& phase_snapshot_failed_count == 0;
+	const bool native_map_json_pass = options.native_map_json_only
+			&& native_map_json_exported_count > 0
+			&& failed_count == 0
+			&& unsupported_count == 0
+			&& blocked_count == 0
+			&& native_map_json_failed_count == 0;
+	if (native_map_json_pass) {
+		std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=native_map_json_exported output_dir=" << absolute_output_dir.string()
+				  << " cases=" << case_reports.size()
+				  << " native_map_json=" << native_map_json_exported_count << "\n";
+		return 0;
+	}
 	if (phase_snapshot_pass) {
 		std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=phase_snapshot_exported output_dir=" << absolute_output_dir.string()
 				  << " cases=" << case_reports.size()
