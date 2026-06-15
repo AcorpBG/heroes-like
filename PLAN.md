@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
-- Current implementation slice: `rmg-small-generalization-hardening-10184` is in progress. The active work is native alignment to the recovered H3MapEd R1-R7 one-level land chain for supported Small/Medium maps. R1-R7 recovery is complete, but native parity remains incomplete until the eight alignment checkpoints below pass Python-owned private-state and final-payload comparisons. Checkpoints 1, 4, and 5 are complete; five checkpoints remain pending.
+- Current implementation slice: `rmg-small-generalization-hardening-10184` is in progress. The active work is source-order native alignment to the recovered H3MapEd R1-R7 one-level land chain for supported Small/Medium one-level land maps.
+- Recovery reality: R7 is recovered according to `.artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json` and `docs/h3maped-rmg-full-recovery-blockers.md`. That is recovery authority only. It is not a native generator parity claim.
+- Native parity reality: native still diverges before object/route/package consumers. Checkpoint 2 remains the active implementation blocker until the native pre-`0x4a4c8e` generated-cell words match recovered private state in Python-owned comparisons.
+- Source-first rule for this slice: inspect native RMG implementation in phase order, patch only source-backed divergences, then run no-Godot native verification. Do not use final-map deltas, density scalars, brute-force retries, GDScript reports, or Godot exports as substitutes for porting the recovered private-state behavior.
 - Native RMG alignment checkpoints, in execution order:
   1. Final writeout authority: complete. Native final-writeout evidence now points at recovered `0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb` tile/object stream evidence; current mismatches are attributed to pending earlier checkpoints, not package-draft parity.
   2. Private generated-cell grid: make pre-`0x4a4c8e` native generated-cell words match recovered private state before route/object consumers run.

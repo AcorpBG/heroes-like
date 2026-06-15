@@ -5288,7 +5288,7 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 			}
 			const int64_t key = cell_key_4a325d(map_width, map_height, x, span.y, span.level);
 			zone_words[size_t(key)] = zone_word_4a325d(zone_words[size_t(key)], zone_id);
-			const bool reserved = !(water_code == 2 && span.level == 1);
+			const bool reserved = !(water_code == 2 && span.level != 1);
 			if (reserved) {
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 			}
