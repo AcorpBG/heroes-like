@@ -3635,7 +3635,7 @@ SpanFillResultPlain span_fill_4a325d_plain(std::vector<uint32_t> &zone_words, st
 				continue;
 			}
 			zone_words[size_t(key)] = zone_word_4a325d_plain(zone_words[size_t(key)], zone_id);
-			const bool reserved = !(water_code == 2 && span.level == 1);
+			const bool reserved = !(water_code == 2 && span.level != 1);
 			if (reserved) {
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 			}
