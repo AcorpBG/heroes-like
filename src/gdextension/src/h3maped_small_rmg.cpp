@@ -9678,6 +9678,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t primary_category_guard_placement_attempt_count = 0;
 	int32_t primary_category_guard_coordinate_record_count = 0;
 	int32_t primary_category_score_depletion_call_count = 0;
+	int32_t primary_category_score_depletion_skipped_count = 0;
 	int32_t primary_category_score_depletion_mutated_cell_count = 0;
 		Dictionary direct_stamping = town_castle_phase.get("direct_stamping_projection", Dictionary());
 		H3MapedRng object_rng { uint32_t(int64_t(direct_stamping.get("object_rng_state_after_0x4a93a2_uint32", 0))) };
@@ -10952,8 +10953,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				}
 			}
 			const bool source_score_wave_enabled_0x4a54a7 = selected_template.descriptor_byte_0x29 != 0;
-			const int32_t score_depleted_cells = h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, selected.x, selected.y, selected.level);
-			primary_category_score_depletion_call_count += 1;
+			const int32_t score_depleted_cells = source_score_wave_enabled_0x4a54a7
+					? h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, selected.x, selected.y, selected.level)
+					: 0;
+			if (source_score_wave_enabled_0x4a54a7) {
+				primary_category_score_depletion_call_count += 1;
+			} else {
+				primary_category_score_depletion_skipped_count += 1;
+			}
 			primary_category_score_depletion_mutated_cell_count += score_depleted_cells;
 			placement["status"] = "0x4a901a_primary_category_object_record_projected_private";
 			placement["port_fidelity"] = "recovered_0x4a8db2_0x4a901a_0x4a54a7_weighted_materialization";
@@ -10968,7 +10975,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			placement["selected_score_low_word"] = selected.score;
 			placement["source_object_descriptor_byte_0x29"] = selected_template.descriptor_byte_0x29;
 			placement["source_generated_cell_score_depletion_wave_enabled_0x4a54a7"] = source_score_wave_enabled_0x4a54a7;
-			placement["generated_cell_score_depletion_policy_0x4a54a7"] = "active_recovered_0x4a54a7_score_wave";
+			placement["generated_cell_score_depletion_policy_0x4a54a7"] = source_score_wave_enabled_0x4a54a7
+					? String("active_recovered_0x4a54a7_projection_path")
+					: String("skipped_recovered_0x4a54a7_descriptor_byte_0x29_zero_exit");
 			placement["x"] = selected.x;
 			placement["y"] = selected.y;
 			placement["level"] = selected.level;
@@ -11218,6 +11227,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	primary_category_boundary["guard_placement_attempt_count"] = primary_category_guard_placement_attempt_count;
 	primary_category_boundary["guard_coordinate_record_count"] = primary_category_guard_coordinate_record_count;
 	primary_category_boundary["score_depletion_call_count"] = primary_category_score_depletion_call_count;
+	primary_category_boundary["score_depletion_skipped_count_descriptor_byte_0x29_zero"] = primary_category_score_depletion_skipped_count;
 	primary_category_boundary["score_depletion_mutated_cell_count"] = primary_category_score_depletion_mutated_cell_count;
 	primary_category_boundary["coordinate_records"] = primary_category_records;
 	primary_category_boundary["guard_records"] = primary_category_guard_records;
@@ -11278,6 +11288,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	int32_t reward_generated_cell_mutated_body_count = 0;
 	int32_t reward_generated_cell_mutated_action_count = 0;
 	int32_t reward_generated_cell_score_depletion_call_count = 0;
+	int32_t reward_generated_cell_score_depletion_skipped_count = 0;
 	int32_t reward_generated_cell_score_depletion_mutated_cell_count = 0;
 	int32_t reward_guard_placement_attempt_count = 0;
 	int32_t reward_guard_coordinate_record_count = 0;
@@ -13342,8 +13353,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					const int32_t source_primary_materializer_x_0x4a54a7 = selected_coordinate.x + source_primary_member_stored_coordinate_0x49abd6.dx - source_primary_object_origin_0x2c_0x30.dx;
 					const int32_t source_primary_materializer_y_0x4a54a7 = selected_coordinate.y + source_primary_member_stored_coordinate_0x49abd6.dy - source_primary_object_origin_0x2c_0x30.dy;
 					const bool source_score_wave_enabled_0x4a54a7 = object_selection.template_row.descriptor_byte_0x29 != 0;
-					const int32_t score_depleted_cells = h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, source_primary_materializer_x_0x4a54a7, source_primary_materializer_y_0x4a54a7, selected_coordinate.level);
-					reward_generated_cell_score_depletion_call_count += 1;
+					const int32_t score_depleted_cells = source_score_wave_enabled_0x4a54a7
+							? h3maped_4a54a7_deplete_generated_cell_scores(private_generated_word_0x20, map_width, map_height, map_level_count, source_primary_materializer_x_0x4a54a7, source_primary_materializer_y_0x4a54a7, selected_coordinate.level)
+							: 0;
+					if (source_score_wave_enabled_0x4a54a7) {
+						reward_generated_cell_score_depletion_call_count += 1;
+					} else {
+						reward_generated_cell_score_depletion_skipped_count += 1;
+					}
 					reward_generated_cell_score_depletion_mutated_cell_count += score_depleted_cells;
 					placement_record["status"] = "0x4aa9b7_0x4aa603_0x4aa3e9_reward_coordinate_record_projected_private";
 					placement_record["port_fidelity"] = "coordinate_commit_aligned_proxy_catalog";
@@ -13358,7 +13375,9 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 					placement_record["selected_score_low_word"] = selected_coordinate.score;
 					placement_record["source_primary_object_descriptor_byte_0x29"] = object_selection.template_row.descriptor_byte_0x29;
 					placement_record["source_generated_cell_score_depletion_wave_enabled_0x4a54a7"] = source_score_wave_enabled_0x4a54a7;
-					placement_record["generated_cell_score_depletion_policy_0x4a54a7"] = "active_recovered_0x4a54a7_score_wave_with_projected_member_anchor";
+					placement_record["generated_cell_score_depletion_policy_0x4a54a7"] = source_score_wave_enabled_0x4a54a7
+							? String("active_recovered_0x4a54a7_projection_path_with_projected_member_anchor")
+							: String("skipped_recovered_0x4a54a7_descriptor_byte_0x29_zero_exit");
 					Dictionary source_final_writer_projection_probe_0x4aa3e9;
 					source_final_writer_projection_probe_0x4aa3e9["source_writer_address"] = "0x4aa3e9";
 					source_final_writer_projection_probe_0x4aa3e9["behavioral"] = false;
@@ -14181,6 +14200,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	reward_scheduler["generated_cell_mutated_body_count"] = reward_generated_cell_mutated_body_count;
 	reward_scheduler["generated_cell_mutated_action_count"] = reward_generated_cell_mutated_action_count;
 	reward_scheduler["generated_cell_score_depletion_call_count"] = reward_generated_cell_score_depletion_call_count;
+	reward_scheduler["generated_cell_score_depletion_skipped_count_descriptor_byte_0x29_zero"] = reward_generated_cell_score_depletion_skipped_count;
 	reward_scheduler["generated_cell_score_depletion_mutated_cell_count"] = reward_generated_cell_score_depletion_mutated_cell_count;
 	reward_scheduler["materialized_private_reward_coordinate_record_count"] = reward_coordinate_records.size();
 	reward_scheduler["reward_guard_records"] = reward_guard_records;
@@ -14299,6 +14319,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	phase["reward_generated_cell_mutated_body_count"] = reward_generated_cell_mutated_body_count;
 	phase["reward_generated_cell_mutated_action_count"] = reward_generated_cell_mutated_action_count;
 	phase["reward_generated_cell_score_depletion_call_count"] = reward_generated_cell_score_depletion_call_count;
+	phase["reward_generated_cell_score_depletion_skipped_count_descriptor_byte_0x29_zero"] = reward_generated_cell_score_depletion_skipped_count;
 	phase["reward_generated_cell_score_depletion_mutated_cell_count"] = reward_generated_cell_score_depletion_mutated_cell_count;
 	phase["object_catalog_source"] = COMPILED_OBJECT_CATALOG_SOURCE;
 	phase["grid_available"] = grid_available;
