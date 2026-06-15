@@ -766,6 +766,14 @@ struct TownObjectVectorRecordPlain {
 	bool has_castle = false;
 	bool weighted_continuation = false;
 	bool weighted_delegates_direct_0x4a93a2 = false;
+	bool relation_geometry_source_used = false;
+	int32_t placement_center_x_0x10 = -1;
+	int32_t placement_center_y_0x14 = -1;
+	int32_t placement_center_level_0x18 = 0;
+	int32_t scan_rect_min_x_0x20 = 0;
+	int32_t scan_rect_min_y_0x24 = 0;
+	int32_t scan_rect_max_x_exclusive_0x28 = 0;
+	int32_t scan_rect_max_y_exclusive_0x2c = 0;
 	int32_t selected_x = -1;
 	int32_t selected_y = -1;
 	int32_t selected_level = 0;
@@ -818,6 +826,9 @@ struct TownObjectVectorBitStateSummaryPlain {
 	int32_t footprint_rejected_zone_count = 0;
 	int32_t footprint_rejected_terrain_count = 0;
 	int32_t footprint_rejected_collision_count = 0;
+	int32_t footprint_rejected_bit22_count = 0;
+	int32_t footprint_rejected_validity_count = 0;
+	int32_t footprint_rejected_transition_count = 0;
 	int32_t direct_candidate_vector_selection_rng_call_count = 0;
 	int32_t town_object_vector_seed_count_0x49abd6 = 0;
 	int32_t town_object_vector_action_seed_count_0x49abd6 = 0;
@@ -5778,6 +5789,7 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		const CoordinateReplaySummary &coordinate_summary,
 		const BoundarySpanFillSummary &boundary_summary,
 		const RuntimeTerrainSelectionSummaryPlain &terrain_selection_summary,
+		const TerrainRelationEligibilitySummaryPlain &relation_summary,
 		const TerrainLiveFeedbackSummaryPlain &terrain_summary) {
 	TownObjectVectorBitStateSummaryPlain summary;
 	summary.coordinate_replay_available = coordinate_summary.ok;
@@ -5810,7 +5822,6 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		return summary;
 	}
 
-	const std::vector<uint32_t> &private_zone_words = boundary_summary.private_zone_words;
 	summary.generated_cell_word_0x20 = terrain_summary.generated_cell_word_0x20;
 	summary.generated_cell_word_0x24 = terrain_summary.generated_cell_word_0x24;
 	summary.generated_cell_word_0x28 = terrain_summary.generated_cell_word_0x28;
@@ -5894,6 +5905,12 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 	for (const RuntimeZoneRecordPlain &runtime : coordinate_summary.scaled_zone_coordinates) {
 		runtime_by_index[runtime.runtime_index] = runtime;
 	}
+	std::map<int32_t, FilledZoneGeometryPlain> relation_geometry_by_runtime_index;
+	for (const FilledZoneGeometryPlain &geometry : relation_summary.geometry_records) {
+		if (geometry.has_filled_cells) {
+			relation_geometry_by_runtime_index[geometry.runtime_zone_index] = geometry;
+		}
+	}
 	std::set<int32_t> direct_success_runtime_indices;
 	std::vector<uint8_t> placement_occupied(size_t(summary.cell_count), 0U);
 	H3MapedRng object_rng { terrain_selection_summary.rng_state_after_0x49b53d != 0U
@@ -5908,9 +5925,7 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		if (flat < 0 || flat >= summary.cell_count) {
 			return false;
 		}
-		const uint32_t masked = private_zone_words[size_t(flat)] & H3MAPED_UNASSIGNED_ZONE_WORD_PLAIN;
-		return masked != H3MAPED_UNASSIGNED_ZONE_WORD_PLAIN
-				&& int32_t((masked >> 16U) & 0xffU) == zone_word_id_for_runtime_zone_plain(runtime);
+		return i8_from_u32_byte(summary.generated_cell_word_0x20[size_t(flat)], 16U) == zone_word_id_for_runtime_zone_plain(runtime);
 	};
 	auto push_body_tiles = [&](TownObjectVectorRecordPlain &record) {
 		for (const TownMaskOffsetPlain &point : TOWN_BODY_POINTS) {
@@ -5919,6 +5934,89 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		for (const TownMaskOffsetPlain &point : TOWN_ACTION_POINTS) {
 			record.action_tiles.push_back(CoordCandidate { record.selected_x + point.dx, record.selected_y + point.dy, record.selected_level });
 		}
+	};
+	struct TownFootprintGatePlain {
+		bool pass = false;
+		std::string reject_reason = "no_valid_boundary_run";
+		int32_t bounds_count = 0;
+		int32_t zone_count = 0;
+		int32_t terrain_count = 0;
+		int32_t collision_count = 0;
+		int32_t bit22_count = 0;
+		int32_t validity_count = 0;
+		int32_t transition_count = 0;
+	};
+	auto source_town_footprint_gate = [&](int32_t anchor_x, int32_t anchor_y, int32_t anchor_level, const RuntimeZoneRecordPlain &runtime) -> TownFootprintGatePlain {
+		TownFootprintGatePlain gate;
+		if (TOWN_BODY_POINTS.empty()) {
+			return gate;
+		}
+		bool previous_invalid = true;
+		bool saw_invalid_after_valid = false;
+		bool current_invalid = true;
+		for (int32_t step = 0; step <= int32_t(TOWN_BODY_POINTS.size()); ++step) {
+			const TownMaskOffsetPlain &point = TOWN_BODY_POINTS[size_t(step % int32_t(TOWN_BODY_POINTS.size()))];
+			const int32_t body_x = anchor_x + point.dx;
+			const int32_t body_y = anchor_y + point.dy;
+			const int64_t body_flat = flat_for(body_x, body_y, anchor_level);
+			current_invalid = false;
+			if (body_flat < 0 || body_flat >= summary.cell_count) {
+				gate.bounds_count += 1;
+				current_invalid = true;
+				gate.reject_reason = "bounds";
+			} else {
+				const uint32_t word_0x28 = summary.generated_cell_word_0x28[size_t(body_flat)];
+				if (placement_occupied[size_t(body_flat)] != 0U) {
+					gate.collision_count += 1;
+					current_invalid = true;
+					gate.reject_reason = "collision";
+				}
+				if (!current_invalid && (word_0x28 & H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN) != 0U) {
+					gate.bit22_count += 1;
+					gate.reject_reason = "bit22";
+					return gate;
+				}
+				if (!current_invalid && !h3maped_generated_cell_49a1d8_valid_plain(summary.generated_cell_word_0x28, summary.generated_cell_word_0x24, body_flat)) {
+					gate.validity_count += 1;
+					const int32_t body_terrain = summary.generated_cell_terrain_code[size_t(body_flat)] & 0x3f;
+					if (body_terrain == 9) {
+						gate.terrain_count += 1;
+						gate.reject_reason = "terrain";
+					} else {
+						gate.collision_count += 1;
+						gate.reject_reason = "cell_validity";
+					}
+					current_invalid = true;
+				}
+				const int32_t body_terrain = summary.generated_cell_terrain_code[size_t(body_flat)] & 0x3f;
+				if (!current_invalid && body_terrain == 8) {
+					gate.terrain_count += 1;
+					current_invalid = true;
+					gate.reject_reason = "terrain";
+				}
+				if (!current_invalid && !cell_matches_runtime_zone(body_flat, runtime)) {
+					gate.zone_count += 1;
+					current_invalid = true;
+					gate.reject_reason = "zone";
+				}
+			}
+			if (current_invalid) {
+				if (!previous_invalid) {
+					gate.transition_count += 1;
+					if (saw_invalid_after_valid) {
+						gate.reject_reason = "invalid_transition";
+						return gate;
+					}
+					saw_invalid_after_valid = true;
+				}
+			}
+			previous_invalid = current_invalid;
+		}
+		gate.pass = !previous_invalid || saw_invalid_after_valid;
+		if (gate.pass) {
+			gate.reject_reason.clear();
+		}
+		return gate;
 	};
 
 	for (const TownSchedulePlain &schedule : schedules) {
@@ -5934,10 +6032,36 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 			continue;
 		}
 		const RuntimeZoneRecordPlain &runtime = runtime_it->second;
+		record.placement_center_x_0x10 = runtime.x_after_bbox_rescale;
+		record.placement_center_y_0x14 = runtime.y_after_bbox_rescale;
+		record.placement_center_level_0x18 = runtime.level_after_bbox_rescale;
+		record.scan_rect_min_x_0x20 = 0;
+		record.scan_rect_min_y_0x24 = 0;
+		record.scan_rect_max_x_exclusive_0x28 = summary.width;
+		record.scan_rect_max_y_exclusive_0x2c = summary.height;
+		const auto geometry_it = relation_geometry_by_runtime_index.find(schedule.runtime_zone_index);
+		if (geometry_it != relation_geometry_by_runtime_index.end()) {
+			const FilledZoneGeometryPlain &geometry = geometry_it->second;
+			record.relation_geometry_source_used = true;
+			record.placement_center_x_0x10 = geometry.centroid_x_0x10;
+			record.placement_center_y_0x14 = geometry.centroid_y_0x14;
+			record.placement_center_level_0x18 = geometry.centroid_level_0x18;
+			record.scan_rect_min_x_0x20 = std::max<int32_t>(0, geometry.filled_rect_min_x_0x20);
+			record.scan_rect_min_y_0x24 = std::max<int32_t>(0, geometry.filled_rect_min_y_0x24);
+			record.scan_rect_max_x_exclusive_0x28 = std::min<int32_t>(summary.width, geometry.filled_rect_max_x_exclusive_0x28);
+			record.scan_rect_max_y_exclusive_0x2c = std::min<int32_t>(summary.height, geometry.filled_rect_max_y_exclusive_0x2c);
+		}
 		record.weighted_delegates_direct_0x4a93a2 = schedule.weighted_continuation && !runtime.runtime_byte_0x3c_inferred;
 		if (!schedule.weighted_continuation && direct_success_runtime_indices.find(schedule.runtime_zone_index) != direct_success_runtime_indices.end()) {
 			record.status = "0x4a8d2c_direct_field_skipped_after_prior_success";
 			summary.skipped_after_prior_success_count += 1;
+			summary.town_records.push_back(record);
+			continue;
+		}
+		if (record.scan_rect_min_x_0x20 >= record.scan_rect_max_x_exclusive_0x28
+				|| record.scan_rect_min_y_0x24 >= record.scan_rect_max_y_exclusive_0x2c) {
+			record.status = "0x4a93a2_source_record_scan_rect_empty";
+			summary.footprint_missing_count += 1;
 			summary.town_records.push_back(record);
 			continue;
 		}
@@ -5947,9 +6071,9 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		std::vector<CoordCandidate> weighted_footprint_candidates;
 		int32_t closest_distance = std::numeric_limits<int32_t>::max();
 		int32_t weighted_best_score = schedule.density_budget_argument;
-		for (int32_t y = 0; y < summary.height; ++y) {
-			for (int32_t x = 0; x < summary.width; ++x) {
-				const int32_t level = runtime.level_after_bbox_rescale;
+		for (int32_t y = record.scan_rect_min_y_0x24; y < record.scan_rect_max_y_exclusive_0x2c; ++y) {
+			for (int32_t x = record.scan_rect_min_x_0x20; x < record.scan_rect_max_x_exclusive_0x28; ++x) {
+				const int32_t level = record.placement_center_level_0x18;
 				const int64_t flat = flat_for(x, y, level);
 				if (!cell_matches_runtime_zone(flat, runtime)) {
 					continue;
@@ -5960,52 +6084,23 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 				}
 				record.candidate_count += 1;
 				summary.candidate_total += 1;
-				bool footprint_passes = true;
-				std::string reject_reason;
-				for (const TownMaskOffsetPlain &point : TOWN_BODY_POINTS) {
-					const int32_t body_x = x + point.dx;
-					const int32_t body_y = y + point.dy;
-					const int64_t body_flat = flat_for(body_x, body_y, level);
-					if (body_flat < 0 || body_flat >= summary.cell_count) {
-						footprint_passes = false;
-						reject_reason = "bounds";
-						break;
-					}
-					if (placement_occupied[size_t(body_flat)] != 0U) {
-						footprint_passes = false;
-						reject_reason = "collision";
-						break;
-					}
-					if (!cell_matches_runtime_zone(body_flat, runtime)) {
-						footprint_passes = false;
-						reject_reason = "zone";
-						break;
-					}
-					const int32_t body_terrain = summary.generated_cell_terrain_code[size_t(body_flat)] & 0x3f;
-					if (body_terrain == 8 || body_terrain == 9) {
-						footprint_passes = false;
-						reject_reason = "terrain";
-						break;
-					}
-				}
-				if (!footprint_passes) {
-					if (reject_reason == "bounds") {
-						summary.footprint_rejected_bounds_count += 1;
-					} else if (reject_reason == "collision") {
-						summary.footprint_rejected_collision_count += 1;
-					} else if (reject_reason == "terrain") {
-						summary.footprint_rejected_terrain_count += 1;
-					} else {
-						summary.footprint_rejected_zone_count += 1;
-					}
+				const TownFootprintGatePlain footprint_gate = source_town_footprint_gate(x, y, level, runtime);
+				if (!footprint_gate.pass) {
+					summary.footprint_rejected_bounds_count += footprint_gate.bounds_count;
+					summary.footprint_rejected_zone_count += footprint_gate.zone_count;
+					summary.footprint_rejected_terrain_count += footprint_gate.terrain_count;
+					summary.footprint_rejected_collision_count += footprint_gate.collision_count;
+					summary.footprint_rejected_bit22_count += footprint_gate.bit22_count;
+					summary.footprint_rejected_validity_count += footprint_gate.validity_count;
+					summary.footprint_rejected_transition_count += footprint_gate.transition_count;
 					continue;
 				}
 				record.footprint_eligible_count += 1;
 				summary.footprint_eligible_total += 1;
-				const int32_t dx = x - runtime.x_after_bbox_rescale;
-				const int32_t dy = y - runtime.y_after_bbox_rescale;
+				const int32_t dx = x - record.placement_center_x_0x10;
+				const int32_t dy = y - record.placement_center_y_0x14;
 				const int32_t distance = dx * dx + dy * dy;
-				const int32_t generated_score = int32_t(private_zone_words[size_t(flat)] & 0xffffU);
+				const int32_t generated_score = int32_t(summary.generated_cell_word_0x20[size_t(flat)] & 0xffffU);
 				if (schedule.weighted_continuation && !record.weighted_delegates_direct_0x4a93a2) {
 					if (generated_score >= schedule.density_budget_argument && generated_score > weighted_best_score) {
 						weighted_best_score = generated_score;
@@ -9067,6 +9162,9 @@ void append_town_object_vector_bit_state_summary_json(std::ostream &out, const T
 	out << "    \"footprint_rejected_zone_count\": " << summary.footprint_rejected_zone_count << ",\n";
 	out << "    \"footprint_rejected_terrain_count\": " << summary.footprint_rejected_terrain_count << ",\n";
 	out << "    \"footprint_rejected_collision_count\": " << summary.footprint_rejected_collision_count << ",\n";
+	out << "    \"footprint_rejected_bit22_count\": " << summary.footprint_rejected_bit22_count << ",\n";
+	out << "    \"footprint_rejected_validity_count\": " << summary.footprint_rejected_validity_count << ",\n";
+	out << "    \"footprint_rejected_transition_count\": " << summary.footprint_rejected_transition_count << ",\n";
 	out << "    \"direct_candidate_vector_selection_rng_call_count_0x4e7276\": " << summary.direct_candidate_vector_selection_rng_call_count << ",\n";
 	out << "    \"town_object_vector_seed_count_0x49abd6\": " << summary.town_object_vector_seed_count_0x49abd6 << ",\n";
 	out << "    \"town_object_vector_action_seed_count_0x49abd6\": " << summary.town_object_vector_action_seed_count_0x49abd6 << ",\n";
@@ -9103,6 +9201,14 @@ void append_town_object_vector_bit_state_summary_json(std::ostream &out, const T
 		out << "\"has_castle\":" << (record.has_castle ? "true" : "false") << ",";
 		out << "\"weighted_continuation\":" << (record.weighted_continuation ? "true" : "false") << ",";
 		out << "\"weighted_delegates_direct_0x4a93a2\":" << (record.weighted_delegates_direct_0x4a93a2 ? "true" : "false") << ",";
+		out << "\"relation_geometry_source_used\":" << (record.relation_geometry_source_used ? "true" : "false") << ",";
+		out << "\"placement_center_x_0x10\":" << record.placement_center_x_0x10 << ",";
+		out << "\"placement_center_y_0x14\":" << record.placement_center_y_0x14 << ",";
+		out << "\"placement_center_level_0x18\":" << record.placement_center_level_0x18 << ",";
+		out << "\"scan_rect_min_x_0x20\":" << record.scan_rect_min_x_0x20 << ",";
+		out << "\"scan_rect_min_y_0x24\":" << record.scan_rect_min_y_0x24 << ",";
+		out << "\"scan_rect_max_x_exclusive_0x28\":" << record.scan_rect_max_x_exclusive_0x28 << ",";
+		out << "\"scan_rect_max_y_exclusive_0x2c\":" << record.scan_rect_max_y_exclusive_0x2c << ",";
 		out << "\"selected_x\":" << record.selected_x << ",";
 		out << "\"selected_y\":" << record.selected_y << ",";
 		out << "\"selected_level\":" << record.selected_level << ",";
@@ -10202,7 +10308,7 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
 	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
-	const TownObjectVectorBitStateSummaryPlain town_object_vector_bit_state_summary = build_town_object_vector_bit_state_summary(controlled_case, coordinate_replay_summary, boundary_span_fill_summary, runtime_terrain_selection_summary, terrain_live_feedback_summary);
+	const TownObjectVectorBitStateSummaryPlain town_object_vector_bit_state_summary = build_town_object_vector_bit_state_summary(controlled_case, coordinate_replay_summary, boundary_span_fill_summary, runtime_terrain_selection_summary, terrain_relation_eligibility_summary, terrain_live_feedback_summary);
 	const RelationNormalizationContractSummaryPlain relation_normalization_contract_summary = build_relation_normalization_contract_summary(controlled_case, runtime_zone_summary, coordinate_replay_summary, terrain_live_feedback_summary, generated_cell_bit_helper_summary);
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
 	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
