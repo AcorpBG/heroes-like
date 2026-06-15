@@ -5749,33 +5749,25 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 					continue;
 				}
 				summary.candidate_0x49a962_call_count += 1;
-				if (h3maped_generated_cell_49aa63_plain(diagnostic_word_0x28, word_0x2c, flat, true)) {
+				const aurelion::h3maped_rmg_core::GeneratedCell49a962SweepResult sweep_0x49a962 =
+						aurelion::h3maped_rmg_core::generated_cell_49a962_word24(
+								diagnostic_word_0x28,
+								word_0x2c,
+								word_0x24,
+								summary.width,
+								summary.height,
+								summary.level_count,
+								x,
+								y,
+								level);
+				if (sweep_0x49a962.center_candidate_set) {
 					summary.candidate_0x49a962_center_set_count += 1;
 				}
-				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(summary.height, y + 2); ++local_y) {
-					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(summary.width, x + 2); ++local_x) {
-						const int64_t neighbor_flat = h3maped_generated_cell_flat_plain(summary.width, summary.height, local_x, local_y, level);
-						if (neighbor_flat < 0 || neighbor_flat >= summary.cell_count) {
-							continue;
-						}
-						summary.candidate_0x49a962_neighbor_scan_count += 1;
-						if ((diagnostic_word_0x28[size_t(neighbor_flat)] & H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN) != 0U) {
-							summary.candidate_0x49a962_neighbor_bit22_skip_count += 1;
-							continue;
-						}
-						if (!h3maped_generated_cell_49a1d8_valid_plain(diagnostic_word_0x28, word_0x24, neighbor_flat)) {
-							summary.candidate_0x49a962_neighbor_invalid_skip_count += 1;
-							continue;
-						}
-						if ((word_0x24[size_t(neighbor_flat)] & 0x3fU) == 8U) {
-							summary.candidate_0x49a962_neighbor_terrain8_skip_count += 1;
-							continue;
-						}
-						if (h3maped_generated_cell_49a932_plain(diagnostic_word_0x28, word_0x2c, neighbor_flat, false)) {
-							summary.candidate_0x49a962_neighbor_clear_count_0x49a932 += 1;
-						}
-					}
-				}
+				summary.candidate_0x49a962_neighbor_scan_count += sweep_0x49a962.neighbor_scan_count;
+				summary.candidate_0x49a962_neighbor_bit22_skip_count += sweep_0x49a962.neighbor_bit22_skip_count;
+				summary.candidate_0x49a962_neighbor_invalid_skip_count += sweep_0x49a962.neighbor_invalid_skip_count;
+				summary.candidate_0x49a962_neighbor_terrain8_skip_count += sweep_0x49a962.neighbor_terrain8_skip_count;
+				summary.candidate_0x49a962_neighbor_clear_count_0x49a932 += sweep_0x49a962.neighbor_clear_count;
 			}
 		}
 	}
@@ -6284,32 +6276,16 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		}
 		return route_diagnostic_word_0x28[size_t(flat)];
 	};
-	auto route_mark_occupied_0x49a932 = [&](int64_t flat) -> bool {
-		if (flat < 0 || flat >= summary.cell_count) {
-			return false;
-		}
-		return h3maped_generated_cell_49a932_plain(route_diagnostic_word_0x28, summary.generated_cell_word_0x2c, flat, true);
-	};
 	auto route_stamp_0x49a85d = [&](const RoutePoint0x4a8260Plain &point, int32_t level) {
-		if (!route_point_in_bounds(point) || level < 0 || level >= summary.level_count) {
-			return;
-		}
-		const int64_t center_flat = flat_for(point.x, point.y, level);
-		if (center_flat >= 0 && center_flat < summary.cell_count) {
-			route_mark_occupied_0x49a932(center_flat);
-		}
-		const int32_t min_x = std::max<int32_t>(0, point.x - 1);
-		const int32_t min_y = std::max<int32_t>(0, point.y - 1);
-		const int32_t max_x = std::min<int32_t>(summary.width, point.x + 2);
-		const int32_t max_y = std::min<int32_t>(summary.height, point.y + 2);
-		for (int32_t y = min_y; y < max_y; ++y) {
-			for (int32_t x = min_x; x < max_x; ++x) {
-				const int64_t flat = flat_for(x, y, level);
-				if (flat >= 0 && flat < summary.cell_count) {
-					route_mark_occupied_0x49a932(flat);
-				}
-			}
-		}
+		aurelion::h3maped_rmg_core::generated_cell_49a85d_stamp(
+				route_diagnostic_word_0x28,
+				summary.generated_cell_word_0x2c,
+				summary.width,
+				summary.height,
+				summary.level_count,
+				point.x,
+				point.y,
+				level);
 	};
 	auto route_cut_0x4a80dc = [&](const RoutePoint0x4a8260Plain &start, const RoutePoint0x4a8260Plain &target, int32_t level) -> RoutePoint0x4a8260Plain {
 		const int32_t dx = target.x - start.x;
