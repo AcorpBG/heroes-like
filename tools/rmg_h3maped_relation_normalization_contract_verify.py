@@ -197,9 +197,19 @@ def verify(
         )
         == propagation_ref_present,
     }
+    same_run_relation_vector_materialized = (
+        native.get("status") == "same_run_relation_vector_materialized_runtime_replay_pending"
+        and native.get("relation_vector_runtime_order_materialized") is True
+        and native.get("generator_0x10e4_relation_pointer_records_materialized") is True
+        and native.get("generator_0x10e8_relation_pointer_end_materialized") is True
+        and int(native.get("runtime_relation_vector_record_count", -1)) == 13
+    )
     native_contract_checks = {
         "native_status_diagnostic": native.get("status")
-        == "diagnostic_relation_normalization_contract_ported_runtime_replay_pending",
+        in {
+            "diagnostic_relation_normalization_contract_ported_runtime_replay_pending",
+            "same_run_relation_vector_materialized_runtime_replay_pending",
+        },
         "native_contract_ported": native.get("relation_normalization_contract_ported_plain_cpp") is True,
         "native_4a59e2_pack_materialized": native.get(
             "helper_0x4a59e2_pack_materialized_plain_cpp"
@@ -366,18 +376,23 @@ def verify(
             "flat_template_link_seeds_are_runtime_relation_vector"
         )
         is False,
-        "native_generator_0x10e4_relation_records_pending": native.get(
-            "generator_0x10e4_relation_pointer_records_materialized"
-        )
-        is False,
-        "native_generator_0x10e8_relation_end_pending": native.get(
-            "generator_0x10e8_relation_pointer_end_materialized"
-        )
-        is False,
+        "native_generator_0x10e4_relation_records_pending": (
+            native.get("generator_0x10e4_relation_pointer_records_materialized") is False
+            or same_run_relation_vector_materialized
+        ),
+        "native_generator_0x10e8_relation_end_pending": (
+            native.get("generator_0x10e8_relation_pointer_end_materialized") is False
+            or same_run_relation_vector_materialized
+        ),
         "native_relation_vector_blocker_names_0x10e4": "generator_plus_0x10e4"
         in str(native.get("relation_vector_blocked_reason", "")),
-        "native_relation_vector_blocker_names_0x49a318": "0x49a318"
-        in str(native.get("relation_vector_blocked_reason", "")),
+        "native_relation_vector_blocker_names_0x49a318": (
+            "0x49a318" in str(native.get("relation_vector_blocked_reason", ""))
+            or (
+                same_run_relation_vector_materialized
+                and "0x4a5a23" in str(native.get("relation_vector_blocked_reason", ""))
+            )
+        ),
     }
     prerequisite_checks = {
         "prerequisite_exposes_relation_contract": prerequisite.get(
