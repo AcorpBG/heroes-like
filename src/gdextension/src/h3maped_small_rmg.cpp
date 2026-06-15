@@ -9496,8 +9496,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 		if (flat < 0 || flat >= int64_t(private_generated_word_0x28.size())) {
 			return false;
 		}
-		const bool newly_cleared = (private_generated_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U;
-		private_generated_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_READY_BIT_25;
+		const bool newly_cleared = aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(private_generated_word_0x28, flat);
 		if (newly_cleared) {
 			private_generated_word_0x28_body_mutation_count += 1;
 		}
@@ -11762,7 +11761,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						}
 						const int32_t wrapper_flat = source_wrapper_flat_0x49ce04(wrapper_x, wrapper_y);
 						if (wrapper_flat >= 0 && (selection.candidate.dynamic_monster || !h3_object_row_action_bit_0x4268eb(selection.template_row, -point.dx, -point.dy))) {
-							source_wrapper_word_0x28_0x49ce04[size_t(wrapper_flat)] &= ~H3MAPED_CELL_DECOR_READY_BIT_25;
+							aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(source_wrapper_word_0x28_0x49ce04, wrapper_flat);
 						}
 					}
 				};
@@ -16346,13 +16345,10 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 				town_object_vector_seed_count_0x49abd6 += 1;
 			}
 			if (action_flats.count(flat) == 0) {
-				const bool bit25_was_set = (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U;
-				live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_READY_BIT_25;
-				if (bit25_was_set) {
+				if (aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(live_cell_word_0x28, flat64)) {
 					town_0x49abd6_body_bit25_clear_count += 1;
 				}
 			}
-			mark_occupied_blocked_49a932(flat64, true);
 		}
 	};
 	for (int64_t index = 0; index < town_records.size(); ++index) {
@@ -18433,8 +18429,7 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 							decorative_obstacle_id_by_flat[size_t(body_flat)] = selected->obstacle.obstacle_id;
 							decorative_wrapper_ids_by_flat[size_t(body_flat)].push_back(wrapper_id);
 							private_decorative_u8.set(body_flat, 1);
-							if ((live_cell_word_0x28[size_t(body_flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U) {
-								live_cell_word_0x28[size_t(body_flat)] &= ~H3MAPED_CELL_DECOR_READY_BIT_25;
+							if (aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(live_cell_word_0x28, body_flat)) {
 								body_ready_bit25_cleared_after_stamp_count += 1;
 							}
 							body_marked_for_object += 1;

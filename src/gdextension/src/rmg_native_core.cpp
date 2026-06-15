@@ -3363,6 +3363,10 @@ bool h3maped_generated_cell_49abd6_action_stamp_plain(std::vector<uint32_t> &wor
 	return aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(word_0x28, word_0x2c, flat);
 }
 
+bool h3maped_generated_cell_49abd6_body_reject_stamp_plain(std::vector<uint32_t> &word_0x28, int64_t flat) {
+	return aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(word_0x28, flat);
+}
+
 int64_t h3maped_generated_cell_flat_plain(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
 	return aurelion::h3maped_rmg_core::cell_index(width, height, x, y, level);
 }
@@ -6223,13 +6227,10 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 			}
 			seed_private_object_vector_flat(flat);
 			if (action_flats.count(flat) == 0) {
-				const bool bit25_was_set = (summary.generated_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN) != 0U;
-				summary.generated_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_READY_BIT_25_PLAIN;
-				if (bit25_was_set) {
+				if (h3maped_generated_cell_49abd6_body_reject_stamp_plain(summary.generated_cell_word_0x28, flat)) {
 					summary.town_0x49abd6_body_bit25_clear_count += 1;
 				}
 			}
-			h3maped_generated_cell_49a932_plain(summary.generated_cell_word_0x28, summary.generated_cell_word_0x2c, flat, true);
 		}
 	}
 	summary.town_object_vector_0x49abd6_materialized = summary.town_object_vector_seed_count_0x49abd6 > 0;
