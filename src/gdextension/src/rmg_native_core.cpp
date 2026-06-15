@@ -775,6 +775,10 @@ struct TownObjectVectorRecordPlain {
 	int32_t selection_rng_value = -1;
 	int32_t selection_index = -1;
 	int32_t object_occupied_cell_mark_count = 0;
+	int32_t score_depletion_anchor_x_0x4a54a7 = -1;
+	int32_t score_depletion_anchor_y_0x4a54a7 = -1;
+	int32_t score_depletion_anchor_level_0x4a54a7 = 0;
+	int32_t score_depletion_mutated_cell_count_0x4a54a7 = 0;
 	std::string status;
 	std::vector<CoordCandidate> body_tiles;
 	std::vector<CoordCandidate> action_tiles;
@@ -819,6 +823,8 @@ struct TownObjectVectorBitStateSummaryPlain {
 	int32_t town_object_vector_action_seed_count_0x49abd6 = 0;
 	int32_t town_0x49abd6_action_bit22_count = 0;
 	int32_t town_0x49abd6_body_bit25_clear_count = 0;
+	int32_t town_0x4a54a7_score_depletion_call_count = 0;
+	int32_t town_0x4a54a7_score_depletion_mutated_cell_count = 0;
 	int32_t route_container_0x4a8260_scan_cell_count = 0;
 	int32_t route_container_0x4a8260_object_vector_empty_count = 0;
 	int32_t route_container_0x4a8260_object_vector_nonempty_count = 0;
@@ -6042,6 +6048,22 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 				? "0x4a901a_0x49ba89_0x540a9c_record_fields_projected_native_private"
 				: "0x49ba89_0x540a9c_record_fields_projected_native_private";
 		push_body_tiles(record);
+		// 0x4a54a7 clears/projection-depletes scores at dispatch x/y minus
+		// descriptor origin +0x2c/+0x30. Town descriptor 98 has origin (2,0).
+		record.score_depletion_anchor_x_0x4a54a7 = record.selected_x - 2;
+		record.score_depletion_anchor_y_0x4a54a7 = record.selected_y;
+		record.score_depletion_anchor_level_0x4a54a7 = record.selected_level;
+		record.score_depletion_mutated_cell_count_0x4a54a7 = aurelion::h3maped_rmg_core::deplete_generated_cell_scores_4a54a7(
+				summary.generated_cell_word_0x20,
+				summary.width,
+				summary.height,
+				summary.level_count,
+				record.score_depletion_anchor_x_0x4a54a7,
+				record.score_depletion_anchor_y_0x4a54a7,
+				record.score_depletion_anchor_level_0x4a54a7);
+		summary.town_0x4a54a7_score_depletion_call_count += 1;
+		summary.town_0x4a54a7_score_depletion_mutated_cell_count += record.score_depletion_mutated_cell_count_0x4a54a7;
+		summary.native_behavior_changed = true;
 		for (const CoordCandidate &body : record.body_tiles) {
 			const int64_t body_flat = flat_for(body.x, body.y, body.level);
 			if (body_flat >= 0 && body_flat < summary.cell_count && placement_occupied[size_t(body_flat)] == 0U) {
@@ -9050,6 +9072,8 @@ void append_town_object_vector_bit_state_summary_json(std::ostream &out, const T
 	out << "    \"town_object_vector_action_seed_count_0x49abd6\": " << summary.town_object_vector_action_seed_count_0x49abd6 << ",\n";
 	out << "    \"town_0x49abd6_action_bit22_count\": " << summary.town_0x49abd6_action_bit22_count << ",\n";
 	out << "    \"town_0x49abd6_body_bit25_clear_count\": " << summary.town_0x49abd6_body_bit25_clear_count << ",\n";
+	out << "    \"town_0x4a54a7_score_depletion_call_count\": " << summary.town_0x4a54a7_score_depletion_call_count << ",\n";
+	out << "    \"town_0x4a54a7_score_depletion_mutated_cell_count\": " << summary.town_0x4a54a7_score_depletion_mutated_cell_count << ",\n";
 	out << "    \"route_container_0x4a8260_scan_cell_count\": " << summary.route_container_0x4a8260_scan_cell_count << ",\n";
 	out << "    \"route_container_0x4a8260_object_vector_empty_count\": " << summary.route_container_0x4a8260_object_vector_empty_count << ",\n";
 	out << "    \"route_container_0x4a8260_object_vector_nonempty_count\": " << summary.route_container_0x4a8260_object_vector_nonempty_count << ",\n";
@@ -9088,6 +9112,10 @@ void append_town_object_vector_bit_state_summary_json(std::ostream &out, const T
 		out << "\"selection_rng_value\":" << record.selection_rng_value << ",";
 		out << "\"selection_index\":" << record.selection_index << ",";
 		out << "\"object_occupied_cell_mark_count\":" << record.object_occupied_cell_mark_count << ",";
+		out << "\"score_depletion_anchor_x_0x4a54a7\":" << record.score_depletion_anchor_x_0x4a54a7 << ",";
+		out << "\"score_depletion_anchor_y_0x4a54a7\":" << record.score_depletion_anchor_y_0x4a54a7 << ",";
+		out << "\"score_depletion_anchor_level_0x4a54a7\":" << record.score_depletion_anchor_level_0x4a54a7 << ",";
+		out << "\"score_depletion_mutated_cell_count_0x4a54a7\":" << record.score_depletion_mutated_cell_count_0x4a54a7 << ",";
 		out << "\"status\":\"" << json_escape(record.status) << "\"";
 		out << "}";
 	}
