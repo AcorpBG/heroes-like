@@ -3359,6 +3359,10 @@ bool h3maped_generated_cell_49a932_plain(std::vector<uint32_t> &word_0x28, const
 	return aurelion::h3maped_rmg_core::generated_cell_49a932(word_0x28, word_0x2c, flat, set_occupied);
 }
 
+bool h3maped_generated_cell_49abd6_action_stamp_plain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat) {
+	return aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(word_0x28, word_0x2c, flat);
+}
+
 int64_t h3maped_generated_cell_flat_plain(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
 	return aurelion::h3maped_rmg_core::cell_index(width, height, x, y, level);
 }
@@ -6206,10 +6210,9 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 				summary.town_object_vector_action_seed_count_0x49abd6 += 1;
 			}
 			const uint32_t before = summary.generated_cell_word_0x28[size_t(flat)];
-			summary.generated_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN;
-			summary.generated_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN;
-			summary.generated_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN;
-			if (before != summary.generated_cell_word_0x28[size_t(flat)]) {
+			h3maped_generated_cell_49abd6_action_stamp_plain(summary.generated_cell_word_0x28, summary.generated_cell_word_0x2c, flat);
+			if ((before & H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN) == 0U
+					&& (summary.generated_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_ACTION_CONTROL_BIT_22_PLAIN) != 0U) {
 				summary.town_0x49abd6_action_bit22_count += 1;
 			}
 		}

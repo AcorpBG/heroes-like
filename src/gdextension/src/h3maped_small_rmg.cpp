@@ -9478,6 +9478,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 	std::vector<uint8_t> object_occupied(size_t(std::max(0, expected_cell_count)), 0);
 	std::vector<uint32_t> private_generated_word_0x20(size_t(std::max(0, expected_cell_count)), 0xffff7fbcU);
 	std::vector<uint32_t> private_generated_word_0x28 = grid_available ? live_cell_word_0x28 : std::vector<uint32_t>(size_t(std::max(0, expected_cell_count)), 0);
+	std::vector<uint32_t> private_generated_word_0x2c(size_t(std::max(0, expected_cell_count)), 0);
 	int32_t private_generated_word_0x28_bit27_prefill_count_0x499ea3 = 0;
 	if (grid_available) {
 		for (uint32_t &word_0x28 : private_generated_word_0x28) {
@@ -9507,9 +9508,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 			return false;
 		}
 		const uint32_t before = private_generated_word_0x28[size_t(flat)];
-		private_generated_word_0x28[size_t(flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
-		private_generated_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-		private_generated_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+		aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(private_generated_word_0x28, private_generated_word_0x2c, flat);
 		if (before != private_generated_word_0x28[size_t(flat)]) {
 			private_generated_word_0x28_action_mutation_count += 1;
 		}
@@ -11731,6 +11730,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 				std::vector<uint32_t> source_wrapper_word_0x20_0x49ce04(size_t(source_composite_wrapper_width_0x49ce04 * source_composite_wrapper_height_0x49ce04), 0xffff7fbcU);
 				std::vector<uint32_t> source_wrapper_word_0x24_0x49ce04(size_t(source_composite_wrapper_width_0x49ce04 * source_composite_wrapper_height_0x49ce04), 0U);
 				std::vector<uint32_t> source_wrapper_word_0x28_0x49ce04(size_t(source_composite_wrapper_width_0x49ce04 * source_composite_wrapper_height_0x49ce04), H3MAPED_CELL_DECOR_READY_BIT_25 | H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27);
+				std::vector<uint32_t> source_wrapper_word_0x2c_0x49ce04(size_t(source_composite_wrapper_width_0x49ce04 * source_composite_wrapper_height_0x49ce04), 0U);
 				auto source_wrapper_cell_valid_0x49a1d8 = [&](int32_t x, int32_t y) -> bool {
 					const int32_t flat = source_wrapper_flat_0x49ce04(x, y);
 					if (flat < 0) {
@@ -11750,9 +11750,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						}
 						const int32_t wrapper_flat = source_wrapper_flat_0x49ce04(wrapper_x, wrapper_y);
 						if (wrapper_flat >= 0) {
-							source_wrapper_word_0x28_0x49ce04[size_t(wrapper_flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
-							source_wrapper_word_0x28_0x49ce04[size_t(wrapper_flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-							source_wrapper_word_0x28_0x49ce04[size_t(wrapper_flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+							aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(source_wrapper_word_0x28_0x49ce04, source_wrapper_word_0x2c_0x49ce04, wrapper_flat);
 						}
 						source_wrapper_action_control_type_by_cell_0x49abd6[source_wrapper_key_0x49ce04(wrapper_x, wrapper_y)] = selection.candidate.type_id;
 					}
@@ -12761,8 +12759,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 										return;
 									}
 									const uint32_t before = diagnostic_stamp_word_0x28[size_t(flat)];
-									diagnostic_stamp_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-									diagnostic_stamp_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+									aurelion::h3maped_rmg_core::generated_cell_49a932(diagnostic_stamp_word_0x28, source_wrapper_word_0x2c_0x49ce04, flat, true);
 									const uint32_t after = diagnostic_stamp_word_0x28[size_t(flat)];
 									if (records.size() < 48) {
 										Dictionary mutation;
@@ -12781,9 +12778,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								const int32_t selected_flat = source_wrapper_flat_0x49ce04(selected_guard_candidate.dx, selected_guard_candidate.dy);
 								if (selected_flat >= 0) {
 									const uint32_t before = diagnostic_stamp_word_0x28[size_t(selected_flat)];
-									diagnostic_stamp_word_0x28[size_t(selected_flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
-									diagnostic_stamp_word_0x28[size_t(selected_flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-									diagnostic_stamp_word_0x28[size_t(selected_flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+									aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(diagnostic_stamp_word_0x28, source_wrapper_word_0x2c_0x49ce04, selected_flat);
 									const uint32_t after = diagnostic_stamp_word_0x28[size_t(selected_flat)];
 									Dictionary mutation;
 									mutation["x"] = selected_guard_candidate.dx;
@@ -13525,17 +13520,14 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 						const int32_t selected_guard_wrapper_y = int32_t(selected_guard_stamp_shape_0x49d69d.get("selected_candidate_y", -1));
 						const int32_t selected_guard_flat = source_wrapper_flat_0x49ce04(selected_guard_wrapper_x, selected_guard_wrapper_y);
 						if (selected_guard_flat >= 0) {
-							source_wrapper_word_before_merge_0x4aa3e9[size_t(selected_guard_flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
-							source_wrapper_word_before_merge_0x4aa3e9[size_t(selected_guard_flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-							source_wrapper_word_before_merge_0x4aa3e9[size_t(selected_guard_flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+							aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(source_wrapper_word_before_merge_0x4aa3e9, source_wrapper_word_0x2c_0x49ce04, selected_guard_flat);
 						}
 						for (int32_t direction_index = 0; selected_guard_flat >= 0 && direction_index < 8; ++direction_index) {
 							const int32_t neighbor_x = selected_guard_wrapper_x + SOURCE_DIRECTION_DX_0X5A2658[direction_index];
 							const int32_t neighbor_y = selected_guard_wrapper_y + SOURCE_DIRECTION_DY_0X5A2658[direction_index];
 							const int32_t neighbor_flat = source_wrapper_flat_0x49ce04(neighbor_x, neighbor_y);
 							if (neighbor_flat >= 0 && source_wrapper_cell_valid_0x49a1d8(neighbor_x, neighbor_y)) {
-								source_wrapper_word_before_merge_0x4aa3e9[size_t(neighbor_flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-								source_wrapper_word_before_merge_0x4aa3e9[size_t(neighbor_flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+								aurelion::h3maped_rmg_core::generated_cell_49a932(source_wrapper_word_before_merge_0x4aa3e9, source_wrapper_word_0x2c_0x49ce04, neighbor_flat, true);
 							}
 							const int32_t secondary_start_direction = (direction_index & 1) != 0 ? ((direction_index + 7) & 7) : direction_index;
 							const int32_t secondary_count = (direction_index & 1) != 0 ? 3 : 1;
@@ -13545,8 +13537,7 @@ Dictionary object_vector_prerequisite_phase(const Dictionary &normalized_config,
 								const int32_t ring_y = neighbor_y + SOURCE_DIRECTION_DY_0X5A2658[secondary_direction];
 								const int32_t ring_flat = source_wrapper_flat_0x49ce04(ring_x, ring_y);
 								if (ring_flat >= 0 && source_wrapper_cell_valid_0x49a1d8(ring_x, ring_y)) {
-									source_wrapper_word_before_merge_0x4aa3e9[size_t(ring_flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-									source_wrapper_word_before_merge_0x4aa3e9[size_t(ring_flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
+									aurelion::h3maped_rmg_core::generated_cell_49a932(source_wrapper_word_before_merge_0x4aa3e9, source_wrapper_word_0x2c_0x49ce04, ring_flat, true);
 								}
 							}
 						}
@@ -16335,10 +16326,9 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 				town_object_vector_action_seed_count_0x49abd6 += 1;
 			}
 			const uint32_t before = live_cell_word_0x28[size_t(flat)];
-			live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
-			live_cell_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-			live_cell_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
-			if (before != live_cell_word_0x28[size_t(flat)]) {
+			aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(live_cell_word_0x28, live_cell_word_0x2c, flat64);
+			if ((before & H3MAPED_CELL_ACTION_CONTROL_BIT_22) == 0U
+					&& (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_ACTION_CONTROL_BIT_22) != 0U) {
 				town_0x49abd6_action_bit22_count += 1;
 			}
 		}
@@ -18461,18 +18451,20 @@ Dictionary decorative_obstacle_filler_phase(const Dictionary &normalized_config,
 						continue;
 					}
 					uint32_t &action_word = live_cell_word_0x28[size_t(action_flat)];
-					if ((action_word & H3MAPED_CELL_ACTION_CONTROL_BIT_22) == 0U) {
+					const uint32_t before_action_word = action_word;
+					aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(live_cell_word_0x28, live_cell_word_0x2c, action_flat);
+					if ((before_action_word & H3MAPED_CELL_ACTION_CONTROL_BIT_22) == 0U
+							&& (action_word & H3MAPED_CELL_ACTION_CONTROL_BIT_22) != 0U) {
 						action_bit22_set_after_stamp_count += 1;
 					}
-					if ((action_word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U) {
+					if ((before_action_word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U
+							&& (action_word & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
 						action_bit27_set_after_stamp_count += 1;
 					}
-					if ((action_word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+					if ((before_action_word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) != 0U
+							&& (action_word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26) == 0U) {
 						action_bit26_cleared_after_stamp_count += 1;
 					}
-					action_word |= H3MAPED_CELL_ACTION_CONTROL_BIT_22;
-					action_word |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-					action_word &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
 					action_marked_for_object += 1;
 				}
 				const std::vector<H3MaskPoint> selected_action_points = h3_text_mask_points(selected->template_row.action_mask, true);

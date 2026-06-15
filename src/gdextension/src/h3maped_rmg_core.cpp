@@ -157,6 +157,16 @@ bool generated_cell_49a932(std::vector<uint32_t> &word_0x28, const std::vector<u
 	return was_set;
 }
 
+bool generated_cell_49abd6_action_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat) {
+	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
+		return false;
+	}
+	const uint32_t before = word_0x28[size_t(flat)];
+	word_0x28[size_t(flat)] |= CELL_ACTION_CONTROL_BIT_22;
+	generated_cell_49a932(word_0x28, word_0x2c, flat, true);
+	return before != word_0x28[size_t(flat)];
+}
+
 int32_t deplete_generated_cell_scores_4a54a7(std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level) {
 	if (width <= 0 || height <= 0 || level_count <= 0 || anchor_level < 0 || anchor_level >= level_count || generated_cell_word_0x20.empty()) {
 		return 0;
