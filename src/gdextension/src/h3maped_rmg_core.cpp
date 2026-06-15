@@ -70,6 +70,37 @@ uint32_t generated_cell_terrain_flags_0x49acf6(int32_t flag_a, int32_t flag_b) {
 	return (((uint32_t(flag_a) & 0x01U) | ((uint32_t(flag_b) & 0x01U) << 1U)) << CELL_TERRAIN_FLAG_SHIFT_0X49ACF6);
 }
 
+uint32_t generated_cell_4a59e2_pack_word_0x1c(uint32_t word_0x1c, uint32_t arg_word_0x1c_high) {
+	return (word_0x1c & 0x0000ffffU) | ((arg_word_0x1c_high & 0xffffU) << 16U);
+}
+
+uint32_t generated_cell_4a59e2_pack_word_0x20(uint32_t word_0x20, uint32_t arg_byte3) {
+	return (word_0x20 & 0x00ffffffU) | ((arg_byte3 & 0xffU) << 24U);
+}
+
+uint32_t generated_cell_4a59e2_pack_word_0x28(uint32_t word_0x28, uint32_t arg_bits_12_14) {
+	return (word_0x28 & ~RELATION_WORD_0X28_BITS_12_14_MASK)
+			| ((arg_bits_12_14 & 0x7U) << 12U);
+}
+
+uint32_t generated_cell_4a5767_reset_force_word_0x1c(uint32_t word_0x1c_after_4a59e2) {
+	return (word_0x1c_after_4a59e2 & 0xffff0000U)
+			| (((word_0x1c_after_4a59e2 & 0x0000ffffU) & 0x7d00U) | 0x7d00U);
+}
+
+uint32_t generated_cell_49a318_clear_source_word_0x1c(uint32_t word_0x1c) {
+	return word_0x1c & 0xffff0000U;
+}
+
+RelationResetCell generated_cell_4a5767_reset_cell(uint32_t source_word_0x20, uint32_t source_word_0x28) {
+	RelationResetCell cell;
+	cell.word_0x1c = generated_cell_4a59e2_pack_word_0x1c(0U, RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH);
+	cell.word_0x1c = generated_cell_4a5767_reset_force_word_0x1c(cell.word_0x1c);
+	cell.word_0x20 = generated_cell_4a59e2_pack_word_0x20(source_word_0x20, RELATION_RESET_ARG_0X4A59E2_WORD_0X20_BYTE3);
+	cell.word_0x28 = generated_cell_4a59e2_pack_word_0x28(source_word_0x28, RELATION_RESET_ARG_0X4A59E2_BITS_12_14);
+	return cell;
+}
+
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
 	return flat >= 0
 			&& flat < int64_t(word_0x28.size())
