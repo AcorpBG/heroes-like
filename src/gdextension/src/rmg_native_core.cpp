@@ -931,6 +931,23 @@ struct RelationNormalizationDirectionEntryPlain {
 	bool matches_recovered = false;
 };
 
+struct RelationNormalizationRuntimeRecordPlain {
+	int32_t vector_index = -1;
+	std::string recovered_pointer;
+	std::string recovered_vtable;
+	int32_t field_0x04 = 0;
+	int32_t field_0x08 = 0;
+	int32_t relation_type_0x0c = 0;
+	int32_t source_x_0x10 = 0;
+	int32_t source_y_0x14 = 0;
+	int32_t source_level_0x18 = 0;
+	int32_t field_0x1c = 0;
+	int32_t scan_min_x_0x20 = 0;
+	int32_t scan_min_y_0x24 = 0;
+	int32_t scan_max_x_exclusive_0x28 = 0;
+	int32_t scan_max_y_exclusive_0x2c = 0;
+};
+
 struct RelationNormalizationContractSummaryPlain {
 	bool terrain_live_feedback_available = false;
 	bool supported_scope = false;
@@ -989,6 +1006,13 @@ struct RelationNormalizationContractSummaryPlain {
 	int32_t selected_candidate_relation_total_record_count = 0;
 	int32_t selected_candidate_relation_border_guard_record_count = 0;
 	int32_t selected_candidate_relation_record_stride_bytes = 0;
+	int32_t runtime_relation_vector_record_count = 0;
+	int32_t runtime_relation_vector_stride_bytes = 0;
+	int32_t runtime_relation_vector_begin_0x10e4 = 0;
+	int32_t runtime_relation_vector_end_0x10e8 = 0;
+	int32_t runtime_relation_vector_capacity_0x10ec = 0;
+	int32_t runtime_relation_vector_relation_type8_count = 0;
+	int32_t runtime_relation_vector_same_owner_field_count = 0;
 	int32_t template_vs_selected_candidate_relation_record_count_delta = 0;
 	int32_t template_vs_selected_candidate_border_guard_record_count_delta = 0;
 	std::vector<int32_t> selected_candidate_relation_owner_record_counts;
@@ -1027,6 +1051,7 @@ struct RelationNormalizationContractSummaryPlain {
 	std::vector<uint32_t> reset_word_0x1c;
 	std::vector<uint32_t> reset_word_0x20;
 	std::vector<uint32_t> reset_word_0x28;
+	std::vector<RelationNormalizationRuntimeRecordPlain> runtime_relation_vector_records;
 	std::vector<RelationNormalizationResetSamplePlain> reset_samples;
 	std::vector<RelationNormalizationSourceClearSamplePlain> source_clear_samples;
 	std::vector<RelationNormalizationDirectionEntryPlain> direction_table_entries;
@@ -6513,6 +6538,56 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 	return summary;
 }
 
+std::vector<RelationNormalizationRuntimeRecordPlain> recovered_medium_seed10_hc4_setup0_relation_vector_plain() {
+	std::vector<RelationNormalizationRuntimeRecordPlain> records;
+	records.reserve(13);
+	auto append = [&](int32_t index,
+			const char *pointer,
+			const char *vtable,
+			int32_t field_0x04,
+			int32_t field_0x08,
+			int32_t relation_type_0x0c,
+			int32_t source_x,
+			int32_t source_y,
+			int32_t source_level,
+			int32_t field_0x1c,
+			int32_t min_x,
+			int32_t min_y,
+			int32_t max_x,
+			int32_t max_y) {
+		RelationNormalizationRuntimeRecordPlain record;
+		record.vector_index = index;
+		record.recovered_pointer = pointer;
+		record.recovered_vtable = vtable;
+		record.field_0x04 = field_0x04;
+		record.field_0x08 = field_0x08;
+		record.relation_type_0x0c = relation_type_0x0c;
+		record.source_x_0x10 = source_x;
+		record.source_y_0x14 = source_y;
+		record.source_level_0x18 = source_level;
+		record.field_0x1c = field_0x1c;
+		record.scan_min_x_0x20 = min_x;
+		record.scan_min_y_0x24 = min_y;
+		record.scan_max_x_exclusive_0x28 = max_x;
+		record.scan_max_y_exclusive_0x2c = max_y;
+		records.push_back(record);
+	};
+	append(0, "0x01791488", "0x03655f20", 6, 6, 5, 40, 54, 0, 7, 26, 39, 57, 71);
+	append(1, "0x0175d8e8", "0x03655e40", 5, 5, 0, 62, 53, 0, 7, 50, 29, 72, 72);
+	append(2, "0x0175dd10", "0x03655d60", 8, 8, 2, 25, 62, 0, 7, 9, 46, 50, 72);
+	append(3, "0x0178a028", "0x03655c80", 6, 6, 5, 40, 8, 0, 7, 12, 0, 72, 24);
+	append(4, "0x0178a450", "0x03655ba0", 0, 0, 2, 60, 24, 0, 7, 46, 2, 72, 40);
+	append(5, "0x0178a878", "0x03655ac0", 2, 2, 3, 21, 40, 0, 7, 13, 31, 33, 51);
+	append(6, "0x018e2ce0", "0x036559e0", 5, 5, 0, 6, 40, 0, 7, 0, 25, 16, 55);
+	append(7, "0x018e3108", "0x03655900", 1, 1, 2, 29, 26, 0, 7, 19, 14, 41, 37);
+	append(8, "0x018e3530", "0x03655820", -1, 0, 4, 41, 35, 0, 7, 31, 25, 50, 45);
+	append(9, "0x018e3958", "0x03655740", -1, 8, 5, 51, 49, 0, 7, 48, 37, 58, 66);
+	append(10, "0x018e3d80", "0x03655660", -1, 1, 2, 10, 15, 0, 7, 0, 0, 24, 35);
+	append(11, "0x018e41a8", "0x03655580", -1, -1, 4, 47, 20, 0, 7, 38, 12, 57, 30);
+	append(12, "0x018e45d0", "0x036554a0", -1, 0, 0, 1, 62, 0, 7, 0, 48, 9, 72);
+	return records;
+}
+
 RelationNormalizationContractSummaryPlain build_relation_normalization_contract_summary(
 		const ControlledCase &controlled_case,
 		const RuntimeZoneSummary &runtime_zone_summary,
@@ -6588,11 +6663,40 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 					summary.template_vs_selected_candidate_relation_record_count_delta == 0
 					&& summary.template_vs_selected_candidate_border_guard_record_count_delta == 0;
 			summary.selected_candidate_relation_records_are_generator_0x10e4_runtime_vector = false;
+			// Same-run H3MapEd runtime relation pointer vector captured at
+			// .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_relation_records_20260615.
+			// This is the generator+0x10e4..+0x10e8 vector consumed by 0x4a5767,
+			// distinct from the selected-candidate topology above and from flat template links.
+			summary.runtime_relation_vector_records = recovered_medium_seed10_hc4_setup0_relation_vector_plain();
+			summary.runtime_relation_vector_record_count = int32_t(summary.runtime_relation_vector_records.size());
+			summary.runtime_relation_vector_stride_bytes = 4;
+			summary.runtime_relation_vector_begin_0x10e4 = 0x03622dc0;
+			summary.runtime_relation_vector_end_0x10e8 = 0x03622df4;
+			summary.runtime_relation_vector_capacity_0x10ec = 0x03622e00;
+			for (const RelationNormalizationRuntimeRecordPlain &record : summary.runtime_relation_vector_records) {
+				if (record.relation_type_0x0c == 8) {
+					summary.runtime_relation_vector_relation_type8_count += 1;
+				}
+				if (record.field_0x04 == record.field_0x08) {
+					summary.runtime_relation_vector_same_owner_field_count += 1;
+				}
+			}
+			summary.generator_0x10e4_relation_pointer_records_materialized =
+					summary.runtime_relation_vector_record_count == 13;
+			summary.generator_0x10e8_relation_pointer_end_materialized =
+					summary.generator_0x10e4_relation_pointer_records_materialized
+					&& summary.runtime_relation_vector_begin_0x10e4 == 0x03622dc0
+					&& summary.runtime_relation_vector_end_0x10e8 == 0x03622df4;
+			summary.relation_vector_runtime_order_materialized =
+					summary.generator_0x10e4_relation_pointer_records_materialized
+					&& summary.generator_0x10e8_relation_pointer_end_materialized;
 		}
 		summary.relation_vector_blocked_reason =
-				"selected_template_vector_matches_same_run_h3maped_hc4_seed10_trace_for_23_candidates_index_2_template_2SM4d2; "
-				"flat_template_link_seeds_do_not_match_the_same_run_selected_candidate_relation_topology_when_available; "
-				"remaining_blocker_is_materializing_generator_plus_0x10e4_to_0x10e8_runtime_relation_pointer_records_and_the_0x49a318_descriptor_policy_object_reference_filters";
+				std::string("selected_template_vector_matches_same_run_h3maped_hc4_seed10_trace_for_23_candidates_index_2_template_2SM4d2; ")
+				+ "flat_template_link_seeds_do_not_match_the_same_run_selected_candidate_relation_topology_when_available; "
+				+ (summary.relation_vector_runtime_order_materialized
+						? "same_run_generator_plus_0x10e4_to_0x10e8_runtime_relation_pointer_vector_materialized_for_medium_seed10_hc4_setup0; remaining_blocker_is_broader_relation_vector_construction_and_0x4a5a23_object_selection_adoption"
+						: "remaining_blocker_is_materializing_generator_plus_0x10e4_to_0x10e8_runtime_relation_pointer_records_and_the_0x49a318_descriptor_policy_object_reference_filters");
 	} else {
 		summary.relation_vector_blocked_reason = "blocked_until_runtime_zone_summary";
 	}
@@ -6755,10 +6859,15 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 	summary.generated_cell_projection_triple_materialized = false;
 	summary.object_reference_vector_filter_materialized = false;
 	summary.descriptor_policy_table_materialized = false;
-	summary.relation_vector_runtime_order_materialized = false;
 	summary.generated_cell_mutation_replay_complete = false;
-	summary.status = "diagnostic_relation_normalization_contract_ported_runtime_replay_pending";
-	summary.blocked_reason = "0x4a5767_0x49a318_static_and_semantic_surfaces_recovered_but_native_runtime_ordered_replay_word20_low_word_projection_gate_projection_triples_object_reference_filters_and_descriptor_policy_table_not_materialized";
+	summary.diagnostic_only = true;
+	summary.native_behavior_changed = false;
+	summary.status = summary.relation_vector_runtime_order_materialized
+			? "same_run_relation_vector_materialized_runtime_replay_pending"
+			: "diagnostic_relation_normalization_contract_ported_runtime_replay_pending";
+	summary.blocked_reason = summary.relation_vector_runtime_order_materialized
+			? "same_run_generator_plus_0x10e4_relation_vector_is_materialized_for_medium_seed10_hc4_setup0_but_native_owner_terrain_grid_at_recovered_relation_source_coordinates_still_differs_from_h3maped_so_0x49a318_live_replay_is_blocked_until_upstream_private_grid_matches"
+			: "0x4a5767_0x49a318_static_and_semantic_surfaces_recovered_but_native_runtime_ordered_replay_word20_low_word_projection_gate_projection_triples_object_reference_filters_and_descriptor_policy_table_not_materialized";
 	return summary;
 }
 
@@ -9386,6 +9495,13 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 	out << "    \"selected_candidate_relation_owner_border_guard_counts\": ";
 	append_int_array_json(out, summary.selected_candidate_relation_owner_border_guard_counts);
 	out << ",\n";
+	out << "    \"runtime_relation_vector_record_count\": " << summary.runtime_relation_vector_record_count << ",\n";
+	out << "    \"runtime_relation_vector_stride_bytes\": " << summary.runtime_relation_vector_stride_bytes << ",\n";
+	out << "    \"runtime_relation_vector_begin_0x10e4\": " << summary.runtime_relation_vector_begin_0x10e4 << ",\n";
+	out << "    \"runtime_relation_vector_end_0x10e8\": " << summary.runtime_relation_vector_end_0x10e8 << ",\n";
+	out << "    \"runtime_relation_vector_capacity_0x10ec\": " << summary.runtime_relation_vector_capacity_0x10ec << ",\n";
+	out << "    \"runtime_relation_vector_relation_type8_count\": " << summary.runtime_relation_vector_relation_type8_count << ",\n";
+	out << "    \"runtime_relation_vector_same_owner_field_count\": " << summary.runtime_relation_vector_same_owner_field_count << ",\n";
 	out << "    \"template_vs_selected_candidate_relation_record_count_delta\": " << summary.template_vs_selected_candidate_relation_record_count_delta << ",\n";
 	out << "    \"template_vs_selected_candidate_border_guard_record_count_delta\": " << summary.template_vs_selected_candidate_border_guard_record_count_delta << ",\n";
 	out << "    \"flat_template_link_seeds_are_runtime_relation_vector\": " << (summary.flat_template_link_seeds_are_runtime_relation_vector ? "true" : "false") << ",\n";
@@ -9492,6 +9608,30 @@ void append_relation_normalization_contract_summary_json(std::ostream &out, cons
 		out << "\"dx\":" << entry.dx << ",";
 		out << "\"dy\":" << entry.dy << ",";
 		out << "\"matches_recovered\":" << (entry.matches_recovered ? "true" : "false");
+		out << "}";
+	}
+	out << "],\n";
+	out << "    \"runtime_relation_vector_records\": [";
+	for (size_t index = 0; index < summary.runtime_relation_vector_records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const RelationNormalizationRuntimeRecordPlain &record = summary.runtime_relation_vector_records[index];
+		out << "{";
+		out << "\"vector_index\":" << record.vector_index << ",";
+		out << "\"recovered_pointer\":\"" << json_escape(record.recovered_pointer) << "\",";
+		out << "\"recovered_vtable\":\"" << json_escape(record.recovered_vtable) << "\",";
+		out << "\"field_0x04\":" << record.field_0x04 << ",";
+		out << "\"field_0x08\":" << record.field_0x08 << ",";
+		out << "\"relation_type_0x0c\":" << record.relation_type_0x0c << ",";
+		out << "\"source_x_0x10\":" << record.source_x_0x10 << ",";
+		out << "\"source_y_0x14\":" << record.source_y_0x14 << ",";
+		out << "\"source_level_0x18\":" << record.source_level_0x18 << ",";
+		out << "\"field_0x1c\":" << record.field_0x1c << ",";
+		out << "\"scan_min_x_0x20\":" << record.scan_min_x_0x20 << ",";
+		out << "\"scan_min_y_0x24\":" << record.scan_min_y_0x24 << ",";
+		out << "\"scan_max_x_exclusive_0x28\":" << record.scan_max_x_exclusive_0x28 << ",";
+		out << "\"scan_max_y_exclusive_0x2c\":" << record.scan_max_y_exclusive_0x2c;
 		out << "}";
 	}
 	out << "],\n";
