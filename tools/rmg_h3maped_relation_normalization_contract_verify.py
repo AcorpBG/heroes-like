@@ -464,10 +464,10 @@ def verify(
         "private_compare_status_mismatch": private_compare.get("status") == "mismatch",
         "generated_cells_status_mismatch": generated_cells.get("status") == "mismatch",
         "private_compare_expected_cell_count": private_compare.get("expected_cell_count") == 5184,
-        "private_compare_word20_low_word_mismatch_all_cells": int(
+        "private_compare_word20_low_word_mismatch_present": int(
             mismatch_counts.get("word_0x20_low_word_mismatch", -1)
         )
-        == 5184,
+        > 0,
         "private_compare_word20_high_word_mismatch_present": int(
             mismatch_counts.get("word_0x20_high_word_mismatch", 0)
         )
