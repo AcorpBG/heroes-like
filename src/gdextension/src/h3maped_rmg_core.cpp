@@ -1,5 +1,6 @@
 #include "h3maped_rmg_core.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -174,6 +175,123 @@ bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, i
 	const bool was_set = (word_0x28[size_t(flat)] & CELL_DECOR_READY_BIT_25) != 0U;
 	word_0x28[size_t(flat)] &= ~CELL_DECOR_READY_BIT_25;
 	return was_set;
+}
+
+GeneratedCell49a85dStampResult generated_cell_49a85d_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level) {
+	GeneratedCell49a85dStampResult result;
+	if (width <= 0 || height <= 0 || level_count <= 0 || x < 0 || y < 0 || x >= width || y >= height || level < 0 || level >= level_count) {
+		return result;
+	}
+	const int64_t center_flat = cell_index(width, height, x, y, level);
+	if (center_flat < 0 || center_flat >= int64_t(word_0x28.size()) || center_flat >= int64_t(word_0x2c.size())) {
+		return result;
+	}
+	result.center_in_bounds = true;
+	result.center_set = generated_cell_49a932(word_0x28, word_0x2c, center_flat, true);
+
+	const int32_t min_x = std::max<int32_t>(0, x - 1);
+	const int32_t min_y = std::max<int32_t>(0, y - 1);
+	const int32_t max_x = std::min<int32_t>(width, x + 2);
+	const int32_t max_y = std::min<int32_t>(height, y + 2);
+	for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+		for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+			const int64_t flat = cell_index(width, height, local_x, local_y, level);
+			if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
+				continue;
+			}
+			result.covered_cell_count += 1;
+			if (generated_cell_49a932(word_0x28, word_0x2c, flat, true)) {
+				result.covered_set_count += 1;
+			}
+		}
+	}
+	return result;
+}
+
+GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<uint32_t> &word_0x24, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level) {
+	GeneratedCell49a962SweepResult result;
+	if (width <= 0 || height <= 0 || level_count <= 0 || x < 0 || y < 0 || x >= width || y >= height || level < 0 || level >= level_count) {
+		return result;
+	}
+	const int64_t center_flat = cell_index(width, height, x, y, level);
+	if (center_flat < 0 || center_flat >= int64_t(word_0x28.size()) || center_flat >= int64_t(word_0x2c.size())) {
+		return result;
+	}
+	result.center_in_bounds = true;
+	result.center_candidate_set = generated_cell_49aa63(word_0x28, word_0x2c, center_flat, true);
+
+	const int32_t min_x = std::max<int32_t>(0, x - 1);
+	const int32_t min_y = std::max<int32_t>(0, y - 1);
+	const int32_t max_x = std::min<int32_t>(width, x + 2);
+	const int32_t max_y = std::min<int32_t>(height, y + 2);
+	for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+		for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+			const int64_t flat = cell_index(width, height, local_x, local_y, level);
+			if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size()) || flat >= int64_t(word_0x24.size())) {
+				continue;
+			}
+			result.neighbor_scan_count += 1;
+			if ((word_0x28[size_t(flat)] & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+				result.neighbor_bit22_skip_count += 1;
+				continue;
+			}
+			if (!generated_cell_49a1d8_valid_word24(word_0x28, word_0x24, flat)) {
+				result.neighbor_invalid_skip_count += 1;
+				continue;
+			}
+			if ((word_0x24[size_t(flat)] & 0x3fU) == 8U) {
+				result.neighbor_terrain8_skip_count += 1;
+				continue;
+			}
+			if (generated_cell_49a932(word_0x28, word_0x2c, flat, false)) {
+				result.neighbor_clear_count += 1;
+			}
+		}
+	}
+	return result;
+}
+
+GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<int32_t> &terrain_code, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level) {
+	GeneratedCell49a962SweepResult result;
+	if (width <= 0 || height <= 0 || level_count <= 0 || x < 0 || y < 0 || x >= width || y >= height || level < 0 || level >= level_count) {
+		return result;
+	}
+	const int64_t center_flat = cell_index(width, height, x, y, level);
+	if (center_flat < 0 || center_flat >= int64_t(word_0x28.size()) || center_flat >= int64_t(word_0x2c.size())) {
+		return result;
+	}
+	result.center_in_bounds = true;
+	result.center_candidate_set = generated_cell_49aa63(word_0x28, word_0x2c, center_flat, true);
+
+	const int32_t min_x = std::max<int32_t>(0, x - 1);
+	const int32_t min_y = std::max<int32_t>(0, y - 1);
+	const int32_t max_x = std::min<int32_t>(width, x + 2);
+	const int32_t max_y = std::min<int32_t>(height, y + 2);
+	for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+		for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+			const int64_t flat = cell_index(width, height, local_x, local_y, level);
+			if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size()) || flat >= int64_t(terrain_code.size())) {
+				continue;
+			}
+			result.neighbor_scan_count += 1;
+			if ((word_0x28[size_t(flat)] & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+				result.neighbor_bit22_skip_count += 1;
+				continue;
+			}
+			if (!generated_cell_49a1d8_valid_terrain(word_0x28, terrain_code, flat)) {
+				result.neighbor_invalid_skip_count += 1;
+				continue;
+			}
+			if ((terrain_code[size_t(flat)] & 0x3f) == 8) {
+				result.neighbor_terrain8_skip_count += 1;
+				continue;
+			}
+			if (generated_cell_49a932(word_0x28, word_0x2c, flat, false)) {
+				result.neighbor_clear_count += 1;
+			}
+		}
+	}
+	return result;
 }
 
 int32_t deplete_generated_cell_scores_4a54a7(std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level) {

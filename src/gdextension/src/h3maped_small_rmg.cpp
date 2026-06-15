@@ -16534,51 +16534,28 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		}
 		return route_container_0x4a8260_active_adoption ? live_cell_word_0x28[size_t(flat)] : route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)];
 	};
-	auto route_container_0x4a8260_mark_occupied = [&](int64_t flat) -> bool {
-		if (flat < 0 || flat >= expected_cell_count) {
-			return false;
-		}
-		if (route_container_0x4a8260_active_adoption) {
-			return mark_occupied_blocked_49a932(flat, true);
-		}
-		if ((live_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
-			return false;
-		}
-		const bool newly_set = (route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
-		route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)] |= H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27;
-		route_container_0x4a8260_diagnostic_word_0x28[size_t(flat)] &= ~H3MAPED_CELL_DECOR_CANDIDATE_BIT_26;
-		return newly_set;
-	};
-
 	auto route_stamp_0x49a85d = [&](const RoutePoint0x4a8260 &point, int32_t level) {
 		if (!route_point_in_bounds(point) || level < 0 || level >= map_level_count) {
 			return;
 		}
 		route_container_0x4a8260_stamp_call_count += 1;
-		const int64_t center_flat = h3maped_cell_index(map_width, map_height, point.x, point.y, level);
-		if (center_flat >= 0 && center_flat < expected_cell_count) {
-			const bool was_clear = (route_container_0x4a8260_word(center_flat) & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
-			if (route_container_0x4a8260_mark_occupied(center_flat) && was_clear) {
-				route_container_0x4a8260_stamp_new_bit27_count += 1;
-			}
-		}
-		const int32_t min_x = std::max<int32_t>(0, point.x - 1);
-		const int32_t min_y = std::max<int32_t>(0, point.y - 1);
-		const int32_t max_x = std::min<int32_t>(map_width, point.x + 2);
-		const int32_t max_y = std::min<int32_t>(map_height, point.y + 2);
-		for (int32_t y = min_y; y < max_y; ++y) {
-			for (int32_t x = min_x; x < max_x; ++x) {
-				const int64_t flat = h3maped_cell_index(map_width, map_height, x, y, level);
-				if (flat < 0 || flat >= expected_cell_count) {
-					continue;
-				}
-				route_container_0x4a8260_stamp_covered_cell_count += 1;
-				const bool was_clear = (route_container_0x4a8260_word(flat) & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
-				if (route_container_0x4a8260_mark_occupied(flat) && was_clear) {
-					route_container_0x4a8260_stamp_new_bit27_count += 1;
-				}
-			}
-		}
+		std::vector<uint32_t> &target_word_0x28 =
+				route_container_0x4a8260_active_adoption
+				? live_cell_word_0x28
+				: route_container_0x4a8260_diagnostic_word_0x28;
+		const aurelion::h3maped_rmg_core::GeneratedCell49a85dStampResult stamp_0x49a85d =
+				aurelion::h3maped_rmg_core::generated_cell_49a85d_stamp(
+						target_word_0x28,
+						live_cell_word_0x2c,
+						map_width,
+						map_height,
+						map_level_count,
+						point.x,
+						point.y,
+						level);
+		route_container_0x4a8260_stamp_covered_cell_count += stamp_0x49a85d.covered_cell_count;
+		route_container_0x4a8260_stamp_new_bit27_count +=
+				(stamp_0x49a85d.center_set ? 1 : 0) + stamp_0x49a85d.covered_set_count;
 	};
 
 	auto route_cut_0x4a80dc = [&](const RoutePoint0x4a8260 &start, const RoutePoint0x4a8260 &target, int32_t level, bool &occupied_hit, bool &boundary_return) -> RoutePoint0x4a8260 {
@@ -16777,12 +16754,6 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 			route_container_0x4a8260_drain_complete = false;
 		}
 	}
-	auto generated_cell_valid_49a1d8_word24 = [&](int64_t flat) {
-		return flat >= 0
-				&& flat < expected_cell_count
-				&& (live_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_READY_BIT_25) != 0U
-				&& (live_cell_word_0x24[size_t(flat)] & 0x3fU) != 9U;
-	};
 	int32_t route_container_0x4a8260_final_sweep_scan_count = 0;
 	int32_t route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count = 0;
 	int32_t route_container_0x4a8260_final_sweep_terrain_8_9_0x2c_skip_count = 0;
@@ -16819,33 +16790,25 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 					continue;
 				}
 				route_container_0x4a8260_final_sweep_0x49a962_call_count += 1;
-				if (mark_decor_candidate_49aa63(flat, true)) {
+				const aurelion::h3maped_rmg_core::GeneratedCell49a962SweepResult sweep_0x49a962 =
+						aurelion::h3maped_rmg_core::generated_cell_49a962_word24(
+								live_cell_word_0x28,
+								live_cell_word_0x2c,
+								live_cell_word_0x24,
+								map_width,
+								map_height,
+								map_level_count,
+								x,
+								y,
+								level);
+				if (sweep_0x49a962.center_candidate_set) {
 					route_container_0x4a8260_final_sweep_0x49a962_candidate_set_count += 1;
 				}
-				for (int32_t local_y = std::max(0, y - 1); local_y < std::min(map_height, y + 2); ++local_y) {
-					for (int32_t local_x = std::max(0, x - 1); local_x < std::min(map_width, x + 2); ++local_x) {
-						const int64_t neighbor_flat = h3maped_cell_index(map_width, map_height, local_x, local_y, level);
-						if (neighbor_flat < 0 || neighbor_flat >= expected_cell_count) {
-							continue;
-						}
-						route_container_0x4a8260_final_sweep_0x49a962_neighbor_scan_count += 1;
-						if ((live_cell_word_0x28[size_t(neighbor_flat)] & H3MAPED_CELL_ACTION_CONTROL_BIT_22) != 0U) {
-							route_container_0x4a8260_final_sweep_0x49a962_neighbor_bit22_skip_count += 1;
-							continue;
-						}
-						if (!generated_cell_valid_49a1d8_word24(neighbor_flat)) {
-							route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count += 1;
-							continue;
-						}
-						if ((live_cell_word_0x24[size_t(neighbor_flat)] & 0x3fU) == 8U) {
-							route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count += 1;
-							continue;
-						}
-						if (mark_occupied_blocked_49a932(neighbor_flat, false)) {
-							route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count += 1;
-						}
-					}
-				}
+				route_container_0x4a8260_final_sweep_0x49a962_neighbor_scan_count += sweep_0x49a962.neighbor_scan_count;
+				route_container_0x4a8260_final_sweep_0x49a962_neighbor_bit22_skip_count += sweep_0x49a962.neighbor_bit22_skip_count;
+				route_container_0x4a8260_final_sweep_0x49a962_neighbor_invalid_skip_count += sweep_0x49a962.neighbor_invalid_skip_count;
+				route_container_0x4a8260_final_sweep_0x49a962_neighbor_terrain8_skip_count += sweep_0x49a962.neighbor_terrain8_skip_count;
+				route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count += sweep_0x49a962.neighbor_clear_count;
 			}
 		}
 	}
@@ -17016,29 +16979,21 @@ Dictionary generated_cell_decoration_bit_state_phase(const Dictionary &normalize
 		const int32_t x = remainder % map_width;
 		const int32_t y = remainder / map_width;
 		cleanup_0x49a962_call_count += 1;
-		if (mark_decor_candidate_49aa63(flat, true)) {
+		const aurelion::h3maped_rmg_core::GeneratedCell49a962SweepResult cleanup_0x49a962 =
+				aurelion::h3maped_rmg_core::generated_cell_49a962_terrain(
+						live_cell_word_0x28,
+						live_cell_word_0x2c,
+						live_terrain_code,
+						map_width,
+						map_height,
+						map_level_count,
+						x,
+						y,
+						level);
+		if (cleanup_0x49a962.center_candidate_set) {
 			cleanup_0x49a962_candidate_set_count += 1;
 		}
-		for (int32_t local_y = std::max(0, y - 1); local_y < std::min(map_height, y + 2); ++local_y) {
-			for (int32_t local_x = std::max(0, x - 1); local_x < std::min(map_width, x + 2); ++local_x) {
-				const int64_t neighbor_flat = h3maped_cell_index(map_width, map_height, local_x, local_y, level);
-				if (neighbor_flat < 0 || neighbor_flat >= expected_cell_count) {
-					continue;
-				}
-				if ((live_cell_word_0x28[size_t(neighbor_flat)] & (1U << 22U)) != 0U) {
-					continue;
-				}
-				if (!cell_valid_49a1d8(int32_t(neighbor_flat))) {
-					continue;
-				}
-				if ((live_terrain_code[size_t(neighbor_flat)] & 0x3f) == 8) {
-					continue;
-				}
-				if (mark_occupied_blocked_49a932(neighbor_flat, false)) {
-					cleanup_0x49a962_neighbor_0x49a932_false_clear_count += 1;
-				}
-			}
-		}
+		cleanup_0x49a962_neighbor_0x49a932_false_clear_count += cleanup_0x49a962.neighbor_clear_count;
 	}
 
 	int32_t junction_source_bucket_3_runtime_zone_count = 0;

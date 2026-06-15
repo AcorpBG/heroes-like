@@ -29,6 +29,23 @@ struct RelationResetCell {
 	uint32_t word_0x28 = 0U;
 };
 
+struct GeneratedCell49a85dStampResult {
+	bool center_in_bounds = false;
+	bool center_set = false;
+	int32_t covered_cell_count = 0;
+	int32_t covered_set_count = 0;
+};
+
+struct GeneratedCell49a962SweepResult {
+	bool center_in_bounds = false;
+	bool center_candidate_set = false;
+	int32_t neighbor_scan_count = 0;
+	int32_t neighbor_bit22_skip_count = 0;
+	int32_t neighbor_invalid_skip_count = 0;
+	int32_t neighbor_terrain8_skip_count = 0;
+	int32_t neighbor_clear_count = 0;
+};
+
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 
 uint32_t generated_cell_word20_set_low_word(uint32_t word_0x20, uint32_t low_word);
@@ -51,6 +68,9 @@ bool generated_cell_49aa63(std::vector<uint32_t> &word_0x28, const std::vector<u
 bool generated_cell_49a932(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_occupied);
 bool generated_cell_49abd6_action_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat);
 bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, int64_t flat);
+GeneratedCell49a85dStampResult generated_cell_49a85d_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
+GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<uint32_t> &word_0x24, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
+GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<int32_t> &terrain_code, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 
 int32_t deplete_generated_cell_scores_4a54a7(std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level);
 
