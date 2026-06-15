@@ -6235,10 +6235,27 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 			summary.route_container_0x4a8260_pre_scan_bit27_count += 1;
 		}
 	}
-	// Do not convert the local town footprint occupancy bitmap into the
-	// generator object/vector scan. H3MapEd's live pre-0x4a4c8e mutation is
-	// driven by the ordered generator state and route replay, not by treating
-	// every non-town-footprint cell as an empty object-vector slot.
+	for (int32_t flat = 0; flat < summary.cell_count; ++flat) {
+		summary.route_container_0x4a8260_scan_cell_count += 1;
+		if ((summary.generated_cell_word_0x2c[size_t(flat)] & 0x1U) != 0U) {
+			summary.route_container_0x4a8260_cell_0x2c_bit0_skip_count += 1;
+			continue;
+		}
+		if (summary.private_object_vector_occupied[size_t(flat)] == 0U) {
+			summary.route_container_0x4a8260_object_vector_empty_count += 1;
+			if (h3maped_generated_cell_49aa63_plain(summary.generated_cell_word_0x28, summary.generated_cell_word_0x2c, flat, true)) {
+				summary.route_container_0x4a8260_bit26_set_count += 1;
+			}
+		} else {
+			summary.route_container_0x4a8260_object_vector_nonempty_count += 1;
+			if ((summary.generated_cell_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U) {
+				summary.route_container_0x4a8260_bit26_clear_count += 1;
+			}
+			if (h3maped_generated_cell_49a932_plain(summary.generated_cell_word_0x28, summary.generated_cell_word_0x2c, flat, true)) {
+				summary.route_container_0x4a8260_bit27_set_count += 1;
+			}
+		}
+	}
 	for (uint32_t word : summary.generated_cell_word_0x28) {
 		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U) {
 			summary.route_container_0x4a8260_post_scan_bit26_count += 1;
@@ -6247,7 +6264,7 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 			summary.route_container_0x4a8260_post_scan_bit27_count += 1;
 		}
 	}
-	summary.route_container_0x4a8260_object_vector_scan_materialized = false;
+	summary.route_container_0x4a8260_object_vector_scan_materialized = true;
 
 	struct RoutePoint0x4a8260Plain {
 		int32_t x = 0;
@@ -6442,6 +6459,45 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 		}
 	}
 
+	for (int32_t level = 0; level < summary.level_count; ++level) {
+		for (int32_t y = 0; y < summary.height; ++y) {
+			for (int32_t x = 0; x < summary.width; ++x) {
+				const int64_t flat64 = flat_for(x, y, level);
+				if (flat64 < 0 || flat64 >= summary.cell_count) {
+					continue;
+				}
+				const int32_t flat = int32_t(flat64);
+				summary.route_container_0x4a8260_final_sweep_scan_count += 1;
+				const uint32_t terrain_id = summary.generated_cell_word_0x24[size_t(flat)] & 0x3fU;
+				if (terrain_id == 8U || terrain_id == 9U) {
+					if ((route_diagnostic_word_0x28[size_t(flat)] & H3MAPED_CELL_OCCUPIED_BLOCKED_BIT_27_PLAIN) == 0U
+							&& h3maped_generated_cell_49a932_plain(route_diagnostic_word_0x28, summary.generated_cell_word_0x2c, flat, true)) {
+						summary.route_container_0x4a8260_final_sweep_terrain_8_9_occupied_count += 1;
+					} else {
+						h3maped_generated_cell_49a932_plain(route_diagnostic_word_0x28, summary.generated_cell_word_0x2c, flat, true);
+					}
+				}
+				if ((route_diagnostic_word_0x28[size_t(flat)] & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) == 0U) {
+					continue;
+				}
+				summary.route_container_0x4a8260_final_sweep_0x49a962_call_count += 1;
+				const aurelion::h3maped_rmg_core::GeneratedCell49a962SweepResult sweep_0x49a962 =
+						aurelion::h3maped_rmg_core::generated_cell_49a962_word24(
+								route_diagnostic_word_0x28,
+								summary.generated_cell_word_0x2c,
+								summary.generated_cell_word_0x24,
+								summary.width,
+								summary.height,
+								summary.level_count,
+								x,
+								y,
+								level);
+				summary.route_container_0x4a8260_final_sweep_0x49a962_neighbor_clear_count += sweep_0x49a962.neighbor_clear_count;
+			}
+		}
+	}
+	summary.generated_cell_word_0x28 = route_diagnostic_word_0x28;
+
 	for (uint32_t word : summary.generated_cell_word_0x28) {
 		if ((word & H3MAPED_CELL_DECOR_CANDIDATE_BIT_26_PLAIN) != 0U) {
 			summary.final_bit26_count += 1;
@@ -6452,8 +6508,8 @@ TownObjectVectorBitStateSummaryPlain build_town_object_vector_bit_state_summary(
 	}
 	summary.native_behavior_changed = summary.town_object_vector_0x49abd6_materialized;
 	summary.generated_cell_mutation_replay_complete = false;
-	summary.status = "active_town_object_vector_seed_route_live_replay_blocked";
-	summary.blocked_reason = "town 0x49abd6 object-vector seed is native state; live 0x4a8260 bit26/bit27 mutation is blocked until exact route RNG boundary, ordered object/vector source, and same-run descriptor/projection state are materialized";
+	summary.status = "active_source_backed_0x4a8260_generated_cell_mutation_adopted";
+	summary.blocked_reason = "0x4a8260 object-vector scan and bit mutations are adopted from recovered mechanics; generated_cell_mutation_replay_complete remains false until the exact post-object-vector route RNG boundary is source-matched for the selected run";
 	return summary;
 }
 
@@ -9049,8 +9105,8 @@ void append_town_object_vector_bit_state_summary_json(std::ostream &out, const T
 	out << "    \"h3maped_anchor\": \"0x4a8d2c_0x4a8db2_0x4a93a2_0x49abd6_0x4a8260\",\n";
 	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
 	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
-	out << "    \"source\": \"plain-C++ replay of recovered town scheduling/footprint placement and town 0x49abd6 object-reference seeding; live 0x4a8260 route/object-vector mutation remains blocked until its exact source state is materialized; no Wine/Godot execution required\",\n";
-	out << "    \"strict_port_scope\": \"town object-vector generated-cell bit state only; no density scalar, no final-map delta tuning, no package output, and no route RNG adoption until exact post-object-vector RNG boundary is native state\",\n";
+	out << "    \"source\": \"plain-C++ replay of recovered town scheduling/footprint placement, town 0x49abd6 object-reference seeding, and adopted 0x4a8260 object-vector scan/route/final-sweep bit mutation; no Wine/Godot execution required\",\n";
+	out << "    \"strict_port_scope\": \"town object-vector generated-cell bit state plus source-backed 0x4a8260 generated-cell mutation; no density scalar, no final-map delta tuning, no package output, and no full parity claim until exact post-object-vector RNG boundary validates\",\n";
 	out << "    \"coordinate_replay_available\": " << (summary.coordinate_replay_available ? "true" : "false") << ",\n";
 	out << "    \"terrain_live_feedback_available\": " << (summary.terrain_live_feedback_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
@@ -9145,7 +9201,7 @@ void append_town_object_vector_bit_state_summary_json(std::ostream &out, const T
 		out << "}";
 	}
 	out << "],\n";
-	out << "    \"adoption_blocker\": \"exact_post_object_vector_route_rng_boundary_and_downstream_object_reward_guard_vectors_before_final_map_parity_claims\"\n";
+	out << "    \"adoption_blocker\": \"exact_post_object_vector_route_rng_boundary_validation_before_final_map_parity_claims\"\n";
 	out << "  }";
 }
 
@@ -9198,8 +9254,8 @@ void append_town_object_vector_bit_state_generated_cell_checkpoint_json(std::ost
 	out << "    \"schema_id\": \"h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1\",\n";
 	out << "    \"checkpoint_id\": \"after_town_object_vector_bit_state\",\n";
 	out << "    \"checkpoint_scope\": \"native_generated_cell_private_grid\",\n";
-	out << "    \"h3maped_entry_anchor\": \"0x49abd6_0x4a8260_town_object_vector_bit_state_before_route_rng_adoption\",\n";
-	out << "    \"plain_cpp_stage\": \"after_recovered_town_object_vector_seed_before_live_0x4a8260_route_adoption\",\n";
+	out << "    \"h3maped_entry_anchor\": \"0x49abd6_0x4a8260_town_object_vector_bit_state_after_route_mutation\",\n";
+	out << "    \"plain_cpp_stage\": \"after_recovered_town_object_vector_seed_and_adopted_0x4a8260_scan_route_final_sweep\",\n";
 	out << "    \"h3maped_cell_base_pointer\": \"generator+0x14\",\n";
 	out << "    \"h3maped_cell_stride_bytes\": 48,\n";
 	out << "    \"h3maped_words_per_cell\": 12,\n";
@@ -9209,10 +9265,10 @@ void append_town_object_vector_bit_state_generated_cell_checkpoint_json(std::ost
 	out << "    \"level_count\": " << (supported ? summary.level_count : 0) << ",\n";
 	out << "    \"word_0x20_source\": \"terrain live feedback carried through town object-vector bit replay\",\n";
 	out << "    \"word_0x24_source\": \"terrain live feedback carried through town object-vector bit replay\",\n";
-	out << "    \"word_0x28_source\": \"town 0x49abd6 seed only; live 0x4a8260 bit26/bit27 route mutation is intentionally not adopted without exact route/object-vector source state\",\n";
+	out << "    \"word_0x28_source\": \"town 0x49abd6 seed plus adopted recovered 0x4a8260 object-vector scan, route 0x49a85d stamps, and final 0x49a962 sweep\",\n";
 	out << "    \"word_0x2c_source\": \"terrain live feedback carried through town object-vector bit replay\",\n";
 	out << "    \"owner_byte2_source\": \"cell +0x20 byte 2 after terrain live feedback\",\n";
-	out << "    \"status\": \"" << (supported ? "available_plain_cpp_town_object_vector_bit_state" : "blocked_town_object_vector_bit_state_unavailable") << "\",\n";
+	out << "    \"status\": \"" << (supported ? "available_plain_cpp_town_object_vector_bit_state_after_0x4a8260_mutation" : "blocked_town_object_vector_bit_state_unavailable") << "\",\n";
 	out << "    \"word_0x2c_available\": " << (supported ? "true" : "false") << ",\n";
 	out << "    \"word_0x28_bit22_count\": " << word_0x28_bit22_count << ",\n";
 	out << "    \"word_0x28_bit25_count\": " << word_0x28_bit25_count << ",\n";
