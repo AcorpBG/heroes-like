@@ -3195,34 +3195,24 @@ uint32_t h3maped_generated_cell_4a56b6_projection_word20_plain(uint32_t word_0x2
 	return aurelion::h3maped_rmg_core::generated_cell_4a56b6_projection_word20(word_0x20, lowered_low_word);
 }
 
-constexpr uint32_t H3MAPED_RELATION_RESET_WORD_0X1C_PLAIN = 0x7d007d00U;
-constexpr uint32_t H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN = 0xffffffffU;
-constexpr uint32_t H3MAPED_RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH_PLAIN = 0x7d00U;
-constexpr uint32_t H3MAPED_RELATION_RESET_ARG_0X4A59E2_BITS_12_14_PLAIN = 0U;
-constexpr uint32_t H3MAPED_RELATION_RESET_ARG_0X4A59E2_WORD_0X20_BYTE3_PLAIN = 0xffffffffU;
-constexpr uint32_t H3MAPED_RELATION_WORD_0X28_BITS_12_14_MASK_PLAIN = 0x7U << 12U;
-
 uint32_t h3maped_generated_cell_4a59e2_pack_word_0x1c_plain(uint32_t word_0x1c, uint32_t arg_word_0x1c_high) {
-	return (word_0x1c & 0x0000ffffU) | ((arg_word_0x1c_high & 0xffffU) << 16U);
+	return aurelion::h3maped_rmg_core::generated_cell_4a59e2_pack_word_0x1c(word_0x1c, arg_word_0x1c_high);
 }
 
 uint32_t h3maped_generated_cell_4a59e2_pack_word_0x20_plain(uint32_t word_0x20, uint32_t arg_byte3) {
-	return (word_0x20 & 0x00ffffffU) | ((arg_byte3 & 0xffU) << 24U);
+	return aurelion::h3maped_rmg_core::generated_cell_4a59e2_pack_word_0x20(word_0x20, arg_byte3);
 }
 
 uint32_t h3maped_generated_cell_4a59e2_pack_word_0x28_plain(uint32_t word_0x28, uint32_t arg_bits_12_14) {
-	return (word_0x28 & ~H3MAPED_RELATION_WORD_0X28_BITS_12_14_MASK_PLAIN)
-			| ((arg_bits_12_14 & 0x7U) << 12U);
+	return aurelion::h3maped_rmg_core::generated_cell_4a59e2_pack_word_0x28(word_0x28, arg_bits_12_14);
 }
 
 uint32_t h3maped_generated_cell_4a5767_reset_force_word_0x1c_plain(uint32_t word_0x1c_after_4a59e2) {
-	return (word_0x1c_after_4a59e2 & 0xffff0000U)
-			| (((word_0x1c_after_4a59e2 & 0x0000ffffU) & 0x7d00U) | 0x7d00U);
+	return aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_force_word_0x1c(word_0x1c_after_4a59e2);
 }
 
 uint32_t h3maped_generated_cell_49a318_clear_source_word_0x1c_plain(uint32_t word_0x1c) {
-	// 0x49a3a2: AND word ptr [ESI + 0x1c], DI after EDI was zeroed at 0x49a32b.
-	return word_0x1c & 0xffff0000U;
+	return aurelion::h3maped_rmg_core::generated_cell_49a318_clear_source_word_0x1c(word_0x1c);
 }
 
 bool h3maped_generated_cell_index_valid_plain(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
@@ -5813,43 +5803,37 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 		summary.generated_cell_word_0x1c_reset_gate_materialized = true;
 		summary.generated_cell_projection_triple_reset_materialized = true;
 		summary.reset_cell_count = summary.cell_count;
-		summary.reset_word_0x10.assign(size_t(summary.cell_count), H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN);
-		summary.reset_word_0x14.assign(size_t(summary.cell_count), H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN);
-		summary.reset_word_0x18.assign(size_t(summary.cell_count), H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN);
+		summary.reset_word_0x10.assign(size_t(summary.cell_count), aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE);
+		summary.reset_word_0x14.assign(size_t(summary.cell_count), aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE);
+		summary.reset_word_0x18.assign(size_t(summary.cell_count), aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE);
 		summary.reset_word_0x1c.assign(size_t(summary.cell_count), 0U);
 		summary.reset_word_0x20.assign(size_t(summary.cell_count), 0U);
 		summary.reset_word_0x28.assign(size_t(summary.cell_count), 0U);
 		summary.reset_samples.reserve(std::min<int32_t>(summary.cell_count, 8));
 		summary.source_clear_samples.reserve(std::min<int32_t>(summary.cell_count, 8));
 		for (int32_t flat = 0; flat < summary.cell_count; ++flat) {
-			uint32_t word_0x1c = 0U;
-			uint32_t word_0x20 = terrain_summary.generated_cell_word_0x20[size_t(flat)];
-			uint32_t word_0x28 = terrain_summary.generated_cell_word_0x28[size_t(flat)];
-			word_0x1c = h3maped_generated_cell_4a59e2_pack_word_0x1c_plain(
-					word_0x1c,
-					H3MAPED_RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH_PLAIN);
-			word_0x28 = h3maped_generated_cell_4a59e2_pack_word_0x28_plain(
-					word_0x28,
-					H3MAPED_RELATION_RESET_ARG_0X4A59E2_BITS_12_14_PLAIN);
-			word_0x20 = h3maped_generated_cell_4a59e2_pack_word_0x20_plain(
-					word_0x20,
-					H3MAPED_RELATION_RESET_ARG_0X4A59E2_WORD_0X20_BYTE3_PLAIN);
-			word_0x1c = h3maped_generated_cell_4a5767_reset_force_word_0x1c_plain(word_0x1c);
-			summary.reset_word_0x1c[size_t(flat)] = word_0x1c;
-			summary.reset_word_0x20[size_t(flat)] = word_0x20;
-			summary.reset_word_0x28[size_t(flat)] = word_0x28;
-			if (word_0x1c == H3MAPED_RELATION_RESET_WORD_0X1C_PLAIN) {
+			const aurelion::h3maped_rmg_core::RelationResetCell reset_cell =
+					aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_cell(
+							terrain_summary.generated_cell_word_0x20[size_t(flat)],
+							terrain_summary.generated_cell_word_0x28[size_t(flat)]);
+			summary.reset_word_0x10[size_t(flat)] = reset_cell.word_0x10;
+			summary.reset_word_0x14[size_t(flat)] = reset_cell.word_0x14;
+			summary.reset_word_0x18[size_t(flat)] = reset_cell.word_0x18;
+			summary.reset_word_0x1c[size_t(flat)] = reset_cell.word_0x1c;
+			summary.reset_word_0x20[size_t(flat)] = reset_cell.word_0x20;
+			summary.reset_word_0x28[size_t(flat)] = reset_cell.word_0x28;
+			if (reset_cell.word_0x1c == aurelion::h3maped_rmg_core::RELATION_RESET_WORD_0X1C) {
 				summary.reset_word_0x1c_0x7d007d00_count += 1;
 			}
-			if (summary.reset_word_0x10[size_t(flat)] == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN
-					&& summary.reset_word_0x14[size_t(flat)] == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN
-					&& summary.reset_word_0x18[size_t(flat)] == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN) {
+			if (summary.reset_word_0x10[size_t(flat)] == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& summary.reset_word_0x14[size_t(flat)] == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& summary.reset_word_0x18[size_t(flat)] == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE) {
 				summary.reset_projection_triple_minus_one_count += 1;
 			}
-			if ((word_0x20 & 0xff000000U) == 0xff000000U) {
+			if ((reset_cell.word_0x20 & 0xff000000U) == 0xff000000U) {
 				summary.reset_word_0x20_byte3_minus_one_count += 1;
 			}
-			if ((word_0x28 & H3MAPED_RELATION_WORD_0X28_BITS_12_14_MASK_PLAIN) == 0U) {
+			if ((reset_cell.word_0x28 & aurelion::h3maped_rmg_core::RELATION_WORD_0X28_BITS_12_14_MASK) == 0U) {
 				summary.reset_word_0x28_bits_12_14_zero_count += 1;
 			}
 			if (summary.reset_samples.size() < 8U) {
@@ -5863,9 +5847,9 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 				sample.word_0x10 = summary.reset_word_0x10[size_t(flat)];
 				sample.word_0x14 = summary.reset_word_0x14[size_t(flat)];
 				sample.word_0x18 = summary.reset_word_0x18[size_t(flat)];
-				sample.word_0x1c = word_0x1c;
-				sample.word_0x20 = word_0x20;
-				sample.word_0x28 = word_0x28;
+				sample.word_0x1c = reset_cell.word_0x1c;
+				sample.word_0x20 = reset_cell.word_0x20;
+				sample.word_0x28 = reset_cell.word_0x28;
 				summary.reset_samples.push_back(sample);
 			}
 			if (summary.source_clear_samples.size() < 8U) {
@@ -5876,17 +5860,17 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 				const int32_t local_flat = cells_per_level > 0 ? flat % cells_per_level : flat;
 				sample.x = summary.width > 0 ? local_flat % summary.width : 0;
 				sample.y = summary.width > 0 ? local_flat / summary.width : 0;
-				sample.before_word_0x1c = word_0x1c;
-				sample.after_word_0x1c = h3maped_generated_cell_49a318_clear_source_word_0x1c_plain(word_0x1c);
-				sample.after_word_0x10 = H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
-				sample.after_word_0x14 = H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
-				sample.after_word_0x18 = H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
+				sample.before_word_0x1c = reset_cell.word_0x1c;
+				sample.after_word_0x1c = h3maped_generated_cell_49a318_clear_source_word_0x1c_plain(reset_cell.word_0x1c);
+				sample.after_word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
+				sample.after_word_0x14 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
+				sample.after_word_0x18 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
 				sample.low_word_cleared = (sample.after_word_0x1c & 0x0000ffffU) == 0U;
 				sample.high_word_preserved = (sample.after_word_0x1c & 0xffff0000U) == (sample.before_word_0x1c & 0xffff0000U);
 				sample.projection_triple_minus_one =
-						sample.after_word_0x10 == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN
-						&& sample.after_word_0x14 == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN
-						&& sample.after_word_0x18 == H3MAPED_RELATION_RESET_COORD_MINUS_ONE_PLAIN;
+						sample.after_word_0x10 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+						&& sample.after_word_0x14 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+						&& sample.after_word_0x18 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
 				if (sample.low_word_cleared) {
 					summary.propagation_source_cell_clear_low_word_zero_count += 1;
 				}
