@@ -870,6 +870,7 @@ struct GeneratedCellBitHelperSummaryPlain {
 	bool live_grid_mutation_adopted = false;
 	std::string status = "blocked_until_terrain_live_feedback";
 	std::string blocked_reason = "terrain_live_feedback_missing";
+	std::string input_grid_stage = "unknown";
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
@@ -5699,13 +5700,14 @@ TerrainLiveFeedbackSummaryPlain build_terrain_live_feedback_summary(const Terrai
 	return summary;
 }
 
-GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const TerrainLiveFeedbackSummaryPlain &terrain_summary) {
+GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const TownObjectVectorBitStateSummaryPlain &terrain_summary) {
 	GeneratedCellBitHelperSummaryPlain summary;
-	summary.terrain_live_feedback_available = terrain_summary.materializes_private_generated_cell_words;
+	summary.terrain_live_feedback_available = terrain_summary.terrain_live_feedback_available;
 	summary.width = terrain_summary.width;
 	summary.height = terrain_summary.height;
 	summary.level_count = terrain_summary.level_count;
 	summary.cell_count = terrain_summary.cell_count;
+	summary.input_grid_stage = "after_town_object_vector_bit_state";
 	summary.supported_scope = terrain_summary.width > 0
 			&& terrain_summary.height > 0
 			&& terrain_summary.level_count == 1
@@ -5718,8 +5720,8 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 			&& terrain_summary.generated_cell_word_0x2c.size() == size_t(summary.cell_count)
 			&& terrain_summary.generated_cell_terrain_code.size() == size_t(summary.cell_count);
 	if (!supported) {
-		summary.status = "blocked_generated_cell_bit_helpers_missing_live_grid";
-		summary.blocked_reason = "terrain_live_feedback_generated_cell_words_missing_or_unsupported_scope";
+		summary.status = "blocked_generated_cell_bit_helpers_missing_post_object_vector_grid";
+		summary.blocked_reason = "post_town_object_vector_generated_cell_words_missing_or_unsupported_scope";
 		return summary;
 	}
 
@@ -5804,8 +5806,8 @@ GeneratedCellBitHelperSummaryPlain build_generated_cell_bit_helper_summary(const
 			summary.diagnostic_final_bit27_count += 1;
 		}
 	}
-	summary.status = "diagnostic_plain_cpp_generated_cell_bit_helpers_ported";
-	summary.blocked_reason = "live_grid_mutation_not_adopted_until_exact_object_reference_vectors_and_0x4a8260_route_rng_boundary_are_ported";
+	summary.status = "diagnostic_plain_cpp_generated_cell_bit_helpers_ported_from_post_object_vector_grid";
+	summary.blocked_reason = "helper_contracts_read_post_town_object_vector_grid; live_relation_replay_still_pending_until_0x4a5767_0x49a318_is_adopted";
 	return summary;
 }
 
@@ -6592,10 +6594,12 @@ RelationNormalizationContractSummaryPlain build_relation_normalization_contract_
 		const ControlledCase &controlled_case,
 		const RuntimeZoneSummary &runtime_zone_summary,
 		const CoordinateReplaySummary &coordinate_summary,
-		const TerrainLiveFeedbackSummaryPlain &terrain_summary,
+		const TownObjectVectorBitStateSummaryPlain &terrain_summary,
 		const GeneratedCellBitHelperSummaryPlain &bit_summary) {
 	RelationNormalizationContractSummaryPlain summary;
-	summary.terrain_live_feedback_available = terrain_summary.materializes_private_generated_cell_words;
+	summary.terrain_live_feedback_available = terrain_summary.terrain_live_feedback_available
+			&& !terrain_summary.generated_cell_word_0x20.empty()
+			&& !terrain_summary.generated_cell_word_0x28.empty();
 	summary.supported_scope = supported_one_level_land_scope(controlled_case);
 	summary.width = map_width_for_size(controlled_case.size_class);
 	summary.height = summary.width;
@@ -9173,8 +9177,9 @@ void append_generated_cell_bit_helper_summary_json(std::ostream &out, const Gene
 	out << "    \"h3maped_anchor\": \"0x49a1d8_0x49aa63_0x49a932_0x49a962\",\n";
 	out << "    \"status\": \"" << json_escape(summary.status) << "\",\n";
 	out << "    \"blocked_reason\": \"" << json_escape(summary.blocked_reason) << "\",\n";
-	out << "    \"source\": \"plain-C++ port of recovered generated-cell validity and bit26/bit27 helper contracts; diagnostic-only until exact object-reference vectors and 0x4a8260 route RNG boundary are ported\",\n";
-	out << "    \"strict_port_scope\": \"helper contracts and copied-grid diagnostic surface only; no live generated-cell adoption, package objects, roads, guards, blockers, or public output\",\n";
+	out << "    \"source\": \"plain-C++ port of recovered generated-cell validity and bit26/bit27 helper contracts over the post-town/object-vector private grid\",\n";
+	out << "    \"strict_port_scope\": \"helper contracts over adopted private generated-cell state only; no package objects, guards, blockers, public output, or 0x4a5767/0x49a318 live replay adoption\",\n";
+	out << "    \"input_grid_stage\": \"" << json_escape(summary.input_grid_stage) << "\",\n";
 	out << "    \"terrain_live_feedback_available\": " << (summary.terrain_live_feedback_available ? "true" : "false") << ",\n";
 	out << "    \"supported_one_level_land_scope\": " << (summary.supported_scope ? "true" : "false") << ",\n";
 	out << "    \"helper_contracts_ported_plain_cpp\": " << (summary.helper_contracts_ported_plain_cpp ? "true" : "false") << ",\n";
@@ -10422,9 +10427,9 @@ std::string case_phase_snapshot_json(const ControlledCase &controlled_case, cons
 	const TerrainCellWriteoutSummaryPlain terrain_cell_writeout_summary = build_terrain_cell_writeout_summary(boundary_span_fill_summary, runtime_terrain_selection_summary, source_node_summary);
 	const TerrainRelationEligibilitySummaryPlain terrain_relation_eligibility_summary = build_terrain_relation_eligibility_summary(boundary_span_fill_summary, terrain_cell_writeout_summary, source_node_summary);
 	const TerrainLiveFeedbackSummaryPlain terrain_live_feedback_summary = build_terrain_live_feedback_summary(terrain_relation_eligibility_summary, runtime_terrain_selection_summary);
-	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(terrain_live_feedback_summary);
 	const TownObjectVectorBitStateSummaryPlain town_object_vector_bit_state_summary = build_town_object_vector_bit_state_summary(controlled_case, coordinate_replay_summary, boundary_span_fill_summary, runtime_terrain_selection_summary, terrain_relation_eligibility_summary, terrain_live_feedback_summary);
-	const RelationNormalizationContractSummaryPlain relation_normalization_contract_summary = build_relation_normalization_contract_summary(controlled_case, runtime_zone_summary, coordinate_replay_summary, terrain_live_feedback_summary, generated_cell_bit_helper_summary);
+	const GeneratedCellBitHelperSummaryPlain generated_cell_bit_helper_summary = build_generated_cell_bit_helper_summary(town_object_vector_bit_state_summary);
+	const RelationNormalizationContractSummaryPlain relation_normalization_contract_summary = build_relation_normalization_contract_summary(controlled_case, runtime_zone_summary, coordinate_replay_summary, town_object_vector_bit_state_summary, generated_cell_bit_helper_summary);
 	const ObjectVectorCommitMutationSummaryPlain object_vector_commit_mutation_summary = build_object_vector_commit_mutation_summary(controlled_case, terrain_live_feedback_summary);
 	const DescriptorSourceIdentityClosureSummaryPlain descriptor_source_identity_closure_summary = build_descriptor_source_identity_closure_summary(controlled_case);
 	const ObjectVectorPayloadOrderSummaryPlain object_vector_payload_order_summary = build_object_vector_payload_order_summary(controlled_case);
