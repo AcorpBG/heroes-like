@@ -22,6 +22,7 @@ add_subdirectory("${GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
 add_library(aurelion_map_persistence SHARED
 	src/register_types.cpp
 	src/h3maped_rmg_core.cpp
+	src/h3maped_rmg_object_catalog.cpp
 	src/h3maped_rmg_template_catalog.cpp
 	src/map_document.cpp
 	src/scenario_document.cpp
@@ -31,6 +32,7 @@ add_library(aurelion_map_persistence SHARED
 
 add_executable(rmg_native_batch_export_cli
 	src/h3maped_rmg_core.cpp
+	src/h3maped_rmg_object_catalog.cpp
 	src/h3maped_rmg_template_catalog.cpp
 	src/rmg_native_core.cpp
 	src/rmg_native_batch_export_cli.cpp
@@ -38,6 +40,7 @@ add_executable(rmg_native_batch_export_cli
 
 add_executable(h3maped_rmg_core_selftest
 	src/h3maped_rmg_core.cpp
+	src/h3maped_rmg_object_catalog.cpp
 	src/h3maped_rmg_template_catalog.cpp
 	src/h3maped_rmg_core_selftest.cpp
 )

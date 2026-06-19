@@ -70,6 +70,24 @@ struct SharedSourceZonePayload {
 	SharedSourceTreasureBand treasure_band_2;
 };
 
+struct SharedSourceObjectRecord0x4c {
+	int32_t source_row = -1;
+	std::string source;
+	std::string def_name;
+	int32_t type_id_0x1c = 0;
+	std::string type_name;
+	int32_t subtype_0x20 = 0;
+	int32_t group_0x24 = 0;
+	int32_t last_flag_0x28 = 0;
+	int32_t pass_count = 0;
+	int32_t action_count = 0;
+	uint16_t terrain_mask_a_0x14 = 0U;
+	uint16_t terrain_mask_b_0x18 = 0U;
+	std::string terrain_a_names;
+	std::string terrain_b_names;
+	bool rand_trn_backed = false;
+};
+
 struct SharedRuntimeZoneSeedInput {
 	int32_t runtime_zone_index = -1;
 	int32_t source_zone_id = -1;
@@ -280,6 +298,15 @@ struct RecoveredOwnerGridPayload {
 	std::vector<uint32_t> generated_cell_word_0x24;
 	std::vector<uint32_t> generated_cell_word_0x28;
 	std::vector<uint32_t> generated_cell_word_0x2c;
+	bool source_object_catalog_0x49da08_present = false;
+	int32_t source_object_catalog_0x49da08_record_count = 0;
+	int32_t source_object_catalog_0x4c_copy_size_bytes = 0;
+	int32_t source_object_catalog_objects_txt_record_count = 0;
+	int32_t source_object_catalog_rand_trn_backed_record_count = 0;
+	int32_t source_object_catalog_type53_record_count = 0;
+	int32_t source_object_catalog_type53_ambiguous_subtype_count = 0;
+	bool source_object_catalog_descriptor_only_mine_identity_ambiguous = false;
+	std::vector<SharedSourceObjectRecord0x4c> source_object_catalog_samples;
 };
 
 ControlledCase parse_controlled_case(const std::string &raw);

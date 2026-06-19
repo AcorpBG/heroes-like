@@ -12100,7 +12100,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG D-006/D-009 partially reduced: generated-cell record helpers now model 0x49a1d8/0x49aa63/0x49a932/0x49abd6 semantics and +0x2b bit0x02 known-clear; live relation/object caller order and object-reference/projection writes remain blocked before checkpoint-2 parity.",
+  "currentSliceNotes": "Native RMG D-011 partially reduced: shared core now exposes recovered 0x49da08 object source-record catalog identity (0x4c copy-size surface, DEF/type/subtype/group/terrain masks) to the no-Godot blocked snapshot; wrapper/source selection, descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-19T06:05:07Z",
@@ -49900,7 +49900,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG D-006/D-009 partially reduced: generated-cell record helpers now model 0x49a1d8/0x49aa63/0x49a932/0x49abd6 semantics and +0x2b bit0x02 known-clear; live relation/object caller order and object-reference/projection writes remain blocked before checkpoint-2 parity.",
+      "notes": "Native RMG D-011 partially reduced: shared core now exposes recovered 0x49da08 object source-record catalog identity (0x4c copy-size surface, DEF/type/subtype/group/terrain masks) to the no-Godot blocked snapshot; wrapper/source selection, descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -49916,7 +49916,7 @@
       "status": "in_progress",
       "summary": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core now preserves descriptor-cycle identity through the 0x4cca55 -> 0x4a2777 handoff: BoundaryCyclePoint4a2777 carries source descriptor link indexes, raw +0x00/+0x04 coordinates, and finalized +0x1c/+0x20 coordinates instead of collapsing to finalized x/y only. The no-Godot Small seed-11 setup0 snapshot remains blocked/no-output and reports 5 source handoffs, 24 descriptor-indexed handoff points, 24 raw-coordinate handoff points, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-19T22:33:37Z",
+      "updatedAt": "2026-06-19T22:43:45Z",
       "validation": {
         "id": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
         "evidenceId": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
@@ -56929,7 +56929,7 @@
   ],
   "summary": "Native RMG checkpoint 2 remains pending. The reset-plus-owner-word generated-cell snapshot surface is invalid as a comparable pre-0x4a4c8e checkpoint; native now tracks the missing H3MapEd mutating phases explicitly.",
   "taskId": "10184",
-  "updatedAt": "2026-06-19T22:33:37Z",
+  "updatedAt": "2026-06-19T22:43:45Z",
   "validation": {
     "id": "native-rmg-terrain-selection-repaint-failclosed-20260619",
     "evidenceId": "native-rmg-terrain-selection-repaint-failclosed-20260619",

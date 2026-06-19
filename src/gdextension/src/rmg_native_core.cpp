@@ -354,6 +354,72 @@ SharedSourceZonePayload from_h3maped_source_zone_payload(const h3maped_rmg_core:
 	};
 }
 
+SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg_core::SourceObjectRecord0x4c &input) {
+	return SharedSourceObjectRecord0x4c {
+		input.source_row,
+		input.source,
+		input.def_name,
+		input.type_id_0x1c,
+		input.type_name,
+		input.subtype_0x20,
+		input.group_0x24,
+		input.last_flag_0x28,
+		input.pass_count,
+		input.action_count,
+		input.terrain_mask_a_0x14,
+		input.terrain_mask_b_0x18,
+		input.terrain_a_names,
+		input.terrain_b_names,
+		input.rand_trn_backed,
+	};
+}
+
+bool same_source_object_record_sample(const SharedSourceObjectRecord0x4c &left, const SharedSourceObjectRecord0x4c &right) {
+	return left.source_row == right.source_row
+			&& left.source == right.source
+			&& left.def_name == right.def_name
+			&& left.type_id_0x1c == right.type_id_0x1c
+			&& left.subtype_0x20 == right.subtype_0x20;
+}
+
+void add_source_object_sample(RecoveredOwnerGridPayload &payload, const h3maped_rmg_core::SourceObjectRecord0x4c &input) {
+	const SharedSourceObjectRecord0x4c sample = from_h3maped_source_object_record(input);
+	const auto duplicate = std::find_if(payload.source_object_catalog_samples.begin(), payload.source_object_catalog_samples.end(), [&sample](const SharedSourceObjectRecord0x4c &existing) {
+		return same_source_object_record_sample(existing, sample);
+	});
+	if (duplicate == payload.source_object_catalog_samples.end()) {
+		payload.source_object_catalog_samples.push_back(sample);
+	}
+}
+
+void add_first_source_object_sample(RecoveredOwnerGridPayload &payload, const std::vector<h3maped_rmg_core::SourceObjectRecord0x4c> &records) {
+	if (!records.empty()) {
+		add_source_object_sample(payload, records.front());
+	}
+}
+
+void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload) {
+	const h3maped_rmg_core::SourceObjectCatalogSummary0x49da08 summary =
+			h3maped_rmg_core::source_object_catalog_summary_0x49da08();
+	payload.source_object_catalog_0x49da08_present = summary.record_count > 0;
+	payload.source_object_catalog_0x49da08_record_count = summary.record_count;
+	payload.source_object_catalog_0x4c_copy_size_bytes = summary.source_record_copy_size_bytes;
+	payload.source_object_catalog_objects_txt_record_count = summary.objects_txt_record_count;
+	payload.source_object_catalog_rand_trn_backed_record_count = summary.rand_trn_backed_record_count;
+	payload.source_object_catalog_type53_record_count = summary.mine_type53_record_count;
+	payload.source_object_catalog_type53_ambiguous_subtype_count = summary.mine_type53_ambiguous_subtype_count;
+	payload.source_object_catalog_descriptor_only_mine_identity_ambiguous = summary.descriptor_only_mine_identity_ambiguous;
+	payload.source_object_catalog_samples.clear();
+
+	const std::vector<h3maped_rmg_core::SourceObjectRecord0x4c> &catalog =
+			h3maped_rmg_core::source_object_catalog_0x49da08();
+	add_first_source_object_sample(payload, catalog);
+	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(45));
+	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_subtype_0x49da08(53, 4));
+	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(54));
+	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(79));
+}
+
 std::vector<SharedPlayerSlotAssignmentRecord> from_h3maped_player_slot_assignments(const std::vector<h3maped_rmg_core::PlayerSlotAssignmentRecord4ac62a> &inputs) {
 	std::vector<SharedPlayerSlotAssignmentRecord> out;
 	out.reserve(inputs.size());
@@ -476,6 +542,56 @@ void append_runtime_zone_source_payload_records_json(std::ostream &out, const st
 		out << "}";
 	}
 	out << "]";
+}
+
+void append_source_object_record_sample_json(std::ostream &out, const SharedSourceObjectRecord0x4c &record) {
+	out << "{\"source_row\":" << record.source_row
+		<< ",\"source\":\"" << json_escape(record.source) << "\""
+		<< ",\"def_name\":\"" << json_escape(record.def_name) << "\""
+		<< ",\"type_id_0x1c\":" << record.type_id_0x1c
+		<< ",\"type_name\":\"" << json_escape(record.type_name) << "\""
+		<< ",\"subtype_0x20\":" << record.subtype_0x20
+		<< ",\"group_0x24\":" << record.group_0x24
+		<< ",\"last_flag_0x28\":" << record.last_flag_0x28
+		<< ",\"pass_count\":" << record.pass_count
+		<< ",\"action_count\":" << record.action_count
+		<< ",\"terrain_mask_a_0x14\":" << record.terrain_mask_a_0x14
+		<< ",\"terrain_mask_b_0x18\":" << record.terrain_mask_b_0x18
+		<< ",\"terrain_a_names\":\"" << json_escape(record.terrain_a_names) << "\""
+		<< ",\"terrain_b_names\":\"" << json_escape(record.terrain_b_names) << "\""
+		<< ",\"rand_trn_backed\":" << (record.rand_trn_backed ? "true" : "false")
+		<< "}";
+}
+
+void append_source_object_record_samples_json(std::ostream &out, const std::vector<SharedSourceObjectRecord0x4c> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		append_source_object_record_sample_json(out, records[index]);
+	}
+	out << "]";
+}
+
+void append_source_object_record_catalog_json(std::ostream &out, const RecoveredOwnerGridPayload &payload) {
+	out << "{"
+		<< "\"schema_id\":\"rmg_native_source_object_record_catalog_0x49da08_v1\","
+		<< "\"status\":\"source_record_catalog_identity_preserved_selection_descriptor_join_and_materialization_pending\","
+		<< "\"h3maped_entry_anchor\":\"0x49da08_objects_txt_loader_0x49db76_wrapper_init_0x49dc9e_rand_trn_loader\","
+		<< "\"present\":" << (payload.source_object_catalog_0x49da08_present ? "true" : "false") << ","
+		<< "\"source_record_copy_size_bytes\":" << payload.source_object_catalog_0x4c_copy_size_bytes << ","
+		<< "\"record_count\":" << payload.source_object_catalog_0x49da08_record_count << ","
+		<< "\"objects_txt_record_count\":" << payload.source_object_catalog_objects_txt_record_count << ","
+		<< "\"rand_trn_backed_record_count\":" << payload.source_object_catalog_rand_trn_backed_record_count << ","
+		<< "\"type53_record_count\":" << payload.source_object_catalog_type53_record_count << ","
+		<< "\"type53_ambiguous_subtype_count\":" << payload.source_object_catalog_type53_ambiguous_subtype_count << ","
+		<< "\"descriptor_only_mine_identity_ambiguous\":" << (payload.source_object_catalog_descriptor_only_mine_identity_ambiguous ? "true" : "false") << ","
+		<< "\"identity_rule\":\"copied_0x4c_source_record_is_identity_authority_descriptor_plus_0x00_not_universal_row_id\","
+		<< "\"remaining_blockers\":[\"0xe8_wrapper_bucket_selection\", \"0x4903e8_descriptor_source_join\", \"source_record_through_object_materialization\", \"relation_object_caller_order\"],"
+		<< "\"samples\":";
+	append_source_object_record_samples_json(out, payload.source_object_catalog_samples);
+	out << "}";
 }
 
 void append_player_slot_assignment_records_json(std::ostream &out, const std::vector<SharedPlayerSlotAssignmentRecord> &records) {
@@ -796,6 +912,9 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"same_run_recovered_source_zone_payloads\": ";
 	append_runtime_zone_source_payload_records_json(out, input.runtime_zone_seeds);
 	out << ",\n";
+	out << "    \"source_object_record_catalog_0x49da08\": ";
+	append_source_object_record_catalog_json(out, payload);
+	out << ",\n";
 	int64_t runtime_link_guard_value_sum = 0;
 	int32_t runtime_link_wide_count = 0;
 	int32_t runtime_link_border_guard_count = 0;
@@ -1078,6 +1197,7 @@ SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase
 RecoveredOwnerGridPayload build_recovered_owner_grid_payload(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input) {
 	RecoveredOwnerGridPayload payload;
 	payload.input = resolved_shared_runtime_chain_input(controlled_case, input);
+	populate_source_object_catalog_0x49da08(payload);
 	payload.generated_cell_private_state_comparable = false;
 	payload.generated_cell_private_state_status = "partial_owner_grid_terrainplacement_surface_not_comparable_until_source_records_full_generated_cell_state_relation_object_endpoint_road_writeout_and_same_run_comparison_are_native_owned";
 	payload.terrain_selection_repaint_status = "pending_execution";
