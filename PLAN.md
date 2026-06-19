@@ -25,6 +25,7 @@ Rules:
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
 - Current implementation slice: `rmg-small-generalization-hardening-10184` is in progress. The active work is native C++ implementation alignment to the H3MapEd one-level land authority behavior for supported Small/Medium maps. Recovery-ledger closure is not the active work item.
+- Single native RMG behavior ledger: `docs/h3maped-rmg-end-to-end-behavior.md`. Use it as the first source map for H3MapEd phase order, function/helper status, private state, generated-cell words, and bit fields before touching native RMG code.
 - Native parity reality: native still diverges before object/route/package consumers. Checkpoint 2 remains the active implementation blocker until the native pre-`0x4a4c8e` generated-cell words match H3MapEd private state in Python-owned comparisons.
 - Source-first rule for this slice: inspect native RMG implementation in phase order, patch only source-backed divergences, then run no-Godot native verification. Do not use final-map deltas, density scalars, brute-force retries, GDScript reports, or Godot exports as substitutes for implementing the source behavior.
 - Native RMG alignment checkpoints, in execution order:
