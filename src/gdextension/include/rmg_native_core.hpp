@@ -167,8 +167,8 @@ struct RecoveredOwnerGridPayload {
 	int32_t footprint_finalizer_zone_order_reset_call_count = 0;
 	int32_t footprint_finalizer_per_zone_order_helper_call_count = 0;
 	std::vector<std::string> missing_generated_cell_mutation_phases;
-	std::vector<std::string> missing_terrain_selection_inputs;
-	std::vector<std::string> missing_terrain_repaint_inputs;
+	std::vector<std::string> terrain_selection_parity_blockers;
+	std::vector<std::string> terrain_repaint_parity_blockers;
 	std::vector<TerrainVisualMissingBucketSample> terrain_visual_missing_bucket_samples_0x4bcfc3;
 	std::vector<uint32_t> generated_cell_word_0x10;
 	std::vector<uint32_t> generated_cell_word_0x1c;

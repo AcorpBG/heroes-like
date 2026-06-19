@@ -315,13 +315,13 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 			report.blocked_reason = "standalone_cli_currently_scopes_only_small_medium_one_level_land";
 		} else if (options.native_map_json_only) {
 			report.status = "blocked";
-			report.blocked_reason = "native_map_json_disabled_until_shared_h3maped_rmg_core_owns_final_payload";
+			report.blocked_reason = "native_map_json_disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_final_payload";
 		} else if (options.phase_snapshot_only) {
 			report.status = "blocked";
-			report.blocked_reason = "phase_snapshot_diagnostic_only_until_shared_recovered_h3maped_state_chain_owns_payload";
+			report.blocked_reason = "phase_snapshot_diagnostic_only_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload";
 		} else {
 			report.status = "blocked";
-			report.blocked_reason = "runtime_export_disabled_until_shared_recovered_h3maped_state_chain_core_owns_payload";
+			report.blocked_reason = "runtime_export_disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload";
 		}
 		if (options.emit_phase_snapshot) {
 			const std::filesystem::path snapshot_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".phase_snapshot.json");
@@ -373,8 +373,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
 	const std::string status = "blocked";
 	const std::string blocked_reason = options.phase_snapshot_only
-			? "phase_snapshot_diagnostic_only_until_shared_recovered_h3maped_state_chain_owns_payload"
-			: "runtime_export_disabled_until_shared_recovered_h3maped_state_chain_core_owns_payload";
+			? "phase_snapshot_diagnostic_only_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload"
+			: "runtime_export_disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -430,11 +430,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"blocked_until_shared_recovered_h3maped_state_chain_core_owns_payload\",\n";
+	out << "  \"generation_core_stage\": \"blocked_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_shared_h3maped_state_chain_blocked_v1\",\n";
-	out << "  \"native_map_json_schema_id\": \"disabled_until_shared_recovered_h3maped_state_chain_core_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_later_relation_object_generated_cell_mutation_caller_order\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes only a minimal blocked shared-chain marker and exposes no live generation surface. It exits blocked until final payload generation is owned by the shared recovered H3MapEd RMG core.\",\n";
+	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
+	out << "  \"required_next_slice\": \"port_full_source_records_descriptor_identity_and_generated_cell_state_before_relation_object_consumers\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes only a minimal blocked partial-chain marker and exposes no live generation surface. It exits blocked until final payload generation is owned by the full recovered H3MapEd entrypoint-to-writeout chain.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
@@ -500,6 +500,6 @@ int main(int argc, char **argv) {
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
-			  << " reason=shared_recovered_h3maped_state_chain_core_does_not_yet_own_payload\n";
+			  << " reason=full_recovered_h3maped_entrypoint_to_writeout_chain_does_not_yet_own_payload\n";
 	return failed_count > 0 ? 1 : 2;
 }
