@@ -241,10 +241,15 @@ Options parse_options(int argc, char **argv) {
 			std::string raw;
 			take_value(raw);
 			std::vector<int32_t> fields;
-			if (parse_i32_csv(raw, 2, fields)) {
+			if (parse_i32_csv(raw, 5, fields) || parse_i32_csv(raw, 2, fields)) {
 				SharedRuntimeLinkInput input;
 				input.from_index = fields[0];
 				input.to_index = fields[1];
+				if (fields.size() >= 5) {
+					input.guard_value = fields[2];
+					input.wide = fields[3] != 0;
+					input.border_guard = fields[4] != 0;
+				}
 				options.shared_runtime_chain_input.runtime_links.push_back(input);
 			}
 		} else if (arg == "--case") {
@@ -393,7 +398,22 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << ",\n";
 	out << "  \"shared_input_source\": \"" << json_escape(options.shared_runtime_chain_input.input_source.empty() ? "explicit_cli_runtime_inputs" : options.shared_runtime_chain_input.input_source) << "\",\n";
 	out << "  \"shared_runtime_zone_seed_count\": " << options.shared_runtime_chain_input.runtime_zone_seeds.size() << ",\n";
+	int64_t shared_runtime_link_guard_value_sum = 0;
+	int32_t shared_runtime_link_wide_count = 0;
+	int32_t shared_runtime_link_border_guard_count = 0;
+	for (const SharedRuntimeLinkInput &link : options.shared_runtime_chain_input.runtime_links) {
+		shared_runtime_link_guard_value_sum += link.guard_value;
+		if (link.wide) {
+			shared_runtime_link_wide_count += 1;
+		}
+		if (link.border_guard) {
+			shared_runtime_link_border_guard_count += 1;
+		}
+	}
 	out << "  \"shared_runtime_link_count\": " << options.shared_runtime_chain_input.runtime_links.size() << ",\n";
+	out << "  \"shared_runtime_link_guard_value_sum\": " << shared_runtime_link_guard_value_sum << ",\n";
+	out << "  \"shared_runtime_link_wide_count\": " << shared_runtime_link_wide_count << ",\n";
+	out << "  \"shared_runtime_link_border_guard_count\": " << shared_runtime_link_border_guard_count << ",\n";
 	out << "  \"shared_rng_state_after_template_selection_known\": " << (options.shared_runtime_chain_input.rng_state_after_template_selection_known ? "true" : "false") << ",\n";
 	out << "  \"shared_generator_mode_0x10b8_known\": " << (options.shared_runtime_chain_input.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
 	out << "  \"shared_coordinate_owner_grid_chain_executed_count\": " << shared_chain_executed_count << ",\n";

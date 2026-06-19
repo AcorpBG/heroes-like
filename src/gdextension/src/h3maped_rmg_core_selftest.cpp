@@ -358,10 +358,10 @@ int main() {
 		TemplateZoneRecord4a218c { 5, 4, 4, 3, -1, 5, 4, 8, 4, 8 },
 	};
 	const std::vector<TemplateLinkRecord4a1f3b> template_links = {
-		TemplateLinkRecord4a1f3b { 1, 2 },
-		TemplateLinkRecord4a1f3b { 2, 3 },
-		TemplateLinkRecord4a1f3b { 3, 4 },
-		TemplateLinkRecord4a1f3b { 4, 5 },
+		TemplateLinkRecord4a1f3b { 1, 2, 1200, false, false },
+		TemplateLinkRecord4a1f3b { 2, 3, 2400, true, false },
+		TemplateLinkRecord4a1f3b { 3, 4, 3600, false, true },
+		TemplateLinkRecord4a1f3b { 4, 5, 4800, true, true },
 		TemplateLinkRecord4a1f3b { 1, 5, 0, false, false, 4, 8, 4, 8 },
 	};
 	const RuntimeSeedBuildResult4a218c template_seed_result = aurelion::h3maped_rmg_core::runtime_seed_inputs_from_template_records_4a218c_4a1f3b(
@@ -377,6 +377,18 @@ int main() {
 		return 1;
 	}
 	if (!require(template_seed_result.runtime_links.size() == 3, "template seed producer did not emit expected endpoint links")) {
+		return 1;
+	}
+	if (!require(template_seed_result.runtime_links[0].guard_value == 1200
+				&& !template_seed_result.runtime_links[0].wide
+				&& !template_seed_result.runtime_links[0].border_guard
+				&& template_seed_result.runtime_links[1].guard_value == 2400
+				&& template_seed_result.runtime_links[1].wide
+				&& !template_seed_result.runtime_links[1].border_guard
+				&& template_seed_result.runtime_links[2].guard_value == 3600
+				&& !template_seed_result.runtime_links[2].wide
+				&& template_seed_result.runtime_links[2].border_guard,
+				"template seed producer did not preserve link guard/wide/border-guard payloads")) {
 		return 1;
 	}
 	if (!require(template_seed_result.skipped_zone_filter_count == 1 && template_seed_result.skipped_link_filter_count == 1, "template seed producer did not report player-filter exclusions")) {

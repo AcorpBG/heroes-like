@@ -236,6 +236,9 @@ struct RuntimeZoneSeedInput4a218c {
 struct RuntimeLinkSeedInput4a218c {
 	int32_t from_index = -1;
 	int32_t to_index = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
 };
 
 struct PlayerSlotAssignmentRecord4ac62a {

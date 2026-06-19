@@ -12100,7 +12100,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. The shared core now carries recovered source-zone town/terrain bytes, interleaves 0x49b3c1 town choice, runs 0x49b53d terrain selection, applies 0x4a3f27 terrain repaint, and runs TerrainPlacement visual row/flag selection through 0x4bb74b/0x4bad0f/0x4bcfc3/0x4bce6d into generated-cell +0x24/+0x28 support words, with final-sweep current-record preservation through 0x4bc5a3 for corrected-class 0x4bbfcc cases without direct row buckets. Full comparable pre-0x4a4c8e parity remains blocked by later relation/object caller order; runtime map output remains fail-closed.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending; runtime map output remains fail-closed. D-004 runtime link payload handoff is closed: RuntimeLinkSeedInput4a218c and SharedRuntimeLinkInput now preserve guard_value, wide, and border_guard through template seed construction, native conversion, explicit no-Godot CLI inputs, and blocked snapshot manifest/snapshot counts. Downstream connection materialization remains tracked under D-014, and full pre-0x4a4c8e parity still depends on D-005/D-006/D-009+ source-order state ownership.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-19T06:05:07Z",
@@ -49900,7 +49900,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core now threads generator+0x10b8 into the 0x4a218c coordinate candidate-prune span budget: mode 0 uses divisor 5, mode 1 uses divisor 6, and other modes use divisor 7 over min(min_source_base_size * map_width, min_source_base_size * map_height). The setup-known no-Godot snapshots prove setup 0 -> mode 0 divisor 5 budget 79 and setup sentinel 3 -> randomized mode 2 divisor 7 budget 56 for the Small seed-11 case. Runtime generation and native map output remain fail-closed. Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
+      "notes": "Native RMG checkpoint 2 remains pending; runtime map output remains fail-closed. D-004 runtime link payload handoff is closed: RuntimeLinkSeedInput4a218c and SharedRuntimeLinkInput now preserve guard_value, wide, and border_guard through template seed construction, native conversion, explicit no-Godot CLI inputs, and blocked snapshot manifest/snapshot counts. Downstream connection materialization remains tracked under D-014, and full pre-0x4a4c8e parity still depends on D-005/D-006/D-009+ source-order state ownership.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -49916,7 +49916,7 @@
       "status": "in_progress",
       "summary": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core now preserves descriptor-cycle identity through the 0x4cca55 -> 0x4a2777 handoff: BoundaryCyclePoint4a2777 carries source descriptor link indexes, raw +0x00/+0x04 coordinates, and finalized +0x1c/+0x20 coordinates instead of collapsing to finalized x/y only. The no-Godot Small seed-11 setup0 snapshot remains blocked/no-output and reports 5 source handoffs, 24 descriptor-indexed handoff points, 24 raw-coordinate handoff points, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-19T02:08:52Z",
+      "updatedAt": "2026-06-19T21:37:01Z",
       "validation": {
         "id": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
         "evidenceId": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
@@ -56929,7 +56929,7 @@
   ],
   "summary": "Native RMG checkpoint 2 remains pending. The reset-plus-owner-word generated-cell snapshot surface is invalid as a comparable pre-0x4a4c8e checkpoint; native now tracks the missing H3MapEd mutating phases explicitly.",
   "taskId": "10184",
-  "updatedAt": "2026-06-19T04:07:43Z",
+  "updatedAt": "2026-06-19T21:37:01Z",
   "validation": {
     "id": "native-rmg-terrain-selection-repaint-failclosed-20260619",
     "evidenceId": "native-rmg-terrain-selection-repaint-failclosed-20260619",
