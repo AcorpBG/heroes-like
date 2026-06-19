@@ -245,6 +245,9 @@ std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> to_h3maped_runtime_lin
 		out.push_back(h3maped_rmg_core::RuntimeLinkSeedInput4a218c {
 			input.from_index,
 			input.to_index,
+			input.guard_value,
+			input.wide,
+			input.border_guard,
 		});
 	}
 	return out;
@@ -278,6 +281,9 @@ std::vector<SharedRuntimeLinkInput> from_h3maped_runtime_links(const std::vector
 		out.push_back(SharedRuntimeLinkInput {
 			input.from_index,
 			input.to_index,
+			input.guard_value,
+			input.wide,
+			input.border_guard,
 		});
 	}
 	return out;
@@ -391,7 +397,22 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"generator_mode_0x10b8_known\": " << (input.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
 	out << "    \"generator_mode_0x10b8\": " << input.generator_mode_0x10b8 << ",\n";
 	out << "    \"runtime_zone_seed_count\": " << input.runtime_zone_seeds.size() << ",\n";
+	int64_t runtime_link_guard_value_sum = 0;
+	int32_t runtime_link_wide_count = 0;
+	int32_t runtime_link_border_guard_count = 0;
+	for (const SharedRuntimeLinkInput &link : input.runtime_links) {
+		runtime_link_guard_value_sum += link.guard_value;
+		if (link.wide) {
+			runtime_link_wide_count += 1;
+		}
+		if (link.border_guard) {
+			runtime_link_border_guard_count += 1;
+		}
+	}
 	out << "    \"runtime_link_count\": " << input.runtime_links.size() << ",\n";
+	out << "    \"runtime_link_guard_value_sum\": " << runtime_link_guard_value_sum << ",\n";
+	out << "    \"runtime_link_wide_count\": " << runtime_link_wide_count << ",\n";
+	out << "    \"runtime_link_border_guard_count\": " << runtime_link_border_guard_count << ",\n";
 	out << "    \"executed\": " << (executable ? "true" : "false");
 	if (executable) {
 		out << ",\n";

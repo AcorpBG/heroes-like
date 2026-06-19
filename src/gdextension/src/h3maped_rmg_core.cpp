@@ -1953,7 +1953,13 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 			result.missing_link_endpoint_count += 1;
 			continue;
 		}
-		result.runtime_links.push_back(RuntimeLinkSeedInput4a218c { runtime_a, runtime_b });
+		result.runtime_links.push_back(RuntimeLinkSeedInput4a218c {
+			runtime_a,
+			runtime_b,
+			link.guard_value,
+			link.wide,
+			link.border_guard,
+		});
 	}
 	return result;
 }

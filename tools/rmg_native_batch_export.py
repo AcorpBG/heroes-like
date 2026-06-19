@@ -328,7 +328,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--shared-runtime-link",
         action="append",
         default=[],
-        help="Repeatable exact runtime link tuple: from_runtime_zone_index,to_runtime_zone_index.",
+        help="Repeatable exact runtime link tuple: from_runtime_zone_index,to_runtime_zone_index[,guard_value,wide,border_guard].",
     )
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
     parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case diagnostic snapshots through the standalone CLI and exit blocked until the shared recovered H3MapEd RMG core owns payload generation.")
