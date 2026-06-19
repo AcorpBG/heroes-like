@@ -52,6 +52,14 @@ struct SharedPlayerSlotAssignmentRecord {
 	bool human = false;
 };
 
+struct SharedTemplateCandidateContainerRecord {
+	int32_t vector_index = -1;
+	int32_t source_catalog_index = -1;
+	std::string template_name;
+	int32_t zone_count = 0;
+	int32_t link_count = 0;
+};
+
 struct SharedRuntimeChainInput {
 	std::string input_source;
 	bool recovered_template_selection_known = false;
@@ -69,6 +77,7 @@ struct SharedRuntimeChainInput {
 	int32_t recovered_template_selected_vector_index = -1;
 	int32_t recovered_template_source_catalog_index = -1;
 	std::string recovered_template_name;
+	std::vector<SharedTemplateCandidateContainerRecord> recovered_candidate_containers_10d4_10d8;
 	int32_t recovered_template_rng_value = -1;
 	int32_t recovered_template_source_zone_record_count = 0;
 	int32_t recovered_template_source_link_record_count = 0;

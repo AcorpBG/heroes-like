@@ -200,6 +200,41 @@ std::vector<SharedPlayerSlotAssignmentRecord> from_h3maped_player_slot_assignmen
 	return out;
 }
 
+std::vector<SharedTemplateCandidateContainerRecord> from_h3maped_candidate_containers(const std::vector<h3maped_rmg_core::TemplateCandidateContainerRecord4ac552> &inputs) {
+	std::vector<SharedTemplateCandidateContainerRecord> out;
+	out.reserve(inputs.size());
+	for (const h3maped_rmg_core::TemplateCandidateContainerRecord4ac552 &input : inputs) {
+		out.push_back(SharedTemplateCandidateContainerRecord {
+			input.vector_index,
+			input.source_catalog_index,
+			input.template_name,
+			input.zone_count,
+			input.link_count,
+		});
+	}
+	return out;
+}
+
+void append_template_candidate_container_record_json(std::ostream &out, const SharedTemplateCandidateContainerRecord &record) {
+	out << "{\"vector_index\":" << record.vector_index
+		<< ",\"source_catalog_index\":" << record.source_catalog_index
+		<< ",\"template_name\":\"" << json_escape(record.template_name) << "\""
+		<< ",\"zone_count\":" << record.zone_count
+		<< ",\"link_count\":" << record.link_count
+		<< "}";
+}
+
+void append_template_candidate_container_records_json(std::ostream &out, const std::vector<SharedTemplateCandidateContainerRecord> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		append_template_candidate_container_record_json(out, records[index]);
+	}
+	out << "]";
+}
+
 void append_player_slot_assignment_records_json(std::ostream &out, const std::vector<SharedPlayerSlotAssignmentRecord> &records) {
 	out << "[";
 	for (size_t index = 0; index < records.size(); ++index) {
@@ -419,6 +454,19 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"same_run_recovered_template_selected_vector_index\": " << input.recovered_template_selected_vector_index << ",\n";
 	out << "    \"same_run_recovered_template_source_catalog_index\": " << input.recovered_template_source_catalog_index << ",\n";
 	out << "    \"same_run_recovered_template_name\": \"" << json_escape(input.recovered_template_name) << "\",\n";
+	out << "    \"same_run_recovered_candidate_container_source\": \"0x49f0cd_generator_0x10d4_0x10d8_consumed_by_0x4ac552\",\n";
+	out << "    \"same_run_recovered_candidate_container_count\": " << input.recovered_candidate_containers_10d4_10d8.size() << ",\n";
+	out << "    \"same_run_recovered_candidate_containers_10d4_10d8\": ";
+	append_template_candidate_container_records_json(out, input.recovered_candidate_containers_10d4_10d8);
+	out << ",\n";
+	out << "    \"same_run_recovered_selected_candidate_container\": ";
+	if (input.recovered_template_selected_vector_index >= 0
+			&& input.recovered_template_selected_vector_index < int32_t(input.recovered_candidate_containers_10d4_10d8.size())) {
+		append_template_candidate_container_record_json(out, input.recovered_candidate_containers_10d4_10d8[size_t(input.recovered_template_selected_vector_index)]);
+	} else {
+		out << "null";
+	}
+	out << ",\n";
 	out << "    \"same_run_recovered_template_rng_value\": " << input.recovered_template_rng_value << ",\n";
 	out << "    \"same_run_recovered_template_source_zone_record_count\": " << input.recovered_template_source_zone_record_count << ",\n";
 	out << "    \"same_run_recovered_template_source_link_record_count\": " << input.recovered_template_source_link_record_count << ",\n";
@@ -684,6 +732,7 @@ SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase
 		resolved.recovered_template_selected_vector_index = selection.selected_vector_index;
 		resolved.recovered_template_source_catalog_index = selection.selected_source_catalog_index;
 		resolved.recovered_template_name = selection.selected_template_name;
+		resolved.recovered_candidate_containers_10d4_10d8 = from_h3maped_candidate_containers(selection.accepted_candidate_containers_10d4_10d8);
 		resolved.recovered_template_rng_value = selection.rng_value;
 		resolved.recovered_template_source_zone_record_count = selection.source_zone_record_count;
 		resolved.recovered_template_source_link_record_count = selection.source_link_record_count;
