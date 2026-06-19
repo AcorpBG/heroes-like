@@ -75,6 +75,39 @@ H3_TERRAIN_INDEX_BY_NAME = {
     "lava": 7,
 }
 
+H3_MONSTER_TOWN_INDEX_BY_NAME = {
+    "neutral": 0,
+    "castle": 1,
+    "rampart": 2,
+    "tower": 3,
+    "inferno": 4,
+    "necropolis": 5,
+    "dungeon": 6,
+    "stronghold": 7,
+    "fortress": 8,
+    "forge": 9,
+}
+
+SOURCE_ZONE_TYPE_CODE = {
+    "human_start": 1,
+    "computer_start": 2,
+    "treasure": 3,
+    "junction": 4,
+}
+
+H3_RESOURCE_KEYS = ("wood", "mercury", "ore", "sulfur", "crystal", "gems", "gold")
+
+
+def monster_strength_mode(value: Any) -> int:
+    text = str(value if value is not None else "avg").strip().lower()
+    if text.startswith("n"):
+        return 0
+    if text.startswith("w"):
+        return 2
+    if text.startswith("s"):
+        return 4
+    return 3
+
 
 def mask_from_names(values: Any, mapping: dict[str, int], max_slots: int) -> int:
     mask = 0
@@ -85,6 +118,49 @@ def mask_from_names(values: Any, mapping: dict[str, int], max_slots: int) -> int
         if index is not None and 0 <= index < max_slots:
             mask |= 1 << index
     return mask
+
+
+def int_dict_values(payload: Any, keys: tuple[str, ...]) -> list[int]:
+    data = payload if isinstance(payload, dict) else {}
+    return [i32(data.get(key), 0) for key in keys]
+
+
+def source_town_rules(payload: Any) -> str:
+    values = int_dict_values(payload, ("min_towns", "min_castles", "town_density", "castle_density"))
+    return "{ " + ", ".join(str(value) for value in values) + " }"
+
+
+def source_mine_rules(minimum_payload: Any, density_payload: Any) -> str:
+    values = int_dict_values(minimum_payload, H3_RESOURCE_KEYS) + int_dict_values(density_payload, H3_RESOURCE_KEYS)
+    return "{ " + ", ".join(str(value) for value in values) + " }"
+
+
+def source_treasure_band(payload: Any) -> str:
+    data = payload if isinstance(payload, dict) else {}
+    return "{ " + ", ".join(str(i32(data.get(key), 0)) for key in ("density", "low", "high")) + " }"
+
+
+def source_zone_payload(zone: dict[str, Any]) -> str:
+    bands = zone.get("treasure_bands", [])
+    if not isinstance(bands, list):
+        bands = []
+    band_values = [source_treasure_band(bands[index] if index < len(bands) else {}) for index in range(3)]
+    allowed_monster_mask = mask_from_names(zone.get("allowed_monster_towns", []), H3_MONSTER_TOWN_INDEX_BY_NAME, 10)
+    return (
+        "{ "
+        f"{i32(zone.get('row'), -1)}, "
+        f"{SOURCE_ZONE_TYPE_CODE.get(str(zone.get('type', '')), 0)}, "
+        f"{i32(zone.get('ownership'), -1)}, "
+        f"{'true' if bool(zone.get('same_town_type', False)) else 'false'}, "
+        f"{'true' if bool(zone.get('monster_match_to_town', False)) else 'false'}, "
+        f"{monster_strength_mode(zone.get('monster_strength', 'avg'))}, "
+        f"uint16_t({allowed_monster_mask}), "
+        f"{source_town_rules(zone.get('player_towns', {}))}, "
+        f"{source_town_rules(zone.get('neutral_towns', {}))}, "
+        f"{source_mine_rules(zone.get('minimum_mines', {}), zone.get('mine_density', {}))}, "
+        f"{band_values[0]}, {band_values[1]}, {band_values[2]} "
+        "}"
+    )
 
 
 def render(catalog_path: Path, payload: dict[str, Any]) -> str:
@@ -142,7 +218,8 @@ def render(catalog_path: Path, payload: dict[str, Any]) -> str:
                 f"{player_filter['min_total']}, {player_filter['max_total']}, "
                 f"uint16_t({allowed_town_mask}), "
                 f"{'true' if bool(zone.get('terrain_match_to_town', False)) else 'false'}, "
-                f"uint16_t({allowed_terrain_mask}) "
+                f"uint16_t({allowed_terrain_mask}), "
+                f"{source_zone_payload(zone)} "
                 "}, "
                 f"{role_code(str(zone.get('type', '')))} "
                 "},"
@@ -263,17 +340,22 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 \tresult.player_count = std::max<int32_t>(result.human_count, player_count);
 \tresult.rng_state_before_template_selection = seed;
 
-\tstd::vector<int32_t> accepted_template_positions;
-\taccepted_template_positions.reserve(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0]));
+\tresult.accepted_candidate_containers_10d4_10d8.reserve(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0]));
 \tfor (int32_t index = 0; index < int32_t(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0])); ++index) {{
 \t\tconst CatalogTemplateRecord4ac552 &template_record = CATALOG_TEMPLATES_4AC552[index];
 \t\tif (!template_range_allows_4ac552(template_record, size_score, result.human_count, result.player_count)) {{
 \t\t\tcontinue;
 \t\t}}
-\t\taccepted_template_positions.push_back(index);
+\t\tTemplateCandidateContainerRecord4ac552 candidate;
+\t\tcandidate.vector_index = int32_t(result.accepted_candidate_containers_10d4_10d8.size());
+\t\tcandidate.source_catalog_index = template_record.source_catalog_index;
+\t\tcandidate.template_name = template_record.name;
+\t\tcandidate.zone_count = template_record.zone_count;
+\t\tcandidate.link_count = template_record.link_count;
+\t\tresult.accepted_candidate_containers_10d4_10d8.push_back(candidate);
 \t}}
-\tresult.accepted_template_count = int32_t(accepted_template_positions.size());
-\tif (accepted_template_positions.empty()) {{
+\tresult.accepted_template_count = int32_t(result.accepted_candidate_containers_10d4_10d8.size());
+\tif (result.accepted_candidate_containers_10d4_10d8.empty()) {{
 \t\tresult.blocked = true;
 \t\treturn result;
 \t}}
@@ -283,7 +365,8 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 \tresult.rng_value = rng.next();
 \tresult.rng_state_after_template_selection = rng.state;
 \tresult.selected_vector_index = result.rng_value % result.accepted_template_count;
-\tconst CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[accepted_template_positions[size_t(result.selected_vector_index)]];
+\tconst TemplateCandidateContainerRecord4ac552 &selected_candidate = result.accepted_candidate_containers_10d4_10d8[size_t(result.selected_vector_index)];
+\tconst CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[selected_candidate.source_catalog_index];
 \tresult.selected_source_catalog_index = selected_template.source_catalog_index;
 \tresult.selected_template_name = selected_template.name;
 \tresult.source_zone_record_count = selected_template.zone_count;
