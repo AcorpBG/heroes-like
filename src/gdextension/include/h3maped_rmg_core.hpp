@@ -160,6 +160,37 @@ struct SourceObjectWrapperBucketSummary0xe8 {
 	int32_t max_bucket_index_0x08 = -1;
 };
 
+struct SourceObjectMaskLaneResult4af89f {
+	int32_t selected_lane = 9;
+	bool selected_by_mask = false;
+	int32_t scanned_lane_count = 0;
+	uint32_t mask_word_0x18 = 0U;
+};
+
+struct SourceObjectSelectorResult4a9e40 {
+	int32_t requested_lane = 0;
+	int32_t requested_bucket_index_0x08 = -1;
+	int32_t requested_source_field_0x20 = 0;
+	bool bucket_found = false;
+	int32_t scanned_record_count = 0;
+	int32_t source_0x20_reject_count = 0;
+	int32_t group_lane8_reject_count = 0;
+	int32_t mask_reject_count = 0;
+	int32_t accepted_count = 0;
+	std::vector<int32_t> accepted_source_record_indices;
+	bool selected = false;
+	int32_t selected_candidate_index = -1;
+	int32_t selected_source_record_index = -1;
+	int32_t selected_type_id_0x1c = -1;
+	int32_t selected_subtype_0x20 = 0;
+	int32_t selected_group_0x24 = 0;
+	std::string selected_def_name;
+	uint32_t rng_state_before = 0U;
+	uint32_t rng_state_after = 0U;
+	bool rng_consumed = false;
+	int32_t rng_value = -1;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -177,6 +208,8 @@ std::vector<SourceObjectRecord0x4c> source_object_records_by_type_subtype_0x49da
 const std::vector<SourceObjectWrapperBucket0xe8> &source_object_wrapper_buckets_0x49db76();
 SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db76();
 bool source_object_wrapper_bucket_by_index_0x49db76(int32_t bucket_index, SourceObjectWrapperBucket0xe8 &out_bucket);
+SourceObjectMaskLaneResult4af89f source_object_mask_lane_selector_0x4af89f(const SourceObjectRecord0x4c &record);
+SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_t rng_state, int32_t requested_lane, int32_t bucket_index_0x08, int32_t requested_source_field_0x20);
 
 struct GeneratedCell49a85dStampResult {
 	bool center_in_bounds = false;

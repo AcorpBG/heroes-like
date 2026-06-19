@@ -524,14 +524,13 @@
         "status": "pending",
         "summary": "Carry recovered source records/descriptors through selection and materialization instead of resolving final identity through proxy object ids.",
         "title": "Reward/object identity alignment",
-        "updatedAt": "2026-06-19T23:06:47Z",
-        "latestEvidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
+        "updatedAt": "2026-06-19T23:27:23Z",
+        "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
         "latestEvidenceArtifacts": [
-          "tools/generate_h3maped_rmg_object_catalog_cpp.py",
           "src/gdextension/include/h3maped_rmg_core.hpp",
-          "src/gdextension/include/rmg_native_core.hpp",
-          "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+          "src/gdextension/include/rmg_native_core.hpp",
           "src/gdextension/src/rmg_native_core.cpp",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
@@ -539,11 +538,11 @@
           "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
           "docs/native-rmg-core-h3maped-drift-audit.md",
           "PLAN.md",
-          ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+          ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
         ],
-        "latestFinding": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
-        "remainingWork": "Port live 0x4af785/0x4af89f/0x4a9e40 wrapper/source selection, 0x4903e8 descriptor/source joins, selected copied records, object vectors, and materialization.",
+        "latestFinding": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+        "remainingWork": "Port live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied records carried through object selection, object vectors, materialization, and relation/object caller order.",
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
@@ -562,7 +561,12 @@
           "wrapper_max_bucket_index_0x08": 0,
           "wrapper_max_bucket_record_count": 1252,
           "wrapper_raw_type_bucket_model_removed": true,
-          "wrapper_selector_0x4af785_0x4af89f_0x4a9e40_ported": false,
+          "selector_samples_0x4a9e40_count": 3,
+          "selector_sample_rng_value_seed10": 71,
+          "selector_sample_no_candidate_consumed_rng": false,
+          "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
+          "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
+          "wrapper_selector_0x4af785_live_chain_ported": false,
           "descriptor_join_0x4903e8_ported": false,
           "object_materialization_ported": false,
           "windows_dll_build_deferred": true
@@ -627,9 +631,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending. The shared core now carries recovered source-zone town/terrain bytes, interleaves 0x49b3c1 town choice, runs 0x49b53d terrain selection, applies 0x4a3f27 terrain repaint, and runs TerrainPlacement visual row/flag selection through 0x4bb74b/0x4bad0f/0x4bcfc3/0x4bce6d into generated-cell +0x24/+0x28 support words, with final-sweep current-record preservation through 0x4bc5a3 for corrected-class 0x4bbfcc cases without direct row buckets. Full comparable pre-0x4a4c8e parity remains blocked by later relation/object caller order; runtime map output remains fail-closed.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. The shared core now carries recovered source-zone town/terrain bytes, interleaves 0x49b3c1 town choice, runs 0x49b53d terrain selection, applies 0x4a3f27 terrain repaint, and runs TerrainPlacement visual row/flag selection through 0x4bb74b/0x4bad0f/0x4bcfc3/0x4bce6d into generated-cell +0x24/+0x28 support words, with final-sweep current-record preservation through 0x4bc5a3 for corrected-class 0x4bbfcc cases without direct row buckets. Full comparable pre-0x4a4c8e parity remains blocked by later relation/object caller order; runtime map output remains fail-closed.",
-    "currentSliceUpdatedAt": "2026-06-19T06:05:07Z",
+    "currentNotes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+    "currentSliceNotes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+    "currentSliceUpdatedAt": "2026-06-19T23:27:23Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -638,18 +642,17 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
-      "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
-      "timestamp": "2026-06-19T23:06:47Z",
-      "status": "pass_supporting_object_bucket_identity_not_parity",
+      "id": "native-rmg-object-selector-surface-20260619",
+      "evidenceId": "native-rmg-object-selector-surface-20260619",
+      "timestamp": "2026-06-19T23:27:23Z",
+      "status": "pass_supporting_object_selector_surface_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+      "summary": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
       "artifacts": [
-        "tools/generate_h3maped_rmg_object_catalog_cpp.py",
         "src/gdextension/include/h3maped_rmg_core.hpp",
-        "src/gdextension/include/rmg_native_core.hpp",
-        "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
         "src/gdextension/src/rmg_native_core.cpp",
         "bin/h3maped_rmg_core_selftest",
         "bin/rmg_native_batch_export_cli",
@@ -657,8 +660,8 @@
         "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
         "docs/native-rmg-core-h3maped-drift-audit.md",
         "PLAN.md",
-        ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+        ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
       ],
       "checks": [
         {
@@ -674,15 +677,11 @@
           "status": "passed"
         },
         {
-          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_metadata_bucket_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_selector_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
           "status": "expected_blocked_exit_2_no_godot_snapshot_written"
         },
         {
-          "command": "metadata bucket snapshot assertion for source_object_record_catalog_0x49da08",
-          "status": "passed"
-        },
-        {
-          "command": "python3 -m py_compile tools/generate_h3maped_rmg_object_catalog_cpp.py",
+          "command": "selector snapshot assertion for selector_samples_0x4a9e40",
           "status": "passed"
         },
         {
@@ -716,26 +715,30 @@
         "wrapper_max_bucket_index_0x08": 0,
         "wrapper_max_bucket_record_count": 1252,
         "wrapper_raw_type_bucket_model_removed": true,
-        "wrapper_selector_0x4af785_0x4af89f_0x4a9e40_ported": false,
+        "selector_samples_0x4a9e40_count": 3,
+        "selector_sample_rng_value_seed10": 71,
+        "selector_sample_no_candidate_consumed_rng": false,
+        "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
+        "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
+        "wrapper_selector_0x4af785_live_chain_ported": false,
         "descriptor_join_0x4903e8_ported": false,
         "object_materialization_ported": false,
         "windows_dll_build_deferred": true
       },
-      "blocker": "wrapper/source selector calls, descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
+      "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
     },
     "latestEvidence": {
-      "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
-      "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
-      "timestamp": "2026-06-19T23:06:47Z",
-      "status": "pass_supporting_object_bucket_identity_not_parity",
+      "id": "native-rmg-object-selector-surface-20260619",
+      "evidenceId": "native-rmg-object-selector-surface-20260619",
+      "timestamp": "2026-06-19T23:27:23Z",
+      "status": "pass_supporting_object_selector_surface_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+      "summary": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
       "artifacts": [
-        "tools/generate_h3maped_rmg_object_catalog_cpp.py",
         "src/gdextension/include/h3maped_rmg_core.hpp",
-        "src/gdextension/include/rmg_native_core.hpp",
-        "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
         "src/gdextension/src/rmg_native_core.cpp",
         "bin/h3maped_rmg_core_selftest",
         "bin/rmg_native_batch_export_cli",
@@ -743,8 +746,8 @@
         "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
         "docs/native-rmg-core-h3maped-drift-audit.md",
         "PLAN.md",
-        ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+        ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
       ],
       "checks": [
         {
@@ -760,15 +763,11 @@
           "status": "passed"
         },
         {
-          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_metadata_bucket_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_selector_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
           "status": "expected_blocked_exit_2_no_godot_snapshot_written"
         },
         {
-          "command": "metadata bucket snapshot assertion for source_object_record_catalog_0x49da08",
-          "status": "passed"
-        },
-        {
-          "command": "python3 -m py_compile tools/generate_h3maped_rmg_object_catalog_cpp.py",
+          "command": "selector snapshot assertion for selector_samples_0x4a9e40",
           "status": "passed"
         },
         {
@@ -802,19 +801,23 @@
         "wrapper_max_bucket_index_0x08": 0,
         "wrapper_max_bucket_record_count": 1252,
         "wrapper_raw_type_bucket_model_removed": true,
-        "wrapper_selector_0x4af785_0x4af89f_0x4a9e40_ported": false,
+        "selector_samples_0x4a9e40_count": 3,
+        "selector_sample_rng_value_seed10": 71,
+        "selector_sample_no_candidate_consumed_rng": false,
+        "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
+        "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
+        "wrapper_selector_0x4af785_live_chain_ported": false,
         "descriptor_join_0x4903e8_ported": false,
         "object_materialization_ported": false,
         "windows_dll_build_deferred": true
       },
-      "blocker": "wrapper/source selector calls, descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
+      "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
     },
     "latestEvidenceArtifacts": [
-      "tools/generate_h3maped_rmg_object_catalog_cpp.py",
       "src/gdextension/include/h3maped_rmg_core.hpp",
-      "src/gdextension/include/rmg_native_core.hpp",
-      "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+      "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/include/rmg_native_core.hpp",
       "src/gdextension/src/rmg_native_core.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
@@ -822,10 +825,10 @@
       "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
       "docs/native-rmg-core-h3maped-drift-audit.md",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+      ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
     ],
-    "latestEvidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
+    "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -12223,16 +12226,102 @@
       "phase": "Phase 5 - Playable Alpha Baseline",
       "runtimeGenerationAllowed": false,
       "godotProcessStarted": false
+    },
+    {
+      "id": "native-rmg-object-selector-surface-20260619",
+      "evidenceId": "native-rmg-object-selector-surface-20260619",
+      "timestamp": "2026-06-19T23:27:23Z",
+      "status": "pass_supporting_object_selector_surface_not_parity",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "summary": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "PLAN.md",
+        ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
+      ],
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
+          "status": "passed_debug_linux"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
+          "status": "passed_release_linux"
+        },
+        {
+          "command": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_selector_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+          "status": "expected_blocked_exit_2_no_godot_snapshot_written"
+        },
+        {
+          "command": "selector snapshot assertion for selector_samples_0x4a9e40",
+          "status": "passed"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "command": "git diff --check",
+          "status": "passed"
+        }
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "godot_process_started": false,
+        "live_generation_surface_present": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "source_object_catalog_record_count": 1328,
+        "wrapper_bucket_count_0xe8": 232,
+        "wrapper_initialized_bucket_count": 232,
+        "wrapper_non_empty_bucket_count": 8,
+        "wrapper_total_source_record_references": 1328,
+        "wrapper_out_of_range_source_record_count": 0,
+        "wrapper_max_bucket_index_0x08": 0,
+        "wrapper_max_bucket_record_count": 1252,
+        "wrapper_raw_type_bucket_model_removed": true,
+        "selector_samples_0x4a9e40_count": 3,
+        "selector_sample_rng_value_seed10": 71,
+        "selector_sample_no_candidate_consumed_rng": false,
+        "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
+        "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
+        "wrapper_selector_0x4af785_live_chain_ported": false,
+        "descriptor_join_0x4903e8_ported": false,
+        "object_materialization_ported": false,
+        "windows_dll_build_deferred": true
+      },
+      "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
     }
   ],
   "currentNotes": "Native RMG checkpoint 2 remains pending. The shared core now carries recovered source-zone town/terrain bytes, interleaves 0x49b3c1 town choice, runs 0x49b53d terrain selection, applies 0x4a3f27 terrain repaint, and runs TerrainPlacement visual row/flag selection through 0x4bb74b/0x4bad0f/0x4bcfc3/0x4bce6d into generated-cell +0x24/+0x28 support words, with final-sweep current-record preservation through 0x4bc5a3 for corrected-class 0x4bbfcc cases without direct row buckets. Full comparable pre-0x4a4c8e parity remains blocked by later relation/object caller order; runtime map output remains fail-closed.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+  "currentSliceNotes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-19T23:06:47Z",
+  "currentSliceUpdatedAt": "2026-06-19T23:27:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -15496,18 +15585,17 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
-    "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
-    "timestamp": "2026-06-19T23:06:47Z",
-    "status": "pass_supporting_object_bucket_identity_not_parity",
+    "id": "native-rmg-object-selector-surface-20260619",
+    "evidenceId": "native-rmg-object-selector-surface-20260619",
+    "timestamp": "2026-06-19T23:27:23Z",
+    "status": "pass_supporting_object_selector_surface_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+    "summary": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
     "artifacts": [
-      "tools/generate_h3maped_rmg_object_catalog_cpp.py",
       "src/gdextension/include/h3maped_rmg_core.hpp",
-      "src/gdextension/include/rmg_native_core.hpp",
-      "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+      "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/include/rmg_native_core.hpp",
       "src/gdextension/src/rmg_native_core.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
@@ -15515,8 +15603,8 @@
       "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
       "docs/native-rmg-core-h3maped-drift-audit.md",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+      ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
     ],
     "checks": [
       {
@@ -15532,15 +15620,11 @@
         "status": "passed"
       },
       {
-        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_metadata_bucket_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_selector_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
         "status": "expected_blocked_exit_2_no_godot_snapshot_written"
       },
       {
-        "command": "metadata bucket snapshot assertion for source_object_record_catalog_0x49da08",
-        "status": "passed"
-      },
-      {
-        "command": "python3 -m py_compile tools/generate_h3maped_rmg_object_catalog_cpp.py",
+        "command": "selector snapshot assertion for selector_samples_0x4a9e40",
         "status": "passed"
       },
       {
@@ -15574,26 +15658,30 @@
       "wrapper_max_bucket_index_0x08": 0,
       "wrapper_max_bucket_record_count": 1252,
       "wrapper_raw_type_bucket_model_removed": true,
-      "wrapper_selector_0x4af785_0x4af89f_0x4a9e40_ported": false,
+      "selector_samples_0x4a9e40_count": 3,
+      "selector_sample_rng_value_seed10": 71,
+      "selector_sample_no_candidate_consumed_rng": false,
+      "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
+      "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
+      "wrapper_selector_0x4af785_live_chain_ported": false,
       "descriptor_join_0x4903e8_ported": false,
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "wrapper/source selector calls, descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
+    "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
   },
   "latestEvidence": {
-    "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
-    "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
-    "timestamp": "2026-06-19T23:06:47Z",
-    "status": "pass_supporting_object_bucket_identity_not_parity",
+    "id": "native-rmg-object-selector-surface-20260619",
+    "evidenceId": "native-rmg-object-selector-surface-20260619",
+    "timestamp": "2026-06-19T23:27:23Z",
+    "status": "pass_supporting_object_selector_surface_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+    "summary": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
     "artifacts": [
-      "tools/generate_h3maped_rmg_object_catalog_cpp.py",
       "src/gdextension/include/h3maped_rmg_core.hpp",
-      "src/gdextension/include/rmg_native_core.hpp",
-      "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+      "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/include/rmg_native_core.hpp",
       "src/gdextension/src/rmg_native_core.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
@@ -15601,8 +15689,8 @@
       "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
       "docs/native-rmg-core-h3maped-drift-audit.md",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+      ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
     ],
     "checks": [
       {
@@ -15618,15 +15706,11 @@
         "status": "passed"
       },
       {
-        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_metadata_bucket_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_selector_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
         "status": "expected_blocked_exit_2_no_godot_snapshot_written"
       },
       {
-        "command": "metadata bucket snapshot assertion for source_object_record_catalog_0x49da08",
-        "status": "passed"
-      },
-      {
-        "command": "python3 -m py_compile tools/generate_h3maped_rmg_object_catalog_cpp.py",
+        "command": "selector snapshot assertion for selector_samples_0x4a9e40",
         "status": "passed"
       },
       {
@@ -15660,19 +15744,23 @@
       "wrapper_max_bucket_index_0x08": 0,
       "wrapper_max_bucket_record_count": 1252,
       "wrapper_raw_type_bucket_model_removed": true,
-      "wrapper_selector_0x4af785_0x4af89f_0x4a9e40_ported": false,
+      "selector_samples_0x4a9e40_count": 3,
+      "selector_sample_rng_value_seed10": 71,
+      "selector_sample_no_candidate_consumed_rng": false,
+      "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
+      "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
+      "wrapper_selector_0x4af785_live_chain_ported": false,
       "descriptor_join_0x4903e8_ported": false,
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "wrapper/source selector calls, descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
+    "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
   },
   "latestEvidenceArtifacts": [
-    "tools/generate_h3maped_rmg_object_catalog_cpp.py",
     "src/gdextension/include/h3maped_rmg_core.hpp",
-    "src/gdextension/include/rmg_native_core.hpp",
-    "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+    "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+    "src/gdextension/include/rmg_native_core.hpp",
     "src/gdextension/src/rmg_native_core.cpp",
     "bin/h3maped_rmg_core_selftest",
     "bin/rmg_native_batch_export_cli",
@@ -15680,10 +15768,10 @@
     "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
     "docs/native-rmg-core-h3maped-drift-audit.md",
     "PLAN.md",
-    ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-    ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+    ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+    ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
   ],
-  "latestEvidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
+  "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -49588,17 +49676,22 @@
         "godotProcessStarted": false
       },
       "latestEvidenceArtifacts": [
-        "src/gdextension/src/map_package_service.cpp",
-        "tests/validate_repo.py",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "docs/native-rmg-core-h3maped-drift-audit.md",
         "PLAN.md",
-        "docs/native-rmg-small-h3maped-reset.md",
-        "docs/rmg-python-validation-workflow.md",
-        ".artifacts/rmg_map_package_reconstruction_surface_removed_20260618/manifest.json",
-        ".artifacts/rmg_map_package_reconstruction_surface_removed_20260618/small_3p_seed_11_controlled.phase_snapshot.json",
-        "scripts/core/HeadlessSimulationHarnessRules.gd"
+        ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
       ],
-      "latestEvidenceId": "native-rmg-full-generated-cell-word-checkpoint-20260619",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. The no-Godot shared H3MapEd chain checkpoint now carries the full recovered generated-cell word surface: reset-owned +0x10/+0x1c/+0x24/+0x28/+0x2c from 0x49a072 -> 0x499ea3 plus owner-grid +0x20 from 0x4a2777 -> 0x4a325d. The Small seed-11 setup0 blocked snapshot has 1296 records with all six word fields and FNV hashes for +0x10/+0x1c/+0x20. This is checkpoint-surface completeness only; parity/output remain blocked until same-run private-state comparison passes and the matched owner grid becomes live payload.",
+      "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
+      "latestFinding": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -50071,7 +50164,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG D-011 corrected: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). This supersedes the earlier incorrect wrapper bucket count. Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+      "notes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -50087,7 +50180,7 @@
       "status": "in_progress",
       "summary": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core now preserves descriptor-cycle identity through the 0x4cca55 -> 0x4a2777 handoff: BoundaryCyclePoint4a2777 carries source descriptor link indexes, raw +0x00/+0x04 coordinates, and finalized +0x1c/+0x20 coordinates instead of collapsing to finalized x/y only. The no-Godot Small seed-11 setup0 snapshot remains blocked/no-output and reports 5 source handoffs, 24 descriptor-indexed handoff points, 24 raw-coordinate handoff points, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-19T22:52:10Z",
+      "updatedAt": "2026-06-19T23:27:23Z",
       "validation": {
         "id": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
         "evidenceId": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
@@ -56565,7 +56658,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Missing H3MapEd generated-cell mutating phases listed in docs/native-rmg-generated-cell-mutation-chain.md are not yet implemented end to end.",
+  "remainingGap": "Native RMG still lacks live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, relation/object caller order, materialization, and same-run private-state comparison.",
   "remainingWork": "Implement later relation/object generated-cell caller order from docs/native-rmg-generated-cell-mutation-chain.md before emitting any comparable pre-0x4a4c8e generated-cell checkpoint or allowing terrain, relation, object, route, package, session, or public map output to consume the support artifact.",
   "reportOnlyEvidence": [
     {
