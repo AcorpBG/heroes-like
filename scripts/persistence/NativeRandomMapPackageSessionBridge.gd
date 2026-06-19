@@ -5,12 +5,6 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
-const H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY := {
-	"quicksilver": "site_peatwax_reed_yard",
-	"ember_salt": "site_embergrain_warm_granary",
-	"lens_crystal": "site_aetherglass_lens_house",
-	"cut_gems": "site_memory_salt_pan",
-}
 const GENERATED_TOWN_COMMON_SOURCE_SITE_BY_RESOURCE := {
 	"wood": {"site_id": "site_brightwood_sawmill", "object_id": "object_brightwood_sawmill"},
 	"ore": {"site_id": "site_ridge_quarry", "object_id": "object_ridge_quarry"},
@@ -390,8 +384,6 @@ static func _resource_nodes_from_document(map_document: Variant) -> Array:
 			continue
 		var node: Dictionary = object.duplicate(true)
 		node["site_id"] = site_id
-		if String(node.get("object_id", "")) == "":
-			node["object_id"] = String(object.get("native_proxy_object_id", ""))
 		node["collected"] = false
 		nodes.append(node)
 	return nodes
@@ -833,38 +825,32 @@ static func _map_objects_from_document(map_document: Variant) -> Array:
 	return objects
 
 static func _resource_site_id_for_object(object: Dictionary) -> String:
-	var rare_mine_site_id := _live_rare_site_id_for_h3m_mine_proxy(object)
+	var rare_mine_site_id := _live_rare_site_id_for_h3m_mine(object)
 	if rare_mine_site_id != "":
 		return rare_mine_site_id
 	var site_id := String(object.get("site_id", "")).strip_edges()
 	if site_id != "":
 		return site_id
-	site_id = String(object.get("native_proxy_site_id", "")).strip_edges()
-	if site_id != "":
-		return site_id
-	var object_id := String(object.get("object_id", object.get("native_proxy_object_id", ""))).strip_edges()
+	var object_id := String(object.get("object_id", "")).strip_edges()
 	if object_id == "":
 		return ""
 	var map_object := ContentService.get_map_object(object_id)
 	return String(map_object.get("resource_site_id", "")).strip_edges()
 
-static func _live_rare_site_id_for_h3m_mine_proxy(object: Dictionary) -> String:
+static func _live_rare_site_id_for_h3m_mine(object: Dictionary) -> String:
 	var kind := String(object.get("kind", ""))
 	var native_kind := String(object.get("native_record_kind", ""))
 	if kind != "mine" and native_kind != "mine":
 		return ""
-	var proxy_category := String(object.get("native_proxy_category", "")).strip_edges()
-	if H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY.has(proxy_category):
-		return String(H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY[proxy_category])
-	var proxy_object_id := String(object.get("object_id", object.get("native_proxy_object_id", ""))).strip_edges()
-	match proxy_object_id:
-		"mine_alchemist_proxy", "object_marsh_peat_yard":
+	var object_id := String(object.get("object_id", "")).strip_edges()
+	match object_id:
+		"object_marsh_peat_yard":
 			return "site_peatwax_reed_yard"
-		"mine_sulfur_proxy", "object_floodplain_sluice_camp":
+		"object_floodplain_sluice_camp":
 			return "site_embergrain_warm_granary"
-		"mine_crystal_proxy", "object_cinder_ore_face":
+		"object_cinder_ore_face":
 			return "site_aetherglass_lens_house"
-		"mine_gems_proxy", "object_badlands_coin_sluice":
+		"object_badlands_coin_sluice":
 			return "site_memory_salt_pan"
 	return ""
 

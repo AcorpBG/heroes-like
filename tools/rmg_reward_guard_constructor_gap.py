@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_NATIVE_SOURCE = Path("src/gdextension/src/h3maped_small_rmg.cpp")
+DEFAULT_NATIVE_SOURCE = Path("src/gdextension/src/archived_h3maped_small_rmg_legacy_proxy_20260618.cpp")
 DEFAULT_CRTRAITS = Path(
     "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/"
     "output/h3bitmap/raw/crtraits.txt"

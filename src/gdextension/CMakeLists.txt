@@ -21,21 +21,25 @@ add_subdirectory("${GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
 
 add_library(aurelion_map_persistence SHARED
 	src/register_types.cpp
-	src/h3maped_small_rmg_embedded_data.cpp
 	src/h3maped_rmg_core.cpp
-	src/h3maped_small_rmg.cpp
+	src/h3maped_rmg_template_catalog.cpp
 	src/map_document.cpp
-	src/rmg_native_batch_export_runner.cpp
 	src/scenario_document.cpp
 	src/map_package_service.cpp
 	src/rmg_data_model.cpp
 )
 
 add_executable(rmg_native_batch_export_cli
-	src/h3maped_small_rmg_embedded_data.cpp
 	src/h3maped_rmg_core.cpp
+	src/h3maped_rmg_template_catalog.cpp
 	src/rmg_native_core.cpp
 	src/rmg_native_batch_export_cli.cpp
+)
+
+add_executable(h3maped_rmg_core_selftest
+	src/h3maped_rmg_core.cpp
+	src/h3maped_rmg_template_catalog.cpp
+	src/h3maped_rmg_core_selftest.cpp
 )
 
 target_include_directories(aurelion_map_persistence PRIVATE
@@ -43,6 +47,10 @@ target_include_directories(aurelion_map_persistence PRIVATE
 )
 
 target_include_directories(rmg_native_batch_export_cli PRIVATE
+	include
+)
+
+target_include_directories(h3maped_rmg_core_selftest PRIVATE
 	include
 )
 
@@ -99,8 +107,15 @@ set_target_properties(rmg_native_batch_export_cli PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
 )
 
+set_target_properties(h3maped_rmg_core_selftest PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
+)
+
 foreach(AURELION_CONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
 	set_target_properties(rmg_native_batch_export_cli PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
+	)
+	set_target_properties(h3maped_rmg_core_selftest PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
 	)
 endforeach()

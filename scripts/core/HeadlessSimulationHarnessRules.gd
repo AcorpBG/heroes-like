@@ -990,7 +990,7 @@ static func _strategic_ai_baseline_blocker_rows(
 	if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)) \
 			or int(rmg_summary.get("medium_ok_count", 0)) < REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT:
 		var medium_error_codes: Array = rmg_summary.get("medium_setup_failure_error_codes", []) if rmg_summary.get("medium_setup_failure_error_codes", []) is Array else []
-		var runtime_generation_blocked := "archived_legacy_native_rmg_disabled" in medium_error_codes
+		var runtime_generation_blocked := "native_rmg_exact_chain_unimplemented_blocked" in medium_error_codes
 		var medium_blocked_by := "native_rmg_runtime_generation" if runtime_generation_blocked else (
 			"medium_ai_turn_health" if int(rmg_summary.get("medium_probe_count", 0)) > int(rmg_summary.get("medium_ok_count", 0)) else "medium_generated_map_breadth"
 		)

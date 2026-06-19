@@ -3653,20 +3653,27 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ensure("LIVE_STOCKPILE_RESOURCE_KEYS" in scenario_factory_text, errors, "ScenarioFactory must seed the full live stockpile key set")
     for required_token in (
         "_opening_resource_stockpile",
-        "H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY",
         "H3M_TOWN_TYPE_PROJECT_IDENTITY",
         "_project_town_identity_from_h3m_record",
         "site_embergrain_warm_granary",
         "site_peatwax_reed_yard",
         "site_aetherglass_lens_house",
         "site_memory_salt_pan",
-        "_live_rare_site_id_for_h3m_mine_proxy",
+        "_live_rare_site_id_for_h3m_mine",
         "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
         '"gold"] = 5000',
         '"wood"] = 10',
         '"ore"] = 10',
     ):
         ensure(required_token in native_package_bridge_text, errors, f"NativeRandomMapPackageSessionBridge.gd is missing generated-package full stockpile token {required_token}")
+    for forbidden_token in (
+        "native_proxy_object_id",
+        "native_proxy_site_id",
+        "native_proxy_category",
+        "H3M_RARE_MINE_SITE_BY_PROXY_CATEGORY",
+        "_live_rare_site_id_for_h3m_mine_proxy",
+    ):
+        ensure(forbidden_token not in native_package_bridge_text, errors, f"NativeRandomMapPackageSessionBridge.gd must not use proxy package-session token {forbidden_token}")
     ensure('"resources": {"gold": 5000, "wood": 10, "ore": 10}' not in native_package_bridge_text, errors, "Native generated package sessions must not seed a common-only resource map")
     for required_token in (
         "_assert_full_resource_stockpile",
@@ -19175,9 +19182,41 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     workflow_path = ROOT / "docs" / "rmg-python-validation-workflow.md"
     plan_path = ROOT / "PLAN.md"
     progress_path = ROOT / "ops" / "progress.json"
+    native_map_service_path = ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp"
+    gdscript_map_service_path = ROOT / "scripts" / "persistence" / "MapPackageService.gd"
+    old_legacy_source_paths = (
+        ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg.cpp",
+        ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg_embedded_data.cpp",
+    )
+    archived_legacy_source_paths = (
+        ROOT / "src" / "gdextension" / "src" / "archived_h3maped_small_rmg_legacy_proxy_20260618.cpp",
+        ROOT / "src" / "gdextension" / "src" / "archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
+    )
+    removed_godot_runner_paths = (
+        ROOT / "src" / "gdextension" / "include" / "rmg_native_batch_export_runner.hpp",
+        ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_runner.cpp",
+        ROOT / "tools" / "rmg_native_batch_export_native.tscn",
+    )
+    cmake_path = ROOT / "src" / "gdextension" / "CMakeLists.txt"
+    register_types_path = ROOT / "src" / "gdextension" / "src" / "register_types.cpp"
 
-    for path in (guard_path, wrapper_path, quick_path, gate_path, workflow_path, plan_path, progress_path):
+    for path in (guard_path, wrapper_path, quick_path, gate_path, workflow_path, plan_path, progress_path, native_map_service_path, gdscript_map_service_path, cmake_path, register_types_path):
         ensure(path.exists(), errors, f"Missing native RMG no-Godot boundary file: {path.relative_to(ROOT)}")
+    for path in old_legacy_source_paths:
+        ensure(not path.exists(), errors, f"Native RMG legacy proxy source must not use active filename: {path.relative_to(ROOT)}")
+    for path in archived_legacy_source_paths:
+        ensure(path.exists(), errors, f"Missing archived native RMG legacy proxy artifact: {path.relative_to(ROOT)}")
+    for path in removed_godot_runner_paths:
+        ensure(not path.exists(), errors, f"Native RMG Godot batch export runner surface must not exist: {path.relative_to(ROOT)}")
+
+    for path in (cmake_path, register_types_path):
+        if path.exists():
+            text = path.read_text(encoding="utf-8")
+            for forbidden_token in (
+                "rmg_native_batch_export_runner",
+                "RmgNativeBatchExportRunner",
+            ):
+                ensure(forbidden_token not in text, errors, f"Native RMG Godot batch export runner must not be linked or registered in {path.relative_to(ROOT)}: {forbidden_token}")
 
     if guard_path.exists():
         guard_text = guard_path.read_text(encoding="utf-8")
@@ -19198,15 +19237,176 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "godot_processes()",
             "subprocess.run(",
             '"--phase-snapshot-only"',
+            "--shared-runtime-zone-seed",
+            "--shared-runtime-link",
+            "--shared-rng-state-after-template-selection",
+            "--shared-generator-mode-0x10b8",
+            "shared_coordinate_owner_grid_chain_executed_count",
         ):
             ensure(required_token in wrapper_text, errors, f"RMG native batch wrapper is missing no-Godot boundary token: {required_token}")
         for forbidden_token in (
             "--allow-blocked-full-export-probe",
+            "--shared-runtime-input-snapshot",
+            "shared_runtime_inputs_from_phase_snapshot",
+            "controlled_case_from_phase_snapshot",
             "rmg_native_batch_export_runner",
             "--headless",
             "GODOT_BIN",
         ):
             ensure(forbidden_token not in wrapper_text, errors, f"RMG native batch wrapper must not expose Godot/full-export probe token: {forbidden_token}")
+
+    if native_map_service_path.exists():
+        native_text = native_map_service_path.read_text(encoding="utf-8")
+        for required_token in (
+            "native_rmg_package_session_adoption_disabled",
+            "h3maped_validator_gated_package_session_adoption_removed",
+            "h3maped_exact_state_chain_runtime_blocked_result",
+            "native_rmg_exact_chain_unimplemented_blocked_result",
+        ):
+            ensure(required_token in native_text, errors, f"Native MapPackageService is missing fail-closed RMG token: {required_token}")
+        for forbidden_token in (
+            "AURELION_ENABLE_ARCHIVED_NATIVE_RMG_RECONSTRUCTION",
+            "native_rmg_archived_legacy_disabled_result",
+            "Dictionary generate_zone_layout",
+            "Dictionary generate_player_starts",
+            "Dictionary generate_road_network",
+            "Dictionary generate_river_network",
+            "Dictionary generate_object_placements",
+            "Dictionary generate_town_guard_placements",
+            "Dictionary generate_connection_payload_resolution",
+            "Dictionary generate_terrain_grid",
+            "Native package/session adoption accepts partial foundation",
+            "package_session_adoption_ready\"] = true",
+            "runtime_authoritative_owner_compared_not_full_parity",
+            "ready_feature_gated_not_authoritative",
+            "aurelion_native_random_map_foundation",
+            "native_rmg_foundation_v1",
+            "foundation_scope",
+            "canonical_variant_fnv1a32_foundation",
+        ):
+            ensure(forbidden_token not in native_text, errors, f"Native MapPackageService must not expose legacy package adoption token: {forbidden_token}")
+
+    native_core_path = ROOT / "src" / "gdextension" / "src" / "rmg_native_core.cpp"
+    native_cli_path = ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_cli.cpp"
+    h3maped_core_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_core.cpp"
+    h3maped_catalog_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_template_catalog.cpp"
+    h3maped_selftest_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_core_selftest.cpp"
+    ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
+    if native_core_path.exists():
+        native_core_text = native_core_path.read_text(encoding="utf-8")
+        ensure("live_generation_surface_present" in native_core_text, errors, "Native RMG blocked snapshot must explicitly report no live generation surface")
+        for required_token in (
+            "shared_coordinate_owner_grid_chain",
+            "coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d",
+            "template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b",
+            "same_run_recovered_h3maped_template_catalog_4ac552",
+            "generator_setup_mode_49ecf2",
+            "rmg_setup_object_0x44_before_0x49ecf2_template_selection",
+            "same_run_recovered_setup_randomized_sentinel_3",
+            "shared_inputs_ready",
+            "missing_exact_runtime_zone_seed_link_inputs",
+            "coordinate_prune_divisor_4a218c",
+            "coordinate_prune_span_budget_4a218c",
+            "word_0x10_0x1c_source",
+            "word_0x10_hash_fnv1a64",
+            "word_0x1c_hash_fnv1a64",
+        ):
+            ensure(required_token in native_core_text, errors, f"Native RMG blocked snapshot is missing shared-chain handoff token: {required_token}")
+        for forbidden_token in (
+            "duplicate_plain_cpp_reconstruction_executed",
+            "plain_cpp_reconstruction_authority",
+        ):
+            ensure(forbidden_token not in native_core_text, errors, f"Native RMG blocked snapshot must not expose stale reconstruction token: {forbidden_token}")
+    if native_cli_path.exists():
+        native_cli_text = native_cli_path.read_text(encoding="utf-8")
+        ensure("legacy_native_generation_surface_removed" in native_cli_text, errors, "Native RMG CLI manifest must report legacy generation surface removal")
+        for required_token in (
+            "--shared-runtime-zone-seed",
+            "--shared-runtime-link",
+            "--shared-rng-state-after-template-selection",
+            "--shared-generator-mode-0x10b8",
+            "shared_coordinate_owner_grid_chain_executed_count",
+        ):
+            ensure(required_token in native_cli_text, errors, f"Native RMG CLI is missing explicit shared-chain input token: {required_token}")
+        for forbidden_token in (
+            "duplicate_native_core_reconstruction_body_removed",
+            "duplicate plain-C++ reconstruction surface",
+        ):
+            ensure(forbidden_token not in native_cli_text, errors, f"Native RMG CLI manifest must not expose stale reconstruction token: {forbidden_token}")
+    if h3maped_core_path.exists():
+        h3maped_core_text = h3maped_core_path.read_text(encoding="utf-8")
+        for required_token in (
+            "player_slot_assignment_4ac62a_4ac6ec",
+            "runtime_seed_inputs_from_template_records_4a218c_4a1f3b",
+            "generator_setup_mode_49ecf2",
+            "randomized_setup_sentinel_3",
+            "TemplateZoneRecord4a218c",
+            "TemplateLinkRecord4a1f3b",
+            "coordinate_prune_divisor_from_generator_mode_4a218c",
+            "coordinate_prune_span_budget_4a218c",
+        ):
+            ensure(required_token in h3maped_core_text, errors, f"Shared H3MapEd RMG core is missing typed same-run seed producer token: {required_token}")
+    if h3maped_catalog_path.exists():
+        h3maped_catalog_text = h3maped_catalog_path.read_text(encoding="utf-8")
+        for required_token in (
+            "Generated by tools/generate_h3maped_rmg_template_catalog_cpp.py",
+            "Source sha256:",
+            "CATALOG_TEMPLATES_4AC552",
+            "CATALOG_ZONES_4AC552",
+            "CATALOG_LINKS_4A1F3B",
+            "template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b",
+            "Small Ring",
+            "8MM6",
+        ):
+            ensure(required_token in h3maped_catalog_text, errors, f"Recovered H3MapEd RMG template catalog is missing token: {required_token}")
+    if h3maped_selftest_path.exists():
+        h3maped_selftest_text = h3maped_selftest_path.read_text(encoding="utf-8")
+        for required_token in (
+            "runtime_seed_inputs_from_template_records_4a218c_4a1f3b",
+            "template_seed_result",
+            "player_slot_assignment_4ac62a_4ac6ec",
+            "template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b",
+            "generator_setup_mode_49ecf2",
+            "setup3.rng_state_before_template_selection",
+            "ExpectedSmallSelection",
+            "coordinate_prune_divisor_4a218c == 5",
+            "coordinate_prune_divisor_4a218c == 7",
+            "coordinate_prune_span_budget_4a218c",
+        ):
+            ensure(required_token in h3maped_selftest_text, errors, f"Shared H3MapEd RMG selftest is missing typed producer coverage token: {required_token}")
+
+    if cmake_path.exists():
+        cmake_text = cmake_path.read_text(encoding="utf-8")
+        ensure("src/h3maped_rmg_template_catalog.cpp" in cmake_text, errors, "Recovered H3MapEd RMG template catalog must be linked into native targets")
+
+    if gdscript_map_service_path.exists():
+        gdscript_text = gdscript_map_service_path.read_text(encoding="utf-8")
+        for required_token in (
+            "native_rmg_package_session_adoption_disabled",
+            "native_rmg_exact_state_chain_runtime_blocked",
+            "native_rmg_runtime_generation_allowed\": false",
+        ):
+            ensure(required_token in gdscript_text, errors, f"GDScript MapPackageService is missing fail-closed RMG token: {required_token}")
+        for forbidden_token in (
+            "_archived_native_rmg_reconstruction_blocked",
+            "func _generate_terrain_grid",
+            "func _generate_zone_layout",
+            "func _generate_player_starts",
+            "func _generate_road_network",
+            "func _generate_river_network",
+            "func _generate_object_placements",
+            "func _generate_town_guard_placements",
+            "func _build_native_package_session_adoption",
+            "return _build_native_package_session_adoption",
+            "\"status\": \"partial_foundation\"",
+            "\"generation_status\": \"partial_foundation\"",
+            "ready_feature_gated_not_authoritative",
+            "aurelion_native_random_map_foundation",
+            "native_rmg_foundation_v1",
+            "foundation_scope",
+            "canonical_variant_fnv1a32_foundation",
+        ):
+            ensure(forbidden_token not in gdscript_text, errors, f"GDScript MapPackageService must not expose legacy package adoption/generation token: {forbidden_token}")
 
     for path in (quick_path, gate_path):
         if path.exists():

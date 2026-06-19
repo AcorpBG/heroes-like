@@ -1,5 +1,5 @@
-#include "h3maped_small_rmg.hpp"
-#include "h3maped_small_rmg_embedded_data.hpp"
+#include "archived_h3maped_small_rmg.hpp"
+#include "archived_h3maped_small_rmg_embedded_data.hpp"
 #include "h3maped_rmg_core.hpp"
 
 #include <godot_cpp/classes/json.hpp>
@@ -73,14 +73,7 @@ struct TemplateEvidence {
 	uint8_t player_capable_source_owner_mask = 0;
 };
 
-struct H3MapedRng {
-	uint32_t state = 0;
-
-	int32_t next() {
-		state = state * 0x343fdu + 0x269ec3u;
-		return int32_t((state >> 16U) & 0x7fffu);
-	}
-};
+using H3MapedRng = aurelion::h3maped_rmg_core::H3MapedRng;
 
 struct RoadArtClassification {
 	int32_t art_class = 0;
@@ -1053,6 +1046,11 @@ int32_t nested_or_flat_i32(const Dictionary &dict, const char *nested_key, const
 	return int32_t(dict.get(flat_key, fallback));
 }
 
+std::string string_to_std(const String &value) {
+	const CharString utf8 = value.utf8();
+	return std::string(utf8.get_data());
+}
+
 String normalized_seed_text(const Dictionary &normalized_config) {
 	return String(normalized_config.get("normalized_seed", normalized_config.get("seed", "0")));
 }
@@ -1090,14 +1088,7 @@ int32_t level_count(const Dictionary &normalized_config) {
 }
 
 int32_t water_mode_code(const Dictionary &normalized_config) {
-	const String mode = water_mode(normalized_config);
-	if (mode == "normal_water") {
-		return 1;
-	}
-	if (mode == "islands") {
-		return 2;
-	}
-	return 0;
+	return aurelion::h3maped_rmg_core::water_mode_code(string_to_std(water_mode(normalized_config)));
 }
 
 int32_t decorative_filler_generator_mode_0x08(const Dictionary &normalized_config) {
@@ -1152,11 +1143,7 @@ int32_t h3maped_generator_mode_0x10b8_or_unknown(const Dictionary &normalized_co
 }
 
 int32_t size_score(const Dictionary &normalized_config) {
-	int32_t score = int32_t((int64_t(std::max(1, width(normalized_config))) * int64_t(std::max(1, height(normalized_config))) * int64_t(std::max(1, level_count(normalized_config)))) / 0x510);
-	if (water_mode_code(normalized_config) == 2) {
-		score = std::max(1, score / 2);
-	}
-	return score;
+	return aurelion::h3maped_rmg_core::size_score(width(normalized_config), height(normalized_config), level_count(normalized_config), water_mode_code(normalized_config));
 }
 
 bool parse_numeric_seed(const String &seed_text, uint32_t &seed_value) {
@@ -3211,7 +3198,7 @@ Array fresh_phase_backlog() {
 	backlog.append(phase_record("public_package_adoption", "strict private h3maped state to non-authoritative project package draft", "active_strict_package_draft_runtime_blocked"));
 	backlog.append(phase_record("final_h3m_writeout", "0x49b2b6 plus final object/tile serialization", "active_strict_writeout_draft_runtime_blocked"));
 	backlog.append(phase_record("fast_structural_validator_authority", "package/writeout structural validator before public generation authority", "active_strict_validator_authority_runtime_blocked"));
-	backlog.append(phase_record("public_generation_authority", "generate_random_map validator-gated public Small/Medium land package", "active_validator_gated_public_package_available_native_end_to_end_parity_pending"));
+	backlog.append(phase_record("public_generation_authority", "generate_random_map exact H3MapEd executable-order private-state chain", "blocked_until_exact_state_chain_runtime_payload"));
 	return backlog;
 }
 
@@ -3219,7 +3206,7 @@ Array current_gap_summary() {
 	Array gaps;
 	gaps.append("active public boundary is reset to h3maped binary verification, small land scope, recovered size/water score, h3maped RNG template selection, player slots, runtime zones, link seeds, coordinate replay, source-node geometry, boundary/span fill, the small-land footprint finalizer, runtime terrain selection, and private terrain cell writeout");
 	gaps.append("old private terrain, town, mine, reward, road, blocker, and guard ledgers are archived evidence and are not exposed as active generation state");
-	gaps.append("scoped runtime package generation is enabled for validator-gated strict Small/Medium one-level land scopes, but true native end-to-end RMG parity is not complete until the recovered H3MapEd private-state replay is ported into native behavior and compared against H3MapEd outputs; water, underground, larger sizes, broader templates, and full parity remain blocked");
+	gaps.append("scoped runtime package generation is blocked for strict Small/Medium one-level land scopes until the recovered H3MapEd private-state chain and executable order own the live payload; validator/package/writeout drafts remain diagnostics only");
 	gaps.append("roads work now materializes private accepted route chains plus road type/art/flip overlay bytes from the 0x4ab52a, 0x4aae7b, 0x458a2f/0x458893, and 0x49b2b6 family; connection work materializes private same-level blocker/guard records from the 0x4a79a3/0x4a61bc/0x4a65a5/0x4a5e03 path; decorative work now materializes an explicit 0x49aa63/0x49a932 generated-cell bit-state phase and 0x49eb8d/0x49e700 filler from recovered rand_trn/template data, but the bit-26 source is still owner-transition derived until every upstream writer is exact");
 	return gaps;
 }
@@ -3230,11 +3217,11 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 	state["status"] = supports_scope(normalized_config) ? String("strict_executable_restart_scaffold_active") : String("unsupported_scope");
 	state["scope"] = "small_36x36_surface_land_only";
 	state["binary_verified"] = bool(binary_verification().get("ok", false));
-	state["active_public_generation_state"] = supports_scope(normalized_config);
-	state["runtime_generation_allowed"] = supports_scope(normalized_config);
+	state["active_public_generation_state"] = false;
+	state["runtime_generation_allowed"] = false;
 	state["native_rmg_end_to_end_parity_complete"] = false;
-	state["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
-	state["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay still has to be ported into the native generator and validated against owner executable output.";
+	state["native_rmg_end_to_end_parity_status"] = "blocked_until_exact_h3maped_private_state_chain";
+	state["native_rmg_end_to_end_parity_blocker"] = "Exact H3MapEd descriptor buffers, generator+0x3f4 boundary vector, 0x4a325d descriptor seed handoff, and downstream executable-order state replay are not yet the live runtime payload source.";
 	state["partial_materialized_payload_public_api"] = false;
 	state["legacy_private_phase_ledgers_exposed"] = false;
 	state["legacy_private_phase_ledgers_archived_only"] = true;
@@ -3265,22 +3252,22 @@ Dictionary strict_restart_state(const Dictionary &normalized_config, const Array
 			"decorative_obstacle_filler_private:0x49dc9e_0x49eb8d_0x49e700",
 			"public_package_adoption_draft:private_h3maped_state_to_project_map_document_payload",
 			"final_0x49b2b6_writeout_draft:private_tile_bytes_and_package_object_payload",
-			"fast_structural_validator_authority:package_writeout_draft_gate",
-			"public_generate_random_map_authority_after_package_validation");
+			"fast_structural_validator_authority:package_writeout_draft_diagnostic_only",
+			"public_generation_authority_blocked_until_exact_state_chain");
 	state["pending_strict_ports"] = Array::make(
-			"authoritative_final_map_package_serialization",
+			"exact_h3maped_private_state_chain_runtime_payload_authority",
+			"materialize_exact_0x4a2777_generator_plus_0x3f4_boundary_vector_and_0x4a325d_descriptor_seed_handoff",
 			"roads_as_route_infrastructure_audit",
 			"blockers_guards_runtime_zoning_audit",
 			"validator_negative_cases",
-			"small_map_corpus_audit",
-			"editor_runtime_adoption_audit");
+			"small_map_corpus_audit");
 	state["prohibited_runtime_sources"] = Array::make(
 			"catalog_auto_hash_selection",
 			"owner_sample_exact_count_fitting",
 			"fake_road_cluster_materialization",
 			"metadata_only_zone_link_validation",
 			"archived_native_generator_fallback");
-	state["next_required_port"] = "authoritative_final_map_package_serialization";
+	state["next_required_port"] = "materialize_exact_0x4a2777_generator_plus_0x3f4_boundary_vector_and_0x4a325d_descriptor_seed_handoff";
 	return state;
 }
 
@@ -20614,7 +20601,7 @@ Dictionary h3maped_package_adoption_draft_phase(const Dictionary &normalized_con
 	phase["remaining_blockers"] = Array::make(
 			"rivers_overlay_writeback:0x4b4243_0x49b2b6",
 			"final_h3m_writeout:0x49b2b6",
-			"public_generate_random_map_authority_after_package_validation");
+			"exact_h3maped_private_state_chain_runtime_payload_authority");
 	return phase;
 }
 
@@ -20629,7 +20616,7 @@ Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_confi
 	phase["public_runtime_authoritative"] = false;
 	phase["materializes_final_serializer_draft"] = false;
 	phase["materializes_public_h3m"] = false;
-	phase["blocked_next"] = "public_generate_random_map_authority_after_package_validation";
+	phase["blocked_next"] = "exact_h3maped_private_state_chain_runtime_payload_authority";
 
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
@@ -20749,8 +20736,7 @@ Dictionary h3maped_final_writeout_draft_phase(const Dictionary &normalized_confi
 			"terrain_generated_cell_word_0x24_private_state_parity",
 			"river_overlay_writeback_0x4b4243_0x49b2b6",
 			"fast_structural_validator_authority",
-			"public_generate_random_map_authority_after_package_validation",
-			"editor_runtime_adoption_audit");
+			"exact_h3maped_private_state_chain_runtime_payload_authority");
 	return phase;
 }
 
@@ -20763,7 +20749,7 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 	phase["runtime_generation_allowed"] = false;
 	phase["public_runtime_authoritative"] = false;
 	phase["authorizes_public_runtime"] = false;
-	phase["blocked_next"] = "public_generate_random_map_authority_after_package_validation";
+	phase["blocked_next"] = "exact_h3maped_private_state_chain_runtime_payload_authority";
 
 	const int32_t map_width = width(normalized_config);
 	const int32_t map_height = height(normalized_config);
@@ -21184,19 +21170,19 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 	metrics["duplicate_placement_id_count"] = duplicate_placement_id_count;
 	metrics["out_of_bounds_object_count"] = out_of_bounds_object_count;
 
-	phase["status"] = pass ? String("strict_fast_structural_validator_pass_public_generation_ready") : String("strict_fast_structural_validator_fail_runtime_blocked");
+	phase["status"] = pass ? String("strict_fast_structural_validator_pass_exact_state_chain_blocked") : String("strict_fast_structural_validator_fail_runtime_blocked");
 	phase["source"] = "fast native structural validator over the non-authoritative h3maped package and final 0x49b2b6 writeout drafts; no Godot scene report required";
 	phase["validator_authority"] = pass;
-	phase["runtime_generation_allowed"] = pass;
-	phase["public_runtime_authoritative"] = pass;
-	phase["authorizes_public_runtime"] = pass;
+	phase["runtime_generation_allowed"] = false;
+	phase["public_runtime_authoritative"] = false;
+	phase["authorizes_public_runtime"] = false;
 	phase["validator_runtime_ms_budget"] = 10;
 	phase["failure_count"] = failures.size();
 	phase["failures"] = failures;
 	phase["metrics"] = metrics;
 	phase["remaining_blockers"] = Array::make(
-			"public_generate_random_map_authority_after_package_validation",
-			"editor_runtime_adoption_audit");
+			"exact_h3maped_private_state_chain_runtime_payload_authority",
+			"materialize_exact_0x4a2777_generator_plus_0x3f4_boundary_vector_and_0x4a325d_descriptor_seed_handoff");
 	return phase;
 }
 
@@ -21204,19 +21190,27 @@ Dictionary h3maped_fast_structural_validator_phase(const Dictionary &normalized_
 } // namespace
 
 bool supports_small_land_scope(const Dictionary &normalized_config) {
-	return width(normalized_config) == 36
-			&& height(normalized_config) == 36
-			&& level_count(normalized_config) == 1
-			&& water_mode(normalized_config) == "land"
-			&& size_class_id(normalized_config) == "homm3_small";
+	if (size_class_id(normalized_config) != "homm3_small") {
+		return false;
+	}
+	return aurelion::h3maped_rmg_core::supports_one_level_land_scope(
+			width(normalized_config),
+			height(normalized_config),
+			level_count(normalized_config),
+			string_to_std(water_mode(normalized_config)),
+			string_to_std(size_class_id(normalized_config)));
 }
 
 bool supports_medium_land_scope(const Dictionary &normalized_config) {
-	return width(normalized_config) == 72
-			&& height(normalized_config) == 72
-			&& level_count(normalized_config) == 1
-			&& water_mode(normalized_config) == "land"
-			&& size_class_id(normalized_config) == "homm3_medium";
+	if (size_class_id(normalized_config) != "homm3_medium") {
+		return false;
+	}
+	return aurelion::h3maped_rmg_core::supports_one_level_land_scope(
+			width(normalized_config),
+			height(normalized_config),
+			level_count(normalized_config),
+			string_to_std(water_mode(normalized_config)),
+			string_to_std(size_class_id(normalized_config)));
 }
 
 bool supports_scope(const Dictionary &normalized_config) {
@@ -21224,23 +21218,23 @@ bool supports_scope(const Dictionary &normalized_config) {
 }
 
 String strict_scope_id(const Dictionary &normalized_config) {
-	if (supports_small_land_scope(normalized_config)) {
-		return "strict_small_36x36_one_level_land_only";
-	}
-	if (supports_medium_land_scope(normalized_config)) {
-		return "strict_medium_72x72_one_level_land_only";
-	}
-	return "unsupported_h3maped_scope";
+	return String(aurelion::h3maped_rmg_core::strict_scope_id(
+			width(normalized_config),
+			height(normalized_config),
+			level_count(normalized_config),
+			string_to_std(water_mode(normalized_config)),
+			string_to_std(size_class_id(normalized_config)))
+						  .c_str());
 }
 
 String strict_scope_label(const Dictionary &normalized_config) {
-	if (supports_small_land_scope(normalized_config)) {
-		return "small_36x36_surface_land_only";
-	}
-	if (supports_medium_land_scope(normalized_config)) {
-		return "medium_72x72_surface_land_only";
-	}
-	return "unsupported_scope";
+	return String(aurelion::h3maped_rmg_core::strict_scope_label(
+			width(normalized_config),
+			height(normalized_config),
+			level_count(normalized_config),
+			string_to_std(water_mode(normalized_config)),
+			string_to_std(size_class_id(normalized_config)))
+						  .c_str());
 }
 
 bool inspection_phase_limit_reached(const Dictionary &normalized_config, Dictionary &report, const String &phase_id) {
@@ -21769,7 +21763,7 @@ Dictionary negative_validator_cases(const Dictionary &normalized_config) {
 	Dictionary base_final = Dictionary(report.get("final_h3m_writeout", Dictionary())).duplicate(true);
 	Dictionary base_validator = Dictionary(report.get("fast_structural_validator", Dictionary())).duplicate(true);
 
-	const bool base_ready = String(base_validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready"
+	const bool base_ready = String(base_validator.get("status", "")) == "strict_fast_structural_validator_pass_exact_state_chain_blocked"
 			&& int32_t(base_validator.get("failure_count", -1)) == 0
 			&& String(base_package.get("status", "")) == "strict_package_adoption_draft_materialized_runtime_blocked"
 			&& String(base_final.get("status", "")) == "strict_final_0x49b2b6_writeout_draft_runtime_blocked";
@@ -21908,7 +21902,7 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 		Dictionary final_writeout = report.get("final_h3m_writeout", Dictionary());
 		Dictionary map_document = Dictionary(package_adoption.get("map_document_payload", Dictionary())).duplicate(true);
 		const bool validator_passed = bool(validator.get("validator_authority", false))
-				&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready"
+				&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_exact_state_chain_blocked"
 				&& int32_t(validator.get("failure_count", -1)) == 0;
 		const bool package_ready = String(package_adoption.get("status", "")) == "strict_package_adoption_draft_materialized_runtime_blocked"
 				&& bool(package_adoption.get("map_document_payload_materialized", false));
@@ -21973,7 +21967,7 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 	const String scope_id = strict_scope_id(normalized_config);
 
 	const bool validator_passed = bool(validator.get("validator_authority", false))
-			&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_public_generation_ready"
+			&& String(validator.get("status", "")) == "strict_fast_structural_validator_pass_exact_state_chain_blocked"
 			&& int32_t(validator.get("failure_count", -1)) == 0;
 	const bool package_ready = String(package_adoption.get("status", "")) == "strict_package_adoption_draft_materialized_runtime_blocked"
 			&& bool(package_adoption.get("map_document_payload_materialized", false));
@@ -22009,279 +22003,41 @@ Dictionary validator_gated_generation_result(const Dictionary &normalized_config
 		return result;
 	}
 
-	const String seed = String(normalized_config.get("seed", ""));
-	const String source_template_id = String(map_document.get("source_template_id", ""));
-	const String public_map_id = String("h3maped_") + scope_token + String("_seed_") + seed;
-	const String public_map_hash = String("validated:h3maped_") + scope_token + String(":") + seed + String(":") + source_template_id;
-	map_document["map_id"] = public_map_id;
-	map_document["map_hash"] = public_map_hash;
-	map_document["source_kind"] = String("generated_h3maped_") + scope_token + String("_validated");
-	map_document["public_runtime_authoritative"] = true;
-	map_document["runtime_generation_allowed"] = true;
-	map_document["production_ready"] = true;
-	map_document["production_ready_scope"] = scope_id;
-	map_document["native_rmg_end_to_end_parity_complete"] = false;
-	map_document["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
-	map_document["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
-	map_document["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
-	map_document["editor_runtime_adoption_audited"] = true;
-	map_document["source_template_authority"] = "h3maped_exe_rng";
-	map_document["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
-	map_document["translated_template_authority_used"] = false;
-	map_document["archived_catalog_auto_used"] = false;
-	map_document["template_selection_fallback_used"] = false;
-	Dictionary metadata = Dictionary(map_document.get("metadata", Dictionary())).duplicate(true);
-	metadata["source"] = String("h3maped_") + scope_token + String("_validator_gated_generation_result");
-	metadata["h3maped_reference_sha256"] = Dictionary(report.get("h3maped_binary", Dictionary())).get("reference_sha256", "");
-	metadata["source_template_id"] = source_template_id;
-	metadata["source_catalog_index"] = map_document.get("source_catalog_index", -1);
-	metadata["source_template_authority"] = "compiled_h3maped_rng";
-	metadata["template_selection_authority"] = "compiled_h3maped_original_catalog";
-	metadata["translated_template_authority_used"] = false;
-	metadata["archived_catalog_auto_used"] = false;
-	metadata["template_selection_fallback_used"] = false;
-	metadata["validator_status"] = validator.get("status", "");
-	metadata["validator_failure_count"] = validator.get("failure_count", 0);
-	metadata["production_ready"] = true;
-	metadata["production_ready_scope"] = scope_id;
-	metadata["native_rmg_end_to_end_parity_complete"] = false;
-	metadata["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
-	metadata["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
-	metadata["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
-	metadata["editor_runtime_adoption_audited"] = true;
-	map_document["metadata"] = metadata;
+	Dictionary exact_chain_block;
+	exact_chain_block["ok"] = false;
+	exact_chain_block["status"] = medium_scope ? String("h3maped_medium_exact_state_chain_runtime_blocked") : String("h3maped_small_exact_state_chain_runtime_blocked");
+	exact_chain_block["generation_status"] = exact_chain_block["status"];
+	exact_chain_block["full_generation_status"] = medium_scope ? String("h3maped_medium_waiting_for_exact_executable_state_chain") : String("h3maped_small_waiting_for_exact_executable_state_chain");
+	exact_chain_block["error_code"] = medium_scope ? String("h3maped_medium_exact_state_chain_not_ported") : String("h3maped_small_exact_state_chain_not_ported");
+	exact_chain_block["message"] = "Supported H3MapEd land generation is blocked until the exact recovered private-state chain and executable phase order own the runtime map payload. Validator/package drafts and reconstructed native surfaces are diagnostics only.";
+	exact_chain_block["runtime_generation_allowed"] = false;
+	exact_chain_block["public_runtime_authoritative"] = false;
+	exact_chain_block["native_runtime_authoritative"] = false;
+	exact_chain_block["production_ready"] = false;
+	exact_chain_block["partial_materialized_payload_public_api"] = false;
+	exact_chain_block["full_parity_claim"] = false;
+	exact_chain_block["native_rmg_end_to_end_parity_complete"] = false;
+	exact_chain_block["native_rmg_end_to_end_parity_status"] = "blocked_until_exact_h3maped_private_state_chain";
+	exact_chain_block["native_rmg_end_to_end_parity_blocker"] = "Exact H3MapEd 0x4ccb64/0x4ccdfc descriptor buffer, 0x4a2777 generator+0x3f4 boundary vector, 0x4a325d descriptor seed handoff, and downstream executable-order state replay are not yet the live runtime payload source.";
+	exact_chain_block["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
+	exact_chain_block["template_selection_authority"] = "h3maped_exe_rng_original_catalog_inspection_only";
+	exact_chain_block["source_template_authority"] = "h3maped_exe_rng_inspection_only";
+	exact_chain_block["source_template_id"] = map_document.get("source_template_id", "");
+	exact_chain_block["source_catalog_index"] = map_document.get("source_catalog_index", -1);
+	exact_chain_block["translated_template_authority_used"] = false;
+	exact_chain_block["archived_catalog_auto_used"] = false;
+	exact_chain_block["template_selection_fallback_used"] = false;
+	exact_chain_block["normalized_config"] = normalized_config;
+	exact_chain_block["validator_status"] = validator.get("status", "");
+	exact_chain_block["validator_failures"] = validator.get("failures", Array());
+	exact_chain_block["package_adoption_status"] = package_adoption.get("status", "");
+	exact_chain_block["final_writeout_status"] = final_writeout.get("status", "");
+	exact_chain_block["h3maped_small_port"] = include_h3maped_small_port ? report : Dictionary();
+	exact_chain_block["strict_restart_state"] = strict_restart_state(normalized_config, accepted_templates(normalized_config));
+	exact_chain_block["replacement_slice_id"] = medium_scope ? String("native-rmg-medium-exact-h3maped-state-chain-10184") : String("native-rmg-small-exact-h3maped-state-chain-10184");
+	exact_chain_block["extension_profile"] = extension_profile;
+	return exact_chain_block;
 
-	Array objects = Array(map_document.get("objects", Array())).duplicate(true);
-	for (int64_t index = 0; index < objects.size(); ++index) {
-		if (Variant(objects[index]).get_type() != Variant::DICTIONARY) {
-			continue;
-		}
-		Dictionary object = Dictionary(objects[index]).duplicate(true);
-		object["public_runtime_authoritative"] = true;
-		object["runtime_generation_allowed"] = true;
-		objects[index] = object;
-	}
-	map_document["objects"] = objects;
-
-	Dictionary route_graph = Dictionary(map_document.get("route_graph", Dictionary())).duplicate(true);
-	route_graph["public_runtime_authoritative"] = true;
-	route_graph["runtime_generation_allowed"] = true;
-	map_document["route_graph"] = route_graph;
-
-	Dictionary terrain_layers = Dictionary(map_document.get("terrain_layers", Dictionary())).duplicate(true);
-	terrain_layers["public_runtime_authoritative"] = true;
-	terrain_layers["runtime_generation_allowed"] = true;
-	map_document["terrain_layers"] = terrain_layers;
-
-	Dictionary tile_bytes = Dictionary(final_writeout.get("tile_bytes", Dictionary())).duplicate(true);
-	Dictionary result;
-	result["ok"] = true;
-	result["status"] = medium_scope ? String("h3maped_medium_validated_package_ready") : String("h3maped_small_validated_package_ready");
-	result["generation_status"] = result["status"];
-	result["full_generation_status"] = medium_scope ? String("h3maped_medium_public_package_production_ready_strict_medium_land") : String("h3maped_small_public_package_production_ready_strict_small_land");
-	result["schema_id"] = medium_scope ? String("aurelion_h3maped_medium_validator_gated_generation_result_v1") : String("aurelion_h3maped_small_validator_gated_generation_result_v1");
-	result["schema_version"] = 1;
-	result["runtime_generation_allowed"] = true;
-	result["public_runtime_authoritative"] = true;
-	result["native_runtime_authoritative"] = true;
-	result["production_ready"] = true;
-	result["production_ready_scope"] = scope_id;
-	result["native_rmg_end_to_end_parity_complete"] = false;
-	result["native_rmg_end_to_end_parity_status"] = "native_adoption_pending_after_h3maped_recovery";
-	result["native_rmg_end_to_end_parity_blocker"] = "Recovered H3MapEd private-state replay has not yet been fully ported into native generation behavior and validated against owner executable output.";
-	result["unsupported_mode_policy"] = "explicit_blocked_no_fallback";
-	result["editor_runtime_adoption_audited"] = true;
-	result["full_parity_claim"] = false;
-	result["template_selection_authority"] = "h3maped_exe_rng_original_catalog";
-	result["source_template_authority"] = "h3maped_exe_rng";
-	result["source_template_id"] = source_template_id;
-	result["source_catalog_index"] = map_document.get("source_catalog_index", -1);
-	result["translated_template_authority_used"] = false;
-	result["archived_catalog_auto_used"] = false;
-	result["template_selection_fallback_used"] = false;
-	result["no_authored_writeback"] = true;
-	result["normalized_config"] = normalized_config;
-		result["h3maped_template_selection"] = report.get("selection_identity", Dictionary());
-		if (include_h3maped_small_port) {
-			result["h3maped_small_port"] = report;
-		}
-		result["map_document_payload"] = map_document;
-	result["terrain_layers"] = map_document.get("terrain_layers", Dictionary());
-	result["route_graph"] = map_document.get("route_graph", Dictionary());
-	result["objects"] = map_document.get("objects", Array());
-	result["player_starts"] = map_document.get("player_starts", Array());
-	result["final_tile_bytes"] = tile_bytes;
-	result["fast_structural_validator"] = validator;
-	result["validator_metrics"] = validator.get("metrics", Dictionary());
-	result["runtime_zone_count"] = Dictionary(report.get("runtime_zone_records", Dictionary())).get("runtime_zone_count", 0);
-	auto copy_phase_fields = [](const Dictionary &source, const std::vector<String> &fields) {
-		Dictionary picked;
-		for (const String &field : fields) {
-			if (source.has(field)) {
-				picked[field] = source.get(field, Variant());
-			}
-		}
-		return picked;
-	};
-	Dictionary phase_counter_summary;
-	phase_counter_summary["schema_id"] = "rmg_native_generation_phase_counter_summary_v1";
-	phase_counter_summary["status"] = "available";
-	phase_counter_summary["coordinate_replay"] = copy_phase_fields(Dictionary(report.get("coordinate_replay", Dictionary())), {
-			"status",
-			"placement_step_count",
-			"blanket_refinement_pass_count",
-			"coordinate_prune_span_budget_4a218c",
-			"coordinate_prune_divisor_4a218c",
-			"coordinate_rng_calls_during_0x4a1f3b",
-			"town_choice_rng_calls_during_0x4a218c",
-			"total_interleaved_rng_calls_during_0x4a218c",
-			"bounding_box_rescale",
-			"scaled_zone_coordinates",
-	});
-	phase_counter_summary["town_castle"] = copy_phase_fields(Dictionary(report.get("town_castle_phase", Dictionary())), {
-			"status",
-			"source_player_min_town_count",
-			"source_player_min_castle_count",
-			"source_neutral_min_town_count",
-			"source_neutral_min_castle_count",
-			"density_schedule_count",
-			"project_town_record_candidate_count",
-			"project_player_start_candidate_count",
-			"project_neutral_town_candidate_count",
-			"direct_record_projection_count",
-			"direct_footprint_missing_count",
-			"weighted_continuation_density_retired_count",
-	});
-	phase_counter_summary["object_vector"] = copy_phase_fields(Dictionary(report.get("mines_rewards_and_object_vector", Dictionary())), {
-			"status",
-			"materialized_private_mine_coordinate_record_count",
-			"materialized_private_mine_guard_record_count",
-			"materialized_private_adjacent_resource_record_count",
-			"primary_category_selected_count",
-			"primary_category_guard_coordinate_record_count",
-			"reward_scheduler_preview_attempt_count",
-			"reward_scheduler_density_loop_attempt_capacity_total",
-			"reward_scheduler_retired_band_total",
-			"reward_scheduler_budget_argument_total",
-			"reward_object_lookup_count",
-			"reward_object_lookup_selected_count",
-			"reward_coordinate_selected_count",
-			"reward_guard_coordinate_record_count",
-			"partial_coordinate_record_count",
-	});
-	phase_counter_summary["roads_and_rivers"] = copy_phase_fields(Dictionary(report.get("roads_and_rivers", Dictionary())), {
-			"status",
-			"generator_coordinate_record_count",
-			"road_template_link_seed_count",
-			"road_template_link_pair_count",
-			"restrict_medium_roads_to_template_links",
-			"unlinked_route_pair_count",
-			"rejected_unlinked_route_pair_count",
-			"pair_candidate_iteration_count",
-			"candidate_accepted_by_threshold_count",
-			"accepted_predecessor_chain_count",
-			"road_overlay_cell_count",
-			"road_overlay_art_nonzero_count",
-	});
-	phase_counter_summary["generated_cell_decoration_bit_state"] = copy_phase_fields(Dictionary(report.get("generated_cell_decoration_bit_state", Dictionary())), {
-			"status",
-			"decor_candidate_set_count",
-			"final_decor_candidate_bit_26_count",
-			"final_occupied_blocked_bit_27_count",
-			"cleanup_decor_candidate_write_count",
-			"water_edge_decor_candidate_write_count",
-			"junction_decor_candidate_write_count",
-	});
-	phase_counter_summary["decorative_obstacle_filler"] = copy_phase_fields(Dictionary(report.get("decorative_obstacle_filler", Dictionary())), {
-			"status",
-			"decor_candidate_bit_26_count_before_filler",
-			"occupied_blocked_bit_27_count_before_filler",
-			"generated_flagged_cell_count",
-			"generated_valid_flagged_cell_count",
-			"invalid_flagged_progress_only_count",
-			"raw_budget_argument_to_0x49e700",
-			"budget_argument_to_0x49e700",
-			"cell_call_count",
-			"rejected_no_candidates_count",
-				"rejected_footprint_count",
-				"selected_coordinate_out_of_bounds_count_0x49e700",
-				"rejected_49e1bf_score_count",
-				"rejected_49e1bf_object_terrain_mask_count",
-				"rejected_type_limit_count_0x49e700",
-				"type_limit_seed_record_count_0x49e700",
-				"mapped_template_def_filter_rejected_count",
-				"mapped_template_def_filter_complete_row_count",
-				"mapped_template_def_filter_incomplete_row_count",
-				"rejected_town_connectivity_count",
-				"expanded_anchor_candidate_count",
-			"duplicate_expanded_anchor_candidate_count",
-			"private_decorative_obstacle_record_count",
-			"private_decorative_object_placement_count",
-			"private_decorative_wrapper_record_count_0x49abd6",
-					"private_decorative_wrapper_vector_nonempty_cell_count",
-					"private_decorative_wrapper_vector_reference_count",
-					"private_decorative_wrapper_vector_max_cell_size",
-					"private_decorative_wrapper_vector_multi_wrapper_cell_count",
-					"private_decorative_wrapper_vector_multi_wrapper_pair_count",
-					"private_decorative_source_wrapper_vector_nonempty_cell_count_0x49abd6",
-					"private_decorative_source_wrapper_vector_reference_count_0x49abd6",
-					"private_decorative_source_wrapper_vector_max_cell_size_0x49abd6",
-					"private_decorative_source_wrapper_vector_multi_wrapper_cell_count_0x49abd6",
-					"private_decorative_source_wrapper_vector_multi_wrapper_pair_count_0x49abd6",
-					"private_decorative_source_wrapper_vector_current_missing_pair_count_0x49abd6",
-					"private_decorative_current_wrapper_vector_source_missing_pair_count_0x49abd6",
-					"private_decorative_0x49e1bf_touched_wrapper_count_0x17",
-					"private_decorative_0x49e1bf_overlap_pair_count_0x18",
-					"private_decorative_0x49e1bf_adjacency_pair_count_0x16",
-					"private_decorative_0x49e1bf_recalculation_compare_pair_count_0x14_0x15",
-					"private_decorative_0x49b89c_recalculation_table_count",
-					"private_decorative_0x49b89c_recalculation_nonzero_entry_total",
-					"private_decorative_0x49b89c_recalculation_max_entry",
-					"private_decorative_0x49b89c_descriptor_byte_0x28_nonzero_count",
-					"private_decorative_marked_body_cell_count",
-				"private_remaining_candidate_0x49a932_lock_count",
-				"post_stamp_rectangle_cell_scan_count",
-			"post_stamp_rectangle_bit26_cleared_count",
-			"post_stamp_rectangle_bit26_clear_skipped_count",
-			"rng_call_count",
-	});
-	phase_counter_summary["public_package_adoption"] = copy_phase_fields(package_adoption, {
-			"status",
-			"package_object_count",
-			"town_package_object_count",
-			"neutral_town_package_object_count",
-			"road_package_tile_count",
-			"road_package_segment_count",
-			"decorative_obstacle_package_object_count",
-			"decorative_scenic_package_object_count",
-			"decorative_private_record_package_object_count",
-			"reward_package_object_count",
-			"mine_package_object_count",
-			"primary_category_package_object_count",
-	});
-	result["h3maped_phase_counter_summary"] = phase_counter_summary;
-	Dictionary public_package_adoption_summary;
-	public_package_adoption_summary["status"] = package_adoption.get("status", "");
-	public_package_adoption_summary["package_object_count"] = package_adoption.get("package_object_count", 0);
-	public_package_adoption_summary["player_start_count"] = package_adoption.get("player_start_count", 0);
-	public_package_adoption_summary["road_package_segment_count"] = package_adoption.get("road_package_segment_count", 0);
-	public_package_adoption_summary["connection_guard_package_object_count"] = package_adoption.get("connection_guard_package_object_count", 0);
-	public_package_adoption_summary["connection_blocker_package_object_count"] = package_adoption.get("connection_blocker_package_object_count", 0);
-	public_package_adoption_summary["reward_guard_package_object_count"] = package_adoption.get("reward_guard_package_object_count", 0);
-	public_package_adoption_summary["decorative_obstacle_package_object_count"] = package_adoption.get("decorative_obstacle_package_object_count", 0);
-	public_package_adoption_summary["decorative_scenic_package_object_count"] = package_adoption.get("decorative_scenic_package_object_count", 0);
-	public_package_adoption_summary["decorative_private_record_package_object_count"] = package_adoption.get("decorative_private_record_package_object_count", 0);
-	result["public_package_adoption_summary"] = public_package_adoption_summary;
-	Dictionary final_writeout_summary;
-	final_writeout_summary["status"] = final_writeout.get("status", "");
-	final_writeout_summary["tile_byte_array_count"] = final_writeout.get("tile_byte_array_count", 0);
-	final_writeout_summary["tile_byte_array_size"] = final_writeout.get("tile_byte_array_size", 0);
-	final_writeout_summary["road_overlay_type_nonzero_count"] = final_writeout.get("road_overlay_type_nonzero_count", 0);
-	final_writeout_summary["package_object_count"] = final_writeout.get("package_object_count", 0);
-	result["final_writeout_summary"] = final_writeout_summary;
-	result["replacement_slice_id"] = medium_scope ? String("native-rmg-medium-h3maped-land-runtime-adoption-10184") : String("native-rmg-small-h3maped-port-10184");
-	result["extension_profile"] = extension_profile;
-	return result;
 }
 
 Dictionary generation_not_ready_result(const Dictionary &normalized_config, const Dictionary &extension_profile) {

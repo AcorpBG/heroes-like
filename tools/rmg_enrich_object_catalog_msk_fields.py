@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_EMBEDDED = Path("src/gdextension/src/h3maped_small_rmg_embedded_data.cpp")
+DEFAULT_EMBEDDED = Path("src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp")
 DEFAULT_MSK_DIRS = [
     Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/raw"),
     Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_spr/raw"),

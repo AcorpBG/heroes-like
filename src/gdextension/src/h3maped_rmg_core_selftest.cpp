@@ -1,0 +1,609 @@
+#include "h3maped_rmg_core.hpp"
+
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+
+namespace {
+
+using aurelion::h3maped_rmg_core::BoundaryMaterialization4a2777;
+using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
+using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
+using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
+using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
+using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
+using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
+using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
+using aurelion::h3maped_rmg_core::RuntimeTerrainSelectionResult49b53d;
+using aurelion::h3maped_rmg_core::RuntimeZoneSeedInput4a218c;
+using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
+using aurelion::h3maped_rmg_core::SourceNodeFootprintResult4a3a03;
+using aurelion::h3maped_rmg_core::SourceNodeCyclePoint4a2777;
+using aurelion::h3maped_rmg_core::SpanRecord;
+using aurelion::h3maped_rmg_core::TerrainRepaintResult4a3f27;
+using aurelion::h3maped_rmg_core::TemplateSelectionRuntimeResult4ac552;
+using aurelion::h3maped_rmg_core::TemplateLinkRecord4a1f3b;
+using aurelion::h3maped_rmg_core::TemplateZoneRecord4a218c;
+
+SourceNodeCyclePoint4a2777 source_node(int32_t x, int32_t y, int32_t model_node_index) {
+	SourceNodeCyclePoint4a2777 node;
+	node.model_node_index = model_node_index;
+	node.pair_index = model_node_index ^ 1;
+	node.next_index = (model_node_index + 1) % 4;
+	node.previous_index = (model_node_index + 3) % 4;
+	node.next_pair_index = (model_node_index + 2) % 4;
+	node.raw_x_0x00 = x - 1;
+	node.raw_y_0x04 = y - 1;
+	node.finalized_x_0x1c = x;
+	node.finalized_y_0x20 = y;
+	node.finalized = true;
+	return node;
+}
+
+BoundarySourceCycleHandoff4a2777 square_handoff(bool gate_first_edge) {
+	BoundarySourceCycleHandoff4a2777 handoff;
+	handoff.runtime_zone_index = 0;
+	handoff.zone_word = 1;
+	handoff.level = 0;
+	handoff.random_span_limit = 1;
+	handoff.source_record_vector_index_4a3e9c = 0;
+	handoff.has_source_record_seed_0x10 = true;
+	handoff.source_record_seed_0x10 = SpanRecord { 3, 3, 0 };
+	handoff.source_nodes = {
+		source_node(1, 1, 0),
+		source_node(6, 1, 1),
+		source_node(6, 6, 2),
+		source_node(1, 6, 3),
+	};
+	if (gate_first_edge) {
+		handoff.source_nodes[0].next_pair_has_payload = true;
+		handoff.source_nodes[0].next_pair_payload = 1;
+	}
+	return handoff;
+}
+
+bool require(bool condition, const std::string &message) {
+	if (!condition) {
+		std::cerr << "h3maped_rmg_core_selftest: " << message << "\n";
+		return false;
+	}
+	return true;
+}
+
+} // namespace
+
+int main() {
+	{
+		const std::vector<BoundarySourceCycleHandoff4a2777> handoffs { square_handoff(true) };
+		const auto cycles = aurelion::h3maped_rmg_core::boundary_cycles_from_source_handoffs_4a2777(handoffs);
+		if (!require(cycles.size() == 1, "expected one converted boundary cycle")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes.size() == 4, "expected four converted cycle nodes")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].next_pair_has_payload, "source next-pair payload flag was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].next_pair_payload == 1, "source next-pair payload value was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].model_node_index == handoffs[0].source_nodes[0].model_node_index, "source descriptor model index was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].pair_index == handoffs[0].source_nodes[0].pair_index, "source descriptor pair index was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].next_index == handoffs[0].source_nodes[0].next_index, "source descriptor next index was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].previous_index == handoffs[0].source_nodes[0].previous_index, "source descriptor previous index was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].next_pair_index == handoffs[0].source_nodes[0].next_pair_index, "source descriptor next-pair index was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].raw_x_0x00 == handoffs[0].source_nodes[0].raw_x_0x00 && cycles[0].cycle_nodes[0].raw_y_0x04 == handoffs[0].source_nodes[0].raw_y_0x04, "source raw coordinates were not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].finalized_x_0x1c == handoffs[0].source_nodes[0].finalized_x_0x1c && cycles[0].cycle_nodes[0].finalized_y_0x20 == handoffs[0].source_nodes[0].finalized_y_0x20, "source finalized coordinates were not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].has_span_seed_4a325d, "source-record +0x10 seed was not converted into the 0x4a325d span seed")) {
+			return 1;
+		}
+		if (!require(cycles[0].source_record_vector_index_4a3e9c == 0, "source-record vector index was not preserved into the boundary cycle")) {
+			return 1;
+		}
+	}
+
+	const BoundaryMaterialization4a2777 ungated = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			8,
+			8,
+			1,
+			0,
+			1234U,
+			{ square_handoff(false) });
+	const BoundaryMaterialization4a2777 gated = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			8,
+			8,
+			1,
+			0,
+			1234U,
+			{ square_handoff(true) });
+
+	if (!require(ungated.owner_gate_skipped_segment_count == 0, "ungated handoff unexpectedly skipped owner-gated segments")) {
+		return 1;
+	}
+	if (!require(gated.owner_gate_skipped_segment_count > 0, "gated handoff did not skip any owner-gated segment")) {
+		return 1;
+	}
+	if (!require(gated.connector_segment_count < ungated.connector_segment_count, "owner gate did not reduce connector segment writes")) {
+		return 1;
+	}
+	if (!require(gated.source_handoff_count == 1 && gated.source_handoff_point_count == 4, "source handoff counters were not preserved")) {
+		return 1;
+	}
+	if (!require(gated.source_handoff_descriptor_indexed_point_count == 4, "source handoff descriptor index counters were not preserved")) {
+		return 1;
+	}
+	if (!require(gated.source_handoff_raw_coordinate_point_count == 4, "source handoff raw-coordinate counters were not preserved")) {
+		return 1;
+	}
+	if (!require(gated.source_handoff_source_record_seed_count == 1 && gated.source_handoff_missing_source_record_seed_count == 0, "source-record seed counters were not preserved")) {
+		return 1;
+	}
+	if (!require(gated.span_fill_zone_count == 1, "gated handoff should still execute span fill from source-record +0x10 seed")) {
+		return 1;
+	}
+	BoundarySourceCycleHandoff4a2777 missing_seed = square_handoff(false);
+	missing_seed.has_source_record_seed_0x10 = false;
+	const BoundaryMaterialization4a2777 missing_seed_result = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			8,
+			8,
+			1,
+			0,
+			1234U,
+			{ missing_seed });
+	if (!require(missing_seed_result.source_handoff_missing_source_record_seed_count == 1, "missing source-record seed was not reported")) {
+		return 1;
+	}
+	if (!require(missing_seed_result.span_fill_zone_count == 0, "missing source-record seed must not be replaced by a reconstructed span seed")) {
+		return 1;
+	}
+
+	const std::vector<RuntimeZoneFootprintInput4a3a03> runtime_zones = {
+		RuntimeZoneFootprintInput4a3a03 { 0, 1, 8, 8, 0 },
+		RuntimeZoneFootprintInput4a3a03 { 1, 2, 20, 8, 0 },
+		RuntimeZoneFootprintInput4a3a03 { 2, 3, 20, 20, 0 },
+		RuntimeZoneFootprintInput4a3a03 { 3, 4, 8, 20, 0 },
+	};
+	const SourceNodeFootprintResult4a3a03 footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(runtime_zones);
+	if (!require(!footprint.blocked, "source-node footprint producer unexpectedly blocked")) {
+		return 1;
+	}
+	if (!require(footprint.executed_split_count == 4, "source-node footprint producer did not split all surface runtime zones")) {
+		return 1;
+	}
+	if (!require(footprint.source_descriptor_node_count > 0 && footprint.source_descriptor_finalized_node_count > 0, "source descriptor table was not materialized")) {
+		return 1;
+	}
+	if (!require(footprint.walks.size() == 4, "source-node footprint producer did not emit one walk per surface runtime zone")) {
+		return 1;
+	}
+	if (!require(footprint.walks[0].locator_node_index >= 0 && !footprint.walks[0].source_nodes.empty(), "source descriptor walk was not materialized")) {
+		return 1;
+	}
+	if (!require(footprint.walks[0].source_nodes[0].model_node_index >= 0 && footprint.walks[0].source_nodes[0].next_pair_index >= 0, "source walk lost descriptor link indexes")) {
+		return 1;
+	}
+
+	BoundarySourceCycleHandoff4a2777 produced_handoff;
+	produced_handoff.runtime_zone_index = footprint.walks[0].runtime_zone_index;
+	produced_handoff.zone_word = 0;
+	produced_handoff.level = 0;
+	produced_handoff.random_span_limit = 1;
+	produced_handoff.source_record_vector_index_4a3e9c = 0;
+	produced_handoff.has_source_record_seed_0x10 = true;
+	produced_handoff.source_record_seed_0x10 = SpanRecord { runtime_zones[0].x_after_bbox_rescale, runtime_zones[0].y_after_bbox_rescale, 0 };
+	produced_handoff.source_nodes = footprint.walks[0].source_nodes;
+	const BoundaryMaterialization4a2777 produced = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			36,
+			36,
+			1,
+			0,
+			1234U,
+			{ produced_handoff });
+	if (!require(produced.source_handoff_count == 1, "producer handoff was not consumed by boundary materializer")) {
+		return 1;
+	}
+	if (!require(produced.source_handoff_point_count == int32_t(footprint.walks[0].source_nodes.size()), "producer handoff point count changed during materialization")) {
+		return 1;
+	}
+	if (!require(produced.source_handoff_descriptor_indexed_point_count > 0, "producer handoff descriptor indexes were not preserved into materialization")) {
+		return 1;
+	}
+	if (!require(produced.span_fill_zone_count == 1, "producer handoff did not preserve span fill seed")) {
+		return 1;
+	}
+
+	const std::vector<RuntimeZoneBoundaryInput4a3a03> boundary_inputs = {
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[0], 0, 1, 0, true, SpanRecord { 8, 8, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[1], 1, 1, 1, true, SpanRecord { 20, 8, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[2], 2, 1, 2, true, SpanRecord { 20, 20, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[3], 3, 1, 3, true, SpanRecord { 8, 20, 0 } },
+	};
+	const BoundaryOwnerGridResult4a3a03 owner_grid = aurelion::h3maped_rmg_core::materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(
+			36,
+			36,
+			1,
+			aurelion::h3maped_rmg_core::water_mode_code("land"),
+			0,
+			1234U,
+			boundary_inputs);
+	if (!require(!owner_grid.source_blocked, "composed owner-grid chain blocked in source-node producer")) {
+		return 1;
+	}
+	if (!require(owner_grid.materialization_executed, "composed owner-grid chain did not execute boundary materialization")) {
+		return 1;
+	}
+	if (!require(owner_grid.footprint_finalizer_executed && !owner_grid.footprint_finalizer.blocked, "composed owner-grid chain did not execute the one-level land 0x4a3710 finalizer")) {
+		return 1;
+	}
+	if (!require(owner_grid.handoffs.size() == 4, "composed owner-grid chain did not build one handoff per source walk")) {
+		return 1;
+	}
+	if (!require(owner_grid.missing_boundary_input_count == 0 && owner_grid.missing_source_walk_count == 0, "composed owner-grid chain lost source/boundary handoff inputs")) {
+		return 1;
+	}
+	if (!require(owner_grid.materialization.source_handoff_count == 4, "composed owner-grid materializer did not consume all source handoffs")) {
+		return 1;
+	}
+	if (!require(owner_grid.materialization.source_handoff_source_record_seed_count == 4 && owner_grid.materialization.source_handoff_missing_source_record_seed_count == 0, "composed owner-grid materializer did not consume source-record seeds")) {
+		return 1;
+	}
+	if (!require(owner_grid.materialization.span_fill_zone_count == 4, "composed owner-grid materializer did not span-fill all seeded zones")) {
+		return 1;
+	}
+	if (!require(!owner_grid.materialization.generated_cell_word_0x20.empty(), "composed owner-grid materializer did not produce generated-cell owner words")) {
+		return 1;
+	}
+	std::vector<RuntimeZoneBoundaryInput4a3a03> terrain_inputs = boundary_inputs;
+	terrain_inputs[0].terrain_match_to_town_0x84 = true;
+	terrain_inputs[0].selected_town_choice_index_0x49b3c1 = 2;
+	terrain_inputs[1].allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 5U);
+	terrain_inputs[2].allowed_terrain_mask_0x85_0x8c = 0U;
+	terrain_inputs[3].allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 6U);
+	RuntimeTerrainSelectionResult49b53d terrain_selection = aurelion::h3maped_rmg_core::runtime_terrain_selection_49b53d(1234U, terrain_inputs);
+	if (!require(terrain_selection.records.size() == terrain_inputs.size(), "0x49b53d did not emit one terrain record per runtime zone")) {
+		return 1;
+	}
+	if (!require(terrain_selection.records[0].selected_terrain_id_0x49b53d == 3, "0x49b53d match-to-town table did not select tower snow terrain")) {
+		return 1;
+	}
+	if (!require(terrain_selection.records[1].selected_terrain_id_0x49b53d == 5, "0x49b53d allowed terrain mask did not select the only eligible rough terrain")) {
+		return 1;
+	}
+	if (!require(terrain_selection.records[2].selected_terrain_id_0x49b53d == 0 && terrain_selection.no_eligible_default_zero_count == 2, "0x49b53d no-eligible terrain path did not default to zero")) {
+		return 1;
+	}
+	if (!require(terrain_selection.records[3].selected_terrain_id_0x49b53d == 0, "0x49b53d cave terrain must not be eligible on level 0")) {
+		return 1;
+	}
+	if (!require(terrain_selection.match_to_town_count == 1 && terrain_selection.allowed_flag_choice_count == 1 && terrain_selection.rng_call_count == 1, "0x49b53d terrain source/RNG counters mismatch")) {
+		return 1;
+	}
+	TerrainRepaintResult4a3f27 terrain_repaint = aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
+			36,
+			36,
+			1,
+			owner_grid.materialization,
+			terrain_selection);
+	if (!require(terrain_repaint.executed, "0x4a3f27 terrain repaint did not execute")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.full_map_water_repaint_count_0x4a4025 == 36 * 36, "0x4a3f27 did not apply full-map water repaint")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.zone_repaint_write_count_0x4a4163 > 0, "0x4a3f27 did not repaint any owner/member-gated terrain cells")) {
+		return 1;
+	}
+	if (!require(!terrain_repaint.generated_cell_word_0x24.empty() && !terrain_repaint.generated_cell_word_0x28.empty(), "0x4a3f27 did not produce terrain generated-cell words")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_initial_water_write_count_0x4a4025 == 36 * 36, "TerrainPlacement did not write visual rows for the full-map water prefill")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_write_count_0x4bb74b > terrain_repaint.full_map_water_repaint_count_0x4a4025, "TerrainPlacement did not write post-water visual feedback")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_final_sweep_cell_count_0x4bbfcc == 36 * 36, "TerrainPlacement final sweep did not revisit the full grid")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_missing_bucket_count_0x4bcfc3 == 0, "TerrainPlacement visual selector hit a missing recovered row bucket")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_roundtrip_mismatch_count == 0 && terrain_repaint.terrain_visual_terrain_mismatch_count == 0, "TerrainPlacement scratch/generated-cell roundtrip mismatch")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_art_nonzero_cell_count > 0, "TerrainPlacement left all art rows at zero")) {
+		return 1;
+	}
+	if (!require(terrain_repaint.terrain_visual_rng_state_after_0x4bb74b != terrain_repaint.terrain_visual_rng_state_before_0x4bb74b, "TerrainPlacement visual selector did not consume RNG")) {
+		return 1;
+	}
+
+	const auto player_assignment = aurelion::h3maped_rmg_core::player_slot_assignment_4ac62a_4ac6ec(
+			1,
+			3,
+			0b00000001U,
+			0b00000111U,
+			0xffU);
+	if (!require(player_assignment.complete, "player slot assignment did not satisfy requested players")) {
+		return 1;
+	}
+	if (!require(player_assignment.assigned_player_count == 3, "player slot assignment count mismatch")) {
+		return 1;
+	}
+	if (!require(player_assignment.mapped_ee4_slots[0] == 0 && player_assignment.mapped_ee4_slots[1] == 1 && player_assignment.mapped_ee4_slots[2] == 2, "player slot assignment did not map source owners to colors")) {
+		return 1;
+	}
+
+	const std::vector<TemplateZoneRecord4a218c> template_zones = {
+		TemplateZoneRecord4a218c { 1, 0, 0, 0, 0, 8 },
+		TemplateZoneRecord4a218c { 2, 1, 1, 1, 1, 7 },
+		TemplateZoneRecord4a218c { 3, 2, 2, 2, 2, 7 },
+		TemplateZoneRecord4a218c { 4, 3, 3, 2, -1, 6 },
+		TemplateZoneRecord4a218c { 5, 4, 4, 3, -1, 5, 4, 8, 4, 8 },
+	};
+	const std::vector<TemplateLinkRecord4a1f3b> template_links = {
+		TemplateLinkRecord4a1f3b { 1, 2 },
+		TemplateLinkRecord4a1f3b { 2, 3 },
+		TemplateLinkRecord4a1f3b { 3, 4 },
+		TemplateLinkRecord4a1f3b { 4, 5 },
+		TemplateLinkRecord4a1f3b { 1, 5, 0, false, false, 4, 8, 4, 8 },
+	};
+	const RuntimeSeedBuildResult4a218c template_seed_result = aurelion::h3maped_rmg_core::runtime_seed_inputs_from_template_records_4a218c_4a1f3b(
+			template_zones,
+			template_links,
+			player_assignment,
+			1,
+			3);
+	if (!require(!template_seed_result.blocked, "template seed producer blocked despite complete player assignment")) {
+		return 1;
+	}
+	if (!require(template_seed_result.runtime_zone_seeds.size() == 4, "template seed producer did not filter zones into runtime seeds")) {
+		return 1;
+	}
+	if (!require(template_seed_result.runtime_links.size() == 3, "template seed producer did not emit expected endpoint links")) {
+		return 1;
+	}
+	if (!require(template_seed_result.skipped_zone_filter_count == 1 && template_seed_result.skipped_link_filter_count == 1, "template seed producer did not report player-filter exclusions")) {
+		return 1;
+	}
+	if (!require(template_seed_result.missing_link_endpoint_count == 1, "template seed producer did not report missing filtered endpoint")) {
+		return 1;
+	}
+	if (!require(template_seed_result.runtime_zone_seeds[0].actual_player_color == 0 && template_seed_result.runtime_zone_seeds[3].actual_player_color == -1, "template seed producer lost owner-color mapping")) {
+		return 1;
+	}
+	if (!require(template_seed_result.runtime_zone_seeds[3].source_index == 3, "filtered template seed producer lost original source-record index")) {
+		return 1;
+	}
+
+	struct ExpectedSmallSelection {
+		uint32_t seed;
+		int32_t rng_value;
+		int32_t selected_vector_index;
+		int32_t source_catalog_index;
+		const char *template_name;
+	};
+	const std::vector<ExpectedSmallSelection> expected_small_selections = {
+		ExpectedSmallSelection { 3U, 48, 6, 17, "2SM2f" },
+		ExpectedSmallSelection { 11U, 74, 11, 22, "2SM2i(2)" },
+		ExpectedSmallSelection { 28U, 130, 4, 13, "2SM2c" },
+		ExpectedSmallSelection { 73U, 277, 4, 13, "2SM2c" },
+	};
+	for (const ExpectedSmallSelection &expected : expected_small_selections) {
+		const TemplateSelectionRuntimeResult4ac552 selected = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
+				expected.seed,
+				1,
+				2,
+				2);
+		if (!require(!selected.blocked, "recovered Small template catalog selection unexpectedly blocked")) {
+			return 1;
+		}
+		if (!require(selected.accepted_template_count == 21, "recovered Small template catalog accepted count mismatch")) {
+			return 1;
+		}
+		if (!require(selected.rng_value == expected.rng_value, "recovered Small template catalog RNG value mismatch")) {
+			return 1;
+		}
+		if (!require(selected.selected_vector_index == expected.selected_vector_index, "recovered Small template catalog selected vector index mismatch")) {
+			return 1;
+		}
+		if (!require(selected.selected_source_catalog_index == expected.source_catalog_index, "recovered Small template catalog source index mismatch")) {
+			return 1;
+		}
+		if (!require(selected.selected_template_name == expected.template_name, "recovered Small template catalog name mismatch")) {
+			return 1;
+		}
+		if (!require(selected.player_assignment.complete && !selected.runtime_seed.runtime_zone_seeds.empty(), "recovered Small template catalog did not feed runtime seed inputs")) {
+			return 1;
+		}
+	}
+
+	const GeneratorSetupModeResult49ecf2 setup0 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0);
+	if (!require(!setup0.randomized_setup_sentinel_3 && setup0.generator_mode_0x10b8 == 0 && setup0.rng_state_before_template_selection == 10U, "0x49ecf2 setup mode 0 must not consume RNG before template selection")) {
+		return 1;
+	}
+	const GeneratorSetupModeResult49ecf2 setup3 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 3);
+	if (!require(setup3.randomized_setup_sentinel_3 && setup3.setup_rng_value == 71 && setup3.generator_mode_0x10b8 == 2 && setup3.setup_rng_call_count == 1, "0x49ecf2 setup sentinel 3 must randomize generator mode with rand % 3")) {
+		return 1;
+	}
+	if (!require(setup3.rng_state_before_template_selection == 0x004746a5U, "0x49ecf2 setup sentinel 3 did not hand off post-setup RNG state")) {
+		return 1;
+	}
+	const TemplateSelectionRuntimeResult4ac552 selected_after_setup3 = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
+			setup3.rng_state_before_template_selection,
+			1,
+			2,
+			2);
+	if (!require(selected_after_setup3.rng_value == 16899, "template selection must consume RNG after setup sentinel randomization")) {
+		return 1;
+	}
+
+	const int32_t medium_size_score = aurelion::h3maped_rmg_core::size_score(72, 72, 1, aurelion::h3maped_rmg_core::water_mode_code("land"));
+	const TemplateSelectionRuntimeResult4ac552 medium_selection = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
+			10U,
+			medium_size_score,
+			1,
+			2);
+	if (!require(medium_size_score == 4, "Medium one-level land size score changed unexpectedly")) {
+		return 1;
+	}
+	if (!require(!medium_selection.blocked, "recovered Medium template catalog selection unexpectedly blocked")) {
+		return 1;
+	}
+	if (!require(medium_selection.accepted_template_count > 0 && !medium_selection.runtime_seed.runtime_zone_seeds.empty(), "recovered Medium template catalog did not feed runtime seed inputs")) {
+		return 1;
+	}
+	const TemplateSelectionRuntimeResult4ac552 medium_hc4_setup0_selection = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
+			10U,
+			medium_size_score,
+			4,
+			4);
+	if (!require(medium_hc4_setup0_selection.accepted_template_count == 23, "recovered Medium seed-10 hc4 accepted count mismatch")) {
+		return 1;
+	}
+	if (!require(medium_hc4_setup0_selection.rng_value == 71, "recovered Medium seed-10 hc4 RNG value mismatch")) {
+		return 1;
+	}
+	if (!require(medium_hc4_setup0_selection.selected_vector_index == 2, "recovered Medium seed-10 hc4 selected vector index mismatch")) {
+		return 1;
+	}
+	if (!require(medium_hc4_setup0_selection.selected_source_catalog_index == 15, "recovered Medium seed-10 hc4 source catalog index mismatch")) {
+		return 1;
+	}
+	if (!require(medium_hc4_setup0_selection.selected_template_name == "2SM4d(2)", "recovered Medium seed-10 hc4 template name mismatch")) {
+		return 1;
+	}
+		if (!require(medium_hc4_setup0_selection.player_assignment.complete && medium_hc4_setup0_selection.runtime_seed.runtime_zone_seeds.size() == 10, "recovered Medium seed-10 hc4 did not feed ten runtime zones")) {
+			return 1;
+		}
+
+		const std::vector<RuntimeZoneSeedInput4a218c> &seed_inputs = template_seed_result.runtime_zone_seeds;
+	const std::vector<RuntimeLinkSeedInput4a218c> &links = template_seed_result.runtime_links;
+	int32_t minimum_source_base_size = 0x7fffffff;
+	for (const RuntimeZoneSeedInput4a218c &seed_input : seed_inputs) {
+		if (seed_input.source_base_size > 0) {
+			minimum_source_base_size = std::min(minimum_source_base_size, seed_input.source_base_size);
+		}
+	}
+	if (!require(minimum_source_base_size != 0x7fffffff, "template-record seed inputs lost source base sizes")) {
+		return 1;
+	}
+	const CoordinateOwnerGridResult4a218c composed = aurelion::h3maped_rmg_core::coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(
+			36,
+			36,
+			1,
+			aurelion::h3maped_rmg_core::water_mode_code("land"),
+			0,
+			1234U,
+			seed_inputs,
+			links);
+	if (!require(!composed.coordinate_seed_blocked, "coordinate seed blocked in recovered-order composed chain")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.generator_mode_0x10b8 == 0, "coordinate seed did not preserve generator mode 0x10b8")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.minimum_source_base_size == minimum_source_base_size, "coordinate seed did not preserve minimum source base size for 0x4a218c pruning")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.coordinate_prune_divisor_4a218c == 5, "0x4a218c generator mode 0 must use coordinate prune divisor 5")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.coordinate_prune_span_budget_4a218c == (minimum_source_base_size * 36) / 5, "0x4a218c mode 0 coordinate prune span budget mismatch")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.boundary_inputs.size() == seed_inputs.size(), "coordinate seed did not emit one boundary input per runtime-zone seed")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.boundary_inputs[3].source_record_vector_index_4a3e9c == seed_inputs[3].source_index, "coordinate seed rewrote source-record vector index to compacted runtime position")) {
+		return 1;
+	}
+	if (!require(composed.coordinate_seed.rng_state_after != composed.coordinate_seed.rng_state_before, "coordinate seed did not advance recovered RNG state")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid_executed, "coordinate-to-owner-grid chain did not execute owner-grid materialization")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.handoffs.size() == seed_inputs.size(), "coordinate-to-owner-grid chain did not materialize one source handoff per zone")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.materialization.rng_state_before == composed.coordinate_seed.rng_state_after, "owner-grid phase did not consume coordinate seed output RNG state")) {
+		return 1;
+	}
+	if (!require(composed.terrain_selection_executed && composed.terrain_repaint_executed, "composed chain did not execute 0x49b53d terrain selection and 0x4a3f27 terrain repaint")) {
+		return 1;
+	}
+	if (!require(composed.terrain_repaint.full_map_water_repaint_count_0x4a4025 == 36 * 36, "composed chain did not apply terrain full-map repaint")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.materialization.source_handoff_count == int32_t(seed_inputs.size()), "coordinate-to-owner-grid materializer did not consume every source handoff")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.materialization.source_handoff_point_count > int32_t(seed_inputs.size()), "coordinate-to-owner-grid materializer lost source-node cycle points")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.materialization.span_fill_zone_count > 0, "coordinate-to-owner-grid chain did not span-fill any seeded zone")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.footprint_finalizer_executed, "coordinate-to-owner-grid chain did not execute recovered 0x4a3710 finalizer order")) {
+		return 1;
+	}
+	if (!require(!composed.owner_grid.footprint_finalizer.blocked, "one-level land 0x4a3710 finalizer should not take the blocked appended-zone branch")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.footprint_finalizer.appended_runtime_zone_count == 0, "one-level land 0x4a3710 finalizer should have no appended runtime zones")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.footprint_finalizer.zone_order_reset_call_count == int32_t(seed_inputs.size()), "0x4a3710 finalizer did not reset one ordering vector per runtime zone")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.footprint_finalizer.per_zone_order_helper_call_count == int32_t(seed_inputs.size()), "0x4a3710 finalizer did not rebuild one ordering vector per original runtime zone")) {
+		return 1;
+	}
+	if (!require(!composed.owner_grid.materialization.generated_cell_word_0x20.empty(), "coordinate-to-owner-grid chain produced no generated-cell owner words")) {
+		return 1;
+	}
+	const CoordinateOwnerGridResult4a218c composed_mode2 = aurelion::h3maped_rmg_core::coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(
+			36,
+			36,
+			1,
+			aurelion::h3maped_rmg_core::water_mode_code("land"),
+			2,
+			1234U,
+			seed_inputs,
+			links);
+	if (!require(!composed_mode2.coordinate_seed_blocked, "coordinate seed blocked in recovered-order mode-2 composed chain")) {
+		return 1;
+	}
+	if (!require(composed_mode2.coordinate_seed.generator_mode_0x10b8 == 2, "coordinate seed did not preserve generator mode 2")) {
+		return 1;
+	}
+	if (!require(composed_mode2.coordinate_seed.coordinate_prune_divisor_4a218c == 7, "0x4a218c generator modes outside 0/1 must use coordinate prune divisor 7")) {
+		return 1;
+	}
+	if (!require(composed_mode2.coordinate_seed.coordinate_prune_span_budget_4a218c == (minimum_source_base_size * 36) / 7, "0x4a218c mode 2 coordinate prune span budget mismatch")) {
+		return 1;
+	}
+
+	std::cout << "h3maped_rmg_core_selftest: ok\n";
+	return 0;
+}

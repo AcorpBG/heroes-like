@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 
-DEFAULT_EMBEDDED = Path("src/gdextension/src/h3maped_small_rmg_embedded_data.cpp")
+DEFAULT_EMBEDDED = Path("src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp")
 OBJECT_CATALOG_PATTERN = re.compile(
     r'static constexpr char OBJECT_CATALOG_BY_TYPE_JSON\[\] = R"RMG1\((.*?)\)RMG1";',
     re.DOTALL,

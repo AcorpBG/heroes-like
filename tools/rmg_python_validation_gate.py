@@ -36,7 +36,7 @@ PYTHON_GATE_MODULES = [
 NATIVE_FRESHNESS_SOURCE_INPUTS = [
     ROOT / "src" / "gdextension" / "CMakeLists.txt",
     ROOT / "src" / "gdextension" / "include" / "rmg_native_core.hpp",
-    ROOT / "src" / "gdextension" / "src" / "h3maped_small_rmg_embedded_data.cpp",
+    ROOT / "src" / "gdextension" / "src" / "archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
     ROOT / "src" / "gdextension" / "src" / "rmg_native_core.cpp",
     ROOT / "src" / "gdextension" / "src" / "rmg_native_batch_export_cli.cpp",
     ROOT / "tools" / "rmg_native_batch_export.py",
