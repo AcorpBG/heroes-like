@@ -238,6 +238,7 @@ void populate_generated_cell_record_surface_0x30(RecoveredOwnerGridPayload &payl
 		out.word_0x28_known = record.word_0x28_known || flat < int32_t(payload.generated_cell_word_0x28.size());
 		out.word_0x28 = flat < int32_t(payload.generated_cell_word_0x28.size()) ? payload.generated_cell_word_0x28[size_t(flat)] : record.word_0x28;
 		out.byte_0x2b_known = record.byte_0x2b_known;
+		out.byte_0x2b_known_mask = record.byte_0x2b_known_mask;
 		out.byte_0x2b = record.byte_0x2b;
 		out.word_0x2c_known = record.word_0x2c_known;
 		out.word_0x2c = flat < int32_t(payload.generated_cell_word_0x2c.size()) ? payload.generated_cell_word_0x2c[size_t(flat)] : record.word_0x2c;
@@ -636,6 +637,13 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 	out << "      \"word_0x14_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::word_0x14_known) << ",\n";
 	out << "      \"word_0x18_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::word_0x18_known) << ",\n";
 	out << "      \"byte_0x2b_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::byte_0x2b_known) << ",\n";
+	int32_t byte_0x2b_bit_0x02_known_count = 0;
+	for (const SharedGeneratedCellRecord0x30 &record : payload.generated_cell_records_0x30) {
+		if ((record.byte_0x2b_known_mask & 0x02U) != 0U) {
+			byte_0x2b_bit_0x02_known_count += 1;
+		}
+	}
+	out << "      \"byte_0x2b_bit_0x02_known_count\": " << byte_0x2b_bit_0x02_known_count << ",\n";
 	out << "      \"word_0x14_0x18_source\": \"not_native_owned_until_0x4a5767_0x4a606b_projection_chain_is_ported\",\n";
 	out << "      \"byte_0x2b_source\": \"not_native_owned_until_validity_private_byte_mutations_0x49a1d8_0x49abd6_0x4a5a23_are_ported\",\n";
 	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
@@ -688,6 +696,7 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 		out << "\"word_0x28_known\":" << (record != nullptr && record->word_0x28_known ? "true" : "false") << ",";
 		out << "\"word_0x28\":" << word_0x28 << ",";
 		out << "\"byte_0x2b_known\":" << (record != nullptr && record->byte_0x2b_known ? "true" : "false") << ",";
+		out << "\"byte_0x2b_known_mask\":" << (record != nullptr ? int32_t(record->byte_0x2b_known_mask) : 0) << ",";
 		out << "\"byte_0x2b\":" << (record != nullptr ? int32_t(record->byte_0x2b) : 0) << ",";
 		out << "\"word_0x2c_known\":" << (record != nullptr && record->word_0x2c_known ? "true" : "false") << ",";
 		out << "\"word_0x2c\":" << word_0x2c << ",";

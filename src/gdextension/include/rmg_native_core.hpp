@@ -200,6 +200,7 @@ struct SharedGeneratedCellRecord0x30 {
 	bool word_0x28_known = false;
 	uint32_t word_0x28 = 0U;
 	bool byte_0x2b_known = false;
+	uint8_t byte_0x2b_known_mask = 0U;
 	uint8_t byte_0x2b = 0U;
 	bool word_0x2c_known = false;
 	uint32_t word_0x2c = 0U;

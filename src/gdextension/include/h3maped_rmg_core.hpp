@@ -94,6 +94,7 @@ struct GeneratedCellRecord0x30 {
 	bool word_0x28_known = true;
 	uint32_t word_0x28 = GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
 	bool byte_0x2b_known = false;
+	uint8_t byte_0x2b_known_mask = 0U;
 	uint8_t byte_0x2b = 0U;
 	bool word_0x2c_known = true;
 	uint32_t word_0x2c = 0U;
@@ -769,11 +770,16 @@ uint32_t generated_cell_49a318_clear_source_word_0x1c(uint32_t word_0x1c);
 RelationResetCell generated_cell_4a5767_reset_cell(uint32_t source_word_0x20, uint32_t source_word_0x28);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
+bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);
 bool generated_cell_49a1d8_valid_word24(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_terrain(const std::vector<uint32_t> &word_0x28, const std::vector<int32_t> &terrain_code, int64_t flat);
+bool generated_cell_49aa63(GeneratedCellRecord0x30 &record, bool set_candidate);
 bool generated_cell_49aa63(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_candidate);
+bool generated_cell_49a932(GeneratedCellRecord0x30 &record, bool set_occupied);
 bool generated_cell_49a932(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_occupied);
+bool generated_cell_49abd6_action_stamp(GeneratedCellRecord0x30 &record);
 bool generated_cell_49abd6_action_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat);
+bool generated_cell_49abd6_body_reject_stamp(GeneratedCellRecord0x30 &record);
 bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, int64_t flat);
 GeneratedCell49a85dStampResult generated_cell_49a85d_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<uint32_t> &word_0x24, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
