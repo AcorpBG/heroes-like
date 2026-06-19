@@ -23,6 +23,7 @@ constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X24_VALUE = 0x00000548U;
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X28_PRESERVED_MASK = 0x01000000U;
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X28_VALUE = CELL_DECOR_READY_BIT_25 | CELL_OCCUPIED_BLOCKED_BIT_27;
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X2C_CLEAR_MASK = ~uint32_t(0x01U);
+constexpr int32_t GENERATED_CELL_RECORD_STRIDE_BYTES = 0x30;
 constexpr uint32_t RELATION_RESET_WORD_0X1C = 0x7d007d00U;
 constexpr uint32_t RELATION_RESET_COORD_MINUS_ONE = 0xffffffffU;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH = 0x7d00U;
@@ -73,6 +74,39 @@ struct GeneratedCellWordGrid {
 	std::vector<uint32_t> word_0x2c;
 };
 
+struct GeneratedCellRecord0x30 {
+	int32_t stride_bytes = GENERATED_CELL_RECORD_STRIDE_BYTES;
+	bool object_reference_vector_fields_0x04_0x08_present = true;
+	bool object_reference_vector_contents_known = false;
+	int32_t object_reference_count = 0;
+	bool word_0x10_known = true;
+	uint32_t word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
+	bool word_0x14_known = false;
+	uint32_t word_0x14 = 0U;
+	bool word_0x18_known = false;
+	uint32_t word_0x18 = 0U;
+	bool word_0x1c_known = true;
+	uint32_t word_0x1c = GENERATED_CELL_INITIAL_WORD_0X1C;
+	bool word_0x20_known = true;
+	uint32_t word_0x20 = GENERATED_CELL_INITIAL_WORD_0X20;
+	bool word_0x24_known = true;
+	uint32_t word_0x24 = GENERATED_CELL_INITIAL_WORD_0X24_VALUE;
+	bool word_0x28_known = true;
+	uint32_t word_0x28 = GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
+	bool byte_0x2b_known = false;
+	uint8_t byte_0x2b = 0U;
+	bool word_0x2c_known = true;
+	uint32_t word_0x2c = 0U;
+};
+
+struct GeneratedCellRecordGrid0x30 {
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t stride_bytes = GENERATED_CELL_RECORD_STRIDE_BYTES;
+	std::vector<GeneratedCellRecord0x30> records;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -80,6 +114,7 @@ bool supports_one_level_land_scope(int32_t width, int32_t height, int32_t level_
 std::string strict_scope_id(int32_t width, int32_t height, int32_t level_count, const std::string &water_mode, const std::string &size_class);
 std::string strict_scope_label(int32_t width, int32_t height, int32_t level_count, const std::string &water_mode, const std::string &size_class);
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24 = 0U, uint32_t old_word_0x28 = 0U, uint32_t old_word_0x2c = 0U);
+GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count);
 GeneratedCellWordGrid generated_cell_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count);
 void generated_cell_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count, std::vector<uint32_t> &word_0x20, std::vector<uint32_t> &word_0x24, std::vector<uint32_t> &word_0x28, std::vector<uint32_t> &word_0x2c);
 

@@ -12,6 +12,8 @@ using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
+using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
+using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
@@ -74,6 +76,48 @@ bool require(bool condition, const std::string &message) {
 } // namespace
 
 int main() {
+	{
+		const GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+		if (!require(record_grid.stride_bytes == aurelion::h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES, "generated-cell record grid did not preserve stride 0x30")) {
+			return 1;
+		}
+		if (!require(record_grid.records.size() == 4, "generated-cell record grid reset did not create four records")) {
+			return 1;
+		}
+		const auto &record = record_grid.records[0];
+		if (!require(record.object_reference_vector_fields_0x04_0x08_present, "generated-cell record did not expose object-reference vector fields")) {
+			return 1;
+		}
+		if (!require(!record.object_reference_vector_contents_known, "0x49a072/0x499ea3 reset must not claim object-reference vector contents")) {
+			return 1;
+		}
+		if (!require(record.word_0x10_known && record.word_0x10 == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X10, "generated-cell +0x10 reset word mismatch")) {
+			return 1;
+		}
+		if (!require(!record.word_0x14_known && !record.word_0x18_known, "generated-cell projection words +0x14/+0x18 must stay unknown until 0x4a5767 is ported")) {
+			return 1;
+		}
+		if (!require(record.word_0x1c_known && record.word_0x1c == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X1C, "generated-cell +0x1c reset word mismatch")) {
+			return 1;
+		}
+		if (!require(record.word_0x20_known && record.word_0x20 == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20, "generated-cell +0x20 reset word mismatch")) {
+			return 1;
+		}
+		if (!require(record.word_0x24_known && record.word_0x24 == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X24_VALUE, "generated-cell +0x24 reset word mismatch")) {
+			return 1;
+		}
+		if (!require(record.word_0x28_known && record.word_0x28 == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE, "generated-cell +0x28 reset word mismatch")) {
+			return 1;
+		}
+		if (!require(!record.byte_0x2b_known, "generated-cell validity byte +0x2b must stay unknown until its mutators are ported")) {
+			return 1;
+		}
+		const GeneratedCellWordGrid word_grid = aurelion::h3maped_rmg_core::generated_cell_grid_reset_0x49a072(2, 2, 1);
+		if (!require(word_grid.word_0x20.size() == record_grid.records.size() && word_grid.word_0x20[0] == record.word_0x20, "legacy generated-cell word grid no longer projects from record grid")) {
+			return 1;
+		}
+	}
+
 	{
 		const std::vector<BoundarySourceCycleHandoff4a2777> handoffs { square_handoff(true) };
 		const auto cycles = aurelion::h3maped_rmg_core::boundary_cycles_from_source_handoffs_4a2777(handoffs);
