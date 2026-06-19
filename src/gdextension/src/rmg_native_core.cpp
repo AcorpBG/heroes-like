@@ -187,6 +187,114 @@ void append_json_i32_array(std::ostream &out, const std::vector<int32_t> &values
 	out << "]";
 }
 
+h3maped_rmg_core::SourceTownRules4a218c to_h3maped_source_town_rules(const SharedSourceTownRules &input) {
+	return h3maped_rmg_core::SourceTownRules4a218c {
+		input.min_towns,
+		input.min_castles,
+		input.town_density,
+		input.castle_density,
+	};
+}
+
+SharedSourceTownRules from_h3maped_source_town_rules(const h3maped_rmg_core::SourceTownRules4a218c &input) {
+	return SharedSourceTownRules {
+		input.min_towns,
+		input.min_castles,
+		input.town_density,
+		input.castle_density,
+	};
+}
+
+h3maped_rmg_core::SourceMineRules4a218c to_h3maped_source_mine_rules(const SharedSourceMineRules &input) {
+	return h3maped_rmg_core::SourceMineRules4a218c {
+		input.minimum_wood,
+		input.minimum_mercury,
+		input.minimum_ore,
+		input.minimum_sulfur,
+		input.minimum_crystal,
+		input.minimum_gems,
+		input.minimum_gold,
+		input.density_wood,
+		input.density_mercury,
+		input.density_ore,
+		input.density_sulfur,
+		input.density_crystal,
+		input.density_gems,
+		input.density_gold,
+	};
+}
+
+SharedSourceMineRules from_h3maped_source_mine_rules(const h3maped_rmg_core::SourceMineRules4a218c &input) {
+	return SharedSourceMineRules {
+		input.minimum_wood,
+		input.minimum_mercury,
+		input.minimum_ore,
+		input.minimum_sulfur,
+		input.minimum_crystal,
+		input.minimum_gems,
+		input.minimum_gold,
+		input.density_wood,
+		input.density_mercury,
+		input.density_ore,
+		input.density_sulfur,
+		input.density_crystal,
+		input.density_gems,
+		input.density_gold,
+	};
+}
+
+h3maped_rmg_core::SourceTreasureBand4a218c to_h3maped_source_treasure_band(const SharedSourceTreasureBand &input) {
+	return h3maped_rmg_core::SourceTreasureBand4a218c {
+		input.density,
+		input.low,
+		input.high,
+	};
+}
+
+SharedSourceTreasureBand from_h3maped_source_treasure_band(const h3maped_rmg_core::SourceTreasureBand4a218c &input) {
+	return SharedSourceTreasureBand {
+		input.density,
+		input.low,
+		input.high,
+	};
+}
+
+h3maped_rmg_core::SourceZonePayload4a218c to_h3maped_source_zone_payload(const SharedSourceZonePayload &input) {
+	return h3maped_rmg_core::SourceZonePayload4a218c {
+		input.source_row,
+		input.source_type_code,
+		input.source_ownership,
+		input.same_town_type,
+		input.monster_match_to_town,
+		input.monster_strength_mode,
+		input.allowed_monster_town_mask,
+		to_h3maped_source_town_rules(input.player_towns),
+		to_h3maped_source_town_rules(input.neutral_towns),
+		to_h3maped_source_mine_rules(input.mines),
+		to_h3maped_source_treasure_band(input.treasure_band_0),
+		to_h3maped_source_treasure_band(input.treasure_band_1),
+		to_h3maped_source_treasure_band(input.treasure_band_2),
+	};
+}
+
+SharedSourceZonePayload from_h3maped_source_zone_payload(const h3maped_rmg_core::SourceZonePayload4a218c &input) {
+	return SharedSourceZonePayload {
+		input.source_row,
+		input.source_type_code,
+		input.source_ownership,
+		input.same_town_type,
+		input.monster_match_to_town,
+		input.monster_strength_mode,
+		input.allowed_monster_town_mask,
+		from_h3maped_source_town_rules(input.player_towns),
+		from_h3maped_source_town_rules(input.neutral_towns),
+		from_h3maped_source_mine_rules(input.mines),
+		from_h3maped_source_treasure_band(input.treasure_band_0),
+		from_h3maped_source_treasure_band(input.treasure_band_1),
+		from_h3maped_source_treasure_band(input.treasure_band_2),
+	};
+}
+
 std::vector<SharedPlayerSlotAssignmentRecord> from_h3maped_player_slot_assignments(const std::vector<h3maped_rmg_core::PlayerSlotAssignmentRecord4ac62a> &inputs) {
 	std::vector<SharedPlayerSlotAssignmentRecord> out;
 	out.reserve(inputs.size());
@@ -231,6 +339,82 @@ void append_template_candidate_container_records_json(std::ostream &out, const s
 			out << ", ";
 		}
 		append_template_candidate_container_record_json(out, records[index]);
+	}
+	out << "]";
+}
+
+void append_source_town_rules_json(std::ostream &out, const SharedSourceTownRules &rules) {
+	out << "{\"min_towns\":" << rules.min_towns
+		<< ",\"min_castles\":" << rules.min_castles
+		<< ",\"town_density\":" << rules.town_density
+		<< ",\"castle_density\":" << rules.castle_density
+		<< "}";
+}
+
+void append_source_mine_rules_json(std::ostream &out, const SharedSourceMineRules &rules) {
+	out << "{\"minimum_wood\":" << rules.minimum_wood
+		<< ",\"minimum_mercury\":" << rules.minimum_mercury
+		<< ",\"minimum_ore\":" << rules.minimum_ore
+		<< ",\"minimum_sulfur\":" << rules.minimum_sulfur
+		<< ",\"minimum_crystal\":" << rules.minimum_crystal
+		<< ",\"minimum_gems\":" << rules.minimum_gems
+		<< ",\"minimum_gold\":" << rules.minimum_gold
+		<< ",\"density_wood\":" << rules.density_wood
+		<< ",\"density_mercury\":" << rules.density_mercury
+		<< ",\"density_ore\":" << rules.density_ore
+		<< ",\"density_sulfur\":" << rules.density_sulfur
+		<< ",\"density_crystal\":" << rules.density_crystal
+		<< ",\"density_gems\":" << rules.density_gems
+		<< ",\"density_gold\":" << rules.density_gold
+		<< "}";
+}
+
+void append_source_treasure_band_json(std::ostream &out, const SharedSourceTreasureBand &band) {
+	out << "{\"density\":" << band.density
+		<< ",\"low\":" << band.low
+		<< ",\"high\":" << band.high
+		<< "}";
+}
+
+void append_source_zone_payload_json(std::ostream &out, const SharedSourceZonePayload &payload) {
+	out << "{\"source_row\":" << payload.source_row
+		<< ",\"source_type_code\":" << payload.source_type_code
+		<< ",\"source_ownership\":" << payload.source_ownership
+		<< ",\"same_town_type\":" << (payload.same_town_type ? "true" : "false")
+		<< ",\"monster_match_to_town\":" << (payload.monster_match_to_town ? "true" : "false")
+		<< ",\"monster_strength_mode\":" << payload.monster_strength_mode
+		<< ",\"allowed_monster_town_mask\":" << payload.allowed_monster_town_mask
+		<< ",\"player_towns\":";
+	append_source_town_rules_json(out, payload.player_towns);
+	out << ",\"neutral_towns\":";
+	append_source_town_rules_json(out, payload.neutral_towns);
+	out << ",\"mines\":";
+	append_source_mine_rules_json(out, payload.mines);
+	out << ",\"treasure_bands\":[";
+	append_source_treasure_band_json(out, payload.treasure_band_0);
+	out << ",";
+	append_source_treasure_band_json(out, payload.treasure_band_1);
+	out << ",";
+	append_source_treasure_band_json(out, payload.treasure_band_2);
+	out << "]}";
+}
+
+void append_runtime_zone_source_payload_records_json(std::ostream &out, const std::vector<SharedRuntimeZoneSeedInput> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const SharedRuntimeZoneSeedInput &record = records[index];
+		out << "{\"runtime_zone_index\":" << record.runtime_zone_index
+			<< ",\"source_zone_id\":" << record.source_zone_id
+			<< ",\"source_index\":" << record.source_index
+			<< ",\"h3maped_zone_word_id\":" << record.h3maped_zone_word_id
+			<< ",\"source_bucket\":" << record.source_bucket
+			<< ",\"actual_player_color\":" << record.actual_player_color
+			<< ",\"source_payload\":";
+		append_source_zone_payload_json(out, record.source_payload);
+		out << "}";
 	}
 	out << "]";
 }
@@ -315,6 +499,7 @@ std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zon
 				input.selected_town_choice_index_0x49b3c1,
 				input.terrain_match_to_town_0x84,
 				input.allowed_terrain_mask_0x85_0x8c,
+				to_h3maped_source_zone_payload(input.source_payload),
 			});
 		}
 		return out;
@@ -351,6 +536,7 @@ std::vector<SharedRuntimeZoneSeedInput> from_h3maped_runtime_zone_seeds(const st
 				input.selected_town_choice_index_0x49b3c1,
 				input.terrain_match_to_town_0x84,
 				input.allowed_terrain_mask_0x85_0x8c,
+				from_h3maped_source_zone_payload(input.source_payload),
 			});
 		}
 		return out;
@@ -509,6 +695,11 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"generator_mode_0x10b8_known\": " << (input.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
 	out << "    \"generator_mode_0x10b8\": " << input.generator_mode_0x10b8 << ",\n";
 	out << "    \"runtime_zone_seed_count\": " << input.runtime_zone_seeds.size() << ",\n";
+	out << "    \"same_run_recovered_source_zone_payload_source\": \"selected_h3maped_template_catalog_zone_semantics_from_0x4ac552_feed\",\n";
+	out << "    \"same_run_recovered_source_zone_payload_count\": " << input.runtime_zone_seeds.size() << ",\n";
+	out << "    \"same_run_recovered_source_zone_payloads\": ";
+	append_runtime_zone_source_payload_records_json(out, input.runtime_zone_seeds);
+	out << ",\n";
 	int64_t runtime_link_guard_value_sum = 0;
 	int32_t runtime_link_wide_count = 0;
 	int32_t runtime_link_border_guard_count = 0;

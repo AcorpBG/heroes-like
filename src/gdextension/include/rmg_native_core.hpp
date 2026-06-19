@@ -24,6 +24,52 @@ struct ControlledCase {
 	std::string parse_error;
 };
 
+struct SharedSourceTownRules {
+	int32_t min_towns = 0;
+	int32_t min_castles = 0;
+	int32_t town_density = 0;
+	int32_t castle_density = 0;
+};
+
+struct SharedSourceMineRules {
+	int32_t minimum_wood = 0;
+	int32_t minimum_mercury = 0;
+	int32_t minimum_ore = 0;
+	int32_t minimum_sulfur = 0;
+	int32_t minimum_crystal = 0;
+	int32_t minimum_gems = 0;
+	int32_t minimum_gold = 0;
+	int32_t density_wood = 0;
+	int32_t density_mercury = 0;
+	int32_t density_ore = 0;
+	int32_t density_sulfur = 0;
+	int32_t density_crystal = 0;
+	int32_t density_gems = 0;
+	int32_t density_gold = 0;
+};
+
+struct SharedSourceTreasureBand {
+	int32_t density = 0;
+	int32_t low = 0;
+	int32_t high = 0;
+};
+
+struct SharedSourceZonePayload {
+	int32_t source_row = -1;
+	int32_t source_type_code = 0;
+	int32_t source_ownership = -1;
+	bool same_town_type = false;
+	bool monster_match_to_town = false;
+	int32_t monster_strength_mode = 3;
+	uint16_t allowed_monster_town_mask = 0U;
+	SharedSourceTownRules player_towns;
+	SharedSourceTownRules neutral_towns;
+	SharedSourceMineRules mines;
+	SharedSourceTreasureBand treasure_band_0;
+	SharedSourceTreasureBand treasure_band_1;
+	SharedSourceTreasureBand treasure_band_2;
+};
+
 struct SharedRuntimeZoneSeedInput {
 	int32_t runtime_zone_index = -1;
 	int32_t source_zone_id = -1;
@@ -36,6 +82,7 @@ struct SharedRuntimeZoneSeedInput {
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
 	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	SharedSourceZonePayload source_payload;
 };
 
 struct SharedRuntimeLinkInput {

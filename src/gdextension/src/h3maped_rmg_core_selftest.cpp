@@ -350,13 +350,18 @@ int main() {
 		return 1;
 	}
 
-	const std::vector<TemplateZoneRecord4a218c> template_zones = {
+	std::vector<TemplateZoneRecord4a218c> template_zones = {
 		TemplateZoneRecord4a218c { 1, 0, 0, 0, 0, 8 },
 		TemplateZoneRecord4a218c { 2, 1, 1, 1, 1, 7 },
 		TemplateZoneRecord4a218c { 3, 2, 2, 2, 2, 7 },
 		TemplateZoneRecord4a218c { 4, 3, 3, 2, -1, 6 },
 		TemplateZoneRecord4a218c { 5, 4, 4, 3, -1, 5, 4, 8, 4, 8 },
 	};
+	template_zones[0].source_payload.source_row = 700;
+	template_zones[0].source_payload.source_type_code = 1;
+	template_zones[0].source_payload.player_towns.min_castles = 2;
+	template_zones[0].source_payload.mines.minimum_wood = 1;
+	template_zones[0].source_payload.treasure_band_0 = aurelion::h3maped_rmg_core::SourceTreasureBand4a218c { 9, 500, 3000 };
 	const std::vector<TemplateLinkRecord4a1f3b> template_links = {
 		TemplateLinkRecord4a1f3b { 1, 2, 1200, false, false },
 		TemplateLinkRecord4a1f3b { 2, 3, 2400, true, false },
@@ -403,6 +408,13 @@ int main() {
 	if (!require(template_seed_result.runtime_zone_seeds[3].source_index == 3, "filtered template seed producer lost original source-record index")) {
 		return 1;
 	}
+	if (!require(template_seed_result.runtime_zone_seeds[0].source_payload.source_row == 700
+				&& template_seed_result.runtime_zone_seeds[0].source_payload.player_towns.min_castles == 2
+				&& template_seed_result.runtime_zone_seeds[0].source_payload.mines.minimum_wood == 1
+				&& template_seed_result.runtime_zone_seeds[0].source_payload.treasure_band_0.high == 3000,
+				"template seed producer did not preserve source-zone payload fields")) {
+		return 1;
+	}
 
 	struct ExpectedSmallSelection {
 		uint32_t seed;
@@ -442,6 +454,9 @@ int main() {
 			return 1;
 		}
 		if (!require(selected.player_assignment.complete && !selected.runtime_seed.runtime_zone_seeds.empty(), "recovered Small template catalog did not feed runtime seed inputs")) {
+			return 1;
+		}
+		if (!require(selected.runtime_seed.runtime_zone_seeds[0].source_payload.source_row > 0, "recovered Small template catalog did not preserve source-zone row payload")) {
 			return 1;
 		}
 	}
