@@ -46,6 +46,12 @@ struct SharedRuntimeLinkInput {
 	bool border_guard = false;
 };
 
+struct SharedPlayerSlotAssignmentRecord {
+	int32_t source_owner_index = -1;
+	int32_t actual_player_color = -1;
+	bool human = false;
+};
+
 struct SharedRuntimeChainInput {
 	std::string input_source;
 	bool recovered_template_selection_known = false;
@@ -72,6 +78,14 @@ struct SharedRuntimeChainInput {
 	int32_t recovered_template_skipped_zone_filter_count = 0;
 	int32_t recovered_template_skipped_link_filter_count = 0;
 	int32_t recovered_template_missing_link_endpoint_count = 0;
+	bool recovered_player_slot_assignment_known = false;
+	int32_t recovered_player_slot_requested_human_count = 0;
+	int32_t recovered_player_slot_requested_player_count = 0;
+	int32_t recovered_player_slot_assigned_player_count = 0;
+	std::vector<int32_t> recovered_selected_color_order_ed8;
+	std::vector<int32_t> recovered_raw_source_owner_slots_ee0;
+	std::vector<int32_t> recovered_mapped_source_owner_slots_ee4;
+	std::vector<SharedPlayerSlotAssignmentRecord> recovered_player_slot_assignments;
 	bool rng_state_after_template_selection_known = false;
 	uint32_t rng_state_after_template_selection = 0;
 	bool generator_mode_0x10b8_known = false;

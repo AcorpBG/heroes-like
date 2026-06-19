@@ -176,6 +176,45 @@ void append_json_string_array(std::ostream &out, const std::vector<std::string> 
 	out << "]";
 }
 
+void append_json_i32_array(std::ostream &out, const std::vector<int32_t> &values) {
+	out << "[";
+	for (size_t index = 0; index < values.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		out << values[index];
+	}
+	out << "]";
+}
+
+std::vector<SharedPlayerSlotAssignmentRecord> from_h3maped_player_slot_assignments(const std::vector<h3maped_rmg_core::PlayerSlotAssignmentRecord4ac62a> &inputs) {
+	std::vector<SharedPlayerSlotAssignmentRecord> out;
+	out.reserve(inputs.size());
+	for (const h3maped_rmg_core::PlayerSlotAssignmentRecord4ac62a &input : inputs) {
+		out.push_back(SharedPlayerSlotAssignmentRecord {
+			input.source_owner_index,
+			input.actual_player_color,
+			input.human,
+		});
+	}
+	return out;
+}
+
+void append_player_slot_assignment_records_json(std::ostream &out, const std::vector<SharedPlayerSlotAssignmentRecord> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const SharedPlayerSlotAssignmentRecord &record = records[index];
+		out << "{\"source_owner_index\":" << record.source_owner_index
+			<< ",\"actual_player_color\":" << record.actual_player_color
+			<< ",\"human\":" << (record.human ? "true" : "false")
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_terrain_visual_missing_bucket_samples_json(std::ostream &out, const std::vector<TerrainVisualMissingBucketSample> &samples) {
 	out << "[";
 	for (size_t index = 0; index < samples.size(); ++index) {
@@ -384,6 +423,23 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"same_run_recovered_template_source_zone_record_count\": " << input.recovered_template_source_zone_record_count << ",\n";
 	out << "    \"same_run_recovered_template_source_link_record_count\": " << input.recovered_template_source_link_record_count << ",\n";
 	out << "    \"same_run_recovered_template_player_assignment_complete\": " << (input.recovered_template_player_assignment_complete ? "true" : "false") << ",\n";
+	out << "    \"same_run_recovered_player_slot_assignment_known\": " << (input.recovered_player_slot_assignment_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_recovered_player_slot_assignment_source\": \"0x4ac62a_0x4ac6ec_generator_ed8_ee0_ee4\",\n";
+	out << "    \"same_run_recovered_player_slot_requested_human_count\": " << input.recovered_player_slot_requested_human_count << ",\n";
+	out << "    \"same_run_recovered_player_slot_requested_player_count\": " << input.recovered_player_slot_requested_player_count << ",\n";
+	out << "    \"same_run_recovered_player_slot_assigned_player_count\": " << input.recovered_player_slot_assigned_player_count << ",\n";
+	out << "    \"same_run_recovered_selected_color_order_ed8\": ";
+	append_json_i32_array(out, input.recovered_selected_color_order_ed8);
+	out << ",\n";
+	out << "    \"same_run_recovered_raw_source_owner_slots_ee0\": ";
+	append_json_i32_array(out, input.recovered_raw_source_owner_slots_ee0);
+	out << ",\n";
+	out << "    \"same_run_recovered_mapped_source_owner_slots_ee4\": ";
+	append_json_i32_array(out, input.recovered_mapped_source_owner_slots_ee4);
+	out << ",\n";
+	out << "    \"same_run_recovered_player_slot_assignments\": ";
+	append_player_slot_assignment_records_json(out, input.recovered_player_slot_assignments);
+	out << ",\n";
 	out << "    \"same_run_recovered_template_runtime_zone_seed_count\": " << input.recovered_template_runtime_zone_seed_count << ",\n";
 	out << "    \"same_run_recovered_template_runtime_link_count\": " << input.recovered_template_runtime_link_count << ",\n";
 	out << "    \"same_run_recovered_template_skipped_zone_filter_count\": " << input.recovered_template_skipped_zone_filter_count << ",\n";
@@ -632,6 +688,14 @@ SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase
 		resolved.recovered_template_source_zone_record_count = selection.source_zone_record_count;
 		resolved.recovered_template_source_link_record_count = selection.source_link_record_count;
 		resolved.recovered_template_player_assignment_complete = selection.player_assignment.complete;
+		resolved.recovered_player_slot_assignment_known = true;
+		resolved.recovered_player_slot_requested_human_count = selection.player_assignment.requested_human_count;
+		resolved.recovered_player_slot_requested_player_count = selection.player_assignment.requested_player_count;
+		resolved.recovered_player_slot_assigned_player_count = selection.player_assignment.assigned_player_count;
+		resolved.recovered_selected_color_order_ed8 = selection.player_assignment.selected_color_order_ed8;
+		resolved.recovered_raw_source_owner_slots_ee0 = selection.player_assignment.raw_ee0_slots;
+		resolved.recovered_mapped_source_owner_slots_ee4 = selection.player_assignment.mapped_ee4_slots;
+		resolved.recovered_player_slot_assignments = from_h3maped_player_slot_assignments(selection.player_assignment.assignments);
 		resolved.recovered_template_runtime_zone_seed_count = int32_t(selection.runtime_seed.runtime_zone_seeds.size());
 		resolved.recovered_template_runtime_link_count = int32_t(selection.runtime_seed.runtime_links.size());
 		resolved.recovered_template_skipped_zone_filter_count = selection.runtime_seed.skipped_zone_filter_count;
