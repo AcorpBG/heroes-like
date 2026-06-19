@@ -19307,7 +19307,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "missing_exact_runtime_zone_seed_link_inputs",
             "coordinate_prune_divisor_4a218c",
             "coordinate_prune_span_budget_4a218c",
-            "word_0x10_0x1c_source",
+            "word_0x10_0x1c_partial_source",
+            "partial_generated_cell_word_surface",
+            "rmg_native_partial_generated_cell_word_surface_v1",
+            "terrain_selection_parity_blockers",
+            "terrain_repaint_parity_blockers",
             "word_0x10_hash_fnv1a64",
             "word_0x1c_hash_fnv1a64",
         ):
@@ -19315,6 +19319,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         for forbidden_token in (
             "duplicate_plain_cpp_reconstruction_executed",
             "plain_cpp_reconstruction_authority",
+            "h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1",
+            "recovered_owner_grid_generated_cell_checkpoint",
+            "shared_recovered_h3maped_private_state_chain",
+            "port_later_relation_object_generated_cell_mutation_caller_order",
         ):
             ensure(forbidden_token not in native_core_text, errors, f"Native RMG blocked snapshot must not expose stale reconstruction token: {forbidden_token}")
     if native_cli_path.exists():

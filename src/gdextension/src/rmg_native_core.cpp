@@ -149,12 +149,20 @@ std::vector<std::string> generated_cell_mutation_phase_blockers() {
 	};
 }
 
-std::vector<std::string> terrain_selection_input_blockers() {
-	return {};
+std::vector<std::string> terrain_selection_parity_blockers() {
+	return {
+		"terrain_selection_executes_on_partial_coordinate_owner_grid_surface_only",
+		"upstream_source_records_descriptor_identity_and_full_generated_cell_state_not_native_owned",
+		"same_run_h3maped_private_state_comparison_not_passed"
+	};
 }
 
-std::vector<std::string> terrain_repaint_input_blockers() {
-	return {};
+std::vector<std::string> terrain_repaint_parity_blockers() {
+	return {
+		"terrain_repaint_executes_on_partial_coordinate_owner_grid_surface_only",
+		"upstream_source_records_descriptor_identity_and_full_generated_cell_state_not_native_owned",
+		"downstream_relation_object_route_and_writeout_consumers_not_native_owned"
+	};
 }
 
 void append_json_string_array(std::ostream &out, const std::vector<std::string> &values) {
@@ -289,21 +297,21 @@ std::vector<SharedRuntimeLinkInput> from_h3maped_runtime_links(const std::vector
 	return out;
 }
 
-void append_generated_cell_checkpoint_json(std::ostream &out, const RecoveredOwnerGridPayload &payload) {
+void append_partial_generated_cell_word_surface_json(std::ostream &out, const RecoveredOwnerGridPayload &payload) {
 	const int32_t cell_count = int32_t(payload.generated_cell_word_0x20.size());
-	out << "    \"recovered_owner_grid_generated_cell_checkpoint\": {\n";
-	out << "      \"schema_id\": \"h3maped_private_state_checkpoint_0x4a4c8e_generated_cells_v1\",\n";
-	out << "      \"checkpoint_id\": \"after_boundary_span_fill_owner_words\",\n";
-	out << "      \"status\": \"recovered_owner_grid_payload_materialized\",\n";
+	out << "    \"partial_generated_cell_word_surface\": {\n";
+	out << "      \"schema_id\": \"rmg_native_partial_generated_cell_word_surface_v1\",\n";
+	out << "      \"checkpoint_id\": \"none_partial_owner_grid_terrainplacement_surface_not_pre_0x4a4c8e\",\n";
+	out << "      \"status\": \"partial_support_state_not_comparable_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"h3maped_entry_anchor\": \"0x4a218c_to_0x4a1f3b_to_0x4a19ed_to_0x4a3a03_to_0x4cca55_to_0x4a2777_to_0x4a325d_to_0x4a3710_before_0x4a4c8e_consumers\",\n";
 	out << "      \"width\": " << payload.width << ",\n";
 	out << "      \"height\": " << payload.height << ",\n";
 	out << "      \"level_count\": " << payload.level_count << ",\n";
 	out << "      \"cell_count\": " << cell_count << ",\n";
-	out << "      \"word_0x10_0x1c_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers\",\n";
+	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization\",\n";
 	out << "      \"word_0x24_0x28_source\": \"0x49b3c1_0x49b53d_0x4a3f27_terrain_repaint_0x4bb74b_0x4bad0f_0x4bcfc3_0x4bce6d_visual_rows\",\n";
-	out << "      \"word_0x2c_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers\",\n";
+	out << "      \"word_0x2c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"word_0x10_hash_fnv1a64\": " << fnv1a64_words(payload.generated_cell_word_0x10) << ",\n";
 	out << "      \"word_0x1c_hash_fnv1a64\": " << fnv1a64_words(payload.generated_cell_word_0x1c) << ",\n";
 	out << "      \"word_0x20_hash_fnv1a64\": " << fnv1a64_words(payload.generated_cell_word_0x20) << ",\n";
@@ -474,14 +482,14 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		append_json_string_array(out, payload.missing_generated_cell_mutation_phases);
 		out << ",\n";
 		out << "    \"terrain_selection_repaint_status\": \"" << json_escape(payload.terrain_selection_repaint_status) << "\",\n";
-		out << "    \"missing_terrain_selection_inputs\": ";
-		append_json_string_array(out, payload.missing_terrain_selection_inputs);
+		out << "    \"terrain_selection_parity_blockers\": ";
+		append_json_string_array(out, payload.terrain_selection_parity_blockers);
 		out << ",\n";
-		out << "    \"missing_terrain_repaint_inputs\": ";
-		append_json_string_array(out, payload.missing_terrain_repaint_inputs);
+		out << "    \"terrain_repaint_parity_blockers\": ";
+		append_json_string_array(out, payload.terrain_repaint_parity_blockers);
 		if (payload.built) {
 			out << ",\n";
-			append_generated_cell_checkpoint_json(out, payload);
+			append_partial_generated_cell_word_surface_json(out, payload);
 		}
 	}
 	out << "\n";
@@ -671,11 +679,11 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload(const ControlledCas
 	RecoveredOwnerGridPayload payload;
 	payload.input = resolved_shared_runtime_chain_input(controlled_case, input);
 	payload.generated_cell_private_state_comparable = false;
-	payload.generated_cell_private_state_status = "terrainplacement_visual_row_flags_executed_but_full_private_state_still_blocked_by_later_relation_object_mutations";
+	payload.generated_cell_private_state_status = "partial_owner_grid_terrainplacement_surface_not_comparable_until_source_records_full_generated_cell_state_relation_object_endpoint_road_writeout_and_same_run_comparison_are_native_owned";
 	payload.terrain_selection_repaint_status = "pending_execution";
 	payload.missing_generated_cell_mutation_phases = generated_cell_mutation_phase_blockers();
-	payload.missing_terrain_selection_inputs = terrain_selection_input_blockers();
-	payload.missing_terrain_repaint_inputs = terrain_repaint_input_blockers();
+	payload.terrain_selection_parity_blockers = terrain_selection_parity_blockers();
+	payload.terrain_repaint_parity_blockers = terrain_repaint_parity_blockers();
 	payload.missing_inputs = shared_runtime_chain_missing_reasons(controlled_case, payload.input);
 	payload.executable = payload.missing_inputs.empty();
 	if (!controlled_case.parse_ok) {
@@ -824,14 +832,14 @@ std::string case_shared_h3maped_state_chain_blocked_json(const ControlledCase &c
 	out << "    \"computer_count\": " << controlled_case.computer_count << "\n";
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
-	out << "    \"required_source\": \"shared_recovered_h3maped_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"TerrainPlacement visual row/flag selection is implemented; later relation/object caller order still blocks comparable pre-0x4a4c8e parity\",\n";
-	out << "    \"required_refactor\": \"implement the remaining H3MapEd generated-cell mutation phases listed in docs/native-rmg-generated-cell-mutation-chain.md before emitting a comparable pre-0x4a4c8e checkpoint\",\n";
+	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
+	out << "    \"current_blocker\": \"native owns only partial coordinate owner-grid and TerrainPlacement support; source records, descriptor identity, full generated-cell records, relation/object callers, endpoint/connection, roads/rivers, writeout, and same-run private-state comparison remain unported\",\n";
+	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_later_relation_object_generated_cell_mutation_caller_order\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_full_source_records_descriptor_identity_and_generated_cell_state_before_relation_object_consumers\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
