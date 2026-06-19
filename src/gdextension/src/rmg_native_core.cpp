@@ -438,6 +438,66 @@ void add_source_object_wrapper_bucket_sample_by_index(RecoveredOwnerGridPayload 
 	}
 }
 
+SharedSourceObjectSelectorResult4a9e40 from_h3maped_source_object_selector_result(const h3maped_rmg_core::SourceObjectSelectorResult4a9e40 &input) {
+	SharedSourceObjectSelectorResult4a9e40 out;
+	out.requested_lane = input.requested_lane;
+	out.requested_bucket_index_0x08 = input.requested_bucket_index_0x08;
+	out.requested_source_field_0x20 = input.requested_source_field_0x20;
+	out.bucket_found = input.bucket_found;
+	out.scanned_record_count = input.scanned_record_count;
+	out.source_0x20_reject_count = input.source_0x20_reject_count;
+	out.group_lane8_reject_count = input.group_lane8_reject_count;
+	out.mask_reject_count = input.mask_reject_count;
+	out.accepted_count = input.accepted_count;
+	const int32_t sample_count = std::min<int32_t>(12, int32_t(input.accepted_source_record_indices.size()));
+	out.accepted_source_record_index_sample.reserve(size_t(sample_count));
+	for (int32_t index = 0; index < sample_count; ++index) {
+		out.accepted_source_record_index_sample.push_back(input.accepted_source_record_indices[size_t(index)]);
+	}
+	out.selected = input.selected;
+	out.selected_candidate_index = input.selected_candidate_index;
+	out.selected_source_record_index = input.selected_source_record_index;
+	out.selected_type_id_0x1c = input.selected_type_id_0x1c;
+	out.selected_subtype_0x20 = input.selected_subtype_0x20;
+	out.selected_group_0x24 = input.selected_group_0x24;
+	out.selected_def_name = input.selected_def_name;
+	out.rng_state_before = input.rng_state_before;
+	out.rng_state_after = input.rng_state_after;
+	out.rng_consumed = input.rng_consumed;
+	out.rng_value = input.rng_value;
+	return out;
+}
+
+void add_source_object_selector_sample(RecoveredOwnerGridPayload &payload, const h3maped_rmg_core::SourceObjectSelectorResult4a9e40 &input) {
+	payload.source_object_selector_samples_0x4a9e40.push_back(from_h3maped_source_object_selector_result(input));
+}
+
+void add_first_source_object_selector_sample(RecoveredOwnerGridPayload &payload, const std::vector<h3maped_rmg_core::SourceObjectRecord0x4c> &records) {
+	if (records.empty()) {
+		return;
+	}
+	const h3maped_rmg_core::SourceObjectRecord0x4c &record = records.front();
+	const h3maped_rmg_core::SourceObjectMaskLaneResult4af89f lane =
+			h3maped_rmg_core::source_object_mask_lane_selector_0x4af89f(record);
+	add_source_object_selector_sample(payload,
+			h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, lane.selected_lane, record.metadata_bucket_index_0x08, record.subtype_0x20));
+}
+
+void populate_source_object_selector_samples_0x4a9e40(RecoveredOwnerGridPayload &payload) {
+	payload.source_object_selector_samples_0x4a9e40.clear();
+	add_first_source_object_selector_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(199));
+	add_first_source_object_selector_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(45));
+	const std::vector<h3maped_rmg_core::SourceObjectRecord0x4c> type199_records =
+			h3maped_rmg_core::source_object_records_by_type_0x49da08(199);
+	if (!type199_records.empty()) {
+		const h3maped_rmg_core::SourceObjectRecord0x4c &record = type199_records.front();
+		const h3maped_rmg_core::SourceObjectMaskLaneResult4af89f lane =
+				h3maped_rmg_core::source_object_mask_lane_selector_0x4af89f(record);
+		add_source_object_selector_sample(payload,
+				h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, lane.selected_lane, record.metadata_bucket_index_0x08, -999));
+	}
+}
+
 void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload) {
 	const h3maped_rmg_core::SourceObjectCatalogSummary0x49da08 summary =
 			h3maped_rmg_core::source_object_catalog_summary_0x49da08();
@@ -478,6 +538,7 @@ void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload)
 	add_source_object_wrapper_bucket_sample_by_index(payload, 99);
 	add_source_object_wrapper_bucket_sample_by_index(payload, 126);
 	add_source_object_wrapper_bucket_sample_by_index(payload, 1);
+	populate_source_object_selector_samples_0x4a9e40(payload);
 }
 
 std::vector<SharedPlayerSlotAssignmentRecord> from_h3maped_player_slot_assignments(const std::vector<h3maped_rmg_core::PlayerSlotAssignmentRecord4ac62a> &inputs) {
@@ -659,10 +720,47 @@ void append_source_object_wrapper_bucket_samples_json(std::ostream &out, const s
 	out << "]";
 }
 
+void append_source_object_selector_sample_json(std::ostream &out, const SharedSourceObjectSelectorResult4a9e40 &sample) {
+	out << "{\"requested_lane\":" << sample.requested_lane
+		<< ",\"requested_bucket_index_0x08\":" << sample.requested_bucket_index_0x08
+		<< ",\"requested_source_field_0x20\":" << sample.requested_source_field_0x20
+		<< ",\"bucket_found\":" << (sample.bucket_found ? "true" : "false")
+		<< ",\"scanned_record_count\":" << sample.scanned_record_count
+		<< ",\"source_0x20_reject_count\":" << sample.source_0x20_reject_count
+		<< ",\"group_lane8_reject_count\":" << sample.group_lane8_reject_count
+		<< ",\"mask_reject_count\":" << sample.mask_reject_count
+		<< ",\"accepted_count\":" << sample.accepted_count
+		<< ",\"accepted_source_record_index_sample\":";
+	append_json_i32_array(out, sample.accepted_source_record_index_sample);
+	out << ",\"selected\":" << (sample.selected ? "true" : "false")
+		<< ",\"selected_candidate_index\":" << sample.selected_candidate_index
+		<< ",\"selected_source_record_index\":" << sample.selected_source_record_index
+		<< ",\"selected_type_id_0x1c\":" << sample.selected_type_id_0x1c
+		<< ",\"selected_subtype_0x20\":" << sample.selected_subtype_0x20
+		<< ",\"selected_group_0x24\":" << sample.selected_group_0x24
+		<< ",\"selected_def_name\":\"" << json_escape(sample.selected_def_name) << "\""
+		<< ",\"rng_state_before\":" << sample.rng_state_before
+		<< ",\"rng_state_after\":" << sample.rng_state_after
+		<< ",\"rng_consumed\":" << (sample.rng_consumed ? "true" : "false")
+		<< ",\"rng_value\":" << sample.rng_value
+		<< "}";
+}
+
+void append_source_object_selector_samples_json(std::ostream &out, const std::vector<SharedSourceObjectSelectorResult4a9e40> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		append_source_object_selector_sample_json(out, samples[index]);
+	}
+	out << "]";
+}
+
 void append_source_object_record_catalog_json(std::ostream &out, const RecoveredOwnerGridPayload &payload) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_source_object_record_catalog_0x49da08_v1\","
-		<< "\"status\":\"source_record_catalog_and_metadata_0x08_wrapper_bucket_lanes_preserved_selection_descriptor_join_and_materialization_pending\","
+		<< "\"status\":\"source_record_catalog_metadata_0x08_wrapper_bucket_lanes_and_0x4af89f_0x4a9e40_selector_samples_preserved_live_wrapper_reuse_descriptor_join_and_materialization_pending\","
 		<< "\"h3maped_entry_anchor\":\"0x49da08_objects_txt_loader_0x49db76_wrapper_init_0x49dc9e_rand_trn_loader\","
 		<< "\"present\":" << (payload.source_object_catalog_0x49da08_present ? "true" : "false") << ","
 		<< "\"source_record_copy_size_bytes\":" << payload.source_object_catalog_0x4c_copy_size_bytes << ","
@@ -674,6 +772,7 @@ void append_source_object_record_catalog_json(std::ostream &out, const Recovered
 		<< "\"descriptor_only_mine_identity_ambiguous\":" << (payload.source_object_catalog_descriptor_only_mine_identity_ambiguous ? "true" : "false") << ","
 		<< "\"identity_rule\":\"copied_0x4c_source_record_is_identity_authority_descriptor_plus_0x00_not_universal_row_id\","
 		<< "\"wrapper_bucket_schema\":\"metadata_entry_plus_0x08_bucket_index_bounded_by_0xe8_and_initialized_by_0x49db76\","
+		<< "\"selector_schema\":\"0x4af89f_source_0x18_lane_scan_then_0x4a9e40_bucket_0x08_source_0x20_group_0x24_mask_0x18_rng_selection\","
 		<< "\"wrapper_buckets_present\":" << (payload.source_object_wrapper_buckets_0x49db76_present ? "true" : "false") << ","
 		<< "\"wrapper_bucket_count_0xe8\":" << payload.source_object_wrapper_bucket_count_0xe8 << ","
 		<< "\"wrapper_initialized_bucket_count\":" << payload.source_object_wrapper_initialized_bucket_count << ","
@@ -685,7 +784,10 @@ void append_source_object_record_catalog_json(std::ostream &out, const Recovered
 		<< "\"wrapper_bucket_samples\":";
 	append_source_object_wrapper_bucket_samples_json(out, payload.source_object_wrapper_bucket_samples);
 	out << ","
-		<< "\"remaining_blockers\":[\"0x4af785_0x4af89f_0x4a9e40_wrapper_source_selection\", \"0x4903e8_descriptor_source_join\", \"source_record_through_object_materialization\", \"relation_object_caller_order\"],"
+		<< "\"selector_samples_0x4a9e40\":";
+	append_source_object_selector_samples_json(out, payload.source_object_selector_samples_0x4a9e40);
+	out << ","
+		<< "\"remaining_blockers\":[\"0x4af785_wrapper_reuse_create_live_chain\", \"0x4903e8_descriptor_source_join\", \"selected_copied_source_record_through_object_materialization\", \"relation_object_caller_order\"],"
 		<< "\"samples\":";
 	append_source_object_record_samples_json(out, payload.source_object_catalog_samples);
 	out << "}";

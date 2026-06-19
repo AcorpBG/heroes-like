@@ -21,7 +21,9 @@ using aurelion::h3maped_rmg_core::RuntimeTerrainSelectionResult49b53d;
 using aurelion::h3maped_rmg_core::RuntimeZoneSeedInput4a218c;
 using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectCatalogSummary0x49da08;
+using aurelion::h3maped_rmg_core::SourceObjectMaskLaneResult4af89f;
 using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
+using aurelion::h3maped_rmg_core::SourceObjectSelectorResult4a9e40;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucket0xe8;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucketSummary0xe8;
 using aurelion::h3maped_rmg_core::SourceNodeFootprintResult4a3a03;
@@ -165,6 +167,33 @@ int main() {
 		}
 		SourceObjectWrapperBucket0xe8 empty_bucket;
 		if (!require(aurelion::h3maped_rmg_core::source_object_wrapper_bucket_by_index_0x49db76(1, empty_bucket) && empty_bucket.initialized_by_0x49db76 && empty_bucket.record_count == 0, "0x49db76 empty wrapper bucket was not preserved")) {
+			return 1;
+		}
+		const SourceObjectMaskLaneResult4af89f type199_lane =
+				aurelion::h3maped_rmg_core::source_object_mask_lane_selector_0x4af89f(type199_records[0]);
+		if (!require(type199_lane.scanned_lane_count >= 1 && type199_lane.selected_lane >= 0 && type199_lane.selected_lane <= 9, "0x4af89f source mask lane selector returned an invalid lane")) {
+			return 1;
+		}
+		const SourceObjectSelectorResult4a9e40 type199_selection =
+				aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, type199_lane.selected_lane, type199_records[0].metadata_bucket_index_0x08, type199_records[0].subtype_0x20);
+		if (!require(type199_selection.bucket_found && type199_selection.scanned_record_count == 51 && type199_selection.accepted_count > 0, "0x4a9e40 source wrapper selector did not scan metadata bucket 155 candidates")) {
+			return 1;
+		}
+		if (!require(type199_selection.selected && type199_selection.rng_consumed && type199_selection.rng_value == 71 && type199_selection.rng_state_after == 0x004746a5U, "0x4a9e40 source wrapper selector did not consume the recovered RNG path")) {
+			return 1;
+		}
+		if (!require(std::find(type199_selection.accepted_source_record_indices.begin(), type199_selection.accepted_source_record_indices.end(), type199_selection.selected_source_record_index) != type199_selection.accepted_source_record_indices.end(), "0x4a9e40 selected record was not part of the accepted candidate vector")) {
+			return 1;
+		}
+		const SourceObjectSelectorResult4a9e40 impossible_selection =
+				aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, type199_lane.selected_lane, type199_records[0].metadata_bucket_index_0x08, -999);
+		if (!require(impossible_selection.bucket_found && impossible_selection.accepted_count == 0 && !impossible_selection.rng_consumed && impossible_selection.rng_state_after == 10U, "0x4a9e40 selector consumed RNG despite having no accepted candidates")) {
+			return 1;
+		}
+		SourceObjectRecord0x4c blank_record;
+		const SourceObjectMaskLaneResult4af89f blank_lane =
+				aurelion::h3maped_rmg_core::source_object_mask_lane_selector_0x4af89f(blank_record);
+		if (!require(blank_lane.selected_lane == 9 && !blank_lane.selected_by_mask && blank_lane.scanned_lane_count == 9, "0x4af89f zero-mask record did not return sentinel lane 9")) {
 			return 1;
 		}
 	}

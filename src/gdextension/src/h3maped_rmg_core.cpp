@@ -1346,6 +1346,89 @@ std::string strict_scope_label(int32_t width, int32_t height, int32_t level_coun
 	return "unsupported_scope";
 }
 
+SourceObjectMaskLaneResult4af89f source_object_mask_lane_selector_0x4af89f(const SourceObjectRecord0x4c &record) {
+	SourceObjectMaskLaneResult4af89f result;
+	result.mask_word_0x18 = uint32_t(record.terrain_mask_b_0x18);
+	for (int32_t lane = 0; lane < 9; ++lane) {
+		result.scanned_lane_count += 1;
+		const uint32_t bit = uint32_t(1U) << uint32_t(lane);
+		if ((result.mask_word_0x18 & bit) != 0U) {
+			result.selected_lane = lane;
+			result.selected_by_mask = true;
+			return result;
+		}
+	}
+	result.selected_lane = 9;
+	return result;
+}
+
+SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_t rng_state, int32_t requested_lane, int32_t bucket_index_0x08, int32_t requested_source_field_0x20) {
+	SourceObjectSelectorResult4a9e40 result;
+	result.requested_lane = requested_lane;
+	result.requested_bucket_index_0x08 = bucket_index_0x08;
+	result.requested_source_field_0x20 = requested_source_field_0x20;
+	result.rng_state_before = rng_state;
+	result.rng_state_after = rng_state;
+
+	SourceObjectWrapperBucket0xe8 bucket;
+	if (!source_object_wrapper_bucket_by_index_0x49db76(bucket_index_0x08, bucket)) {
+		return result;
+	}
+	result.bucket_found = true;
+
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	for (const int32_t source_index : bucket.source_record_indices) {
+		if (source_index < 0 || source_index >= int32_t(records.size())) {
+			continue;
+		}
+		result.scanned_record_count += 1;
+		const SourceObjectRecord0x4c &record = records[size_t(source_index)];
+		if (record.subtype_0x20 != requested_source_field_0x20) {
+			result.source_0x20_reject_count += 1;
+			continue;
+		}
+
+		bool accepted = false;
+		if (record.group_0x24 == 4 || record.group_0x24 == 5) {
+			accepted = requested_lane != 8;
+			if (!accepted) {
+				result.group_lane8_reject_count += 1;
+			}
+		} else {
+			const uint32_t mask_word = uint32_t(record.terrain_mask_b_0x18);
+			const bool lane_in_word = requested_lane >= 0 && requested_lane < 32;
+			const uint32_t bit = lane_in_word ? (uint32_t(1U) << uint32_t(requested_lane)) : 0U;
+			accepted = lane_in_word && (mask_word & bit) != 0U;
+			if (!accepted) {
+				result.mask_reject_count += 1;
+			}
+		}
+		if (accepted) {
+			result.accepted_source_record_indices.push_back(source_index);
+		}
+	}
+
+	result.accepted_count = int32_t(result.accepted_source_record_indices.size());
+	if (result.accepted_count <= 0) {
+		return result;
+	}
+
+	H3MapedRng rng;
+	rng.state = rng_state;
+	result.rng_value = rng.next();
+	result.rng_state_after = rng.state;
+	result.rng_consumed = true;
+	result.selected_candidate_index = result.rng_value % result.accepted_count;
+	result.selected_source_record_index = result.accepted_source_record_indices[size_t(result.selected_candidate_index)];
+	const SourceObjectRecord0x4c &selected = records[size_t(result.selected_source_record_index)];
+	result.selected = true;
+	result.selected_type_id_0x1c = selected.type_id_0x1c;
+	result.selected_subtype_0x20 = selected.subtype_0x20;
+	result.selected_group_0x24 = selected.group_0x24;
+	result.selected_def_name = selected.def_name;
+	return result;
+}
+
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24, uint32_t old_word_0x28, uint32_t old_word_0x2c) {
 	GeneratedCellInitialWords cell;
 	cell.word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
