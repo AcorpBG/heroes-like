@@ -22,6 +22,8 @@ using aurelion::h3maped_rmg_core::RuntimeZoneSeedInput4a218c;
 using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectCatalogSummary0x49da08;
 using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
+using aurelion::h3maped_rmg_core::SourceObjectWrapperBucket0xe8;
+using aurelion::h3maped_rmg_core::SourceObjectWrapperBucketSummary0xe8;
 using aurelion::h3maped_rmg_core::SourceNodeFootprintResult4a3a03;
 using aurelion::h3maped_rmg_core::SourceNodeCyclePoint4a2777;
 using aurelion::h3maped_rmg_core::SpanRecord;
@@ -110,6 +112,37 @@ int main() {
 			return 1;
 		}
 		if (!require(mine_subtype_records[0].source_row > 0 && !mine_subtype_records[0].def_name.empty(), "0x49da08 mine source record lookup lost source row/DEF identity")) {
+			return 1;
+		}
+		const SourceObjectWrapperBucketSummary0xe8 wrapper_summary =
+				aurelion::h3maped_rmg_core::source_object_wrapper_bucket_summary_0x49db76();
+		if (!require(wrapper_summary.bucket_count == aurelion::h3maped_rmg_core::SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8, "0x49db76 wrapper bucket table did not preserve 0xe8 bucket count")) {
+			return 1;
+		}
+		if (!require(wrapper_summary.initialized_bucket_count == 0xe8, "0x49db76 wrapper initialization did not initialize every type bucket")) {
+			return 1;
+		}
+		if (!require(wrapper_summary.non_empty_bucket_count == 167, "0x49db76 wrapper bucket table lost recovered non-empty bucket count")) {
+			return 1;
+		}
+		if (!require(wrapper_summary.total_source_record_references == source_object_summary.record_count, "0x49db76 wrapper bucket table did not account for every source record")) {
+			return 1;
+		}
+		if (!require(wrapper_summary.out_of_range_source_record_count == 0, "0x49db76 wrapper bucket table found out-of-range source types despite recovered 0xe8 bound")) {
+			return 1;
+		}
+		if (!require(wrapper_summary.max_bucket_type_id_0x1c == 54 && wrapper_summary.max_bucket_record_count == 141, "0x49db76 wrapper max bucket drifted from recovered type-54 monster bucket")) {
+			return 1;
+		}
+		SourceObjectWrapperBucket0xe8 monster_bucket;
+		if (!require(aurelion::h3maped_rmg_core::source_object_wrapper_bucket_by_type_0x49db76(54, monster_bucket), "0x49db76 wrapper lookup rejected type 54")) {
+			return 1;
+		}
+		if (!require(monster_bucket.initialized_by_0x49db76 && monster_bucket.record_count == 141 && monster_bucket.source_record_indices.size() == 141, "0x49db76 type-54 wrapper lost monster source records")) {
+			return 1;
+		}
+		SourceObjectWrapperBucket0xe8 empty_bucket;
+		if (!require(aurelion::h3maped_rmg_core::source_object_wrapper_bucket_by_type_0x49db76(1, empty_bucket) && empty_bucket.initialized_by_0x49db76 && empty_bucket.record_count == 0, "0x49db76 empty wrapper bucket was not preserved")) {
 			return 1;
 		}
 	}

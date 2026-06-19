@@ -1391,6 +1391,32 @@ std::vector<SourceObjectRecord0x4c> build_source_object_catalog() {
 	return records;
 }
 
+std::vector<SourceObjectWrapperBucket0xe8> build_source_object_wrapper_buckets() {
+	std::vector<SourceObjectWrapperBucket0xe8> buckets;
+	buckets.resize(SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8);
+	for (int32_t type_id = 0; type_id < SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8; ++type_id) {
+		SourceObjectWrapperBucket0xe8 &bucket = buckets[size_t(type_id)];
+		bucket.type_id_0x1c = type_id;
+		bucket.initialized_by_0x49db76 = true;
+	}
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+		const SourceObjectRecord0x4c &record = records[size_t(index)];
+		if (record.type_id_0x1c < 0 || record.type_id_0x1c >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
+			continue;
+		}
+		SourceObjectWrapperBucket0xe8 &bucket = buckets[size_t(record.type_id_0x1c)];
+		if (bucket.record_count == 0) {
+			bucket.first_source_record_index = index;
+			bucket.type_name = record.type_name;
+		}
+		bucket.last_source_record_index = index;
+		bucket.record_count += 1;
+		bucket.source_record_indices.push_back(index);
+	}
+	return buckets;
+}
+
 } // namespace
 
 const std::vector<SourceObjectRecord0x4c> &source_object_catalog_0x49da08() {
@@ -1441,6 +1467,46 @@ std::vector<SourceObjectRecord0x4c> source_object_records_by_type_subtype_0x49da
 		return record.type_id_0x1c == type_id && record.subtype_0x20 == subtype;
 	});
 	return matches;
+}
+
+const std::vector<SourceObjectWrapperBucket0xe8> &source_object_wrapper_buckets_0x49db76() {
+	static const std::vector<SourceObjectWrapperBucket0xe8> buckets = build_source_object_wrapper_buckets();
+	return buckets;
+}
+
+SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db76() {
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	const std::vector<SourceObjectWrapperBucket0xe8> &buckets = source_object_wrapper_buckets_0x49db76();
+	SourceObjectWrapperBucketSummary0xe8 summary;
+	summary.bucket_count = int32_t(buckets.size());
+	for (const SourceObjectWrapperBucket0xe8 &bucket : buckets) {
+		if (bucket.initialized_by_0x49db76) {
+			summary.initialized_bucket_count += 1;
+		}
+		if (bucket.record_count > 0) {
+			summary.non_empty_bucket_count += 1;
+			summary.total_source_record_references += bucket.record_count;
+			if (bucket.record_count > summary.max_bucket_record_count) {
+				summary.max_bucket_record_count = bucket.record_count;
+				summary.max_bucket_type_id_0x1c = bucket.type_id_0x1c;
+			}
+		}
+	}
+	for (const SourceObjectRecord0x4c &record : records) {
+		if (record.type_id_0x1c < 0 || record.type_id_0x1c >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
+			summary.out_of_range_source_record_count += 1;
+		}
+	}
+	return summary;
+}
+
+bool source_object_wrapper_bucket_by_type_0x49db76(int32_t type_id, SourceObjectWrapperBucket0xe8 &out_bucket) {
+	const std::vector<SourceObjectWrapperBucket0xe8> &buckets = source_object_wrapper_buckets_0x49db76();
+	if (type_id < 0 || type_id >= int32_t(buckets.size())) {
+		return false;
+	}
+	out_bucket = buckets[size_t(type_id)];
+	return true;
 }
 
 } // namespace aurelion::h3maped_rmg_core

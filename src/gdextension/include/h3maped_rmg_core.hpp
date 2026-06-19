@@ -25,6 +25,7 @@ constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X28_VALUE = CELL_DECOR_READY_BIT
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X2C_CLEAR_MASK = ~uint32_t(0x01U);
 constexpr int32_t GENERATED_CELL_RECORD_STRIDE_BYTES = 0x30;
 constexpr int32_t SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C = 0x4c;
+constexpr int32_t SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8 = 0xe8;
 constexpr uint32_t RELATION_RESET_WORD_0X1C = 0x7d007d00U;
 constexpr uint32_t RELATION_RESET_COORD_MINUS_ONE = 0xffffffffU;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH = 0x7d00U;
@@ -137,6 +138,26 @@ struct SourceObjectCatalogSummary0x49da08 {
 	bool descriptor_only_mine_identity_ambiguous = false;
 };
 
+struct SourceObjectWrapperBucket0xe8 {
+	int32_t type_id_0x1c = -1;
+	std::string type_name;
+	bool initialized_by_0x49db76 = false;
+	int32_t record_count = 0;
+	int32_t first_source_record_index = -1;
+	int32_t last_source_record_index = -1;
+	std::vector<int32_t> source_record_indices;
+};
+
+struct SourceObjectWrapperBucketSummary0xe8 {
+	int32_t bucket_count = SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8;
+	int32_t initialized_bucket_count = 0;
+	int32_t non_empty_bucket_count = 0;
+	int32_t total_source_record_references = 0;
+	int32_t out_of_range_source_record_count = 0;
+	int32_t max_bucket_record_count = 0;
+	int32_t max_bucket_type_id_0x1c = -1;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -151,6 +172,9 @@ const std::vector<SourceObjectRecord0x4c> &source_object_catalog_0x49da08();
 SourceObjectCatalogSummary0x49da08 source_object_catalog_summary_0x49da08();
 std::vector<SourceObjectRecord0x4c> source_object_records_by_type_0x49da08(int32_t type_id);
 std::vector<SourceObjectRecord0x4c> source_object_records_by_type_subtype_0x49da08(int32_t type_id, int32_t subtype);
+const std::vector<SourceObjectWrapperBucket0xe8> &source_object_wrapper_buckets_0x49db76();
+SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db76();
+bool source_object_wrapper_bucket_by_type_0x49db76(int32_t type_id, SourceObjectWrapperBucket0xe8 &out_bucket);
 
 struct GeneratedCell49a85dStampResult {
 	bool center_in_bounds = false;
