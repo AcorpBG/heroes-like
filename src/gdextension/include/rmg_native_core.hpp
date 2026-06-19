@@ -76,6 +76,7 @@ struct SharedSourceObjectRecord0x4c {
 	std::string def_name;
 	int32_t type_id_0x1c = 0;
 	std::string type_name;
+	int32_t metadata_bucket_index_0x08 = 0;
 	int32_t subtype_0x20 = 0;
 	int32_t group_0x24 = 0;
 	int32_t last_flag_0x28 = 0;
@@ -89,8 +90,9 @@ struct SharedSourceObjectRecord0x4c {
 };
 
 struct SharedSourceObjectWrapperBucket0xe8 {
-	int32_t type_id_0x1c = -1;
-	std::string type_name;
+	int32_t bucket_index_0x08 = -1;
+	int32_t first_type_id_0x1c = -1;
+	std::string first_type_name;
 	bool initialized_by_0x49db76 = false;
 	int32_t record_count = 0;
 	int32_t first_source_record_index = -1;
@@ -324,7 +326,7 @@ struct RecoveredOwnerGridPayload {
 	int32_t source_object_wrapper_total_source_record_references = 0;
 	int32_t source_object_wrapper_out_of_range_source_record_count = 0;
 	int32_t source_object_wrapper_max_bucket_record_count = 0;
-	int32_t source_object_wrapper_max_bucket_type_id_0x1c = -1;
+	int32_t source_object_wrapper_max_bucket_index_0x08 = -1;
 	std::vector<SharedSourceObjectWrapperBucket0xe8> source_object_wrapper_bucket_samples;
 };
 
