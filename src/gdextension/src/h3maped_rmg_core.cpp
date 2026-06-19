@@ -1357,6 +1357,48 @@ GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_
 	return cell;
 }
 
+GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count) {
+	GeneratedCellRecordGrid0x30 grid;
+	grid.width = width;
+	grid.height = height;
+	grid.level_count = level_count;
+	grid.stride_bytes = GENERATED_CELL_RECORD_STRIDE_BYTES;
+	if (width <= 0 || height <= 0 || level_count <= 0) {
+		return grid;
+	}
+	const int64_t cell_count = int64_t(width) * int64_t(height) * int64_t(level_count);
+	if (cell_count <= 0) {
+		return grid;
+	}
+	const GeneratedCellInitialWords initial = generated_cell_initializer_0x499ea3();
+	grid.records.assign(size_t(cell_count), GeneratedCellRecord0x30());
+	for (GeneratedCellRecord0x30 &record : grid.records) {
+		record.stride_bytes = GENERATED_CELL_RECORD_STRIDE_BYTES;
+		record.object_reference_vector_fields_0x04_0x08_present = true;
+		record.object_reference_vector_contents_known = false;
+		record.object_reference_count = 0;
+		record.word_0x10_known = true;
+		record.word_0x10 = initial.word_0x10;
+		record.word_0x14_known = false;
+		record.word_0x14 = 0U;
+		record.word_0x18_known = false;
+		record.word_0x18 = 0U;
+		record.word_0x1c_known = true;
+		record.word_0x1c = initial.word_0x1c;
+		record.word_0x20_known = true;
+		record.word_0x20 = initial.word_0x20;
+		record.word_0x24_known = true;
+		record.word_0x24 = initial.word_0x24;
+		record.word_0x28_known = true;
+		record.word_0x28 = initial.word_0x28;
+		record.byte_0x2b_known = false;
+		record.byte_0x2b = 0U;
+		record.word_0x2c_known = true;
+		record.word_0x2c = initial.word_0x2c;
+	}
+	return grid;
+}
+
 GeneratedCellWordGrid generated_cell_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count) {
 	GeneratedCellWordGrid grid;
 	grid.width = width;
@@ -1369,13 +1411,21 @@ GeneratedCellWordGrid generated_cell_grid_reset_0x49a072(int32_t width, int32_t 
 	if (cell_count < 0) {
 		return grid;
 	}
-	const GeneratedCellInitialWords initial = generated_cell_initializer_0x499ea3();
-	grid.word_0x10.assign(size_t(cell_count), initial.word_0x10);
-	grid.word_0x1c.assign(size_t(cell_count), initial.word_0x1c);
-	grid.word_0x20.assign(size_t(cell_count), initial.word_0x20);
-	grid.word_0x24.assign(size_t(cell_count), initial.word_0x24);
-	grid.word_0x28.assign(size_t(cell_count), initial.word_0x28);
-	grid.word_0x2c.assign(size_t(cell_count), initial.word_0x2c);
+	const GeneratedCellRecordGrid0x30 records = generated_cell_record_grid_reset_0x49a072(width, height, level_count);
+	grid.word_0x10.reserve(size_t(cell_count));
+	grid.word_0x1c.reserve(size_t(cell_count));
+	grid.word_0x20.reserve(size_t(cell_count));
+	grid.word_0x24.reserve(size_t(cell_count));
+	grid.word_0x28.reserve(size_t(cell_count));
+	grid.word_0x2c.reserve(size_t(cell_count));
+	for (const GeneratedCellRecord0x30 &record : records.records) {
+		grid.word_0x10.push_back(record.word_0x10);
+		grid.word_0x1c.push_back(record.word_0x1c);
+		grid.word_0x20.push_back(record.word_0x20);
+		grid.word_0x24.push_back(record.word_0x24);
+		grid.word_0x28.push_back(record.word_0x28);
+		grid.word_0x2c.push_back(record.word_0x2c);
+	}
 	return grid;
 }
 

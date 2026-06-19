@@ -176,6 +176,35 @@ struct TerrainVisualMissingBucketSample {
 	bool final_sweep = false;
 };
 
+struct SharedGeneratedCellRecord0x30 {
+	int32_t flat = -1;
+	int32_t x = -1;
+	int32_t y = -1;
+	int32_t level = -1;
+	int32_t stride_bytes = 0x30;
+	bool object_reference_vector_fields_0x04_0x08_present = true;
+	bool object_reference_vector_contents_known = false;
+	int32_t object_reference_count = 0;
+	bool word_0x10_known = false;
+	uint32_t word_0x10 = 0U;
+	bool word_0x14_known = false;
+	uint32_t word_0x14 = 0U;
+	bool word_0x18_known = false;
+	uint32_t word_0x18 = 0U;
+	bool word_0x1c_known = false;
+	uint32_t word_0x1c = 0U;
+	bool word_0x20_known = false;
+	uint32_t word_0x20 = 0U;
+	bool word_0x24_known = false;
+	uint32_t word_0x24 = 0U;
+	bool word_0x28_known = false;
+	uint32_t word_0x28 = 0U;
+	bool byte_0x2b_known = false;
+	uint8_t byte_0x2b = 0U;
+	bool word_0x2c_known = false;
+	uint32_t word_0x2c = 0U;
+};
+
 struct RecoveredOwnerGridPayload {
 	SharedRuntimeChainInput input;
 	std::vector<std::string> missing_inputs;
@@ -240,6 +269,10 @@ struct RecoveredOwnerGridPayload {
 	std::vector<std::string> terrain_selection_parity_blockers;
 	std::vector<std::string> terrain_repaint_parity_blockers;
 	std::vector<TerrainVisualMissingBucketSample> terrain_visual_missing_bucket_samples_0x4bcfc3;
+	bool generated_cell_record_shape_0x30_present = false;
+	int32_t generated_cell_record_stride_bytes = 0x30;
+	std::string generated_cell_record_surface_status;
+	std::vector<SharedGeneratedCellRecord0x30> generated_cell_records_0x30;
 	std::vector<uint32_t> generated_cell_word_0x10;
 	std::vector<uint32_t> generated_cell_word_0x1c;
 	std::vector<uint32_t> generated_cell_word_0x20;

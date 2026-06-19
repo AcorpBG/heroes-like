@@ -187,6 +187,64 @@ void append_json_i32_array(std::ostream &out, const std::vector<int32_t> &values
 	out << "]";
 }
 
+int32_t generated_cell_record_known_count(const std::vector<SharedGeneratedCellRecord0x30> &records, bool SharedGeneratedCellRecord0x30::*member) {
+	return int32_t(std::count_if(records.begin(), records.end(), [member](const SharedGeneratedCellRecord0x30 &record) {
+		return record.*member;
+	}));
+}
+
+void populate_generated_cell_record_surface_0x30(RecoveredOwnerGridPayload &payload) {
+	payload.generated_cell_record_shape_0x30_present = false;
+	payload.generated_cell_record_stride_bytes = h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES;
+	payload.generated_cell_record_surface_status = "not_built";
+	payload.generated_cell_records_0x30.clear();
+	if (payload.width <= 0 || payload.height <= 0 || payload.level_count <= 0) {
+		return;
+	}
+	const h3maped_rmg_core::GeneratedCellRecordGrid0x30 source =
+			h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(payload.width, payload.height, payload.level_count);
+	if (source.records.empty()) {
+		return;
+	}
+	payload.generated_cell_record_shape_0x30_present = true;
+	payload.generated_cell_record_stride_bytes = source.stride_bytes;
+	payload.generated_cell_record_surface_status = "partial_stride_0x30_record_shape_from_0x49a072_0x499ea3_with_owner_terrain_word_overlays_not_pre_0x4a4c8e_checkpoint";
+	payload.generated_cell_records_0x30.reserve(source.records.size());
+	const int32_t level_size = std::max<int32_t>(1, payload.width * payload.height);
+	for (int32_t flat = 0; flat < int32_t(source.records.size()); ++flat) {
+		const h3maped_rmg_core::GeneratedCellRecord0x30 &record = source.records[size_t(flat)];
+		SharedGeneratedCellRecord0x30 out;
+		out.flat = flat;
+		out.level = flat / level_size;
+		const int32_t remainder = flat % level_size;
+		out.x = payload.width > 0 ? remainder % payload.width : -1;
+		out.y = payload.width > 0 ? remainder / payload.width : -1;
+		out.stride_bytes = record.stride_bytes;
+		out.object_reference_vector_fields_0x04_0x08_present = record.object_reference_vector_fields_0x04_0x08_present;
+		out.object_reference_vector_contents_known = record.object_reference_vector_contents_known;
+		out.object_reference_count = record.object_reference_count;
+		out.word_0x10_known = record.word_0x10_known;
+		out.word_0x10 = flat < int32_t(payload.generated_cell_word_0x10.size()) ? payload.generated_cell_word_0x10[size_t(flat)] : record.word_0x10;
+		out.word_0x14_known = record.word_0x14_known;
+		out.word_0x14 = record.word_0x14;
+		out.word_0x18_known = record.word_0x18_known;
+		out.word_0x18 = record.word_0x18;
+		out.word_0x1c_known = record.word_0x1c_known;
+		out.word_0x1c = flat < int32_t(payload.generated_cell_word_0x1c.size()) ? payload.generated_cell_word_0x1c[size_t(flat)] : record.word_0x1c;
+		out.word_0x20_known = record.word_0x20_known || flat < int32_t(payload.generated_cell_word_0x20.size());
+		out.word_0x20 = flat < int32_t(payload.generated_cell_word_0x20.size()) ? payload.generated_cell_word_0x20[size_t(flat)] : record.word_0x20;
+		out.word_0x24_known = record.word_0x24_known || flat < int32_t(payload.generated_cell_word_0x24.size());
+		out.word_0x24 = flat < int32_t(payload.generated_cell_word_0x24.size()) ? payload.generated_cell_word_0x24[size_t(flat)] : record.word_0x24;
+		out.word_0x28_known = record.word_0x28_known || flat < int32_t(payload.generated_cell_word_0x28.size());
+		out.word_0x28 = flat < int32_t(payload.generated_cell_word_0x28.size()) ? payload.generated_cell_word_0x28[size_t(flat)] : record.word_0x28;
+		out.byte_0x2b_known = record.byte_0x2b_known;
+		out.byte_0x2b = record.byte_0x2b;
+		out.word_0x2c_known = record.word_0x2c_known;
+		out.word_0x2c = flat < int32_t(payload.generated_cell_word_0x2c.size()) ? payload.generated_cell_word_0x2c[size_t(flat)] : record.word_0x2c;
+		payload.generated_cell_records_0x30.push_back(out);
+	}
+}
+
 h3maped_rmg_core::SourceTownRules4a218c to_h3maped_source_town_rules(const SharedSourceTownRules &input) {
 	return h3maped_rmg_core::SourceTownRules4a218c {
 		input.min_towns,
@@ -568,6 +626,18 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 	out << "      \"height\": " << payload.height << ",\n";
 	out << "      \"level_count\": " << payload.level_count << ",\n";
 	out << "      \"cell_count\": " << cell_count << ",\n";
+	out << "      \"record_shape_0x30_present\": " << (payload.generated_cell_record_shape_0x30_present ? "true" : "false") << ",\n";
+	out << "      \"record_stride_bytes\": " << payload.generated_cell_record_stride_bytes << ",\n";
+	out << "      \"record_surface_status\": \"" << json_escape(payload.generated_cell_record_surface_status) << "\",\n";
+	out << "      \"record_shape_source\": \"GeneratedCell_stride_0x30_from_h3maped_private_state_layout_0x49a072_0x499ea3_reset_record_shape_only\",\n";
+	out << "      \"record_count\": " << payload.generated_cell_records_0x30.size() << ",\n";
+	out << "      \"object_reference_vector_fields_0x04_0x08_present_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::object_reference_vector_fields_0x04_0x08_present) << ",\n";
+	out << "      \"object_reference_vector_contents_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::object_reference_vector_contents_known) << ",\n";
+	out << "      \"word_0x14_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::word_0x14_known) << ",\n";
+	out << "      \"word_0x18_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::word_0x18_known) << ",\n";
+	out << "      \"byte_0x2b_known_count\": " << generated_cell_record_known_count(payload.generated_cell_records_0x30, &SharedGeneratedCellRecord0x30::byte_0x2b_known) << ",\n";
+	out << "      \"word_0x14_0x18_source\": \"not_native_owned_until_0x4a5767_0x4a606b_projection_chain_is_ported\",\n";
+	out << "      \"byte_0x2b_source\": \"not_native_owned_until_validity_private_byte_mutations_0x49a1d8_0x49abd6_0x4a5a23_are_ported\",\n";
 	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization\",\n";
 	out << "      \"word_0x24_0x28_source\": \"0x49b3c1_0x49b53d_0x4a3f27_terrain_repaint_0x4bb74b_0x4bad0f_0x4bcfc3_0x4bce6d_visual_rows\",\n";
@@ -588,6 +658,7 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 		const uint32_t word_0x24 = flat < int32_t(payload.generated_cell_word_0x24.size()) ? payload.generated_cell_word_0x24[size_t(flat)] : 0U;
 		const uint32_t word_0x28 = flat < int32_t(payload.generated_cell_word_0x28.size()) ? payload.generated_cell_word_0x28[size_t(flat)] : 0U;
 		const uint32_t word_0x2c = flat < int32_t(payload.generated_cell_word_0x2c.size()) ? payload.generated_cell_word_0x2c[size_t(flat)] : 0U;
+		const SharedGeneratedCellRecord0x30 *record = flat < int32_t(payload.generated_cell_records_0x30.size()) ? &payload.generated_cell_records_0x30[size_t(flat)] : nullptr;
 		const int32_t level_size = std::max<int32_t>(1, payload.width * payload.height);
 		const int32_t level = flat / level_size;
 		const int32_t remainder = flat % level_size;
@@ -598,11 +669,27 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 		out << "\"x\":" << x << ",";
 		out << "\"y\":" << y << ",";
 		out << "\"level\":" << level << ",";
+		out << "\"stride_bytes\":" << (record != nullptr ? record->stride_bytes : payload.generated_cell_record_stride_bytes) << ",";
+		out << "\"object_reference_vector_fields_0x04_0x08_present\":" << (record != nullptr && record->object_reference_vector_fields_0x04_0x08_present ? "true" : "false") << ",";
+		out << "\"object_reference_vector_contents_known\":" << (record != nullptr && record->object_reference_vector_contents_known ? "true" : "false") << ",";
+		out << "\"object_reference_count\":" << (record != nullptr ? record->object_reference_count : 0) << ",";
+		out << "\"word_0x10_known\":" << (record != nullptr && record->word_0x10_known ? "true" : "false") << ",";
 		out << "\"word_0x10\":" << word_0x10 << ",";
+		out << "\"word_0x14_known\":" << (record != nullptr && record->word_0x14_known ? "true" : "false") << ",";
+		out << "\"word_0x14\":" << (record != nullptr ? record->word_0x14 : 0U) << ",";
+		out << "\"word_0x18_known\":" << (record != nullptr && record->word_0x18_known ? "true" : "false") << ",";
+		out << "\"word_0x18\":" << (record != nullptr ? record->word_0x18 : 0U) << ",";
+		out << "\"word_0x1c_known\":" << (record != nullptr && record->word_0x1c_known ? "true" : "false") << ",";
 		out << "\"word_0x1c\":" << word_0x1c << ",";
+		out << "\"word_0x20_known\":" << (record != nullptr && record->word_0x20_known ? "true" : "false") << ",";
 		out << "\"word_0x20\":" << word_0x20 << ",";
+		out << "\"word_0x24_known\":" << (record != nullptr && record->word_0x24_known ? "true" : "false") << ",";
 		out << "\"word_0x24\":" << word_0x24 << ",";
+		out << "\"word_0x28_known\":" << (record != nullptr && record->word_0x28_known ? "true" : "false") << ",";
 		out << "\"word_0x28\":" << word_0x28 << ",";
+		out << "\"byte_0x2b_known\":" << (record != nullptr && record->byte_0x2b_known ? "true" : "false") << ",";
+		out << "\"byte_0x2b\":" << (record != nullptr ? int32_t(record->byte_0x2b) : 0) << ",";
+		out << "\"word_0x2c_known\":" << (record != nullptr && record->word_0x2c_known ? "true" : "false") << ",";
 		out << "\"word_0x2c\":" << word_0x2c << ",";
 		out << "\"owner_byte2_signed\":" << signed_byte(word_0x20 >> 16U) << ",";
 		out << "\"owner_byte3_signed\":" << signed_byte(word_0x20 >> 24U) << ",";
@@ -1090,6 +1177,7 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload(const ControlledCas
 		payload.generated_cell_word_0x20 = result.owner_grid.materialization.generated_cell_word_0x20;
 		payload.built = false;
 	}
+	populate_generated_cell_record_surface_0x30(payload);
 	return payload;
 }
 
