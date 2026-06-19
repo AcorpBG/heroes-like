@@ -2,11 +2,13 @@
 
 #include <algorithm>
 #include <cerrno>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -15,11 +17,15 @@ namespace {
 
 using aurelion::rmg_native_core::CaseReport;
 using aurelion::rmg_native_core::ControlledCase;
+using aurelion::rmg_native_core::SharedRuntimeChainInput;
+using aurelion::rmg_native_core::SharedRuntimeLinkInput;
+using aurelion::rmg_native_core::SharedRuntimeZoneSeedInput;
 
 struct Options {
 	std::filesystem::path output_dir = ".artifacts/rmg_native_batch_export_cli";
 	std::vector<std::string> controlled_cases;
 	std::string case_filter;
+	SharedRuntimeChainInput shared_runtime_chain_input;
 	int limit = 0;
 	bool include_unsupported = false;
 	bool emit_phase_snapshot = false;
@@ -94,6 +100,8 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"status\":\"" << json_escape(report.status) << "\",";
 		out << "\"blocked_reason\":\"" << json_escape(report.blocked_reason) << "\",";
 		out << "\"supported_scope\":" << (report.supported_scope ? "true" : "false") << ",";
+		out << "\"shared_chain_input_status\":\"" << json_escape(report.shared_chain_input_status) << "\",";
+		out << "\"shared_chain_executed\":" << (report.shared_chain_executed ? "true" : "false") << ",";
 		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
 		out << "\"phase_snapshot_path\":\"" << json_escape(report.phase_snapshot_path.string()) << "\",";
 		out << "\"native_map_json_written\":" << (report.native_map_json_written ? "true" : "false") << ",";
@@ -111,6 +119,61 @@ bool parse_int(const std::string &raw, int &out_value) {
 		return false;
 	}
 	out_value = static_cast<int>(std::max<long>(0, parsed));
+	return true;
+}
+
+bool parse_i32_strict(const std::string &raw, int32_t &out_value) {
+	char *end = nullptr;
+	errno = 0;
+	const long parsed = std::strtol(raw.c_str(), &end, 10);
+	if (errno != 0 || end == raw.c_str() || *end != '\0' || parsed < std::numeric_limits<int32_t>::min() || parsed > std::numeric_limits<int32_t>::max()) {
+		return false;
+	}
+	out_value = static_cast<int32_t>(parsed);
+	return true;
+}
+
+bool parse_u32_strict(const std::string &raw, uint32_t &out_value) {
+	char *end = nullptr;
+	errno = 0;
+	const unsigned long parsed = std::strtoul(raw.c_str(), &end, 10);
+	if (errno != 0 || end == raw.c_str() || *end != '\0' || parsed > std::numeric_limits<uint32_t>::max()) {
+		return false;
+	}
+	out_value = static_cast<uint32_t>(parsed);
+	return true;
+}
+
+std::vector<std::string> split_csv(const std::string &raw) {
+	std::vector<std::string> parts;
+	std::string current;
+	for (const char ch : raw) {
+		if (ch == ',') {
+			parts.push_back(current);
+			current.clear();
+		} else {
+			current.push_back(ch);
+		}
+	}
+	parts.push_back(current);
+	return parts;
+}
+
+bool parse_i32_csv(const std::string &raw, size_t expected_count, std::vector<int32_t> &out_values) {
+	const std::vector<std::string> parts = split_csv(raw);
+	if (parts.size() != expected_count) {
+		return false;
+	}
+	std::vector<int32_t> parsed;
+	parsed.reserve(parts.size());
+	for (const std::string &part : parts) {
+		int32_t value = 0;
+		if (!parse_i32_strict(part, value)) {
+			return false;
+		}
+		parsed.push_back(value);
+	}
+	out_values = parsed;
 	return true;
 }
 
@@ -134,6 +197,55 @@ Options parse_options(int argc, char **argv) {
 			take_value(raw);
 			if (!raw.empty()) {
 				options.controlled_cases.push_back(raw);
+			}
+		} else if (arg == "--shared-input-source") {
+			take_value(options.shared_runtime_chain_input.input_source);
+		} else if (arg == "--shared-rng-state-after-template-selection") {
+			std::string raw;
+			take_value(raw);
+			uint32_t parsed = 0;
+			if (parse_u32_strict(raw, parsed)) {
+				options.shared_runtime_chain_input.rng_state_after_template_selection = parsed;
+				options.shared_runtime_chain_input.rng_state_after_template_selection_known = true;
+			}
+		} else if (arg == "--shared-generator-mode-0x10b8") {
+			std::string raw;
+			take_value(raw);
+			int32_t parsed = 0;
+			if (parse_i32_strict(raw, parsed)) {
+				options.shared_runtime_chain_input.generator_mode_0x10b8 = parsed;
+				options.shared_runtime_chain_input.generator_mode_0x10b8_known = true;
+			}
+		} else if (arg == "--shared-runtime-zone-seed") {
+			std::string raw;
+			take_value(raw);
+			std::vector<int32_t> fields;
+			if (parse_i32_csv(raw, 11, fields) || parse_i32_csv(raw, 7, fields)) {
+				SharedRuntimeZoneSeedInput input;
+				input.runtime_zone_index = fields[0];
+				input.source_zone_id = fields[1];
+				input.source_index = fields[2];
+				input.h3maped_zone_word_id = fields[3];
+				input.source_bucket = fields[4];
+				input.actual_player_color = fields[5];
+				input.source_base_size = fields[6];
+				if (fields.size() >= 11) {
+					input.allowed_town_mask_0x41_0x49 = uint16_t(fields[7]);
+					input.selected_town_choice_index_0x49b3c1 = fields[8];
+					input.terrain_match_to_town_0x84 = fields[9] != 0;
+					input.allowed_terrain_mask_0x85_0x8c = uint16_t(fields[10]);
+				}
+				options.shared_runtime_chain_input.runtime_zone_seeds.push_back(input);
+			}
+		} else if (arg == "--shared-runtime-link") {
+			std::string raw;
+			take_value(raw);
+			std::vector<int32_t> fields;
+			if (parse_i32_csv(raw, 2, fields)) {
+				SharedRuntimeLinkInput input;
+				input.from_index = fields[0];
+				input.to_index = fields[1];
+				options.shared_runtime_chain_input.runtime_links.push_back(input);
 			}
 		} else if (arg == "--case") {
 			take_value(options.case_filter);
@@ -188,6 +300,8 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		CaseReport report;
 		report.input = controlled_case;
 		report.supported_scope = supported;
+		report.shared_chain_input_status = aurelion::rmg_native_core::shared_runtime_chain_input_status(controlled_case, options.shared_runtime_chain_input);
+		report.shared_chain_executed = supported && aurelion::rmg_native_core::shared_runtime_chain_input_executable(controlled_case, options.shared_runtime_chain_input);
 		if (!controlled_case.parse_ok) {
 			report.status = "failed";
 			report.blocked_reason = controlled_case.parse_error;
@@ -198,28 +312,19 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 			report.status = "blocked";
 			report.blocked_reason = "native_map_json_disabled_until_shared_h3maped_rmg_core_owns_final_payload";
 		} else if (options.phase_snapshot_only) {
-			report.status = "phase_snapshot_exported";
-			report.blocked_reason = "";
+			report.status = "blocked";
+			report.blocked_reason = "phase_snapshot_diagnostic_only_until_shared_recovered_h3maped_state_chain_owns_payload";
 		} else {
 			report.status = "blocked";
-			report.blocked_reason = "native_rmg_core_still_godot_variant_bound";
+			report.blocked_reason = "runtime_export_disabled_until_shared_recovered_h3maped_state_chain_core_owns_payload";
 		}
 		if (options.emit_phase_snapshot) {
 			const std::filesystem::path snapshot_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".phase_snapshot.json");
 			std::ofstream snapshot(snapshot_path, std::ios::binary);
 			if (snapshot) {
-				snapshot << aurelion::rmg_native_core::case_phase_snapshot_json(controlled_case, report.status, report.blocked_reason);
+				snapshot << aurelion::rmg_native_core::case_shared_h3maped_state_chain_blocked_json(controlled_case, report.status, report.blocked_reason, options.shared_runtime_chain_input);
 				report.phase_snapshot_written = true;
 				report.phase_snapshot_path = snapshot_path;
-			}
-		}
-		if (options.emit_native_map_json && report.status == "native_map_json_exported") {
-			const std::filesystem::path native_map_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".native_map.json");
-			std::ofstream native_map(native_map_path, std::ios::binary);
-			if (native_map) {
-				native_map << aurelion::rmg_native_core::case_native_map_json(controlled_case, report.status, report.blocked_reason);
-				report.native_map_json_written = true;
-				report.native_map_json_path = native_map_path;
 			}
 		}
 		reports.push_back(report);
@@ -235,8 +340,9 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int unsupported_count = 0;
 	int native_map_json_exported_count = 0;
 	int native_map_json_failed_count = 0;
-	int phase_snapshot_exported_count = 0;
+	int phase_snapshot_written_count = 0;
 	int phase_snapshot_failed_count = 0;
+	int shared_chain_executed_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -247,28 +353,23 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			if (!report.native_map_json_written) {
 				++native_map_json_failed_count;
 			}
-		} else if (report.status == "phase_snapshot_exported") {
-			++phase_snapshot_exported_count;
+		}
+		if (report.phase_snapshot_written) {
+			++phase_snapshot_written_count;
+		} else if (options.emit_phase_snapshot && report.supported_scope) {
 			if (!report.phase_snapshot_written) {
 				++phase_snapshot_failed_count;
 			}
 		}
+		if (report.shared_chain_executed) {
+			++shared_chain_executed_count;
+		}
 	}
-	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count - phase_snapshot_exported_count;
-	const bool phase_snapshot_pass = options.phase_snapshot_only
-			&& phase_snapshot_exported_count > 0
-			&& failed_count == 0
-			&& unsupported_count == 0
-			&& blocked_count == 0
-			&& phase_snapshot_failed_count == 0;
-	const bool native_map_json_pass = options.native_map_json_only
-			&& native_map_json_exported_count > 0
-			&& failed_count == 0
-			&& unsupported_count == 0
-			&& blocked_count == 0
-			&& native_map_json_failed_count == 0;
-	const std::string status = native_map_json_pass ? "native_map_json_exported" : (phase_snapshot_pass ? "phase_snapshot_exported" : "blocked");
-	const std::string blocked_reason = (native_map_json_pass || phase_snapshot_pass) ? "" : "native_rmg_core_still_godot_variant_bound";
+	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
+	const std::string status = "blocked";
+	const std::string blocked_reason = options.phase_snapshot_only
+			? "phase_snapshot_diagnostic_only_until_shared_recovered_h3maped_state_chain_owns_payload"
+			: "runtime_export_disabled_until_shared_recovered_h3maped_state_chain_core_owns_payload";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -290,6 +391,12 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"controlled_cases\": ";
 	append_json_string_array(out, options.controlled_cases);
 	out << ",\n";
+	out << "  \"shared_input_source\": \"" << json_escape(options.shared_runtime_chain_input.input_source.empty() ? "explicit_cli_runtime_inputs" : options.shared_runtime_chain_input.input_source) << "\",\n";
+	out << "  \"shared_runtime_zone_seed_count\": " << options.shared_runtime_chain_input.runtime_zone_seeds.size() << ",\n";
+	out << "  \"shared_runtime_link_count\": " << options.shared_runtime_chain_input.runtime_links.size() << ",\n";
+	out << "  \"shared_rng_state_after_template_selection_known\": " << (options.shared_runtime_chain_input.rng_state_after_template_selection_known ? "true" : "false") << ",\n";
+	out << "  \"shared_generator_mode_0x10b8_known\": " << (options.shared_runtime_chain_input.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
+	out << "  \"shared_coordinate_owner_grid_chain_executed_count\": " << shared_chain_executed_count << ",\n";
 	out << "  \"case_count\": " << case_reports.size() << ",\n";
 	out << "  \"blocked_count\": " << blocked_count << ",\n";
 	out << "  \"unsupported_count\": " << unsupported_count << ",\n";
@@ -297,14 +404,17 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"exported_count\": " << native_map_json_exported_count << ",\n";
 	out << "  \"native_map_json_exported_count\": " << native_map_json_exported_count << ",\n";
 	out << "  \"native_map_json_failed_count\": " << native_map_json_failed_count << ",\n";
-	out << "  \"phase_snapshot_exported_count\": " << phase_snapshot_exported_count << ",\n";
+	out << "  \"native_map_json_public_api_removed\": true,\n";
+	out << "  \"legacy_native_generation_surface_removed\": true,\n";
+	out << "  \"phase_snapshot_exported_count\": 0,\n";
+	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"plain_cpp_controlled_case_checkpoint2_setup_default_postsynthetic_live_feedback_surface\",\n";
-	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_phase_snapshot_v2\",\n";
-	out << "  \"native_map_json_schema_id\": \"rmg_native_cli_plain_cpp_map_artifact_v1\",\n";
-	out << "  \"required_next_slice\": \"split_h3maped_rmg_generation_core_from_godot_variant_refcounted_fileaccess_api_before_running_native_exports_on_memory_constrained_hosts\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes controlled Small/Medium one-level land private-state snapshots and exits successfully without Godot. Native map JSON and .amap output intentionally fail closed until final payload generation is owned by the shared recovered H3MapEd RMG core instead of the duplicate CLI surface.\",\n";
+	out << "  \"generation_core_stage\": \"blocked_until_shared_recovered_h3maped_state_chain_core_owns_payload\",\n";
+	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_shared_h3maped_state_chain_blocked_v1\",\n";
+	out << "  \"native_map_json_schema_id\": \"disabled_until_shared_recovered_h3maped_state_chain_core_owns_payload\",\n";
+	out << "  \"required_next_slice\": \"port_later_relation_object_generated_cell_mutation_caller_order\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes only a minimal blocked shared-chain marker and exposes no live generation surface. It exits blocked until final payload generation is owned by the shared recovered H3MapEd RMG core.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
@@ -344,7 +454,7 @@ int main(int argc, char **argv) {
 	int blocked_count = 0;
 	int native_map_json_exported_count = 0;
 	int native_map_json_failed_count = 0;
-	int phase_snapshot_exported_count = 0;
+	int phase_snapshot_written_count = 0;
 	int phase_snapshot_failed_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
@@ -356,41 +466,20 @@ int main(int argc, char **argv) {
 			if (!report.native_map_json_written) {
 				++native_map_json_failed_count;
 			}
-		} else if (report.status == "phase_snapshot_exported") {
-			++phase_snapshot_exported_count;
-			if (!report.phase_snapshot_written) {
-				++phase_snapshot_failed_count;
-			}
 		} else if (report.status == "blocked") {
 			++blocked_count;
 		}
-	}
-	const bool phase_snapshot_pass = options.phase_snapshot_only
-			&& phase_snapshot_exported_count > 0
-			&& failed_count == 0
-			&& unsupported_count == 0
-			&& blocked_count == 0
-			&& phase_snapshot_failed_count == 0;
-	const bool native_map_json_pass = options.native_map_json_only
-			&& native_map_json_exported_count > 0
-			&& failed_count == 0
-			&& unsupported_count == 0
-			&& blocked_count == 0
-			&& native_map_json_failed_count == 0;
-	if (native_map_json_pass) {
-		std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=native_map_json_exported output_dir=" << absolute_output_dir.string()
-				  << " cases=" << case_reports.size()
-				  << " native_map_json=" << native_map_json_exported_count << "\n";
-		return 0;
-	}
-	if (phase_snapshot_pass) {
-		std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=phase_snapshot_exported output_dir=" << absolute_output_dir.string()
-				  << " cases=" << case_reports.size()
-				  << " phase_snapshots=" << phase_snapshot_exported_count << "\n";
-		return 0;
+		if (report.phase_snapshot_written) {
+			++phase_snapshot_written_count;
+		} else if (options.emit_phase_snapshot && report.supported_scope) {
+			if (!report.phase_snapshot_written) {
+				++phase_snapshot_failed_count;
+			}
+		}
 	}
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
-			  << " reason=native_rmg_core_still_godot_variant_bound\n";
+			  << " phase_snapshots_written=" << phase_snapshot_written_count
+			  << " reason=shared_recovered_h3maped_state_chain_core_does_not_yet_own_payload\n";
 	return failed_count > 0 ? 1 : 2;
 }

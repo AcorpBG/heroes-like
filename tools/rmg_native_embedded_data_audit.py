@@ -6,9 +6,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE_FILES = [
-    ROOT / "src/gdextension/src/h3maped_small_rmg.cpp",
-    ROOT / "src/gdextension/include/h3maped_small_rmg_embedded_data.hpp",
-    ROOT / "src/gdextension/src/h3maped_small_rmg_embedded_data.cpp",
+    ROOT / "src/gdextension/src/archived_h3maped_small_rmg_legacy_proxy_20260618.cpp",
+    ROOT / "src/gdextension/src/archived_h3maped_small_rmg_embedded_data.hpp",
+    ROOT / "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
     ROOT / "src/gdextension/CMakeLists.txt",
 ]
 
@@ -33,8 +33,7 @@ FORBIDDEN_ACTIVE_STRINGS = [
 ]
 
 REQUIRED_ACTIVE_STRINGS = [
-    "h3maped_small_rmg_embedded_data.hpp",
-    "h3maped_small_rmg_embedded_data.cpp",
+    "archived_h3maped_small_rmg_embedded_data.hpp",
     "load_compiled_template_catalog",
     "load_compiled_object_catalog",
     "load_compiled_reward_proxy_catalog",

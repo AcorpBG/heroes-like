@@ -1,6 +1,6 @@
 # Native RMG Small h3maped Reset
 
-Status: active reset slice.
+Status: active exact-chain reset slice.
 
 The previous native RMG implementations are archived as debug/evidence code. They are not the production generator path, and `MapPackageService.generate_random_map()` must not fall back to them.
 
@@ -10,7 +10,8 @@ The previous native RMG implementations are archived as debug/evidence code. The
 - Format: PE32 GUI Intel 80386 Windows executable
 - SHA-256: `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`
 - Recovered spec: `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
-- Active module: `src/gdextension/src/h3maped_small_rmg.cpp`
+- Active native module: `src/gdextension/src/h3maped_rmg_core.cpp` plus the no-Godot blocked runner in `src/gdextension/src/rmg_native_core.cpp`
+- Historical/recovery artifact: the old proxy/reconstruction implementation now lives at `src/gdextension/src/archived_h3maped_small_rmg_legacy_proxy_20260618.cpp`, and its proxy catalogs now live at `src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp`. They are not linked into native targets and are not runtime authority. Their headers live beside archived source files, not in the public native include directory.
 - Archived phase ledger: `src/gdextension/src/archived_h3maped_small_rmg_phase_ledger_20260513.cpp`
 - Archived active boundary: `src/gdextension/src/archived_h3maped_small_rmg_active_boundary_20260513.cpp`
 - Archived current ledger: `src/gdextension/src/archived_h3maped_small_rmg_inspection_ledger_20260513.cpp`
@@ -18,11 +19,33 @@ The previous native RMG implementations are archived as debug/evidence code. The
 
 ## Scope
 
-Initial scope is only 36x36, one-level, land maps.
+Current scope is Small 36x36 and Medium 72x72 one-level land maps only.
 
-Medium, large, XL, water, islands, and underground generation are out of scope for this reset until the small land path can materialize zones, terrain, owned starts, towns, roads, blockers, guards, mines, rewards, and final writeout from h3maped-derived phases.
+Large, XL, water, islands, and underground generation are out of scope for this reset until the Small/Medium land path materializes the exact recovered H3MapEd private-state chain and executable phase order in native code.
 
 ## Current Boundary
+
+2026-06-18 exact-chain correction: earlier validator-gated Small/Medium public package output and package/session adoption evidence is superseded. `MapPackageService::generate_random_map()` returns an exact-state-chain blocked result for supported H3MapEd scopes until the exact executable-order state chain owns the runtime payload. The duplicate no-Godot native-core phase/native-map reconstruction body has been deleted from `src/gdextension/src/rmg_native_core.cpp`; that file now only owns controlled-case parsing/filtering and blocked shared-chain marker output, not reconstructed owner-grid materialization. The old proxy/reconstruction port and proxy catalogs have been renamed to the explicit archived artifact paths listed above, are not linked into native targets, have headers outside the public native include directory, and are not accepted by native or GDScript package/session adoption. `inspect_h3maped_small_rmg_port` / negative-validator are not declared, bound, advertised, or stubbed by native or the GDScript shim. The GDScript compatibility shim no longer advertises foundation-generation/adoption capabilities and returns a blocked result instead of generating fallback maps. The package-session bridge no longer reads `native_proxy_*` fields; resource-site resolution must come from real `site_id`/`object_id` payload fields after the recovered chain owns payloads. The active implementation blocker is the exact recovered producer that feeds descriptor/source-cycle/seed ownership into the shared `boundary_cycles_from_source_handoffs_4a2777` / `materialize_boundary_source_handoffs_4a2777_4a325d` API as the live owner-grid payload before any terrain, relation, object, package, session, or public map output can consume the owner grid. The May entries below are retained as historical evidence and are not current runtime authority.
+
+2026-06-18 default proxy-surface fence: the active-source `MapPackageService` reconstruction helper entrypoints and the old `AURELION_ENABLE_ARCHIVED_NATIVE_RMG_RECONSTRUCTION` compile-time escape hatch have been removed. Default Linux native builds do not expose the old `generate_zone_layout`, `generate_player_starts`, `generate_road_network`, `generate_river_network`, `generate_object_placements`, `generate_town_guard_placements`, `generate_connection_payload_resolution`, or `generate_terrain_grid` helper symbols, and `generate_random_map()` only returns fail-closed blocked results until the exact recovered chain owns output. The GDScript shim no longer carries the private `_generate_*` reconstruction helpers or the archived reconstruction blocker helper, and it no longer advertises disabled native RMG placement/provenance schema ids. The old Godot `RmgNativeBatchExportRunner` header/source and `tools/rmg_native_batch_export_native.tscn` launcher have also been removed from the repo and from GDExtension registration; only the standalone no-Godot CLI remains, and it fails closed until the exact recovered chain owns output. This removes default reachable proxy generation surfaces; it does not make H3MapEd parity complete or allow successful runtime generation.
+
+2026-06-18 shared owner-gate port: the shared `h3maped_rmg_core` boundary handoff now preserves source-node payload and next-pair payload fields, then applies the recovered `0x4a2777` owner gate before writing source-edge segments. Source handoff conversion no longer erases the `0x4cca55` descriptor-cycle payload metadata needed by the boundary materializer. The traversal also uses recovered `from_clip`/`to_clip` source-edge endpoints instead of reducing the cycle to a one-point border connection. `bin/h3maped_rmg_core_selftest` covers this behavior without Godot or map export. Runtime generation remains blocked: the exact same-run producer that builds those handoffs from `0x4a3a03 -> 0x4cca55` and proves private-state parity is still pending.
+
+2026-06-18 shared source-node producer port: the recovered `0x4a3a03 -> 0x4ccb64 -> 0x4cca55` source-node footprint producer has been moved into `h3maped_rmg_core` as `build_source_node_footprints_4a3a03_4ccb64_4cca55()`. It initializes the recovered rectangle, performs runtime-zone split insertion, bridge and crossing cleanup, finalizes descriptor nodes, and emits per-zone source walks with descriptor indexes, raw/finalized coordinates, payloads, and next-pair owner metadata for the `0x4a2777` boundary handoff. `bin/h3maped_rmg_core_selftest` now covers producer output and producer-to-boundary-materializer handoff without Godot. This is source-chain implementation progress, not public generation authority: runtime generation remains blocked until the no-Godot/live path consumes this shared producer as the owner-grid payload and passes same-run private-state comparison.
+
+2026-06-18 shared owner-grid composition port: `h3maped_rmg_core` now composes recovered runtime-zone boundary inputs through `build_source_node_footprints_4a3a03_4ccb64_4cca55()`, converts produced `0x4cca55` source walks into `0x4a2777` handoffs, and runs `materialize_boundary_source_handoffs_4a2777_4a325d()` via `materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d()`. Selected source-record `+0x10/+0x14/+0x18` seeds are explicit inputs and missing seeds remain observable; no synthetic coordinates, density scalar, or map-output fallback is introduced. The selftest proves this composed shared-chain path produces generated-cell owner words without starting Godot. Runtime generation remains blocked until exact same-run runtime-zone boundary inputs feed this shared chain and the private-state compare passes.
+
+2026-06-18 shared coordinate-to-owner-grid composition port: `h3maped_rmg_core` now also exposes `coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d()`. This runs the recovered coordinate seeding surface, source-node footprint producer, source-cycle handoff conversion, and owner-grid/span-fill materializer in one shared C++ chain, carrying the coordinate seed output RNG state into the boundary phase. `bin/h3maped_rmg_core_selftest` covers the full composed path from runtime-zone seed/link inputs through selected source-record span seeds to generated-cell owner words without Godot or map export. This is still not generation authority: exact same-run runtime-zone seed/link inputs and private-state comparison remain the checkpoint-2 blocker before terrain, route, object, package, or session output can consume owner words.
+
+2026-06-19 source-record seed handoff correction: the shared `h3maped_rmg_core` boundary/span-fill path no longer exposes or consumes a reconstructed `runtime_zone_seed_0x10` field. `RuntimeZoneBoundaryInput4a3a03` and `BoundarySourceCycleHandoff4a2777` now carry the selected `0x4a3a03` `generator+0x10e4` source-record vector index plus the copied source-record `+0x10/+0x14/+0x18` seed triple, and `boundary_cycles_from_source_handoffs_4a2777()` only converts that source-record seed into the `0x4a325d` span seed. Missing source-record seeds are counted and are not replaced by synthetic coordinates. The no-Godot Small seed-11 setup0 smoke remains blocked/no-output and reports 5 source handoffs, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones. Runtime generation remains blocked until same-run pre-`0x4a4c8e` private-state comparison passes and the matched owner grid becomes the live payload.
+
+2026-06-19 source-record vector identity correction: the coordinate seed now preserves the original template/runtime source-record index when filling `RuntimeZoneBoundaryInput4a3a03::source_record_vector_index_4a3e9c`. Filtered template zones no longer get relabeled with compacted runtime positions before the `0x4a3a03 -> 0x4cca55 -> 0x4a2777` handoff. `bin/h3maped_rmg_core_selftest` covers the filtered-zone case without Godot or map export. This remains checkpoint-2 support work, not parity completion or runtime map output.
+
+2026-06-19 source-cycle identity handoff correction: `BoundaryCyclePoint4a2777` now preserves the recovered `0x4cca55` source-cycle descriptor link indexes, raw `+0x00/+0x04` coordinates, and finalized `+0x1c/+0x20` coordinates through `boundary_cycles_from_source_handoffs_4a2777()` and materialization instead of flattening each node to finalized x/y only. `bin/h3maped_rmg_core_selftest` covers descriptor index and raw/finalized coordinate preservation. The no-Godot Small seed-11 setup0 smoke remains blocked/no-output and reports 5 source handoffs, 24 descriptor-indexed handoff points, 24 raw-coordinate handoff points, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones. This preserves source-chain identity for checkpoint 2; it does not complete parity or enable runtime map output.
+
+2026-06-19 generated-cell word checkpoint completion: the no-Godot shared-chain phase snapshot now carries the full recovered generated-cell word surface for checkpoint 2. `src/gdextension/src/rmg_native_core.cpp` fills reset-owned `+0x10`, `+0x1c`, `+0x24`, `+0x28`, and `+0x2c` from `0x49a072 -> 0x499ea3`, and fills owner-grid `+0x20` from the shared `0x4a2777 -> 0x4a325d` materializer. The Small seed-11 setup0 blocked snapshot reports 1296 records with all six word fields plus FNV hashes for `+0x10`, `+0x1c`, and `+0x20`. This is checkpoint-surface completeness only; runtime generation remains blocked until same-run private-state comparison passes and the matched owner grid becomes the live payload.
+
+2026-06-18 `0x4a218c` generator-mode prune-budget port: the shared coordinate seed now threads the recovered `generator+0x10b8` value into candidate pruning before owner-grid materialization. Mode `0` uses divisor `5`, mode `1` uses divisor `6`, and all other modes use divisor `7` when computing the prune span from `min(min_source_base_size * map_width, min_source_base_size * map_height)`. The no-Godot setup smoke verifies setup `0` produces mode `0`, divisor `5`, budget `79` on the Small seed-11 case, while setup sentinel `3` produces randomized mode `2`, divisor `7`, budget `56`. Runtime generation remains blocked: this is a source-backed shared-core alignment checkpoint, not public map output or checkpoint-2 parity completion.
 
 2026-05-16 validator-blocked root-cause update: strict Small-land generation now fixes the concrete client failure where valid h3maped Small outputs could be rejected after bounded retries. The connection phase now tries a recovered `0x4a6cf2`-style zone-pair endpoint fallback before the existing `0x4a7605` / `0x4a7312` fallback when no best transition candidate exists, and records fallback telemetry in the phase report. Template selection now filters accepted recovered source templates by requested human/player owner-mask capacity, so templates with only two player-capable source owners are not selected for 3p/4p games. Route-link validation now distinguishes links that require normal guards from h3maped zero-value and wide-suppressed links, so the validator does not reject intentional unguarded/wide-suppressed records while still rejecting missing required blockers/guards. The exact previously failing 2p Small land seed `1270881600` now validates with zero missing route blockers/guards, and `tests/native_rmg_small_h3maped_public_template_matrix_report.tscn` covers that seed plus the accepted-template matrix for 2p/3p/4p. Linux and Windows native libraries were rebuilt, including `bin/aurelion_map_persistence.windows.template_debug.x86_64.dll`. The deep seed-pinned `tests/native_rmg_small_h3maped_port_boundary_report.tscn` still needs its own diagnostic recalibration because accepted-template filtering intentionally changes seed-1 3p selection from the historical template-018 assumption.
 
@@ -103,7 +126,7 @@ The archived report-treadmill module used to:
 - builds active non-public `0x4a1f3b` link seeds and one-level `0x4a17f5`/`0x4a1701`/`0x4a1ad8`/`0x4a19ed` coordinate replay from the original recovered h3maped template connections;
 - builds active non-public `0x4a3a03` zone-footprint helper scheduling, `0x4cc788` initial source-node rectangle constants, `0x4ccb64` split insertion/bridge/crossing cleanup, and `0x4ccdfc` source-node finalization;
 - feeds the finalized source-node cycles into private `0x4a2777` boundary traversal through the recovered `0x4a2b33` clip helper, `0x4a261a` deterministic line writer, and `0x4a2413` randomized line writer;
-- feeds the private `0x4a2777` boundary buffer into the recovered `0x4a325d` span-fill primitive using runtime-zone `+0x10` seed coordinates;
+- feeds the private `0x4a2777` boundary buffer into the recovered `0x4a325d` span-fill primitive using selected source-record `+0x10/+0x14/+0x18` seed coordinates;
 - runs the small-land `0x4a3710` footprint finalizer path, where no synthetic runtime zones are appended and the adjacency insertion loops skip;
 - runs non-public `0x49b53d` runtime terrain selection from the h3maped nine-town terrain table `0x540908` and source-zone terrain flags;
 - runs private `0x4a3f27` terrain/cell writeout from the real post-span-fill zone-word buffer, including full-map water prefill, per-zone terrain repaint scheduling, owner-low-byte projection, and pending `0x49b2b6` terrain byte-zero packing evidence;
@@ -122,16 +145,16 @@ The active module no longer exposes the old top-level terrain art, blocker, guar
 
 ## Runtime Gate
 
-Supported small land generation currently returns:
+Supported Small/Medium one-level land generation currently returns:
 
-- `ok: true`
-- `generation_status: h3maped_small_validated_package_ready`
-- `full_generation_status: h3maped_small_public_package_production_ready_strict_small_land`
-- `runtime_generation_allowed: true`
-- `production_ready: true`
-- `production_ready_scope: strict_small_36x36_one_level_land_only`
+- `ok: false`
+- `generation_status: h3maped_small_exact_state_chain_runtime_blocked` or `h3maped_medium_exact_state_chain_runtime_blocked`
+- `full_generation_status: h3maped_small_waiting_for_exact_executable_state_chain` or `h3maped_medium_waiting_for_exact_executable_state_chain`
+- `runtime_generation_allowed: false`
+- `production_ready: false`
+- `native_rmg_end_to_end_parity_status: blocked_until_exact_h3maped_private_state_chain`
 
-Out-of-scope generation currently returns `archived_legacy_native_rmg_disabled`.
+Out-of-scope generation returns explicit blocked/no-fallback statuses.
 
 Explicit translated-template requests do not bypass the h3maped source-template selector.
 

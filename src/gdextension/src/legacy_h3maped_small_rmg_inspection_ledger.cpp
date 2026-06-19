@@ -1,4 +1,4 @@
-#include "h3maped_small_rmg.hpp"
+#include "archived_h3maped_small_rmg.hpp"
 
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/json.hpp>

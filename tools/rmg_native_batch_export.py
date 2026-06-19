@@ -197,6 +197,21 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         controlled_cases.append(controlled_case_from_reference_manifest(reference_manifest))
     for controlled_case in controlled_cases:
         command.extend(["--controlled-case", controlled_case])
+    shared_input_source = args.shared_input_source
+    shared_rng_state_after_template_selection = args.shared_rng_state_after_template_selection
+    shared_generator_mode_0x10b8 = args.shared_generator_mode_0x10b8
+    shared_runtime_zone_seed_args = list(args.shared_runtime_zone_seed)
+    shared_runtime_link_args = list(args.shared_runtime_link)
+    if shared_input_source:
+        command.extend(["--shared-input-source", shared_input_source])
+    if shared_rng_state_after_template_selection is not None:
+        command.extend(["--shared-rng-state-after-template-selection", str(shared_rng_state_after_template_selection)])
+    if shared_generator_mode_0x10b8 is not None:
+        command.extend(["--shared-generator-mode-0x10b8", str(shared_generator_mode_0x10b8)])
+    for runtime_zone_seed in shared_runtime_zone_seed_args:
+        command.extend(["--shared-runtime-zone-seed", runtime_zone_seed])
+    for runtime_link in shared_runtime_link_args:
+        command.extend(["--shared-runtime-link", runtime_link])
     if args.include_unsupported:
         command.append("--include-unsupported")
     if args.phase_snapshot_only:
@@ -222,8 +237,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
 
     manifest = load_manifest(output_dir)
     post_run_godot = godot_processes()
-    pass_statuses = {"phase_snapshot_exported"}
-    base_status = "pass" if process.returncode == 0 and manifest.get("status") in pass_statuses else "blocked"
+    base_status = "blocked"
     wrapper = {
         "schema_id": "rmg_native_batch_export_python_wrapper_v5",
         "status": "failed" if post_run_godot else base_status,
@@ -246,7 +260,14 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         "native_map_json_exported_count": manifest.get("native_map_json_exported_count", 0),
         "native_map_json_failed_count": manifest.get("native_map_json_failed_count", 0),
         "phase_snapshot_exported_count": manifest.get("phase_snapshot_exported_count", 0),
+        "phase_snapshot_written_count": manifest.get("phase_snapshot_written_count", 0),
         "phase_snapshot_failed_count": manifest.get("phase_snapshot_failed_count", 0),
+        "shared_input_source": manifest.get("shared_input_source", ""),
+        "shared_runtime_zone_seed_count": manifest.get("shared_runtime_zone_seed_count", 0),
+        "shared_runtime_link_count": manifest.get("shared_runtime_link_count", 0),
+        "shared_rng_state_after_template_selection_known": manifest.get("shared_rng_state_after_template_selection_known", False),
+        "shared_generator_mode_0x10b8_known": manifest.get("shared_generator_mode_0x10b8_known", False),
+        "shared_coordinate_owner_grid_chain_executed_count": manifest.get("shared_coordinate_owner_grid_chain_executed_count", 0),
         "generation_core_stage": manifest.get("generation_core_stage", ""),
         "phase_snapshot_schema_id": manifest.get("phase_snapshot_schema_id", ""),
         "native_map_json_schema_id": manifest.get("native_map_json_schema_id", ""),
@@ -265,6 +286,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     print(
         "RMG_NATIVE_BATCH_EXPORT_PY status={status} output_dir={output_dir} "
         "exported={exported_count} native_map_json={native_map_json_exported_count} phase_snapshots={phase_snapshot_exported_count} "
+        "phase_snapshots_written={phase_snapshot_written_count} "
         "failed={failed_count} log={log_path}".format(**wrapper)
     )
     if args.print_manifest:
@@ -293,8 +315,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Build a controlled native case from a h3maped controlled_reference_manifest.json using the observed saved H3M identity.",
     )
     parser.add_argument("--include-unsupported", action="store_true", help="Export unsupported owner cases too; failures are expected for modes outside strict Small/Medium one-level land.")
+    parser.add_argument("--shared-input-source", default="", help="Label for explicit recovered runtime inputs passed to the shared H3MapEd chain.")
+    parser.add_argument("--shared-rng-state-after-template-selection", type=int, default=None, help="Exact H3MapEd RNG state after template selection for the shared coordinate/owner-grid chain.")
+    parser.add_argument("--shared-generator-mode-0x10b8", type=int, default=None, help="Exact generator mode field consumed by the shared 0x4a2777/0x4a325d chain.")
+    parser.add_argument(
+        "--shared-runtime-zone-seed",
+        action="append",
+        default=[],
+        help="Repeatable exact runtime-zone seed tuple: runtime_zone_index,source_zone_id,source_index,h3maped_zone_word_id,source_bucket,actual_player_color,source_base_size.",
+    )
+    parser.add_argument(
+        "--shared-runtime-link",
+        action="append",
+        default=[],
+        help="Repeatable exact runtime link tuple: from_runtime_zone_index,to_runtime_zone_index.",
+    )
     parser.add_argument("--emit-phase-snapshot", action="store_true", help="Ask the native runner to write per-case private h3maped phase snapshots for source-behavior debugging.")
-    parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case private-state snapshots through the standalone CLI and exit successfully without attempting .amap generation.")
+    parser.add_argument("--phase-snapshot-only", action="store_true", help="Write supported controlled-case diagnostic snapshots through the standalone CLI and exit blocked until the shared recovered H3MapEd RMG core owns payload generation.")
     parser.add_argument("--emit-native-map-json", action="store_true", help="Deprecated blocked mode. Native map JSON output is disabled until final payload generation uses the shared recovered H3MapEd RMG core.")
     parser.add_argument("--native-map-json-only", action="store_true", help="Deprecated blocked mode. Use --phase-snapshot-only until final payload generation uses the shared recovered H3MapEd RMG core.")
     parser.add_argument("--print-manifest", action="store_true", help="Print wrapper manifest JSON.")
