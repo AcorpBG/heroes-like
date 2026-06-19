@@ -1662,17 +1662,22 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 	result.player_count = std::max<int32_t>(result.human_count, player_count);
 	result.rng_state_before_template_selection = seed;
 
-	std::vector<int32_t> accepted_template_positions;
-	accepted_template_positions.reserve(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0]));
+	result.accepted_candidate_containers_10d4_10d8.reserve(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0]));
 	for (int32_t index = 0; index < int32_t(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0])); ++index) {
 		const CatalogTemplateRecord4ac552 &template_record = CATALOG_TEMPLATES_4AC552[index];
 		if (!template_range_allows_4ac552(template_record, size_score, result.human_count, result.player_count)) {
 			continue;
 		}
-		accepted_template_positions.push_back(index);
+		TemplateCandidateContainerRecord4ac552 candidate;
+		candidate.vector_index = int32_t(result.accepted_candidate_containers_10d4_10d8.size());
+		candidate.source_catalog_index = template_record.source_catalog_index;
+		candidate.template_name = template_record.name;
+		candidate.zone_count = template_record.zone_count;
+		candidate.link_count = template_record.link_count;
+		result.accepted_candidate_containers_10d4_10d8.push_back(candidate);
 	}
-	result.accepted_template_count = int32_t(accepted_template_positions.size());
-	if (accepted_template_positions.empty()) {
+	result.accepted_template_count = int32_t(result.accepted_candidate_containers_10d4_10d8.size());
+	if (result.accepted_candidate_containers_10d4_10d8.empty()) {
 		result.blocked = true;
 		return result;
 	}
@@ -1682,7 +1687,8 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 	result.rng_value = rng.next();
 	result.rng_state_after_template_selection = rng.state;
 	result.selected_vector_index = result.rng_value % result.accepted_template_count;
-	const CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[accepted_template_positions[size_t(result.selected_vector_index)]];
+	const TemplateCandidateContainerRecord4ac552 &selected_candidate = result.accepted_candidate_containers_10d4_10d8[size_t(result.selected_vector_index)];
+	const CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[selected_candidate.source_catalog_index];
 	result.selected_source_catalog_index = selected_template.source_catalog_index;
 	result.selected_template_name = selected_template.name;
 	result.source_zone_record_count = selected_template.zone_count;

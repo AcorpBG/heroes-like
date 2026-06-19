@@ -295,6 +295,14 @@ struct RuntimeSeedBuildResult4a218c {
 	std::vector<RuntimeLinkSeedInput4a218c> runtime_links;
 };
 
+struct TemplateCandidateContainerRecord4ac552 {
+	int32_t vector_index = -1;
+	int32_t source_catalog_index = -1;
+	std::string template_name;
+	int32_t zone_count = 0;
+	int32_t link_count = 0;
+};
+
 struct TemplateSelectionRuntimeResult4ac552 {
 	bool blocked = false;
 	int32_t size_score = 0;
@@ -304,6 +312,7 @@ struct TemplateSelectionRuntimeResult4ac552 {
 	int32_t selected_vector_index = -1;
 	int32_t selected_source_catalog_index = -1;
 	std::string selected_template_name;
+	std::vector<TemplateCandidateContainerRecord4ac552> accepted_candidate_containers_10d4_10d8;
 	uint32_t rng_state_before_template_selection = 0;
 	uint32_t rng_state_after_template_selection = 0;
 	int32_t rng_value = -1;
