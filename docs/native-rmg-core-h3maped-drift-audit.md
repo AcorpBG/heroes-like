@@ -40,19 +40,19 @@ That is useful as a fail-closed diagnostic wrapper, but it drifts from the recov
 | D-019 | Closed for misleading surface | Terrain selection/repaint can only be trusted in the source-order chain and after comparison. | Native now emits non-empty `terrain_selection_parity_blockers` and `terrain_repaint_parity_blockers` explaining that terrain helpers execute on a partial owner-grid surface and remain untrusted for parity until upstream/downstream private state is owned and compared. | The surface no longer implies terrain selection/repaint parity through empty blocker arrays. |
 | D-020 | Scope limit | The recovery ledger's fixed scope is direct one-level land evidence, with unsupported modes not claimed. | `supported_one_level_land_scope()` restricts the wrapper to supported Small/Medium one-level land (`rmg_native_core.cpp:136-142`, `199-201`). | This is not a bug by itself, but it means the file is not a broad H3MapEd RMG implementation. |
 | D-021 | Blocking | Native parity must be proven by phase/private-state comparison to H3MapEd evidence. | Native emits FNV hashes of its own arrays, but does not compare them to H3MapEd private-state payloads in this file (`rmg_native_core.cpp:315-319`). | The core marks state shape, not parity. |
-| D-022 | Blocking | The generator object private layout includes generated-cell buffer/size fields, endpoint pointer vectors, object vectors, candidate-container vectors, relation vectors, byte-state vectors, descriptor counter table, and source-owner/player-slot vectors such as `+0xed8/+0xee0/+0xee4`. | `SharedRuntimeChainInput` stores selected counts, names, status booleans, copied runtime-zone/link seeds, and a final `actual_player_color`, but not the generator object vectors or slot buffers (`rmg_native_core.hpp:49-80`, `rmg_native_core.cpp:581-655`). | Native collapses generator private-state vectors into summary/runtime seed data before the recovered phases that need those vectors. |
+| D-022 | Blocking, partially reduced | The generator object private layout includes generated-cell buffer/size fields, endpoint pointer vectors, object vectors, candidate-container vectors, relation vectors, byte-state vectors, descriptor counter table, and source-owner/player-slot vectors such as `+0xed8/+0xee0/+0xee4`. | `SharedRuntimeChainInput` now preserves the recovered `0x4ac62a..0x4ac6ec` source-owner/player-slot buffers: selected color order `+0xed8`, raw slots `+0xee0`, mapped slots `+0xee4`, and assignment records (`rmg_native_core.hpp:49-88`, `rmg_native_core.cpp:176-214`, `rmg_native_core.cpp:423-440`, `rmg_native_core.cpp:688-695`). It still lacks the generated-cell buffer ownership, endpoint vectors, object vectors, candidate-container pointer vectors, relation vectors, endpoint byte-state vector, and descriptor counter table. | The `+0xed8/+0xee0/+0xee4` slot-collapse drift is fixed, but native still collapses the other generator private-state vectors into summary/runtime seed data before later recovered phases that need those vectors. |
 | D-023 | Source-backed exclusion | The source-handler pending-entry lifecycle is recovered but excluded for the supported direct RMG target mode. | `rmg_native_core` has no `+0xeec/+0xef0/+0xef4` pending-entry vector implementation. | This is not a current supported-mode blocker by itself; the direct one-level land path must keep the source-backed exclusion explicit and must not replace it with guessed handler behavior. |
 
 ## Short Form
 
 The native wrapper currently reaches only this subset:
 
-`controlled case -> optional 0x49ecf2 -> optional recovered catalog 0x4ac552 helper -> 0x4a218c/0x4a1f3b/0x4a19ed -> 0x4a3a03/0x4cca55 -> 0x4a2777/0x4a325d/0x4a3710 -> 0x49b53d/0x4a3f27/TerrainPlacement support -> blocked JSON`.
+`controlled case -> optional 0x49ecf2 -> optional recovered catalog 0x4ac552 helper with source-owner/player-slot buffers -> 0x4a218c/0x4a1f3b/0x4a19ed -> 0x4a3a03/0x4cca55 -> 0x4a2777/0x4a325d/0x4a3710 -> 0x49b53d/0x4a3f27/TerrainPlacement support -> blocked JSON`.
 
 It does not own:
 
 - H3MapEd UI/entrypoint/private generator object setup;
-- generator object vectors and player/source-owner slot buffers;
+- generator object vectors beyond the recovered player/source-owner slot buffers;
 - complete candidate/source containers;
 - full copied source records and descriptor identity;
 - full stride-`0x30` generated-cell records;
@@ -72,7 +72,7 @@ Do not start from final-map deltas. The first implementation drift to fix is the
 
 1. Replace synthetic controlled-case state with the recovered `0x4602c1 -> 0x4adfe1 -> 0x49ecf2 -> 0x49f0cd -> 0x4ac552` private-state setup path, or explicitly name any input that cannot be represented.
 2. Done for the runtime-link handoff: preserve full runtime link payloads (`guard_value`, `wide`, `border_guard`) into runtime/link state instead of reducing links to endpoints. The downstream connection materialization consumer remains D-014.
-3. Preserve the generator object private vectors and player/source-owner slot buffers instead of reducing them to summary counts and final runtime seeds.
+3. Done for source-owner/player-slot buffers: preserve recovered `+0xed8/+0xee0/+0xee4` instead of reducing them to final runtime-zone owner colors. The remaining D-022 work is the generated-cell buffer ownership, endpoint vectors, object vectors, candidate-container pointer vectors, relation vectors, endpoint byte-state vector, and descriptor counter table.
 4. Preserve full copied `0x4c` source records and descriptor/source identity through runtime zones and object selection.
 5. Expand generated-cell state to real stride-`0x30` records, including object-reference vectors, `+0x14/+0x18`, and `+0x2b`, before claiming a checkpoint.
 6. Port relation/scoring/object caller order before route/object/package consumers.
