@@ -24,6 +24,7 @@ constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X28_PRESERVED_MASK = 0x01000000U
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X28_VALUE = CELL_DECOR_READY_BIT_25 | CELL_OCCUPIED_BLOCKED_BIT_27;
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X2C_CLEAR_MASK = ~uint32_t(0x01U);
 constexpr int32_t GENERATED_CELL_RECORD_STRIDE_BYTES = 0x30;
+constexpr int32_t SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C = 0x4c;
 constexpr uint32_t RELATION_RESET_WORD_0X1C = 0x7d007d00U;
 constexpr uint32_t RELATION_RESET_COORD_MINUS_ONE = 0xffffffffU;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH = 0x7d00U;
@@ -108,6 +109,34 @@ struct GeneratedCellRecordGrid0x30 {
 	std::vector<GeneratedCellRecord0x30> records;
 };
 
+struct SourceObjectRecord0x4c {
+	int32_t source_row = -1;
+	std::string source;
+	std::string def_name;
+	int32_t type_id_0x1c = 0;
+	std::string type_name;
+	int32_t subtype_0x20 = 0;
+	int32_t group_0x24 = 0;
+	int32_t last_flag_0x28 = 0;
+	int32_t pass_count = 0;
+	int32_t action_count = 0;
+	uint16_t terrain_mask_a_0x14 = 0U;
+	uint16_t terrain_mask_b_0x18 = 0U;
+	std::string terrain_a_names;
+	std::string terrain_b_names;
+	bool rand_trn_backed = false;
+};
+
+struct SourceObjectCatalogSummary0x49da08 {
+	int32_t record_count = 0;
+	int32_t source_record_copy_size_bytes = SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C;
+	int32_t objects_txt_record_count = 0;
+	int32_t rand_trn_backed_record_count = 0;
+	int32_t mine_type53_record_count = 0;
+	int32_t mine_type53_ambiguous_subtype_count = 0;
+	bool descriptor_only_mine_identity_ambiguous = false;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -118,6 +147,10 @@ GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_
 GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count);
 GeneratedCellWordGrid generated_cell_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count);
 void generated_cell_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count, std::vector<uint32_t> &word_0x20, std::vector<uint32_t> &word_0x24, std::vector<uint32_t> &word_0x28, std::vector<uint32_t> &word_0x2c);
+const std::vector<SourceObjectRecord0x4c> &source_object_catalog_0x49da08();
+SourceObjectCatalogSummary0x49da08 source_object_catalog_summary_0x49da08();
+std::vector<SourceObjectRecord0x4c> source_object_records_by_type_0x49da08(int32_t type_id);
+std::vector<SourceObjectRecord0x4c> source_object_records_by_type_subtype_0x49da08(int32_t type_id, int32_t subtype);
 
 struct GeneratedCell49a85dStampResult {
 	bool center_in_bounds = false;

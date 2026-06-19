@@ -20,6 +20,8 @@ using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
 using aurelion::h3maped_rmg_core::RuntimeTerrainSelectionResult49b53d;
 using aurelion::h3maped_rmg_core::RuntimeZoneSeedInput4a218c;
 using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
+using aurelion::h3maped_rmg_core::SourceObjectCatalogSummary0x49da08;
+using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
 using aurelion::h3maped_rmg_core::SourceNodeFootprintResult4a3a03;
 using aurelion::h3maped_rmg_core::SourceNodeCyclePoint4a2777;
 using aurelion::h3maped_rmg_core::SpanRecord;
@@ -76,6 +78,42 @@ bool require(bool condition, const std::string &message) {
 } // namespace
 
 int main() {
+	{
+		const SourceObjectCatalogSummary0x49da08 source_object_summary =
+				aurelion::h3maped_rmg_core::source_object_catalog_summary_0x49da08();
+		if (!require(source_object_summary.record_count == 1328, "0x49da08 source object catalog did not preserve recovered row count")) {
+			return 1;
+		}
+		if (!require(source_object_summary.source_record_copy_size_bytes == aurelion::h3maped_rmg_core::SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C, "0x49da08 source record copy size must remain 0x4c")) {
+			return 1;
+		}
+		if (!require(source_object_summary.objects_txt_record_count == 1326, "0x49da08 source object catalog lost objects.txt row identity")) {
+			return 1;
+		}
+		if (!require(source_object_summary.rand_trn_backed_record_count == 543, "0x49da08 source object catalog lost rand_trn-backed identity")) {
+			return 1;
+		}
+		if (!require(source_object_summary.mine_type53_record_count == 46, "0x49da08 source object catalog lost type-53 mine rows")) {
+			return 1;
+		}
+		if (!require(source_object_summary.descriptor_only_mine_identity_ambiguous, "type-53 mine source identity must remain descriptor-ambiguous without copied records")) {
+			return 1;
+		}
+		const std::vector<SourceObjectRecord0x4c> type45_records =
+				aurelion::h3maped_rmg_core::source_object_records_by_type_0x49da08(45);
+		if (!require(!type45_records.empty() && !type45_records[0].def_name.empty(), "0x49da08 type-45 source record lookup did not preserve DEF identity")) {
+			return 1;
+		}
+		const std::vector<SourceObjectRecord0x4c> mine_subtype_records =
+				aurelion::h3maped_rmg_core::source_object_records_by_type_subtype_0x49da08(53, 4);
+		if (!require(mine_subtype_records.size() > 1, "0x49da08 mine subtype 4 must remain ambiguous across copied source records")) {
+			return 1;
+		}
+		if (!require(mine_subtype_records[0].source_row > 0 && !mine_subtype_records[0].def_name.empty(), "0x49da08 mine source record lookup lost source row/DEF identity")) {
+			return 1;
+		}
+	}
+
 	{
 		const GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
 		if (!require(record_grid.stride_bytes == aurelion::h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES, "generated-cell record grid did not preserve stride 0x30")) {
