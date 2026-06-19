@@ -1,186 +1,341 @@
-# H3MapEd RMG End-To-End Behavior
+# H3MapEd RMG End-To-End Recovery Ledger
 
-Document role: single consolidated source map for recovered H3MapEd random-map-generation behavior, private state, generated-cell words, bit fields, helper functions, and active native ownership.
+Document role: single source-backed ledger for recovered `h3maped.exe` random-map-generation behavior from entrypoint to final map writeout.
 
-This file is the coordination document for native RMG work. It replaces scattered verbal claims as the first place to check whether a phase is active in the one native RMG authority, helper-only, historical/private evidence, or still pending active-chain integration.
+This document is about H3MapEd recovery, not about the current native implementation. Native files, helper functions, reports, blocked CLI payloads, and prior proxy implementations are not authority for the behavior below. They may only consume this recovered behavior after the source-order state chain is ported and compared.
 
 ## Truth Contract
 
-- One native RMG authority: `src/gdextension/src/h3maped_rmg_core.cpp`.
-- No new proxy, duplicate generator, diagnostic replay, support implementation, or side surface may count as RMG implementation progress.
-- `src/gdextension/src/rmg_native_core.cpp` may parse controlled cases and print blocked no-Godot markers while generation is fail-closed, but it must not own generation behavior.
-- Historical/private work is evidence only unless it has been moved into `h3maped_rmg_core` and runs in recovered source order.
-- A phase is complete only when the active chain owns the phase inputs, mutations, output buffers, and same-run private-state comparison for the selected scope.
-- If this file and a historical note disagree, the status labels in this file win.
+- Authority comes from the recovered H3MapEd binary behavior, Wine runtime traces, Ghidra exports, and Python summarizers listed here.
+- Native implementation status is deliberately not used as a recovery status.
+- A recovered phase is not a native parity claim. R7 closed the fixed H3MapEd recovery ledger; native RMG parity is still a separate port/adoption task.
+- If native output, final-map deltas, density reports, or support snapshots disagree with this document, the native side is wrong until proven otherwise.
+- Do not replace a recovered phase with heuristics, density scalars, brute-force retries, package-time trimming, or final-map tuning.
+- If a native port cannot implement a behavior listed here, the blocker is the exact missing recovered input, function, buffer, or caller order from this file.
 
-## Status Legend
+## Evidence Base
 
-- `ACTIVE_CORE`: implemented in `h3maped_rmg_core` and called by the active source-order chain for Small/Medium one-level land.
-- `HELPER_ONLY`: primitive/helper semantics exist in `h3maped_rmg_core`, but recovered caller order is not active.
-- `HISTORICAL_PRIVATE`: behavior existed in older private/proxy/diagnostic paths or markdown evidence, but is not current active authority.
-- `PENDING_ACTIVE_CHAIN`: recovered or partially recovered behavior still needs to be integrated into `h3maped_rmg_core` in source order.
-- `UNSUPPORTED_SCOPE`: outside current Small/Medium one-level land scope.
+Canonical binary:
 
-## Current Supported Scope
+- `.artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe`
+- SHA-256: `f1ab1565fdfb7581cf67ca18a5349bf26fce59f696ea33061f941d80fcc069be`
 
-- Map sizes: Small `36x36` and Medium `72x72`.
-- Levels: one level only.
-- Water mode: land/no-water scope only.
-- Runtime/public map output: blocked until active generated-cell/object/route/package state is source-owned and same-run validated.
-- Windows/Linux product target remains required, but Windows DLL rebuilding is deferred until Linux no-Godot core validation is green for the boundary being changed.
+Primary recovery ledgers and summaries:
 
-## Source Anchors
+- `docs/h3maped-rmg-private-state-recovery.md`
+- `docs/h3maped-rmg-full-recovery-blockers.md`
+- `.artifacts/rmg_recovery/recovery_manifest_summary_20260610.json`
+- `.artifacts/rmg_recovery/r1_projection_chain_closure_summary_20260610.json`
+- `.artifacts/rmg_recovery/r2_endpoint_cursor_closure_summary_20260610.json`
+- `.artifacts/rmg_recovery/r3_weighted_materialization_tail_closure_summary_20260611.json`
+- `.artifacts/rmg_recovery/r4_descriptor_source_identity_closure_summary_20260611.json`
+- `.artifacts/rmg_recovery/r5_source_handler_pending_entry_closure_summary_20260611.json`
+- `.artifacts/rmg_recovery/r6_relation_scoring_semantic_closure_summary_20260611.json`
+- `.artifacts/rmg_recovery/r7_ordered_private_state_replay_summary_20260611.json`
+- `.artifacts/rmg_recovery/ordered_writeout_spine_summary_20260610.json`
+- `.artifacts/rmg_recovery/same_run_final_payload_summary_20260610.json`
+- `.artifacts/rmg_recovery/same_run_final_tile_payload_summary_20260610.json`
+- `.artifacts/rmg_recovery/same_run_final_object_payload_replay_summary_20260610.json`
+- `.artifacts/rmg_recovery/final_header_metadata_payload_summary_20260610.json`
+- `.artifacts/rmg_recovery/final_stream_state_summary_20260610.json`
 
-- H3MapEd executable: `/root/Downloads/h3maped.exe`.
-- SHA-256: `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`.
-- Recovered template catalog source: `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json`.
-- Active generated catalog: `src/gdextension/src/h3maped_rmg_template_catalog.cpp`.
-- Active native core: `src/gdextension/src/h3maped_rmg_core.cpp`.
-- Active native core header: `src/gdextension/include/h3maped_rmg_core.hpp`.
-- Focused core selftest: `src/gdextension/src/h3maped_rmg_core_selftest.cpp`.
+R7 recovery status:
 
-## High-Level Executable Order
+- Fixed recovery ledger: `100%` for the named R1-R7 blocker set.
+- Ordered replay phases recovered: `18`.
+- Recovery manifest: `7` checkpoints, `49` frontier summaries, `178` recovered functions.
+- Native behavior changed by recovery: `false`.
+- Native RMG parity implementation complete: `false`.
 
-The current recovered Small/Medium one-level land order is:
+## Recovery Status Labels
 
-1. Setup object mode: `0x49ecf2`.
-2. Template selection and template feed: `0x49f0cd`, `0x4ac597`, `0x4ac552`, `0x4e7276`.
-3. Player slot assignment: `0x4ac62a..0x4ac6ec`.
-4. Runtime-zone and link seed construction: `0x4a218c`, `0x49b452`, `0x4a1f3b`.
-5. Coordinate candidate placement, pruning, and bounding-box rescale: `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`.
-6. Source-node footprint construction: `0x4a3a03`, `0x4cc788`, `0x4cc955`, `0x4ccb64`, `0x4ccdfc`, `0x4cca55`.
-7. Boundary traversal and span fill: `0x4a2777`, `0x4a2b33`, `0x4a261a`, `0x4a2413`, `0x4a325d`.
-8. One-level land footprint/order finalizer: `0x4a3710`, `0x49b61b`, `0x4a3554`.
-9. Runtime terrain selection: `0x49b53d`.
-10. Terrain repaint/writeout: `0x4a3f27`, `0x4a4025`, `0x4a4082`, `0x4a4142`, `0x4a4150`, `0x4a415a`, `0x4a4163`.
-11. TerrainPlacement visual feedback: `0x4bcff5`, `0x4bd099`, `0x4bb681`, `0x4bb74b`, `0x4bad0f`, `0x4bcfc3`, `0x4bce6d`, `0x4bc988`, `0x4bc5f0`, `0x4bbd01`, `0x4bbfcc`, `0x4bc5a3`, `0x49acc5`, `0x49acf6`.
-12. Relation/object generated-cell mutation: `0x4a5767`, `0x4a59e2`, `0x49a318`, `0x4a56b6`, `0x4a54a7`, `0x49aa63`, `0x49a932`, `0x49abd6`, `0x49a85d`, `0x49a962`, `0x49cf34`, `0x4aa3e9`.
-13. Town/castle object scheduling and placement: `0x4a8d2c`, `0x4a8db2`, `0x4a93a2`, `0x49aa93`, `0x49a09c`, `0x49b3c1`, `0x49ba89`, `0x540a9c`.
-14. Mines, rewards, and object-vector producers: `0x4a9d6a`, `0x4a9911`, `0x4a9641`, `0x4a9c7c`, `0x4aab7e`, `0x4aa354`, `0x4a9f1c`, `0x4aa9b7`, `0x4aa603`, `0x4aa3e9`.
-15. Roads/rivers: `0x4ab52a`, `0x4aae7b`, `0x4ab37f`, `0x4b4243`, `0x458a2f`, `0x458893`.
-16. Connections, blockers, and guards: `0x4a79a3`, `0x4a79d8`, `0x4a61bc`, `0x4a7605`, `0x4a7312`, `0x4a65a5`, `0x4a5e03`, plus pending `0x4a696b`, `0x4a6cf2`, `0x4a5e73`.
-17. Final tile/object writeout: `0x4ad1e3`, `0x49b2b6`, `0x4ad309`, `0x4ad3eb`.
+- `RECOVERED`: source-backed behavior is recovered for the fixed recovery scope.
+- `SOURCE_BACKED_EXCLUSION`: source-backed evidence proves the path is not live for the supported direct RMG target mode.
+- `STATIC_OR_PARTIAL`: static/function-level behavior is recovered, but full live replay or wider-scope semantics are not claimed.
+- `WRITEOUT_RECOVERED`: final serialized output behavior is recovered for the same-run replay.
+- `NATIVE_PORT_PENDING`: native adoption is still required; this is not a recovery gap.
 
-## Phase Ownership Matrix
+## Scope And Limits
 
-| Phase | Key functions | Current ownership |
-| --- | --- | --- |
-| Setup mode | `0x49ecf2` | `ACTIVE_CORE` |
-| Template selection/feed | `0x49f0cd`, `0x4ac597`, `0x4ac552`, `0x4e7276` | `ACTIVE_CORE` for catalog selection/feed in current scope |
-| Player slots | `0x4ac62a..0x4ac6ec` | `ACTIVE_CORE` |
-| Runtime zone/link seeds | `0x4a218c`, `0x49b452`, `0x4a1f3b` | `ACTIVE_CORE` |
-| Coordinate placement/rescale | `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed` | `ACTIVE_CORE` |
-| Source-node footprints | `0x4a3a03`, `0x4ccb64`, `0x4cca55` | `ACTIVE_CORE` |
-| Boundary/span fill | `0x4a2777`, `0x4a2b33`, `0x4a261a`, `0x4a2413`, `0x4a325d` | `ACTIVE_CORE` |
-| Footprint/order finalizer | `0x4a3710`, `0x49b61b`, `0x4a3554` | `ACTIVE_CORE` for one-level land no-appended-zone behavior; downstream vectors still matter |
-| Terrain selection | `0x49b53d` | `ACTIVE_CORE` |
-| Terrain repaint | `0x4a3f27`, `0x4a4025`, `0x4a4082`, `0x4a4142`, `0x4a4150`, `0x4a4163` | `ACTIVE_CORE` |
-| TerrainPlacement | `0x4bcff5`, `0x4bb74b`, `0x4bad0f`, `0x4bcfc3`, `0x4bce6d`, `0x4bbfcc`, `0x4bc5a3`, `0x49acf6` | `ACTIVE_CORE` |
-| Relation/object mutations | `0x4a5767`, `0x49a318`, `0x49aa63`, `0x49a932`, `0x49abd6`, `0x49a85d`, `0x49a962`, `0x49cf34`, `0x4aa3e9` | `HELPER_ONLY` plus historical/private evidence; caller order not active |
-| Town objects | `0x4a8d2c`, `0x4a8db2`, `0x4a93a2`, `0x49aa93`, `0x49a09c`, `0x49ba89` | `HISTORICAL_PRIVATE`; not active package authority |
-| Mines/rewards/object vectors | `0x4a9d6a`, `0x4a9911`, `0x4a9641`, `0x4aab7e`, `0x4aa354`, `0x4a9f1c`, `0x4aa9b7`, `0x4aa603`, `0x4aa3e9` | `HISTORICAL_PRIVATE` plus helpers; not active package authority |
-| Roads/rivers | `0x4ab52a`, `0x4aae7b`, `0x4ab37f`, `0x4b4243`, `0x458a2f`, `0x458893` | `HISTORICAL_PRIVATE`; current map output blocked |
-| Connections/blockers/guards | `0x4a79a3`, `0x4a61bc`, `0x4a7605`, `0x4a7312`, `0x4a65a5`, `0x4a5e03` | `HISTORICAL_PRIVATE`; current active chain blocked before package output |
-| Final writeout | `0x4ad1e3`, `0x49b2b6`, `0x4ad309`, `0x4ad3eb` | final-writeout authority known; active output remains blocked by earlier state |
+Recovered fixed-ledger scope:
 
-## Private State Inventory
+- Direct H3MapEd random map generation through the observed one-level land profiles used by the recovery corpus.
+- Same-run Medium one-level no-water seed-10 writeout replay for the final payload evidence.
+- Small seed-58 traces for generated-cell, route, relation, projection, and reward/guard recovery surfaces.
+- Source-backed exclusions for supported one-level land paths where the binary does not execute a candidate path.
 
-### Generator-Level Fields
+Not claimed here:
 
-| Field | Meaning in current recovery |
+- Current native RMG parity.
+- A completed native map package generator.
+- A license to infer behavior from final object counts.
+- Unsupported map modes outside the recovered scope unless they are named by a recovery artifact.
+
+## Ordered End-To-End Spine
+
+The recovered high-level ordered spine is:
+
+1. `0x4602c1`: random-map UI entrypoint.
+2. `0x4adfe1`: candidate/source setup.
+3. `0x49ecf2`: setup-mode/candidate-container producer surface.
+4. `0x49f0cd`: candidate-container fill.
+5. `0x4ac552`: selected candidate/template phase completion.
+6. `0x4a218c / 0x4a1f3b / 0x4a19ed`: runtime-zone/link/coordinate placement chain.
+7. `0x4a3a03 / 0x4ccb64 / 0x4cca55`: source-node footprint and descriptor-cycle production.
+8. `0x4a2777 / 0x4a325d / 0x4a3710`: boundary traversal, span fill, and one-level land finalizer.
+9. `0x49b53d / 0x4a3f27`: runtime terrain selection and terrain repaint.
+10. `0x4bcff5` family: TerrainPlacement visual/art/flag selection.
+11. `0x4a5767 / 0x49a318 / 0x49e700 / 0x4a54a7`: relation-local generated-cell normalization, placement scoring, and relation/control linkage.
+12. `0x4a8d2c / 0x4a8db2 / 0x4a93a2`: town/castle and weighted materialization surfaces.
+13. `0x4a9d6a / 0x4aa9b7 / 0x4aa3e9`: reward/guard/object-vector selection and generated-cell attachment.
+14. `0x4a79a3 / 0x4a61bc / 0x4a7605 / 0x4a5e03`: connection, endpoint, blocker, and guard materialization/fallback surfaces.
+15. `0x4ab52a` family: road/river/object-adjacency phase before final tile writeout.
+16. `0x4ad1e3`: final map writeout entry.
+17. `0x49b2b6 -> 0x4ad251`: final tile cell-write loop and completion.
+18. `0x4ad309 / 0x4ad318 / 0x4ad3eb`: object count and object serialization.
+19. `0x4ad3de -> 0x4ae09a`: success test and final return.
+
+The R7 summary records these as 18 ordered replay phases by grouping some writeout and R-surface closures.
+
+## Private State Layout
+
+### Generated Cell Record
+
+Recovered generated-cell stride: `0x30`.
+
+| Offset | Meaning |
 | --- | --- |
-| `generator+0xed8` | selected color order / player slot setup surface |
-| `generator+0xee0` | raw source-owner assignment slots |
-| `generator+0xee4` | source-owner to actual player-color mapping |
-| `generator+0x10b8` | setup/generator mode written by `0x49ecf2`; drives coordinate pruning and synthetic branch behavior |
-| `generator+0x10e0` | runtime-zone vector begin/owner surface in older notes |
-| `generator+0x10e4` | runtime source/relation/source-record vector pointer; consumed by relation/object phases |
-| `generator+0x10e8` | runtime source/relation/source-record vector end |
-| `generator+0x10ec` | runtime source/relation/source-record vector capacity |
-| `generator+0x3f4` | boundary-vector append records used by `0x4a2777` |
-| `generator+0x14b0` | town/castle coordinate vector consumed by road/river pair-cost phases |
-| source zone `+0x41..+0x49` | allowed town mask feeding `0x49b3c1` |
-| source zone `+0x84` | terrain-match-to-town flag |
-| source zone `+0x85..+0x8c` | allowed terrain mask feeding `0x49b53d` |
-| source record `+0x10/+0x14/+0x18` | span seed triple consumed by `0x4a325d` |
-| source node raw `+0x00/+0x04` | raw descriptor coordinates |
-| source node finalized `+0x1c/+0x20` | finalized descriptor coordinates |
+| `+0x04/+0x08` | object-reference vector begin/end observed by `0x49e1bf` and removal helpers |
+| `+0x10/+0x14/+0x18` | projection/local coordinate triple written by `0x4a5767` and read by `0x4a606b` |
+| `+0x1c` | projection/local word gate forced by `0x4a5767`, thresholded by `0x4a746b`, and cleared/packed by relation helpers |
+| `+0x20` | score/owner/relation word consumed by `0x4a4c8e`, relation scans, and final surfaces |
+| `+0x24` | terrain/art word; low 6 bits are terrain id; art row is written by `0x49acf6` |
+| `+0x28` | generated-cell bit-state word |
+| `+0x2b` | validity/private byte; bit `0x02` is tested by `0x49a1d8`, bit `0x04` is cleared by `0x4a5a23` for nearby same-owner cells |
+| `+0x2c` | private flags; bit `0x01` suppresses `0x49a932` and `0x49aa63` |
 
-### Active Core Structs
-
-| Struct | Purpose |
-| --- | --- |
-| `GeneratorSetupModeResult49ecf2` | setup object `+0x44`, mode `+0x10b8`, sentinel-3 RNG handoff |
-| `TemplateSelectionRuntimeResult4ac552` | selected template, RNG state, player assignment, runtime seed output |
-| `PlayerSlotAssignmentResult4ac62a` | selected colors, raw `+0xee0` slots, mapped `+0xee4` slots |
-| `RuntimeZoneSeedInput4a218c` | filtered runtime zone seed with source owner, base size, town/terrain masks |
-| `RuntimeLinkSeedInput4a218c` | filtered runtime connection/link seed |
-| `CoordinateSeedResult4a218c` | placement steps, bbox rescale, boundary inputs, RNG handoff |
-| `RuntimeZoneBoundaryInput4a3a03` | runtime-zone boundary payload plus selected source-record seed |
-| `SourceNodeFootprintResult4a3a03` | descriptor nodes, split/bridge/crossing cleanup, per-zone source walks |
-| `BoundarySourceCycleHandoff4a2777` | source-cycle handoff into boundary materialization |
-| `BoundaryMaterialization4a2777` | private zone words, generated-cell `+0x20`, cell flags, boundary vector, span-fill stats |
-| `FootprintFinalizerResult4a3710` | one-level land finalizer/order behavior and relation-vector requirements |
-| `RuntimeTerrainSelectionResult49b53d` | per-zone terrain selection and RNG handoff |
-| `TerrainRepaintResult4a3f27` | terrain repaint, TerrainPlacement writeback, generated-cell words, terrain scratch |
-| `GeneratedCellWordGrid` | six generated-cell word arrays: `+0x10/+0x1c/+0x20/+0x24/+0x28/+0x2c` |
-
-## GeneratedCell Layout And Bits
-
-The generated-cell state is a six-word private grid. It must be treated as one phase-owned private state, not as independent public map fields.
-
-### Initial Values
-
-| Word | Initial/reset behavior |
-| --- | --- |
-| `+0x10` | `0xffffffff` |
-| `+0x1c` | `0x7fbc7fbc` |
-| `+0x20` | `0xffff7fbc` before owner/grid mutations |
-| `+0x24` | preserved mask `0xc0000548`, value `0x00000548`; later terrain id/art bits are written here |
-| `+0x28` | preserves `0x01000000`; default value includes bit 25 and bit 27 |
-| `+0x2c` | selected bit 0 cleared by reset |
-
-### Word Meanings And Known Bit Fields
-
-| Word | Known fields |
-| --- | --- |
-| `+0x10` | projection/coordinate word; reset to `-1`; relation propagation and object projection use it |
-| `+0x14` | projection/coordinate word in relation reset helper output, reset to `-1` |
-| `+0x18` | projection/coordinate word in relation reset helper output, reset to `-1` |
-| `+0x1c` | relation/local gate word; reset by `0x4a5767`; low word can be cleared by `0x49a318`; reset constant `0x7d007d00` after relation reset |
-| `+0x20` | zone owner word, local score/projection low word, and owner bytes; `+0x20` byte 2 is used by terrain repaint owner gate; low word is changed by score/projection helpers |
-| `+0x24` | terrain id and visual/art row |
-| `+0x28` | terrain flags, relation/object action/candidate/occupied bits, member/repaint bits |
-| `+0x2c` | bit-0 gate used by candidate/occupied helpers |
-
-### `+0x24` Terrain Fields
-
-| Bits | Meaning |
-| --- | --- |
-| `0..5` | terrain id written by `0x49acf6` |
-| `6..13` | selected visual/art row written by `0x49acf6` |
-
-### `+0x28` Known Bits
-
-| Bit(s) | Constant / meaning |
-| --- | --- |
-| `12..14` | relation helper bits packed by `0x4a59e2`; mask `0x7 << 12` |
-| `15..16` | terrain flags written by `0x49acf6` |
-| `22` | `CELL_ACTION_CONTROL_BIT_22`; action/control stamp |
-| `25` | `CELL_DECOR_READY_BIT_25`; decor/body readiness/default bit |
-| `26` | `CELL_DECOR_CANDIDATE_BIT_26`; decoration candidate bit |
-| `27` | `CELL_OCCUPIED_BLOCKED_BIT_27`; occupied/blocked bit |
-| `28` | `CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28`; terrain-relation/member eligibility bit |
-
-### `+0x2c` Gate
+Important `+0x28` bits:
 
 | Bit | Meaning |
 | --- | --- |
-| `0` | gate checked by `0x49aa63`, `0x49a932`, and related candidate/occupied helpers; reset clears it |
+| `12..14` | packed projection/local direction from `0x4a59e2` |
+| `15..16` | terrain flags from `0x49acf6` |
+| `22` | object action/control bit used by `0x49a962` filtering and object footprint stamping |
+| `25` | reset/object-reference empty state; `0x499ee8` sets it when a cell's object-reference vector becomes empty |
+| `26` | candidate bit written by `0x49aa63`; setting it clears bit27 |
+| `27` | occupied/blocked bit written by `0x49a932`; setting it clears bit26 |
+| `28` | member/repaint gate consumed by `0x4a3f27` at `0x4a4150` |
 
-## Terrain Scratch Word `0x4bad0f`
+### Generated Grid Wrapper
 
-TerrainPlacement keeps an intermediate scratch word before writing back to generated cells.
+The grid wrapper seen by `0x49a072` uses:
+
+| Offset | Meaning |
+| --- | --- |
+| `+0x08` | generated-cell buffer |
+| `+0x0c` | width |
+| `+0x10` | height |
+| `+0x14` | level count |
+
+### Generator Object
+
+The generator object seen by `0x4a4c8e`, `0x4a8c15`, and later relation/object phases uses:
+
+| Offset | Meaning |
+| --- | --- |
+| `+0x14` | generated-cell buffer |
+| `+0x18` | width |
+| `+0x1c` | height |
+| `+0x20` | level count |
+| `+0xc8/+0xcc` | index-keyed pointer vector begin/end used by endpoint/projection surfaces |
+| `+0xd8/+0xdc` | index-keyed pointer vector begin/end used by `0x4a5e73` |
+| `+0xec4/+0xecc` | object record vector anchor/end observed by `0x4a54a7` |
+| `+0xed4` | optional handler pointer used by `0x49eb8d` for invalid bit26 candidate cells |
+| `+0xed8` | source handler pointer assigned by `0x4af463` in the source-handler lifecycle |
+| `+0xedc` | source-handler metadata vector initialized by `0x4af463` |
+| `+0xeec/+0xef0/+0xef4` | pending-entry vector initialized and consumed only by the source-handler lifecycle excluded for direct target mode |
+| `+0xf5c` | endpoint/index cursor used by `0x4a5e73`, `0x4adb72`, and `0x4add76` |
+| `+0x10d4/+0x10d8` | candidate-container pointer vector built by `0x49f0cd` and consumed by `0x4ac552` |
+| `+0x10e4/+0x10e8` | relation/vector begin/end consumed after `0x4a4c8e` |
+| `+0x1104/+0x1108` | byte-state vector sized from the `+0xd8/+0xdc` pointer count and used by `0x4a5e73` |
+| `+0x1110` | descriptor-type counter table indexed by descriptor `+0x1c` in `0x4a54a7` |
+
+### Source Records And Descriptors
+
+Copied `0x4c` source records:
+
+| Field | Recovered role |
+| --- | --- |
+| `+0x18` | mask-word surface used by resolver and selector code |
+| `+0x1c` | resolver/relation lane index; indexes generator `+0xee4` |
+| `+0x20/+0x24` | wrapper sorting/reuse, selector filtering, and relation branch gating |
+| `+0x30/+0x34` | additional relation-builder branch gates |
+| `+0x3c` | successful relation-build marker byte |
+
+Runtime zone source fields:
+
+| Field | Recovered role |
+| --- | --- |
+| `+0x41..+0x49` | allowed town mask consumed by `0x49b3c1` |
+| `+0x84` | terrain-match-to-town flag consumed by `0x49b53d` |
+| `+0x85..+0x8c` | allowed terrain mask consumed by `0x49b53d` |
+
+Descriptor fields:
+
+| Field | Recovered role |
+| --- | --- |
+| `+0x00` | source-key registry value from `0x491eed`; not a universal `objects.txt` row id |
+| `+0x1c` | descriptor type / counter lane |
+| `+0x20` | subtype/source object id |
+| `+0x24` | class/group-like selector |
+| `+0x29` | projection path enable for `0x4a54a7` |
+| `+0x2c/+0x30` | source-cell selection for relation/control linkage |
+| `+0x30/+0x40` | score-table adjustment surfaces in local placement scoring |
+
+Relation/control records:
+
+| Field | Recovered role |
+| --- | --- |
+| `+0x09` | template connection Border Guard endpoint-stamping flag |
+| `+0x44[type]` | per-relation descriptor-type occupancy counter |
+
+## Recovered Function Behavior
+
+### Generated Cell Helpers
+
+`0x499e65` constructs one generated-cell record and calls `0x499ea3`.
+
+`0x49a072` resets the full generated-cell grid by walking `width * height * level_count` records at stride `0x30`.
+
+`0x499ea3` initializes a generated-cell record:
+
+- clears `+0x2c` bit `0`;
+- writes `+0x10 = 0xffffffff`;
+- writes `+0x1c = 0x7fbc7fbc`;
+- writes `+0x20 = 0xffff7fbc`;
+- writes `+0x24 = (old & 0xc0000548) | 0x00000548`;
+- writes `+0x28 = (old & 0x01000000) | 0x0a000000`.
+
+This initializer intentionally sets bit25 and bit27. Later mutation phases reduce or alter that state; native must not treat reset defaults as the pre-`0x4a4c8e` checkpoint.
+
+`0x49a1d8` returns true only when `+0x2b & 0x02` is non-zero and terrain id `(+0x24 & 0x3f)` is not `9`.
+
+`0x49acf6` writes terrain/art/flags:
+
+- `+0x24 = (old & 0xffffc000) | (terrain & 0x3f) | ((art & 0xff) << 6)`;
+- `+0x28` clears bit `15` and writes `((flag_a & 1) | ((flag_b & 1) << 1)) << 15`.
+
+`0x4a59e2` packs relation/local fields:
+
+- stack `+0x04` becomes the high word of `+0x1c`;
+- stack `+0x08` is masked to three bits and written to `+0x28` bits `12..14`;
+- stack `+0x0c` becomes byte3 of `+0x20`.
+
+`0x49a932` writes occupied bit27 and is gated by `+0x2c` bit0:
+
+- false clears bit27;
+- true sets bit27 and clears bit26.
+
+`0x49aa63` writes candidate bit26 and is gated by `+0x2c` bit0:
+
+- false clears bit26;
+- true sets bit26 and clears bit27.
+
+`0x49a85d` stamps a clipped 3x3 bit27 neighborhood with `0x49a932(true)`.
+
+`0x49a962` stamps candidate/occupied neighborhood state with terrain/action filtering:
+
+- center cell gets `0x49aa63(true)`;
+- clipped neighbors get `0x49a932(false)` only when bit22 is clear, `0x49a1d8` is true, and terrain id is not `8`.
+
+`0x49abd6` stamps object/vector footprints. The seed-58 trace records five body-cell writes before `0x4a8c15`; those five flats are the observed bit22 cells and retain bit27.
+
+`0x499ee8` removes an object record reference from a generated cell. If the cell object-reference vector becomes empty, it clears bit22, sets bit25, and resets the low word of `+0x20` to `0x7fbc` while preserving the high word.
+
+### Setup, Candidate, Template, And Relation Input
+
+`0x49ecf2` is the setup-mode / candidate-container producer surface. The ordinary setup object `+0x44` mode is copied to generator `+0x10b8`; sentinel `3` consumes one `0x4e7276` RNG call and stores `rand % 3`.
+
+`0x49f0cd` fills candidate containers.
+
+`0x4ac552` consumes accepted candidate containers and completes the selected template/candidate phase. It is the bridge from candidate setup into runtime zone/link materialization and later relation normalization.
+
+`0x4ac62a..0x4ac6ec` assign player/source-owner slots:
+
+- generator `+0xed8`: selected color order;
+- generator `+0xee0`: raw source-owner assignment slots;
+- generator `+0xee4`: mapped source-owner to player-color slots.
+
+`0x49f2f5 / 0x49f7c4` relation builder surfaces produce relation records. Connection byte `+0x09` is recovered as the template Border Guard flag.
+
+### Runtime Zone, Coordinate, Boundary, And Terrain
+
+`0x4a218c` builds runtime-zone records and consumes player/source-owner assignment.
+
+`0x4a1f3b` walks link endpoints for coordinate candidates. Link value, wide, and Border Guard payloads are preserved for later connection behavior; endpoint walking alone does not materialize blockers.
+
+`0x4a17f5`, `0x4a1701`, and `0x4a1ad8` handle coordinate candidate generation, spacing validation, and one-level pruning. The `generator+0x10b8` mode selects prune divisors `5`, `6`, or `7`.
+
+`0x4a19ed` rescales placed zones through bounding-box logic.
+
+`0x49b3c1` runs during initial zone insertion before coordinate placement. If source zone `+0x41..+0x49` has an allowed-town mask, one RNG call selects the Nth enabled H3 town id; if the mask is empty, town choice remains `-1`.
+
+`0x4a3a03 -> 0x4ccb64 -> 0x4cca55` builds source-node footprint descriptors, split nodes, bridge/crossing cleanup, and source walks.
+
+`0x4a2777` consumes finalized source-node cycles. Its dependencies include:
+
+- `0x4a2b33`: clip source-node segment endpoints to the active map rectangle;
+- `0x4a261a`: deterministic boundary line writer;
+- `0x4a2413`: randomized/jittered line writer.
+
+`0x4a325d` performs span fill over the private boundary buffer. If the seed is outside bounds, it uses the recovered relocation path through `0x4a2b33`.
+
+`0x4a3710` is the one-level land footprint/order finalizer. For the recovered one-level land no-appended-zone path, it does not append synthetic runtime zones; it resets/rebuilds ordering required by later relation consumers.
+
+`0x49b53d` selects runtime terrain:
+
+- if source zone `+0x84` match-to-town is true, terrain comes from table `0x540908 = {2, 2, 3, 7, 0, 0, 5, 4, 2}`;
+- otherwise one RNG call selects among source zone `+0x85..+0x8c` terrain flags;
+- terrain id `6` is eligible only on level `1`;
+- on level `1`, any selected terrain except lava `7` is forced to cave `6`.
+
+`0x4a3f27` runs terrain repaint:
+
+- full-map water repaint first;
+- per-zone repaint skips water zones;
+- owner gate reads generated-cell `+0x20` byte2 at `0x4a4142`;
+- member/repaint gate reads `+0x28 >> 28 & 1` at `0x4a4150`;
+- passing cells write terrain id through `0x49acf6`.
+
+### TerrainPlacement
+
+Recovered TerrainPlacement functions:
+
+- `0x4bcff5`: visual table/toolkit setup.
+- `0x4bd099` / `0x4bb681`: rectangle/delegated repaint walkers.
+- `0x4bb74b`: live visual write.
+- `0x4bad0f`: scratch packing.
+- `0x4bcfc3`: visual row selection.
+- `0x4bce6d`: visual row bucket/classifier helper.
+- `0x4bc988`: candidate gate.
+- `0x4bc5f0`: queue drain.
+- `0x4bbd01`: retouch.
+- `0x4bbfcc`: final sweep.
+- `0x4bc5a3`: current-record preservation during final sweep.
+- `0x49acf6`: generated-cell terrain/art/flag writeback.
+
+Recovered static row tables:
+
+| Table | Rows |
+| --- | ---: |
+| `0x543108` normal | 79 |
+| `0x543380` dirt | 46 |
+| `0x5434f0` sand | 24 |
+| `0x5435b0` water | 33 |
+| `0x542f88` rock | 48 |
+| Total | 230 |
+
+`0x4bad0f` scratch word:
 
 | Bits | Meaning |
 | --- | --- |
@@ -190,510 +345,152 @@ TerrainPlacement keeps an intermediate scratch word before writing back to gener
 | `12` | terrain flag A |
 | `13` | terrain flag B |
 
-Final sweep uses `0x4bc5a3` to preserve the current scratch visual record for corrected classes that have no direct bucket.
+### Relation, Scoring, And Object Commitment
 
-## Phase Details
+`0x49e1bf` is bounded to `0x49e700` as a local placement adjacency/compatibility score helper. Positive returns are added to candidate score; no-positive and hard-negative paths reject candidates.
 
-### 0. Scope, Size, Water, RNG
+`0x4a5767 / 0x49a318` are relation-local generated-cell normalization and owner/projection propagation:
 
-Status: `ACTIVE_CORE`.
+- reset/projection fields in `+0x10/+0x14/+0x18`;
+- projection/local gate state in `+0x1c`;
+- owner/score propagation in `+0x20`;
+- relation direction bits in `+0x28`.
 
-Functions and helpers:
+`0x4a54a7` is the relation/control linkage surface:
 
-- `map_width_for_size_class`
-- `water_mode_code`
-- `size_score`
-- `supports_one_level_land_scope`
-- `strict_scope_id`
-- `strict_scope_label`
-- `H3MapedRng::next` / `0x4e7276`
+- descriptor `+0x29` enables projection path;
+- descriptor `+0x2c/+0x30` select source cell;
+- relation `+0x44[type]` is the per-relation descriptor-type occupancy counter;
+- generated-cell `+0x20` carries source-owner relation index plus local projection distance/score;
+- it updates object vectors and descriptor counters for weighted materialization.
 
-Current behavior:
+R3 closes the weighted materialization tail `0x4a8db2 -> 0x4a901a -> 0x4a54a7` for sampled dispatches, including object-vector growth and descriptor counter lane `98` increments.
 
-- Small maps are `36x36`; Medium maps are `72x72`.
-- Only one-level land scope is active.
-- Unsupported scopes must block without fallback output.
+R4 closes descriptor/source identity for mixed lanes:
 
-### 1. Setup Mode `0x49ecf2`
+- target contexts `45`, `53`, `54`, and `79` join to same-run `0x4903e8` descriptor build events;
+- descriptor `+0x00` is not a universal row id;
+- exact catalog identity authority is the copied `0x4c` source record and provider/object-loader surface;
+- type `53` mines can be descriptor-ambiguous because several DEF rows share a mine subtype, so native must carry the copied source record instead of guessing.
 
-Status: `ACTIVE_CORE`.
+`0x49da08` loads `objects.txt`, walks `0x4c` rows, reads row `+0x1c` as object type id, uses row `+0x20` as a subtype-like field in special guards, bounds type ids by `0xe8`, initializes `0xe8` wrappers through `0x49db76`, and loads `rand_trn.txt` through `0x49dc9e`.
 
-Function:
+`0x4af785`, `0x4af89f`, and `0x4a9e40` recover wrapper/source selection:
 
-- `generator_setup_mode_49ecf2`
+- reuse or create wrapper records from copied `0x4c` source records;
+- select source lanes by mask words;
+- filter wrappers by backing source fields `+0x20/+0x24` and mask compatibility;
+- choose one passing wrapper by RNG.
 
-Behavior:
+### Reward, Guard, Endpoint, And Connection Surfaces
 
-- Copies ordinary setup object `+0x44` into `generator+0x10b8`.
-- If setup object `+0x44 == 3`, consumes one `0x4e7276` RNG call and stores `rand % 3` as `generator+0x10b8`.
-- Hands post-setup RNG state to template selection.
+R1 closes the reward/guard projection chain:
 
-### 2. Template Selection And Runtime Seed Feed
+- live `0x540b14 -> 0x49c0a6 -> 0x4ad947 -> 0x4ad7f7` branch is recovered;
+- successful `0x4aa9b7 -> 0x4aa3e9` handoff is tied to relation pointer `0x017e0380`;
+- sibling `0x4adb72/+0xc8` and `+0xf5c/+0x1104` surfaces are source-bounded and not ported from guesses.
 
-Status: `ACTIVE_CORE` for current scope.
+`0x4aa9b7` scans generated-cell owner/score candidate cells and randomly selects reward coordinates.
 
-Functions:
+`0x4aa603` filters reward templates.
 
-- `template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b`
-- `player_slot_assignment_4ac62a_4ac6ec`
-- `runtime_seed_inputs_from_template_records_4a218c_4a1f3b`
-- source anchors `0x49f0cd`, `0x4ac597`, `0x4ac552`, `0x4e7276`
+`0x4aa3e9` mutates generated-cell/object state for rewards.
 
-Behavior:
+R2 closes the endpoint/cursor chain for supported one-level land:
 
-- Filters recovered H3MapEd templates by size score, water mode, human/player counts, and source-owner masks.
-- Selects from the accepted vector through H3MapEd RNG.
-- Builds runtime-zone seeds and link seeds from typed template records.
-- Preserves source zone id, source index, H3 zone word id, source bucket, source owner, source base size, town masks, and terrain masks.
+- direct `generator+0xf5c` writer surface is bounded to `0x4a5e73`, `0x4adb72`, and `0x4add76`;
+- setup initializes `+0xf58` and the endpoint byte-state vector, not `+0xf5c`;
+- observed `0x4a5e73` entries fail before endpoint mutation and before live `0x4a606b`;
+- `0x4a696b` is blocked by recovered `GeneratedCell+0x20` owner/relation byte-pair gate in supported one-level land target mode;
+- natural Border Guard branch falls through stale endpoint attempts into `0x4a7605 -> 0x4a5e03` fallback materialization.
 
-### 3. Player Slots `0x4ac62a..0x4ac6ec`
+`0x4a7605` is the fallback endpoint writer path. It can call `0x4a5767`, derive a source cell, choose an endpoint from projection/local offsets or fallback, call `0x4a5e73`, and stamp endpoint offsets through `0x49aa63(true)` and `+0x2c` packing.
 
-Status: `ACTIVE_CORE`.
+`0x4a7312` policy recovery covers descriptor dimensions, source bounds/coordinate copies, owner-byte candidate filtering, `0x49aa93` eligibility calls, `0x4ae1fd` candidate appends, RNG `% candidate_count` selection, generator vtable slot `+0x04` commit, and candidate-vector destruction.
 
-Private state:
+### Source-Handler Pending Entry Chain
 
-- `generator+0xed8`: selected color order.
-- `generator+0xee0`: raw source-owner assignment slots.
-- `generator+0xee4`: mapped source-owner to player-color slots.
+R5 closes the source-handler pending-entry blocker by source-backed exclusion for direct RMG target mode:
 
-Behavior:
+- `0x53eafc` source-handler vtable is recovered.
+- `0x484d9f -> 0x4802ac / 0x4afa99 -> 0x4af463 / 0x4af910 / 0x4af65e` lifecycle is statically closed.
+- Ghidra reports zero incoming references to `0x484d9f`.
+- Deterministic direct-generation breakpoint at `0x484d9f` did not hit.
+- pending-entry offsets `+0xeec/+0xef0/+0xef4` are confined to that orphaned lifecycle for the direct RMG target mode.
 
-- Assigns requested human/total players to source-owner slots based on recovered owner masks.
-- Preserves unassigned slots as `-1`.
+This is not a claim that the source-handler chain is dead in every game context.
 
-### 4. Coordinate Placement And Runtime Zone Materialization
+## Final Writeout
 
-Status: `ACTIVE_CORE`.
+`0x4ad1e3` is the final map writeout entry.
 
-Functions:
+Tile writeout:
 
-- `coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed`
-- `coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710`
-- source anchors `0x4a218c`, `0x49b452`, `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`
+- `0x49b2b6` writes the tile-cell stream.
+- Same-run recovered payload: `5184` cells, `36288` bytes.
+- SHA-256: `cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65`.
 
-Behavior:
-
-- Builds coordinate candidates from runtime links and spacing rules.
-- Applies `generator+0x10b8` pruning divisor:
-  - mode `0`: divisor `5`;
-  - mode `1`: divisor `6`;
-  - other modes: divisor `7`.
-- Computes prune span from `min(min_source_base_size * map_width, min_source_base_size * map_height)`.
-- Selects placement candidates with H3MapEd RNG.
-- Rescales placed zones through bounding-box logic.
-- During first-pass insertion, executes `0x49b3c1` town choice before coordinate placement:
-  - source zone `+0x41..+0x49` gives allowed town mask;
-  - if mask is non-empty, one RNG value picks the Nth enabled original H3 town id;
-  - if mask is empty, town choice remains `-1`.
-
-### 5. Source-Node Footprints `0x4a3a03 -> 0x4cca55`
-
-Status: `ACTIVE_CORE`.
-
-Functions:
-
-- `build_source_node_footprints_4a3a03_4ccb64_4cca55`
-- source anchors `0x4a3a03`, `0x4cc788`, `0x4cc955`, `0x4ccb64`, `0x4ccdfc`, `0x4cca55`
-
-Behavior:
-
-- Initializes recovered source-node rectangle shape.
-- Inserts runtime-zone split nodes.
-- Performs bridge insertion and crossing cleanup.
-- Finalizes descriptor nodes.
-- Emits per-zone source walks with:
-  - descriptor node indexes;
-  - pair/next/previous indexes;
-  - raw `+0x00/+0x04` coordinates;
-  - finalized `+0x1c/+0x20` coordinates;
-  - payload and next-pair payload metadata.
-
-### 6. Boundary Traversal And Span Fill
-
-Status: `ACTIVE_CORE`.
-
-Functions:
-
-- `boundary_cycles_from_source_handoffs_4a2777`
-- `materialize_boundary_cycles_4a2777`
-- `materialize_boundary_source_handoffs_4a2777_4a325d`
-- `materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710`
-- `clip_point_4a2b33`
-- `boundary_line_writer_4a261a`
-- `boundary_randomized_line_writer_4a2413`
-- `apply_line_trace_to_zone_buffer_4a2777`
-- `span_fill_4a325d`
-
-Private state:
-
-- `private_zone_words`
-- `generated_cell_word_0x20`
-- `cell_flags`
-- `BoundaryVector4a2777`
-
-Recovered append callsites:
-
-| Callsite | Meaning |
-| --- | --- |
-| `0x004a28c8` | rectangle vertex 0 |
-| `0x004a28dc` | rectangle vertex 1 |
-| `0x004a28f3` | rectangle vertex 2 |
-| `0x004a2907` | rectangle vertex 3 |
-| `0x004a2990` | selected clipped endpoint |
-| `0x004a2adc` | wrap/continuation endpoint |
-| `0x004a2b1e` | final clipped endpoint |
-
-Behavior:
-
-- Converts source-node walks into boundary cycles.
-- Preserves source-record vector index and source-record seed triple.
-- Applies recovered owner gate before source-edge writes: if `next_pair_payload <= zone_word`, the segment is skipped.
-- Uses clipped source-edge endpoints, not flattened one-point border proxies.
-- Writes zone owner into private zone words and generated-cell `+0x20`.
-- Tracks repaint/member flags in `cell_flags`.
-- Runs span fill from selected source-record `+0x10/+0x14/+0x18` seed.
-- Missing source-record seed is a blocker/counter, not a fallback coordinate.
-
-### 7. One-Level Land Footprint/Order Finalizer
-
-Status: `ACTIVE_CORE` for one-level land no-appended-zone behavior; downstream relation-order vectors still matter.
-
-Functions:
-
-- `footprint_finalizer_4a3710`
-- source anchors `0x4a3710`, `0x49b61b`, `0x4a3554`
-
-Behavior:
-
-- In current one-level land scope, does not append synthetic runtime zones.
-- Resets/rebuilds per-zone ordering required by later relation consumers.
-- Does not by itself materialize generated-cell words.
-
-Known active-chain issue:
-
-- Runtime-zone `+0xc4` adjacency/order and `+0x3e8` vectors are not yet fully represented as downstream relation-order state in the current active generated-cell parity claim.
-
-### 8. Runtime Terrain Selection `0x49b53d`
-
-Status: `ACTIVE_CORE`.
-
-Function:
-
-- `runtime_terrain_selection_49b53d`
-
-Data:
-
-- town-to-terrain table `0x540908 = {2, 2, 3, 7, 0, 0, 5, 4, 2}`.
-- source zone `+0x84`: match-to-town flag.
-- source zone `+0x85..+0x8c`: allowed terrain mask.
-
-Terrain ids:
-
-| ID | Terrain |
-| --- | --- |
-| `0` | dirt |
-| `1` | sand |
-| `2` | grass |
-| `3` | snow |
-| `4` | swamp |
-| `5` | rough |
-| `6` | cave |
-| `7` | lava |
-| `8` | water |
-
-Behavior:
-
-- If match-to-town is true, selects terrain from town choice through `0x540908`.
-- Otherwise consumes one RNG call and selects among allowed terrain flags.
-- Terrain id `6` is eligible only on level `1`.
-- If level is `1` and selected terrain is not lava `7`, the selected terrain is forced to `6`.
-
-### 9. Terrain Repaint `0x4a3f27`
-
-Status: `ACTIVE_CORE`.
-
-Function:
-
-- `terrain_repaint_4a3f27`
-
-Source anchors:
-
-- `0x4a3f27`, `0x4a4025`, `0x4a4082`, `0x4a4142`, `0x4a4150`, `0x4a415a`, `0x4a4163`
-
-Behavior:
-
-- Starts with full-map water terrain repaint (`terrain id 8`).
-- Skips per-zone repaint for water zones.
-- Uses generated-cell `+0x20` byte 2 as owner gate, matching `0x4a4142`.
-- Uses generated-cell `+0x28 >> 28 & 1` as member/repaint gate, matching `0x4a4150`.
-- Passing cells write terrain id through `0x49acf6`.
-- Feeds TerrainPlacement visual row/flag selection.
-
-### 10. TerrainPlacement
-
-Status: `ACTIVE_CORE`.
-
-Functions:
-
-- `0x4bcff5` visual table/toolkit setup.
-- `0x4bd099` / `0x4bb681` rectangle/delegated repaint walkers.
-- `0x4bb74b` live visual write.
-- `0x4bad0f` scratch packing.
-- `0x4bcfc3` visual row selection.
-- `0x4bce6d` visual row bucket/classifier helper.
-- `0x4bc988` candidate gate.
-- `0x4bc5f0` queue drain.
-- `0x4bbd01` retouch.
-- `0x4bbfcc` final sweep.
-- `0x4bc5a3` final-sweep current-record preservation.
-- `0x49acf6` generated-cell terrain/art/flag writeback.
-
-Recovered static visual row tables:
-
-| Table | Rows |
-| --- | --- |
-| `0x543108` normal | `79` |
-| `0x543380` dirt | `46` |
-| `0x5434f0` sand | `24` |
-| `0x5435b0` water | `33` |
-| `0x542f88` rock | `48` |
-| total | `230` |
-
-Behavior:
-
-- Full-map water visual prefill runs first.
-- Owner/member-gated terrain repaint writes visual rows and flags.
-- Set-A/set-B queue feedback, retouch, candidate gates, and neighbor seeding run inside the active core.
-- Final whole-map sweep revisits every cell and applies recovered class corrections.
-- If a corrected class has no direct visual row bucket, final sweep preserves the current scratch visual record through `0x4bc5a3`.
-- `0x49acf6` writes terrain id/art bits to `+0x24` and terrain flags to `+0x28`.
-
-### 11. Relation/Object Generated-Cell Mutation
-
-Status: `HELPER_ONLY` in active core; caller order is `PENDING_ACTIVE_CHAIN`.
-
-Functions with helper semantics in `h3maped_rmg_core`:
-
-- `generated_cell_4a5767_reset_cell`
-- `generated_cell_4a5767_reset_force_word_0x1c`
-- `generated_cell_49a318_clear_source_word_0x1c`
-- `generated_cell_4a59e2_pack_word_0x1c`
-- `generated_cell_4a59e2_pack_word_0x20`
-- `generated_cell_4a59e2_pack_word_0x28`
-- `generated_cell_4a56b6_projection_word20`
-- `deplete_generated_cell_scores_4a54a7`
-- `generated_cell_49aa63`
-- `generated_cell_49a932`
-- `generated_cell_49abd6_action_stamp`
-- `generated_cell_49abd6_body_reject_stamp`
-- `generated_cell_49a85d_stamp`
-- `generated_cell_49a962_word24`
-- `generated_cell_49a962_terrain`
-- `generated_cell_49cf34_attach_word28`
-- `generated_cell_4aa3e9_reward_word28`
-- `generated_cell_49a1d8_valid_word24`
-- `generated_cell_49a1d8_valid_terrain`
-
-Source anchors:
-
-- `0x4a5767`
-- `0x4a59e2`
-- `0x49a318`
-- `0x4a56b6`
-- `0x4a54a7`
-- `0x49aa63`
-- `0x49a932`
-- `0x49abd6`
-- `0x49a85d`
-- `0x49a962`
-- `0x49cf34`
-- `0x4aa3e9`
-
-Known mutation surface:
-
-- Resets relation fields in `+0x1c`.
-- Propagates source/projection fields in `+0x10/+0x14/+0x18/+0x1c/+0x20/+0x28`.
-- Depletes score/distance low-word fields in `+0x20`.
-- Sets/clears candidate bit 26 and occupied/blocked bit 27.
-- Sets action/control bit 22.
-- Uses `+0x2c` bit 0 gates.
-- Attaches reward/object mutation bits through `0x49cf34` and `0x4aa3e9`.
-
-What is not complete:
-
-- The active chain does not yet call these helpers through the exact recovered relation/object caller sequence over the live post-TerrainPlacement generated-cell arrays.
-- Prior commits contain historical/private relation-vector and bit-state work. That work must be migrated into `h3maped_rmg_core`; it must not remain a separate implementation surface.
-
-### 12. Town/Castle Object Placement
-
-Status: `HISTORICAL_PRIVATE` / `PENDING_ACTIVE_CHAIN` for package authority.
-
-Source anchors:
-
-- `0x4a8d2c`
-- `0x4a8db2`
-- `0x4a93a2`
-- `0x49aa93`
-- `0x49a09c`
-- `0x49b3c1`
-- `0x49ba89`
-- `0x540a9c`
-
-Known behavior from prior private evidence:
-
-- Schedules town/castle candidates.
-- Projects direct town records against recovered town footprint masks.
-- Seeds object vectors and action/body bits through generated-cell helpers.
-- Produces town/castle coordinate records consumed by later road vector work.
-
-Current rule:
-
-- Do not expose package towns from this phase until active object-vector producers and generated-cell mutations are owned in `h3maped_rmg_core`.
-
-### 13. Mines, Rewards, Generic Object Vectors
-
-Status: `HISTORICAL_PRIVATE` plus helper semantics; not current public object authority.
-
-Source anchors:
-
-- `0x4a9d6a`
-- `0x4a9911`
-- `0x4a9641`
-- `0x4a9c7c`
-- `0x4aab7e`
-- `0x4aa354`
-- `0x4a9f1c`
-- `0x4aa9b7`
-- `0x4aa603`
-- `0x4aa3e9`
-- `0x4ae1fd`
-- `0x4ae52a`
-- value vfuncs `0x49c54d`, `0x49c64b`, `0x49c849`, `0x49ca8b`, `0x49cb60`, `0x49cd97`
-- create vfunc family `0x49c553..0x49cdb1`
-
-Known behavior from prior private evidence:
-
-- Mine phase carries seven mine minimum/density categories.
-- Reward phase carries treasure-band scheduler/budget/value selection.
-- `0x4a9f1c` scans value-banded candidates and weighted choices through `0x4aa192`.
-- `0x4aa9b7..0x4aab7b` scans generated-cell owner/score candidate cells and randomly selects reward coordinates.
-- `0x4aa603` filters reward templates.
-- `0x4aa3e9` mutates generated-cell/object state for rewards.
-- `0x4a54a7` depletes local score fields.
-
-Current rule:
-
-- This phase must be reintroduced as active `h3maped_rmg_core` generation, not as package adoption or final-map tuning.
-
-### 14. Roads And Rivers
-
-Status: `HISTORICAL_PRIVATE` / `PENDING_ACTIVE_CHAIN`.
-
-Source anchors:
-
-- `0x4ab52a`
-- `0x4aae7b`
-- `0x4ab37f`
-- `0x4b4243`
-- `0x458a2f`
-- `0x458893`
-- final tile staging through `0x49b2b6`
-
-Known behavior from prior private evidence:
-
-- Consumes town/castle coordinate vector `generator+0x14b0`.
-- Evaluates private pair costs through `0x4aae7b`.
-- Uses recovered threshold `0x7530`.
-- Road geometry/writeback uses road toolkit behavior and art/flip classifiers.
-- One-level land final writeout currently carries zero river bytes unless broader river/water scope is selected.
-
-Current rule:
-
-- Do not treat town-only coordinates or approximate road counts as road parity.
-
-### 15. Connections, Blockers, Guards
-
-Status: `HISTORICAL_PRIVATE` / `PENDING_ACTIVE_CHAIN`.
-
-Source anchors:
-
-- `0x4a79a3`
-- `0x4a79d8`
-- `0x4a61bc`
-- `0x4a7605`
-- `0x4a7312`
-- `0x4a65a5`
-- `0x4a5e03`
-- `0x4a5767`
-- `0x49a318`
-- pending or source-backed exclusion needed: `0x4a696b`, `0x4a6cf2`, `0x4a5e73`
-
-Known behavior from prior private evidence:
-
-- Uses relation projection and generated-cell owner/terrain state to build transition vectors.
-- Selects same-level endpoints through `0x4a61bc`.
-- Uses second-pass fallback through `0x4a7605` / `0x4a7312`.
-- Scales blocker/guard values through `0x4a65a5`.
-- Materializes guard records through `0x4a5e03`.
-
-Current rule:
-
-- Package blocker/guard output must come from this active source-order chain. Synthetic package blockers, density gates, or mask trimming are invalid.
-
-### 16. Final Tile/Object Writeout
-
-Status: final writeout authority known; active output remains blocked by earlier private-state gaps.
-
-Source anchors:
-
-- `0x4ad1e3`
-- `0x49b2b6`
-- `0x4ad309`
-- `0x4ad3eb`
-
-Known tile bytes:
+Tile bytes:
 
 | Byte | Meaning |
 | --- | --- |
 | `0` | terrain id |
-| `1` | terrain art/visual row |
+| `1` | terrain art / visual row |
 | `2` | river byte |
 | `3` | river byte / variation |
 | `4` | road byte |
 | `5` | road byte / variation |
 | `6` | flags: terrain flags plus road flip bits |
 
-Current rule:
+Object writeout:
 
-- Final writeout may be used as comparison authority. It must not hide earlier generated-cell/object-vector drift.
+- `0x4ad309 / 0x4ad318` write object count.
+- `0x4ad3eb` serializes static objects.
+- Generated objects are serialized in two passes.
+- Same-run recovered payload: `1212` objects, `17057` bytes, `7082` stream writes.
+- SHA-256: `4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c`.
 
-## Current Active Blocker
+Header/player/metadata writeout:
 
-The current blocker is not missing helper semantics. It is active-chain integration:
+- `4964` decoded events across `11` sections.
+- `0` malformed events.
+- Final sentinel hit.
+- Payload byte count: `25254`.
+- SHA-256: `aea4de28115ae5b6e8715df467b860f4dfc080a3f029ce205b27185b506fbc25`.
 
-1. Move relation/object caller-order behavior into `h3maped_rmg_core` after TerrainPlacement.
-2. Apply it to the live generated-cell arrays in recovered source order.
-3. Remove unconditional blocker strings only when the active chain executes the phase.
-4. Run same-run private-state comparison for checkpoint 2.
-5. Only then allow route/object/package consumers to use the generated-cell checkpoint.
+Stream state:
+
+- adapter vtable `0x539918`;
+- wrapped buffered sink vtable `0x536c94`;
+- consistent pointer across traces.
+
+Final success:
+
+- `0x4ad3de` success test sees `EAX=4`.
+- `0x4ae09a` returns with `EAX=1`.
+
+## Native Adoption Rule
+
+The recovered H3MapEd behavior above is the source to port. The current native generator must be judged by whether it reproduces this source-order private state and final writeout, not by whether it has a helper with a similar name.
+
+Before native output can be called parity:
+
+1. Port the recovered source-order phases into one native RMG authority.
+2. Use the recovered private buffers and record identities, not project object categories or final-map counts.
+3. Compare native phase/private-state checkpoints against H3MapEd owner executable evidence.
+4. Only after private-state comparison passes, allow route/object/package consumers to use the state.
+
+Current native status, by the recovery ledger:
+
+- H3MapEd fixed recovery ledger: complete.
+- Native parity: not complete.
+- Remaining work is native port/adoption and comparison, not another recovery loop unless the port exposes a named contradiction in the recovered evidence.
 
 ## Invalid Work Patterns
 
-- Implementing a phase in `rmg_native_core.cpp` and calling that native RMG progress.
-- Adding a new report, gate, snapshot, or diagnostic and calling the phase implemented.
-- Reconstructing source behavior from final-map count deltas.
-- Using density scalars, brute-force retries, map-output patching, or package-time mask trimming.
-- Translating source H3MapEd object semantics into project object categories before the source phase is proven.
-- Reclaiming historical private/proxy work as active authority without moving it into `h3maped_rmg_core`.
-
-## Required Next Implementation Slice
-
-The next implementation slice must be:
-
-1. Read prior commits and historical/private evidence for relation/object mutation behavior.
-2. Extract only source-backed caller-order behavior.
-3. Port it into `h3maped_rmg_core` after TerrainPlacement.
-4. Keep one generated-cell state, not a side replay.
-5. Validate with the standalone no-Godot CLI and selftest.
-6. Commit only after the active chain, not a diagnostic surface, owns the phase.
-
+- Calling a native helper implementation proof of H3MapEd behavior.
+- Calling a blocked CLI snapshot parity.
+- Using object-count or density deltas as the source of a phase rule.
+- Translating source H3MapEd semantics into project categories before the source phase is proven in native private state.
+- Reintroducing proxy generators, duplicate side replays, or package-adoption patches as implementation authority.
+- Treating final tile/object writeout parity as a substitute for earlier private-state parity.
