@@ -116,6 +116,7 @@ struct SourceObjectRecord0x4c {
 	std::string def_name;
 	int32_t type_id_0x1c = 0;
 	std::string type_name;
+	int32_t metadata_bucket_index_0x08 = 0;
 	int32_t subtype_0x20 = 0;
 	int32_t group_0x24 = 0;
 	int32_t last_flag_0x28 = 0;
@@ -139,8 +140,9 @@ struct SourceObjectCatalogSummary0x49da08 {
 };
 
 struct SourceObjectWrapperBucket0xe8 {
-	int32_t type_id_0x1c = -1;
-	std::string type_name;
+	int32_t bucket_index_0x08 = -1;
+	int32_t first_type_id_0x1c = -1;
+	std::string first_type_name;
 	bool initialized_by_0x49db76 = false;
 	int32_t record_count = 0;
 	int32_t first_source_record_index = -1;
@@ -155,7 +157,7 @@ struct SourceObjectWrapperBucketSummary0xe8 {
 	int32_t total_source_record_references = 0;
 	int32_t out_of_range_source_record_count = 0;
 	int32_t max_bucket_record_count = 0;
-	int32_t max_bucket_type_id_0x1c = -1;
+	int32_t max_bucket_index_0x08 = -1;
 };
 
 int32_t map_width_for_size_class(const std::string &size_class);
@@ -174,7 +176,7 @@ std::vector<SourceObjectRecord0x4c> source_object_records_by_type_0x49da08(int32
 std::vector<SourceObjectRecord0x4c> source_object_records_by_type_subtype_0x49da08(int32_t type_id, int32_t subtype);
 const std::vector<SourceObjectWrapperBucket0xe8> &source_object_wrapper_buckets_0x49db76();
 SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db76();
-bool source_object_wrapper_bucket_by_type_0x49db76(int32_t type_id, SourceObjectWrapperBucket0xe8 &out_bucket);
+bool source_object_wrapper_bucket_by_index_0x49db76(int32_t bucket_index, SourceObjectWrapperBucket0xe8 &out_bucket);
 
 struct GeneratedCell49a85dStampResult {
 	bool center_in_bounds = false;
