@@ -398,9 +398,48 @@ void add_first_source_object_sample(RecoveredOwnerGridPayload &payload, const st
 	}
 }
 
+SharedSourceObjectWrapperBucket0xe8 from_h3maped_source_object_wrapper_bucket(const h3maped_rmg_core::SourceObjectWrapperBucket0xe8 &input) {
+	SharedSourceObjectWrapperBucket0xe8 out;
+	out.type_id_0x1c = input.type_id_0x1c;
+	out.type_name = input.type_name;
+	out.initialized_by_0x49db76 = input.initialized_by_0x49db76;
+	out.record_count = input.record_count;
+	out.first_source_record_index = input.first_source_record_index;
+	out.last_source_record_index = input.last_source_record_index;
+	const int32_t sample_count = std::min<int32_t>(12, int32_t(input.source_record_indices.size()));
+	out.source_record_index_sample.reserve(size_t(sample_count));
+	for (int32_t index = 0; index < sample_count; ++index) {
+		out.source_record_index_sample.push_back(input.source_record_indices[size_t(index)]);
+	}
+	return out;
+}
+
+bool same_source_object_wrapper_bucket_sample(const SharedSourceObjectWrapperBucket0xe8 &left, const SharedSourceObjectWrapperBucket0xe8 &right) {
+	return left.type_id_0x1c == right.type_id_0x1c;
+}
+
+void add_source_object_wrapper_bucket_sample(RecoveredOwnerGridPayload &payload, const h3maped_rmg_core::SourceObjectWrapperBucket0xe8 &input) {
+	const SharedSourceObjectWrapperBucket0xe8 sample = from_h3maped_source_object_wrapper_bucket(input);
+	const auto duplicate = std::find_if(payload.source_object_wrapper_bucket_samples.begin(), payload.source_object_wrapper_bucket_samples.end(), [&sample](const SharedSourceObjectWrapperBucket0xe8 &existing) {
+		return same_source_object_wrapper_bucket_sample(existing, sample);
+	});
+	if (duplicate == payload.source_object_wrapper_bucket_samples.end()) {
+		payload.source_object_wrapper_bucket_samples.push_back(sample);
+	}
+}
+
+void add_source_object_wrapper_bucket_sample_by_type(RecoveredOwnerGridPayload &payload, int32_t type_id) {
+	h3maped_rmg_core::SourceObjectWrapperBucket0xe8 bucket;
+	if (h3maped_rmg_core::source_object_wrapper_bucket_by_type_0x49db76(type_id, bucket)) {
+		add_source_object_wrapper_bucket_sample(payload, bucket);
+	}
+}
+
 void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload) {
 	const h3maped_rmg_core::SourceObjectCatalogSummary0x49da08 summary =
 			h3maped_rmg_core::source_object_catalog_summary_0x49da08();
+	const h3maped_rmg_core::SourceObjectWrapperBucketSummary0xe8 wrapper_summary =
+			h3maped_rmg_core::source_object_wrapper_bucket_summary_0x49db76();
 	payload.source_object_catalog_0x49da08_present = summary.record_count > 0;
 	payload.source_object_catalog_0x49da08_record_count = summary.record_count;
 	payload.source_object_catalog_0x4c_copy_size_bytes = summary.source_record_copy_size_bytes;
@@ -410,6 +449,15 @@ void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload)
 	payload.source_object_catalog_type53_ambiguous_subtype_count = summary.mine_type53_ambiguous_subtype_count;
 	payload.source_object_catalog_descriptor_only_mine_identity_ambiguous = summary.descriptor_only_mine_identity_ambiguous;
 	payload.source_object_catalog_samples.clear();
+	payload.source_object_wrapper_buckets_0x49db76_present = wrapper_summary.bucket_count == h3maped_rmg_core::SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8;
+	payload.source_object_wrapper_bucket_count_0xe8 = wrapper_summary.bucket_count;
+	payload.source_object_wrapper_initialized_bucket_count = wrapper_summary.initialized_bucket_count;
+	payload.source_object_wrapper_non_empty_bucket_count = wrapper_summary.non_empty_bucket_count;
+	payload.source_object_wrapper_total_source_record_references = wrapper_summary.total_source_record_references;
+	payload.source_object_wrapper_out_of_range_source_record_count = wrapper_summary.out_of_range_source_record_count;
+	payload.source_object_wrapper_max_bucket_record_count = wrapper_summary.max_bucket_record_count;
+	payload.source_object_wrapper_max_bucket_type_id_0x1c = wrapper_summary.max_bucket_type_id_0x1c;
+	payload.source_object_wrapper_bucket_samples.clear();
 
 	const std::vector<h3maped_rmg_core::SourceObjectRecord0x4c> &catalog =
 			h3maped_rmg_core::source_object_catalog_0x49da08();
@@ -418,6 +466,12 @@ void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload)
 	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_subtype_0x49da08(53, 4));
 	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(54));
 	add_first_source_object_sample(payload, h3maped_rmg_core::source_object_records_by_type_0x49da08(79));
+	add_source_object_wrapper_bucket_sample_by_type(payload, 0);
+	add_source_object_wrapper_bucket_sample_by_type(payload, 45);
+	add_source_object_wrapper_bucket_sample_by_type(payload, 53);
+	add_source_object_wrapper_bucket_sample_by_type(payload, 54);
+	add_source_object_wrapper_bucket_sample_by_type(payload, 79);
+	add_source_object_wrapper_bucket_sample_by_type(payload, 231);
 }
 
 std::vector<SharedPlayerSlotAssignmentRecord> from_h3maped_player_slot_assignments(const std::vector<h3maped_rmg_core::PlayerSlotAssignmentRecord4ac62a> &inputs) {
@@ -574,10 +628,33 @@ void append_source_object_record_samples_json(std::ostream &out, const std::vect
 	out << "]";
 }
 
+void append_source_object_wrapper_bucket_sample_json(std::ostream &out, const SharedSourceObjectWrapperBucket0xe8 &bucket) {
+	out << "{\"type_id_0x1c\":" << bucket.type_id_0x1c
+		<< ",\"type_name\":\"" << json_escape(bucket.type_name) << "\""
+		<< ",\"initialized_by_0x49db76\":" << (bucket.initialized_by_0x49db76 ? "true" : "false")
+		<< ",\"record_count\":" << bucket.record_count
+		<< ",\"first_source_record_index\":" << bucket.first_source_record_index
+		<< ",\"last_source_record_index\":" << bucket.last_source_record_index
+		<< ",\"source_record_index_sample\":";
+	append_json_i32_array(out, bucket.source_record_index_sample);
+	out << "}";
+}
+
+void append_source_object_wrapper_bucket_samples_json(std::ostream &out, const std::vector<SharedSourceObjectWrapperBucket0xe8> &buckets) {
+	out << "[";
+	for (size_t index = 0; index < buckets.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		append_source_object_wrapper_bucket_sample_json(out, buckets[index]);
+	}
+	out << "]";
+}
+
 void append_source_object_record_catalog_json(std::ostream &out, const RecoveredOwnerGridPayload &payload) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_source_object_record_catalog_0x49da08_v1\","
-		<< "\"status\":\"source_record_catalog_identity_preserved_selection_descriptor_join_and_materialization_pending\","
+		<< "\"status\":\"source_record_catalog_and_0xe8_wrapper_buckets_preserved_selection_descriptor_join_and_materialization_pending\","
 		<< "\"h3maped_entry_anchor\":\"0x49da08_objects_txt_loader_0x49db76_wrapper_init_0x49dc9e_rand_trn_loader\","
 		<< "\"present\":" << (payload.source_object_catalog_0x49da08_present ? "true" : "false") << ","
 		<< "\"source_record_copy_size_bytes\":" << payload.source_object_catalog_0x4c_copy_size_bytes << ","
@@ -588,7 +665,19 @@ void append_source_object_record_catalog_json(std::ostream &out, const Recovered
 		<< "\"type53_ambiguous_subtype_count\":" << payload.source_object_catalog_type53_ambiguous_subtype_count << ","
 		<< "\"descriptor_only_mine_identity_ambiguous\":" << (payload.source_object_catalog_descriptor_only_mine_identity_ambiguous ? "true" : "false") << ","
 		<< "\"identity_rule\":\"copied_0x4c_source_record_is_identity_authority_descriptor_plus_0x00_not_universal_row_id\","
-		<< "\"remaining_blockers\":[\"0xe8_wrapper_bucket_selection\", \"0x4903e8_descriptor_source_join\", \"source_record_through_object_materialization\", \"relation_object_caller_order\"],"
+		<< "\"wrapper_bucket_schema\":\"source_record_type_0x1c_bounded_by_0xe8_and_initialized_by_0x49db76\","
+		<< "\"wrapper_buckets_present\":" << (payload.source_object_wrapper_buckets_0x49db76_present ? "true" : "false") << ","
+		<< "\"wrapper_bucket_count_0xe8\":" << payload.source_object_wrapper_bucket_count_0xe8 << ","
+		<< "\"wrapper_initialized_bucket_count\":" << payload.source_object_wrapper_initialized_bucket_count << ","
+		<< "\"wrapper_non_empty_bucket_count\":" << payload.source_object_wrapper_non_empty_bucket_count << ","
+		<< "\"wrapper_total_source_record_references\":" << payload.source_object_wrapper_total_source_record_references << ","
+		<< "\"wrapper_out_of_range_source_record_count\":" << payload.source_object_wrapper_out_of_range_source_record_count << ","
+		<< "\"wrapper_max_bucket_type_id_0x1c\":" << payload.source_object_wrapper_max_bucket_type_id_0x1c << ","
+		<< "\"wrapper_max_bucket_record_count\":" << payload.source_object_wrapper_max_bucket_record_count << ","
+		<< "\"wrapper_bucket_samples\":";
+	append_source_object_wrapper_bucket_samples_json(out, payload.source_object_wrapper_bucket_samples);
+	out << ","
+		<< "\"remaining_blockers\":[\"0x4af785_0x4af89f_0x4a9e40_wrapper_source_selection\", \"0x4903e8_descriptor_source_join\", \"source_record_through_object_materialization\", \"relation_object_caller_order\"],"
 		<< "\"samples\":";
 	append_source_object_record_samples_json(out, payload.source_object_catalog_samples);
 	out << "}";

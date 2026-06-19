@@ -152,6 +152,32 @@ std::vector<SourceObjectRecord0x4c> build_source_object_catalog() {{
 \treturn records;
 }}
 
+std::vector<SourceObjectWrapperBucket0xe8> build_source_object_wrapper_buckets() {{
+\tstd::vector<SourceObjectWrapperBucket0xe8> buckets;
+\tbuckets.resize(SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8);
+\tfor (int32_t type_id = 0; type_id < SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8; ++type_id) {{
+\t\tSourceObjectWrapperBucket0xe8 &bucket = buckets[size_t(type_id)];
+\t\tbucket.type_id_0x1c = type_id;
+\t\tbucket.initialized_by_0x49db76 = true;
+\t}}
+\tconst std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+\tfor (int32_t index = 0; index < int32_t(records.size()); ++index) {{
+\t\tconst SourceObjectRecord0x4c &record = records[size_t(index)];
+\t\tif (record.type_id_0x1c < 0 || record.type_id_0x1c >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {{
+\t\t\tcontinue;
+\t\t}}
+\t\tSourceObjectWrapperBucket0xe8 &bucket = buckets[size_t(record.type_id_0x1c)];
+\t\tif (bucket.record_count == 0) {{
+\t\t\tbucket.first_source_record_index = index;
+\t\t\tbucket.type_name = record.type_name;
+\t\t}}
+\t\tbucket.last_source_record_index = index;
+\t\tbucket.record_count += 1;
+\t\tbucket.source_record_indices.push_back(index);
+\t}}
+\treturn buckets;
+}}
+
 }} // namespace
 
 const std::vector<SourceObjectRecord0x4c> &source_object_catalog_0x49da08() {{
@@ -202,6 +228,46 @@ std::vector<SourceObjectRecord0x4c> source_object_records_by_type_subtype_0x49da
 \t\treturn record.type_id_0x1c == type_id && record.subtype_0x20 == subtype;
 \t}});
 \treturn matches;
+}}
+
+const std::vector<SourceObjectWrapperBucket0xe8> &source_object_wrapper_buckets_0x49db76() {{
+\tstatic const std::vector<SourceObjectWrapperBucket0xe8> buckets = build_source_object_wrapper_buckets();
+\treturn buckets;
+}}
+
+SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db76() {{
+\tconst std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+\tconst std::vector<SourceObjectWrapperBucket0xe8> &buckets = source_object_wrapper_buckets_0x49db76();
+\tSourceObjectWrapperBucketSummary0xe8 summary;
+\tsummary.bucket_count = int32_t(buckets.size());
+\tfor (const SourceObjectWrapperBucket0xe8 &bucket : buckets) {{
+\t\tif (bucket.initialized_by_0x49db76) {{
+\t\t\tsummary.initialized_bucket_count += 1;
+\t\t}}
+\t\tif (bucket.record_count > 0) {{
+\t\t\tsummary.non_empty_bucket_count += 1;
+\t\t\tsummary.total_source_record_references += bucket.record_count;
+\t\t\tif (bucket.record_count > summary.max_bucket_record_count) {{
+\t\t\t\tsummary.max_bucket_record_count = bucket.record_count;
+\t\t\t\tsummary.max_bucket_type_id_0x1c = bucket.type_id_0x1c;
+\t\t\t}}
+\t\t}}
+\t}}
+\tfor (const SourceObjectRecord0x4c &record : records) {{
+\t\tif (record.type_id_0x1c < 0 || record.type_id_0x1c >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {{
+\t\t\tsummary.out_of_range_source_record_count += 1;
+\t\t}}
+\t}}
+\treturn summary;
+}}
+
+bool source_object_wrapper_bucket_by_type_0x49db76(int32_t type_id, SourceObjectWrapperBucket0xe8 &out_bucket) {{
+\tconst std::vector<SourceObjectWrapperBucket0xe8> &buckets = source_object_wrapper_buckets_0x49db76();
+\tif (type_id < 0 || type_id >= int32_t(buckets.size())) {{
+\t\treturn false;
+\t}}
+\tout_bucket = buckets[size_t(type_id)];
+\treturn true;
 }}
 
 }} // namespace aurelion::h3maped_rmg_core

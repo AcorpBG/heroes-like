@@ -88,6 +88,16 @@ struct SharedSourceObjectRecord0x4c {
 	bool rand_trn_backed = false;
 };
 
+struct SharedSourceObjectWrapperBucket0xe8 {
+	int32_t type_id_0x1c = -1;
+	std::string type_name;
+	bool initialized_by_0x49db76 = false;
+	int32_t record_count = 0;
+	int32_t first_source_record_index = -1;
+	int32_t last_source_record_index = -1;
+	std::vector<int32_t> source_record_index_sample;
+};
+
 struct SharedRuntimeZoneSeedInput {
 	int32_t runtime_zone_index = -1;
 	int32_t source_zone_id = -1;
@@ -307,6 +317,15 @@ struct RecoveredOwnerGridPayload {
 	int32_t source_object_catalog_type53_ambiguous_subtype_count = 0;
 	bool source_object_catalog_descriptor_only_mine_identity_ambiguous = false;
 	std::vector<SharedSourceObjectRecord0x4c> source_object_catalog_samples;
+	bool source_object_wrapper_buckets_0x49db76_present = false;
+	int32_t source_object_wrapper_bucket_count_0xe8 = 0;
+	int32_t source_object_wrapper_initialized_bucket_count = 0;
+	int32_t source_object_wrapper_non_empty_bucket_count = 0;
+	int32_t source_object_wrapper_total_source_record_references = 0;
+	int32_t source_object_wrapper_out_of_range_source_record_count = 0;
+	int32_t source_object_wrapper_max_bucket_record_count = 0;
+	int32_t source_object_wrapper_max_bucket_type_id_0x1c = -1;
+	std::vector<SharedSourceObjectWrapperBucket0xe8> source_object_wrapper_bucket_samples;
 };
 
 ControlledCase parse_controlled_case(const std::string &raw);
