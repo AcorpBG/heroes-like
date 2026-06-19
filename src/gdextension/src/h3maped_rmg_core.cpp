@@ -1392,6 +1392,7 @@ GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t wi
 		record.word_0x28_known = true;
 		record.word_0x28 = initial.word_0x28;
 		record.byte_0x2b_known = false;
+		record.byte_0x2b_known_mask = 0U;
 		record.byte_0x2b = 0U;
 		record.word_0x2c_known = true;
 		record.word_0x2c = initial.word_0x2c;
@@ -1534,6 +1535,13 @@ bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const st
 			&& flat < int64_t(word_0x24.size());
 }
 
+bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record) {
+	if ((record.byte_0x2b_known_mask & 0x02U) == 0U || (record.byte_0x2b & 0x02U) == 0U) {
+		return false;
+	}
+	return record.word_0x24_known && (record.word_0x24 & 0x3fU) != 9U;
+}
+
 bool generated_cell_49a1d8_valid_word24(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
 	if (!generated_cell_index_valid(word_0x28, word_0x24, flat)) {
 		return false;
@@ -1550,6 +1558,20 @@ bool generated_cell_49a1d8_valid_terrain(const std::vector<uint32_t> &word_0x28,
 			&& (terrain_code[size_t(flat)] & 0x3f) != 9;
 }
 
+bool generated_cell_49aa63(GeneratedCellRecord0x30 &record, bool set_candidate) {
+	if (!record.word_0x28_known || !record.word_0x2c_known || (record.word_0x2c & 0x1U) != 0U) {
+		return false;
+	}
+	const bool was_set = (record.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U;
+	if (set_candidate) {
+		record.word_0x28 |= CELL_DECOR_CANDIDATE_BIT_26;
+		record.word_0x28 &= ~CELL_OCCUPIED_BLOCKED_BIT_27;
+		return !was_set;
+	}
+	record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+	return was_set;
+}
+
 bool generated_cell_49aa63(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_candidate) {
 	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
 		return false;
@@ -1564,6 +1586,20 @@ bool generated_cell_49aa63(std::vector<uint32_t> &word_0x28, const std::vector<u
 		return !was_set;
 	}
 	word_0x28[size_t(flat)] &= ~CELL_DECOR_CANDIDATE_BIT_26;
+	return was_set;
+}
+
+bool generated_cell_49a932(GeneratedCellRecord0x30 &record, bool set_occupied) {
+	if (!record.word_0x28_known || !record.word_0x2c_known || (record.word_0x2c & 0x1U) != 0U) {
+		return false;
+	}
+	const bool was_set = (record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+	if (set_occupied) {
+		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		return !was_set;
+	}
+	record.word_0x28 &= ~CELL_OCCUPIED_BLOCKED_BIT_27;
 	return was_set;
 }
 
@@ -1584,6 +1620,16 @@ bool generated_cell_49a932(std::vector<uint32_t> &word_0x28, const std::vector<u
 	return was_set;
 }
 
+bool generated_cell_49abd6_action_stamp(GeneratedCellRecord0x30 &record) {
+	if (!record.word_0x28_known) {
+		return false;
+	}
+	const uint32_t before = record.word_0x28;
+	record.word_0x28 |= CELL_ACTION_CONTROL_BIT_22;
+	generated_cell_49a932(record, true);
+	return before != record.word_0x28;
+}
+
 bool generated_cell_49abd6_action_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat) {
 	if (flat < 0 || flat >= int64_t(word_0x28.size()) || flat >= int64_t(word_0x2c.size())) {
 		return false;
@@ -1592,6 +1638,18 @@ bool generated_cell_49abd6_action_stamp(std::vector<uint32_t> &word_0x28, const 
 	word_0x28[size_t(flat)] |= CELL_ACTION_CONTROL_BIT_22;
 	generated_cell_49a932(word_0x28, word_0x2c, flat, true);
 	return before != word_0x28[size_t(flat)];
+}
+
+bool generated_cell_49abd6_body_reject_stamp(GeneratedCellRecord0x30 &record) {
+	if (!record.word_0x28_known) {
+		return false;
+	}
+	const bool was_set = (record.word_0x28 & CELL_DECOR_READY_BIT_25) != 0U;
+	record.byte_0x2b_known_mask |= 0x02U;
+	record.byte_0x2b &= ~uint8_t(0x02U);
+	record.byte_0x2b_known = record.byte_0x2b_known_mask == 0xffU;
+	record.word_0x28 &= ~CELL_DECOR_READY_BIT_25;
+	return was_set;
 }
 
 bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, int64_t flat) {

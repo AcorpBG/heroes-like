@@ -237,10 +237,11 @@ Native helpers:
 - `generated_cell_4a5767_reset_cell`
 - `generated_cell_49a318_clear_source_word_0x1c`
 - `deplete_generated_cell_scores_4a54a7`
-- `generated_cell_49aa63`
-- `generated_cell_49a932`
-- `generated_cell_49abd6_action_stamp`
-- `generated_cell_49abd6_body_reject_stamp`
+- record-level `generated_cell_49a1d8_valid_record`
+- record-level and legacy word-array `generated_cell_49aa63`
+- record-level and legacy word-array `generated_cell_49a932`
+- record-level and legacy word-array `generated_cell_49abd6_action_stamp`
+- record-level and legacy word-array `generated_cell_49abd6_body_reject_stamp`
 - `generated_cell_49a85d_stamp`
 - `generated_cell_49a962_word24`
 - `generated_cell_49a962_terrain`
@@ -253,11 +254,14 @@ Mutation surface:
 - Sets/clears candidate and occupied bits.
 - Sets action/control bits.
 - Uses `+0x2c` gates.
+- Tracks `+0x2b` bit `0x02` knowledge at record level and clears it on recovered `0x49abd6` body-reject behavior.
 - Depletes score/distance fields in `+0x20`.
 
 Known blockers:
 
 - Exact caller sequence from terrain/relation/object phases into these helpers is not fully owned as a single source-order native chain.
+- Record-level helper semantics do not yet mutate the live generated-cell grid in recovered source order.
+- Native still lacks source-order object-reference vector contents and `0x4a5767` projection writes to `+0x14/+0x18`.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
 
 Implementation rule: keep helpers available, but do not use them to claim pre-object generated-cell parity until their source callers and inputs are ordered and same-run validated.
@@ -270,9 +274,9 @@ The only 100-percent-safe implementation change from this ledger is to fail clos
 - Native must not emit a full comparable pre-`0x4a4c8e` generated-cell record set assembled from reset defaults plus owner words.
 - Native map output remains blocked until phases 5 through 7 are source-owned for the selected Small/Medium one-level land path.
 
-## Next Recovery Targets Before Implementation
+## Next Native Port Targets
 
-1. Recover exact caller order for relation/object generated-cell helper mutations before route/object/package consumers run.
+1. Port exact caller order for relation/object generated-cell helper mutations before route/object/package consumers run.
 2. Port the source-order relation reset, candidate, occupied/action, score, and reward attachment callers into the active shared native chain.
 3. Run same-run private-state comparison before allowing route/object/package consumers to use the generated-cell checkpoint.
 

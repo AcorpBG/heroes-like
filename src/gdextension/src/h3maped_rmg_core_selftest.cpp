@@ -116,6 +116,42 @@ int main() {
 		if (!require(word_grid.word_0x20.size() == record_grid.records.size() && word_grid.word_0x20[0] == record.word_0x20, "legacy generated-cell word grid no longer projects from record grid")) {
 			return 1;
 		}
+		auto mutable_record = record;
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49aa63(mutable_record, true), "record 0x49aa63(true) did not set bit26")) {
+			return 1;
+		}
+		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) != 0U && (mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) == 0U, "record 0x49aa63(true) did not set bit26 and clear bit27")) {
+			return 1;
+		}
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49a932(mutable_record, true), "record 0x49a932(true) did not set bit27")) {
+			return 1;
+		}
+		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U && (mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U, "record 0x49a932(true) did not set bit27 and clear bit26")) {
+			return 1;
+		}
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(mutable_record), "record 0x49abd6 action stamp did not mutate bit22/bit27")) {
+			return 1;
+		}
+		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U && (mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U, "record 0x49abd6 action stamp did not leave bit22 and bit27 set")) {
+			return 1;
+		}
+		mutable_record.byte_0x2b = 0x02U;
+		mutable_record.byte_0x2b_known_mask = 0x02U;
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_record(mutable_record), "record 0x49a1d8 did not accept known +0x2b bit0x02 with non-rock terrain")) {
+			return 1;
+		}
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(mutable_record), "record 0x49abd6 body reject did not clear bit25")) {
+			return 1;
+		}
+		if (!require((mutable_record.byte_0x2b_known_mask & 0x02U) != 0U && (mutable_record.byte_0x2b & 0x02U) == 0U, "record 0x49abd6 body reject did not mark +0x2b bit0x02 known-clear")) {
+			return 1;
+		}
+		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25) == 0U, "record 0x49abd6 body reject did not clear bit25")) {
+			return 1;
+		}
+		if (!require(!aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_record(mutable_record), "record 0x49a1d8 accepted after +0x2b bit0x02 was cleared")) {
+			return 1;
+		}
 	}
 
 	{
