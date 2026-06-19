@@ -1429,6 +1429,113 @@ SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_
 	return result;
 }
 
+bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const SourceObjectRecord0x4c &right) {
+	return left.source_row == right.source_row
+			&& left.source == right.source
+			&& left.def_name == right.def_name
+			&& left.type_id_0x1c == right.type_id_0x1c
+			&& left.type_name == right.type_name
+			&& left.metadata_bucket_index_0x08 == right.metadata_bucket_index_0x08
+			&& left.subtype_0x20 == right.subtype_0x20
+			&& left.group_0x24 == right.group_0x24
+			&& left.last_flag_0x28 == right.last_flag_0x28
+			&& left.pass_count == right.pass_count
+			&& left.action_count == right.action_count
+			&& left.terrain_mask_a_0x14 == right.terrain_mask_a_0x14
+			&& left.terrain_mask_b_0x18 == right.terrain_mask_b_0x18
+			&& left.terrain_a_names == right.terrain_a_names
+			&& left.terrain_b_names == right.terrain_b_names
+			&& left.rand_trn_backed == right.rand_trn_backed;
+}
+
+int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &record) {
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+		if (same_source_object_record_0x4c(records[size_t(index)], record)) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(SourceObjectResolverState4af785 &state, const SourceObjectRecord0x4c &record) {
+	SourceObjectResolverResult4af785 result;
+	result.input_source_catalog_index = source_object_catalog_index_0x49da08(record);
+	result.input_source_row = record.source_row;
+	result.input_def_name = record.def_name;
+	result.input_type_id_0x1c = record.type_id_0x1c;
+	result.input_subtype_0x20 = record.subtype_0x20;
+	result.metadata_bucket_index_0x08 = record.metadata_bucket_index_0x08;
+	const SourceObjectMaskLaneResult4af89f lane = source_object_mask_lane_selector_0x4af89f(record);
+	result.resolver_lane_0x04 = lane.selected_lane;
+	result.source_pair_count_before = int32_t(state.source_pairs_0xedc.size());
+
+	for (const SourceObjectResolvedWrapper4af785 &wrapper : state.wrappers) {
+		if (wrapper.metadata_bucket_index_0x08 == result.metadata_bucket_index_0x08) {
+			result.bucket_size_before += 1;
+		}
+	}
+
+	bool prior_wrapper_0x10_known = false;
+	int32_t prior_wrapper_0x10 = 0;
+	for (const SourceObjectResolvedWrapper4af785 &wrapper : state.wrappers) {
+		if (wrapper.metadata_bucket_index_0x08 != result.metadata_bucket_index_0x08) {
+			continue;
+		}
+		result.scanned_bucket_wrapper_count += 1;
+		if (wrapper.wrapper_0x04 != result.resolver_lane_0x04) {
+			result.lane_reject_count += 1;
+			continue;
+		}
+		if (wrapper.source_record_copy.subtype_0x20 != record.subtype_0x20) {
+			result.source_0x20_reject_count += 1;
+			continue;
+		}
+		if (wrapper.wrapper_0x10_known) {
+			prior_wrapper_0x10_known = true;
+			prior_wrapper_0x10 = wrapper.wrapper_0x10;
+		}
+		if (same_source_object_record_0x4c(wrapper.source_record_copy, record)) {
+			result.reused_existing_wrapper = true;
+			result.selected_wrapper_index = wrapper.wrapper_index;
+			result.wrapper_0x10_known = wrapper.wrapper_0x10_known;
+			result.wrapper_0x10 = wrapper.wrapper_0x10;
+			result.bucket_size_after = result.bucket_size_before;
+			result.source_pair_count_after = int32_t(state.source_pairs_0xedc.size());
+			return result;
+		}
+		result.source_copy_mismatch_count += 1;
+	}
+
+	SourceObjectResolvedWrapper4af785 wrapper;
+	wrapper.wrapper_index = state.next_wrapper_index++;
+	wrapper.source_catalog_index = result.input_source_catalog_index;
+	wrapper.source_record_copy = record;
+	wrapper.metadata_bucket_index_0x08 = result.metadata_bucket_index_0x08;
+	wrapper.resolver_lane_0x04 = result.resolver_lane_0x04;
+	wrapper.wrapper_0x04 = result.resolver_lane_0x04;
+	wrapper.wrapper_0x10_known = prior_wrapper_0x10_known;
+	wrapper.wrapper_0x10 = prior_wrapper_0x10;
+	wrapper.initialized_by_0x49db76 = true;
+	wrapper.copied_source_record = true;
+	state.wrappers.push_back(wrapper);
+	state.source_pairs_0xedc.push_back(SourceObjectResolverSourcePair4af785 {
+		wrapper.source_catalog_index,
+		wrapper.wrapper_index,
+	});
+
+	result.created_new_wrapper = true;
+	result.selected_wrapper_index = wrapper.wrapper_index;
+	result.bucket_size_after = result.bucket_size_before + 1;
+	result.source_pair_count_after = int32_t(state.source_pairs_0xedc.size());
+	result.appended_source_pair_0xedc = true;
+	result.appended_wrapper_to_bucket = true;
+	result.copied_source_record = true;
+	result.wrapper_0x10_known = wrapper.wrapper_0x10_known;
+	result.wrapper_0x10 = wrapper.wrapper_0x10;
+	return result;
+}
+
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24, uint32_t old_word_0x28, uint32_t old_word_0x2c) {
 	GeneratedCellInitialWords cell;
 	cell.word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;

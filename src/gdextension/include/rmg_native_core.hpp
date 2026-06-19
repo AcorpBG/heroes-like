@@ -124,6 +124,32 @@ struct SharedSourceObjectSelectorResult4a9e40 {
 	int32_t rng_value = -1;
 };
 
+struct SharedSourceObjectResolverResult4af785 {
+	int32_t input_source_catalog_index = -1;
+	int32_t input_source_row = -1;
+	std::string input_def_name;
+	int32_t input_type_id_0x1c = -1;
+	int32_t input_subtype_0x20 = 0;
+	int32_t metadata_bucket_index_0x08 = -1;
+	int32_t resolver_lane_0x04 = 9;
+	bool reused_existing_wrapper = false;
+	bool created_new_wrapper = false;
+	int32_t selected_wrapper_index = -1;
+	int32_t scanned_bucket_wrapper_count = 0;
+	int32_t lane_reject_count = 0;
+	int32_t source_0x20_reject_count = 0;
+	int32_t source_copy_mismatch_count = 0;
+	int32_t bucket_size_before = 0;
+	int32_t bucket_size_after = 0;
+	int32_t source_pair_count_before = 0;
+	int32_t source_pair_count_after = 0;
+	bool appended_source_pair_0xedc = false;
+	bool appended_wrapper_to_bucket = false;
+	bool copied_source_record = false;
+	bool wrapper_0x10_known = false;
+	int32_t wrapper_0x10 = 0;
+};
+
 struct SharedRuntimeZoneSeedInput {
 	int32_t runtime_zone_index = -1;
 	int32_t source_zone_id = -1;
@@ -353,6 +379,7 @@ struct RecoveredOwnerGridPayload {
 	int32_t source_object_wrapper_max_bucket_index_0x08 = -1;
 	std::vector<SharedSourceObjectWrapperBucket0xe8> source_object_wrapper_bucket_samples;
 	std::vector<SharedSourceObjectSelectorResult4a9e40> source_object_selector_samples_0x4a9e40;
+	std::vector<SharedSourceObjectResolverResult4af785> source_object_resolver_samples_0x4af785;
 };
 
 ControlledCase parse_controlled_case(const std::string &raw);

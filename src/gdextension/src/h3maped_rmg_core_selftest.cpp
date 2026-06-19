@@ -23,6 +23,8 @@ using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectCatalogSummary0x49da08;
 using aurelion::h3maped_rmg_core::SourceObjectMaskLaneResult4af89f;
 using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
+using aurelion::h3maped_rmg_core::SourceObjectResolverResult4af785;
+using aurelion::h3maped_rmg_core::SourceObjectResolverState4af785;
 using aurelion::h3maped_rmg_core::SourceObjectSelectorResult4a9e40;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucket0xe8;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucketSummary0xe8;
@@ -189,6 +191,47 @@ int main() {
 				aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, type199_lane.selected_lane, type199_records[0].metadata_bucket_index_0x08, -999);
 		if (!require(impossible_selection.bucket_found && impossible_selection.accepted_count == 0 && !impossible_selection.rng_consumed && impossible_selection.rng_state_after == 10U, "0x4a9e40 selector consumed RNG despite having no accepted candidates")) {
 			return 1;
+		}
+		SourceObjectResolverState4af785 resolver_state;
+		const SourceObjectResolverResult4af785 first_resolve =
+				aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(resolver_state, type199_records[0]);
+		if (!require(first_resolve.created_new_wrapper && !first_resolve.reused_existing_wrapper && first_resolve.selected_wrapper_index == 0, "0x4af785 did not create the first resolved wrapper")) {
+			return 1;
+		}
+		if (!require(first_resolve.metadata_bucket_index_0x08 == 155 && first_resolve.resolver_lane_0x04 == type199_lane.selected_lane, "0x4af785 first wrapper did not preserve metadata bucket/lane")) {
+			return 1;
+		}
+		if (!require(first_resolve.copied_source_record && first_resolve.appended_source_pair_0xedc && first_resolve.appended_wrapper_to_bucket, "0x4af785 first wrapper did not copy source record and append wrapper/source pair")) {
+			return 1;
+		}
+		if (!require(resolver_state.wrappers.size() == 1 && resolver_state.source_pairs_0xedc.size() == 1, "0x4af785 resolver state did not record first wrapper/source pair")) {
+			return 1;
+		}
+		const SourceObjectResolverResult4af785 reuse_resolve =
+				aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(resolver_state, type199_records[0]);
+		if (!require(reuse_resolve.reused_existing_wrapper && !reuse_resolve.created_new_wrapper && reuse_resolve.selected_wrapper_index == first_resolve.selected_wrapper_index, "0x4af785 did not reuse an identical copied source record")) {
+			return 1;
+		}
+		if (!require(resolver_state.wrappers.size() == 1 && resolver_state.source_pairs_0xedc.size() == 1 && reuse_resolve.source_pair_count_after == 1, "0x4af785 reuse should not append wrapper/source-pair state")) {
+			return 1;
+		}
+		for (const SourceObjectRecord0x4c &candidate : type199_records) {
+			const SourceObjectMaskLaneResult4af89f candidate_lane =
+					aurelion::h3maped_rmg_core::source_object_mask_lane_selector_0x4af89f(candidate);
+			if (candidate.metadata_bucket_index_0x08 == type199_records[0].metadata_bucket_index_0x08
+					&& candidate.subtype_0x20 == type199_records[0].subtype_0x20
+					&& candidate_lane.selected_lane == type199_lane.selected_lane
+					&& !aurelion::h3maped_rmg_core::same_source_object_record_0x4c(candidate, type199_records[0])) {
+				const SourceObjectResolverResult4af785 mismatch_resolve =
+						aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(resolver_state, candidate);
+				if (!require(mismatch_resolve.created_new_wrapper && mismatch_resolve.source_copy_mismatch_count > 0, "0x4af785 same lane/source-field mismatch did not create a new copied wrapper")) {
+					return 1;
+				}
+				if (!require(resolver_state.wrappers.size() == 2 && resolver_state.source_pairs_0xedc.size() == 2, "0x4af785 mismatch create did not append second wrapper/source pair")) {
+					return 1;
+				}
+				break;
+			}
 		}
 		SourceObjectRecord0x4c blank_record;
 		const SourceObjectMaskLaneResult4af89f blank_lane =

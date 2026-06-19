@@ -191,6 +191,56 @@ struct SourceObjectSelectorResult4a9e40 {
 	int32_t rng_value = -1;
 };
 
+struct SourceObjectResolvedWrapper4af785 {
+	int32_t wrapper_index = -1;
+	int32_t source_catalog_index = -1;
+	SourceObjectRecord0x4c source_record_copy;
+	int32_t metadata_bucket_index_0x08 = -1;
+	int32_t resolver_lane_0x04 = 9;
+	int32_t wrapper_0x04 = -1;
+	bool wrapper_0x10_known = false;
+	int32_t wrapper_0x10 = 0;
+	bool initialized_by_0x49db76 = false;
+	bool copied_source_record = false;
+};
+
+struct SourceObjectResolverSourcePair4af785 {
+	int32_t copied_source_catalog_index = -1;
+	int32_t wrapper_index = -1;
+};
+
+struct SourceObjectResolverState4af785 {
+	std::vector<SourceObjectResolvedWrapper4af785> wrappers;
+	std::vector<SourceObjectResolverSourcePair4af785> source_pairs_0xedc;
+	int32_t next_wrapper_index = 0;
+};
+
+struct SourceObjectResolverResult4af785 {
+	int32_t input_source_catalog_index = -1;
+	int32_t input_source_row = -1;
+	std::string input_def_name;
+	int32_t input_type_id_0x1c = -1;
+	int32_t input_subtype_0x20 = 0;
+	int32_t metadata_bucket_index_0x08 = -1;
+	int32_t resolver_lane_0x04 = 9;
+	bool reused_existing_wrapper = false;
+	bool created_new_wrapper = false;
+	int32_t selected_wrapper_index = -1;
+	int32_t scanned_bucket_wrapper_count = 0;
+	int32_t lane_reject_count = 0;
+	int32_t source_0x20_reject_count = 0;
+	int32_t source_copy_mismatch_count = 0;
+	int32_t bucket_size_before = 0;
+	int32_t bucket_size_after = 0;
+	int32_t source_pair_count_before = 0;
+	int32_t source_pair_count_after = 0;
+	bool appended_source_pair_0xedc = false;
+	bool appended_wrapper_to_bucket = false;
+	bool copied_source_record = false;
+	bool wrapper_0x10_known = false;
+	int32_t wrapper_0x10 = 0;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -210,6 +260,9 @@ SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db
 bool source_object_wrapper_bucket_by_index_0x49db76(int32_t bucket_index, SourceObjectWrapperBucket0xe8 &out_bucket);
 SourceObjectMaskLaneResult4af89f source_object_mask_lane_selector_0x4af89f(const SourceObjectRecord0x4c &record);
 SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_t rng_state, int32_t requested_lane, int32_t bucket_index_0x08, int32_t requested_source_field_0x20);
+bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const SourceObjectRecord0x4c &right);
+int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &record);
+SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(SourceObjectResolverState4af785 &state, const SourceObjectRecord0x4c &record);
 
 struct GeneratedCell49a85dStampResult {
 	bool center_in_bounds = false;
