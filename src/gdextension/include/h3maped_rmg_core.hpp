@@ -339,6 +339,18 @@ struct WeightedObjectRecord4a93a2 {
 	bool enabled_low_byte_0x24 = false;
 };
 
+struct WeightedSchedulerThreshold4a8db2 {
+	bool source_density_fields_known = false;
+	int32_t player_castle_density_0x2c = 0;
+	int32_t player_town_density_0x28 = 0;
+	int32_t neutral_castle_density_0x3c = 0;
+	int32_t neutral_town_density_0x38 = 0;
+	int32_t positive_density_sum = 0;
+	bool threshold_arg_0x18_known = false;
+	int32_t threshold_arg_0x18 = 0;
+	std::string blocked_reason;
+};
+
 struct SourceBoundedCandidate4a7312 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -1272,6 +1284,9 @@ struct GeneratorObjectPrivateState {
 	bool native_object_record_key_allocator_0x4a93a2_known = false;
 	uint32_t next_native_object_record_key_0x4a93a2 = 1U;
 	int32_t object_record_allocation_count_0x4a93a2 = 0;
+	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
+	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
+	std::vector<WeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
 	std::vector<ObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
@@ -1427,6 +1442,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
 SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng);
+WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const SourceZonePayload4a218c &source_payload);
 WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);

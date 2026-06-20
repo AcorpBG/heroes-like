@@ -1694,6 +1694,43 @@ ObjectMaterializationPrep4a8db2_4a901a object_materialization_prep_from_weighted
 	return prep;
 }
 
+WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const SourceZonePayload4a218c &source_payload) {
+	WeightedSchedulerThreshold4a8db2 result;
+	result.source_density_fields_known = true;
+	result.player_castle_density_0x2c = source_payload.player_towns.castle_density;
+	result.player_town_density_0x28 = source_payload.player_towns.town_density;
+	result.neutral_castle_density_0x3c = source_payload.neutral_towns.castle_density;
+	result.neutral_town_density_0x38 = source_payload.neutral_towns.town_density;
+
+	const int32_t densities[] = {
+		result.player_castle_density_0x2c,
+		result.player_town_density_0x28,
+		result.neutral_castle_density_0x3c,
+		result.neutral_town_density_0x38,
+	};
+	for (const int32_t density : densities) {
+		if (density > 0) {
+			result.positive_density_sum += density;
+		}
+	}
+	if (result.positive_density_sum <= 0) {
+		result.blocked_reason = "0x4a8db2_weighted_scheduler_no_positive_town_castle_density";
+		return result;
+	}
+
+	const int32_t quotient = 0x14400 / result.positive_density_sum;
+	int32_t threshold = int32_t(std::sqrt(double(quotient)));
+	while (int64_t(threshold + 1) * int64_t(threshold + 1) <= quotient) {
+		++threshold;
+	}
+	while (int64_t(threshold) * int64_t(threshold) > quotient) {
+		--threshold;
+	}
+	result.threshold_arg_0x18_known = true;
+	result.threshold_arg_0x18 = threshold;
+	return result;
+}
+
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24, uint32_t old_word_0x28, uint32_t old_word_0x2c) {
 	GeneratedCellInitialWords cell;
 	cell.word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
@@ -4312,7 +4349,7 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.town_choice_0x04 = town_choice;
 	owner.source_owner_slot_0x1c_known = seed.source_owner_index >= 0;
 	owner.source_owner_slot_0x1c = seed.source_owner_index;
-	owner.scan_bounds_0x20_0x2c_known = true;
+	owner.scan_bounds_0x20_0x2c_known = false;
 	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
 	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
 	owner.scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
@@ -4577,6 +4614,12 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.object_record_sequence_allocator_0xf44 = 1;
 	state.native_object_record_key_allocator_0x4a93a2_known = true;
 	state.next_native_object_record_key_0x4a93a2 = 1U;
+	state.weighted_scheduler_thresholds_0x4a8db2_known = !template_selection.blocked;
+	state.weighted_scheduler_thresholds_0x4a8db2.reserve(template_selection.runtime_seed.runtime_zone_seeds.size());
+	for (const RuntimeZoneSeedInput4a218c &runtime_zone : template_selection.runtime_seed.runtime_zone_seeds) {
+		state.weighted_scheduler_thresholds_0x4a8db2.push_back(weighted_scheduler_threshold_0x4a8db2(runtime_zone.source_payload));
+	}
+	state.weighted_scheduler_threshold_count_0x4a8db2 = int32_t(state.weighted_scheduler_thresholds_0x4a8db2.size());
 	state.source_owner_player_slots_ed8_ee0_ee4_present = template_selection.player_assignment.complete;
 	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
 	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
@@ -4610,7 +4653,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	apply_endpoint_materialization_state_d014(state);
 	state.remaining_private_state_blockers = {
 		"endpoint_vector_0xd8_0xdc_success_path_source_producer_unrecovered_for_live_materialization",
-		"object_record_vector_0xec4_0xecc_contents_unported",
+		"object_record_vector_0xec4_0xecc_contents_unported_after_0x4a8db2_thresholds_until_0x4a901a_candidate_vector_append_selection_is_ported",
 		"source_pair_vector_0xedc_live_contents_unported",
 		"relation_vector_0x10e4_0x10e8_0x4a1f3b_scan_bounds_and_scan_consumers_unported_after_coordinate_candidate_vector_surface",
 		"endpoint_byte_state_vector_0x1104_0x1108_zero_init_waiting_on_source_owned_endpoint_vector_0xd8_0xdc_count",
