@@ -426,6 +426,7 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.x = input.x;
 	out.y = input.y;
 	out.level = input.level;
+	out.object_record_key_allocated_by_0x4a93a2 = input.object_record_key_allocated_by_0x4a93a2;
 	out.weighted_record_0x4a93a2_known = input.weighted_record_0x4a93a2_known;
 	out.object_record_vtable_0x00 = input.object_record_vtable_0x00;
 	out.object_record_sequence_0x1c = input.object_record_sequence_0x1c;
@@ -499,6 +500,12 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.descriptor_counter_table_0x1110_contents_known = input.descriptor_counter_table_0x1110_contents_known;
 	out.descriptor_counter_table_0x1110_known_count = input.descriptor_counter_table_0x1110_known_count;
 	out.descriptor_counter_table_0x1110_zero_count = int32_t(std::count(input.descriptor_counter_table_0x1110.begin(), input.descriptor_counter_table_0x1110.end(), 0U));
+	out.object_record_sequence_allocator_0xf44_present = input.object_record_sequence_allocator_0xf44_present;
+	out.object_record_sequence_allocator_0xf44_known = input.object_record_sequence_allocator_0xf44_known;
+	out.object_record_sequence_allocator_0xf44 = input.object_record_sequence_allocator_0xf44;
+	out.native_object_record_key_allocator_0x4a93a2_known = input.native_object_record_key_allocator_0x4a93a2_known;
+	out.next_native_object_record_key_0x4a93a2 = input.next_native_object_record_key_0x4a93a2;
+	out.object_record_allocation_count_0x4a93a2 = input.object_record_allocation_count_0x4a93a2;
 	out.object_records_0xec4_ecc.reserve(input.object_records_0xec4_ecc.size());
 	for (const h3maped_rmg_core::ObjectRecordReference4a54a7 &record : input.object_records_0xec4_ecc) {
 		out.object_records_0xec4_ecc.push_back(from_h3maped_object_record_reference_4a54a7(record));
@@ -1300,6 +1307,7 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"x\":" << record.x
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
+			<< ",\"object_record_key_allocated_by_0x4a93a2\":" << (record.object_record_key_allocated_by_0x4a93a2 ? "true" : "false")
 			<< ",\"weighted_record_0x4a93a2_known\":" << (record.weighted_record_0x4a93a2_known ? "true" : "false")
 			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
 			<< ",\"object_record_sequence_0x1c\":" << record.object_record_sequence_0x1c
@@ -1532,6 +1540,13 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"descriptor_counter_table_0x1110_byte_size\":" << h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE << ","
 		<< "\"descriptor_counter_table_0x1110_zero_count\":" << state.descriptor_counter_table_0x1110_zero_count << ","
 		<< "\"descriptor_counter_table_0x1110_source\":\"0x49ecf2_zeroes_generator_plus_0x1110_over_0x3a0_bytes_before_relation_object_commits\","
+		<< "\"object_record_sequence_allocator_0xf44_present\":" << (state.object_record_sequence_allocator_0xf44_present ? "true" : "false") << ","
+		<< "\"object_record_sequence_allocator_0xf44_known\":" << (state.object_record_sequence_allocator_0xf44_known ? "true" : "false") << ","
+		<< "\"object_record_sequence_allocator_0xf44\":" << state.object_record_sequence_allocator_0xf44 << ","
+		<< "\"object_record_sequence_allocator_0xf44_source\":\"0x49ecf2_initializes_generator_plus_0xf44_to_1_and_0x4a93a2_increments_before_record_plus_0x1c_store\","
+		<< "\"native_object_record_key_allocator_0x4a93a2_known\":" << (state.native_object_record_key_allocator_0x4a93a2_known ? "true" : "false") << ","
+		<< "\"next_native_object_record_key_0x4a93a2\":" << state.next_native_object_record_key_0x4a93a2 << ","
+		<< "\"object_record_allocation_count_0x4a93a2\":" << state.object_record_allocation_count_0x4a93a2 << ","
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
 		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","
