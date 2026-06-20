@@ -295,6 +295,22 @@ SharedGeneratorRelationRecordState from_h3maped_generator_relation_record_state(
 	return out;
 }
 
+SharedGeneratorSourceEndpointRecordState from_h3maped_generator_source_endpoint_record_state(const h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b &input) {
+	SharedGeneratorSourceEndpointRecordState out;
+	out.source_link_index = input.source_link_index;
+	out.owner_runtime_zone_index = input.owner_runtime_zone_index;
+	out.owner_source_zone_id = input.owner_source_zone_id;
+	out.target_runtime_zone_index = input.target_runtime_zone_index;
+	out.target_source_zone_id = input.target_source_zone_id;
+	out.source_endpoint = input.source_endpoint;
+	out.target_source_endpoint = input.target_source_endpoint;
+	out.guard_value = input.guard_value;
+	out.wide = input.wide;
+	out.border_guard = input.border_guard;
+	out.reciprocal = input.reciprocal;
+	return out;
+}
+
 SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &input) {
 	SharedGeneratorRelationOwnerState out;
 	out.owner_vector_index = input.owner_vector_index;
@@ -332,6 +348,10 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.owner_local_vector_0x3f4_count = input.owner_local_vector_0x3f4_count;
 	out.owner_local_vector_0x404_count = input.owner_local_vector_0x404_count;
 	out.relation_record_count = input.relation_record_count;
+	out.source_endpoint_records_0xc8_0xcc.reserve(input.source_endpoint_records_0xc8_0xcc.size());
+	for (const h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b &record : input.source_endpoint_records_0xc8_0xcc) {
+		out.source_endpoint_records_0xc8_0xcc.push_back(from_h3maped_generator_source_endpoint_record_state(record));
+	}
 	out.relation_records.reserve(input.relation_records.size());
 	for (const h3maped_rmg_core::GeneratorRelationRecordState4a218c &record : input.relation_records) {
 		out.relation_records.push_back(from_h3maped_generator_relation_record_state(record));
@@ -1156,6 +1176,29 @@ void append_generator_relation_records_json(std::ostream &out, const std::vector
 	out << "]";
 }
 
+void append_generator_source_endpoint_records_json(std::ostream &out, const std::vector<SharedGeneratorSourceEndpointRecordState> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedGeneratorSourceEndpointRecordState &record = records[index];
+		out << "{\"source_link_index\":" << record.source_link_index
+			<< ",\"owner_runtime_zone_index\":" << record.owner_runtime_zone_index
+			<< ",\"owner_source_zone_id\":" << record.owner_source_zone_id
+			<< ",\"target_runtime_zone_index\":" << record.target_runtime_zone_index
+			<< ",\"target_source_zone_id\":" << record.target_source_zone_id
+			<< ",\"source_endpoint\":" << record.source_endpoint
+			<< ",\"target_source_endpoint\":" << record.target_source_endpoint
+			<< ",\"guard_value\":" << record.guard_value
+			<< ",\"wide\":" << (record.wide ? "true" : "false")
+			<< ",\"border_guard\":" << (record.border_guard ? "true" : "false")
+			<< ",\"reciprocal\":" << (record.reciprocal ? "true" : "false")
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_generator_relation_owner_vectors_json(std::ostream &out, const std::vector<SharedGeneratorRelationOwnerState> &owners) {
 	out << "[";
 	for (size_t index = 0; index < owners.size(); ++index) {
@@ -1183,7 +1226,9 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"source_endpoint_vector_0xc8_0xcc_count_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_count_known ? "true" : "false")
 			<< ",\"source_endpoint_vector_0xc8_0xcc_count\":" << owner.source_endpoint_vector_0xc8_0xcc_count
 			<< ",\"source_endpoint_vector_0xc8_0xcc_stride_bytes\":" << owner.source_endpoint_vector_0xc8_0xcc_stride_bytes
-			<< ",\"scan_bounds_0x20_0x2c_known\":" << (owner.scan_bounds_0x20_0x2c_known ? "true" : "false")
+			<< ",\"source_endpoint_records_0xc8_0xcc\":";
+		append_generator_source_endpoint_records_json(out, owner.source_endpoint_records_0xc8_0xcc);
+		out << ",\"scan_bounds_0x20_0x2c_known\":" << (owner.scan_bounds_0x20_0x2c_known ? "true" : "false")
 			<< ",\"scan_bound_low_x_0x20\":" << owner.scan_bound_low_x_0x20
 			<< ",\"scan_bound_low_y_0x24\":" << owner.scan_bound_low_y_0x24
 			<< ",\"scan_bound_high_x_0x28\":" << owner.scan_bound_high_x_0x28
@@ -1330,6 +1375,10 @@ std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> to_h3maped_runtime_lin
 			input.guard_value,
 			input.wide,
 			input.border_guard,
+			input.source_zone_a,
+			input.source_zone_b,
+			input.source_endpoint_a,
+			input.source_endpoint_b,
 		});
 	}
 	return out;
@@ -1368,6 +1417,10 @@ std::vector<SharedRuntimeLinkInput> from_h3maped_runtime_links(const std::vector
 			input.guard_value,
 			input.wide,
 			input.border_guard,
+			input.source_zone_a,
+			input.source_zone_b,
+			input.source_endpoint_a,
+			input.source_endpoint_b,
 		});
 	}
 	return out;

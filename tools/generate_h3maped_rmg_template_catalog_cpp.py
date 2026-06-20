@@ -228,6 +228,9 @@ def render(catalog_path: Path, payload: dict[str, Any]) -> str:
             if not isinstance(link, dict):
                 continue
             player_filter = filter_payload(link.get("player_filter", {}))
+            source_endpoints = link.get("source_endpoints", {})
+            if not isinstance(source_endpoints, dict):
+                source_endpoints = {}
             link_rows.append(
                 "\t{ "
                 f"{i32(link.get('zone1'), -1)}, {i32(link.get('zone2'), -1)}, "
@@ -235,7 +238,8 @@ def render(catalog_path: Path, payload: dict[str, Any]) -> str:
                 f"{'true' if bool(link.get('wide', False)) else 'false'}, "
                 f"{'true' if bool(link.get('border_guard', False)) else 'false'}, "
                 f"{player_filter['min_human']}, {player_filter['max_human']}, "
-                f"{player_filter['min_total']}, {player_filter['max_total']} "
+                f"{player_filter['min_total']}, {player_filter['max_total']}, "
+                f"{i32(source_endpoints.get('zone1'), -1)}, {i32(source_endpoints.get('zone2'), -1)} "
                 "},"
             )
         zone_begin += len(zones)
