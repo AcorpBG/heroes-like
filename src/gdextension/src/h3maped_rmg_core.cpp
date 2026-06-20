@@ -2607,6 +2607,49 @@ static void apply_generated_cell_word20_vector_to_record_grid(GeneratedCellRecor
 	}
 }
 
+static GeneratorRelationOwnerState4a218c *relation_owner_for_runtime_zone_0x4a54a7(GeneratorObjectPrivateState &state, int32_t runtime_zone_index) {
+	for (GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (owner.runtime_zone_index == runtime_zone_index) {
+			return &owner;
+		}
+	}
+	return nullptr;
+}
+
+static bool increment_relation_descriptor_counter_0x4a54a7(GeneratorObjectPrivateState &state, ObjectFootprintCommitResult4a54a7 &result, int64_t projection_flat, int32_t descriptor_type_0x1c) {
+	if (projection_flat < 0 || projection_flat >= int64_t(state.generated_cell_buffer.records.size()) || descriptor_type_0x1c < 0) {
+		return false;
+	}
+	const GeneratedCellRecord0x30 &source_record = state.generated_cell_buffer.records[size_t(projection_flat)];
+	if (!source_record.word_0x20_known) {
+		return false;
+	}
+	const int32_t source_owner = generated_cell_owner_byte2_signed_4a4142(source_record.word_0x20);
+	if (source_owner < 0) {
+		return false;
+	}
+	GeneratorRelationOwnerState4a218c *owner = relation_owner_for_runtime_zone_0x4a54a7(state, source_owner);
+	if (owner == nullptr || !owner->descriptor_type_counter_table_0x44_known) {
+		return false;
+	}
+	if (owner->descriptor_type_counters_0x44.size() != size_t(RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT)) {
+		return false;
+	}
+	if (descriptor_type_0x1c >= int32_t(owner->descriptor_type_counters_0x44.size())) {
+		return false;
+	}
+	uint32_t &counter = owner->descriptor_type_counters_0x44[size_t(descriptor_type_0x1c)];
+	if (counter == 0U && owner->descriptor_type_counter_table_0x44_zero_count > 0) {
+		owner->descriptor_type_counter_table_0x44_zero_count -= 1;
+	}
+	counter += 1U;
+	state.relation_descriptor_counter_increment_count_0x4a54a7 += 1;
+	result.relation_descriptor_counter_incremented = true;
+	result.relation_descriptor_counter_owner_runtime_zone_index = source_owner;
+	result.relation_descriptor_counter_after = int32_t(counter);
+	return true;
+}
+
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30) {
 	ObjectFootprintCommitResult4a54a7 result;
 	ObjectRecordReference4a54a7 object_record;
@@ -2671,6 +2714,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 		return result;
 	}
 	result.projection_anchor_in_bounds = true;
+	increment_relation_descriptor_counter_0x4a54a7(state, result, projection_flat, descriptor_type_0x1c);
 	const uint32_t target_word_0x20_before_projection = target_record.word_0x20;
 	bool all_word20_known = false;
 	std::vector<uint32_t> word_0x20 = generated_cell_word20_vector_from_record_grid(state.generated_cell_buffer, all_word20_known);
@@ -4397,6 +4441,7 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.descriptor_type_counter_table_0x44_known = true;
 	owner.descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
 	owner.descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	owner.descriptor_type_counters_0x44.assign(size_t(RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
 	owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
 	owner.owner_local_vector_0x3e4_count = 0;
 	owner.owner_local_vector_0x3f4_count = 0;
