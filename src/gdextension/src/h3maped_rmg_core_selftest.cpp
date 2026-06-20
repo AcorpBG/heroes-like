@@ -2116,6 +2116,107 @@ int main() {
 				"0x4a8db2 weighted scheduler threshold did not fail closed on zero density")) {
 		return 1;
 	}
+	GeneratorObjectPrivateState weighted_scan_state;
+	weighted_scan_state.width = 112;
+	weighted_scan_state.height = 112;
+	weighted_scan_state.level_count = 1;
+	weighted_scan_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(112, 112, 1);
+	weighted_scan_state.generated_cell_buffer_owned = true;
+	weighted_scan_state.object_records_0xec4_ecc.resize(4);
+	weighted_scan_state.descriptor_counter_table_0x1110_present = true;
+	weighted_scan_state.descriptor_counter_table_0x1110_contents_known = true;
+	weighted_scan_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	weighted_scan_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	weighted_scan_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+	weighted_scan_state.object_record_sequence_allocator_0xf44_present = true;
+	weighted_scan_state.object_record_sequence_allocator_0xf44_known = true;
+	weighted_scan_state.object_record_sequence_allocator_0xf44 = 5;
+	weighted_scan_state.native_object_record_key_allocator_0x4a93a2_known = true;
+	weighted_scan_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+	for (GeneratedCellRecord0x30 &record : weighted_scan_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0xff000064U;
+		record.word_0x24_known = true;
+		record.word_0x24 = 0x00000548U;
+		record.word_0x28_known = true;
+		record.word_0x28 = 0x12005000U;
+		record.word_0x2c_known = true;
+		record.word_0x2c = 0U;
+	}
+	aurelion::h3maped_rmg_core::H3MapedRng weighted_scan_rng;
+	weighted_scan_rng.state = 10U;
+	const auto weighted_scan_result =
+			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(weighted_scan_state, weighted_join, 0, 107, 6, 108, 7, 0, 83, weighted_scan_rng);
+	const int64_t weighted_scan_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+	const GeneratedCellRecord0x30 &weighted_scan_target = weighted_scan_state.generated_cell_buffer.records[size_t(weighted_scan_target_flat)];
+	if (!require(weighted_scan_result.committed
+					&& weighted_scan_result.vector_state_0x4a901a.descriptor_source_bridge_known
+					&& weighted_scan_result.vector_state_0x4a901a.scanned_cell_count == 1
+					&& weighted_scan_result.vector_state_0x4a901a.accepted_candidate_count == 1
+					&& weighted_scan_result.vector_state_0x4a901a.threshold_arg_0x18_after_scan == 100
+					&& weighted_scan_result.vector_state_0x4a901a.local_vector_clear_count_0x4ae52a == 1
+					&& weighted_scan_result.vector_state_0x4a901a.local_vector_append_count_0x4ae1fd == 1
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate_known
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.x == 107
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.y == 6
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.level == 0
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.low_word_score_0x20 == 100U,
+				"0x4a901a weighted candidate scan did not reproduce recovered value-floor/local-vector selection")) {
+		return 1;
+	}
+	if (!require(weighted_scan_result.allocated_record_0x4a93a2
+					&& weighted_scan_result.weighted_record_0x4a93a2.object_record_key == 0x036b6d40U
+					&& weighted_scan_result.weighted_record_0x4a93a2.sequence_0x1c == 5
+					&& weighted_scan_state.object_record_sequence_allocator_0xf44 == 6
+					&& weighted_scan_state.object_record_allocation_count_0x4a93a2 == 1
+					&& weighted_scan_state.weighted_candidate_vector_count_0x4a901a == 1
+					&& weighted_scan_state.weighted_candidate_total_count_0x4a901a == 1
+					&& weighted_scan_state.weighted_candidate_selected_count_0x4a901a == 1
+					&& weighted_scan_state.weighted_candidate_commit_count_0x4a901a == 1,
+				"0x4a901a weighted candidate scan did not allocate/track the recovered 0x4a93a2 record path")) {
+		return 1;
+	}
+	if (!require(weighted_scan_result.commit_0x4a93a2_0x4a901a_0x4a54a7.commit_0x4a54a7.object_vector_appended
+					&& weighted_scan_result.commit_0x4a93a2_0x4a901a_0x4a54a7.commit_0x4a54a7.object_vector_count_after == 5
+					&& weighted_scan_state.descriptor_counter_table_0x1110[size_t(98)] == 5U
+					&& weighted_scan_target.object_reference_count == 1
+					&& weighted_scan_target.object_references_0x04_0x08[0] == 0x036b6d40U,
+				"0x4a901a weighted candidate scan did not dispatch through 0x4a54a7 into object-vector/reference/counter state")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState weighted_scan_reject_state = weighted_scan_state;
+	weighted_scan_reject_state.object_records_0xec4_ecc.resize(4);
+	weighted_scan_reject_state.object_record_sequence_allocator_0xf44 = 5;
+	weighted_scan_reject_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+	weighted_scan_reject_state.object_record_allocation_count_0x4a93a2 = 0;
+	weighted_scan_reject_state.weighted_candidate_vectors_0x4a901a.clear();
+	weighted_scan_reject_state.weighted_candidate_vector_count_0x4a901a = 0;
+	weighted_scan_reject_state.weighted_candidate_total_count_0x4a901a = 0;
+	weighted_scan_reject_state.weighted_candidate_selected_count_0x4a901a = 0;
+	weighted_scan_reject_state.weighted_candidate_commit_count_0x4a901a = 0;
+	weighted_scan_reject_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+	for (GeneratedCellRecord0x30 &record : weighted_scan_reject_state.generated_cell_buffer.records) {
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20 = 0xff000064U;
+		record.word_0x28 = 0x12005000U;
+	}
+	aurelion::h3maped_rmg_core::H3MapedRng weighted_scan_reject_rng;
+	weighted_scan_reject_rng.state = 10U;
+	const auto weighted_scan_reject =
+			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(weighted_scan_reject_state, weighted_join, 0, 107, 6, 108, 7, 0, 101, weighted_scan_reject_rng);
+	if (!require(!weighted_scan_reject.committed
+					&& weighted_scan_reject.blocked_reason == "0x4a901a_weighted_candidate_vector_empty_after_value_floor_and_0x49aa93_filters"
+					&& weighted_scan_reject.vector_state_0x4a901a.value_floor_reject_count == 1
+					&& weighted_scan_reject_state.object_record_allocation_count_0x4a93a2 == 0
+					&& weighted_scan_reject_state.object_records_0xec4_ecc.size() == 4
+					&& weighted_scan_reject_state.descriptor_counter_table_0x1110[size_t(98)] == 4U,
+				"0x4a901a weighted candidate scan did not fail closed before allocation when value floor rejects all candidates")) {
+		return 1;
+	}
 	GeneratorObjectPrivateState weighted_commit_state;
 	weighted_commit_state.width = 112;
 	weighted_commit_state.height = 112;
