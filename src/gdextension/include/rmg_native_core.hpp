@@ -395,6 +395,7 @@ struct SharedGeneratorRelationOwnerState {
 	bool descriptor_type_counter_table_0x44_known = false;
 	int32_t descriptor_type_counter_table_0x44_byte_size = 0x3a0;
 	int32_t descriptor_type_counter_table_0x44_zero_count = 0x3a0 / 4;
+	std::vector<uint32_t> descriptor_type_counters_0x44;
 	bool owner_local_vectors_0x3e4_0x3f4_0x404_known = false;
 	int32_t owner_local_vector_0x3e4_count = 0;
 	int32_t owner_local_vector_0x3f4_count = 0;
@@ -514,6 +515,7 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
 	int32_t descriptor_counter_increment_count_0x4a54a7 = 0;
+	int32_t relation_descriptor_counter_increment_count_0x4a54a7 = 0;
 	int32_t target_cell_word_mutation_count_0x4a54a7 = 0;
 	int32_t projection_score_depletion_count_0x4a54a7 = 0;
 	bool source_owner_player_slots_ed8_ee0_ee4_present = false;

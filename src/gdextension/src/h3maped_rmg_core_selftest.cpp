@@ -1289,6 +1289,11 @@ int main() {
 					"0x49b452 relation owner descriptor table +0x44 was not zero-initialized")) {
 			return 1;
 		}
+		if (!require(owner.descriptor_type_counters_0x44.size() == size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT)
+						&& std::all_of(owner.descriptor_type_counters_0x44.begin(), owner.descriptor_type_counters_0x44.end(), [](uint32_t value) { return value == 0U; }),
+					"0x49b452 relation owner descriptor table +0x44 does not carry concrete zeroed dwords")) {
+			return 1;
+		}
 		if (!require(owner.owner_local_vectors_0x3e4_0x3f4_0x404_known
 						&& owner.owner_local_vector_0x3e4_count == 0
 						&& owner.owner_local_vector_0x3f4_count == 0
@@ -1506,6 +1511,13 @@ int main() {
 	commit_state.descriptor_counter_table_0x1110_contents_known = true;
 	commit_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
 	commit_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	GeneratorRelationOwnerState4a218c commit_relation_owner;
+	commit_relation_owner.runtime_zone_index = 1;
+	commit_relation_owner.descriptor_type_counter_table_0x44_known = true;
+	commit_relation_owner.descriptor_type_counter_table_0x44_byte_size = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
+	commit_relation_owner.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	commit_relation_owner.descriptor_type_counters_0x44.assign(size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+	commit_state.relation_owner_vectors_10e4_10e8.push_back(commit_relation_owner);
 	for (GeneratedCellRecord0x30 &record : commit_state.generated_cell_buffer.records) {
 		record.object_reference_vector_contents_known = true;
 		record.object_reference_count = 0;
@@ -1544,6 +1556,15 @@ int main() {
 					&& commit_state.descriptor_counter_table_0x1110[size_t(54)] == 1U
 					&& commit_state.descriptor_counter_increment_count_0x4a54a7 == 1,
 				"0x4a54a7 did not increment generator +0x1110[descriptor+0x1c]")) {
+		return 1;
+	}
+	if (!require(commit_result.relation_descriptor_counter_incremented
+					&& commit_result.relation_descriptor_counter_owner_runtime_zone_index == 1
+					&& commit_result.relation_descriptor_counter_after == 1
+					&& commit_state.relation_descriptor_counter_increment_count_0x4a54a7 == 1
+					&& commit_state.relation_owner_vectors_10e4_10e8[0].descriptor_type_counter_table_0x44_zero_count == aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT - 1
+					&& commit_state.relation_owner_vectors_10e4_10e8[0].descriptor_type_counters_0x44[size_t(54)] == 1U,
+				"0x4a54a7 did not increment relation owner +0x44[descriptor+0x1c] from descriptor-offset source cell owner")) {
 		return 1;
 	}
 	if (!require((commit_target.word_0x20 & 0xffffU) == 0U

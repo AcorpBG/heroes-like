@@ -396,6 +396,7 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.descriptor_type_counter_table_0x44_known = input.descriptor_type_counter_table_0x44_known;
 	out.descriptor_type_counter_table_0x44_byte_size = input.descriptor_type_counter_table_0x44_byte_size;
 	out.descriptor_type_counter_table_0x44_zero_count = input.descriptor_type_counter_table_0x44_zero_count;
+	out.descriptor_type_counters_0x44 = input.descriptor_type_counters_0x44;
 	out.owner_local_vectors_0x3e4_0x3f4_0x404_known = input.owner_local_vectors_0x3e4_0x3f4_0x404_known;
 	out.owner_local_vector_0x3e4_count = input.owner_local_vector_0x3e4_count;
 	out.owner_local_vector_0x3f4_count = input.owner_local_vector_0x3f4_count;
@@ -529,6 +530,7 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.object_record_vector_append_count_0x4a54a7 = input.object_record_vector_append_count_0x4a54a7;
 	out.generated_cell_object_reference_append_count_0x4a54a7 = input.generated_cell_object_reference_append_count_0x4a54a7;
 	out.descriptor_counter_increment_count_0x4a54a7 = input.descriptor_counter_increment_count_0x4a54a7;
+	out.relation_descriptor_counter_increment_count_0x4a54a7 = input.relation_descriptor_counter_increment_count_0x4a54a7;
 	out.target_cell_word_mutation_count_0x4a54a7 = input.target_cell_word_mutation_count_0x4a54a7;
 	out.projection_score_depletion_count_0x4a54a7 = input.projection_score_depletion_count_0x4a54a7;
 	out.source_owner_player_slots_ed8_ee0_ee4_present = input.source_owner_player_slots_ed8_ee0_ee4_present;
@@ -1508,7 +1510,9 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"descriptor_type_counter_table_0x44_known\":" << (owner.descriptor_type_counter_table_0x44_known ? "true" : "false")
 			<< ",\"descriptor_type_counter_table_0x44_byte_size\":" << owner.descriptor_type_counter_table_0x44_byte_size
 			<< ",\"descriptor_type_counter_table_0x44_zero_count\":" << owner.descriptor_type_counter_table_0x44_zero_count
-			<< ",\"owner_local_vectors_0x3e4_0x3f4_0x404_known\":" << (owner.owner_local_vectors_0x3e4_0x3f4_0x404_known ? "true" : "false")
+			<< ",\"descriptor_type_counters_0x44\":";
+		append_json_u32_array(out, owner.descriptor_type_counters_0x44);
+		out << ",\"owner_local_vectors_0x3e4_0x3f4_0x404_known\":" << (owner.owner_local_vectors_0x3e4_0x3f4_0x404_known ? "true" : "false")
 			<< ",\"owner_local_vector_0x3e4_count\":" << owner.owner_local_vector_0x3e4_count
 			<< ",\"owner_local_vector_0x3f4_count\":" << owner.owner_local_vector_0x3f4_count
 			<< ",\"owner_local_vector_0x404_count\":" << owner.owner_local_vector_0x404_count
@@ -1621,6 +1625,7 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
 		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","
+		<< "\"relation_descriptor_counter_increment_count_0x4a54a7\":" << state.relation_descriptor_counter_increment_count_0x4a54a7 << ","
 		<< "\"target_cell_word_mutation_count_0x4a54a7\":" << state.target_cell_word_mutation_count_0x4a54a7 << ","
 		<< "\"projection_score_depletion_count_0x4a54a7\":" << state.projection_score_depletion_count_0x4a54a7 << ","
 		<< "\"object_records_0xec4_ecc\":";
