@@ -955,6 +955,8 @@ uint32_t generated_cell_4a59e2_pack_word_0x28(uint32_t word_0x28, uint32_t arg_b
 uint32_t generated_cell_4a5767_reset_force_word_0x1c(uint32_t word_0x1c_after_4a59e2);
 uint32_t generated_cell_49a318_clear_source_word_0x1c(uint32_t word_0x1c);
 RelationResetCell generated_cell_4a5767_reset_cell(uint32_t source_word_0x20, uint32_t source_word_0x28);
+bool generated_cell_4a5767_reset_projection(GeneratedCellRecord0x30 &record);
+bool generated_cell_49a318_clear_source_projection(GeneratedCellRecord0x30 &record);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);
