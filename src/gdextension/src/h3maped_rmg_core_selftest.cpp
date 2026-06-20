@@ -16,11 +16,13 @@ using aurelion::h3maped_rmg_core::EndpointMaterializationState4a5e73;
 using aurelion::h3maped_rmg_core::EndpointPointerRecord4a5e73;
 using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
+using aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c;
 using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
 using aurelion::h3maped_rmg_core::GeneratedCellRecord0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
+using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
@@ -384,6 +386,39 @@ int main() {
 					&& projection_record.word_0x14 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
 					&& projection_record.word_0x18 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE,
 					"record 0x49a318 source clear did not reset +0x10/+0x14/+0x18 to -1")) {
+			return 1;
+		}
+		GeneratedCellRecordGrid0x30 high_owner_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 1, 1);
+		for (int32_t x = 0; x < 3; ++x) {
+			GeneratedCellRecord0x30 &cell = high_owner_grid.records[size_t(x)];
+			cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(cell.word_0x20, x == 0 ? 0 : 1);
+			cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(cell.word_0x24, 0, 0);
+			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+			if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(cell), "test setup 0x4a5767 reset failed before 0x49a318 high-owner propagation")) {
+				return 1;
+			}
+		}
+		GeneratorRelationOwnerState4a218c high_owner_seed;
+		high_owner_seed.owner_vector_index = 0;
+		high_owner_seed.runtime_zone_index = 0;
+		high_owner_seed.coordinate_triple_0x10_0x18_known = true;
+		high_owner_seed.coordinate_x_0x10 = 0;
+		high_owner_seed.coordinate_y_0x14 = 0;
+		high_owner_seed.coordinate_level_0x18 = 0;
+		const RelationHighOwnerPropagationResult49a318 high_owner_result =
+				aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(high_owner_grid, { high_owner_seed });
+		if (!require(high_owner_result.applied && high_owner_result.grid_available, "0x49a318 high-owner propagation did not run on a valid generated-cell grid")) {
+			return 1;
+		}
+		if (!require(high_owner_result.seed_attempt_count == 1 && high_owner_result.seed_blocked_count == 0, "0x49a318 high-owner propagation did not accept the source relation seed")) {
+			return 1;
+		}
+		if (!require(high_owner_result.cross_owner_high_byte_write_count >= 2 && high_owner_result.owner_high_byte_materialized_count >= 2, "0x49a318 high-owner propagation did not write cross-owner high bytes")) {
+			return 1;
+		}
+		if (!require(((high_owner_grid.records[1].word_0x20 >> 24U) & 0xffU) == 0U
+					&& ((high_owner_grid.records[2].word_0x20 >> 24U) & 0xffU) == 0U,
+					"0x49a318 high-owner propagation did not materialize source owner in +0x20 byte3")) {
 			return 1;
 		}
 		const GeneratedCellWordGrid word_grid = aurelion::h3maped_rmg_core::generated_cell_grid_reset_0x49a072(2, 2, 1);

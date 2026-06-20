@@ -238,6 +238,7 @@ Native helpers:
 - record-level `generated_cell_4a5767_reset_projection`
 - `generated_cell_49a318_clear_source_word_0x1c`
 - record-level `generated_cell_49a318_clear_source_projection`
+- `relation_high_owner_propagation_49a318` for source-backed relation-owner coordinate seed flood and owner-high byte writes.
 - `deplete_generated_cell_scores_4a54a7`
 - record-level `generated_cell_49a1d8_valid_record`
 - record-level and legacy word-array `generated_cell_49aa63`
@@ -258,6 +259,7 @@ Mutation surface:
 - Mutates relation/reset fields in `+0x1c`, high/low parts of `+0x20`, and selected `+0x28` bits.
 - `0x4a5767` record helper writes projection triple `+0x10/+0x14/+0x18` to `-1`, writes the reset `+0x1c`, packs `+0x20` byte3, and clears `+0x28` bits 12..14 from source words.
 - `0x49a318` record helper clears source `+0x1c` low word and resets projection triple `+0x10/+0x14/+0x18` to `-1`.
+- `0x49a318` high-owner propagation now seeds from recovered relation-owner coordinates, flood-fills materialized non-rock generated cells in recovered neighbor order, and writes source owner into `GeneratedCell+0x20` byte3 when crossing low-owner channels.
 - Sets/clears candidate and occupied bits.
 - Sets action/control bits.
 - Uses `+0x2c` gates.
@@ -273,8 +275,8 @@ Mutation surface:
 Known blockers:
 
 - Exact caller sequence from terrain/relation/object phases into these helpers is not fully owned as a single source-order native chain.
-- Record-level helper semantics do not yet mutate the live generated-cell grid in recovered source order.
-- Native now applies the recovered `0x4a5767` full-grid projection reset over the live generated-cell grid and exposes explicit-call `0x4a54a7` object-vector/object-reference/descriptor-counter mutations, but still lacks source-order object-reference vector contents, the `0x4a5767` relation-local scan, and ordered `0x49a318` propagation replay.
+- Record-level helper semantics do not yet mutate the live generated-cell grid in complete recovered source order.
+- Native now applies the recovered `0x4a5767` full-grid projection reset over the live generated-cell grid, runs source-backed `0x49a318` high-owner byte propagation, and exposes explicit-call `0x4a54a7` object-vector/object-reference/descriptor-counter mutations, but still lacks source-order object-reference vector contents, `0x4a1f3b` scan-bounds/scan-consumer updates, the `0x49a318` object-metadata branch, and downstream relation/object caller replay.
 - Native now carries recovered `0x49b452` relation-owner constructor/default fields plus the recovered `0x4a1f3b/0x4a19ed` selected coordinate triple `+0x10..+0x18`, source-zone endpoint vector `+0xc8/+0xcc` contents/count, `0x4a17f5/0x4a1ad8` coordinate candidate vectors consumed by `0x4a1f3b`, and the recovered `0x49f95a` endpoint byte-state vector zero-init relationship to endpoint pointer vector `+0xd8/+0xdc`. The remaining relation-owner/private-state gap is the `0x4a1f3b` scan-bounds updates, endpoint pointer-vector contents/count required for concrete byte-state contents, and later source-order scan consumers.
 - Native still lacks source-owned generator-level `+0xd8/+0xdc` vector contents, the live `+0xf5c` cursor producer, source-owned weighted object-record-key callers, and the downstream live `0x4a606b` / `0x4a696b` / fallback materialization caller order. The implemented `0x4a5e73`, `0x4a606b`, no-object `0x4a5a23`, `0x4903e8`, and explicit `0x4a54a7` prep helpers must not be wired to guessed endpoint/object state.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
@@ -291,8 +293,8 @@ The only 100-percent-safe implementation change from this ledger is to fail clos
 
 ## Next Native Port Targets
 
-1. Port exact caller order for relation/object generated-cell helper mutations before route/object/package consumers run.
-2. Port the source-order relation reset, candidate, occupied/action, score, and reward attachment callers into the active shared native chain.
+1. Port `0x4a1f3b` scan-bounds/scan-consumer updates and the remaining `0x49a318` object-metadata branch before route/object/package consumers run.
+2. Port the source-order candidate, occupied/action, score, and reward attachment callers into the active shared native chain.
 3. Run same-run private-state comparison before allowing route/object/package consumers to use the generated-cell checkpoint.
 
 Until those are complete, checkpoint 2 is blocked, not almost complete.

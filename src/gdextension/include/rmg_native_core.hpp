@@ -492,6 +492,17 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_skipped_count = 0;
+	bool relation_high_owner_propagation_49a318_applied = false;
+	bool relation_high_owner_propagation_49a318_grid_available = false;
+	bool relation_high_owner_propagation_49a318_object_metadata_gate_complete = false;
+	int32_t relation_high_owner_seed_attempt_count_49a318 = 0;
+	int32_t relation_high_owner_seed_blocked_count_49a318 = 0;
+	int32_t relation_high_owner_popped_cell_count_49a318 = 0;
+	int32_t relation_high_owner_same_owner_relax_count_49a318 = 0;
+	int32_t relation_high_owner_cross_owner_high_byte_write_count_49a318 = 0;
+	int32_t relation_high_owner_max_queue_size_49a318 = 0;
+	int32_t relation_high_owner_materialized_count_49a318 = 0;
+	int32_t relation_high_owner_sentinel_count_49a318 = 0;
 	std::vector<std::string> remaining_private_state_blockers;
 };
 
