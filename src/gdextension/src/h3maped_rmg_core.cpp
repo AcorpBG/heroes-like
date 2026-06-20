@@ -2471,13 +2471,8 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	}
 	if (target_record.word_0x20_known && target_record.word_0x28_known) {
 		result.target_cell_words_known = true;
-		const uint32_t old_word_0x20 = target_record.word_0x20;
 		const uint32_t old_word_0x28 = target_record.word_0x28;
-		target_record.word_0x20 = generated_cell_word20_set_low_word(target_record.word_0x20, 0U);
 		target_record.word_0x28 = generated_cell_4a54a7_endpoint_word28(target_record.word_0x28);
-		if (target_record.word_0x20 != old_word_0x20) {
-			result.target_cell_word_mutation_count += 1;
-		}
 		if (target_record.word_0x28 != old_word_0x28) {
 			result.target_cell_word_mutation_count += 1;
 		}
@@ -2496,6 +2491,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 		return result;
 	}
 	result.projection_anchor_in_bounds = true;
+	const uint32_t target_word_0x20_before_projection = target_record.word_0x20;
 	bool all_word20_known = false;
 	std::vector<uint32_t> word_0x20 = generated_cell_word20_vector_from_record_grid(state.generated_cell_buffer, all_word20_known);
 	if (!all_word20_known) {
@@ -2512,6 +2508,11 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	if (result.projection_score_depletion_count > 0) {
 		apply_generated_cell_word20_vector_to_record_grid(state.generated_cell_buffer, word_0x20);
 		state.projection_score_depletion_count_0x4a54a7 += result.projection_score_depletion_count;
+		const GeneratedCellRecord0x30 &updated_target_record = state.generated_cell_buffer.records[size_t(target_flat)];
+		if (updated_target_record.word_0x20 != target_word_0x20_before_projection) {
+			result.target_cell_word_mutation_count += 1;
+			state.target_cell_word_mutation_count_0x4a54a7 += 1;
+		}
 	}
 	return result;
 }

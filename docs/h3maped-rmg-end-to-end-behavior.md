@@ -364,6 +364,7 @@ Recovered static row tables:
 - descriptor `+0x2c/+0x30` select source cell;
 - relation `+0x44[type]` is the per-relation descriptor-type occupancy counter;
 - generated-cell `+0x20` carries source-owner relation index plus local projection distance/score;
+- the descriptor-offset source cell is the direct low-word clear anchor for score depletion; the target cell is lowered by the projection wave and is not cleared first unless source and target are the same cell;
 - it updates object vectors and descriptor counters for weighted materialization.
 
 R3 closes the weighted materialization tail `0x4a8db2 -> 0x4a901a -> 0x4a54a7` for sampled dispatches, including object-vector growth and descriptor counter lane `98` increments.
