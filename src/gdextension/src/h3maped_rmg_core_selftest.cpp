@@ -327,7 +327,10 @@ int main() {
 		if (!require(record.object_reference_vector_fields_0x04_0x08_present, "generated-cell record did not expose object-reference vector fields")) {
 			return 1;
 		}
-		if (!require(!record.object_reference_vector_contents_known, "0x49a072/0x499ea3 reset must not claim object-reference vector contents")) {
+		if (!require(record.object_reference_vector_contents_known
+						&& record.object_reference_count == 0
+						&& record.object_references_0x04_0x08.empty(),
+					"0x499e65/0x499ea3 reset did not expose a known-empty object-reference vector")) {
 			return 1;
 		}
 		if (!require(record.word_0x10_known && record.word_0x10 == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X10, "generated-cell +0x10 reset word mismatch")) {

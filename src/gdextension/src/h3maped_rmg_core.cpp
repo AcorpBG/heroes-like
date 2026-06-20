@@ -1643,8 +1643,9 @@ GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t wi
 	for (GeneratedCellRecord0x30 &record : grid.records) {
 		record.stride_bytes = GENERATED_CELL_RECORD_STRIDE_BYTES;
 		record.object_reference_vector_fields_0x04_0x08_present = true;
-		record.object_reference_vector_contents_known = false;
+		record.object_reference_vector_contents_known = true;
 		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
 		record.word_0x10_known = true;
 		record.word_0x10 = initial.word_0x10;
 		record.word_0x14_known = false;
