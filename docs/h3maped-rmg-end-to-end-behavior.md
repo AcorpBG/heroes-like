@@ -204,11 +204,13 @@ Relation/control records:
 ### Generated Cell Helpers
 
 `0x499e65` constructs one generated-cell record and calls `0x499ea3`.
+It zeros the object-reference vector fields at `+0x04/+0x08/+0x0c` before the initializer call.
 
 `0x49a072` resets the full generated-cell grid by walking `width * height * level_count` records at stride `0x30`.
 
 `0x499ea3` initializes a generated-cell record:
 
+- clears the object-reference vector range through `0x42bde9`;
 - clears `+0x2c` bit `0`;
 - writes `+0x10 = 0xffffffff`;
 - writes `+0x1c = 0x7fbc7fbc`;
