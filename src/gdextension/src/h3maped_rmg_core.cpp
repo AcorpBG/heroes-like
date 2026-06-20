@@ -1438,6 +1438,8 @@ bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const So
 			&& left.last_flag_0x28 == right.last_flag_0x28
 			&& left.pass_count == right.pass_count
 			&& left.action_count == right.action_count
+			&& left.passability_mask == right.passability_mask
+			&& left.action_mask == right.action_mask
 			&& left.terrain_mask_a_0x14 == right.terrain_mask_a_0x14
 			&& left.terrain_mask_b_0x18 == right.terrain_mask_b_0x18
 			&& left.descriptor_mask_fields_0x34_0x48_known == right.descriptor_mask_fields_0x34_0x48_known
@@ -1459,6 +1461,24 @@ int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &recor
 		}
 	}
 	return -1;
+}
+
+std::vector<SourceObjectMaskPoint490f3f> source_object_text_mask_points_0x490f3f(const std::string &mask_text, bool action_mask) {
+	std::vector<SourceObjectMaskPoint490f3f> points;
+	if (mask_text.size() < 48U) {
+		return points;
+	}
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t text_col = 0; text_col < 8; ++text_col) {
+			const bool bit_set = mask_text[size_t(row * 8 + text_col)] == '1';
+			const bool include = action_mask ? bit_set : !bit_set;
+			if (!include) {
+				continue;
+			}
+			points.push_back(SourceObjectMaskPoint490f3f { -text_col, -(5 - row) });
+		}
+	}
+	return points;
 }
 
 SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(SourceObjectResolverState4af785 &state, const SourceObjectRecord0x4c &record) {

@@ -112,6 +112,14 @@ int main() {
 		if (!require(source_object_summary.rand_trn_backed_record_count == 543, "0x49da08 source object catalog lost rand_trn-backed identity")) {
 			return 1;
 		}
+		if (!require(source_object_summary.passability_mask_record_count == source_object_summary.record_count,
+					"0x49da08 source object catalog did not preserve recovered passability mask coverage")) {
+			return 1;
+		}
+		if (!require(source_object_summary.action_mask_record_count == source_object_summary.record_count,
+					"0x49da08 source object catalog did not preserve recovered action mask coverage")) {
+			return 1;
+		}
 		if (!require(source_object_summary.descriptor_mask_field_record_count == source_object_summary.record_count,
 					"0x49da08 source object catalog did not preserve recovered descriptor .msk field coverage")) {
 			return 1;
@@ -1597,13 +1605,40 @@ int main() {
 	if (!require(dungeon_town != type98_records.end(), "0x49da08 source row 153 Town record missing for recovered weighted type-98 materialization")) {
 		return 1;
 	}
+	if (!require(dungeon_town->passability_mask == "000001110000011110001111111111111111111111111111"
+					&& dungeon_town->action_mask == "001000000000000000000000000000000000000000000000"
+					&& dungeon_town->pass_count == 35
+					&& dungeon_town->action_count == 1,
+			"type-98 town source record did not preserve recovered text passability/action masks")) {
+		return 1;
+	}
+	const auto dungeon_body_points = aurelion::h3maped_rmg_core::source_object_text_mask_points_0x490f3f(dungeon_town->passability_mask, false);
+	const auto dungeon_action_points = aurelion::h3maped_rmg_core::source_object_text_mask_points_0x490f3f(dungeon_town->action_mask, true);
+	if (!require(dungeon_body_points.size() == size_t(48 - dungeon_town->pass_count)
+					&& dungeon_body_points[0].dx == 0
+					&& dungeon_body_points[0].dy == -5,
+			"type-98 town source record did not decode recovered passability mask body cells")) {
+		return 1;
+	}
+	if (!require(dungeon_action_points.size() == size_t(dungeon_town->action_count)
+					&& dungeon_action_points[0].dx == -2
+					&& dungeon_action_points[0].dy == -5,
+			"type-98 town source record did not decode recovered action mask visit cell")) {
+		return 1;
+	}
+	if (!require(std::any_of(dungeon_body_points.begin(), dungeon_body_points.end(), [](const auto &point) {
+				return point.dx == -2 && point.dy == -5;
+			}),
+			"type-98 town recovered action cell is not part of the non-passable body footprint")) {
+		return 1;
+	}
 	if (!require(dungeon_town->descriptor_mask_fields_0x34_0x48_known
 					&& dungeon_town->descriptor_mask_fields_exact_def_msk
 					&& dungeon_town->descriptor_width_0x34 == 6
 					&& dungeon_town->descriptor_height_0x38 == 6
 					&& dungeon_town->descriptor_mask_a_0x3c_0x40 == 0xfcfcfcfcfcfcULL
 					&& dungeon_town->descriptor_mask_b_0x44_0x48 == 0xfcfcfcfcfcfcULL,
-				"type-98 town source record did not preserve recovered descriptor .msk fields")) {
+			"type-98 town source record did not preserve recovered descriptor .msk fields")) {
 		return 1;
 	}
 	SourceObjectDescriptor4903e8 weighted_descriptor;
