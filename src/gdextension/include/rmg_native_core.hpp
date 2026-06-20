@@ -534,6 +534,15 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_skipped_count = 0;
+	bool relation_scan_consumers_4a5767_applied = false;
+	bool relation_scan_consumers_4a5767_no_object_projection_chain_complete = false;
+	int32_t relation_scan_consumer_owner_scan_count_4a5767 = 0;
+	int32_t relation_scan_consumer_owner_bounds_blocked_count_4a5767 = 0;
+	int32_t relation_scan_consumer_scanned_cell_count_4a5767 = 0;
+	int32_t relation_scan_consumer_object_branch_blocked_count_4a5767 = 0;
+	int32_t relation_scan_consumer_projected_chain_call_count_4a5767 = 0;
+	int32_t relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = 0;
+	int32_t relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = 0;
 	bool relation_high_owner_propagation_49a318_applied = false;
 	bool relation_high_owner_propagation_49a318_grid_available = false;
 	bool relation_high_owner_propagation_49a318_object_metadata_gate_complete = false;

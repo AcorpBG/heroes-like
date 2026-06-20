@@ -468,6 +468,53 @@ int main() {
 					"0x49a318 high-owner propagation did not materialize source owner in +0x20 byte3")) {
 			return 1;
 		}
+		GeneratedCellRecordGrid0x30 scan_consumer_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 1, 1);
+		for (int32_t x = 0; x < 3; ++x) {
+			GeneratedCellRecord0x30 &cell = scan_consumer_grid.records[size_t(x)];
+			cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(cell.word_0x20, 0);
+			cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(cell.word_0x24, 0, 0);
+			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+			if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(cell), "test setup 0x4a5767 reset failed before relation scan-consumer pass")) {
+				return 1;
+			}
+			cell.word_0x1c = (cell.word_0x1c & 0xffff0000U) | 1U;
+			cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
+			cell.word_0x14 = 0U;
+			cell.word_0x18 = 0U;
+			cell.word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+			cell.byte_0x2b = 0x02U;
+			cell.byte_0x2b_known_mask = 0x02U;
+		}
+		scan_consumer_grid.records[1].word_0x2c |= 0x01U;
+		GeneratorRelationOwnerState4a218c scan_consumer_owner;
+		scan_consumer_owner.owner_vector_index = 0;
+		scan_consumer_owner.runtime_zone_index = 0;
+		scan_consumer_owner.coordinate_triple_0x10_0x18_known = true;
+		scan_consumer_owner.coordinate_level_0x18 = 0;
+		scan_consumer_owner.scan_bounds_0x20_0x2c_known = true;
+		scan_consumer_owner.scan_bound_low_x_0x20 = 0;
+		scan_consumer_owner.scan_bound_low_y_0x24 = 0;
+		scan_consumer_owner.scan_bound_high_x_0x28 = 2;
+		scan_consumer_owner.scan_bound_high_y_0x2c = 1;
+		const auto scan_consumer_result =
+				aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(scan_consumer_grid, { scan_consumer_owner });
+		if (!require(scan_consumer_result.applied
+						&& scan_consumer_result.grid_available
+						&& scan_consumer_result.owner_scan_count == 1
+						&& scan_consumer_result.scanned_cell_count == 2
+						&& scan_consumer_result.projected_chain_call_count == 2
+						&& scan_consumer_result.projected_chain_occupied_stamp_count == 1
+						&& scan_consumer_result.projected_chain_object_branch_blocked_count == 1
+						&& !scan_consumer_result.no_object_projection_chain_complete,
+					"relation scan consumer did not apply recovered no-object projection chain while blocking object materialization branch")) {
+			return 1;
+		}
+		if (!require((scan_consumer_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+						&& (scan_consumer_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U,
+					"relation scan consumer did not stamp occupied bit27 and clear bit26 through 0x4a5a23")) {
+			return 1;
+		}
 		const GeneratedCellWordGrid word_grid = aurelion::h3maped_rmg_core::generated_cell_grid_reset_0x49a072(2, 2, 1);
 		if (!require(word_grid.word_0x20.size() == record_grid.records.size() && word_grid.word_0x20[0] == record.word_0x20, "legacy generated-cell word grid no longer projects from record grid")) {
 			return 1;
@@ -1433,6 +1480,11 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not mutate every generated-cell record from reset/terrain state")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_scan_consumers_4a5767_applied
+					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 == generator_state.relation_owner_vector_count_10e4_10e8,
+				"generator object private state did not run relation scan-consumer pass after 0x4a1f3b bounds")) {
 		return 1;
 	}
 	if (!require(std::all_of(generator_state.generated_cell_buffer.records.begin(), generator_state.generated_cell_buffer.records.end(), [](const aurelion::h3maped_rmg_core::GeneratedCellRecord0x30 &record) {

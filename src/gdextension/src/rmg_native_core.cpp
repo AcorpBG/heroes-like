@@ -552,6 +552,15 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.relation_normalization_4a5767_full_grid_reset_visited_count = input.relation_normalization_4a5767_full_grid_reset_visited_count;
 	out.relation_normalization_4a5767_full_grid_reset_changed_count = input.relation_normalization_4a5767_full_grid_reset_changed_count;
 	out.relation_normalization_4a5767_full_grid_reset_skipped_count = input.relation_normalization_4a5767_full_grid_reset_skipped_count;
+	out.relation_scan_consumers_4a5767_applied = input.relation_scan_consumers_4a5767_applied;
+	out.relation_scan_consumers_4a5767_no_object_projection_chain_complete = input.relation_scan_consumers_4a5767_no_object_projection_chain_complete;
+	out.relation_scan_consumer_owner_scan_count_4a5767 = input.relation_scan_consumer_owner_scan_count_4a5767;
+	out.relation_scan_consumer_owner_bounds_blocked_count_4a5767 = input.relation_scan_consumer_owner_bounds_blocked_count_4a5767;
+	out.relation_scan_consumer_scanned_cell_count_4a5767 = input.relation_scan_consumer_scanned_cell_count_4a5767;
+	out.relation_scan_consumer_object_branch_blocked_count_4a5767 = input.relation_scan_consumer_object_branch_blocked_count_4a5767;
+	out.relation_scan_consumer_projected_chain_call_count_4a5767 = input.relation_scan_consumer_projected_chain_call_count_4a5767;
+	out.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = input.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767;
+	out.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = input.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767;
 	out.relation_high_owner_propagation_49a318_applied = input.relation_high_owner_propagation_49a318_applied;
 	out.relation_high_owner_propagation_49a318_grid_available = input.relation_high_owner_propagation_49a318_grid_available;
 	out.relation_high_owner_propagation_49a318_object_metadata_gate_complete = input.relation_high_owner_propagation_49a318_object_metadata_gate_complete;
@@ -1648,6 +1657,16 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_normalization_4a5767_full_grid_reset_changed_count\":" << state.relation_normalization_4a5767_full_grid_reset_changed_count << ","
 		<< "\"relation_normalization_4a5767_full_grid_reset_skipped_count\":" << state.relation_normalization_4a5767_full_grid_reset_skipped_count << ","
 		<< "\"relation_normalization_4a5767_source\":\"0x4a5767_full_grid_generated_cell_projection_reset_applied_before_relation_scan_0x49a318_replay\","
+		<< "\"relation_scan_consumers_4a5767_applied\":" << (state.relation_scan_consumers_4a5767_applied ? "true" : "false") << ","
+		<< "\"relation_scan_consumers_4a5767_no_object_projection_chain_complete\":" << (state.relation_scan_consumers_4a5767_no_object_projection_chain_complete ? "true" : "false") << ","
+		<< "\"relation_scan_consumer_owner_scan_count_4a5767\":" << state.relation_scan_consumer_owner_scan_count_4a5767 << ","
+		<< "\"relation_scan_consumer_owner_bounds_blocked_count_4a5767\":" << state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 << ","
+		<< "\"relation_scan_consumer_scanned_cell_count_4a5767\":" << state.relation_scan_consumer_scanned_cell_count_4a5767 << ","
+		<< "\"relation_scan_consumer_object_branch_blocked_count_4a5767\":" << state.relation_scan_consumer_object_branch_blocked_count_4a5767 << ","
+		<< "\"relation_scan_consumer_projected_chain_call_count_4a5767\":" << state.relation_scan_consumer_projected_chain_call_count_4a5767 << ","
+		<< "\"relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767\":" << state.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 << ","
+		<< "\"relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767\":" << state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 << ","
+		<< "\"relation_scan_consumers_4a5767_source\":\"source_backed_no_object_projection_chain_consumer_over_0x4a1f3b_relation_scan_bounds_object_materialization_branch_still_blocked\","
 		<< "\"relation_high_owner_propagation_49a318_applied\":" << (state.relation_high_owner_propagation_49a318_applied ? "true" : "false") << ","
 		<< "\"relation_high_owner_propagation_49a318_grid_available\":" << (state.relation_high_owner_propagation_49a318_grid_available ? "true" : "false") << ","
 		<< "\"relation_high_owner_propagation_49a318_object_metadata_gate_complete\":" << (state.relation_high_owner_propagation_49a318_object_metadata_gate_complete ? "true" : "false") << ","
