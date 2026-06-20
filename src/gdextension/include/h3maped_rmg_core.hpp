@@ -34,6 +34,7 @@ constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X20_BYTE3 = 0xffffffffU;
 constexpr uint32_t RELATION_WORD_0X28_BITS_12_14_MASK = 0x7U << 12U;
 constexpr int32_t DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE = 0x3a0;
 constexpr int32_t DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT = DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE / 4;
+constexpr uint32_t WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C = 0x00540a9cU;
 constexpr int32_t RELATION_OWNER_ALLOC_SIZE_0X49B452 = 0x414;
 constexpr int32_t RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452 = 0x7d00;
 constexpr int32_t RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452 = -32000;
@@ -289,6 +290,7 @@ struct ObjectMaterializationPrep4a8db2_4a901a {
 	int32_t source_catalog_index_0x49da08 = -1;
 	SourceObjectRecord0x4c source_record_copy;
 	int32_t selected_wrapper_index_0x4af785 = -1;
+	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	bool object_record_key_known = false;
 	uint32_t object_record_key = 0U;
 	int32_t x = 0;
@@ -296,6 +298,20 @@ struct ObjectMaterializationPrep4a8db2_4a901a {
 	int32_t level = 0;
 	bool ready_for_object_vector_commit_0x4a54a7 = false;
 	std::string blocked_reason;
+};
+
+struct WeightedObjectRecord4a93a2 {
+	uint32_t object_record_vtable_0x00 = WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C;
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	bool coordinate_payload_filled_before_0x4a901a = false;
+	int32_t x = -1;
+	int32_t y = -1;
+	int32_t level = -1;
+	int32_t sequence_0x1c = -1;
+	int32_t selected_index_0x20 = -1;
+	uint32_t enabled_word_0x24 = 0U;
+	bool enabled_low_byte_0x24 = false;
 };
 
 int32_t map_width_for_size_class(const std::string &size_class);
@@ -323,6 +339,7 @@ SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(Sour
 bool recovered_descriptor_join_context_0x4903e8(int32_t target_context);
 SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(SourceObjectResolverState4af785 &state, const SourceObjectDescriptor4903e8 &descriptor, const SourceObjectRecord0x4c &selected_source_record);
 ObjectMaterializationPrep4a8db2_4a901a object_materialization_prep_from_descriptor_join_0x4a8db2_0x4a901a(const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, int32_t x, int32_t y, int32_t level);
+ObjectMaterializationPrep4a8db2_4a901a object_materialization_prep_from_weighted_record_0x4a93a2_0x4a901a(const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
 
 struct GeneratedCell49a85dStampResult {
 	bool center_in_bounds = false;
@@ -1166,7 +1183,14 @@ struct ObjectRecordReference4a54a7 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool weighted_record_0x4a93a2_known = false;
+	uint32_t object_record_vtable_0x00 = 0U;
+	int32_t object_record_sequence_0x1c = -1;
+	int32_t object_record_selected_index_0x20 = -1;
+	uint32_t object_record_enabled_word_0x24 = 0U;
+	bool object_record_enabled_low_byte_0x24 = false;
 	bool source_descriptor_join_0x4903e8_known = false;
+	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	int32_t descriptor_source_key_0x00 = -1;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	int32_t source_catalog_index_0x49da08 = -1;
@@ -1282,6 +1306,15 @@ struct ObjectFootprintCommitResult4a54a7 {
 	int32_t projection_score_depletion_count = 0;
 };
 
+struct WeightedObjectMaterializationCommitResult4a93a2 {
+	ObjectMaterializationPrep4a8db2_4a901a prep_0x4a901a;
+	ObjectFootprintCommitResult4a54a7 commit_0x4a54a7;
+	bool record_vtable_0x540a9c = false;
+	bool record_coordinate_payload_filled = false;
+	bool committed = false;
+	std::string blocked_reason;
+};
+
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 int64_t generated_cell_flat_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 uint32_t generated_cell_zone_word_4a325d(uint32_t existing_word, int32_t zone_id);
@@ -1324,6 +1357,7 @@ ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCell
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
+WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, bool projection_helper_0x4a7312_accepts = true);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);

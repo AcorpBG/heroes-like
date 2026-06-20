@@ -47,6 +47,7 @@ using aurelion::h3maped_rmg_core::TerrainRepaintResult4a3f27;
 using aurelion::h3maped_rmg_core::TemplateSelectionRuntimeResult4ac552;
 using aurelion::h3maped_rmg_core::TemplateLinkRecord4a1f3b;
 using aurelion::h3maped_rmg_core::TemplateZoneRecord4a218c;
+using aurelion::h3maped_rmg_core::WeightedObjectRecord4a93a2;
 
 SourceNodeCyclePoint4a2777 source_node(int32_t x, int32_t y, int32_t model_node_index) {
 	SourceNodeCyclePoint4a2777 node;
@@ -1552,6 +1553,104 @@ int main() {
 					&& prepared_target.object_references_0x04_0x08[0] == 0x036260c1U
 					&& prep_commit_state.descriptor_counter_table_0x1110[size_t(54)] == 1U,
 				"prepared object-vector commit did not feed recovered 0x4a54a7 object-reference/counter mutation")) {
+		return 1;
+	}
+	const std::vector<SourceObjectRecord0x4c> type98_records =
+			aurelion::h3maped_rmg_core::source_object_records_by_type_0x49da08(98);
+	const auto dungeon_town = std::find_if(type98_records.begin(), type98_records.end(), [](const SourceObjectRecord0x4c &record) {
+		return record.source_row == 153;
+	});
+	if (!require(dungeon_town != type98_records.end(), "0x49da08 source row 153 Town record missing for recovered weighted type-98 materialization")) {
+		return 1;
+	}
+	SourceObjectDescriptor4903e8 weighted_descriptor;
+	weighted_descriptor.target_context_0x4903e8 = 98;
+	weighted_descriptor.source_key_0x00 = 153;
+	weighted_descriptor.descriptor_type_0x1c = dungeon_town->type_id_0x1c;
+	weighted_descriptor.subtype_0x20 = dungeon_town->subtype_0x20;
+	weighted_descriptor.group_0x24 = dungeon_town->group_0x24;
+	weighted_descriptor.projection_enabled_0x29 = true;
+	weighted_descriptor.source_cell_x_0x2c = 2;
+	weighted_descriptor.source_cell_y_0x30 = 0;
+	SourceObjectResolverState4af785 weighted_resolver_state;
+	const SourceObjectDescriptorJoinResult4903e8 weighted_join =
+			aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(weighted_resolver_state, weighted_descriptor, *dungeon_town);
+	if (!require(!weighted_join.joined
+					&& !weighted_join.recovered_target_context
+					&& weighted_join.descriptor_source_fields_match
+					&& weighted_join.source_catalog_index_0x49da08 >= 0,
+				"type-98 weighted materialization must remain a recovered 0x4a93a2 bridge, not a fake 0x4903e8 join")) {
+		return 1;
+	}
+	WeightedObjectRecord4a93a2 weighted_record;
+	weighted_record.object_record_key = 0x036b6d40U;
+	weighted_record.object_record_key_known = true;
+	weighted_record.coordinate_payload_filled_before_0x4a901a = true;
+	weighted_record.x = 107;
+	weighted_record.y = 6;
+	weighted_record.level = 0;
+	weighted_record.sequence_0x1c = 5;
+	weighted_record.selected_index_0x20 = -1;
+	weighted_record.enabled_word_0x24 = 0U;
+	weighted_record.enabled_low_byte_0x24 = false;
+	GeneratorObjectPrivateState weighted_commit_state;
+	weighted_commit_state.width = 112;
+	weighted_commit_state.height = 112;
+	weighted_commit_state.level_count = 1;
+	weighted_commit_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(112, 112, 1);
+	weighted_commit_state.generated_cell_buffer_owned = true;
+	weighted_commit_state.object_records_0xec4_ecc.resize(4);
+	weighted_commit_state.descriptor_counter_table_0x1110_present = true;
+	weighted_commit_state.descriptor_counter_table_0x1110_contents_known = true;
+	weighted_commit_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	weighted_commit_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	weighted_commit_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+	for (GeneratedCellRecord0x30 &record : weighted_commit_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0xff000064U;
+		record.word_0x28_known = true;
+		record.word_0x28 = 0x12005000U;
+	}
+	const auto weighted_commit =
+			aurelion::h3maped_rmg_core::object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(weighted_commit_state, weighted_join, weighted_record);
+	const int64_t weighted_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+	const int64_t weighted_source_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 105, 6, 0);
+	const GeneratedCellRecord0x30 &weighted_target = weighted_commit_state.generated_cell_buffer.records[size_t(weighted_target_flat)];
+	const GeneratedCellRecord0x30 &weighted_source = weighted_commit_state.generated_cell_buffer.records[size_t(weighted_source_flat)];
+	if (!require(weighted_commit.committed
+					&& weighted_commit.record_vtable_0x540a9c
+					&& weighted_commit.record_coordinate_payload_filled
+					&& weighted_commit.prep_0x4a901a.weighted_type98_descriptor_bridge_0x4a93a2_known,
+				"weighted 0x4a93a2 materialization did not accept the recovered type-98 source-backed bridge")) {
+		return 1;
+	}
+	if (!require(weighted_commit.commit_0x4a54a7.object_vector_appended
+					&& weighted_commit.commit_0x4a54a7.object_vector_count_after == 5
+					&& weighted_commit.commit_0x4a54a7.descriptor_counter_incremented
+					&& weighted_commit_state.descriptor_counter_table_0x1110[size_t(98)] == 5U,
+				"weighted 0x4a93a2 materialization did not reproduce the recovered object-vector/counter transition")) {
+		return 1;
+	}
+	const auto &weighted_object_record = weighted_commit_state.object_records_0xec4_ecc.back();
+	if (!require(weighted_object_record.weighted_record_0x4a93a2_known
+					&& weighted_object_record.weighted_type98_descriptor_bridge_0x4a93a2_known
+					&& !weighted_object_record.source_descriptor_join_0x4903e8_known
+					&& weighted_object_record.object_record_key == 0x036b6d40U
+					&& weighted_object_record.object_record_sequence_0x1c == 5
+					&& weighted_object_record.source_catalog_index_0x49da08 == weighted_join.source_catalog_index_0x49da08
+					&& weighted_object_record.source_record_copy.def_name == dungeon_town->def_name,
+				"weighted 0x4a93a2 object record did not carry recovered record metadata and source identity")) {
+		return 1;
+	}
+	if (!require(weighted_commit.commit_0x4a54a7.generated_cell_reference_appended
+					&& weighted_target.object_reference_count == 1
+					&& weighted_target.object_references_0x04_0x08[0] == 0x036b6d40U
+					&& (weighted_source.word_0x20 & 0xffffU) == 0U
+					&& (weighted_target.word_0x20 & 0xffffU) < 100U,
+				"weighted 0x4a93a2 materialization did not feed target object-reference and descriptor-offset projection mutations")) {
 		return 1;
 	}
 	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {

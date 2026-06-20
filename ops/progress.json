@@ -716,9 +716,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
-    "currentSliceUpdatedAt": "2026-06-20T17:44:29Z",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+    "currentSliceUpdatedAt": "2026-06-20T18:38:28Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -727,23 +727,25 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
-      "evidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
+      "id": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+      "evidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "timestamp": "2026-06-20T17:44:29Z",
-      "status": "pass_behavior_backed_4a54a7_descriptor_offset_projection_not_full_parity",
-      "summary": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
-      "blocker": "Port source-order object materialization callers/object-reference appends, including the recovered 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producers, the exact 0x4a93a2 coordinate/payload fill before 0x4a7d36, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+      "timestamp": "2026-06-20T18:38:28Z",
+      "status": "pass_behavior_backed_weighted_type98_tail_not_full_parity",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+      "blocker": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
       "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-        "docs/h3maped-rmg-end-to-end-behavior.md",
-        "docs/native-rmg-core-h3maped-drift-audit.md",
-        "docs/native-rmg-generated-cell-mutation-chain.md",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
         "PLAN.md",
         "ops/progress.json",
         "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli"
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
       ],
       "checks": [
         {
@@ -753,14 +755,6 @@
         {
           "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
           "status": "passed_linux_release_native_targets"
-        },
-        {
-          "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug --target aurelion_map_persistence --parallel 2",
-          "status": "passed_windows_debug_mingw_cross_build"
-        },
-        {
-          "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_release -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_release --target aurelion_map_persistence --parallel 2",
-          "status": "passed_windows_release_mingw_cross_build"
         },
         {
           "command": "bin/h3maped_rmg_core_selftest",
@@ -777,27 +771,33 @@
         {
           "command": "python3 tests/validate_repo.py",
           "status": "passed"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
         }
       ]
     },
     "latestEvidence": {
-      "id": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
-      "evidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
+      "id": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+      "evidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "timestamp": "2026-06-20T17:44:29Z",
-      "status": "pass_behavior_backed_4a54a7_descriptor_offset_projection_not_full_parity",
-      "summary": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
-      "blocker": "Port source-order object materialization callers/object-reference appends, including the recovered 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producers, the exact 0x4a93a2 coordinate/payload fill before 0x4a7d36, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+      "timestamp": "2026-06-20T18:38:28Z",
+      "status": "pass_behavior_backed_weighted_type98_tail_not_full_parity",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+      "blocker": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
       "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-        "docs/h3maped-rmg-end-to-end-behavior.md",
-        "docs/native-rmg-core-h3maped-drift-audit.md",
-        "docs/native-rmg-generated-cell-mutation-chain.md",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
         "PLAN.md",
         "ops/progress.json",
         "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli"
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
       ],
       "checks": [
         {
@@ -807,14 +807,6 @@
         {
           "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
           "status": "passed_linux_release_native_targets"
-        },
-        {
-          "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug --target aurelion_map_persistence --parallel 2",
-          "status": "passed_windows_debug_mingw_cross_build"
-        },
-        {
-          "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_release -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_release --target aurelion_map_persistence --parallel 2",
-          "status": "passed_windows_release_mingw_cross_build"
         },
         {
           "command": "bin/h3maped_rmg_core_selftest",
@@ -831,21 +823,27 @@
         {
           "command": "python3 tests/validate_repo.py",
           "status": "passed"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
         }
       ]
     },
     "latestEvidenceArtifacts": [
+      "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-      "docs/h3maped-rmg-end-to-end-behavior.md",
-      "docs/native-rmg-core-h3maped-drift-audit.md",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "src/gdextension/include/rmg_native_core.hpp",
+      "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli"
+      "bin/rmg_native_batch_export_cli",
+      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
     ],
-    "latestEvidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
+    "latestEvidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -1553,7 +1551,9 @@
       "explicit_0x4a54a7_target_low_word_preclear_removed": true,
       "explicit_0x4a54a7_nonzero_offset_selftest_passed": true,
       "source_order_object_materialization_callers_ported": false,
-      "object_materialization_parity_complete": false
+      "object_materialization_parity_complete": false,
+      "weighted_type98_record_tail_0x4a93a2_0x4a901a_0x4a54a7_ported": true,
+      "full_rmg_parity_complete": false
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -1564,8 +1564,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Checkpoint 2 remains blocked by source-order relation/object materialization and same-run private-state replay, not by explicit 0x4a54a7 descriptor-offset projection semantics.",
-    "remainingWork": "Port source-order object materialization callers/object-reference appends, including the recovered 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producers, the exact 0x4a93a2 coordinate/payload fill before 0x4a7d36, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+    "remainingGap": "Checkpoint 2 remains blocked by generic source-order materialization producer/order and downstream relation/object materialization. The recovered weighted type-98 record-tail commit is implemented, but it does not yet generate the full live object stream or authorize map output.",
+    "remainingWork": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
     "result": "Native RMG checkpoint 2 remains pending. The generated-cell phase ledger is now explicit, and native is being corrected to fail closed instead of exposing a reset-plus-owner-word private-state checkpoint.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -1574,7 +1574,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -1587,7 +1587,7 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-20T17:44:29Z",
+    "updatedAt": "2026-06-20T18:38:28Z",
     "validation": {
       "id": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
       "evidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
@@ -12385,14 +12385,14 @@
       "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
     }
   ],
-  "currentNotes": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
+  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-20T17:44:29Z",
+  "currentSliceUpdatedAt": "2026-06-20T18:38:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -15656,23 +15656,25 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
-    "evidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
+    "id": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+    "evidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-20T17:44:29Z",
-    "status": "pass_behavior_backed_4a54a7_descriptor_offset_projection_not_full_parity",
-    "summary": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
-    "blocker": "Port source-order object materialization callers/object-reference appends, including the recovered 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producers, the exact 0x4a93a2 coordinate/payload fill before 0x4a7d36, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+    "timestamp": "2026-06-20T18:38:28Z",
+    "status": "pass_behavior_backed_weighted_type98_tail_not_full_parity",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+    "blocker": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
     "artifacts": [
+      "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-      "docs/h3maped-rmg-end-to-end-behavior.md",
-      "docs/native-rmg-core-h3maped-drift-audit.md",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "src/gdextension/include/rmg_native_core.hpp",
+      "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli"
+      "bin/rmg_native_batch_export_cli",
+      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
     ],
     "checks": [
       {
@@ -15682,14 +15684,6 @@
       {
         "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
         "status": "passed_linux_release_native_targets"
-      },
-      {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug --target aurelion_map_persistence --parallel 2",
-        "status": "passed_windows_debug_mingw_cross_build"
-      },
-      {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_release -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_release --target aurelion_map_persistence --parallel 2",
-        "status": "passed_windows_release_mingw_cross_build"
       },
       {
         "command": "bin/h3maped_rmg_core_selftest",
@@ -15706,27 +15700,33 @@
       {
         "command": "python3 tests/validate_repo.py",
         "status": "passed"
+      },
+      {
+        "command": "Windows MinGW DLL builds",
+        "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
       }
     ]
   },
   "latestEvidence": {
-    "id": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
-    "evidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
+    "id": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+    "evidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-20T17:44:29Z",
-    "status": "pass_behavior_backed_4a54a7_descriptor_offset_projection_not_full_parity",
-    "summary": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
-    "blocker": "Port source-order object materialization callers/object-reference appends, including the recovered 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producers, the exact 0x4a93a2 coordinate/payload fill before 0x4a7d36, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+    "timestamp": "2026-06-20T18:38:28Z",
+    "status": "pass_behavior_backed_weighted_type98_tail_not_full_parity",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+    "blocker": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
     "artifacts": [
+      "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-      "docs/h3maped-rmg-end-to-end-behavior.md",
-      "docs/native-rmg-core-h3maped-drift-audit.md",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "src/gdextension/include/rmg_native_core.hpp",
+      "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli"
+      "bin/rmg_native_batch_export_cli",
+      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
     ],
     "checks": [
       {
@@ -15736,14 +15736,6 @@
       {
         "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
         "status": "passed_linux_release_native_targets"
-      },
-      {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug --target aurelion_map_persistence --parallel 2",
-        "status": "passed_windows_debug_mingw_cross_build"
-      },
-      {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_release -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ && cmake --build .artifacts/map_persistence_native_build_windows_mingw_release --target aurelion_map_persistence --parallel 2",
-        "status": "passed_windows_release_mingw_cross_build"
       },
       {
         "command": "bin/h3maped_rmg_core_selftest",
@@ -15760,21 +15752,27 @@
       {
         "command": "python3 tests/validate_repo.py",
         "status": "passed"
+      },
+      {
+        "command": "Windows MinGW DLL builds",
+        "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
       }
     ]
   },
   "latestEvidenceArtifacts": [
+    "src/gdextension/include/h3maped_rmg_core.hpp",
     "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-    "docs/h3maped-rmg-end-to-end-behavior.md",
-    "docs/native-rmg-core-h3maped-drift-audit.md",
-    "docs/native-rmg-generated-cell-mutation-chain.md",
+    "src/gdextension/include/rmg_native_core.hpp",
+    "src/gdextension/src/rmg_native_core.cpp",
     "PLAN.md",
     "ops/progress.json",
     "bin/h3maped_rmg_core_selftest",
-    "bin/rmg_native_batch_export_cli"
+    "bin/rmg_native_batch_export_cli",
+    "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+    "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
   ],
-  "latestEvidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
+  "latestEvidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -16059,7 +16057,9 @@
     "explicit_0x4a54a7_target_low_word_preclear_removed": true,
     "explicit_0x4a54a7_nonzero_offset_selftest_passed": true,
     "source_order_object_materialization_callers_ported": false,
-    "object_materialization_parity_complete": false
+    "object_materialization_parity_complete": false,
+    "weighted_type98_record_tail_0x4a93a2_0x4a901a_0x4a54a7_ported": true,
+    "full_rmg_parity_complete": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
   "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now carries the recovered 0x49f95a endpoint byte-state vector +0x1104/+0x1108 relationship: the byte vector is sized from endpoint pointer vector +0xd8/+0xdc, has 1-byte elements, and is zero-initialized when that source vector count is known. This removes the generic byte-state-vector placeholder without inventing concrete contents; concrete +0x1104/+0x1108 contents remain blocked until the source endpoint pointer vector +0xd8/+0xdc contents/count are ported. 0xf5c seeding, scan-bounds consumers, ordered relation/object replay, descriptor/source joins, object materialization, same-run private-state comparison, and final payload generation remain unported.",
@@ -56659,8 +56659,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Checkpoint 2 remains blocked by source-order relation/object materialization and same-run private-state replay, not by explicit 0x4a54a7 descriptor-offset projection semantics.",
-  "remainingWork": "Port source-order object materialization callers/object-reference appends, including the recovered 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producers, the exact 0x4a93a2 coordinate/payload fill before 0x4a7d36, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+  "remainingGap": "Checkpoint 2 remains blocked by generic source-order materialization producer/order and downstream relation/object materialization. The recovered weighted type-98 record-tail commit is implemented, but it does not yet generate the full live object stream or authorize map output.",
+  "remainingWork": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -57192,9 +57192,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG checkpoint 2 remains pending, but explicit 0x4a54a7 object-footprint commit behavior is now closer to recovered H3MapEd state: h3maped_rmg_core no longer pre-clears the target cell +0x20 low word. It appends the object record to generator +0xec4/+0xecc, appends the key to the target generated-cell object-reference vector when known, increments generator +0x1110[descriptor+0x1c], sets target +0x28 action/occupied bits, and runs score depletion from the descriptor-offset source cell candidate - descriptor +0x2c/+0x30. A nonzero-offset selftest proves the source cell clears while the target is lowered by projection, not blindly zeroed. Full object materialization parity is still blocked by source-order object-record-key callers and downstream relation/object materialization.",
+  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
   "taskId": "10184",
-  "updatedAt": "2026-06-20T17:44:29Z",
+  "updatedAt": "2026-06-20T18:38:28Z",
   "validation": {
     "id": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
     "evidenceId": "native-rmg-4a54a7-descriptor-offset-projection-20260620",
@@ -67955,6 +67955,64 @@
           "status": "passed"
         }
       ]
+    },
+    {
+      "id": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "in_progress",
+      "updatedAt": "2026-06-20T18:38:28Z",
+      "evidence": {
+        "id": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+        "evidenceId": "native-rmg-weighted-4a93a2-type98-tail-20260620",
+        "sliceId": "rmg-small-generalization-hardening-10184",
+        "timestamp": "2026-06-20T18:38:28Z",
+        "status": "pass_behavior_backed_weighted_type98_tail_not_full_parity",
+        "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the source-backed weighted 0x4a93a2 -> 0x4a901a -> 0x4a54a7 record-tail behavior for recovered type-98 0x540a9c records: the prep path refuses unsupported records, allows the recovered type-98 descriptor bridge without pretending it is a 0x4903e8 join, carries copied 0x4c source identity, commits through 0x4a54a7, appends the object record and target generated-cell reference, increments generator+0x1110[98], and preserves descriptor-offset projection mutations. The native wrapper now mirrors the weighted-record metadata in the existing private-state object-record JSON. Full object/materialization parity is still blocked by the generic live source-order candidate/vector producer and downstream relation/reward/guard/object caller order.",
+        "blocker": "Port the generic live source-order materialization producer/selection order beyond source-owned weighted records, including 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a candidate-vector construction and record creation in the active chain, successful reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, 0x4a1f3b scan-bound/scan-consumer updates, the remaining 0x49a318 object-metadata branch, +0xd8/+0xdc endpoint contents/count and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+        "artifacts": [
+          "src/gdextension/include/h3maped_rmg_core.hpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+          "src/gdextension/include/rmg_native_core.hpp",
+          "src/gdextension/src/rmg_native_core.cpp",
+          "PLAN.md",
+          "ops/progress.json",
+          "bin/h3maped_rmg_core_selftest",
+          "bin/rmg_native_batch_export_cli",
+          "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+          "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+        ],
+        "checks": [
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+            "status": "passed_linux_debug_native_targets"
+          },
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+            "status": "passed_linux_release_native_targets"
+          },
+          {
+            "command": "bin/h3maped_rmg_core_selftest",
+            "status": "passed"
+          },
+          {
+            "command": "jq empty ops/progress.json",
+            "status": "passed"
+          },
+          {
+            "command": "git diff --check",
+            "status": "passed"
+          },
+          {
+            "command": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "command": "Windows MinGW DLL builds",
+            "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+          }
+        ]
+      }
     }
   ],
   "validationResults": {
