@@ -133,6 +133,12 @@ struct SourceObjectRecord0x4c {
 	int32_t action_count = 0;
 	uint16_t terrain_mask_a_0x14 = 0U;
 	uint16_t terrain_mask_b_0x18 = 0U;
+	bool descriptor_mask_fields_0x34_0x48_known = false;
+	bool descriptor_mask_fields_exact_def_msk = false;
+	int32_t descriptor_width_0x34 = 0;
+	int32_t descriptor_height_0x38 = 0;
+	uint64_t descriptor_mask_a_0x3c_0x40 = 0U;
+	uint64_t descriptor_mask_b_0x44_0x48 = 0U;
 	std::string terrain_a_names;
 	std::string terrain_b_names;
 	bool rand_trn_backed = false;
@@ -143,6 +149,9 @@ struct SourceObjectCatalogSummary0x49da08 {
 	int32_t source_record_copy_size_bytes = SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C;
 	int32_t objects_txt_record_count = 0;
 	int32_t rand_trn_backed_record_count = 0;
+	int32_t descriptor_mask_field_record_count = 0;
+	int32_t descriptor_mask_exact_def_msk_count = 0;
+	int32_t descriptor_mask_default_msk_fallback_count = 0;
 	int32_t mine_type53_record_count = 0;
 	int32_t mine_type53_ambiguous_subtype_count = 0;
 	bool descriptor_only_mine_identity_ambiguous = false;
@@ -263,6 +272,11 @@ struct SourceObjectDescriptor4903e8 {
 	int32_t score_adjust_0x30 = 0;
 	bool score_adjust_0x40_known = false;
 	int32_t score_adjust_0x40 = 0;
+	bool descriptor_mask_fields_0x34_0x48_known = false;
+	int32_t descriptor_width_0x34 = 0;
+	int32_t descriptor_height_0x38 = 0;
+	uint64_t descriptor_mask_a_0x3c_0x40 = 0U;
+	uint64_t descriptor_mask_b_0x44_0x48 = 0U;
 };
 
 struct SourceObjectDescriptorJoinResult4903e8 {
@@ -274,6 +288,7 @@ struct SourceObjectDescriptorJoinResult4903e8 {
 	bool descriptor_type_matches_source_type_0x1c = false;
 	bool descriptor_subtype_matches_source_0x20 = false;
 	bool descriptor_group_matches_source_0x24 = false;
+	bool descriptor_mask_fields_match_source_0x34_0x48 = false;
 	bool descriptor_source_fields_match = false;
 	bool descriptor_source_key_is_not_source_row_id = false;
 	bool descriptor_only_identity_ambiguous = false;

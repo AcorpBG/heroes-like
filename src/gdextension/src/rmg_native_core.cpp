@@ -669,6 +669,12 @@ SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg
 		input.action_count,
 		input.terrain_mask_a_0x14,
 		input.terrain_mask_b_0x18,
+		input.descriptor_mask_fields_0x34_0x48_known,
+		input.descriptor_mask_fields_exact_def_msk,
+		input.descriptor_width_0x34,
+		input.descriptor_height_0x38,
+		input.descriptor_mask_a_0x3c_0x40,
+		input.descriptor_mask_b_0x44_0x48,
 		input.terrain_a_names,
 		input.terrain_b_names,
 		input.rand_trn_backed,
@@ -866,6 +872,9 @@ void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload)
 	payload.source_object_catalog_0x4c_copy_size_bytes = summary.source_record_copy_size_bytes;
 	payload.source_object_catalog_objects_txt_record_count = summary.objects_txt_record_count;
 	payload.source_object_catalog_rand_trn_backed_record_count = summary.rand_trn_backed_record_count;
+	payload.source_object_catalog_descriptor_mask_field_record_count = summary.descriptor_mask_field_record_count;
+	payload.source_object_catalog_descriptor_mask_exact_def_msk_count = summary.descriptor_mask_exact_def_msk_count;
+	payload.source_object_catalog_descriptor_mask_default_msk_fallback_count = summary.descriptor_mask_default_msk_fallback_count;
 	payload.source_object_catalog_type53_record_count = summary.mine_type53_record_count;
 	payload.source_object_catalog_type53_ambiguous_subtype_count = summary.mine_type53_ambiguous_subtype_count;
 	payload.source_object_catalog_descriptor_only_mine_identity_ambiguous = summary.descriptor_only_mine_identity_ambiguous;
@@ -1086,6 +1095,12 @@ void append_source_object_record_sample_json(std::ostream &out, const SharedSour
 		<< ",\"action_count\":" << record.action_count
 		<< ",\"terrain_mask_a_0x14\":" << record.terrain_mask_a_0x14
 		<< ",\"terrain_mask_b_0x18\":" << record.terrain_mask_b_0x18
+		<< ",\"descriptor_mask_fields_0x34_0x48_known\":" << (record.descriptor_mask_fields_0x34_0x48_known ? "true" : "false")
+		<< ",\"descriptor_mask_fields_exact_def_msk\":" << (record.descriptor_mask_fields_exact_def_msk ? "true" : "false")
+		<< ",\"descriptor_width_0x34\":" << record.descriptor_width_0x34
+		<< ",\"descriptor_height_0x38\":" << record.descriptor_height_0x38
+		<< ",\"descriptor_mask_a_0x3c_0x40\":" << record.descriptor_mask_a_0x3c_0x40
+		<< ",\"descriptor_mask_b_0x44_0x48\":" << record.descriptor_mask_b_0x44_0x48
 		<< ",\"terrain_a_names\":\"" << json_escape(record.terrain_a_names) << "\""
 		<< ",\"terrain_b_names\":\"" << json_escape(record.terrain_b_names) << "\""
 		<< ",\"rand_trn_backed\":" << (record.rand_trn_backed ? "true" : "false")
@@ -1212,6 +1227,9 @@ void append_source_object_record_catalog_json(std::ostream &out, const Recovered
 		<< "\"record_count\":" << payload.source_object_catalog_0x49da08_record_count << ","
 		<< "\"objects_txt_record_count\":" << payload.source_object_catalog_objects_txt_record_count << ","
 		<< "\"rand_trn_backed_record_count\":" << payload.source_object_catalog_rand_trn_backed_record_count << ","
+		<< "\"descriptor_mask_field_record_count\":" << payload.source_object_catalog_descriptor_mask_field_record_count << ","
+		<< "\"descriptor_mask_exact_def_msk_count\":" << payload.source_object_catalog_descriptor_mask_exact_def_msk_count << ","
+		<< "\"descriptor_mask_default_msk_fallback_count\":" << payload.source_object_catalog_descriptor_mask_default_msk_fallback_count << ","
 		<< "\"type53_record_count\":" << payload.source_object_catalog_type53_record_count << ","
 		<< "\"type53_ambiguous_subtype_count\":" << payload.source_object_catalog_type53_ambiguous_subtype_count << ","
 		<< "\"descriptor_only_mine_identity_ambiguous\":" << (payload.source_object_catalog_descriptor_only_mine_identity_ambiguous ? "true" : "false") << ","

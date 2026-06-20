@@ -21,6 +21,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.csv")
 DEFAULT_METADATA = Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.csv")
 DEFAULT_OUT = ROOT / "src/gdextension/src/h3maped_rmg_object_catalog.cpp"
+DEFAULT_MSK_DIRS = [
+    Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/raw"),
+    Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_spr/raw"),
+]
 
 
 def i32(value: Any, default: int = 0) -> int:
@@ -57,15 +61,60 @@ def row_has_rand_trn(row: dict[str, str]) -> bool:
     return bool(row.get("rand_trn_obstacles", "").strip() or row.get("rand_trn_terrain_matches", "").strip())
 
 
-def render(catalog_path: Path, metadata_path: Path, rows: list[dict[str, str]], metadata_bucket_by_type: dict[int, int]) -> str:
+def read_msk_fields(def_name: str, msk_dirs: list[Path]) -> dict[str, Any]:
+    stem = Path(def_name).stem.lower()
+    for candidate, exact in ((f"{stem}.msk", True), ("default.msk", False)):
+        for msk_dir in msk_dirs:
+            path = msk_dir / candidate
+            if not path.exists():
+                continue
+            blob = path.read_bytes()
+            if len(blob) != 14:
+                raise ValueError(f"{path}: expected 14-byte .msk record, got {len(blob)}")
+            return {
+                "known": True,
+                "exact": exact,
+                "width": blob[0],
+                "height": blob[1],
+                "mask_a": int.from_bytes(blob[2:8], "little"),
+                "mask_b": int.from_bytes(blob[8:14], "little"),
+            }
+    return {
+        "known": False,
+        "exact": False,
+        "width": 0,
+        "height": 0,
+        "mask_a": 0,
+        "mask_b": 0,
+    }
+
+
+def render(catalog_path: Path, metadata_path: Path, msk_dirs: list[Path], rows: list[dict[str, str]], metadata_bucket_by_type: dict[int, int]) -> str:
     digest = hashlib.sha256(catalog_path.read_bytes()).hexdigest()
     metadata_digest = hashlib.sha256(metadata_path.read_bytes()).hexdigest()
+    msk_inputs = [path for path in msk_dirs if path.exists()]
+    msk_digest = hashlib.sha256(
+        "\n".join(
+            f"{path}:{path.stat().st_mtime_ns}:{path.stat().st_size}"
+            for path in msk_inputs
+        ).encode("utf-8")
+    ).hexdigest()
     data_rows: list[str] = []
     type53_by_subtype: dict[int, int] = defaultdict(int)
+    msk_known_count = 0
+    msk_exact_count = 0
+    msk_default_count = 0
     for row in rows:
         type_id = i32(row.get("type_id"))
         metadata_bucket = metadata_bucket_by_type.get(type_id, 0)
         subtype = i32(row.get("subtype"))
+        msk = read_msk_fields(str(row.get("def_name", "")), msk_dirs)
+        if msk["known"]:
+            msk_known_count += 1
+            if msk["exact"]:
+                msk_exact_count += 1
+            else:
+                msk_default_count += 1
         if type_id == 53:
             type53_by_subtype[subtype] += 1
         data_rows.append(
@@ -83,6 +132,12 @@ def render(catalog_path: Path, metadata_path: Path, rows: list[dict[str, str]], 
             f"{i32(row.get('action_count'))}, "
             f"uint16_t({terrain_mask(row.get('terrain_mask_a'))}), "
             f"uint16_t({terrain_mask(row.get('terrain_mask_b'))}), "
+            f"{bool_text(msk['known'])}, "
+            f"{bool_text(msk['exact'])}, "
+            f"{int(msk['width'])}, "
+            f"{int(msk['height'])}, "
+            f"uint64_t(0x{int(msk['mask_a']):012x}), "
+            f"uint64_t(0x{int(msk['mask_b']):012x}), "
             f"{cpp_string(row.get('terrain_a_names'))}, "
             f"{cpp_string(row.get('terrain_b_names'))}, "
             f"{bool_text(row_has_rand_trn(row))} "
@@ -95,8 +150,11 @@ def render(catalog_path: Path, metadata_path: Path, rows: list[dict[str, str]], 
 // Source sha256: {digest}
 // Metadata source: {metadata_path}
 // Metadata sha256: {metadata_digest}
+// MSK directories: {", ".join(str(path) for path in msk_dirs)}
+// MSK source digest: {msk_digest}
 // Recovered H3MapEd anchor: 0x49da08 object table loader, copied 0x4c source records.
 // Recovered bucket anchor: object metadata entry +0x08 routes wrappers into generator bucket lanes.
+// Recovered descriptor-mask anchor: 0x4903e8 copies .msk width/height/mask fields into descriptor +0x34..+0x48.
 
 #include "h3maped_rmg_core.hpp"
 
@@ -122,6 +180,12 @@ struct CatalogSourceObjectRecord0x4c {{
 \tint32_t action_count;
 \tuint16_t terrain_mask_a_0x14;
 \tuint16_t terrain_mask_b_0x18;
+\tbool descriptor_mask_fields_0x34_0x48_known;
+\tbool descriptor_mask_fields_exact_def_msk;
+\tint32_t descriptor_width_0x34;
+\tint32_t descriptor_height_0x38;
+\tuint64_t descriptor_mask_a_0x3c_0x40;
+\tuint64_t descriptor_mask_b_0x44_0x48;
 \tconst char *terrain_a_names;
 \tconst char *terrain_b_names;
 \tbool rand_trn_backed;
@@ -146,6 +210,12 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 \tout.action_count = row.action_count;
 \tout.terrain_mask_a_0x14 = row.terrain_mask_a_0x14;
 \tout.terrain_mask_b_0x18 = row.terrain_mask_b_0x18;
+\tout.descriptor_mask_fields_0x34_0x48_known = row.descriptor_mask_fields_0x34_0x48_known;
+\tout.descriptor_mask_fields_exact_def_msk = row.descriptor_mask_fields_exact_def_msk;
+\tout.descriptor_width_0x34 = row.descriptor_width_0x34;
+\tout.descriptor_height_0x38 = row.descriptor_height_0x38;
+\tout.descriptor_mask_a_0x3c_0x40 = row.descriptor_mask_a_0x3c_0x40;
+\tout.descriptor_mask_b_0x44_0x48 = row.descriptor_mask_b_0x44_0x48;
 \tout.terrain_a_names = row.terrain_a_names;
 \tout.terrain_b_names = row.terrain_b_names;
 \tout.rand_trn_backed = row.rand_trn_backed;
@@ -200,6 +270,9 @@ SourceObjectCatalogSummary0x49da08 source_object_catalog_summary_0x49da08() {{
 \tSourceObjectCatalogSummary0x49da08 summary;
 \tsummary.record_count = int32_t(records.size());
 \tsummary.source_record_copy_size_bytes = SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C;
+\tsummary.descriptor_mask_field_record_count = {msk_known_count};
+\tsummary.descriptor_mask_exact_def_msk_count = {msk_exact_count};
+\tsummary.descriptor_mask_default_msk_fallback_count = {msk_default_count};
 \tstd::map<int32_t, int32_t> mine_subtype_counts;
 \tfor (const SourceObjectRecord0x4c &record : records) {{
 \t\tif (record.source == "objects.txt") {{
@@ -288,8 +361,13 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG)
     parser.add_argument("--metadata", type=Path, default=DEFAULT_METADATA)
+    parser.add_argument("--msk-dir", type=Path, action="append", default=[])
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
+    msk_dirs = [path.resolve() for path in (args.msk_dir or DEFAULT_MSK_DIRS)]
+    missing_dirs = [str(path) for path in msk_dirs if not path.exists()]
+    if missing_dirs:
+        raise FileNotFoundError(f"missing .msk directories: {missing_dirs}")
 
     with args.catalog.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
@@ -300,7 +378,7 @@ def main() -> int:
             if i32(row.get("type_id"), -1) >= 0
         }
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(render(args.catalog, args.metadata, rows, metadata_bucket_by_type), encoding="utf-8")
+    args.out.write_text(render(args.catalog, args.metadata, msk_dirs, rows, metadata_bucket_by_type), encoding="utf-8")
     return 0
 
 

@@ -84,6 +84,12 @@ struct SharedSourceObjectRecord0x4c {
 	int32_t action_count = 0;
 	uint16_t terrain_mask_a_0x14 = 0U;
 	uint16_t terrain_mask_b_0x18 = 0U;
+	bool descriptor_mask_fields_0x34_0x48_known = false;
+	bool descriptor_mask_fields_exact_def_msk = false;
+	int32_t descriptor_width_0x34 = 0;
+	int32_t descriptor_height_0x38 = 0;
+	uint64_t descriptor_mask_a_0x3c_0x40 = 0U;
+	uint64_t descriptor_mask_b_0x44_0x48 = 0U;
 	std::string terrain_a_names;
 	std::string terrain_b_names;
 	bool rand_trn_backed = false;
@@ -600,6 +606,9 @@ struct RecoveredOwnerGridPayload {
 	int32_t source_object_catalog_0x4c_copy_size_bytes = 0;
 	int32_t source_object_catalog_objects_txt_record_count = 0;
 	int32_t source_object_catalog_rand_trn_backed_record_count = 0;
+	int32_t source_object_catalog_descriptor_mask_field_record_count = 0;
+	int32_t source_object_catalog_descriptor_mask_exact_def_msk_count = 0;
+	int32_t source_object_catalog_descriptor_mask_default_msk_fallback_count = 0;
 	int32_t source_object_catalog_type53_record_count = 0;
 	int32_t source_object_catalog_type53_ambiguous_subtype_count = 0;
 	bool source_object_catalog_descriptor_only_mine_identity_ambiguous = false;
