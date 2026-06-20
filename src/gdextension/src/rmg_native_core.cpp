@@ -301,6 +301,27 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.runtime_zone_index = input.runtime_zone_index;
 	out.source_zone_id = input.source_zone_id;
 	out.source_index = input.source_index;
+	out.constructor_0x49b452_known = input.constructor_0x49b452_known;
+	out.source_pointer_0x00_known = input.source_pointer_0x00_known;
+	out.source_pointer_source_index_0x00 = input.source_pointer_source_index_0x00;
+	out.town_choice_0x04_known = input.town_choice_0x04_known;
+	out.town_choice_0x04 = input.town_choice_0x04;
+	out.source_owner_slot_0x1c_known = input.source_owner_slot_0x1c_known;
+	out.source_owner_slot_0x1c = input.source_owner_slot_0x1c;
+	out.scan_bounds_0x20_0x2c_known = input.scan_bounds_0x20_0x2c_known;
+	out.scan_bound_low_x_0x20 = input.scan_bound_low_x_0x20;
+	out.scan_bound_low_y_0x24 = input.scan_bound_low_y_0x24;
+	out.scan_bound_high_x_0x28 = input.scan_bound_high_x_0x28;
+	out.scan_bound_high_y_0x2c = input.scan_bound_high_y_0x2c;
+	out.byte_0x3c_known = input.byte_0x3c_known;
+	out.byte_0x3c = input.byte_0x3c;
+	out.descriptor_type_counter_table_0x44_known = input.descriptor_type_counter_table_0x44_known;
+	out.descriptor_type_counter_table_0x44_byte_size = input.descriptor_type_counter_table_0x44_byte_size;
+	out.descriptor_type_counter_table_0x44_zero_count = input.descriptor_type_counter_table_0x44_zero_count;
+	out.owner_local_vectors_0x3e4_0x3f4_0x404_known = input.owner_local_vectors_0x3e4_0x3f4_0x404_known;
+	out.owner_local_vector_0x3e4_count = input.owner_local_vector_0x3e4_count;
+	out.owner_local_vector_0x3f4_count = input.owner_local_vector_0x3f4_count;
+	out.owner_local_vector_0x404_count = input.owner_local_vector_0x404_count;
 	out.relation_record_count = input.relation_record_count;
 	out.relation_records.reserve(input.relation_records.size());
 	for (const h3maped_rmg_core::GeneratorRelationRecordState4a218c &record : input.relation_records) {
@@ -876,6 +897,7 @@ void append_runtime_zone_source_payload_records_json(std::ostream &out, const st
 			<< ",\"source_index\":" << record.source_index
 			<< ",\"h3maped_zone_word_id\":" << record.h3maped_zone_word_id
 			<< ",\"source_bucket\":" << record.source_bucket
+			<< ",\"source_owner_index\":" << record.source_owner_index
 			<< ",\"actual_player_color\":" << record.actual_player_color
 			<< ",\"source_payload\":";
 		append_source_zone_payload_json(out, record.source_payload);
@@ -1136,6 +1158,27 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"runtime_zone_index\":" << owner.runtime_zone_index
 			<< ",\"source_zone_id\":" << owner.source_zone_id
 			<< ",\"source_index\":" << owner.source_index
+			<< ",\"constructor_0x49b452_known\":" << (owner.constructor_0x49b452_known ? "true" : "false")
+			<< ",\"source_pointer_0x00_known\":" << (owner.source_pointer_0x00_known ? "true" : "false")
+			<< ",\"source_pointer_source_index_0x00\":" << owner.source_pointer_source_index_0x00
+			<< ",\"town_choice_0x04_known\":" << (owner.town_choice_0x04_known ? "true" : "false")
+			<< ",\"town_choice_0x04\":" << owner.town_choice_0x04
+			<< ",\"source_owner_slot_0x1c_known\":" << (owner.source_owner_slot_0x1c_known ? "true" : "false")
+			<< ",\"source_owner_slot_0x1c\":" << owner.source_owner_slot_0x1c
+			<< ",\"scan_bounds_0x20_0x2c_known\":" << (owner.scan_bounds_0x20_0x2c_known ? "true" : "false")
+			<< ",\"scan_bound_low_x_0x20\":" << owner.scan_bound_low_x_0x20
+			<< ",\"scan_bound_low_y_0x24\":" << owner.scan_bound_low_y_0x24
+			<< ",\"scan_bound_high_x_0x28\":" << owner.scan_bound_high_x_0x28
+			<< ",\"scan_bound_high_y_0x2c\":" << owner.scan_bound_high_y_0x2c
+			<< ",\"byte_0x3c_known\":" << (owner.byte_0x3c_known ? "true" : "false")
+			<< ",\"byte_0x3c\":" << int32_t(owner.byte_0x3c)
+			<< ",\"descriptor_type_counter_table_0x44_known\":" << (owner.descriptor_type_counter_table_0x44_known ? "true" : "false")
+			<< ",\"descriptor_type_counter_table_0x44_byte_size\":" << owner.descriptor_type_counter_table_0x44_byte_size
+			<< ",\"descriptor_type_counter_table_0x44_zero_count\":" << owner.descriptor_type_counter_table_0x44_zero_count
+			<< ",\"owner_local_vectors_0x3e4_0x3f4_0x404_known\":" << (owner.owner_local_vectors_0x3e4_0x3f4_0x404_known ? "true" : "false")
+			<< ",\"owner_local_vector_0x3e4_count\":" << owner.owner_local_vector_0x3e4_count
+			<< ",\"owner_local_vector_0x3f4_count\":" << owner.owner_local_vector_0x3f4_count
+			<< ",\"owner_local_vector_0x404_count\":" << owner.owner_local_vector_0x404_count
 			<< ",\"relation_record_count\":" << owner.relation_record_count
 			<< ",\"relation_records\":";
 		append_generator_relation_records_json(out, owner.relation_records);
@@ -1179,7 +1222,7 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_owner_vector_count_10e4_10e8\":" << state.relation_owner_vector_count_10e4_10e8 << ","
 		<< "\"relation_record_count_10e4_10e8\":" << state.relation_record_count_10e4_10e8 << ","
 		<< "\"relation_record_missing_endpoint_count_10e4_10e8\":" << state.relation_record_missing_endpoint_count_10e4_10e8 << ","
-		<< "\"relation_record_source\":\"0x4a218c_clones_selected_relation_owners_and_0x49f7c4_appends_reciprocal_7_dword_relation_records_guard_wide_border_guard_fields\","
+		<< "\"relation_record_source\":\"0x49b452_constructs_relation_owner_source_pointer_town_choice_source_owner_slot_default_scan_bounds_local_vectors_then_0x4a218c_clones_selected_relation_owners_and_0x49f7c4_appends_reciprocal_7_dword_relation_records_guard_wide_border_guard_fields\","
 		<< "\"relation_owner_vectors_10e4_10e8\":";
 	append_generator_relation_owner_vectors_json(out, state.relation_owner_vectors_10e4_10e8);
 	out << ","
@@ -1240,23 +1283,24 @@ std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zon
 	std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> out;
 	out.reserve(inputs.size());
 	for (const SharedRuntimeZoneSeedInput &input : inputs) {
-			out.push_back(h3maped_rmg_core::RuntimeZoneSeedInput4a218c {
-				input.runtime_zone_index,
-				input.source_zone_id,
-				input.source_index,
-				input.h3maped_zone_word_id,
-				input.source_bucket,
-				input.actual_player_color,
-				input.source_base_size,
-				input.allowed_town_mask_0x41_0x49,
-				input.selected_town_choice_index_0x49b3c1,
-				input.terrain_match_to_town_0x84,
-				input.allowed_terrain_mask_0x85_0x8c,
-				to_h3maped_source_zone_payload(input.source_payload),
-			});
-		}
-		return out;
+		h3maped_rmg_core::RuntimeZoneSeedInput4a218c zone;
+		zone.runtime_zone_index = input.runtime_zone_index;
+		zone.source_zone_id = input.source_zone_id;
+		zone.source_index = input.source_index;
+		zone.h3maped_zone_word_id = input.h3maped_zone_word_id;
+		zone.source_bucket = input.source_bucket;
+		zone.source_owner_index = input.source_owner_index;
+		zone.actual_player_color = input.actual_player_color;
+		zone.source_base_size = input.source_base_size;
+		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
+		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
+		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
+		zone.allowed_terrain_mask_0x85_0x8c = input.allowed_terrain_mask_0x85_0x8c;
+		zone.source_payload = to_h3maped_source_zone_payload(input.source_payload);
+		out.push_back(zone);
 	}
+	return out;
+}
 
 std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> to_h3maped_runtime_links(const std::vector<SharedRuntimeLinkInput> &inputs) {
 	std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> out;
@@ -1277,23 +1321,24 @@ std::vector<SharedRuntimeZoneSeedInput> from_h3maped_runtime_zone_seeds(const st
 	std::vector<SharedRuntimeZoneSeedInput> out;
 	out.reserve(inputs.size());
 	for (const h3maped_rmg_core::RuntimeZoneSeedInput4a218c &input : inputs) {
-			out.push_back(SharedRuntimeZoneSeedInput {
-				input.runtime_zone_index,
-				input.source_zone_id,
-				input.source_index,
-				input.h3maped_zone_word_id,
-				input.source_bucket,
-				input.actual_player_color,
-				input.source_base_size,
-				input.allowed_town_mask_0x41_0x49,
-				input.selected_town_choice_index_0x49b3c1,
-				input.terrain_match_to_town_0x84,
-				input.allowed_terrain_mask_0x85_0x8c,
-				from_h3maped_source_zone_payload(input.source_payload),
-			});
-		}
-		return out;
+		SharedRuntimeZoneSeedInput zone;
+		zone.runtime_zone_index = input.runtime_zone_index;
+		zone.source_zone_id = input.source_zone_id;
+		zone.source_index = input.source_index;
+		zone.h3maped_zone_word_id = input.h3maped_zone_word_id;
+		zone.source_bucket = input.source_bucket;
+		zone.source_owner_index = input.source_owner_index;
+		zone.actual_player_color = input.actual_player_color;
+		zone.source_base_size = input.source_base_size;
+		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
+		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
+		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
+		zone.allowed_terrain_mask_0x85_0x8c = input.allowed_terrain_mask_0x85_0x8c;
+		zone.source_payload = from_h3maped_source_zone_payload(input.source_payload);
+		out.push_back(zone);
 	}
+	return out;
+}
 
 std::vector<SharedRuntimeLinkInput> from_h3maped_runtime_links(const std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> &inputs) {
 	std::vector<SharedRuntimeLinkInput> out;

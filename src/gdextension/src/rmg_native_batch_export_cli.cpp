@@ -220,7 +220,7 @@ Options parse_options(int argc, char **argv) {
 			std::string raw;
 			take_value(raw);
 			std::vector<int32_t> fields;
-			if (parse_i32_csv(raw, 11, fields) || parse_i32_csv(raw, 7, fields)) {
+			if (parse_i32_csv(raw, 12, fields) || parse_i32_csv(raw, 11, fields) || parse_i32_csv(raw, 8, fields) || parse_i32_csv(raw, 7, fields)) {
 				SharedRuntimeZoneSeedInput input;
 				input.runtime_zone_index = fields[0];
 				input.source_zone_id = fields[1];
@@ -229,11 +229,17 @@ Options parse_options(int argc, char **argv) {
 				input.source_bucket = fields[4];
 				input.actual_player_color = fields[5];
 				input.source_base_size = fields[6];
+				if (fields.size() == 8) {
+					input.source_owner_index = fields[7];
+				}
 				if (fields.size() >= 11) {
 					input.allowed_town_mask_0x41_0x49 = uint16_t(fields[7]);
 					input.selected_town_choice_index_0x49b3c1 = fields[8];
 					input.terrain_match_to_town_0x84 = fields[9] != 0;
 					input.allowed_terrain_mask_0x85_0x8c = uint16_t(fields[10]);
+				}
+				if (fields.size() >= 12) {
+					input.source_owner_index = fields[11];
 				}
 				options.shared_runtime_chain_input.runtime_zone_seeds.push_back(input);
 			}

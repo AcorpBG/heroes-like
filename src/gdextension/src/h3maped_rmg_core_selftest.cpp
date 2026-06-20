@@ -904,11 +904,55 @@ int main() {
 		return 1;
 	}
 	int32_t summed_relation_record_count = 0;
+	int32_t relation_owner_source_slot_known_count = 0;
+	int32_t relation_owner_town_choice_known_count = 0;
 	for (const aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : generator_state.relation_owner_vectors_10e4_10e8) {
 		summed_relation_record_count += owner.relation_record_count;
+		if (!require(owner.constructor_0x49b452_known, "generator relation owner did not carry recovered 0x49b452 constructor state")) {
+			return 1;
+		}
+		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
+			return 1;
+		}
+		if (!require(owner.scan_bounds_0x20_0x2c_known
+						&& owner.scan_bound_low_x_0x20 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
+						&& owner.scan_bound_low_y_0x24 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
+						&& owner.scan_bound_high_x_0x28 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452
+						&& owner.scan_bound_high_y_0x2c == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452,
+					"0x49b452 relation owner default scan bounds were not preserved")) {
+			return 1;
+		}
+		if (!require(owner.byte_0x3c_known && owner.byte_0x3c == 0U, "0x49b452 relation owner byte +0x3c was not zeroed")) {
+			return 1;
+		}
+		if (!require(owner.descriptor_type_counter_table_0x44_known
+						&& owner.descriptor_type_counter_table_0x44_byte_size == aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE
+						&& owner.descriptor_type_counter_table_0x44_zero_count == aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT,
+					"0x49b452 relation owner descriptor table +0x44 was not zero-initialized")) {
+			return 1;
+		}
+		if (!require(owner.owner_local_vectors_0x3e4_0x3f4_0x404_known
+						&& owner.owner_local_vector_0x3e4_count == 0
+						&& owner.owner_local_vector_0x3f4_count == 0
+						&& owner.owner_local_vector_0x404_count == 0,
+					"0x49b452 relation owner local vectors were not initialized empty")) {
+			return 1;
+		}
+		if (owner.source_owner_slot_0x1c_known) {
+			relation_owner_source_slot_known_count += 1;
+		}
+		if (owner.town_choice_0x04_known) {
+			relation_owner_town_choice_known_count += 1;
+		}
 		if (!require(owner.relation_record_count == int32_t(owner.relation_records.size()), "generator relation owner record count does not match owned record vector")) {
 			return 1;
 		}
+	}
+	if (!require(relation_owner_source_slot_known_count > 0, "0x49b452 relation owner source +0x08 to owner +0x1c slot was not carried for any owner")) {
+		return 1;
+	}
+	if (!require(relation_owner_town_choice_known_count > 0, "0x49b452 relation owner town choice +0x04 was not carried from post-0x49b3c1 seed state")) {
+		return 1;
 	}
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {
 		return 1;

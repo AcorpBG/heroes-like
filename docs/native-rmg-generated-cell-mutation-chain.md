@@ -266,6 +266,7 @@ Known blockers:
 - Exact caller sequence from terrain/relation/object phases into these helpers is not fully owned as a single source-order native chain.
 - Record-level helper semantics do not yet mutate the live generated-cell grid in recovered source order.
 - Native now applies the recovered `0x4a5767` full-grid projection reset over the live generated-cell grid, but still lacks source-order object-reference vector contents, the `0x4a5767` relation-local scan, and ordered `0x49a318` propagation replay.
+- Native now carries recovered `0x49b452` relation-owner constructor/default fields. The remaining relation-owner private-state gap is the non-default `0x4a1f3b` bounds/coordinate update path and the later source-order scan consumers.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
 
 Implementation rule: keep helpers available, but do not use them to claim pre-object generated-cell parity until their source callers and inputs are ordered and same-run validated.
