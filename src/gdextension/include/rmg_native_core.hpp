@@ -286,6 +286,49 @@ struct SharedGeneratedCellRecord0x30 {
 	uint32_t word_0x2c = 0U;
 };
 
+struct SharedGeneratorObjectVectorState {
+	std::string label;
+	uint32_t begin_offset = 0U;
+	uint32_t end_offset = 0U;
+	uint32_t capacity_offset = 0U;
+	bool present = false;
+	bool contents_known = false;
+	bool count_known = false;
+	int32_t count = 0;
+};
+
+struct SharedGeneratorObjectPrivateState {
+	bool present = false;
+	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
+	uint32_t width_offset_0x18 = 0x18U;
+	uint32_t height_offset_0x1c = 0x1cU;
+	uint32_t level_count_offset_0x20 = 0x20U;
+	bool generated_cell_buffer_owned = false;
+	int32_t generated_cell_buffer_record_count = 0;
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	SharedGeneratorObjectVectorState endpoint_vector_c8_cc;
+	SharedGeneratorObjectVectorState endpoint_vector_d8_dc;
+	SharedGeneratorObjectVectorState object_record_vector_ec4_ecc;
+	SharedGeneratorObjectVectorState source_pair_vector_edc;
+	SharedGeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
+	SharedGeneratorObjectVectorState candidate_container_vector_10d4_10d8;
+	SharedGeneratorObjectVectorState relation_vector_10e4_10e8;
+	SharedGeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
+	bool endpoint_cursor_0xf5c_present = false;
+	bool endpoint_cursor_0xf5c_known = false;
+	int32_t endpoint_cursor_0xf5c = 0;
+	bool descriptor_counter_table_0x1110_present = false;
+	bool descriptor_counter_table_0x1110_contents_known = false;
+	int32_t descriptor_counter_table_0x1110_known_count = 0;
+	bool source_owner_player_slots_ed8_ee0_ee4_present = false;
+	int32_t selected_color_order_ed8_count = 0;
+	int32_t raw_source_owner_slots_ee0_count = 0;
+	int32_t mapped_source_owner_slots_ee4_count = 0;
+	std::vector<std::string> remaining_private_state_blockers;
+};
+
 struct RecoveredOwnerGridPayload {
 	SharedRuntimeChainInput input;
 	std::vector<std::string> missing_inputs;
@@ -353,6 +396,7 @@ struct RecoveredOwnerGridPayload {
 	bool generated_cell_record_shape_0x30_present = false;
 	int32_t generated_cell_record_stride_bytes = 0x30;
 	std::string generated_cell_record_surface_status;
+	SharedGeneratorObjectPrivateState generator_object_private_state;
 	std::vector<SharedGeneratedCellRecord0x30> generated_cell_records_0x30;
 	std::vector<uint32_t> generated_cell_word_0x10;
 	std::vector<uint32_t> generated_cell_word_0x1c;

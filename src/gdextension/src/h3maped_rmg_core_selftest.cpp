@@ -11,6 +11,7 @@ using aurelion::h3maped_rmg_core::BoundaryMaterialization4a2777;
 using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
+using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
@@ -822,6 +823,31 @@ int main() {
 		return 1;
 	}
 	if (!require(composed.terrain_repaint.full_map_water_repaint_count_0x4a4025 == 36 * 36, "composed chain did not apply terrain full-map repaint")) {
+		return 1;
+	}
+	const GeneratorObjectPrivateState generator_state =
+			aurelion::h3maped_rmg_core::generator_object_private_state_from_recovered_partial_chain(
+					36,
+					36,
+					1,
+					selected_after_setup3,
+					composed);
+	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
+		return 1;
+	}
+	if (!require(generator_state.width == 36 && generator_state.height == 36 && generator_state.level_count == 1, "generator object private state did not preserve +0x18/+0x1c/+0x20 dimensions")) {
+		return 1;
+	}
+	if (!require(generator_state.candidate_container_vector_10d4_10d8.count_known && generator_state.candidate_container_vector_10d4_10d8.count == selected_after_setup3.accepted_template_count, "generator object private state did not preserve accepted candidate vector count")) {
+		return 1;
+	}
+	if (!require(generator_state.source_owner_player_slots_ed8_ee0_ee4_present && generator_state.selected_color_order_ed8_count == int32_t(selected_after_setup3.player_assignment.selected_color_order_ed8.size()), "generator object private state did not preserve source-owner/player-slot buffers")) {
+		return 1;
+	}
+	if (!require(generator_state.object_record_vector_ec4_ecc.present && !generator_state.object_record_vector_ec4_ecc.contents_known, "generator object private state must keep object-vector contents unclaimed until materialization is ported")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_vector_10e4_10e8.present && !generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
 		return 1;
 	}
 	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {

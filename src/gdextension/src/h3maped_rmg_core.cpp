@@ -3215,6 +3215,105 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 	return result;
 }
 
+static GeneratorObjectVectorState generator_object_vector_state(const std::string &label, uint32_t begin_offset, uint32_t end_offset, uint32_t capacity_offset, bool present, bool contents_known, bool count_known, int32_t count) {
+	GeneratorObjectVectorState state;
+	state.label = label;
+	state.begin_offset = begin_offset;
+	state.end_offset = end_offset;
+	state.capacity_offset = capacity_offset;
+	state.present = present;
+	state.contents_known = contents_known;
+	state.count_known = count_known;
+	state.count = count;
+	return state;
+}
+
+static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, const std::vector<uint32_t> &word_0x10, const std::vector<uint32_t> &word_0x1c, const std::vector<uint32_t> &word_0x20, const std::vector<uint32_t> &word_0x24, const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c) {
+	for (size_t index = 0; index < grid.records.size(); ++index) {
+		GeneratedCellRecord0x30 &record = grid.records[index];
+		if (index < word_0x10.size()) {
+			record.word_0x10_known = true;
+			record.word_0x10 = word_0x10[index];
+		}
+		if (index < word_0x1c.size()) {
+			record.word_0x1c_known = true;
+			record.word_0x1c = word_0x1c[index];
+		}
+		if (index < word_0x20.size()) {
+			record.word_0x20_known = true;
+			record.word_0x20 = word_0x20[index];
+		}
+		if (index < word_0x24.size()) {
+			record.word_0x24_known = true;
+			record.word_0x24 = word_0x24[index];
+		}
+		if (index < word_0x28.size()) {
+			record.word_0x28_known = true;
+			record.word_0x28 = word_0x28[index];
+		}
+		if (index < word_0x2c.size()) {
+			record.word_0x2c_known = true;
+			record.word_0x2c = word_0x2c[index];
+		}
+	}
+}
+
+GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
+	GeneratorObjectPrivateState state;
+	state.width = width;
+	state.height = height;
+	state.level_count = level_count;
+	state.generated_cell_buffer = generated_cell_record_grid_reset_0x49a072(width, height, level_count);
+	state.generated_cell_buffer_owned = !state.generated_cell_buffer.records.empty();
+	if (coordinate_result.terrain_repaint_executed) {
+		overlay_generated_cell_words(
+				state.generated_cell_buffer,
+				coordinate_result.terrain_repaint.generated_cell_word_0x10,
+				coordinate_result.terrain_repaint.generated_cell_word_0x1c,
+				coordinate_result.terrain_repaint.generated_cell_word_0x20,
+				coordinate_result.terrain_repaint.generated_cell_word_0x24,
+				coordinate_result.terrain_repaint.generated_cell_word_0x28,
+				coordinate_result.terrain_repaint.generated_cell_word_0x2c);
+	} else if (coordinate_result.owner_grid_executed) {
+		overlay_generated_cell_words(
+				state.generated_cell_buffer,
+				{},
+				{},
+				coordinate_result.owner_grid.materialization.generated_cell_word_0x20,
+				{},
+				{},
+				{});
+	}
+
+	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0);
+	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0);
+	state.object_record_vector_ec4_ecc = generator_object_vector_state("object_record_vector_0xec4_0xecc", 0xec4U, 0xeccU, 0U, true, false, false, 0);
+	state.source_pair_vector_edc = generator_object_vector_state("source_pair_metadata_vector_0xedc", 0xedcU, 0U, 0U, true, false, false, 0);
+	state.pending_entry_vector_eec_ef0_ef4 = generator_object_vector_state("source_handler_pending_entry_vector_0xeec_0xef0_0xef4_source_excluded_for_direct_mode", 0xeecU, 0xef0U, 0xef4U, true, false, true, 0);
+	state.candidate_container_vector_10d4_10d8 = generator_object_vector_state("accepted_candidate_container_vector_0x10d4_0x10d8", 0x10d4U, 0x10d8U, 0U, template_selection.accepted_template_count > 0 || !template_selection.accepted_candidate_containers_10d4_10d8.empty(), true, true, int32_t(template_selection.accepted_candidate_containers_10d4_10d8.size()));
+	state.relation_vector_10e4_10e8 = generator_object_vector_state("relation_vector_0x10e4_0x10e8", 0x10e4U, 0x10e8U, 0U, true, false, false, 0);
+	state.endpoint_byte_state_vector_1104_1108 = generator_object_vector_state("endpoint_byte_state_vector_0x1104_0x1108", 0x1104U, 0x1108U, 0U, true, false, false, 0);
+	state.endpoint_cursor_0xf5c_present = true;
+	state.endpoint_cursor_0xf5c_known = false;
+	state.descriptor_counter_table_0x1110_present = true;
+	state.descriptor_counter_table_0x1110_contents_known = false;
+	state.descriptor_counter_table_0x1110_known_count = 0;
+	state.source_owner_player_slots_ed8_ee0_ee4_present = template_selection.player_assignment.complete;
+	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
+	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
+	state.mapped_source_owner_slots_ee4_count = int32_t(template_selection.player_assignment.mapped_ee4_slots.size());
+	state.remaining_private_state_blockers = {
+		"endpoint_vectors_0xc8_0xcc_and_0xd8_0xdc_contents_unported",
+		"object_record_vector_0xec4_0xecc_contents_unported",
+		"source_pair_vector_0xedc_live_contents_unported",
+		"relation_vector_0x10e4_0x10e8_contents_unported",
+		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
+		"descriptor_counter_table_0x1110_contents_unported",
+		"source_order_relation_object_mutations_not_applied_to_generated_cell_buffer",
+	};
+	return state;
+}
+
 std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a2777(const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs) {
 	std::vector<BoundaryCycleInput4a2777> cycles;
 	cycles.reserve(handoffs.size());
