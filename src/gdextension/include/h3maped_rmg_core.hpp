@@ -288,6 +288,37 @@ struct GeneratedCell49a962SweepResult {
 	int32_t neighbor_clear_count = 0;
 };
 
+struct ConnectionRegionWriterResult4a606b {
+	bool source_cell_in_bounds = false;
+	bool source_projection_triple_known = false;
+	bool source_projection_target_in_bounds = false;
+	int32_t rectangle_scan_count = 0;
+	int32_t object_reference_unknown_skip_count = 0;
+	int32_t object_reference_occupied_skip_count = 0;
+	int32_t unknown_word_skip_count = 0;
+	int32_t candidate_bit_set_count = 0;
+	int32_t packed_stamp_count = 0;
+	int32_t projected_target_unknown_word_skip_count = 0;
+	int32_t projected_target_low_bits_cleared_count = 0;
+	int32_t projected_target_occupied_set_count = 0;
+};
+
+struct ProjectedCellChainResult4a5a23 {
+	bool start_cell_in_bounds = false;
+	bool stopped_on_low_word_zero = false;
+	bool stopped_on_low_word_limit = false;
+	bool stopped_on_out_of_bounds = false;
+	bool stopped_on_unknown_word = false;
+	bool stopped_on_unknown_projection = false;
+	bool stopped_on_object_materialization_required = false;
+	bool truncated_by_cycle_guard = false;
+	int32_t visited_cell_count = 0;
+	int32_t occupied_stamp_count = 0;
+	int32_t cleanup_scan_count = 0;
+	int32_t cleanup_owner_match_count = 0;
+	int32_t cleanup_bit_0x04_clear_count = 0;
+};
+
 struct BoundaryLineCellWrite {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -1125,6 +1156,8 @@ bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, i
 GeneratedCell49a85dStampResult generated_cell_49a85d_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<uint32_t> &word_0x24, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<int32_t> &terrain_code, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
+ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
+ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, bool projection_helper_0x4a7312_accepts = true);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);

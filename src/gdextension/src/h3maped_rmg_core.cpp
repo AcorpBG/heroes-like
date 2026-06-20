@@ -2010,6 +2010,171 @@ GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_
 	return result;
 }
 
+static uint32_t generated_cell_pack_low_nibble_source_0x2c(uint32_t word_0x2c, int32_t low_nibble_source) {
+	return (word_0x2c & 0xffffffe1U) | ((uint32_t(low_nibble_source) & 0x0fU) << 1U) | 0x01U;
+}
+
+static uint8_t generated_cell_word20_owner_byte2(uint32_t word_0x20) {
+	return uint8_t((word_0x20 >> 16U) & 0xffU);
+}
+
+ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source) {
+	ConnectionRegionWriterResult4a606b result;
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || level < 0 || level >= grid.level_count) {
+		return result;
+	}
+
+	const int32_t min_x = std::max<int32_t>(0, x - 1);
+	const int32_t min_y = std::max<int32_t>(0, y - 1);
+	const int32_t max_x = std::min<int32_t>(grid.width, x + 2);
+	const int32_t max_y = std::min<int32_t>(grid.height, y + 2);
+	for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+		for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+			const int64_t flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			result.rectangle_scan_count += 1;
+			GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+			if (!record.object_reference_vector_contents_known) {
+				result.object_reference_unknown_skip_count += 1;
+				continue;
+			}
+			if (record.object_reference_count != 0) {
+				result.object_reference_occupied_skip_count += 1;
+				continue;
+			}
+			if (!record.word_0x28_known || !record.word_0x2c_known) {
+				result.unknown_word_skip_count += 1;
+				continue;
+			}
+			if (generated_cell_49aa63(record, true)) {
+				result.candidate_bit_set_count += 1;
+			}
+			record.word_0x2c = generated_cell_pack_low_nibble_source_0x2c(record.word_0x2c, low_nibble_source);
+			result.packed_stamp_count += 1;
+		}
+	}
+
+	const int64_t source_flat = cell_index(grid.width, grid.height, x, y, level);
+	if (source_flat < 0 || source_flat >= int64_t(grid.records.size())) {
+		return result;
+	}
+	result.source_cell_in_bounds = true;
+	const GeneratedCellRecord0x30 &source_record = grid.records[size_t(source_flat)];
+	if (!source_record.word_0x10_known || !source_record.word_0x14_known || !source_record.word_0x18_known) {
+		return result;
+	}
+	result.source_projection_triple_known = true;
+	const int32_t projected_x = int32_t(source_record.word_0x10);
+	const int32_t projected_y = int32_t(source_record.word_0x14);
+	const int32_t projected_level = int32_t(source_record.word_0x18);
+	const int64_t projected_flat = cell_index(grid.width, grid.height, projected_x, projected_y, projected_level);
+	if (projected_flat < 0 || projected_flat >= int64_t(grid.records.size())) {
+		return result;
+	}
+	result.source_projection_target_in_bounds = true;
+	GeneratedCellRecord0x30 &projected_record = grid.records[size_t(projected_flat)];
+	if (!projected_record.word_0x28_known || !projected_record.word_0x2c_known) {
+		result.projected_target_unknown_word_skip_count += 1;
+		return result;
+	}
+	projected_record.word_0x2c &= ~uint32_t(0x1fU);
+	result.projected_target_low_bits_cleared_count += 1;
+	if (generated_cell_49a932(projected_record, true)) {
+		result.projected_target_occupied_set_count += 1;
+	}
+	return result;
+}
+
+ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup) {
+	ProjectedCellChainResult4a5a23 result;
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0) {
+		result.stopped_on_out_of_bounds = true;
+		return result;
+	}
+
+	const int32_t max_steps = int32_t(grid.records.size()) + 1;
+	for (int32_t step = 0; step < max_steps; ++step) {
+		const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+		if (flat < 0 || flat >= int64_t(grid.records.size())) {
+			result.stopped_on_out_of_bounds = true;
+			return result;
+		}
+		if (step == 0) {
+			result.start_cell_in_bounds = true;
+		}
+		GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+		if (!record.word_0x1c_known || !record.word_0x20_known || !record.word_0x28_known || !record.word_0x2c_known) {
+			result.stopped_on_unknown_word = true;
+			return result;
+		}
+		const uint32_t low_word = record.word_0x1c & 0x0000ffffU;
+		if (low_word == 0U) {
+			result.stopped_on_low_word_zero = true;
+			return result;
+		}
+		if (low_word >= 0x7530U) {
+			result.stopped_on_low_word_limit = true;
+			return result;
+		}
+		result.visited_cell_count += 1;
+		if ((record.word_0x2c & 0x01U) != 0U) {
+			result.stopped_on_object_materialization_required = true;
+			return result;
+		}
+
+		const uint32_t before_word_0x28 = record.word_0x28;
+		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		if (record.word_0x28 != before_word_0x28) {
+			result.occupied_stamp_count += 1;
+		}
+
+		if (!suppress_cleanup) {
+			const uint8_t owner_byte2 = generated_cell_word20_owner_byte2(record.word_0x20);
+			const int32_t min_x = std::max<int32_t>(0, x - 1);
+			const int32_t min_y = std::max<int32_t>(0, y - 1);
+			const int32_t max_x = std::min<int32_t>(grid.width, x + 2);
+			const int32_t max_y = std::min<int32_t>(grid.height, y + 2);
+			for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+				for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+					const int64_t local_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+					if (local_flat < 0 || local_flat >= int64_t(grid.records.size())) {
+						continue;
+					}
+					result.cleanup_scan_count += 1;
+					GeneratedCellRecord0x30 &nearby = grid.records[size_t(local_flat)];
+					if (!nearby.word_0x20_known || !nearby.word_0x2c_known) {
+						continue;
+					}
+					if (generated_cell_word20_owner_byte2(nearby.word_0x20) != owner_byte2 || (nearby.word_0x2c & 0x01U) != 0U) {
+						continue;
+					}
+					result.cleanup_owner_match_count += 1;
+					if ((nearby.byte_0x2b_known_mask & 0x04U) == 0U || (nearby.byte_0x2b & 0x04U) != 0U) {
+						result.cleanup_bit_0x04_clear_count += 1;
+					}
+					nearby.byte_0x2b &= ~uint8_t(0x04U);
+					nearby.byte_0x2b_known_mask |= 0x04U;
+					nearby.byte_0x2b_known = nearby.byte_0x2b_known_mask == 0xffU;
+				}
+			}
+		}
+
+		if (!record.word_0x10_known || !record.word_0x14_known || !record.word_0x18_known) {
+			result.stopped_on_unknown_projection = true;
+			return result;
+		}
+		x = int32_t(record.word_0x10);
+		y = int32_t(record.word_0x14);
+		level = int32_t(record.word_0x18);
+	}
+
+	result.truncated_by_cycle_guard = true;
+	return result;
+}
+
 static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
 	return std::any_of(records.begin(), records.end(), [&](const EndpointPointerRecord4a5e73 &record) {
 		return record.key_0x20 == key_0x20;
