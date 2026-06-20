@@ -18,6 +18,7 @@ using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
 using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
+using aurelion::h3maped_rmg_core::GeneratedCellRecord0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
@@ -360,6 +361,67 @@ int main() {
 		if (!require(!aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_record(mutable_record), "record 0x49a1d8 accepted after +0x2b bit0x02 was cleared")) {
 			return 1;
 		}
+
+		GeneratedCellRecordGrid0x30 region_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(4, 4, 1);
+		for (GeneratedCellRecord0x30 &region_record : region_grid.records) {
+			region_record.object_reference_vector_contents_known = true;
+			region_record.object_reference_count = 0;
+		}
+		GeneratedCellRecord0x30 &region_source = region_grid.records[size_t(aurelion::h3maped_rmg_core::cell_index(4, 4, 1, 1, 0))];
+		region_source.word_0x10_known = true;
+		region_source.word_0x10 = 2U;
+		region_source.word_0x14_known = true;
+		region_source.word_0x14 = 2U;
+		region_source.word_0x18_known = true;
+		region_source.word_0x18 = 0U;
+		const auto region_result = aurelion::h3maped_rmg_core::connection_region_writer_4a606b(region_grid, 1, 1, 0, 0x0a);
+		if (!require(region_result.rectangle_scan_count == 9 && region_result.packed_stamp_count == 9 && region_result.candidate_bit_set_count == 9, "0x4a606b did not stamp the clipped 3x3 empty-object-reference rectangle")) {
+			return 1;
+		}
+		if (!require(region_result.source_projection_target_in_bounds && region_result.projected_target_low_bits_cleared_count == 1 && region_result.projected_target_occupied_set_count == 1, "0x4a606b did not clear/stamp the projected target cell")) {
+			return 1;
+		}
+		const GeneratedCellRecord0x30 &region_target = region_grid.records[size_t(aurelion::h3maped_rmg_core::cell_index(4, 4, 2, 2, 0))];
+		if (!require((region_target.word_0x2c & 0x1fU) == 0U && (region_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U, "0x4a606b projected target did not clear low +0x2c bits and set bit27")) {
+			return 1;
+		}
+
+		GeneratedCellRecordGrid0x30 chain_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(4, 4, 1);
+		for (GeneratedCellRecord0x30 &chain_record : chain_grid.records) {
+			chain_record.byte_0x2b_known_mask = 0x04U;
+			chain_record.byte_0x2b = 0x04U;
+		}
+		GeneratedCellRecord0x30 &chain_start = chain_grid.records[size_t(aurelion::h3maped_rmg_core::cell_index(4, 4, 1, 1, 0))];
+		chain_start.word_0x1c = 0x00000002U;
+		chain_start.word_0x10_known = true;
+		chain_start.word_0x10 = 2U;
+		chain_start.word_0x14_known = true;
+		chain_start.word_0x14 = 1U;
+		chain_start.word_0x18_known = true;
+		chain_start.word_0x18 = 0U;
+		chain_start.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		GeneratedCellRecord0x30 &chain_stop = chain_grid.records[size_t(aurelion::h3maped_rmg_core::cell_index(4, 4, 2, 1, 0))];
+		chain_stop.word_0x1c = 0U;
+		const auto chain_result = aurelion::h3maped_rmg_core::projected_cell_chain_no_object_4a5a23(chain_grid, 1, 1, 0, false);
+		if (!require(chain_result.start_cell_in_bounds && chain_result.visited_cell_count == 1 && chain_result.occupied_stamp_count == 1 && chain_result.stopped_on_low_word_zero, "0x4a5a23 no-object projection chain did not stamp the start cell then stop on low-word zero")) {
+			return 1;
+		}
+		if (!require(chain_result.cleanup_scan_count == 9 && chain_result.cleanup_owner_match_count == 9 && chain_result.cleanup_bit_0x04_clear_count == 9, "0x4a5a23 cleanup did not clear nearby same-owner +0x2b bit0x04")) {
+			return 1;
+		}
+		if (!require((chain_start.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U && (chain_start.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U, "0x4a5a23 no-object branch did not set bit27 and clear bit26")) {
+			return 1;
+		}
+
+		GeneratedCellRecordGrid0x30 chain_object_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+		GeneratedCellRecord0x30 &chain_object_start = chain_object_grid.records[0];
+		chain_object_start.word_0x1c = 0x00000002U;
+		chain_object_start.word_0x2c = 0x01U;
+		const auto chain_object_result = aurelion::h3maped_rmg_core::projected_cell_chain_no_object_4a5a23(chain_object_grid, 0, 0, 0, false);
+		if (!require(chain_object_result.stopped_on_object_materialization_required && chain_object_result.occupied_stamp_count == 0, "0x4a5a23 must stop instead of guessing the +0x2c bit0 object-materialization branch")) {
+			return 1;
+		}
+
 		EndpointMaterializationState4a5e73 endpoint_state;
 		endpoint_state.endpoint_vector_d8_dc = { EndpointPointerRecord4a5e73 { 2 }, EndpointPointerRecord4a5e73 { 4 } };
 		endpoint_state.byte_state_vector_1104_1108 = { 1U, 1U, 0U, 1U, 0U };
