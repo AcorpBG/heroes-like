@@ -406,7 +406,14 @@ struct SharedObjectRecordReference4a54a7 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool weighted_record_0x4a93a2_known = false;
+	uint32_t object_record_vtable_0x00 = 0U;
+	int32_t object_record_sequence_0x1c = -1;
+	int32_t object_record_selected_index_0x20 = -1;
+	uint32_t object_record_enabled_word_0x24 = 0U;
+	bool object_record_enabled_low_byte_0x24 = false;
 	bool source_descriptor_join_0x4903e8_known = false;
+	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	int32_t descriptor_source_key_0x00 = -1;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	int32_t source_catalog_index_0x49da08 = -1;

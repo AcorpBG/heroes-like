@@ -425,7 +425,14 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.x = input.x;
 	out.y = input.y;
 	out.level = input.level;
+	out.weighted_record_0x4a93a2_known = input.weighted_record_0x4a93a2_known;
+	out.object_record_vtable_0x00 = input.object_record_vtable_0x00;
+	out.object_record_sequence_0x1c = input.object_record_sequence_0x1c;
+	out.object_record_selected_index_0x20 = input.object_record_selected_index_0x20;
+	out.object_record_enabled_word_0x24 = input.object_record_enabled_word_0x24;
+	out.object_record_enabled_low_byte_0x24 = input.object_record_enabled_low_byte_0x24;
 	out.source_descriptor_join_0x4903e8_known = input.source_descriptor_join_0x4903e8_known;
+	out.weighted_type98_descriptor_bridge_0x4a93a2_known = input.weighted_type98_descriptor_bridge_0x4a93a2_known;
 	out.descriptor_source_key_0x00 = input.descriptor_source_key_0x00;
 	out.selected_wrapper_index_0x4af785 = input.selected_wrapper_index_0x4af785;
 	out.source_catalog_index_0x49da08 = input.source_catalog_index_0x49da08;
@@ -1292,7 +1299,14 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"x\":" << record.x
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
+			<< ",\"weighted_record_0x4a93a2_known\":" << (record.weighted_record_0x4a93a2_known ? "true" : "false")
+			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
+			<< ",\"object_record_sequence_0x1c\":" << record.object_record_sequence_0x1c
+			<< ",\"object_record_selected_index_0x20\":" << record.object_record_selected_index_0x20
+			<< ",\"object_record_enabled_word_0x24\":" << record.object_record_enabled_word_0x24
+			<< ",\"object_record_enabled_low_byte_0x24\":" << (record.object_record_enabled_low_byte_0x24 ? "true" : "false")
 			<< ",\"source_descriptor_join_0x4903e8_known\":" << (record.source_descriptor_join_0x4903e8_known ? "true" : "false")
+			<< ",\"weighted_type98_descriptor_bridge_0x4a93a2_known\":" << (record.weighted_type98_descriptor_bridge_0x4a93a2_known ? "true" : "false")
 			<< ",\"descriptor_source_key_0x00\":" << record.descriptor_source_key_0x00
 			<< ",\"selected_wrapper_index_0x4af785\":" << record.selected_wrapper_index_0x4af785
 			<< ",\"source_catalog_index_0x49da08\":" << record.source_catalog_index_0x49da08

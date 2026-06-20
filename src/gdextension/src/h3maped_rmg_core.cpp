@@ -1614,6 +1614,52 @@ ObjectMaterializationPrep4a8db2_4a901a object_materialization_prep_from_descript
 	return prep;
 }
 
+ObjectMaterializationPrep4a8db2_4a901a object_materialization_prep_from_weighted_record_0x4a93a2_0x4a901a(const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record) {
+	ObjectMaterializationPrep4a8db2_4a901a prep;
+	prep.descriptor_join_0x4903e8 = join;
+	prep.descriptor_joined = join.joined;
+	prep.copied_source_record_carried = join.copied_source_record_is_identity_authority;
+	prep.source_catalog_index_0x49da08 = join.source_catalog_index_0x49da08;
+	prep.source_record_copy = join.source_record_copy;
+	prep.selected_wrapper_index_0x4af785 = join.resolver_0x4af785.selected_wrapper_index;
+
+	if (record.object_record_vtable_0x00 != WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C) {
+		prep.blocked_reason = "0x4a93a2_weighted_record_vtable_not_0x540a9c";
+		return prep;
+	}
+	if (!record.coordinate_payload_filled_before_0x4a901a) {
+		prep.blocked_reason = "0x4a93a2_weighted_record_coordinate_payload_not_filled";
+		return prep;
+	}
+
+	const bool source_backed_type98_bridge = !join.joined
+			&& join.descriptor.descriptor_type_0x1c == 98
+			&& join.descriptor_source_fields_match
+			&& join.source_catalog_index_0x49da08 >= 0;
+	if (!join.joined && !source_backed_type98_bridge) {
+		prep.blocked_reason = join.blocked_reason.empty()
+				? "0x4a93a2_weighted_descriptor_source_bridge_unresolved"
+				: join.blocked_reason;
+		return prep;
+	}
+	if (source_backed_type98_bridge) {
+		prep.copied_source_record_carried = true;
+		prep.weighted_type98_descriptor_bridge_0x4a93a2_known = true;
+	}
+	if (!record.object_record_key_known) {
+		prep.blocked_reason = "0x4a8d2c_0x4a8db2_0x4a93a2_0x4a901a_object_record_key_caller_unported";
+		return prep;
+	}
+
+	prep.object_record_key_known = true;
+	prep.object_record_key = record.object_record_key;
+	prep.x = record.x;
+	prep.y = record.y;
+	prep.level = record.level;
+	prep.ready_for_object_vector_commit_0x4a54a7 = true;
+	return prep;
+}
+
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24, uint32_t old_word_0x28, uint32_t old_word_0x2c) {
 	GeneratedCellInitialWords cell;
 	cell.word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
@@ -2534,12 +2580,43 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 			descriptor.source_cell_y_0x30);
 	if (result.object_vector_appended && !state.object_records_0xec4_ecc.empty()) {
 		ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc.back();
-		record.source_descriptor_join_0x4903e8_known = true;
+		record.source_descriptor_join_0x4903e8_known = prep.descriptor_joined;
+		record.weighted_type98_descriptor_bridge_0x4a93a2_known = prep.weighted_type98_descriptor_bridge_0x4a93a2_known;
 		record.descriptor_source_key_0x00 = descriptor.source_key_0x00;
 		record.selected_wrapper_index_0x4af785 = prep.selected_wrapper_index_0x4af785;
 		record.source_catalog_index_0x49da08 = prep.source_catalog_index_0x49da08;
 		record.copied_source_record_carried = prep.copied_source_record_carried;
 		record.source_record_copy = prep.source_record_copy;
+	}
+	return result;
+}
+
+WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record) {
+	WeightedObjectMaterializationCommitResult4a93a2 result;
+	result.record_vtable_0x540a9c = record.object_record_vtable_0x00 == WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C;
+	result.record_coordinate_payload_filled = record.coordinate_payload_filled_before_0x4a901a;
+	result.prep_0x4a901a = object_materialization_prep_from_weighted_record_0x4a93a2_0x4a901a(join, record);
+	if (!result.prep_0x4a901a.ready_for_object_vector_commit_0x4a54a7) {
+		result.blocked_reason = result.prep_0x4a901a.blocked_reason.empty()
+				? "0x4a93a2_0x4a901a_weighted_materialization_not_ready"
+				: result.prep_0x4a901a.blocked_reason;
+		return result;
+	}
+
+	result.commit_0x4a54a7 = object_footprint_commit_4a54a7(state, result.prep_0x4a901a);
+	result.committed = result.commit_0x4a54a7.object_vector_appended;
+	if (!result.committed) {
+		result.blocked_reason = "0x4a54a7_weighted_record_commit_did_not_append_object_vector";
+		return result;
+	}
+	if (!state.object_records_0xec4_ecc.empty()) {
+		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+		object_record.weighted_record_0x4a93a2_known = true;
+		object_record.object_record_vtable_0x00 = record.object_record_vtable_0x00;
+		object_record.object_record_sequence_0x1c = record.sequence_0x1c;
+		object_record.object_record_selected_index_0x20 = record.selected_index_0x20;
+		object_record.object_record_enabled_word_0x24 = record.enabled_word_0x24;
+		object_record.object_record_enabled_low_byte_0x24 = record.enabled_low_byte_0x24;
 	}
 	return result;
 }
