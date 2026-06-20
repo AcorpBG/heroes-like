@@ -3338,7 +3338,43 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.owner_local_vector_0x404_count = 0;
 }
 
-static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, int32_t &missing_endpoint_count) {
+static const RuntimeZoneBoundaryInput4a3a03 *boundary_input_after_0x4a19ed_for_runtime_zone(const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs, int32_t runtime_zone_index) {
+	for (const RuntimeZoneBoundaryInput4a3a03 &input : boundary_inputs) {
+		if (input.footprint.runtime_zone_index == runtime_zone_index) {
+			return &input;
+		}
+	}
+	return nullptr;
+}
+
+static int32_t source_endpoint_vector_count_0xc8_0xcc_from_runtime_links_0x4a1f3b(const RuntimeSeedBuildResult4a218c &runtime_seed, int32_t runtime_zone_index) {
+	int32_t count = 0;
+	for (const RuntimeLinkSeedInput4a218c &link : runtime_seed.runtime_links) {
+		if (link.from_index == runtime_zone_index || link.to_index == runtime_zone_index) {
+			count += 1;
+		}
+	}
+	return count;
+}
+
+static void apply_relation_owner_coordinate_state_0x4a1f3b_0x4a19ed(GeneratorRelationOwnerState4a218c &owner, const RuntimeSeedBuildResult4a218c &runtime_seed, const RuntimeZoneBoundaryInput4a3a03 *boundary_input_after_0x4a19ed) {
+	owner.source_endpoint_vector_0xc8_0xcc_present = true;
+	owner.source_endpoint_vector_0xc8_0xcc_contents_known = false;
+	owner.source_endpoint_vector_0xc8_0xcc_count_known = true;
+	owner.source_endpoint_vector_0xc8_0xcc_count = source_endpoint_vector_count_0xc8_0xcc_from_runtime_links_0x4a1f3b(runtime_seed, owner.runtime_zone_index);
+	owner.source_endpoint_vector_0xc8_0xcc_stride_bytes = 0x1c;
+
+	if (boundary_input_after_0x4a19ed == nullptr) {
+		owner.coordinate_triple_0x10_0x18_known = false;
+		return;
+	}
+	owner.coordinate_triple_0x10_0x18_known = true;
+	owner.coordinate_x_0x10 = boundary_input_after_0x4a19ed->footprint.x_after_bbox_rescale;
+	owner.coordinate_y_0x14 = boundary_input_after_0x4a19ed->footprint.y_after_bbox_rescale;
+	owner.coordinate_level_0x18 = boundary_input_after_0x4a19ed->footprint.level;
+}
+
+static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs_after_0x4a19ed, int32_t &missing_endpoint_count) {
 	std::vector<GeneratorRelationOwnerState4a218c> owners;
 	owners.reserve(runtime_seed.runtime_zone_seeds.size());
 	for (size_t index = 0; index < runtime_seed.runtime_zone_seeds.size(); ++index) {
@@ -3349,6 +3385,7 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 		owner.source_zone_id = seed.source_zone_id;
 		owner.source_index = seed.source_index;
 		apply_relation_owner_constructor_0x49b452(owner, seed, runtime_zone_after_town_choice_0x49b3c1(runtime_zones_after_0x49b3c1, seed.runtime_zone_index));
+		apply_relation_owner_coordinate_state_0x4a1f3b_0x4a19ed(owner, runtime_seed, boundary_input_after_0x4a19ed_for_runtime_zone(boundary_inputs_after_0x4a19ed, seed.runtime_zone_index));
 		owners.push_back(owner);
 	}
 
@@ -3484,6 +3521,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(
 					template_selection.runtime_seed,
 					coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1,
+					coordinate_result.coordinate_seed.boundary_inputs,
 					state.relation_record_missing_endpoint_count_10e4_10e8);
 	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
@@ -3493,7 +3531,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_vectors_0xc8_0xcc_and_0xd8_0xdc_contents_unported",
 		"object_record_vector_0xec4_0xecc_contents_unported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_non_default_0x4a1f3b_bounds_updates_and_scan_consumers_unported_after_0x49b452_constructor_defaults",
+		"relation_vector_0x10e4_0x10e8_0x4a1f3b_candidate_vector_contents_scan_bounds_and_scan_consumers_unported_after_coordinate_triple_surface",
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
 		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",

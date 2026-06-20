@@ -308,6 +308,15 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.town_choice_0x04 = input.town_choice_0x04;
 	out.source_owner_slot_0x1c_known = input.source_owner_slot_0x1c_known;
 	out.source_owner_slot_0x1c = input.source_owner_slot_0x1c;
+	out.coordinate_triple_0x10_0x18_known = input.coordinate_triple_0x10_0x18_known;
+	out.coordinate_x_0x10 = input.coordinate_x_0x10;
+	out.coordinate_y_0x14 = input.coordinate_y_0x14;
+	out.coordinate_level_0x18 = input.coordinate_level_0x18;
+	out.source_endpoint_vector_0xc8_0xcc_present = input.source_endpoint_vector_0xc8_0xcc_present;
+	out.source_endpoint_vector_0xc8_0xcc_contents_known = input.source_endpoint_vector_0xc8_0xcc_contents_known;
+	out.source_endpoint_vector_0xc8_0xcc_count_known = input.source_endpoint_vector_0xc8_0xcc_count_known;
+	out.source_endpoint_vector_0xc8_0xcc_count = input.source_endpoint_vector_0xc8_0xcc_count;
+	out.source_endpoint_vector_0xc8_0xcc_stride_bytes = input.source_endpoint_vector_0xc8_0xcc_stride_bytes;
 	out.scan_bounds_0x20_0x2c_known = input.scan_bounds_0x20_0x2c_known;
 	out.scan_bound_low_x_0x20 = input.scan_bound_low_x_0x20;
 	out.scan_bound_low_y_0x24 = input.scan_bound_low_y_0x24;
@@ -1165,6 +1174,15 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"town_choice_0x04\":" << owner.town_choice_0x04
 			<< ",\"source_owner_slot_0x1c_known\":" << (owner.source_owner_slot_0x1c_known ? "true" : "false")
 			<< ",\"source_owner_slot_0x1c\":" << owner.source_owner_slot_0x1c
+			<< ",\"coordinate_triple_0x10_0x18_known\":" << (owner.coordinate_triple_0x10_0x18_known ? "true" : "false")
+			<< ",\"coordinate_x_0x10\":" << owner.coordinate_x_0x10
+			<< ",\"coordinate_y_0x14\":" << owner.coordinate_y_0x14
+			<< ",\"coordinate_level_0x18\":" << owner.coordinate_level_0x18
+			<< ",\"source_endpoint_vector_0xc8_0xcc_present\":" << (owner.source_endpoint_vector_0xc8_0xcc_present ? "true" : "false")
+			<< ",\"source_endpoint_vector_0xc8_0xcc_contents_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_contents_known ? "true" : "false")
+			<< ",\"source_endpoint_vector_0xc8_0xcc_count_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_count_known ? "true" : "false")
+			<< ",\"source_endpoint_vector_0xc8_0xcc_count\":" << owner.source_endpoint_vector_0xc8_0xcc_count
+			<< ",\"source_endpoint_vector_0xc8_0xcc_stride_bytes\":" << owner.source_endpoint_vector_0xc8_0xcc_stride_bytes
 			<< ",\"scan_bounds_0x20_0x2c_known\":" << (owner.scan_bounds_0x20_0x2c_known ? "true" : "false")
 			<< ",\"scan_bound_low_x_0x20\":" << owner.scan_bound_low_x_0x20
 			<< ",\"scan_bound_low_y_0x24\":" << owner.scan_bound_low_y_0x24

@@ -938,6 +938,15 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t town_choice_0x04 = -1;
 	bool source_owner_slot_0x1c_known = false;
 	int32_t source_owner_slot_0x1c = -1;
+	bool coordinate_triple_0x10_0x18_known = false;
+	int32_t coordinate_x_0x10 = 0;
+	int32_t coordinate_y_0x14 = 0;
+	int32_t coordinate_level_0x18 = 0;
+	bool source_endpoint_vector_0xc8_0xcc_present = false;
+	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
+	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
+	int32_t source_endpoint_vector_0xc8_0xcc_count = 0;
+	int32_t source_endpoint_vector_0xc8_0xcc_stride_bytes = 0x1c;
 	bool scan_bounds_0x20_0x2c_known = false;
 	int32_t scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
 	int32_t scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
