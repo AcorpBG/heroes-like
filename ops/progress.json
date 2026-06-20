@@ -68653,22 +68653,83 @@
         "godot_process_started": false,
         "windows_dll_build_deferred": true
       }
+    },
+    {
+      "id": "native-rmg-499ee8-object-reference-removal-20260620",
+      "evidenceId": "native-rmg-499ee8-object-reference-removal-20260620",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "timestamp": "2026-06-20T21:09:54Z",
+      "status": "pass_behavior_backed_499ee8_helper_not_full_materialization",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x499ee8 generated-cell object-reference removal helper: known object-reference vectors are scanned for the object record key, the matching key is removed, and empty vectors clear +0x28 bit22, set +0x28 bit25, and reset the low word of +0x20 to 0x7fbc while preserving the high word. This is a source-backed helper only; live source-order object materialization still waits on the 0x499ee8 callers 0x4add76/0x4af910 plus the broader producer/candidate-vector/caller order.",
+      "blocker": "Port the live source-order materialization producer and scanner order: exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, real 0x4a1f3b non-sentinel scan-bound writers/consumers, live 0x499ee8 callers 0x4add76/0x4af910, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "docs/native-rmg-generated-cell-mutation-chain.md",
+        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+      ],
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
+          "status": "passed_linux_debug_cli_selftest"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2 && cmake --build .artifacts/map_persistence_native_build_release --parallel 2 && bin/h3maped_rmg_core_selftest",
+          "status": "passed_linux_debug_release_native_targets_and_selftest"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "command": "git diff --check",
+          "status": "passed"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+        }
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "checkpoint2_status": "pending",
+        "native_rmg_end_to_end_parity_complete": false,
+        "generated_cell_object_reference_removal_0x499ee8_ported": true,
+        "generated_cell_object_reference_removal_0x499ee8_selftest_passed": true,
+        "object_reference_removal_0x499ee8_callers_0x4add76_0x4af910_ported": false,
+        "source_order_object_materialization_callers_ported": false,
+        "object_materialization_parity_complete": false,
+        "full_rmg_parity_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true
+      }
     }
   ],
   "validationResults": {
-    "id": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
-    "evidenceId": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
+    "id": "native-rmg-499ee8-object-reference-removal-20260620",
+    "evidenceId": "native-rmg-499ee8-object-reference-removal-20260620",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-20T20:58:14Z",
-    "status": "pass_behavior_backed_4a8db2_threshold_not_full_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x4a8db2 weighted scheduler threshold argument from source-zone town/castle density lanes, mirrors it through rmg_native_core JSON, and selftests the recovered floor(sqrt(0x14400 / positive_density_sum)) values. The relation-owner constructor no longer marks 0x49b452 scan-bound sentinels as known non-sentinel bounds. This is source-backed private-state progress only: full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path plus the 0x4a1f3b non-sentinel scan-bound writer and consumers.",
-    "blocker": "Port the live source-order materialization producer and scanner order: exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, real 0x4a1f3b non-sentinel scan-bound writers/consumers, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+    "timestamp": "2026-06-20T21:09:54Z",
+    "status": "pass_behavior_backed_499ee8_helper_not_full_materialization",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x499ee8 generated-cell object-reference removal helper: known object-reference vectors are scanned for the object record key, the matching key is removed, and empty vectors clear +0x28 bit22, set +0x28 bit25, and reset the low word of +0x20 to 0x7fbc while preserving the high word. This is a source-backed helper only; live source-order object materialization still waits on the 0x499ee8 callers 0x4add76/0x4af910 plus the broader producer/candidate-vector/caller order.",
+    "blocker": "Port the live source-order materialization producer and scanner order: exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, real 0x4a1f3b non-sentinel scan-bound writers/consumers, live 0x499ee8 callers 0x4add76/0x4af910, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-      "src/gdextension/include/rmg_native_core.hpp",
-      "src/gdextension/src/rmg_native_core.cpp",
+      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "docs/native-rmg-core-h3maped-drift-audit.md",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
@@ -68678,12 +68739,12 @@
     ],
     "checks": [
       {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
-        "status": "passed_linux_debug_native_targets_and_selftest"
+        "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
+        "status": "passed_linux_debug_cli_selftest"
       },
       {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_release -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
-        "status": "passed_linux_release_native_targets_and_selftest"
+        "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2 && cmake --build .artifacts/map_persistence_native_build_release --parallel 2 && bin/h3maped_rmg_core_selftest",
+        "status": "passed_linux_debug_release_native_targets_and_selftest"
       },
       {
         "command": "python3 tests/validate_repo.py",
@@ -68706,14 +68767,9 @@
       "checkpoint2_complete": false,
       "checkpoint2_status": "pending",
       "native_rmg_end_to_end_parity_complete": false,
-      "weighted_scheduler_threshold_0x4a8db2_ported": true,
-      "weighted_scheduler_threshold_density_total_2_arg_0x18": 203,
-      "weighted_scheduler_threshold_density_total_12_arg_0x18": 83,
-      "weighted_scheduler_threshold_density_total_13_arg_0x18": 79,
-      "weighted_scheduler_threshold_zero_density_fails_closed": true,
-      "relation_owner_constructor_0x49b452_sentinel_values_preserved": true,
-      "relation_owner_constructor_0x49b452_scan_bounds_known_after_constructor": false,
-      "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+      "generated_cell_object_reference_removal_0x499ee8_ported": true,
+      "generated_cell_object_reference_removal_0x499ee8_selftest_passed": true,
+      "object_reference_removal_0x499ee8_callers_0x4add76_0x4af910_ported": false,
       "source_order_object_materialization_callers_ported": false,
       "object_materialization_parity_complete": false,
       "full_rmg_parity_complete": false,
@@ -68721,5 +68777,5 @@
       "windows_dll_build_deferred": true
     }
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x4a8db2 weighted scheduler threshold argument from source-zone town/castle density lanes, mirrors it through rmg_native_core JSON, and selftests the recovered floor(sqrt(0x14400 / positive_density_sum)) values. The relation-owner constructor no longer marks 0x49b452 scan-bound sentinels as known non-sentinel bounds. This is source-backed private-state progress only: full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path plus the 0x4a1f3b non-sentinel scan-bound writer and consumers."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x499ee8 generated-cell object-reference removal helper: known object-reference vectors are scanned for the object record key, the matching key is removed, and empty vectors clear +0x28 bit22, set +0x28 bit25, and reset the low word of +0x20 to 0x7fbc while preserving the high word. This is source-backed helper progress only; full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path, the 0x499ee8 callers 0x4add76/0x4af910, and the 0x4a1f3b non-sentinel scan-bound writer and consumers."
 }

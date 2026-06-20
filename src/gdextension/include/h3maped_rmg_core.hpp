@@ -402,6 +402,20 @@ struct GeneratedCell49a962SweepResult {
 	int32_t neighbor_clear_count = 0;
 };
 
+struct GeneratedCellObjectReferenceRemoval499ee8Result {
+	bool object_reference_vector_known = false;
+	bool object_record_found = false;
+	bool object_record_removed = false;
+	bool object_reference_vector_empty_after = false;
+	bool word_mutations_applied = false;
+	int32_t reference_count_before = 0;
+	int32_t reference_count_after = 0;
+	uint32_t word_0x20_before = 0U;
+	uint32_t word_0x20_after = 0U;
+	uint32_t word_0x28_before = 0U;
+	uint32_t word_0x28_after = 0U;
+};
+
 struct ConnectionRegionWriterResult4a606b {
 	bool source_cell_in_bounds = false;
 	bool source_projection_triple_known = false;
@@ -1437,6 +1451,7 @@ bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, i
 GeneratedCell49a85dStampResult generated_cell_49a85d_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<uint32_t> &word_0x24, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<int32_t> &terrain_code, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
+GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_removal_0x499ee8(GeneratedCellRecord0x30 &record, uint32_t object_record_key);
 ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
