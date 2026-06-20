@@ -826,6 +826,27 @@ int main() {
 		if (!require(endpoint_result.return_value == -1 && !endpoint_result.d8_match_found, "0x4a5e73 did not reject stale +0xf5c without a +0xd8 key match")) {
 			return 1;
 		}
+		EndpointMaterializationState4a5e73 supported_land_endpoint_state;
+		supported_land_endpoint_state.endpoint_vector_d8_dc = {
+			EndpointPointerRecord4a5e73 { 0 },
+			EndpointPointerRecord4a5e73 { 1 },
+			EndpointPointerRecord4a5e73 { 2 },
+			EndpointPointerRecord4a5e73 { 3 },
+			EndpointPointerRecord4a5e73 { 4 },
+			EndpointPointerRecord4a5e73 { 5 },
+			EndpointPointerRecord4a5e73 { 6 },
+			EndpointPointerRecord4a5e73 { 7 },
+		};
+		supported_land_endpoint_state.byte_state_vector_1104_1108.assign(8, 0U);
+		supported_land_endpoint_state.cursor_0xf5c = 0x7a1befdf;
+		const EndpointMaterializationResult4a5e73 supported_land_endpoint_result =
+				aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, supported_land_endpoint_state, 0, 0, 0, 1);
+		if (!require(supported_land_endpoint_result.return_value == -1
+						&& !supported_land_endpoint_result.d8_match_found
+						&& supported_land_endpoint_state.cursor_0xf5c == 0x7a1befdf,
+					"0x4a5e73 did not preserve the recovered supported-land stale +0xf5c rejection against compact +0xd8 keys 0..7")) {
+			return 1;
+		}
 		endpoint_state.cursor_0xf5c = 2;
 		endpoint_result = aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, endpoint_state, 0, 0, 0, 1);
 		if (!require(endpoint_result.return_value == 0 && endpoint_result.d8_match_found && !endpoint_result.c8_match_found, "0x4a5e73 did not return 0 for a +0xd8 match without a +0xc8 key match")) {
@@ -1626,7 +1647,11 @@ int main() {
 	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
 		return 1;
 	}
-	if (!require(generator_state.endpoint_vector_d8_dc.present && !generator_state.endpoint_vector_d8_dc.count_known, "generator object private state must keep endpoint vector +0xd8/+0xdc unclaimed until source endpoint records are ported")) {
+	if (!require(generator_state.endpoint_vector_d8_dc.present
+					&& generator_state.endpoint_vector_d8_dc.count_known
+					&& generator_state.endpoint_vector_d8_dc.count == 8
+					&& !generator_state.endpoint_vector_d8_dc.contents_known,
+				"generator object private state did not preserve recovered supported-land endpoint vector +0xd8/+0xdc compact key count")) {
 		return 1;
 	}
 	if (!require(!generator_state.endpoint_cursor_vector_d8_dc_source_owned
@@ -1639,8 +1664,9 @@ int main() {
 					&& generator_state.endpoint_byte_state_vector_1104_1108.count_source_vector_label == generator_state.endpoint_vector_d8_dc.label
 					&& generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known
 					&& generator_state.endpoint_byte_state_vector_1104_1108.element_size_bytes == 1
-					&& !generator_state.endpoint_byte_state_vector_1104_1108.count_known
-					&& !generator_state.endpoint_byte_state_vector_1104_1108.contents_known,
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count_known
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count == 8
+					&& generator_state.endpoint_byte_state_vector_1104_1108.contents_known,
 				"generator object private state did not preserve recovered 0x49f95a byte-state vector initialization from +0xd8/+0xdc count")) {
 		return 1;
 	}
@@ -1648,11 +1674,18 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count == 8
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == 0x7a1befdfU
 					&& generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
 					&& generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
 					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
 					&& !generator_state.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c
 					&& !generator_state.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known
+					&& !generator_state.endpoint_cursor_producer_d014.supported_land_success_path_reached
+					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached
+					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached
 					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 3,
 				"D-014 endpoint cursor producer state did not preserve the recovered +0xf5c target-mode exclusion")) {
 		return 1;

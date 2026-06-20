@@ -433,11 +433,18 @@ struct SharedObjectRecordReference4a54a7 {
 
 struct SharedGeneratorEndpointCursorProducerStateD014 {
 	bool recovered_supported_land_exclusion_known = false;
+	bool supported_land_endpoint_cursor_key_range_known = false;
+	int32_t supported_land_endpoint_cursor_key_count = 0;
+	bool supported_land_observed_stale_cursor_0xf5c_known = false;
+	uint32_t supported_land_observed_stale_cursor_0xf5c = 0U;
 	bool setup_zeroed_cursor_0xf58_0x49ecf2_known = false;
 	bool endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known = false;
 	bool direct_cursor_writer_surface_bounded = false;
 	bool setup_seeds_cursor_0xf5c = false;
 	bool successful_cursor_0xf5c_seed_source_known = false;
+	bool supported_land_success_path_reached = false;
+	bool supported_land_live_0x4a606b_reached = false;
+	bool supported_land_live_0x4a696b_relation_match_reached = false;
 	int32_t direct_cursor_writer_entry_count = 0;
 	std::vector<std::string> direct_cursor_writer_entries;
 	std::string missing_cursor_seed_source;
