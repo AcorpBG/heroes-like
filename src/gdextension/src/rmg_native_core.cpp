@@ -481,11 +481,18 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.endpoint_cursor_vector_d8_dc_source_owned = input.endpoint_cursor_vector_d8_dc_source_owned;
 	out.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known = input.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known;
 	out.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known = input.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known;
+	out.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known = input.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known;
+	out.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count = input.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count;
+	out.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known = input.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known;
+	out.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c = input.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c;
 	out.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known = input.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known;
 	out.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known = input.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known;
 	out.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded = input.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded;
 	out.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c = input.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c;
 	out.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known = input.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known;
+	out.endpoint_cursor_producer_d014.supported_land_success_path_reached = input.endpoint_cursor_producer_d014.supported_land_success_path_reached;
+	out.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached = input.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached;
+	out.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached = input.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached;
 	out.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count = input.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count;
 	out.endpoint_cursor_producer_d014.direct_cursor_writer_entries = input.endpoint_cursor_producer_d014.direct_cursor_writer_entries;
 	out.endpoint_cursor_producer_d014.missing_cursor_seed_source = input.endpoint_cursor_producer_d014.missing_cursor_seed_source;
@@ -1595,11 +1602,18 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"endpoint_cursor_vector_d8_dc_supported_land_exclusion_known\":" << (state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known ? "true" : "false") << ","
 		<< "\"endpoint_cursor_producer_d014\":{"
 		<< "\"recovered_supported_land_exclusion_known\":" << (state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known ? "true" : "false") << ","
+		<< "\"supported_land_endpoint_cursor_key_range_known\":" << (state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known ? "true" : "false") << ","
+		<< "\"supported_land_endpoint_cursor_key_count\":" << state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count << ","
+		<< "\"supported_land_observed_stale_cursor_0xf5c_known\":" << (state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known ? "true" : "false") << ","
+		<< "\"supported_land_observed_stale_cursor_0xf5c\":" << state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c << ","
 		<< "\"setup_zeroed_cursor_0xf58_0x49ecf2_known\":" << (state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known ? "true" : "false") << ","
 		<< "\"endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known\":" << (state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known ? "true" : "false") << ","
 		<< "\"direct_cursor_writer_surface_bounded\":" << (state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded ? "true" : "false") << ","
 		<< "\"setup_seeds_cursor_0xf5c\":" << (state.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c ? "true" : "false") << ","
 		<< "\"successful_cursor_0xf5c_seed_source_known\":" << (state.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known ? "true" : "false") << ","
+		<< "\"supported_land_success_path_reached\":" << (state.endpoint_cursor_producer_d014.supported_land_success_path_reached ? "true" : "false") << ","
+		<< "\"supported_land_live_0x4a606b_reached\":" << (state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached ? "true" : "false") << ","
+		<< "\"supported_land_live_0x4a696b_relation_match_reached\":" << (state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached ? "true" : "false") << ","
 		<< "\"direct_cursor_writer_entry_count\":" << state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count << ","
 		<< "\"direct_cursor_writer_entries\":";
 	append_json_string_array(out, state.endpoint_cursor_producer_d014.direct_cursor_writer_entries);

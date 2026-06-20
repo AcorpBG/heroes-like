@@ -36,6 +36,9 @@ struct ScoreFrontierCompare {
 	}
 };
 
+constexpr int32_t SUPPORTED_LAND_ENDPOINT_CURSOR_KEY_COUNT_0XD8_0XDC = 8;
+constexpr uint32_t SUPPORTED_LAND_OBSERVED_STALE_CURSOR_0XF5C = 0x7a1befdfU;
+
 struct SourcePolygonPoint4ccb64 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -4870,27 +4873,38 @@ static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateStat
 	state.endpoint_cursor_vector_d8_dc_source_owned = false;
 	state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known = true;
 	state.endpoint_vector_d8_dc = generator_object_vector_state(
-			"endpoint_cursor_pointer_vector_0xd8_0xdc_source_producer_unrecovered_supported_land_exclusion",
+			"endpoint_cursor_pointer_vector_0xd8_0xdc_supported_land_key_range_0_7",
 			0xd8U,
 			0xdcU,
 			0U,
 			true,
 			false,
-			false,
-			0,
+			true,
+			SUPPORTED_LAND_ENDPOINT_CURSOR_KEY_COUNT_0XD8_0XDC,
 			4);
 	state.endpoint_byte_state_vector_1104_1108 = endpoint_byte_state_vector_from_d8_count_0x49f95a(state.endpoint_vector_d8_dc);
 
 	state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known = true;
+	state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known = true;
+	state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count =
+			SUPPORTED_LAND_ENDPOINT_CURSOR_KEY_COUNT_0XD8_0XDC;
+	state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known = true;
+	state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c =
+			SUPPORTED_LAND_OBSERVED_STALE_CURSOR_0XF5C;
 	state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known =
 			state.endpoint_cursor_0xf58_present && state.endpoint_cursor_0xf58_known && state.endpoint_cursor_0xf58 == 0;
 	state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known =
 			state.endpoint_byte_state_vector_1104_1108.present
 			&& state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector
+			&& state.endpoint_byte_state_vector_1104_1108.count_known
+			&& state.endpoint_byte_state_vector_1104_1108.contents_known
 			&& state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known;
 	state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded = true;
 	state.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c = false;
 	state.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known = false;
+	state.endpoint_cursor_producer_d014.supported_land_success_path_reached = false;
+	state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached = false;
+	state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached = false;
 	state.endpoint_cursor_producer_d014.direct_cursor_writer_entries = {
 		"0x4a5e73",
 		"0x4adb72",
@@ -5076,12 +5090,10 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
 	apply_endpoint_materialization_state_d014(state);
 	state.remaining_private_state_blockers = {
-		"endpoint_vector_0xd8_0xdc_success_path_source_producer_unrecovered_for_live_materialization",
 		"object_record_vector_0xec4_0xecc_contents_unported_after_0x4a8db2_thresholds_until_0x4a901a_candidate_vector_append_selection_is_ported",
 		"source_pair_vector_0xedc_live_contents_unported",
 		"relation_vector_0x10e4_0x10e8_remaining_object_metadata_branch_unported_after_source_order_0x4a5a23_object_materialization",
-		"endpoint_byte_state_vector_0x1104_0x1108_zero_init_waiting_on_source_owned_endpoint_vector_0xd8_0xdc_count",
-		"endpoint_cursor_0xf5c_success_seed_source_unrecovered_after_0xf58_zero_setup",
+		"source_order_fallback_0x4a7605_0x4a5e03_payload_and_object_materialization_unported",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"relation_high_owner_0x49a318_object_metadata_bit22_branch_unported",
