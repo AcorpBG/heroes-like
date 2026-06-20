@@ -890,6 +890,29 @@ int main() {
 	if (!require(generator_state.relation_vector_10e4_10e8.count_known && generator_state.relation_vector_10e4_10e8.count == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size()), "generator object private state did not preserve adopted relation-vector count")) {
 		return 1;
 	}
+	if (!require(generator_state.relation_owner_records_10e4_10e8_partial_known, "generator object private state did not carry recovered 0x4a218c/0x49f7c4 relation owner records")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_owner_vector_count_10e4_10e8 == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size()), "generator relation owner vector count does not match selected runtime zones")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_record_missing_endpoint_count_10e4_10e8 == 0, "generator relation owner records lost a selected runtime-link endpoint")) {
+		return 1;
+	}
+	const int32_t expected_relation_record_count = int32_t(selected_after_setup3.runtime_seed.runtime_links.size()) * 2;
+	if (!require(generator_state.relation_record_count_10e4_10e8 == expected_relation_record_count, "generator relation records did not mirror 0x49f7c4 reciprocal link append count")) {
+		return 1;
+	}
+	int32_t summed_relation_record_count = 0;
+	for (const aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : generator_state.relation_owner_vectors_10e4_10e8) {
+		summed_relation_record_count += owner.relation_record_count;
+		if (!require(owner.relation_record_count == int32_t(owner.relation_records.size()), "generator relation owner record count does not match owned record vector")) {
+			return 1;
+		}
+	}
+	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {
+		return 1;
+	}
 	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
 		return 1;
 	}
