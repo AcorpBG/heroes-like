@@ -406,6 +406,7 @@ struct SharedObjectRecordReference4a54a7 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool object_record_key_allocated_by_0x4a93a2 = false;
 	bool weighted_record_0x4a93a2_known = false;
 	uint32_t object_record_vtable_0x00 = 0U;
 	int32_t object_record_sequence_0x1c = -1;
@@ -480,6 +481,12 @@ struct SharedGeneratorObjectPrivateState {
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
 	int32_t descriptor_counter_table_0x1110_zero_count = 0;
+	bool object_record_sequence_allocator_0xf44_present = false;
+	bool object_record_sequence_allocator_0xf44_known = false;
+	int32_t object_record_sequence_allocator_0xf44 = 1;
+	bool native_object_record_key_allocator_0x4a93a2_known = false;
+	uint32_t next_native_object_record_key_0x4a93a2 = 1U;
+	int32_t object_record_allocation_count_0x4a93a2 = 0;
 	std::vector<SharedObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;

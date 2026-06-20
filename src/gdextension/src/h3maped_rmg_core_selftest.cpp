@@ -1604,17 +1604,6 @@ int main() {
 				"type-98 weighted materialization must remain a recovered 0x4a93a2 bridge, not a fake 0x4903e8 join")) {
 		return 1;
 	}
-	WeightedObjectRecord4a93a2 weighted_record;
-	weighted_record.object_record_key = 0x036b6d40U;
-	weighted_record.object_record_key_known = true;
-	weighted_record.coordinate_payload_filled_before_0x4a901a = true;
-	weighted_record.x = 107;
-	weighted_record.y = 6;
-	weighted_record.level = 0;
-	weighted_record.sequence_0x1c = 5;
-	weighted_record.selected_index_0x20 = -1;
-	weighted_record.enabled_word_0x24 = 0U;
-	weighted_record.enabled_low_byte_0x24 = false;
 	GeneratorObjectPrivateState weighted_commit_state;
 	weighted_commit_state.width = 112;
 	weighted_commit_state.height = 112;
@@ -1627,6 +1616,11 @@ int main() {
 	weighted_commit_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
 	weighted_commit_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
 	weighted_commit_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+	weighted_commit_state.object_record_sequence_allocator_0xf44_present = true;
+	weighted_commit_state.object_record_sequence_allocator_0xf44_known = true;
+	weighted_commit_state.object_record_sequence_allocator_0xf44 = 5;
+	weighted_commit_state.native_object_record_key_allocator_0x4a93a2_known = true;
+	weighted_commit_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
 	for (GeneratedCellRecord0x30 &record : weighted_commit_state.generated_cell_buffer.records) {
 		record.object_reference_vector_contents_known = true;
 		record.object_reference_count = 0;
@@ -1635,6 +1629,18 @@ int main() {
 		record.word_0x20 = 0xff000064U;
 		record.word_0x28_known = true;
 		record.word_0x28 = 0x12005000U;
+	}
+	const WeightedObjectRecord4a93a2 weighted_record =
+			aurelion::h3maped_rmg_core::allocate_weighted_object_record_0x4a93a2(weighted_commit_state, 107, 6, 0, -1, 0U, false);
+	if (!require(weighted_record.object_record_key_known
+					&& weighted_record.object_record_key_allocated_by_0x4a93a2
+					&& weighted_record.object_record_key == 0x036b6d40U
+					&& weighted_record.sequence_0x1c == 5
+					&& weighted_commit_state.object_record_sequence_allocator_0xf44 == 6
+					&& weighted_commit_state.next_native_object_record_key_0x4a93a2 == 0x036b6d41U
+					&& weighted_commit_state.object_record_allocation_count_0x4a93a2 == 1,
+				"weighted 0x4a93a2 allocator did not materialize source-order record key and +0xf44 sequence state")) {
+		return 1;
 	}
 	const auto weighted_commit =
 			aurelion::h3maped_rmg_core::object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(weighted_commit_state, weighted_join, weighted_record);
@@ -1658,6 +1664,7 @@ int main() {
 	}
 	const auto &weighted_object_record = weighted_commit_state.object_records_0xec4_ecc.back();
 	if (!require(weighted_object_record.weighted_record_0x4a93a2_known
+					&& weighted_object_record.object_record_key_allocated_by_0x4a93a2
 					&& weighted_object_record.weighted_type98_descriptor_bridge_0x4a93a2_known
 					&& !weighted_object_record.source_descriptor_join_0x4903e8_known
 					&& weighted_object_record.object_record_key == 0x036b6d40U

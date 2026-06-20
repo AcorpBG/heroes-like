@@ -2616,6 +2616,32 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	return result;
 }
 
+WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24) {
+	WeightedObjectRecord4a93a2 record;
+	record.object_record_vtable_0x00 = WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C;
+	record.object_record_key_allocated_by_0x4a93a2 = true;
+	record.object_record_key_known = state.native_object_record_key_allocator_0x4a93a2_known;
+	if (state.native_object_record_key_allocator_0x4a93a2_known) {
+		record.object_record_key = state.next_native_object_record_key_0x4a93a2;
+		state.next_native_object_record_key_0x4a93a2 += 1U;
+	}
+	record.coordinate_payload_filled_before_0x4a901a = true;
+	record.x = x;
+	record.y = y;
+	record.level = level;
+	record.sequence_0x1c = state.object_record_sequence_allocator_0xf44_known
+			? state.object_record_sequence_allocator_0xf44
+			: -1;
+	if (state.object_record_sequence_allocator_0xf44_known) {
+		state.object_record_sequence_allocator_0xf44 += 1;
+	}
+	record.selected_index_0x20 = selected_index_0x20;
+	record.enabled_word_0x24 = enabled_word_0x24;
+	record.enabled_low_byte_0x24 = enabled_low_byte_0x24;
+	state.object_record_allocation_count_0x4a93a2 += 1;
+	return record;
+}
+
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record) {
 	WeightedObjectMaterializationCommitResult4a93a2 result;
 	result.record_vtable_0x540a9c = record.object_record_vtable_0x00 == WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C;
@@ -2637,6 +2663,7 @@ WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_fr
 	if (!state.object_records_0xec4_ecc.empty()) {
 		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
 		object_record.weighted_record_0x4a93a2_known = true;
+		object_record.object_record_key_allocated_by_0x4a93a2 = record.object_record_key_allocated_by_0x4a93a2;
 		object_record.object_record_vtable_0x00 = record.object_record_vtable_0x00;
 		object_record.object_record_sequence_0x1c = record.sequence_0x1c;
 		object_record.object_record_selected_index_0x20 = record.selected_index_0x20;
@@ -4349,6 +4376,11 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.descriptor_counter_table_0x1110_contents_known = true;
 	state.descriptor_counter_table_0x1110_known_count = DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
 	state.descriptor_counter_table_0x1110.assign(size_t(DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	state.object_record_sequence_allocator_0xf44_present = true;
+	state.object_record_sequence_allocator_0xf44_known = true;
+	state.object_record_sequence_allocator_0xf44 = 1;
+	state.native_object_record_key_allocator_0x4a93a2_known = true;
+	state.next_native_object_record_key_0x4a93a2 = 1U;
 	state.source_owner_player_slots_ed8_ee0_ee4_present = template_selection.player_assignment.complete;
 	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
 	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
