@@ -446,6 +446,57 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	return out;
 }
 
+SharedWeightedObjectCandidate4a901a from_h3maped_weighted_object_candidate_4a901a(const h3maped_rmg_core::WeightedObjectCandidate4a901a &input) {
+	SharedWeightedObjectCandidate4a901a out;
+	out.x = input.x;
+	out.y = input.y;
+	out.level = input.level;
+	out.low_word_score_0x20 = input.low_word_score_0x20;
+	return out;
+}
+
+SharedWeightedObjectCandidateVectorState4a901a from_h3maped_weighted_object_candidate_vector_4a901a(const h3maped_rmg_core::WeightedObjectCandidateVectorState4a901a &input) {
+	SharedWeightedObjectCandidateVectorState4a901a out;
+	out.descriptor_source_bridge_known = input.descriptor_source_bridge_known;
+	out.copied_source_record_carried = input.copied_source_record_carried;
+	out.scan_bounds_known = input.scan_bounds_known;
+	out.scan_bounds_non_empty = input.scan_bounds_non_empty;
+	out.relation_owner_byte_known = input.relation_owner_byte_known;
+	out.threshold_arg_0x18_known = input.threshold_arg_0x18_known;
+	out.relation_owner_byte2 = input.relation_owner_byte2;
+	out.scan_bound_low_x = input.scan_bound_low_x;
+	out.scan_bound_low_y = input.scan_bound_low_y;
+	out.scan_bound_high_x = input.scan_bound_high_x;
+	out.scan_bound_high_y = input.scan_bound_high_y;
+	out.level = input.level;
+	out.threshold_arg_0x18_initial = input.threshold_arg_0x18_initial;
+	out.threshold_arg_0x18_after_scan = input.threshold_arg_0x18_after_scan;
+	out.scanned_cell_count = input.scanned_cell_count;
+	out.out_of_bounds_cell_count = input.out_of_bounds_cell_count;
+	out.unknown_cell_word_count = input.unknown_cell_word_count;
+	out.owner_byte_reject_count = input.owner_byte_reject_count;
+	out.value_floor_reject_count = input.value_floor_reject_count;
+	out.eligibility_reject_count_0x49aa93 = input.eligibility_reject_count_0x49aa93;
+	out.local_vector_clear_count_0x4ae52a = input.local_vector_clear_count_0x4ae52a;
+	out.local_vector_append_count_0x4ae1fd = input.local_vector_append_count_0x4ae1fd;
+	out.accepted_candidate_count = input.accepted_candidate_count;
+	out.rng_value_0x4e7276 = input.rng_value_0x4e7276;
+	out.selected_candidate_index = input.selected_candidate_index;
+	out.selected_candidate_known = input.selected_candidate_known;
+	out.selected_candidate = from_h3maped_weighted_object_candidate_4a901a(input.selected_candidate);
+	out.accepted_candidates_0x4ae1fd.reserve(input.accepted_candidates_0x4ae1fd.size());
+	for (const h3maped_rmg_core::WeightedObjectCandidate4a901a &candidate : input.accepted_candidates_0x4ae1fd) {
+		out.accepted_candidates_0x4ae1fd.push_back(from_h3maped_weighted_object_candidate_4a901a(candidate));
+	}
+	out.allocated_record_0x4a93a2 = input.allocated_record_0x4a93a2;
+	out.committed_through_0x4a54a7 = input.committed_through_0x4a54a7;
+	out.object_record_key = input.object_record_key;
+	out.object_record_key_known = input.object_record_key_known;
+	out.object_vector_count_after = input.object_vector_count_after;
+	out.blocked_reason = input.blocked_reason;
+	return out;
+}
+
 SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(const h3maped_rmg_core::GeneratorObjectPrivateState &input) {
 	SharedGeneratorObjectPrivateState out;
 	out.present = input.generated_cell_buffer_owned;
@@ -529,6 +580,15 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 		shared_threshold.threshold_arg_0x18 = threshold.threshold_arg_0x18;
 		shared_threshold.blocked_reason = threshold.blocked_reason;
 		out.weighted_scheduler_thresholds_0x4a8db2.push_back(shared_threshold);
+	}
+	out.weighted_candidate_vectors_0x4a901a_known = input.weighted_candidate_vectors_0x4a901a_known;
+	out.weighted_candidate_vector_count_0x4a901a = input.weighted_candidate_vector_count_0x4a901a;
+	out.weighted_candidate_total_count_0x4a901a = input.weighted_candidate_total_count_0x4a901a;
+	out.weighted_candidate_selected_count_0x4a901a = input.weighted_candidate_selected_count_0x4a901a;
+	out.weighted_candidate_commit_count_0x4a901a = input.weighted_candidate_commit_count_0x4a901a;
+	out.weighted_candidate_vectors_0x4a901a.reserve(input.weighted_candidate_vectors_0x4a901a.size());
+	for (const h3maped_rmg_core::WeightedObjectCandidateVectorState4a901a &vector_state : input.weighted_candidate_vectors_0x4a901a) {
+		out.weighted_candidate_vectors_0x4a901a.push_back(from_h3maped_weighted_object_candidate_vector_4a901a(vector_state));
 	}
 	out.object_records_0xec4_ecc.reserve(input.object_records_0xec4_ecc.size());
 	for (const h3maped_rmg_core::ObjectRecordReference4a54a7 &record : input.object_records_0xec4_ecc) {
@@ -1568,6 +1628,73 @@ void append_weighted_scheduler_thresholds_4a8db2_json(std::ostream &out, const s
 	out << "]";
 }
 
+void append_weighted_object_candidate_4a901a_json(std::ostream &out, const SharedWeightedObjectCandidate4a901a &candidate) {
+	out << "{\"x\":" << candidate.x
+		<< ",\"y\":" << candidate.y
+		<< ",\"level\":" << candidate.level
+		<< ",\"low_word_score_0x20\":" << candidate.low_word_score_0x20
+		<< "}";
+}
+
+void append_weighted_object_candidate_vector_4a901a_json(std::ostream &out, const std::vector<SharedWeightedObjectCandidate4a901a> &candidates) {
+	out << "[";
+	for (size_t index = 0; index < candidates.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		append_weighted_object_candidate_4a901a_json(out, candidates[index]);
+	}
+	out << "]";
+}
+
+void append_weighted_object_candidate_vectors_4a901a_json(std::ostream &out, const std::vector<SharedWeightedObjectCandidateVectorState4a901a> &vectors) {
+	out << "[";
+	for (size_t index = 0; index < vectors.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedWeightedObjectCandidateVectorState4a901a &vector = vectors[index];
+		out << "{\"descriptor_source_bridge_known\":" << (vector.descriptor_source_bridge_known ? "true" : "false")
+			<< ",\"copied_source_record_carried\":" << (vector.copied_source_record_carried ? "true" : "false")
+			<< ",\"scan_bounds_known\":" << (vector.scan_bounds_known ? "true" : "false")
+			<< ",\"scan_bounds_non_empty\":" << (vector.scan_bounds_non_empty ? "true" : "false")
+			<< ",\"relation_owner_byte_known\":" << (vector.relation_owner_byte_known ? "true" : "false")
+			<< ",\"threshold_arg_0x18_known\":" << (vector.threshold_arg_0x18_known ? "true" : "false")
+			<< ",\"relation_owner_byte2\":" << vector.relation_owner_byte2
+			<< ",\"scan_bound_low_x\":" << vector.scan_bound_low_x
+			<< ",\"scan_bound_low_y\":" << vector.scan_bound_low_y
+			<< ",\"scan_bound_high_x\":" << vector.scan_bound_high_x
+			<< ",\"scan_bound_high_y\":" << vector.scan_bound_high_y
+			<< ",\"level\":" << vector.level
+			<< ",\"threshold_arg_0x18_initial\":" << vector.threshold_arg_0x18_initial
+			<< ",\"threshold_arg_0x18_after_scan\":" << vector.threshold_arg_0x18_after_scan
+			<< ",\"scanned_cell_count\":" << vector.scanned_cell_count
+			<< ",\"out_of_bounds_cell_count\":" << vector.out_of_bounds_cell_count
+			<< ",\"unknown_cell_word_count\":" << vector.unknown_cell_word_count
+			<< ",\"owner_byte_reject_count\":" << vector.owner_byte_reject_count
+			<< ",\"value_floor_reject_count\":" << vector.value_floor_reject_count
+			<< ",\"eligibility_reject_count_0x49aa93\":" << vector.eligibility_reject_count_0x49aa93
+			<< ",\"local_vector_clear_count_0x4ae52a\":" << vector.local_vector_clear_count_0x4ae52a
+			<< ",\"local_vector_append_count_0x4ae1fd\":" << vector.local_vector_append_count_0x4ae1fd
+			<< ",\"accepted_candidate_count\":" << vector.accepted_candidate_count
+			<< ",\"rng_value_0x4e7276\":" << vector.rng_value_0x4e7276
+			<< ",\"selected_candidate_index\":" << vector.selected_candidate_index
+			<< ",\"selected_candidate_known\":" << (vector.selected_candidate_known ? "true" : "false")
+			<< ",\"selected_candidate\":";
+		append_weighted_object_candidate_4a901a_json(out, vector.selected_candidate);
+		out << ",\"accepted_candidates_0x4ae1fd\":";
+		append_weighted_object_candidate_vector_4a901a_json(out, vector.accepted_candidates_0x4ae1fd);
+		out << ",\"allocated_record_0x4a93a2\":" << (vector.allocated_record_0x4a93a2 ? "true" : "false")
+			<< ",\"committed_through_0x4a54a7\":" << (vector.committed_through_0x4a54a7 ? "true" : "false")
+			<< ",\"object_record_key\":" << vector.object_record_key
+			<< ",\"object_record_key_known\":" << (vector.object_record_key_known ? "true" : "false")
+			<< ",\"object_vector_count_after\":" << vector.object_vector_count_after
+			<< ",\"blocked_reason\":\"" << json_escape(vector.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_generator_object_private_state_json(std::ostream &out, const SharedGeneratorObjectPrivateState &state) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_generator_object_private_state_v1\","
@@ -1646,6 +1773,14 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"weighted_scheduler_threshold_count_0x4a8db2\":" << state.weighted_scheduler_threshold_count_0x4a8db2 << ","
 		<< "\"weighted_scheduler_thresholds_0x4a8db2\":";
 	append_weighted_scheduler_thresholds_4a8db2_json(out, state.weighted_scheduler_thresholds_0x4a8db2);
+	out << ","
+		<< "\"weighted_candidate_vectors_0x4a901a_known\":" << (state.weighted_candidate_vectors_0x4a901a_known ? "true" : "false") << ","
+		<< "\"weighted_candidate_vector_count_0x4a901a\":" << state.weighted_candidate_vector_count_0x4a901a << ","
+		<< "\"weighted_candidate_total_count_0x4a901a\":" << state.weighted_candidate_total_count_0x4a901a << ","
+		<< "\"weighted_candidate_selected_count_0x4a901a\":" << state.weighted_candidate_selected_count_0x4a901a << ","
+		<< "\"weighted_candidate_commit_count_0x4a901a\":" << state.weighted_candidate_commit_count_0x4a901a << ","
+		<< "\"weighted_candidate_vectors_0x4a901a\":";
+	append_weighted_object_candidate_vectors_4a901a_json(out, state.weighted_candidate_vectors_0x4a901a);
 	out << ","
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","

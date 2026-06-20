@@ -3248,6 +3248,137 @@ WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_fr
 	return result;
 }
 
+WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24) {
+	WeightedObjectCandidateScanResult4a901a result;
+	WeightedObjectCandidateVectorState4a901a &vector_state = result.vector_state_0x4a901a;
+	vector_state.scan_bounds_known = true;
+	vector_state.scan_bounds_non_empty = scan_high_x > scan_low_x && scan_high_y > scan_low_y;
+	vector_state.relation_owner_byte_known = relation_owner_byte2 >= 0;
+	vector_state.threshold_arg_0x18_known = threshold_arg_0x18 >= 0;
+	vector_state.relation_owner_byte2 = relation_owner_byte2;
+	vector_state.scan_bound_low_x = scan_low_x;
+	vector_state.scan_bound_low_y = scan_low_y;
+	vector_state.scan_bound_high_x = scan_high_x;
+	vector_state.scan_bound_high_y = scan_high_y;
+	vector_state.level = level;
+	vector_state.threshold_arg_0x18_initial = threshold_arg_0x18;
+	vector_state.threshold_arg_0x18_after_scan = threshold_arg_0x18;
+
+	const bool source_backed_type98_bridge = !join.joined
+			&& join.descriptor.descriptor_type_0x1c == 98
+			&& join.descriptor_source_fields_match
+			&& join.source_catalog_index_0x49da08 >= 0;
+	vector_state.descriptor_source_bridge_known = join.joined || source_backed_type98_bridge;
+	vector_state.copied_source_record_carried = join.copied_source_record_is_identity_authority || source_backed_type98_bridge;
+	state.weighted_candidate_vectors_0x4a901a_known = true;
+
+	auto finish_blocked = [&](const std::string &reason) {
+		vector_state.blocked_reason = reason;
+		result.blocked_reason = reason;
+		state.weighted_candidate_vectors_0x4a901a.push_back(vector_state);
+		state.weighted_candidate_vector_count_0x4a901a = int32_t(state.weighted_candidate_vectors_0x4a901a.size());
+		state.weighted_candidate_total_count_0x4a901a += vector_state.accepted_candidate_count;
+		return result;
+	};
+
+	if (!vector_state.descriptor_source_bridge_known) {
+		return finish_blocked(join.blocked_reason.empty()
+				? "0x4a901a_weighted_descriptor_source_bridge_unresolved"
+				: join.blocked_reason);
+	}
+	if (!state.generated_cell_buffer_owned || state.generated_cell_buffer.records.empty()) {
+		return finish_blocked("0x4a901a_generated_cell_buffer_missing");
+	}
+	if (!vector_state.scan_bounds_non_empty) {
+		return finish_blocked("0x4a901a_scan_bounds_empty_or_unordered");
+	}
+	if (!vector_state.relation_owner_byte_known) {
+		return finish_blocked("0x4a901a_relation_owner_byte2_missing");
+	}
+	if (!vector_state.threshold_arg_0x18_known) {
+		return finish_blocked("0x4a901a_threshold_arg_0x18_missing");
+	}
+
+	int32_t current_threshold = threshold_arg_0x18;
+	for (int32_t y = scan_low_y; y < scan_high_y; ++y) {
+		for (int32_t x = scan_low_x; x < scan_high_x; ++x) {
+			vector_state.scanned_cell_count += 1;
+			const int64_t flat = cell_index(state.width, state.height, x, y, level);
+			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				vector_state.out_of_bounds_cell_count += 1;
+				continue;
+			}
+			const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+			if (!record.word_0x20_known) {
+				vector_state.unknown_cell_word_count += 1;
+				continue;
+			}
+			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+				vector_state.owner_byte_reject_count += 1;
+				continue;
+			}
+			const uint32_t low_word_score = record.word_0x20 & 0xffffU;
+			if (low_word_score < uint32_t(current_threshold)) {
+				vector_state.value_floor_reject_count += 1;
+				continue;
+			}
+			if (!source_relation_object_coordinate_eligibility_0x49aa93(state, join, x, y, level, relation_owner_byte2)) {
+				vector_state.eligibility_reject_count_0x49aa93 += 1;
+				continue;
+			}
+			if (low_word_score > uint32_t(current_threshold)) {
+				current_threshold = int32_t(low_word_score);
+				vector_state.threshold_arg_0x18_after_scan = current_threshold;
+				vector_state.accepted_candidates_0x4ae1fd.clear();
+				vector_state.local_vector_clear_count_0x4ae52a += 1;
+			}
+			vector_state.accepted_candidates_0x4ae1fd.push_back(WeightedObjectCandidate4a901a { x, y, level, low_word_score });
+			vector_state.local_vector_append_count_0x4ae1fd += 1;
+		}
+	}
+
+	vector_state.accepted_candidate_count = int32_t(vector_state.accepted_candidates_0x4ae1fd.size());
+	state.weighted_candidate_total_count_0x4a901a += vector_state.accepted_candidate_count;
+	if (vector_state.accepted_candidates_0x4ae1fd.empty()) {
+		return finish_blocked("0x4a901a_weighted_candidate_vector_empty_after_value_floor_and_0x49aa93_filters");
+	}
+
+	vector_state.rng_value_0x4e7276 = rng.next();
+	vector_state.selected_candidate_index = vector_state.rng_value_0x4e7276 % vector_state.accepted_candidate_count;
+	vector_state.selected_candidate = vector_state.accepted_candidates_0x4ae1fd[size_t(vector_state.selected_candidate_index)];
+	vector_state.selected_candidate_known = true;
+	state.weighted_candidate_selected_count_0x4a901a += 1;
+
+	result.weighted_record_0x4a93a2 = allocate_weighted_object_record_0x4a93a2(
+			state,
+			vector_state.selected_candidate.x,
+			vector_state.selected_candidate.y,
+			vector_state.selected_candidate.level,
+			selected_index_0x20,
+			enabled_word_0x24,
+			enabled_low_byte_0x24);
+	result.allocated_record_0x4a93a2 = true;
+	vector_state.allocated_record_0x4a93a2 = true;
+	vector_state.object_record_key_known = result.weighted_record_0x4a93a2.object_record_key_known;
+	vector_state.object_record_key = result.weighted_record_0x4a93a2.object_record_key;
+
+	result.commit_0x4a93a2_0x4a901a_0x4a54a7 = object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(state, join, result.weighted_record_0x4a93a2);
+	result.committed = result.commit_0x4a93a2_0x4a901a_0x4a54a7.committed;
+	vector_state.committed_through_0x4a54a7 = result.committed;
+	vector_state.object_vector_count_after = result.commit_0x4a93a2_0x4a901a_0x4a54a7.commit_0x4a54a7.object_vector_count_after;
+	if (result.committed) {
+		state.weighted_candidate_commit_count_0x4a901a += 1;
+	} else {
+		result.blocked_reason = result.commit_0x4a93a2_0x4a901a_0x4a54a7.blocked_reason.empty()
+				? "0x4a901a_weighted_candidate_selected_but_commit_failed"
+				: result.commit_0x4a93a2_0x4a901a_0x4a54a7.blocked_reason;
+		vector_state.blocked_reason = result.blocked_reason;
+	}
+	state.weighted_candidate_vectors_0x4a901a.push_back(vector_state);
+	state.weighted_candidate_vector_count_0x4a901a = int32_t(state.weighted_candidate_vectors_0x4a901a.size());
+	return result;
+}
+
 static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
 	return std::any_of(records.begin(), records.end(), [&](const EndpointPointerRecord4a5e73 &record) {
 		return record.key_0x20 == key_0x20;
@@ -5090,7 +5221,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
 	apply_endpoint_materialization_state_d014(state);
 	state.remaining_private_state_blockers = {
-		"object_record_vector_0xec4_0xecc_contents_unported_after_0x4a8db2_thresholds_until_0x4a901a_candidate_vector_append_selection_is_ported",
+		"object_record_vector_0xec4_0xecc_live_contents_unported_until_0x4a8d2c_0x4a8db2_source_order_dispatcher_feeds_implemented_0x4a901a_scan",
 		"source_pair_vector_0xedc_live_contents_unported",
 		"relation_vector_0x10e4_0x10e8_remaining_object_metadata_branch_unported_after_source_order_0x4a5a23_object_materialization",
 		"source_order_fallback_0x4a7605_0x4a5e03_payload_and_object_materialization_unported",

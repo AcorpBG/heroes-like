@@ -473,6 +473,50 @@ struct SharedWeightedSchedulerThreshold4a8db2 {
 	std::string blocked_reason;
 };
 
+struct SharedWeightedObjectCandidate4a901a {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	uint32_t low_word_score_0x20 = 0U;
+};
+
+struct SharedWeightedObjectCandidateVectorState4a901a {
+	bool descriptor_source_bridge_known = false;
+	bool copied_source_record_carried = false;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_empty = false;
+	bool relation_owner_byte_known = false;
+	bool threshold_arg_0x18_known = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t scan_bound_low_x = 0;
+	int32_t scan_bound_low_y = 0;
+	int32_t scan_bound_high_x = 0;
+	int32_t scan_bound_high_y = 0;
+	int32_t level = 0;
+	int32_t threshold_arg_0x18_initial = 0;
+	int32_t threshold_arg_0x18_after_scan = 0;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_cell_word_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t value_floor_reject_count = 0;
+	int32_t eligibility_reject_count_0x49aa93 = 0;
+	int32_t local_vector_clear_count_0x4ae52a = 0;
+	int32_t local_vector_append_count_0x4ae1fd = 0;
+	int32_t accepted_candidate_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected_candidate_known = false;
+	SharedWeightedObjectCandidate4a901a selected_candidate;
+	std::vector<SharedWeightedObjectCandidate4a901a> accepted_candidates_0x4ae1fd;
+	bool allocated_record_0x4a93a2 = false;
+	bool committed_through_0x4a54a7 = false;
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	int32_t object_vector_count_after = 0;
+	std::string blocked_reason;
+};
+
 struct SharedGeneratorObjectPrivateState {
 	bool present = false;
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
@@ -518,6 +562,12 @@ struct SharedGeneratorObjectPrivateState {
 	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
 	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	std::vector<SharedWeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
+	bool weighted_candidate_vectors_0x4a901a_known = false;
+	int32_t weighted_candidate_vector_count_0x4a901a = 0;
+	int32_t weighted_candidate_total_count_0x4a901a = 0;
+	int32_t weighted_candidate_selected_count_0x4a901a = 0;
+	int32_t weighted_candidate_commit_count_0x4a901a = 0;
+	std::vector<SharedWeightedObjectCandidateVectorState4a901a> weighted_candidate_vectors_0x4a901a;
 	std::vector<SharedObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;

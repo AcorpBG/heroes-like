@@ -358,6 +358,50 @@ struct SourceBoundedCandidate4a7312 {
 	int32_t level = 0;
 };
 
+struct WeightedObjectCandidate4a901a {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	uint32_t low_word_score_0x20 = 0U;
+};
+
+struct WeightedObjectCandidateVectorState4a901a {
+	bool descriptor_source_bridge_known = false;
+	bool copied_source_record_carried = false;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_empty = false;
+	bool relation_owner_byte_known = false;
+	bool threshold_arg_0x18_known = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t scan_bound_low_x = 0;
+	int32_t scan_bound_low_y = 0;
+	int32_t scan_bound_high_x = 0;
+	int32_t scan_bound_high_y = 0;
+	int32_t level = 0;
+	int32_t threshold_arg_0x18_initial = 0;
+	int32_t threshold_arg_0x18_after_scan = 0;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_cell_word_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t value_floor_reject_count = 0;
+	int32_t eligibility_reject_count_0x49aa93 = 0;
+	int32_t local_vector_clear_count_0x4ae52a = 0;
+	int32_t local_vector_append_count_0x4ae1fd = 0;
+	int32_t accepted_candidate_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected_candidate_known = false;
+	WeightedObjectCandidate4a901a selected_candidate;
+	std::vector<WeightedObjectCandidate4a901a> accepted_candidates_0x4ae1fd;
+	bool allocated_record_0x4a93a2 = false;
+	bool committed_through_0x4a54a7 = false;
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	int32_t object_vector_count_after = 0;
+	std::string blocked_reason;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -1357,6 +1401,12 @@ struct GeneratorObjectPrivateState {
 	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
 	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	std::vector<WeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
+	bool weighted_candidate_vectors_0x4a901a_known = false;
+	int32_t weighted_candidate_vector_count_0x4a901a = 0;
+	int32_t weighted_candidate_total_count_0x4a901a = 0;
+	int32_t weighted_candidate_selected_count_0x4a901a = 0;
+	int32_t weighted_candidate_commit_count_0x4a901a = 0;
+	std::vector<WeightedObjectCandidateVectorState4a901a> weighted_candidate_vectors_0x4a901a;
 	std::vector<ObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
@@ -1487,6 +1537,15 @@ struct WeightedObjectMaterializationCommitResult4a93a2 {
 	std::string blocked_reason;
 };
 
+struct WeightedObjectCandidateScanResult4a901a {
+	WeightedObjectCandidateVectorState4a901a vector_state_0x4a901a;
+	WeightedObjectRecord4a93a2 weighted_record_0x4a93a2;
+	WeightedObjectMaterializationCommitResult4a93a2 commit_0x4a93a2_0x4a901a_0x4a54a7;
+	bool allocated_record_0x4a93a2 = false;
+	bool committed = false;
+	std::string blocked_reason;
+};
+
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 int64_t generated_cell_flat_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 uint32_t generated_cell_zone_word_4a325d(uint32_t existing_word, int32_t zone_id);
@@ -1537,6 +1596,7 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const SourceZonePayload4a218c &source_payload);
 WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
+WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
