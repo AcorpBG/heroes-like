@@ -131,6 +131,8 @@ struct SourceObjectRecord0x4c {
 	int32_t last_flag_0x28 = 0;
 	int32_t pass_count = 0;
 	int32_t action_count = 0;
+	std::string passability_mask;
+	std::string action_mask;
 	uint16_t terrain_mask_a_0x14 = 0U;
 	uint16_t terrain_mask_b_0x18 = 0U;
 	bool descriptor_mask_fields_0x34_0x48_known = false;
@@ -144,11 +146,18 @@ struct SourceObjectRecord0x4c {
 	bool rand_trn_backed = false;
 };
 
+struct SourceObjectMaskPoint490f3f {
+	int32_t dx = 0;
+	int32_t dy = 0;
+};
+
 struct SourceObjectCatalogSummary0x49da08 {
 	int32_t record_count = 0;
 	int32_t source_record_copy_size_bytes = SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C;
 	int32_t objects_txt_record_count = 0;
 	int32_t rand_trn_backed_record_count = 0;
+	int32_t passability_mask_record_count = 0;
+	int32_t action_mask_record_count = 0;
 	int32_t descriptor_mask_field_record_count = 0;
 	int32_t descriptor_mask_exact_def_msk_count = 0;
 	int32_t descriptor_mask_default_msk_fallback_count = 0;
@@ -351,6 +360,7 @@ SourceObjectMaskLaneResult4af89f source_object_mask_lane_selector_0x4af89f(const
 SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_t rng_state, int32_t requested_lane, int32_t bucket_index_0x08, int32_t requested_source_field_0x20);
 bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const SourceObjectRecord0x4c &right);
 int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &record);
+std::vector<SourceObjectMaskPoint490f3f> source_object_text_mask_points_0x490f3f(const std::string &mask_text, bool action_mask);
 SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(SourceObjectResolverState4af785 &state, const SourceObjectRecord0x4c &record);
 bool recovered_descriptor_join_context_0x4903e8(int32_t target_context);
 SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(SourceObjectResolverState4af785 &state, const SourceObjectDescriptor4903e8 &descriptor, const SourceObjectRecord0x4c &selected_source_record);

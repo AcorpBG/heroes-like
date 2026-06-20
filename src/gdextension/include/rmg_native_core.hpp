@@ -82,6 +82,8 @@ struct SharedSourceObjectRecord0x4c {
 	int32_t last_flag_0x28 = 0;
 	int32_t pass_count = 0;
 	int32_t action_count = 0;
+	std::string passability_mask;
+	std::string action_mask;
 	uint16_t terrain_mask_a_0x14 = 0U;
 	uint16_t terrain_mask_b_0x18 = 0U;
 	bool descriptor_mask_fields_0x34_0x48_known = false;
@@ -606,6 +608,8 @@ struct RecoveredOwnerGridPayload {
 	int32_t source_object_catalog_0x4c_copy_size_bytes = 0;
 	int32_t source_object_catalog_objects_txt_record_count = 0;
 	int32_t source_object_catalog_rand_trn_backed_record_count = 0;
+	int32_t source_object_catalog_passability_mask_record_count = 0;
+	int32_t source_object_catalog_action_mask_record_count = 0;
 	int32_t source_object_catalog_descriptor_mask_field_record_count = 0;
 	int32_t source_object_catalog_descriptor_mask_exact_def_msk_count = 0;
 	int32_t source_object_catalog_descriptor_mask_default_msk_fallback_count = 0;

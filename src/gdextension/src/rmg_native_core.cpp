@@ -667,6 +667,8 @@ SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg
 		input.last_flag_0x28,
 		input.pass_count,
 		input.action_count,
+		input.passability_mask,
+		input.action_mask,
 		input.terrain_mask_a_0x14,
 		input.terrain_mask_b_0x18,
 		input.descriptor_mask_fields_0x34_0x48_known,
@@ -872,6 +874,8 @@ void populate_source_object_catalog_0x49da08(RecoveredOwnerGridPayload &payload)
 	payload.source_object_catalog_0x4c_copy_size_bytes = summary.source_record_copy_size_bytes;
 	payload.source_object_catalog_objects_txt_record_count = summary.objects_txt_record_count;
 	payload.source_object_catalog_rand_trn_backed_record_count = summary.rand_trn_backed_record_count;
+	payload.source_object_catalog_passability_mask_record_count = summary.passability_mask_record_count;
+	payload.source_object_catalog_action_mask_record_count = summary.action_mask_record_count;
 	payload.source_object_catalog_descriptor_mask_field_record_count = summary.descriptor_mask_field_record_count;
 	payload.source_object_catalog_descriptor_mask_exact_def_msk_count = summary.descriptor_mask_exact_def_msk_count;
 	payload.source_object_catalog_descriptor_mask_default_msk_fallback_count = summary.descriptor_mask_default_msk_fallback_count;
@@ -1093,6 +1097,8 @@ void append_source_object_record_sample_json(std::ostream &out, const SharedSour
 		<< ",\"last_flag_0x28\":" << record.last_flag_0x28
 		<< ",\"pass_count\":" << record.pass_count
 		<< ",\"action_count\":" << record.action_count
+		<< ",\"passability_mask\":\"" << json_escape(record.passability_mask) << "\""
+		<< ",\"action_mask\":\"" << json_escape(record.action_mask) << "\""
 		<< ",\"terrain_mask_a_0x14\":" << record.terrain_mask_a_0x14
 		<< ",\"terrain_mask_b_0x18\":" << record.terrain_mask_b_0x18
 		<< ",\"descriptor_mask_fields_0x34_0x48_known\":" << (record.descriptor_mask_fields_0x34_0x48_known ? "true" : "false")
@@ -1227,6 +1233,8 @@ void append_source_object_record_catalog_json(std::ostream &out, const Recovered
 		<< "\"record_count\":" << payload.source_object_catalog_0x49da08_record_count << ","
 		<< "\"objects_txt_record_count\":" << payload.source_object_catalog_objects_txt_record_count << ","
 		<< "\"rand_trn_backed_record_count\":" << payload.source_object_catalog_rand_trn_backed_record_count << ","
+		<< "\"passability_mask_record_count\":" << payload.source_object_catalog_passability_mask_record_count << ","
+		<< "\"action_mask_record_count\":" << payload.source_object_catalog_action_mask_record_count << ","
 		<< "\"descriptor_mask_field_record_count\":" << payload.source_object_catalog_descriptor_mask_field_record_count << ","
 		<< "\"descriptor_mask_exact_def_msk_count\":" << payload.source_object_catalog_descriptor_mask_exact_def_msk_count << ","
 		<< "\"descriptor_mask_default_msk_fallback_count\":" << payload.source_object_catalog_descriptor_mask_default_msk_fallback_count << ","
