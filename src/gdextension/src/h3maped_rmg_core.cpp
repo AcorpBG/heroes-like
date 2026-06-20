@@ -1842,6 +1842,156 @@ bool generated_cell_49a318_clear_source_projection(GeneratedCellRecord0x30 &reco
 	return changed;
 }
 
+static uint32_t generated_cell_word20_set_owner_byte3_49a318(uint32_t word_0x20, int32_t owner_byte) {
+	return (word_0x20 & 0x00ffffffU) | ((uint32_t(owner_byte) & 0xffU) << 24U);
+}
+
+static int32_t generated_cell_terrain_code_0x24(const GeneratedCellRecord0x30 &record) {
+	return record.word_0x24_known ? int32_t(record.word_0x24 & 0x3fU) : 9;
+}
+
+static bool generated_cell_relation_member_49a318(const GeneratedCellRecord0x30 &record) {
+	return record.word_0x28_known && (record.word_0x28 & CELL_DECOR_READY_BIT_25) != 0U;
+}
+
+RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+	RelationHighOwnerPropagationResult49a318 result;
+	result.applied = true;
+	const int32_t tile_count = int32_t(grid.records.size());
+	result.owner_high_byte_grid.assign(size_t(std::max<int32_t>(0, tile_count)), -1);
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || tile_count <= 0) {
+		return result;
+	}
+	result.grid_available = true;
+
+	struct HighOwnerQueueNode {
+		int32_t x = 0;
+		int32_t y = 0;
+		int32_t level = 0;
+		int32_t score = 0;
+	};
+	static constexpr int32_t DX[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+	static constexpr int32_t DY[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	std::vector<int32_t> path_low_word(size_t(tile_count), RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452);
+	std::vector<int32_t> path_high_word(size_t(tile_count), RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452);
+
+	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
+		RelationHighOwnerPropagationSeedReport49a318 report;
+		report.owner_vector_index = owner.owner_vector_index;
+		report.runtime_zone_index = owner.runtime_zone_index;
+		if (!owner.coordinate_triple_0x10_0x18_known) {
+			report.status = "blocked_seed_coordinate_triple_unknown";
+			result.seed_blocked_count += 1;
+			result.seed_reports.push_back(report);
+			continue;
+		}
+		result.seed_attempt_count += 1;
+		report.seed_x = owner.coordinate_x_0x10;
+		report.seed_y = owner.coordinate_y_0x14;
+		report.seed_level = owner.coordinate_level_0x18;
+		const int64_t seed_flat = cell_index(grid.width, grid.height, report.seed_x, report.seed_y, report.seed_level);
+		if (seed_flat < 0 || seed_flat >= tile_count) {
+			report.status = "blocked_seed_out_of_bounds";
+			result.seed_blocked_count += 1;
+			result.seed_reports.push_back(report);
+			continue;
+		}
+		const GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
+		report.source_owner_byte = seed_record.word_0x20_known ? generated_cell_owner_byte2_signed_4a4142(seed_record.word_0x20) : -1;
+		if (report.source_owner_byte < 0 || !generated_cell_relation_member_49a318(seed_record) || generated_cell_terrain_code_0x24(seed_record) == 9) {
+			report.status = "blocked_seed_not_materialized_or_unowned";
+			result.seed_blocked_count += 1;
+			result.seed_reports.push_back(report);
+			continue;
+		}
+
+		std::vector<HighOwnerQueueNode> queue;
+		path_low_word[size_t(seed_flat)] = 0;
+		queue.push_back(HighOwnerQueueNode { report.seed_x, report.seed_y, report.seed_level, 0 });
+		result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(queue.size()));
+
+		for (int32_t guard = 0; guard < tile_count * 16 && !queue.empty(); ++guard) {
+			int32_t best_index = 0;
+			for (int32_t index = 1; index < int32_t(queue.size()); ++index) {
+				if (queue[size_t(index)].score < queue[size_t(best_index)].score) {
+					best_index = index;
+				}
+			}
+			const HighOwnerQueueNode node = queue[size_t(best_index)];
+			queue.erase(queue.begin() + best_index);
+			report.popped_cell_count += 1;
+			result.popped_cell_count += 1;
+			const int64_t node_flat = cell_index(grid.width, grid.height, node.x, node.y, node.level);
+			if (node_flat < 0 || node_flat >= tile_count) {
+				continue;
+			}
+			const GeneratedCellRecord0x30 &node_record = grid.records[size_t(node_flat)];
+			const int32_t node_owner = node_record.word_0x20_known ? generated_cell_owner_byte2_signed_4a4142(node_record.word_0x20) : -1;
+			const int32_t base_score = node_owner == report.source_owner_byte
+					? path_low_word[size_t(node_flat)]
+					: path_high_word[size_t(node_flat)];
+			for (int32_t direction = 7; direction >= 0; --direction) {
+				const int32_t nx = node.x + DX[direction];
+				const int32_t ny = node.y + DY[direction];
+				const int32_t nl = node.level;
+				const int64_t next_flat = cell_index(grid.width, grid.height, nx, ny, nl);
+				if (next_flat < 0 || next_flat >= tile_count) {
+					report.rejected_bounds_count += 1;
+					continue;
+				}
+				GeneratedCellRecord0x30 &next_record = grid.records[size_t(next_flat)];
+				const int32_t next_owner = next_record.word_0x20_known ? generated_cell_owner_byte2_signed_4a4142(next_record.word_0x20) : -1;
+				if (next_owner < 0) {
+					report.rejected_unowned_count += 1;
+					continue;
+				}
+				if (!generated_cell_relation_member_49a318(next_record)) {
+					report.rejected_materialized_count += 1;
+					continue;
+				}
+				const int32_t terrain = generated_cell_terrain_code_0x24(next_record);
+				if (terrain == 9) {
+					report.rejected_terrain9_count += 1;
+					continue;
+				}
+				if (next_owner == report.source_owner_byte) {
+					const int32_t step = terrain == 8 ? 10 : 1;
+					const int32_t next_score = base_score + step;
+					if (next_score < path_low_word[size_t(next_flat)]) {
+						path_low_word[size_t(next_flat)] = next_score;
+						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
+						report.same_owner_relax_count += 1;
+						result.same_owner_relax_count += 1;
+					}
+				} else {
+					const int32_t next_score = base_score + 10;
+					if (next_score < path_high_word[size_t(next_flat)]) {
+						path_high_word[size_t(next_flat)] = next_score;
+						result.owner_high_byte_grid[size_t(next_flat)] = report.source_owner_byte;
+						next_record.word_0x20 = generated_cell_word20_set_owner_byte3_49a318(next_record.word_0x20, report.source_owner_byte);
+						next_record.word_0x20_known = true;
+						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
+						report.cross_owner_high_byte_write_count += 1;
+						result.cross_owner_high_byte_write_count += 1;
+					}
+				}
+				result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(queue.size()));
+			}
+		}
+		report.status = "0x49a318_seed_propagated";
+		result.seed_reports.push_back(report);
+	}
+
+	for (const int32_t owner_high : result.owner_high_byte_grid) {
+		if (owner_high < 0) {
+			result.owner_high_byte_sentinel_count += 1;
+		} else {
+			result.owner_high_byte_materialized_count += 1;
+		}
+	}
+	return result;
+}
+
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
 	return flat >= 0
 			&& flat < int64_t(word_0x28.size())
@@ -4111,6 +4261,20 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
+	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
+			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
+	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
+	state.relation_high_owner_propagation_49a318_grid_available = high_owner_propagation.grid_available;
+	state.relation_high_owner_propagation_49a318_object_metadata_gate_complete = high_owner_propagation.object_metadata_gate_complete;
+	state.relation_high_owner_seed_attempt_count_49a318 = high_owner_propagation.seed_attempt_count;
+	state.relation_high_owner_seed_blocked_count_49a318 = high_owner_propagation.seed_blocked_count;
+	state.relation_high_owner_popped_cell_count_49a318 = high_owner_propagation.popped_cell_count;
+	state.relation_high_owner_same_owner_relax_count_49a318 = high_owner_propagation.same_owner_relax_count;
+	state.relation_high_owner_cross_owner_high_byte_write_count_49a318 = high_owner_propagation.cross_owner_high_byte_write_count;
+	state.relation_high_owner_max_queue_size_49a318 = high_owner_propagation.max_queue_size;
+	state.relation_high_owner_materialized_count_49a318 = high_owner_propagation.owner_high_byte_materialized_count;
+	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
+	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
 	apply_endpoint_materialization_state_d014(state);
 	state.remaining_private_state_blockers = {
 		"endpoint_vector_0xd8_0xdc_success_path_source_producer_unrecovered_for_live_materialization",
@@ -4121,7 +4285,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_cursor_0xf5c_success_seed_source_unrecovered_after_0xf58_zero_setup",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-		"source_order_relation_scan_0x4a5767_0x49a318_and_object_mutations_not_applied_after_full_grid_reset",
+		"relation_high_owner_0x49a318_object_metadata_bit22_branch_unported",
 	};
 	return state;
 }

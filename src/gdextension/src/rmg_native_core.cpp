@@ -147,7 +147,7 @@ bool supported_one_level_land_scope(const ControlledCase &controlled_case) {
 
 std::vector<std::string> generated_cell_mutation_phase_blockers() {
 	return {
-		"0x4a5767_relation_scan_and_0x49a318_projection_propagation_after_full_grid_reset",
+		"0x4a1f3b_scan_bounds_scan_consumers_and_0x49a318_object_metadata_bit22_branch_after_high_owner_propagation",
 		"0x49aa63_0x49a932_0x49abd6_0x49a85d_0x49a962_candidate_occupied_action_caller_order",
 		"0x49cf34_0x4aa3e9_relation_reward_attachment_caller_order"
 	};
@@ -516,6 +516,17 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.relation_normalization_4a5767_full_grid_reset_visited_count = input.relation_normalization_4a5767_full_grid_reset_visited_count;
 	out.relation_normalization_4a5767_full_grid_reset_changed_count = input.relation_normalization_4a5767_full_grid_reset_changed_count;
 	out.relation_normalization_4a5767_full_grid_reset_skipped_count = input.relation_normalization_4a5767_full_grid_reset_skipped_count;
+	out.relation_high_owner_propagation_49a318_applied = input.relation_high_owner_propagation_49a318_applied;
+	out.relation_high_owner_propagation_49a318_grid_available = input.relation_high_owner_propagation_49a318_grid_available;
+	out.relation_high_owner_propagation_49a318_object_metadata_gate_complete = input.relation_high_owner_propagation_49a318_object_metadata_gate_complete;
+	out.relation_high_owner_seed_attempt_count_49a318 = input.relation_high_owner_seed_attempt_count_49a318;
+	out.relation_high_owner_seed_blocked_count_49a318 = input.relation_high_owner_seed_blocked_count_49a318;
+	out.relation_high_owner_popped_cell_count_49a318 = input.relation_high_owner_popped_cell_count_49a318;
+	out.relation_high_owner_same_owner_relax_count_49a318 = input.relation_high_owner_same_owner_relax_count_49a318;
+	out.relation_high_owner_cross_owner_high_byte_write_count_49a318 = input.relation_high_owner_cross_owner_high_byte_write_count_49a318;
+	out.relation_high_owner_max_queue_size_49a318 = input.relation_high_owner_max_queue_size_49a318;
+	out.relation_high_owner_materialized_count_49a318 = input.relation_high_owner_materialized_count_49a318;
+	out.relation_high_owner_sentinel_count_49a318 = input.relation_high_owner_sentinel_count_49a318;
 	out.remaining_private_state_blockers = input.remaining_private_state_blockers;
 	return out;
 }
@@ -1527,6 +1538,18 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_normalization_4a5767_full_grid_reset_changed_count\":" << state.relation_normalization_4a5767_full_grid_reset_changed_count << ","
 		<< "\"relation_normalization_4a5767_full_grid_reset_skipped_count\":" << state.relation_normalization_4a5767_full_grid_reset_skipped_count << ","
 		<< "\"relation_normalization_4a5767_source\":\"0x4a5767_full_grid_generated_cell_projection_reset_applied_before_relation_scan_0x49a318_replay\","
+		<< "\"relation_high_owner_propagation_49a318_applied\":" << (state.relation_high_owner_propagation_49a318_applied ? "true" : "false") << ","
+		<< "\"relation_high_owner_propagation_49a318_grid_available\":" << (state.relation_high_owner_propagation_49a318_grid_available ? "true" : "false") << ","
+		<< "\"relation_high_owner_propagation_49a318_object_metadata_gate_complete\":" << (state.relation_high_owner_propagation_49a318_object_metadata_gate_complete ? "true" : "false") << ","
+		<< "\"relation_high_owner_seed_attempt_count_49a318\":" << state.relation_high_owner_seed_attempt_count_49a318 << ","
+		<< "\"relation_high_owner_seed_blocked_count_49a318\":" << state.relation_high_owner_seed_blocked_count_49a318 << ","
+		<< "\"relation_high_owner_popped_cell_count_49a318\":" << state.relation_high_owner_popped_cell_count_49a318 << ","
+		<< "\"relation_high_owner_same_owner_relax_count_49a318\":" << state.relation_high_owner_same_owner_relax_count_49a318 << ","
+		<< "\"relation_high_owner_cross_owner_high_byte_write_count_49a318\":" << state.relation_high_owner_cross_owner_high_byte_write_count_49a318 << ","
+		<< "\"relation_high_owner_max_queue_size_49a318\":" << state.relation_high_owner_max_queue_size_49a318 << ","
+		<< "\"relation_high_owner_materialized_count_49a318\":" << state.relation_high_owner_materialized_count_49a318 << ","
+		<< "\"relation_high_owner_sentinel_count_49a318\":" << state.relation_high_owner_sentinel_count_49a318 << ","
+		<< "\"relation_high_owner_propagation_49a318_source\":\"source_backed_0x49a318_relation_owner_coordinate_seed_flood_writes_generated_cell_word_0x20_owner_high_byte_after_0x4a5767_reset_object_metadata_branch_still_blocked\","
 		<< "\"vectors\":[";
 	append_generator_object_vector_state_json(out, state.endpoint_vector_c8_cc);
 	out << ",";
@@ -1690,7 +1713,7 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 	out << "      \"word_0x14_0x18_source\": \"0x4a5767_full_grid_projection_reset_owned_before_relation_scan_0x49a318_and_0x4a606b_projection_consumers\",\n";
 	out << "      \"byte_0x2b_source\": \"not_native_owned_until_validity_private_byte_mutations_0x49a1d8_0x49abd6_0x4a5a23_are_ported\",\n";
 	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_plus_0x4a5767_full_grid_projection_reset_before_relation_scan_not_pre_0x4a4c8e_checkpoint\",\n";
-	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization_plus_0x4a5767_byte3_projection_reset\",\n";
+	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization_plus_0x4a5767_byte3_projection_reset_plus_source_backed_0x49a318_owner_high_byte_propagation_when_relation_seeds_are_available\",\n";
 	out << "      \"word_0x24_0x28_source\": \"0x49b3c1_0x49b53d_0x4a3f27_terrain_repaint_0x4bb74b_0x4bad0f_0x4bcfc3_0x4bce6d_visual_rows_plus_0x4a5767_direction_bits_reset\",\n";
 	out << "      \"word_0x2c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"word_0x10_hash_fnv1a64\": " << fnv1a64_words(payload.generated_cell_word_0x10) << ",\n";

@@ -1127,6 +1127,39 @@ struct GeneratorRelationOwnerState4a218c {
 	std::vector<GeneratorRelationRecordState4a218c> relation_records;
 };
 
+struct RelationHighOwnerPropagationSeedReport49a318 {
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	int32_t seed_x = 0;
+	int32_t seed_y = 0;
+	int32_t seed_level = 0;
+	int32_t source_owner_byte = -1;
+	std::string status;
+	int32_t popped_cell_count = 0;
+	int32_t same_owner_relax_count = 0;
+	int32_t cross_owner_high_byte_write_count = 0;
+	int32_t rejected_bounds_count = 0;
+	int32_t rejected_unowned_count = 0;
+	int32_t rejected_materialized_count = 0;
+	int32_t rejected_terrain9_count = 0;
+};
+
+struct RelationHighOwnerPropagationResult49a318 {
+	bool applied = false;
+	bool grid_available = false;
+	bool object_metadata_gate_complete = false;
+	int32_t seed_attempt_count = 0;
+	int32_t seed_blocked_count = 0;
+	int32_t popped_cell_count = 0;
+	int32_t same_owner_relax_count = 0;
+	int32_t cross_owner_high_byte_write_count = 0;
+	int32_t max_queue_size = 0;
+	int32_t owner_high_byte_materialized_count = 0;
+	int32_t owner_high_byte_sentinel_count = 0;
+	std::vector<int32_t> owner_high_byte_grid;
+	std::vector<RelationHighOwnerPropagationSeedReport49a318> seed_reports;
+};
+
 struct ObjectRecordReference4a54a7 {
 	uint32_t object_record_key = 0U;
 	int32_t descriptor_type_0x1c = -1;
@@ -1195,6 +1228,18 @@ struct GeneratorObjectPrivateState {
 	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_skipped_count = 0;
+	bool relation_high_owner_propagation_49a318_applied = false;
+	bool relation_high_owner_propagation_49a318_grid_available = false;
+	bool relation_high_owner_propagation_49a318_object_metadata_gate_complete = false;
+	int32_t relation_high_owner_seed_attempt_count_49a318 = 0;
+	int32_t relation_high_owner_seed_blocked_count_49a318 = 0;
+	int32_t relation_high_owner_popped_cell_count_49a318 = 0;
+	int32_t relation_high_owner_same_owner_relax_count_49a318 = 0;
+	int32_t relation_high_owner_cross_owner_high_byte_write_count_49a318 = 0;
+	int32_t relation_high_owner_max_queue_size_49a318 = 0;
+	int32_t relation_high_owner_materialized_count_49a318 = 0;
+	int32_t relation_high_owner_sentinel_count_49a318 = 0;
+	std::vector<RelationHighOwnerPropagationSeedReport49a318> relation_high_owner_seed_reports_49a318;
 	std::vector<std::string> remaining_private_state_blockers;
 };
 
@@ -1258,6 +1303,7 @@ uint32_t generated_cell_49a318_clear_source_word_0x1c(uint32_t word_0x1c);
 RelationResetCell generated_cell_4a5767_reset_cell(uint32_t source_word_0x20, uint32_t source_word_0x28);
 bool generated_cell_4a5767_reset_projection(GeneratedCellRecord0x30 &record);
 bool generated_cell_49a318_clear_source_projection(GeneratedCellRecord0x30 &record);
+RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);
