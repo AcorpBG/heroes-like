@@ -2384,6 +2384,44 @@ GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_
 	return result;
 }
 
+GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_removal_0x499ee8(GeneratedCellRecord0x30 &record, uint32_t object_record_key) {
+	GeneratedCellObjectReferenceRemoval499ee8Result result;
+	result.object_reference_vector_known = record.object_reference_vector_contents_known;
+	result.reference_count_before = record.object_reference_count;
+	result.reference_count_after = record.object_reference_count;
+	if (!record.object_reference_vector_contents_known) {
+		return result;
+	}
+
+	result.reference_count_before = int32_t(record.object_references_0x04_0x08.size());
+	record.object_reference_count = result.reference_count_before;
+	auto it = std::find(record.object_references_0x04_0x08.begin(), record.object_references_0x04_0x08.end(), object_record_key);
+	if (it == record.object_references_0x04_0x08.end()) {
+		result.reference_count_after = record.object_reference_count;
+		return result;
+	}
+
+	result.object_record_found = true;
+	record.object_references_0x04_0x08.erase(it);
+	record.object_reference_count = int32_t(record.object_references_0x04_0x08.size());
+	result.object_record_removed = true;
+	result.reference_count_after = record.object_reference_count;
+	result.object_reference_vector_empty_after = record.object_reference_count == 0;
+	if (!result.object_reference_vector_empty_after || !record.word_0x20_known || !record.word_0x28_known) {
+		return result;
+	}
+
+	result.word_0x20_before = record.word_0x20;
+	result.word_0x28_before = record.word_0x28;
+	record.word_0x28 &= ~CELL_ACTION_CONTROL_BIT_22;
+	record.word_0x28 |= CELL_DECOR_READY_BIT_25;
+	record.word_0x20 = generated_cell_word20_set_low_word(record.word_0x20, 0x7fbcU);
+	result.word_0x20_after = record.word_0x20;
+	result.word_0x28_after = record.word_0x28;
+	result.word_mutations_applied = true;
+	return result;
+}
+
 static uint32_t generated_cell_pack_low_nibble_source_0x2c(uint32_t word_0x2c, int32_t low_nibble_source) {
 	return (word_0x2c & 0xffffffe1U) | ((uint32_t(low_nibble_source) & 0x0fU) << 1U) | 0x01U;
 }

@@ -509,6 +509,81 @@ int main() {
 			return 1;
 		}
 
+		GeneratedCellRecord0x30 reference_record = record;
+		reference_record.object_reference_vector_contents_known = true;
+		reference_record.object_references_0x04_0x08 = { 0x11111111U, 0x22222222U };
+		reference_record.object_reference_count = 2;
+		reference_record.word_0x20 = 0x12340005U;
+		reference_record.word_0x28 |= aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22;
+		const auto first_reference_removal =
+				aurelion::h3maped_rmg_core::generated_cell_object_reference_removal_0x499ee8(reference_record, 0x11111111U);
+		if (!require(first_reference_removal.object_reference_vector_known
+					&& first_reference_removal.object_record_found
+					&& first_reference_removal.object_record_removed
+					&& !first_reference_removal.object_reference_vector_empty_after
+					&& !first_reference_removal.word_mutations_applied,
+					"0x499ee8 first object-reference removal did not remove only the selected non-final reference")) {
+			return 1;
+		}
+		if (!require(reference_record.object_reference_count == 1
+					&& reference_record.object_references_0x04_0x08.size() == 1
+					&& reference_record.object_references_0x04_0x08[0] == 0x22222222U,
+					"0x499ee8 first object-reference removal left the vector/count in the wrong state")) {
+			return 1;
+		}
+		if (!require(reference_record.word_0x20 == 0x12340005U
+					&& (reference_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U,
+					"0x499ee8 non-final removal mutated generated-cell words")) {
+			return 1;
+		}
+		const auto final_reference_removal =
+				aurelion::h3maped_rmg_core::generated_cell_object_reference_removal_0x499ee8(reference_record, 0x22222222U);
+		if (!require(final_reference_removal.object_record_found
+					&& final_reference_removal.object_record_removed
+					&& final_reference_removal.object_reference_vector_empty_after
+					&& final_reference_removal.word_mutations_applied,
+					"0x499ee8 final object-reference removal did not report empty-vector word mutation")) {
+			return 1;
+		}
+		if (!require(reference_record.object_reference_count == 0
+					&& reference_record.object_references_0x04_0x08.empty(),
+					"0x499ee8 final object-reference removal did not empty the vector/count")) {
+			return 1;
+		}
+		if (!require(reference_record.word_0x20 == 0x12347fbcU
+					&& (reference_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) == 0U
+					&& (reference_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25) != 0U,
+					"0x499ee8 final object-reference removal did not clear bit22, set bit25, and reset +0x20 low word")) {
+			return 1;
+		}
+		GeneratedCellRecord0x30 unknown_reference_record = reference_record;
+		unknown_reference_record.object_reference_vector_contents_known = false;
+		unknown_reference_record.object_reference_count = 1;
+		unknown_reference_record.object_references_0x04_0x08 = { 0x33333333U };
+		const auto unknown_reference_removal =
+				aurelion::h3maped_rmg_core::generated_cell_object_reference_removal_0x499ee8(unknown_reference_record, 0x33333333U);
+		if (!require(!unknown_reference_removal.object_reference_vector_known
+					&& !unknown_reference_removal.object_record_removed
+					&& unknown_reference_record.object_reference_count == 1
+					&& unknown_reference_record.object_references_0x04_0x08.size() == 1,
+					"0x499ee8 mutated an unknown object-reference vector")) {
+			return 1;
+		}
+		GeneratedCellRecord0x30 missing_reference_record = reference_record;
+		missing_reference_record.object_reference_vector_contents_known = true;
+		missing_reference_record.object_reference_count = 1;
+		missing_reference_record.object_references_0x04_0x08 = { 0x44444444U };
+		const auto missing_reference_removal =
+				aurelion::h3maped_rmg_core::generated_cell_object_reference_removal_0x499ee8(missing_reference_record, 0x55555555U);
+		if (!require(missing_reference_removal.object_reference_vector_known
+					&& !missing_reference_removal.object_record_found
+					&& !missing_reference_removal.object_record_removed
+					&& missing_reference_record.object_reference_count == 1
+					&& missing_reference_record.object_references_0x04_0x08[0] == 0x44444444U,
+					"0x499ee8 missing-key path changed the object-reference vector")) {
+			return 1;
+		}
+
 		GeneratedCellRecordGrid0x30 region_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(4, 4, 1);
 		for (GeneratedCellRecord0x30 &region_record : region_grid.records) {
 			region_record.object_reference_vector_contents_known = true;
