@@ -16,15 +16,15 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG D-006/D-009 reduced at the shared-core helper layer: h3maped_rmg_core now owns record-level recovered 0x4a5767 projection reset writes for +0x10/+0x14/+0x18/+0x1c/+0x20/+0x28 and 0x49a318 source projection clear writes for +0x10/+0x14/+0x18 plus +0x1c low-word clear. The no-Godot CLI remains fail-closed; these helpers are not adopted into live generation until source-order relation/object caller replay and same-run comparison are owned.",
+      "notes": "Native RMG D-022 reduced at the generator-object private-state layer: h3maped_rmg_core now owns the recovered 0x49ecf2 descriptor counter table init at generator+0x1110 as 0x3a0 zeroed bytes / 232 dwords, and the no-Godot snapshot emits known_count=232 and zero_count=232. This is not object materialization parity: 0x4a54a7/0x4add76 descriptor counter increment/decrement replay, endpoint/object/relation/byte-state vector contents, ordered relation/object caller replay, and same-run comparison remain blockers.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-20T00:17:29Z",
-      "latestEvidenceId": "native-rmg-relation-projection-record-helpers-20260620",
-      "remainingWork": "Port the ordered generator+0x10e4/+0x10e8 relation pointer replay and object-reference vector contents so 0x4a5767/0x49a318 mutate the live generated-cell grid in recovered source order; then wire live 0x4af785 resolver state through 0x4903e8 descriptor/source joins, object materialization, and same-run private-state comparison before any comparable pre-0x4a4c8e checkpoint or runtime map output is allowed."
+      "updatedAt": "2026-06-20T00:22:43Z",
+      "latestEvidenceId": "native-rmg-descriptor-counter-table-init-20260620",
+      "remainingWork": "Port endpoint vector contents, object vector contents, relation vector contents, endpoint byte-state vector contents, object-reference vector contents, ordered 0x4a5767/0x49a318 relation replay, live 0x4af785 resolver state through 0x4903e8 descriptor/source joins, object materialization including 0x4a54a7/0x4add76 descriptor counter mutations, and same-run private-state comparison before any comparable pre-0x4a4c8e checkpoint or runtime map output is allowed."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -67812,25 +67812,26 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-relation-projection-record-helpers-20260620",
-    "evidenceId": "native-rmg-relation-projection-record-helpers-20260620",
-    "timestamp": "2026-06-20T00:17:29Z",
-    "status": "pass_supporting_record_helper_semantics_not_parity",
+    "id": "native-rmg-descriptor-counter-table-init-20260620",
+    "evidenceId": "native-rmg-descriptor-counter-table-init-20260620",
+    "timestamp": "2026-06-20T00:22:43Z",
+    "status": "pass_supporting_generator_private_state_field_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed record-level 0x4a5767 projection reset and 0x49a318 source projection clear helper semantics, with focused selftest coverage. The helpers are not wired into live generation; ordered relation/object replay, object-reference vector contents, descriptor/object materialization, and same-run private-state comparison remain blockers.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed generator+0x1110 descriptor counter table initialization from 0x49ecf2 as a 232-dword zeroed table, with focused selftest and no-Godot snapshot evidence. Later descriptor counter increment/decrement replay through object materialization is still unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
+      "src/gdextension/include/rmg_native_core.hpp",
+      "src/gdextension/src/rmg_native_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "docs/native-rmg-core-h3maped-drift-audit.md",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
       "PLAN.md",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
       "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-      ".artifacts/rmg_native_cli_relation_projection_helper_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_relation_projection_helper_smoke/manifest.json"
+      ".artifacts/rmg_native_cli_descriptor_counter_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_cli_descriptor_counter_smoke/manifest.json"
     ],
     "checks": [
       {
@@ -67838,16 +67839,20 @@
         "status": "passed_debug_linux"
       },
       {
+        "command": "bin/h3maped_rmg_core_selftest",
+        "status": "passed"
+      },
+      {
+        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_descriptor_counter_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+        "status": "expected_blocked_exit_2_no_godot_snapshot_written"
+      },
+      {
+        "command": "jq '.shared_coordinate_owner_grid_chain.generator_object_private_state | {descriptor_counter_table_0x1110_present, descriptor_counter_table_0x1110_contents_known, descriptor_counter_table_0x1110_known_count, descriptor_counter_table_0x1110_byte_size, descriptor_counter_table_0x1110_zero_count, descriptor_counter_table_0x1110_source, remaining_private_state_blockers}' .artifacts/rmg_native_cli_descriptor_counter_smoke/small_2p_seed58_setup3.phase_snapshot.json",
+        "status": "passed_known_232_zero_232"
+      },
+      {
         "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
         "status": "passed_release_linux"
-      },
-      {
-        "command": "bin/h3maped_rmg_core_selftest",
-        "status": "passed_debug_and_release_binary"
-      },
-      {
-        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_relation_projection_helper_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-        "status": "expected_blocked_exit_2_no_godot_snapshot_written"
       },
       {
         "command": "python3 tests/validate_repo.py",
@@ -67871,14 +67876,18 @@
       "phase_snapshot_only_status_passed": false,
       "runtime_generation_allowed": false,
       "same_run_private_state_compare_passed": false,
-      "record_level_0x4a5767_projection_helper_owned": true,
-      "record_level_0x49a318_source_projection_helper_owned": true,
+      "descriptor_counter_table_0x1110_present": true,
+      "descriptor_counter_table_0x1110_contents_known": true,
+      "descriptor_counter_table_0x1110_byte_size": 928,
+      "descriptor_counter_table_0x1110_dword_count": 232,
+      "descriptor_counter_table_0x1110_zero_count": 232,
+      "descriptor_counter_increment_decrement_replay_ported": false,
       "ordered_relation_replay_ported": false,
       "object_reference_vector_contents_ported": false,
       "descriptor_join_0x4903e8_ported": false,
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "ordered 0x4a5767/0x49a318 relation replay over live generated-cell grid, object-reference vector contents, descriptor/source joins, object materialization, and same-run private-state comparison remain unported"
+    "blocker": "endpoint/object/relation/byte-state vector contents, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, and same-run private-state comparison remain unported"
   }
 }
