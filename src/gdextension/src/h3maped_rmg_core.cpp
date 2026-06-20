@@ -3339,6 +3339,20 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 	return owners;
 }
 
+static void apply_relation_normalization_full_grid_reset_0x4a5767(GeneratorObjectPrivateState &state) {
+	state.relation_normalization_4a5767_full_grid_reset_applied = true;
+	for (GeneratedCellRecord0x30 &record : state.generated_cell_buffer.records) {
+		state.relation_normalization_4a5767_full_grid_reset_visited_count += 1;
+		if (!record.word_0x20_known || !record.word_0x28_known) {
+			state.relation_normalization_4a5767_full_grid_reset_skipped_count += 1;
+			continue;
+		}
+		if (generated_cell_4a5767_reset_projection(record)) {
+			state.relation_normalization_4a5767_full_grid_reset_changed_count += 1;
+		}
+	}
+}
+
 static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, const std::vector<uint32_t> &word_0x10, const std::vector<uint32_t> &word_0x1c, const std::vector<uint32_t> &word_0x20, const std::vector<uint32_t> &word_0x24, const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c) {
 	for (size_t index = 0; index < grid.records.size(); ++index) {
 		GeneratedCellRecord0x30 &record = grid.records[index];
@@ -3395,6 +3409,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 				{},
 				{});
 	}
+	apply_relation_normalization_full_grid_reset_0x4a5767(state);
 
 	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0);
 	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0);
@@ -3442,7 +3457,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
 		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-		"source_order_relation_object_mutations_not_applied_to_generated_cell_buffer",
+		"source_order_relation_scan_0x4a5767_0x49a318_and_object_mutations_not_applied_after_full_grid_reset",
 	};
 	return state;
 }

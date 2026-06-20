@@ -357,6 +357,10 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t relation_record_count_10e4_10e8 = 0;
 	int32_t relation_record_missing_endpoint_count_10e4_10e8 = 0;
 	std::vector<SharedGeneratorRelationOwnerState> relation_owner_vectors_10e4_10e8;
+	bool relation_normalization_4a5767_full_grid_reset_applied = false;
+	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
+	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
+	int32_t relation_normalization_4a5767_full_grid_reset_skipped_count = 0;
 	std::vector<std::string> remaining_private_state_blockers;
 };
 

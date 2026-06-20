@@ -913,6 +913,28 @@ int main() {
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {
 		return 1;
 	}
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply recovered 0x4a5767 full-grid reset")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not visit every generated-cell record")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped records with known word inputs")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not mutate every generated-cell record from reset/terrain state")) {
+		return 1;
+	}
+	if (!require(std::all_of(generator_state.generated_cell_buffer.records.begin(), generator_state.generated_cell_buffer.records.end(), [](const aurelion::h3maped_rmg_core::GeneratedCellRecord0x30 &record) {
+			return record.word_0x10_known
+					&& record.word_0x14_known
+					&& record.word_0x18_known
+					&& record.word_0x1c_known
+					&& record.word_0x20_known
+					&& record.word_0x28_known;
+		}), "0x4a5767 full-grid reset did not claim the recovered projection word fields")) {
+		return 1;
+	}
 	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
 		return 1;
 	}

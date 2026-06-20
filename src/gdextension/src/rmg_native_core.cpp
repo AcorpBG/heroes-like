@@ -146,7 +146,7 @@ bool supported_one_level_land_scope(const ControlledCase &controlled_case) {
 
 std::vector<std::string> generated_cell_mutation_phase_blockers() {
 	return {
-		"0x4a5767_0x49a318_relation_reset_caller_order",
+		"0x4a5767_relation_scan_and_0x49a318_projection_propagation_after_full_grid_reset",
 		"0x49aa63_0x49a932_0x49abd6_0x49a85d_0x49a962_candidate_occupied_action_caller_order",
 		"0x49cf34_0x4aa3e9_relation_reward_attachment_caller_order"
 	};
@@ -206,7 +206,7 @@ void populate_generated_cell_record_surface_0x30(RecoveredOwnerGridPayload &payl
 	}
 	payload.generated_cell_record_shape_0x30_present = true;
 	payload.generated_cell_record_stride_bytes = source.stride_bytes;
-	payload.generated_cell_record_surface_status = "partial_stride_0x30_generator_object_buffer_0x14_from_0x49a072_0x499ea3_with_owner_terrain_word_overlays_not_pre_0x4a4c8e_checkpoint";
+	payload.generated_cell_record_surface_status = "partial_stride_0x30_generator_object_buffer_0x14_from_0x49a072_0x499ea3_with_owner_terrain_word_overlays_and_0x4a5767_full_grid_reset_not_pre_0x4a4c8e_checkpoint";
 	payload.generated_cell_records_0x30.reserve(source.records.size());
 	const int32_t level_size = std::max<int32_t>(1, payload.width * payload.height);
 	for (int32_t flat = 0; flat < int32_t(source.records.size()); ++flat) {
@@ -241,6 +241,29 @@ void populate_generated_cell_record_surface_0x30(RecoveredOwnerGridPayload &payl
 		out.word_0x2c_known = record.word_0x2c_known;
 		out.word_0x2c = flat < int32_t(payload.generated_cell_word_0x2c.size()) ? payload.generated_cell_word_0x2c[size_t(flat)] : record.word_0x2c;
 		payload.generated_cell_records_0x30.push_back(out);
+	}
+}
+
+void populate_generated_cell_word_arrays_from_record_grid(RecoveredOwnerGridPayload &payload, const h3maped_rmg_core::GeneratedCellRecordGrid0x30 &source) {
+	payload.generated_cell_word_0x10.clear();
+	payload.generated_cell_word_0x1c.clear();
+	payload.generated_cell_word_0x20.clear();
+	payload.generated_cell_word_0x24.clear();
+	payload.generated_cell_word_0x28.clear();
+	payload.generated_cell_word_0x2c.clear();
+	payload.generated_cell_word_0x10.reserve(source.records.size());
+	payload.generated_cell_word_0x1c.reserve(source.records.size());
+	payload.generated_cell_word_0x20.reserve(source.records.size());
+	payload.generated_cell_word_0x24.reserve(source.records.size());
+	payload.generated_cell_word_0x28.reserve(source.records.size());
+	payload.generated_cell_word_0x2c.reserve(source.records.size());
+	for (const h3maped_rmg_core::GeneratedCellRecord0x30 &record : source.records) {
+		payload.generated_cell_word_0x10.push_back(record.word_0x10);
+		payload.generated_cell_word_0x1c.push_back(record.word_0x1c);
+		payload.generated_cell_word_0x20.push_back(record.word_0x20);
+		payload.generated_cell_word_0x24.push_back(record.word_0x24);
+		payload.generated_cell_word_0x28.push_back(record.word_0x28);
+		payload.generated_cell_word_0x2c.push_back(record.word_0x2c);
 	}
 }
 
@@ -328,6 +351,10 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	for (const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : input.relation_owner_vectors_10e4_10e8) {
 		out.relation_owner_vectors_10e4_10e8.push_back(from_h3maped_generator_relation_owner_state(owner));
 	}
+	out.relation_normalization_4a5767_full_grid_reset_applied = input.relation_normalization_4a5767_full_grid_reset_applied;
+	out.relation_normalization_4a5767_full_grid_reset_visited_count = input.relation_normalization_4a5767_full_grid_reset_visited_count;
+	out.relation_normalization_4a5767_full_grid_reset_changed_count = input.relation_normalization_4a5767_full_grid_reset_changed_count;
+	out.relation_normalization_4a5767_full_grid_reset_skipped_count = input.relation_normalization_4a5767_full_grid_reset_skipped_count;
 	out.remaining_private_state_blockers = input.remaining_private_state_blockers;
 	return out;
 }
@@ -1156,6 +1183,11 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_owner_vectors_10e4_10e8\":";
 	append_generator_relation_owner_vectors_json(out, state.relation_owner_vectors_10e4_10e8);
 	out << ","
+		<< "\"relation_normalization_4a5767_full_grid_reset_applied\":" << (state.relation_normalization_4a5767_full_grid_reset_applied ? "true" : "false") << ","
+		<< "\"relation_normalization_4a5767_full_grid_reset_visited_count\":" << state.relation_normalization_4a5767_full_grid_reset_visited_count << ","
+		<< "\"relation_normalization_4a5767_full_grid_reset_changed_count\":" << state.relation_normalization_4a5767_full_grid_reset_changed_count << ","
+		<< "\"relation_normalization_4a5767_full_grid_reset_skipped_count\":" << state.relation_normalization_4a5767_full_grid_reset_skipped_count << ","
+		<< "\"relation_normalization_4a5767_source\":\"0x4a5767_full_grid_generated_cell_projection_reset_applied_before_relation_scan_0x49a318_replay\","
 		<< "\"vectors\":[";
 	append_generator_object_vector_state_json(out, state.endpoint_vector_c8_cc);
 	out << ",";
@@ -1306,11 +1338,11 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 		}
 	}
 	out << "      \"byte_0x2b_bit_0x02_known_count\": " << byte_0x2b_bit_0x02_known_count << ",\n";
-	out << "      \"word_0x14_0x18_source\": \"not_native_owned_until_0x4a5767_0x4a606b_projection_chain_is_ported\",\n";
+	out << "      \"word_0x14_0x18_source\": \"0x4a5767_full_grid_projection_reset_owned_before_relation_scan_0x49a318_and_0x4a606b_projection_consumers\",\n";
 	out << "      \"byte_0x2b_source\": \"not_native_owned_until_validity_private_byte_mutations_0x49a1d8_0x49abd6_0x4a5a23_are_ported\",\n";
-	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
-	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization\",\n";
-	out << "      \"word_0x24_0x28_source\": \"0x49b3c1_0x49b53d_0x4a3f27_terrain_repaint_0x4bb74b_0x4bad0f_0x4bcfc3_0x4bce6d_visual_rows\",\n";
+	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_plus_0x4a5767_full_grid_projection_reset_before_relation_scan_not_pre_0x4a4c8e_checkpoint\",\n";
+	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization_plus_0x4a5767_byte3_projection_reset\",\n";
+	out << "      \"word_0x24_0x28_source\": \"0x49b3c1_0x49b53d_0x4a3f27_terrain_repaint_0x4bb74b_0x4bad0f_0x4bcfc3_0x4bce6d_visual_rows_plus_0x4a5767_direction_bits_reset\",\n";
 	out << "      \"word_0x2c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_before_downstream_consumers_not_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"word_0x10_hash_fnv1a64\": " << fnv1a64_words(payload.generated_cell_word_0x10) << ",\n";
 	out << "      \"word_0x1c_hash_fnv1a64\": " << fnv1a64_words(payload.generated_cell_word_0x1c) << ",\n";
@@ -1865,6 +1897,7 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload(const ControlledCas
 		payload.generated_cell_word_0x20 = result.owner_grid.materialization.generated_cell_word_0x20;
 		payload.built = false;
 	}
+	populate_generated_cell_word_arrays_from_record_grid(payload, generator_private_state.generated_cell_buffer);
 	populate_generated_cell_record_surface_0x30(payload, generator_private_state.generated_cell_buffer);
 	return payload;
 }
