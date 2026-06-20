@@ -16,15 +16,15 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG D-022/D-009 reduced at the generator-object private-state layer: h3maped_rmg_core now owns the active relation-vector count from selected 0x4ac552 -> 0x4a218c owner adoption, recovered reciprocal 0x49f7c4 relation-owner records from selected runtime links, recovered 0x4a1f3b relation-owner source endpoint vector contents, recovered 0x4a17f5/0x4a1ad8 coordinate candidate vectors per relation owner, recovered 0x4a5767 full-grid projection reset, recovered 0x49ecf2 setup zero for generator+0xf58 while leaving +0xf5c unclaimed, recovered 0x49f95a endpoint byte-state vector +0x1104/+0x1108 zero-init relationship to endpoint pointer vector +0xd8/+0xdc, and recovered 0x49ecf2 descriptor counter table init at generator+0x1110 as 0x3a0 zeroed bytes / 232 dwords. This is not relation/object materialization parity: relation scan-bounds/consumer fields, object vector contents, endpoint pointer vector +0xd8/+0xdc contents/count for concrete byte-state contents, 0xf5c seeding, 0x49a318 relation propagation replay, 0x4a54a7/0x4add76 descriptor counter mutations, ordered relation/object caller replay, and same-run comparison remain blockers.",
+      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-20T01:55:37Z",
-      "latestEvidenceId": "native-rmg-endpoint-byte-state-vector-source-relationship-20260620",
-      "remainingWork": "Port object vector contents, full relation scan-bounds fields and source-order replay consumers, endpoint pointer vector +0xd8/+0xdc contents/count required for concrete +0x1104/+0x1108 byte-state contents, object-reference vector contents, 0xf5c cursor seed or source-backed supported-scope exclusion through replay, ordered relation scan and 0x49a318 propagation after the 0x4a5767 full-grid reset, live 0x4af785 resolver state through 0x4903e8 descriptor/source joins, object materialization including 0x4a54a7/0x4add76 descriptor counter mutations, and same-run private-state comparison before any comparable pre-0x4a4c8e checkpoint or runtime map output is allowed."
+      "updatedAt": "2026-06-20T20:35:18Z",
+      "latestEvidenceId": "native-rmg-4a7312-source-bounded-scanner-20260620",
+      "remainingWork": "Port the generic live source-order materialization producer and scanner order around the now-live 0x4a7312 picker: real 0x4a1f3b non-sentinel scan-bound writers/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -12498,10 +12498,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-20T20:18:41Z",
+  "currentSliceUpdatedAt": "2026-06-20T20:35:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -15903,21 +15903,17 @@
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-source-object-text-masks-20260620",
-    "evidenceId": "native-rmg-source-object-text-masks-20260620",
+    "id": "native-rmg-4a7312-source-bounded-scanner-20260620",
+    "evidenceId": "native-rmg-4a7312-source-bounded-scanner-20260620",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-20T20:18:41Z",
-    "status": "pass_behavior_backed_source_object_text_masks_not_full_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain.",
-    "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried source records: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan bounds/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+    "timestamp": "2026-06-20T20:35:18Z",
+    "status": "pass_behavior_backed_4a7312_scanner_not_full_parity",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open.",
+    "blocker": "Port the generic live source-order materialization producer and scanner order around the now-live 0x4a7312 picker: real 0x4a1f3b non-sentinel scan-bound writers/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-      "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
-      "src/gdextension/include/rmg_native_core.hpp",
-      "src/gdextension/src/rmg_native_core.cpp",
-      "tools/generate_h3maped_rmg_object_catalog_cpp.py",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
@@ -15925,16 +15921,12 @@
     ],
     "checks": [
       {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
-        "status": "passed_linux_debug_native_targets"
-      },
-      {
-        "command": "bin/h3maped_rmg_core_selftest",
-        "status": "passed_debug_then_release_binary"
+        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
+        "status": "passed_linux_debug_native_targets_and_selftest"
       },
       {
         "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_release -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
-        "status": "passed_linux_release_native_targets"
+        "status": "passed_linux_release_native_targets_and_selftest"
       },
       {
         "command": "python3 tests/validate_repo.py",
@@ -15942,11 +15934,11 @@
       },
       {
         "command": "jq empty ops/progress.json",
-        "status": "passed"
+        "status": "passed_before_tracker_update"
       },
       {
         "command": "git diff --check",
-        "status": "passed"
+        "status": "passed_before_tracker_update"
       },
       {
         "command": "Windows MinGW DLL builds",
@@ -15956,16 +15948,12 @@
     "metrics": {
       "checkpoint2_complete": false,
       "native_rmg_end_to_end_parity_complete": false,
-      "source_object_passability_action_masks_ported": true,
-      "source_object_passability_mask_record_count": 1328,
-      "source_object_action_mask_record_count": 1328,
-      "source_object_text_mask_decoder_0x490f3f_ported": true,
-      "type98_town_passability_mask_pass_count": 35,
-      "type98_town_action_mask_action_count": 1,
-      "type98_town_text_mask_body_cell_count": 13,
-      "type98_town_text_mask_action_cell_count": 1,
-      "type98_town_action_cell_in_body_footprint": true,
+      "source_bounded_endpoint_candidate_picker_0x4a7312_ported": true,
+      "source_bounded_endpoint_candidate_picker_0x4a7312_selftest_passed": true,
+      "endpoint_materialization_0x4a5e73_typed_0x4a7312_result_ported": true,
+      "endpoint_materialization_0x4a5e73_raw_boolean_proxy_removed": true,
       "source_order_object_materialization_callers_ported": false,
+      "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
       "object_materialization_parity_complete": false,
       "full_rmg_parity_complete": false,
       "godot_process_started": false,
@@ -15976,16 +15964,12 @@
     "src/gdextension/include/h3maped_rmg_core.hpp",
     "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-    "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
-    "src/gdextension/include/rmg_native_core.hpp",
-    "src/gdextension/src/rmg_native_core.cpp",
-    "tools/generate_h3maped_rmg_object_catalog_cpp.py",
     "bin/h3maped_rmg_core_selftest",
     "bin/rmg_native_batch_export_cli",
     "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
     "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
   ],
-  "latestEvidenceId": "native-rmg-source-object-text-masks-20260620",
+  "latestEvidenceId": "native-rmg-4a7312-source-bounded-scanner-20260620",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -16291,10 +16275,15 @@
     "type98_town_action_mask_action_count": 1,
     "type98_town_text_mask_body_cell_count": 13,
     "type98_town_text_mask_action_cell_count": 1,
-    "type98_town_action_cell_in_body_footprint": true
+    "type98_town_action_cell_in_body_footprint": true,
+    "source_bounded_endpoint_candidate_picker_0x4a7312_ported": true,
+    "source_bounded_endpoint_candidate_picker_0x4a7312_selftest_passed": true,
+    "endpoint_materialization_0x4a5e73_typed_0x4a7312_result_ported": true,
+    "endpoint_materialization_0x4a5e73_raw_boolean_proxy_removed": true,
+    "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now carries the recovered 0x49f95a endpoint byte-state vector +0x1104/+0x1108 relationship: the byte vector is sized from endpoint pointer vector +0xd8/+0xdc, has 1-byte elements, and is zero-initialized when that source vector count is known. This removes the generic byte-state-vector placeholder without inventing concrete contents; concrete +0x1104/+0x1108 contents remain blocked until the source endpoint pointer vector +0xd8/+0xdc contents/count are ported. 0xf5c seeding, scan-bounds consumers, ordered relation/object replay, descriptor/source joins, object materialization, same-run private-state comparison, and final payload generation remain unported.",
+  "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -56959,8 +56948,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Checkpoint 2 remains blocked by live source-order caller/scanner replay; recovered source object text masks and decoded footprint offsets are now carried instead of hardcoded.",
-  "remainingWork": "Port the generic live source-order materialization producer and scanner order beyond carried source records: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan bounds/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+  "remainingGap": "Checkpoint 2 remains blocked by active caller-order replay and real 0x4a1f3b scan-bound production; the recovered 0x4a7312 source-bounded candidate picker and typed 0x4a5e73 projection result are now ported instead of a raw acceptance proxy.",
+  "remainingWork": "Port the generic live source-order materialization producer and scanner order around the now-live 0x4a7312 picker: real 0x4a1f3b non-sentinel scan-bound writers/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -57492,9 +57481,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core and the native mirror now preserve the recovered descriptor .msk fields for every 0x49da08 source object record: descriptor width/height plus the +0x3c/+0x44 48-bit mask fields. 0x4903e8 descriptor/source joins now reject known mask mismatches, the type-98 town bridge carries the recovered 6x6 0xfcfcfcfcfcfc masks, and native JSON exposes exact descriptor-mask coverage counts. This removes a source-data prerequisite for live source-order object materialization, but full object/materialization parity is still blocked by the generic live candidate/vector producer and downstream relation/reward/guard/object caller order.",
+  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-06-20T20:18:41Z",
+  "updatedAt": "2026-06-20T20:35:18Z",
   "validation": {
     "id": "native-rmg-source-object-text-masks-20260620",
     "evidenceId": "native-rmg-source-object-text-masks-20260620",
@@ -68471,21 +68460,17 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-source-object-text-masks-20260620",
-    "evidenceId": "native-rmg-source-object-text-masks-20260620",
+    "id": "native-rmg-4a7312-source-bounded-scanner-20260620",
+    "evidenceId": "native-rmg-4a7312-source-bounded-scanner-20260620",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-20T20:18:41Z",
-    "status": "pass_behavior_backed_source_object_text_masks_not_full_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain.",
-    "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried source records: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan bounds/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+    "timestamp": "2026-06-20T20:35:18Z",
+    "status": "pass_behavior_backed_4a7312_scanner_not_full_parity",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open.",
+    "blocker": "Port the generic live source-order materialization producer and scanner order around the now-live 0x4a7312 picker: real 0x4a1f3b non-sentinel scan-bound writers/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-      "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
-      "src/gdextension/include/rmg_native_core.hpp",
-      "src/gdextension/src/rmg_native_core.cpp",
-      "tools/generate_h3maped_rmg_object_catalog_cpp.py",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
@@ -68493,16 +68478,12 @@
     ],
     "checks": [
       {
-        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
-        "status": "passed_linux_debug_native_targets"
-      },
-      {
-        "command": "bin/h3maped_rmg_core_selftest",
-        "status": "passed_debug_then_release_binary"
+        "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug && cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
+        "status": "passed_linux_debug_native_targets_and_selftest"
       },
       {
         "command": "cmake -S src/gdextension -B .artifacts/map_persistence_native_build_release -DCMAKE_BUILD_TYPE=Release && cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 && bin/h3maped_rmg_core_selftest",
-        "status": "passed_linux_release_native_targets"
+        "status": "passed_linux_release_native_targets_and_selftest"
       },
       {
         "command": "python3 tests/validate_repo.py",
@@ -68510,11 +68491,11 @@
       },
       {
         "command": "jq empty ops/progress.json",
-        "status": "passed"
+        "status": "passed_before_tracker_update"
       },
       {
         "command": "git diff --check",
-        "status": "passed"
+        "status": "passed_before_tracker_update"
       },
       {
         "command": "Windows MinGW DLL builds",
@@ -68524,21 +68505,17 @@
     "metrics": {
       "checkpoint2_complete": false,
       "native_rmg_end_to_end_parity_complete": false,
-      "source_object_passability_action_masks_ported": true,
-      "source_object_passability_mask_record_count": 1328,
-      "source_object_action_mask_record_count": 1328,
-      "source_object_text_mask_decoder_0x490f3f_ported": true,
-      "type98_town_passability_mask_pass_count": 35,
-      "type98_town_action_mask_action_count": 1,
-      "type98_town_text_mask_body_cell_count": 13,
-      "type98_town_text_mask_action_cell_count": 1,
-      "type98_town_action_cell_in_body_footprint": true,
+      "source_bounded_endpoint_candidate_picker_0x4a7312_ported": true,
+      "source_bounded_endpoint_candidate_picker_0x4a7312_selftest_passed": true,
+      "endpoint_materialization_0x4a5e73_typed_0x4a7312_result_ported": true,
+      "endpoint_materialization_0x4a5e73_raw_boolean_proxy_removed": true,
       "source_order_object_materialization_callers_ported": false,
+      "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
       "object_materialization_parity_complete": false,
       "full_rmg_parity_complete": false,
       "godot_process_started": false,
       "windows_dll_build_deferred": true
     }
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x4a7312 source-bounded endpoint candidate picker as executable C++ behavior: it consumes a 0x4903e8 descriptor/source join, source/relation scan bounds, relation owner byte, recovered objects.txt passability masks, generated-cell words, the H3MapEd RNG, and dispatches accepted candidates through the existing 0x4a54a7 vtable-slot equivalent. The old raw boolean proxy in 0x4a5e73 was replaced with a typed 0x4a7312 result. This is not full source-order object materialization parity: active 0x4a1f3b non-sentinel scan-bound production, upstream caller order, endpoint +0xd8/+0xdc/+0xf5c state, reward/guard materialization, same-run comparison, and final payload generation remain open."
 }
