@@ -1087,6 +1087,19 @@ int main() {
 	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
 		return 1;
 	}
+	if (!require(generator_state.endpoint_vector_d8_dc.present && !generator_state.endpoint_vector_d8_dc.count_known, "generator object private state must keep endpoint vector +0xd8/+0xdc unclaimed until source endpoint records are ported")) {
+		return 1;
+	}
+	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.present
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count_source_vector_label == generator_state.endpoint_vector_d8_dc.label
+					&& generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known
+					&& generator_state.endpoint_byte_state_vector_1104_1108.element_size_bytes == 1
+					&& !generator_state.endpoint_byte_state_vector_1104_1108.count_known
+					&& !generator_state.endpoint_byte_state_vector_1104_1108.contents_known,
+				"generator object private state did not preserve recovered 0x49f95a byte-state vector initialization from +0xd8/+0xdc count")) {
+		return 1;
+	}
 	if (!require(generator_state.endpoint_cursor_0xf5c_present && !generator_state.endpoint_cursor_0xf5c_known, "generator object private state must not claim recovered 0xf5c cursor seed")) {
 		return 1;
 	}

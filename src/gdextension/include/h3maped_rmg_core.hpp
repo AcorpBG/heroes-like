@@ -927,6 +927,10 @@ struct GeneratorObjectVectorState {
 	bool contents_known = false;
 	bool count_known = false;
 	int32_t count = 0;
+	bool count_sourced_from_vector = false;
+	std::string count_source_vector_label;
+	bool zero_initialized_contents_known_when_count_known = false;
+	int32_t element_size_bytes = 0;
 };
 
 struct GeneratorRelationRecordState4a218c {
