@@ -311,6 +311,41 @@ SharedGeneratorSourceEndpointRecordState from_h3maped_generator_source_endpoint_
 	return out;
 }
 
+SharedCoordinateCandidate4a17f5 from_h3maped_coordinate_candidate_4a17f5(const h3maped_rmg_core::CoordinateCandidate4a17f5 &input) {
+	SharedCoordinateCandidate4a17f5 out;
+	out.x = input.x;
+	out.y = input.y;
+	out.level = input.level;
+	return out;
+}
+
+std::vector<SharedCoordinateCandidate4a17f5> from_h3maped_coordinate_candidates_4a17f5(const std::vector<h3maped_rmg_core::CoordinateCandidate4a17f5> &inputs) {
+	std::vector<SharedCoordinateCandidate4a17f5> out;
+	out.reserve(inputs.size());
+	for (const h3maped_rmg_core::CoordinateCandidate4a17f5 &input : inputs) {
+		out.push_back(from_h3maped_coordinate_candidate_4a17f5(input));
+	}
+	return out;
+}
+
+SharedGeneratorCoordinateCandidateVectorState4a1f3b from_h3maped_generator_coordinate_candidate_vector_state(const h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b &input) {
+	SharedGeneratorCoordinateCandidateVectorState4a1f3b out;
+	out.runtime_zone_index = input.runtime_zone_index;
+	out.pass_id = input.pass_id;
+	out.candidate_source = input.candidate_source;
+	out.candidate_count_before_prune = input.candidate_count_before_prune;
+	out.candidate_count_after_prune = input.candidate_count_after_prune;
+	out.explicit_link_base_count = input.explicit_link_base_count;
+	out.selected_candidate_index = input.selected_candidate_index;
+	out.rng_value = input.rng_value;
+	out.blocked = input.blocked;
+	out.selected_candidate_known = input.selected_candidate_known;
+	out.selected_candidate = from_h3maped_coordinate_candidate_4a17f5(input.selected_candidate);
+	out.candidates_before_prune_4a17f5 = from_h3maped_coordinate_candidates_4a17f5(input.candidates_before_prune_4a17f5);
+	out.candidates_after_prune_4a1ad8 = from_h3maped_coordinate_candidates_4a17f5(input.candidates_after_prune_4a1ad8);
+	return out;
+}
+
 SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &input) {
 	SharedGeneratorRelationOwnerState out;
 	out.owner_vector_index = input.owner_vector_index;
@@ -347,10 +382,17 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.owner_local_vector_0x3e4_count = input.owner_local_vector_0x3e4_count;
 	out.owner_local_vector_0x3f4_count = input.owner_local_vector_0x3f4_count;
 	out.owner_local_vector_0x404_count = input.owner_local_vector_0x404_count;
+	out.coordinate_candidate_vectors_0x4a1f3b_known = input.coordinate_candidate_vectors_0x4a1f3b_known;
+	out.coordinate_candidate_vector_step_count = input.coordinate_candidate_vector_step_count;
+	out.coordinate_candidate_after_prune_total_count = input.coordinate_candidate_after_prune_total_count;
 	out.relation_record_count = input.relation_record_count;
 	out.source_endpoint_records_0xc8_0xcc.reserve(input.source_endpoint_records_0xc8_0xcc.size());
 	for (const h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b &record : input.source_endpoint_records_0xc8_0xcc) {
 		out.source_endpoint_records_0xc8_0xcc.push_back(from_h3maped_generator_source_endpoint_record_state(record));
+	}
+	out.coordinate_candidate_vectors_0x4a1f3b.reserve(input.coordinate_candidate_vectors_0x4a1f3b.size());
+	for (const h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b &vector : input.coordinate_candidate_vectors_0x4a1f3b) {
+		out.coordinate_candidate_vectors_0x4a1f3b.push_back(from_h3maped_generator_coordinate_candidate_vector_state(vector));
 	}
 	out.relation_records.reserve(input.relation_records.size());
 	for (const h3maped_rmg_core::GeneratorRelationRecordState4a218c &record : input.relation_records) {
@@ -1199,6 +1241,54 @@ void append_generator_source_endpoint_records_json(std::ostream &out, const std:
 	out << "]";
 }
 
+void append_coordinate_candidates_json(std::ostream &out, const std::vector<SharedCoordinateCandidate4a17f5> &candidates) {
+	out << "[";
+	for (size_t index = 0; index < candidates.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedCoordinateCandidate4a17f5 &candidate = candidates[index];
+		out << "{\"x\":" << candidate.x
+			<< ",\"y\":" << candidate.y
+			<< ",\"level\":" << candidate.level
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_generator_coordinate_candidate_vectors_json(std::ostream &out, const std::vector<SharedGeneratorCoordinateCandidateVectorState4a1f3b> &vectors) {
+	out << "[";
+	for (size_t index = 0; index < vectors.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedGeneratorCoordinateCandidateVectorState4a1f3b &vector = vectors[index];
+		out << "{\"runtime_zone_index\":" << vector.runtime_zone_index
+			<< ",\"pass_id\":\"" << json_escape(vector.pass_id) << "\""
+			<< ",\"candidate_source\":\"" << json_escape(vector.candidate_source) << "\""
+			<< ",\"candidate_count_before_prune\":" << vector.candidate_count_before_prune
+			<< ",\"candidate_count_after_prune\":" << vector.candidate_count_after_prune
+			<< ",\"explicit_link_base_count\":" << vector.explicit_link_base_count
+			<< ",\"selected_candidate_index\":" << vector.selected_candidate_index
+			<< ",\"rng_value\":" << vector.rng_value
+			<< ",\"blocked\":" << (vector.blocked ? "true" : "false")
+			<< ",\"selected_candidate_known\":" << (vector.selected_candidate_known ? "true" : "false")
+			<< ",\"selected_candidate\":";
+		if (vector.selected_candidate_known) {
+			std::vector<SharedCoordinateCandidate4a17f5> selected = { vector.selected_candidate };
+			append_coordinate_candidates_json(out, selected);
+		} else {
+			out << "[]";
+		}
+		out << ",\"candidates_before_prune_4a17f5\":";
+		append_coordinate_candidates_json(out, vector.candidates_before_prune_4a17f5);
+		out << ",\"candidates_after_prune_4a1ad8\":";
+		append_coordinate_candidates_json(out, vector.candidates_after_prune_4a1ad8);
+		out << "}";
+	}
+	out << "]";
+}
+
 void append_generator_relation_owner_vectors_json(std::ostream &out, const std::vector<SharedGeneratorRelationOwnerState> &owners) {
 	out << "[";
 	for (size_t index = 0; index < owners.size(); ++index) {
@@ -1242,7 +1332,12 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"owner_local_vector_0x3e4_count\":" << owner.owner_local_vector_0x3e4_count
 			<< ",\"owner_local_vector_0x3f4_count\":" << owner.owner_local_vector_0x3f4_count
 			<< ",\"owner_local_vector_0x404_count\":" << owner.owner_local_vector_0x404_count
-			<< ",\"relation_record_count\":" << owner.relation_record_count
+			<< ",\"coordinate_candidate_vectors_0x4a1f3b_known\":" << (owner.coordinate_candidate_vectors_0x4a1f3b_known ? "true" : "false")
+			<< ",\"coordinate_candidate_vector_step_count\":" << owner.coordinate_candidate_vector_step_count
+			<< ",\"coordinate_candidate_after_prune_total_count\":" << owner.coordinate_candidate_after_prune_total_count
+			<< ",\"coordinate_candidate_vectors_0x4a1f3b\":";
+		append_generator_coordinate_candidate_vectors_json(out, owner.coordinate_candidate_vectors_0x4a1f3b);
+		out << ",\"relation_record_count\":" << owner.relation_record_count
 			<< ",\"relation_records\":";
 		append_generator_relation_records_json(out, owner.relation_records);
 		out << "}";
@@ -1253,7 +1348,7 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 void append_generator_object_private_state_json(std::ostream &out, const SharedGeneratorObjectPrivateState &state) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_generator_object_private_state_v1\","
-		<< "\"status\":\"partial_recovered_generator_object_layout_owned_until_relation_object_endpoint_vectors_are_ported\","
+		<< "\"status\":\"partial_recovered_generator_object_layout_owned_until_relation_object_scan_consumers_are_ported\","
 		<< "\"present\":" << (state.present ? "true" : "false") << ","
 		<< "\"generated_cell_buffer_offset_0x14\":" << state.generated_cell_buffer_offset_0x14 << ","
 		<< "\"width_offset_0x18\":" << state.width_offset_0x18 << ","

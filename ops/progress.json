@@ -16,15 +16,15 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG D-022/D-009 reduced at the generator-object private-state layer: h3maped_rmg_core now owns the active relation-vector count from selected 0x4ac552 -> 0x4a218c owner adoption, recovered reciprocal 0x49f7c4 relation-owner records from selected runtime links, recovered 0x4a5767 full-grid projection reset, recovered 0x49ecf2 setup zero for generator+0xf58 while leaving +0xf5c unclaimed, and recovered 0x49ecf2 descriptor counter table init at generator+0x1110 as 0x3a0 zeroed bytes / 232 dwords. This is not relation/object materialization parity: full relation pointer/bounds fields, endpoint/object/byte-state vector contents, 0xf5c seeding, 0x49a318 relation propagation replay, 0x4a54a7/0x4add76 descriptor counter mutations, ordered relation/object caller replay, and same-run comparison remain blockers.",
+      "notes": "Native RMG D-022/D-009 reduced at the generator-object private-state layer: h3maped_rmg_core now owns the active relation-vector count from selected 0x4ac552 -> 0x4a218c owner adoption, recovered reciprocal 0x49f7c4 relation-owner records from selected runtime links, recovered 0x4a1f3b relation-owner source endpoint vector contents, recovered 0x4a17f5/0x4a1ad8 coordinate candidate vectors per relation owner, recovered 0x4a5767 full-grid projection reset, recovered 0x49ecf2 setup zero for generator+0xf58 while leaving +0xf5c unclaimed, and recovered 0x49ecf2 descriptor counter table init at generator+0x1110 as 0x3a0 zeroed bytes / 232 dwords. This is not relation/object materialization parity: relation scan-bounds/consumer fields, object/byte-state vector contents, 0xf5c seeding, 0x49a318 relation propagation replay, 0x4a54a7/0x4add76 descriptor counter mutations, ordered relation/object caller replay, and same-run comparison remain blockers.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-20T00:53:53Z",
-      "latestEvidenceId": "native-rmg-4a5767-full-grid-reset-20260620",
-      "remainingWork": "Port endpoint vector contents, object vector contents, full relation pointer/bounds fields and source-order replay consumers, endpoint byte-state vector contents, object-reference vector contents, 0xf5c cursor seed or source-backed supported-scope exclusion through replay, ordered relation scan and 0x49a318 propagation after the 0x4a5767 full-grid reset, live 0x4af785 resolver state through 0x4903e8 descriptor/source joins, object materialization including 0x4a54a7/0x4add76 descriptor counter mutations, and same-run private-state comparison before any comparable pre-0x4a4c8e checkpoint or runtime map output is allowed."
+      "updatedAt": "2026-06-20T01:41:43Z",
+      "latestEvidenceId": "native-rmg-relation-owner-coordinate-candidate-vectors-20260620",
+      "remainingWork": "Port object vector contents, full relation scan-bounds fields and source-order replay consumers, endpoint byte-state vector contents, object-reference vector contents, 0xf5c cursor seed or source-backed supported-scope exclusion through replay, ordered relation scan and 0x49a318 propagation after the 0x4a5767 full-grid reset, live 0x4af785 resolver state through 0x4903e8 descriptor/source joins, object materialization including 0x4a54a7/0x4add76 descriptor counter mutations, and same-run private-state comparison before any comparable pre-0x4a4c8e checkpoint or runtime map output is allowed."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -67641,12 +67641,12 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-relation-owner-endpoint-vector-contents-20260620",
-    "evidenceId": "native-rmg-relation-owner-endpoint-vector-contents-20260620",
-    "timestamp": "2026-06-20T01:35:00Z",
+    "id": "native-rmg-relation-owner-coordinate-candidate-vectors-20260620",
+    "evidenceId": "native-rmg-relation-owner-coordinate-candidate-vectors-20260620",
+    "timestamp": "2026-06-20T01:41:43Z",
     "status": "pass_supporting_generator_private_state_field_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now carries the recovered 0x4a1f3b/0x4a19ed relation-owner selected coordinate triple +0x10..+0x18 and source-zone endpoint vector +0xc8/+0xcc contents/count consumed by 0x4a1f3b, in addition to the existing 0x49b452 constructor/defaults and 0x49f7c4 relation records. The recovered template catalog currently has zero explicit source_endpoints payloads, so endpoint id fields are preserved as -1 rather than synthesized. Candidate-vector contents, scan-bounds updates, relation-local scans, ordered 0x49a318 propagation, object/reference vectors, descriptor joins, same-run private-state comparison, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now carries the recovered 0x4a1f3b/0x4a19ed relation-owner selected coordinate triple +0x10..+0x18, source-zone endpoint vector +0xc8/+0xcc contents/count, and 0x4a17f5/0x4a1ad8 coordinate candidate vectors consumed by 0x4a1f3b, in addition to the existing 0x49b452 constructor/defaults and 0x49f7c4 relation records. The recovered template catalog currently has zero explicit source_endpoints payloads, so endpoint id fields are preserved as -1 rather than synthesized. Scan-bounds updates, relation-local scans, ordered 0x49a318 propagation, object/reference vectors, descriptor joins, same-run private-state comparison, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -67699,6 +67699,8 @@
       "source_endpoint_vector_0xc8_0xcc_shape_known": true,
       "source_endpoint_vector_0xc8_0xcc_contents_known": true,
       "template_catalog_explicit_source_endpoint_payload_count": 0,
+      "relation_owner_candidate_vector_contents_ported": true,
+      "coordinate_candidate_vectors_0x4a1f3b_owner_attached": true,
       "endpoint_cursor_0xf58_present": true,
       "endpoint_cursor_0xf58_known": true,
       "endpoint_cursor_0xf58": 0,
@@ -67708,7 +67710,6 @@
       "descriptor_counter_table_0x1110_byte_size": 928,
       "descriptor_counter_table_0x1110_dword_count": 232,
       "descriptor_counter_table_0x1110_zero_count": 232,
-      "relation_owner_candidate_vector_contents_ported": false,
       "relation_owner_scan_bounds_updates_ported": false,
       "descriptor_counter_increment_decrement_replay_ported": false,
       "ordered_relation_replay_ported": false,
@@ -67717,7 +67718,7 @@
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "object/relation/byte-state vector contents, 0x4a1f3b candidate-vector contents and scan-bounds updates, 0xf5c cursor seed, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, and same-run private-state comparison remain unported"
+    "blocker": "object/relation/byte-state vector contents, 0x4a1f3b scan-bounds updates, 0xf5c cursor seed, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, and same-run private-state comparison remain unported"
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state plus the recovered 0x4a1f3b/0x4a19ed selected coordinate triple +0x10..+0x18 and source-zone endpoint vector +0xc8/+0xcc contents/count consumed by 0x4a1f3b. The recovered catalog has no explicit source_endpoints values, so endpoint ids remain source-honest -1 values. Candidate-vector contents, scan-bounds updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state plus the recovered 0x4a1f3b/0x4a19ed selected coordinate triple +0x10..+0x18, source-zone endpoint vector +0xc8/+0xcc contents/count, and 0x4a17f5/0x4a1ad8 coordinate candidate vectors consumed by 0x4a1f3b. The recovered catalog has no explicit source_endpoints values, so endpoint ids remain source-honest -1 values. Scan-bounds updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers."
 }
