@@ -416,6 +416,7 @@ struct SharedObjectRecordReference4a54a7 {
 	int32_t y = 0;
 	int32_t level = 0;
 	bool object_record_key_allocated_by_0x4a93a2 = false;
+	bool source_order_direct_record_0x4a8d2c_0x4a93a2_known = false;
 	bool weighted_record_0x4a93a2_known = false;
 	uint32_t object_record_vtable_0x00 = 0U;
 	int32_t object_record_sequence_0x1c = -1;
@@ -568,6 +569,11 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t weighted_candidate_selected_count_0x4a901a = 0;
 	int32_t weighted_candidate_commit_count_0x4a901a = 0;
 	std::vector<SharedWeightedObjectCandidateVectorState4a901a> weighted_candidate_vectors_0x4a901a;
+	bool source_order_direct_candidates_0x4a93a2_known = false;
+	int32_t source_order_direct_candidate_vector_count_0x4a93a2 = 0;
+	int32_t source_order_direct_candidate_total_count_0x4a93a2 = 0;
+	int32_t source_order_direct_selected_count_0x4a93a2 = 0;
+	int32_t source_order_direct_commit_count_0x4a93a2 = 0;
 	std::vector<SharedObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;

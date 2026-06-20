@@ -2187,6 +2187,162 @@ int main() {
 				"0x4a901a weighted candidate scan did not dispatch through 0x4a54a7 into object-vector/reference/counter state")) {
 		return 1;
 	}
+	GeneratorObjectPrivateState direct_placement_state;
+	direct_placement_state.width = 112;
+	direct_placement_state.height = 112;
+	direct_placement_state.level_count = 1;
+	direct_placement_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(112, 112, 1);
+	direct_placement_state.generated_cell_buffer_owned = true;
+	direct_placement_state.object_records_0xec4_ecc.resize(8);
+	direct_placement_state.descriptor_counter_table_0x1110_present = true;
+	direct_placement_state.descriptor_counter_table_0x1110_contents_known = true;
+	direct_placement_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	direct_placement_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	direct_placement_state.descriptor_counter_table_0x1110[size_t(98)] = 8U;
+	direct_placement_state.object_record_sequence_allocator_0xf44_present = true;
+	direct_placement_state.object_record_sequence_allocator_0xf44_known = true;
+	direct_placement_state.object_record_sequence_allocator_0xf44 = 9;
+	direct_placement_state.native_object_record_key_allocator_0x4a93a2_known = true;
+	direct_placement_state.next_native_object_record_key_0x4a93a2 = 0x036b6d50U;
+	for (GeneratedCellRecord0x30 &record : direct_placement_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0xff000064U;
+		record.word_0x24_known = true;
+		record.word_0x24 = 0x00000548U;
+		record.word_0x28_known = true;
+		record.word_0x28 = 0x12005000U;
+		record.word_0x2c_known = true;
+		record.word_0x2c = 0U;
+	}
+	aurelion::h3maped_rmg_core::H3MapedRng direct_placement_rng;
+	direct_placement_rng.state = 10U;
+	const auto direct_placement =
+			aurelion::h3maped_rmg_core::source_order_object_placement_0x4a93a2(
+					direct_placement_state,
+					weighted_join,
+					0,
+					107,
+					6,
+					0,
+					107,
+					6,
+					108,
+					7,
+					77,
+					12,
+					true,
+					direct_placement_rng);
+	const int64_t direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+	const GeneratedCellRecord0x30 &direct_target = direct_placement_state.generated_cell_buffer.records[size_t(direct_target_flat)];
+	if (!require(direct_placement.committed
+					&& direct_placement.placement_state_0x4a93a2.scanned_cell_count == 1
+					&& direct_placement.placement_state_0x4a93a2.accepted_candidate_count == 1
+					&& direct_placement.placement_state_0x4a93a2.best_distance_squared_after_scan == 0
+					&& direct_placement.placement_state_0x4a93a2.local_vector_clear_count_0x4ae52a == 1
+					&& direct_placement.placement_state_0x4a93a2.local_vector_append_count_0x4ae1fd == 1
+					&& direct_placement.placement_state_0x4a93a2.source_pair_success_byte_0x3c_set
+					&& direct_placement.object_record_0x4a93a2.object_record_key == 0x036b6d50U
+					&& direct_placement.object_record_0x4a93a2.sequence_0x1c == 9
+					&& direct_placement.object_record_0x4a93a2.selected_index_0x20 == 12
+					&& direct_placement.object_record_0x4a93a2.enabled_low_byte_0x24,
+				"0x4a93a2 direct source-order placement did not reproduce nearest-distance allocation metadata")) {
+		return 1;
+	}
+	if (!require(direct_placement_state.source_order_direct_candidate_vector_count_0x4a93a2 == 1
+					&& direct_placement_state.source_order_direct_candidate_total_count_0x4a93a2 == 1
+					&& direct_placement_state.source_order_direct_selected_count_0x4a93a2 == 1
+					&& direct_placement_state.source_order_direct_commit_count_0x4a93a2 == 1
+					&& direct_placement_state.object_records_0xec4_ecc.back().source_order_direct_record_0x4a8d2c_0x4a93a2_known
+					&& !direct_placement_state.object_records_0xec4_ecc.back().weighted_record_0x4a93a2_known
+					&& direct_placement_state.descriptor_counter_table_0x1110[size_t(98)] == 9U
+					&& direct_target.object_reference_count == 1
+					&& direct_target.object_references_0x04_0x08[0] == 0x036b6d50U,
+				"0x4a93a2 direct source-order placement did not feed object-vector/reference/counter state")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState direct_dispatch_state = direct_placement_state;
+	direct_dispatch_state.object_records_0xec4_ecc.resize(8);
+	direct_dispatch_state.object_record_sequence_allocator_0xf44 = 9;
+	direct_dispatch_state.next_native_object_record_key_0x4a93a2 = 0x036b6d50U;
+	direct_dispatch_state.object_record_allocation_count_0x4a93a2 = 0;
+	direct_dispatch_state.source_order_direct_candidate_vectors_0x4a93a2.clear();
+	direct_dispatch_state.source_order_direct_candidate_vector_count_0x4a93a2 = 0;
+	direct_dispatch_state.source_order_direct_candidate_total_count_0x4a93a2 = 0;
+	direct_dispatch_state.source_order_direct_selected_count_0x4a93a2 = 0;
+	direct_dispatch_state.source_order_direct_commit_count_0x4a93a2 = 0;
+	direct_dispatch_state.descriptor_counter_table_0x1110[size_t(98)] = 8U;
+	for (GeneratedCellRecord0x30 &record : direct_dispatch_state.generated_cell_buffer.records) {
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20 = 0xff000064U;
+		record.word_0x28 = 0x12005000U;
+	}
+	aurelion::h3maped_rmg_core::H3MapedRng direct_dispatch_rng;
+	direct_dispatch_rng.state = 10U;
+	const auto direct_dispatch =
+			aurelion::h3maped_rmg_core::source_order_object_dispatcher_0x4a8d2c(
+					direct_dispatch_state,
+					weighted_join,
+					0,
+					107,
+					6,
+					0,
+					107,
+					6,
+					108,
+					7,
+					77,
+					12,
+					direct_dispatch_rng);
+	if (!require(direct_dispatch.committed
+					&& direct_dispatch.selected_branch_index == 0
+					&& direct_dispatch.attempted_branch_count == 1
+					&& direct_dispatch.branches.size() == size_t(4)
+					&& direct_dispatch.branches[0].source_field_offset == 0x24
+					&& direct_dispatch.branches[0].branch_gate_positive
+					&& direct_dispatch.branches[0].placement_0x4a93a2.committed
+					&& direct_dispatch.branches[0].placement_0x4a93a2.object_record_0x4a93a2.selected_index_0x20 == 12
+					&& direct_dispatch.branches[0].placement_0x4a93a2.object_record_0x4a93a2.enabled_low_byte_0x24,
+				"0x4a8d2c dispatcher did not try recovered +0x24 branch before +0x20/+0x34/+0x30")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState direct_minus_one_state = direct_dispatch_state;
+	direct_minus_one_state.object_records_0xec4_ecc.resize(8);
+	direct_minus_one_state.object_record_sequence_allocator_0xf44 = 9;
+	direct_minus_one_state.next_native_object_record_key_0x4a93a2 = 0x036b6d50U;
+	direct_minus_one_state.object_record_allocation_count_0x4a93a2 = 0;
+	direct_minus_one_state.source_order_direct_candidate_vectors_0x4a93a2.clear();
+	direct_minus_one_state.source_order_direct_candidate_vector_count_0x4a93a2 = 0;
+	direct_minus_one_state.source_order_direct_candidate_total_count_0x4a93a2 = 0;
+	direct_minus_one_state.source_order_direct_selected_count_0x4a93a2 = 0;
+	direct_minus_one_state.source_order_direct_commit_count_0x4a93a2 = 0;
+	aurelion::h3maped_rmg_core::H3MapedRng direct_minus_one_rng;
+	direct_minus_one_rng.state = 10U;
+	const auto direct_minus_one =
+			aurelion::h3maped_rmg_core::source_order_object_placement_0x4a93a2(
+					direct_minus_one_state,
+					weighted_join,
+					0,
+					107,
+					6,
+					0,
+					107,
+					6,
+					108,
+					7,
+					-1,
+					12,
+					true,
+					direct_minus_one_rng);
+	if (!require(!direct_minus_one.committed
+					&& direct_minus_one.blocked_reason == "0x4a93a2_source_pair_key_arg_0x0c_minus_one"
+					&& direct_minus_one_state.object_record_allocation_count_0x4a93a2 == 0,
+				"0x4a93a2 direct source-order placement did not fail closed on recovered arg2 -1 gate")) {
+		return 1;
+	}
 	GeneratorObjectPrivateState weighted_scan_reject_state = weighted_scan_state;
 	weighted_scan_reject_state.object_records_0xec4_ecc.resize(4);
 	weighted_scan_reject_state.object_record_sequence_allocator_0xf44 = 5;
