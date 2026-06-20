@@ -112,6 +112,18 @@ int main() {
 		if (!require(source_object_summary.rand_trn_backed_record_count == 543, "0x49da08 source object catalog lost rand_trn-backed identity")) {
 			return 1;
 		}
+		if (!require(source_object_summary.descriptor_mask_field_record_count == source_object_summary.record_count,
+					"0x49da08 source object catalog did not preserve recovered descriptor .msk field coverage")) {
+			return 1;
+		}
+		if (!require(source_object_summary.descriptor_mask_exact_def_msk_count == source_object_summary.record_count,
+					"0x49da08 source object catalog fell back from exact DEF .msk data")) {
+			return 1;
+		}
+		if (!require(source_object_summary.descriptor_mask_default_msk_fallback_count == 0,
+					"0x49da08 source object catalog unexpectedly used default.msk fallbacks")) {
+			return 1;
+		}
 		if (!require(source_object_summary.mine_type53_record_count == 46, "0x49da08 source object catalog lost type-53 mine rows")) {
 			return 1;
 		}
@@ -1585,6 +1597,15 @@ int main() {
 	if (!require(dungeon_town != type98_records.end(), "0x49da08 source row 153 Town record missing for recovered weighted type-98 materialization")) {
 		return 1;
 	}
+	if (!require(dungeon_town->descriptor_mask_fields_0x34_0x48_known
+					&& dungeon_town->descriptor_mask_fields_exact_def_msk
+					&& dungeon_town->descriptor_width_0x34 == 6
+					&& dungeon_town->descriptor_height_0x38 == 6
+					&& dungeon_town->descriptor_mask_a_0x3c_0x40 == 0xfcfcfcfcfcfcULL
+					&& dungeon_town->descriptor_mask_b_0x44_0x48 == 0xfcfcfcfcfcfcULL,
+				"type-98 town source record did not preserve recovered descriptor .msk fields")) {
+		return 1;
+	}
 	SourceObjectDescriptor4903e8 weighted_descriptor;
 	weighted_descriptor.target_context_0x4903e8 = 98;
 	weighted_descriptor.source_key_0x00 = 153;
@@ -1594,14 +1615,30 @@ int main() {
 	weighted_descriptor.projection_enabled_0x29 = true;
 	weighted_descriptor.source_cell_x_0x2c = 2;
 	weighted_descriptor.source_cell_y_0x30 = 0;
+	weighted_descriptor.descriptor_mask_fields_0x34_0x48_known = true;
+	weighted_descriptor.descriptor_width_0x34 = dungeon_town->descriptor_width_0x34;
+	weighted_descriptor.descriptor_height_0x38 = dungeon_town->descriptor_height_0x38;
+	weighted_descriptor.descriptor_mask_a_0x3c_0x40 = dungeon_town->descriptor_mask_a_0x3c_0x40;
+	weighted_descriptor.descriptor_mask_b_0x44_0x48 = dungeon_town->descriptor_mask_b_0x44_0x48;
 	SourceObjectResolverState4af785 weighted_resolver_state;
 	const SourceObjectDescriptorJoinResult4903e8 weighted_join =
 			aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(weighted_resolver_state, weighted_descriptor, *dungeon_town);
 	if (!require(!weighted_join.joined
 					&& !weighted_join.recovered_target_context
 					&& weighted_join.descriptor_source_fields_match
+					&& weighted_join.descriptor_mask_fields_match_source_0x34_0x48
 					&& weighted_join.source_catalog_index_0x49da08 >= 0,
 				"type-98 weighted materialization must remain a recovered 0x4a93a2 bridge, not a fake 0x4903e8 join")) {
+		return 1;
+	}
+	SourceObjectDescriptor4903e8 mismatched_weighted_descriptor = weighted_descriptor;
+	mismatched_weighted_descriptor.descriptor_mask_b_0x44_0x48 ^= 1U;
+	SourceObjectResolverState4af785 mismatched_weighted_resolver_state;
+	const SourceObjectDescriptorJoinResult4903e8 mismatched_weighted_join =
+			aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(mismatched_weighted_resolver_state, mismatched_weighted_descriptor, *dungeon_town);
+	if (!require(!mismatched_weighted_join.descriptor_source_fields_match
+					&& !mismatched_weighted_join.descriptor_mask_fields_match_source_0x34_0x48,
+				"0x4903e8 descriptor/source join accepted mismatched recovered .msk fields")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState weighted_commit_state;

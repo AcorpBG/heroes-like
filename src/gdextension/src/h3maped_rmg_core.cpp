@@ -1440,6 +1440,12 @@ bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const So
 			&& left.action_count == right.action_count
 			&& left.terrain_mask_a_0x14 == right.terrain_mask_a_0x14
 			&& left.terrain_mask_b_0x18 == right.terrain_mask_b_0x18
+			&& left.descriptor_mask_fields_0x34_0x48_known == right.descriptor_mask_fields_0x34_0x48_known
+			&& left.descriptor_mask_fields_exact_def_msk == right.descriptor_mask_fields_exact_def_msk
+			&& left.descriptor_width_0x34 == right.descriptor_width_0x34
+			&& left.descriptor_height_0x38 == right.descriptor_height_0x38
+			&& left.descriptor_mask_a_0x3c_0x40 == right.descriptor_mask_a_0x3c_0x40
+			&& left.descriptor_mask_b_0x44_0x48 == right.descriptor_mask_b_0x44_0x48
 			&& left.terrain_a_names == right.terrain_a_names
 			&& left.terrain_b_names == right.terrain_b_names
 			&& left.rand_trn_backed == right.rand_trn_backed;
@@ -1556,9 +1562,17 @@ SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(So
 	result.descriptor_type_matches_source_type_0x1c = descriptor.descriptor_type_0x1c == selected_source_record.type_id_0x1c;
 	result.descriptor_subtype_matches_source_0x20 = descriptor.subtype_0x20 == selected_source_record.subtype_0x20;
 	result.descriptor_group_matches_source_0x24 = descriptor.group_0x24 == selected_source_record.group_0x24;
+	result.descriptor_mask_fields_match_source_0x34_0x48 =
+			!descriptor.descriptor_mask_fields_0x34_0x48_known
+			|| !selected_source_record.descriptor_mask_fields_0x34_0x48_known
+			|| (descriptor.descriptor_width_0x34 == selected_source_record.descriptor_width_0x34
+					&& descriptor.descriptor_height_0x38 == selected_source_record.descriptor_height_0x38
+					&& descriptor.descriptor_mask_a_0x3c_0x40 == selected_source_record.descriptor_mask_a_0x3c_0x40
+					&& descriptor.descriptor_mask_b_0x44_0x48 == selected_source_record.descriptor_mask_b_0x44_0x48);
 	result.descriptor_source_fields_match = result.descriptor_type_matches_source_type_0x1c
 			&& result.descriptor_subtype_matches_source_0x20
-			&& result.descriptor_group_matches_source_0x24;
+			&& result.descriptor_group_matches_source_0x24
+			&& result.descriptor_mask_fields_match_source_0x34_0x48;
 	result.descriptor_source_key_is_not_source_row_id = descriptor.source_key_0x00 != selected_source_record.source_row;
 	result.descriptor_only_identity_ambiguous = descriptor_only_source_identity_is_ambiguous(selected_source_record);
 
