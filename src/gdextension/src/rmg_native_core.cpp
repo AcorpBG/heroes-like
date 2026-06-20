@@ -14,6 +14,7 @@ namespace {
 
 std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zone_seeds(const std::vector<SharedRuntimeZoneSeedInput> &inputs);
 std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> to_h3maped_runtime_links(const std::vector<SharedRuntimeLinkInput> &inputs);
+SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg_core::SourceObjectRecord0x4c &input);
 
 std::string lower_ascii(const std::string &value) {
 	std::string out = value;
@@ -424,6 +425,14 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.x = input.x;
 	out.y = input.y;
 	out.level = input.level;
+	out.source_descriptor_join_0x4903e8_known = input.source_descriptor_join_0x4903e8_known;
+	out.descriptor_source_key_0x00 = input.descriptor_source_key_0x00;
+	out.selected_wrapper_index_0x4af785 = input.selected_wrapper_index_0x4af785;
+	out.source_catalog_index_0x49da08 = input.source_catalog_index_0x49da08;
+	out.copied_source_record_carried = input.copied_source_record_carried;
+	if (input.copied_source_record_carried) {
+		out.source_record_copy = from_h3maped_source_object_record(input.source_record_copy);
+	}
 	return out;
 }
 
@@ -453,6 +462,31 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.endpoint_cursor_0xf5c_present = input.endpoint_cursor_0xf5c_present;
 	out.endpoint_cursor_0xf5c_known = input.endpoint_cursor_0xf5c_known;
 	out.endpoint_cursor_0xf5c = input.endpoint_cursor_0xf5c;
+	out.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b = input.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b;
+	out.endpoint_projection_vector_c8_cc_record_count = input.endpoint_projection_vector_c8_cc_record_count;
+	out.endpoint_projection_records_c8_cc.reserve(input.endpoint_projection_records_c8_cc.size());
+	for (const h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b &record : input.endpoint_projection_records_c8_cc) {
+		out.endpoint_projection_records_c8_cc.push_back(from_h3maped_generator_source_endpoint_record_state(record));
+	}
+	out.endpoint_cursor_vector_d8_dc_source_owned = input.endpoint_cursor_vector_d8_dc_source_owned;
+	out.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known = input.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known;
+	out.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known = input.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known;
+	out.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known = input.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known;
+	out.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known = input.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known;
+	out.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded = input.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded;
+	out.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c = input.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c;
+	out.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known = input.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known;
+	out.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count = input.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count;
+	out.endpoint_cursor_producer_d014.direct_cursor_writer_entries = input.endpoint_cursor_producer_d014.direct_cursor_writer_entries;
+	out.endpoint_cursor_producer_d014.missing_cursor_seed_source = input.endpoint_cursor_producer_d014.missing_cursor_seed_source;
+	out.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known = input.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known;
+	out.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known = input.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known;
+	out.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known = input.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known;
+	out.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded = input.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded;
+	out.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded = input.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded;
+	out.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed = input.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed;
+	out.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed = input.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed;
+	out.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker = input.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker;
 	out.descriptor_counter_table_0x1110_present = input.descriptor_counter_table_0x1110_present;
 	out.descriptor_counter_table_0x1110_contents_known = input.descriptor_counter_table_0x1110_contents_known;
 	out.descriptor_counter_table_0x1110_known_count = input.descriptor_counter_table_0x1110_known_count;
@@ -1247,7 +1281,18 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"x\":" << record.x
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
-			<< "}";
+			<< ",\"source_descriptor_join_0x4903e8_known\":" << (record.source_descriptor_join_0x4903e8_known ? "true" : "false")
+			<< ",\"descriptor_source_key_0x00\":" << record.descriptor_source_key_0x00
+			<< ",\"selected_wrapper_index_0x4af785\":" << record.selected_wrapper_index_0x4af785
+			<< ",\"source_catalog_index_0x49da08\":" << record.source_catalog_index_0x49da08
+			<< ",\"copied_source_record_carried\":" << (record.copied_source_record_carried ? "true" : "false")
+			<< ",\"source_record_copy\":";
+		if (record.copied_source_record_carried) {
+			append_source_object_record_sample_json(out, record.source_record_copy);
+		} else {
+			out << "{}";
+		}
+		out << "}";
 	}
 	out << "]";
 }
@@ -1426,6 +1471,35 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"endpoint_cursor_0xf5c_present\":" << (state.endpoint_cursor_0xf5c_present ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf5c_known\":" << (state.endpoint_cursor_0xf5c_known ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf5c\":" << state.endpoint_cursor_0xf5c << ","
+		<< "\"endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b\":" << (state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b ? "true" : "false") << ","
+		<< "\"endpoint_projection_vector_c8_cc_record_count\":" << state.endpoint_projection_vector_c8_cc_record_count << ","
+		<< "\"endpoint_projection_records_c8_cc\":";
+	append_generator_source_endpoint_records_json(out, state.endpoint_projection_records_c8_cc);
+	out << ","
+		<< "\"endpoint_cursor_vector_d8_dc_source_owned\":" << (state.endpoint_cursor_vector_d8_dc_source_owned ? "true" : "false") << ","
+		<< "\"endpoint_cursor_vector_d8_dc_supported_land_exclusion_known\":" << (state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known ? "true" : "false") << ","
+		<< "\"endpoint_cursor_producer_d014\":{"
+		<< "\"recovered_supported_land_exclusion_known\":" << (state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known ? "true" : "false") << ","
+		<< "\"setup_zeroed_cursor_0xf58_0x49ecf2_known\":" << (state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known ? "true" : "false") << ","
+		<< "\"endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known\":" << (state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known ? "true" : "false") << ","
+		<< "\"direct_cursor_writer_surface_bounded\":" << (state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded ? "true" : "false") << ","
+		<< "\"setup_seeds_cursor_0xf5c\":" << (state.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c ? "true" : "false") << ","
+		<< "\"successful_cursor_0xf5c_seed_source_known\":" << (state.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known ? "true" : "false") << ","
+		<< "\"direct_cursor_writer_entry_count\":" << state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count << ","
+		<< "\"direct_cursor_writer_entries\":";
+	append_json_string_array(out, state.endpoint_cursor_producer_d014.direct_cursor_writer_entries);
+	out << ",\"missing_cursor_seed_source\":\"" << json_escape(state.endpoint_cursor_producer_d014.missing_cursor_seed_source) << "\""
+		<< "},"
+		<< "\"connection_materialization_caller_prep_d014\":{"
+		<< "\"recovered_helper_contract_0x4a5e73_known\":" << (state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known ? "true" : "false") << ","
+		<< "\"recovered_explicit_input_0x4a606b_known\":" << (state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known ? "true" : "false") << ","
+		<< "\"recovered_no_object_projection_chain_0x4a5a23_known\":" << (state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known ? "true" : "false") << ","
+		<< "\"live_0x4a5e73_to_0x4a606b_target_mode_excluded\":" << (state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded ? "true" : "false") << ","
+		<< "\"live_0x4a696b_target_mode_excluded\":" << (state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded ? "true" : "false") << ","
+		<< "\"fallback_0x4a7605_to_0x4a5e03_source_backed\":" << (state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed ? "true" : "false") << ","
+		<< "\"live_endpoint_materialization_allowed\":" << (state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed ? "true" : "false") << ","
+		<< "\"remaining_live_materialization_blocker\":\"" << json_escape(state.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker) << "\""
+		<< "},"
 		<< "\"descriptor_counter_table_0x1110_present\":" << (state.descriptor_counter_table_0x1110_present ? "true" : "false") << ","
 		<< "\"descriptor_counter_table_0x1110_contents_known\":" << (state.descriptor_counter_table_0x1110_contents_known ? "true" : "false") << ","
 		<< "\"descriptor_counter_table_0x1110_known_count\":" << state.descriptor_counter_table_0x1110_known_count << ","

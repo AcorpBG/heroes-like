@@ -406,6 +406,35 @@ struct SharedObjectRecordReference4a54a7 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool source_descriptor_join_0x4903e8_known = false;
+	int32_t descriptor_source_key_0x00 = -1;
+	int32_t selected_wrapper_index_0x4af785 = -1;
+	int32_t source_catalog_index_0x49da08 = -1;
+	bool copied_source_record_carried = false;
+	SharedSourceObjectRecord0x4c source_record_copy;
+};
+
+struct SharedGeneratorEndpointCursorProducerStateD014 {
+	bool recovered_supported_land_exclusion_known = false;
+	bool setup_zeroed_cursor_0xf58_0x49ecf2_known = false;
+	bool endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known = false;
+	bool direct_cursor_writer_surface_bounded = false;
+	bool setup_seeds_cursor_0xf5c = false;
+	bool successful_cursor_0xf5c_seed_source_known = false;
+	int32_t direct_cursor_writer_entry_count = 0;
+	std::vector<std::string> direct_cursor_writer_entries;
+	std::string missing_cursor_seed_source;
+};
+
+struct SharedConnectionMaterializationCallerPrepD014 {
+	bool recovered_helper_contract_0x4a5e73_known = false;
+	bool recovered_explicit_input_0x4a606b_known = false;
+	bool recovered_no_object_projection_chain_0x4a5a23_known = false;
+	bool live_0x4a5e73_to_0x4a606b_target_mode_excluded = false;
+	bool live_0x4a696b_target_mode_excluded = false;
+	bool fallback_0x4a7605_to_0x4a5e03_source_backed = false;
+	bool live_endpoint_materialization_allowed = false;
+	std::string remaining_live_materialization_blocker;
 };
 
 struct SharedGeneratorObjectPrivateState {
@@ -433,6 +462,13 @@ struct SharedGeneratorObjectPrivateState {
 	bool endpoint_cursor_0xf5c_present = false;
 	bool endpoint_cursor_0xf5c_known = false;
 	int32_t endpoint_cursor_0xf5c = 0;
+	bool endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b = false;
+	int32_t endpoint_projection_vector_c8_cc_record_count = 0;
+	std::vector<SharedGeneratorSourceEndpointRecordState> endpoint_projection_records_c8_cc;
+	bool endpoint_cursor_vector_d8_dc_source_owned = false;
+	bool endpoint_cursor_vector_d8_dc_supported_land_exclusion_known = false;
+	SharedGeneratorEndpointCursorProducerStateD014 endpoint_cursor_producer_d014;
+	SharedConnectionMaterializationCallerPrepD014 connection_materialization_caller_prep_d014;
 	bool descriptor_counter_table_0x1110_present = false;
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;

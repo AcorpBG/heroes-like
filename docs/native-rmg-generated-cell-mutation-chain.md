@@ -251,6 +251,7 @@ Native helpers:
 - `generated_cell_4aa3e9_reward_word28`
 - `endpoint_materialization_4a5e73` for the recovered explicit-input endpoint helper contract only.
 - `object_footprint_commit_4a54a7` for the recovered explicit-call object-footprint commit afterstate only.
+- `source_object_descriptor_join_0x4903e8` and `object_materialization_prep_from_descriptor_join_0x4a8db2_0x4a901a` for recovered descriptor/source join prep and explicit copied-source object commit prep only.
 
 Mutation surface:
 
@@ -266,6 +267,8 @@ Mutation surface:
 - `0x4a606b` explicit-input helper now applies the recovered connection-region writer contract: scan the clipped 3x3 rectangle, require known-empty object-reference vectors, call `0x49aa63(true)`, pack the low-nibble source into `+0x2c` bits 1..4 with bit0 set, then clear low five `+0x2c` bits and call `0x49a932(true)` on the projected target cell when the source projection triple is known.
 - `0x4a5a23` explicit-input helper now applies the recovered no-object projected-chain contract: gate on `+0x1c` low word `(0, 0x7530)`, stop instead of guessing the `+0x2c` bit0 object-materialization branch, set bit27/clear bit26 on the mapped cell, optionally clear nearby same-owner `+0x2b` bit `0x04` when cleanup is not suppressed, and follow the projection triple while the next low word remains positive.
 - `0x4a54a7` explicit-call helper now applies the recovered object-footprint commit afterstate: append the object record key to generator `+0xec4/+0xecc`, append it to the target cell object-reference vector when prior vector contents are known, increment generator `+0x1110[descriptor+0x1c]`, clear the target cell `+0x20` low word, set target `+0x28` action/occupied bits, and run the descriptor `+0x29` projection score-depletion wave from candidate coordinates minus descriptor `+0x2c/+0x30`.
+- `0x4903e8` explicit prep now joins recovered target contexts `45/53/54/79` to selected copied `0x4c` source records through `0x4af785`, and explicit materialization prep carries that source identity into `0x4a54a7` only when a source-owned object-record key is supplied.
+- D-014 endpoint prep now promotes recovered `0x4a1f3b` `+0xc8/+0xcc` source-endpoint records into generator private state, preserves the `0x49f95a` byte-state relationship, and keeps `+0xd8/+0xdc` plus `+0xf5c` blocked rather than deriving them from projection endpoints.
 
 Known blockers:
 
@@ -273,7 +276,7 @@ Known blockers:
 - Record-level helper semantics do not yet mutate the live generated-cell grid in recovered source order.
 - Native now applies the recovered `0x4a5767` full-grid projection reset over the live generated-cell grid and exposes explicit-call `0x4a54a7` object-vector/object-reference/descriptor-counter mutations, but still lacks source-order object-reference vector contents, the `0x4a5767` relation-local scan, and ordered `0x49a318` propagation replay.
 - Native now carries recovered `0x49b452` relation-owner constructor/default fields plus the recovered `0x4a1f3b/0x4a19ed` selected coordinate triple `+0x10..+0x18`, source-zone endpoint vector `+0xc8/+0xcc` contents/count, `0x4a17f5/0x4a1ad8` coordinate candidate vectors consumed by `0x4a1f3b`, and the recovered `0x49f95a` endpoint byte-state vector zero-init relationship to endpoint pointer vector `+0xd8/+0xdc`. The remaining relation-owner/private-state gap is the `0x4a1f3b` scan-bounds updates, endpoint pointer-vector contents/count required for concrete byte-state contents, and later source-order scan consumers.
-- Native still lacks source-owned generator-level `+0xd8/+0xdc` and `+0xc8/+0xcc` vector contents, the live `+0xf5c` cursor producer, and the downstream live `0x4a606b` / `0x4a696b` / fallback materialization caller order. The implemented `0x4a5e73`, `0x4a606b`, and no-object `0x4a5a23` helpers must not be wired to guessed endpoint/object state.
+- Native still lacks source-owned generator-level `+0xd8/+0xdc` vector contents, the live `+0xf5c` cursor producer, source-owned weighted object-record-key callers, and the downstream live `0x4a606b` / `0x4a696b` / fallback materialization caller order. The implemented `0x4a5e73`, `0x4a606b`, no-object `0x4a5a23`, `0x4903e8`, and explicit `0x4a54a7` prep helpers must not be wired to guessed endpoint/object state.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
 
 Implementation rule: keep helpers available, but do not use them to claim pre-object generated-cell parity until their source callers and inputs are ordered and same-run validated.
