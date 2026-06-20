@@ -339,6 +339,12 @@ struct WeightedObjectRecord4a93a2 {
 	bool enabled_low_byte_0x24 = false;
 };
 
+struct SourceBoundedCandidate4a7312 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
 int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
@@ -1339,6 +1345,36 @@ struct ObjectFootprintCommitResult4a54a7 {
 	int32_t projection_score_depletion_count = 0;
 };
 
+struct SourceBoundedCandidatePickerResult4a7312 {
+	bool descriptor_joined = false;
+	bool copied_source_record_carried = false;
+	bool object_record_key_known = false;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_sentinel = false;
+	bool relation_owner_byte_known = false;
+	bool descriptor_dimensions_known = false;
+	bool source_mask_known = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t scan_bound_low_x_0x20 = 0;
+	int32_t scan_bound_low_y_0x24 = 0;
+	int32_t scan_bound_high_x_0x28 = 0;
+	int32_t scan_bound_high_y_0x2c = 0;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_cell_word_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t eligibility_reject_count_0x49aa93 = 0;
+	int32_t accepted_candidate_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected_candidate_known = false;
+	bool committed_through_vtable_slot_0x04 = false;
+	SourceBoundedCandidate4a7312 selected_candidate;
+	std::vector<SourceBoundedCandidate4a7312> accepted_candidates_0x4ae1fd;
+	ObjectFootprintCommitResult4a54a7 commit_0x4a54a7;
+	std::string blocked_reason;
+};
+
 struct WeightedObjectMaterializationCommitResult4a93a2 {
 	ObjectMaterializationPrep4a8db2_4a901a prep_0x4a901a;
 	ObjectFootprintCommitResult4a54a7 commit_0x4a54a7;
@@ -1390,9 +1426,10 @@ ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCell
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
+SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng);
 WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
-EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, bool projection_helper_0x4a7312_accepts = true);
+EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 bool private_zone_word_unassigned_4a325d(const std::vector<uint32_t> &zone_words, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);

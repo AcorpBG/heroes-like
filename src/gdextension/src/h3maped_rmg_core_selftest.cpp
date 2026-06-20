@@ -588,7 +588,9 @@ int main() {
 		record_grid.records[0].word_0x2c = 0x3fU;
 		record_grid.records[1].word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
 		record_grid.records[1].word_0x2c = 0x3fU;
-		endpoint_result = aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, endpoint_state, 0, 0, 0, 2);
+		aurelion::h3maped_rmg_core::SourceBoundedCandidatePickerResult4a7312 accepted_projection_result;
+		accepted_projection_result.committed_through_vtable_slot_0x04 = true;
+		endpoint_result = aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, endpoint_state, 0, 0, 0, 2, &accepted_projection_result);
 		if (!require(endpoint_result.return_value == 2 && endpoint_result.c8_match_found && endpoint_result.byte_state_marked, "0x4a5e73 success path did not return the original +0xf5c key and mark byte state")) {
 			return 1;
 		}
@@ -1595,6 +1597,83 @@ int main() {
 					&& prepared_target.object_references_0x04_0x08[0] == 0x036260c1U
 					&& prep_commit_state.descriptor_counter_table_0x1110[size_t(54)] == 1U,
 				"prepared object-vector commit did not feed recovered 0x4a54a7 object-reference/counter mutation")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState scanner_state;
+	scanner_state.width = 8;
+	scanner_state.height = 8;
+	scanner_state.level_count = 1;
+	scanner_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(8, 8, 1);
+	scanner_state.generated_cell_buffer_owned = true;
+	scanner_state.descriptor_counter_table_0x1110_present = true;
+	scanner_state.descriptor_counter_table_0x1110_contents_known = true;
+	scanner_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	scanner_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	for (GeneratedCellRecord0x30 &record : scanner_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0x00030008U;
+		record.word_0x24_known = true;
+		record.word_0x24 = 0x00000548U;
+		record.word_0x28_known = true;
+		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+		record.word_0x2c_known = true;
+		record.word_0x2c = 0U;
+	}
+	GeneratorRelationOwnerState4a218c scanner_relation;
+	scanner_relation.runtime_zone_index = 3;
+	scanner_relation.coordinate_triple_0x10_0x18_known = true;
+	scanner_relation.coordinate_x_0x10 = 2;
+	scanner_relation.coordinate_y_0x14 = 5;
+	scanner_relation.coordinate_level_0x18 = 0;
+	scanner_relation.scan_bounds_0x20_0x2c_known = true;
+	scanner_relation.scan_bound_low_x_0x20 = 2;
+	scanner_relation.scan_bound_low_y_0x24 = 5;
+	scanner_relation.scan_bound_high_x_0x28 = 3;
+	scanner_relation.scan_bound_high_y_0x2c = 6;
+	aurelion::h3maped_rmg_core::H3MapedRng scanner_rng;
+	scanner_rng.state = 10U;
+	const auto scanner_result =
+			aurelion::h3maped_rmg_core::source_bounded_endpoint_candidate_picker_0x4a7312(scanner_state, monster_join, 0x036260c2U, true, scanner_relation, scanner_rng);
+	const GeneratedCellRecord0x30 &scanner_target = scanner_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(8, 8, 2, 5, 0))];
+	if (!require(scanner_result.committed_through_vtable_slot_0x04
+					&& scanner_result.scan_bounds_non_sentinel
+					&& scanner_result.relation_owner_byte2 == 3
+					&& scanner_result.scanned_cell_count == 1
+					&& scanner_result.accepted_candidate_count == 1
+					&& scanner_result.selected_candidate_known
+					&& scanner_result.selected_candidate.x == 2
+					&& scanner_result.selected_candidate.y == 5
+					&& scanner_result.selected_candidate.level == 0,
+				"0x4a7312 source-bounded scanner did not select and commit the accepted source-owned candidate")) {
+		return 1;
+	}
+	if (!require(scanner_result.commit_0x4a54a7.object_vector_appended
+					&& scanner_result.commit_0x4a54a7.generated_cell_reference_appended
+					&& scanner_target.object_reference_count == 1
+					&& scanner_target.object_references_0x04_0x08[0] == 0x036260c2U
+					&& scanner_state.descriptor_counter_table_0x1110[size_t(54)] == 1U,
+				"0x4a7312 selected candidate did not dispatch through the 0x4a54a7 vtable-slot equivalent")) {
+		return 1;
+	}
+	if (!require(!scanner_state.object_records_0xec4_ecc.empty()
+					&& scanner_state.object_records_0xec4_ecc.back().source_descriptor_join_0x4903e8_known
+					&& scanner_state.object_records_0xec4_ecc.back().copied_source_record_carried
+					&& scanner_state.object_records_0xec4_ecc.back().source_record_copy.def_name == type54_records[0].def_name,
+				"0x4a7312 committed object record did not preserve copied source descriptor identity")) {
+		return 1;
+	}
+	scanner_relation.scan_bound_low_x_0x20 = aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	scanner_relation.scan_bound_high_x_0x28 = aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	aurelion::h3maped_rmg_core::H3MapedRng blocked_scanner_rng;
+	blocked_scanner_rng.state = 10U;
+	const auto blocked_scanner_result =
+			aurelion::h3maped_rmg_core::source_bounded_endpoint_candidate_picker_0x4a7312(scanner_state, monster_join, 0x036260c3U, true, scanner_relation, blocked_scanner_rng);
+	if (!require(!blocked_scanner_result.committed_through_vtable_slot_0x04
+					&& blocked_scanner_result.blocked_reason == "0x4a7312_source_relation_scan_bounds_missing_or_constructor_sentinel",
+				"0x4a7312 scanner did not fail closed on unrecovered constructor-sentinel scan bounds")) {
 		return 1;
 	}
 	const std::vector<SourceObjectRecord0x4c> type98_records =
