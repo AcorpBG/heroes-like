@@ -894,6 +894,48 @@ struct CoordinateOwnerGridResult4a218c {
 	bool terrain_repaint_executed = false;
 };
 
+struct GeneratorObjectVectorState {
+	std::string label;
+	uint32_t begin_offset = 0U;
+	uint32_t end_offset = 0U;
+	uint32_t capacity_offset = 0U;
+	bool present = false;
+	bool contents_known = false;
+	bool count_known = false;
+	int32_t count = 0;
+};
+
+struct GeneratorObjectPrivateState {
+	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
+	uint32_t width_offset_0x18 = 0x18U;
+	uint32_t height_offset_0x1c = 0x1cU;
+	uint32_t level_count_offset_0x20 = 0x20U;
+	bool generated_cell_buffer_owned = false;
+	GeneratedCellRecordGrid0x30 generated_cell_buffer;
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	GeneratorObjectVectorState endpoint_vector_c8_cc;
+	GeneratorObjectVectorState endpoint_vector_d8_dc;
+	GeneratorObjectVectorState object_record_vector_ec4_ecc;
+	GeneratorObjectVectorState source_pair_vector_edc;
+	GeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
+	GeneratorObjectVectorState candidate_container_vector_10d4_10d8;
+	GeneratorObjectVectorState relation_vector_10e4_10e8;
+	GeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
+	bool endpoint_cursor_0xf5c_present = false;
+	bool endpoint_cursor_0xf5c_known = false;
+	int32_t endpoint_cursor_0xf5c = 0;
+	bool descriptor_counter_table_0x1110_present = false;
+	bool descriptor_counter_table_0x1110_contents_known = false;
+	int32_t descriptor_counter_table_0x1110_known_count = 0;
+	bool source_owner_player_slots_ed8_ee0_ee4_present = false;
+	int32_t selected_color_order_ed8_count = 0;
+	int32_t raw_source_owner_slots_ee0_count = 0;
+	int32_t mapped_source_owner_slots_ee4_count = 0;
+	std::vector<std::string> remaining_private_state_blockers;
+};
+
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 int64_t generated_cell_flat_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 uint32_t generated_cell_zone_word_4a325d(uint32_t existing_word, int32_t zone_id);
@@ -945,6 +987,7 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection);
+GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result);
 SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones);
 FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count);
 BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
