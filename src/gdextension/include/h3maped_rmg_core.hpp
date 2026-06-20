@@ -567,6 +567,12 @@ struct TemplateSelectionRuntimeResult4ac552 {
 	RuntimeSeedBuildResult4a218c runtime_seed;
 };
 
+struct CoordinateCandidate4a17f5 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
 struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x44 = 0;
 	int32_t generator_mode_0x10b8 = 0;
@@ -587,6 +593,10 @@ struct CoordinatePlacementStep4a1f3b {
 	int32_t selected_candidate_index = -1;
 	int32_t rng_value = -1;
 	bool blocked = false;
+	bool selected_candidate_known = false;
+	CoordinateCandidate4a17f5 selected_candidate;
+	std::vector<CoordinateCandidate4a17f5> candidates_before_prune_4a17f5;
+	std::vector<CoordinateCandidate4a17f5> candidates_after_prune_4a1ad8;
 };
 
 struct CoordinateSeedResult4a218c {
@@ -946,6 +956,22 @@ struct GeneratorSourceEndpointRecordState4a1f3b {
 	bool reciprocal = false;
 };
 
+struct GeneratorCoordinateCandidateVectorState4a1f3b {
+	int32_t runtime_zone_index = -1;
+	std::string pass_id;
+	std::string candidate_source;
+	int32_t candidate_count_before_prune = 0;
+	int32_t candidate_count_after_prune = 0;
+	int32_t explicit_link_base_count = 0;
+	int32_t selected_candidate_index = -1;
+	int32_t rng_value = -1;
+	bool blocked = false;
+	bool selected_candidate_known = false;
+	CoordinateCandidate4a17f5 selected_candidate;
+	std::vector<CoordinateCandidate4a17f5> candidates_before_prune_4a17f5;
+	std::vector<CoordinateCandidate4a17f5> candidates_after_prune_4a1ad8;
+};
+
 struct GeneratorRelationOwnerState4a218c {
 	int32_t owner_vector_index = -1;
 	int32_t runtime_zone_index = -1;
@@ -981,8 +1007,12 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t owner_local_vector_0x3e4_count = 0;
 	int32_t owner_local_vector_0x3f4_count = 0;
 	int32_t owner_local_vector_0x404_count = 0;
+	bool coordinate_candidate_vectors_0x4a1f3b_known = false;
+	int32_t coordinate_candidate_vector_step_count = 0;
+	int32_t coordinate_candidate_after_prune_total_count = 0;
 	int32_t relation_record_count = 0;
 	std::vector<GeneratorSourceEndpointRecordState4a1f3b> source_endpoint_records_0xc8_0xcc;
+	std::vector<GeneratorCoordinateCandidateVectorState4a1f3b> coordinate_candidate_vectors_0x4a1f3b;
 	std::vector<GeneratorRelationRecordState4a218c> relation_records;
 };
 

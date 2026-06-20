@@ -8,6 +8,7 @@
 #include <limits>
 #include <queue>
 #include <set>
+#include <utility>
 #include <vector>
 
 namespace aurelion::h3maped_rmg_core {
@@ -289,12 +290,6 @@ struct CoordinateZone4a218c {
 	int32_t y = 0;
 	int32_t level = 0;
 	int32_t scaled_size = 0;
-};
-
-struct CoordinateCandidate4a17f5 {
-	int32_t x = 0;
-	int32_t y = 0;
-	int32_t level = 0;
 };
 
 struct TerrainVisualRow {
@@ -2403,8 +2398,10 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 			}
 		}
 		step.candidate_count_before_prune = int32_t(candidates.size());
+		step.candidates_before_prune_4a17f5 = candidates;
 		prune_candidates_4a1ad8_single_level(zones[size_t(zone_position)], zone_position, zones, visible_positions, links, result.coordinate_prune_span_budget_4a218c, candidates);
 		step.candidate_count_after_prune = int32_t(candidates.size());
+		step.candidates_after_prune_4a1ad8 = candidates;
 			if (candidates.empty()) {
 				step.blocked = true;
 				result.blocked = true;
@@ -2420,6 +2417,8 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		zones[size_t(zone_position)].level = selected.level;
 		step.rng_value = rng_value;
 		step.selected_candidate_index = selected_index;
+		step.selected_candidate_known = true;
+		step.selected_candidate = selected;
 		result.placement_steps.push_back(step);
 	};
 
@@ -3324,6 +3323,40 @@ static void append_source_endpoint_record_0x4a1f3b(GeneratorRelationOwnerState4a
 	owner.source_endpoint_records_0xc8_0xcc.push_back(record);
 }
 
+static GeneratorCoordinateCandidateVectorState4a1f3b coordinate_candidate_vector_from_placement_step_0x4a1f3b(const CoordinatePlacementStep4a1f3b &step) {
+	GeneratorCoordinateCandidateVectorState4a1f3b out;
+	out.runtime_zone_index = step.runtime_zone_index;
+	out.pass_id = step.pass_id;
+	out.candidate_source = step.candidate_source;
+	out.candidate_count_before_prune = step.candidate_count_before_prune;
+	out.candidate_count_after_prune = step.candidate_count_after_prune;
+	out.explicit_link_base_count = step.explicit_link_base_count;
+	out.selected_candidate_index = step.selected_candidate_index;
+	out.rng_value = step.rng_value;
+	out.blocked = step.blocked;
+	out.selected_candidate_known = step.selected_candidate_known;
+	out.selected_candidate = step.selected_candidate;
+	out.candidates_before_prune_4a17f5 = step.candidates_before_prune_4a17f5;
+	out.candidates_after_prune_4a1ad8 = step.candidates_after_prune_4a1ad8;
+	return out;
+}
+
+static void apply_relation_owner_coordinate_candidate_vectors_0x4a1f3b(GeneratorRelationOwnerState4a218c &owner, const std::vector<CoordinatePlacementStep4a1f3b> &placement_steps) {
+	owner.coordinate_candidate_vectors_0x4a1f3b_known = true;
+	owner.coordinate_candidate_vectors_0x4a1f3b.clear();
+	owner.coordinate_candidate_vector_step_count = 0;
+	owner.coordinate_candidate_after_prune_total_count = 0;
+	for (const CoordinatePlacementStep4a1f3b &step : placement_steps) {
+		if (step.runtime_zone_index != owner.runtime_zone_index) {
+			continue;
+		}
+		GeneratorCoordinateCandidateVectorState4a1f3b vector = coordinate_candidate_vector_from_placement_step_0x4a1f3b(step);
+		owner.coordinate_candidate_after_prune_total_count += int32_t(vector.candidates_after_prune_4a1ad8.size());
+		owner.coordinate_candidate_vectors_0x4a1f3b.push_back(std::move(vector));
+	}
+	owner.coordinate_candidate_vector_step_count = int32_t(owner.coordinate_candidate_vectors_0x4a1f3b.size());
+}
+
 static const RuntimeZoneSeedInput4a218c *runtime_zone_after_town_choice_0x49b3c1(const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, int32_t runtime_zone_index) {
 	for (const RuntimeZoneSeedInput4a218c &zone : runtime_zones_after_0x49b3c1) {
 		if (zone.runtime_zone_index == runtime_zone_index) {
@@ -3384,7 +3417,7 @@ static void apply_relation_owner_coordinate_state_0x4a1f3b_0x4a19ed(GeneratorRel
 	owner.coordinate_level_0x18 = boundary_input_after_0x4a19ed->footprint.level;
 }
 
-static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs_after_0x4a19ed, int32_t &missing_endpoint_count) {
+static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs_after_0x4a19ed, const std::vector<CoordinatePlacementStep4a1f3b> &placement_steps_after_0x4a1f3b, int32_t &missing_endpoint_count) {
 	std::vector<GeneratorRelationOwnerState4a218c> owners;
 	owners.reserve(runtime_seed.runtime_zone_seeds.size());
 	for (size_t index = 0; index < runtime_seed.runtime_zone_seeds.size(); ++index) {
@@ -3396,6 +3429,7 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 		owner.source_index = seed.source_index;
 		apply_relation_owner_constructor_0x49b452(owner, seed, runtime_zone_after_town_choice_0x49b3c1(runtime_zones_after_0x49b3c1, seed.runtime_zone_index));
 		apply_relation_owner_coordinate_state_0x4a1f3b_0x4a19ed(owner, boundary_input_after_0x4a19ed_for_runtime_zone(boundary_inputs_after_0x4a19ed, seed.runtime_zone_index));
+		apply_relation_owner_coordinate_candidate_vectors_0x4a1f3b(owner, placement_steps_after_0x4a1f3b);
 		owners.push_back(owner);
 	}
 
@@ -3537,16 +3571,17 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 					template_selection.runtime_seed,
 					coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1,
 					coordinate_result.coordinate_seed.boundary_inputs,
+					coordinate_result.coordinate_seed.placement_steps,
 					state.relation_record_missing_endpoint_count_10e4_10e8);
 	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
 	state.remaining_private_state_blockers = {
-		"endpoint_vectors_0xc8_0xcc_and_0xd8_0xdc_contents_unported",
+		"endpoint_vector_0xd8_0xdc_contents_unported",
 		"object_record_vector_0xec4_0xecc_contents_unported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_0x4a1f3b_candidate_vector_contents_scan_bounds_and_scan_consumers_unported_after_coordinate_triple_surface",
+		"relation_vector_0x10e4_0x10e8_0x4a1f3b_scan_bounds_and_scan_consumers_unported_after_coordinate_candidate_vector_surface",
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
 		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",

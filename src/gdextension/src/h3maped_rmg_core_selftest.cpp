@@ -11,6 +11,7 @@ using aurelion::h3maped_rmg_core::BoundaryMaterialization4a2777;
 using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
+using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
 using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
@@ -1001,6 +1002,45 @@ int main() {
 							&& endpoint_record.border_guard == runtime_link.border_guard,
 						"0x4a1f3b source endpoint record did not preserve selected link payload")) {
 				return 1;
+			}
+		}
+		int32_t expected_candidate_vector_step_count = 0;
+		int32_t expected_candidate_after_prune_total_count = 0;
+		for (const auto &step : selected_composed.coordinate_seed.placement_steps) {
+			if (step.runtime_zone_index != owner.runtime_zone_index) {
+				continue;
+			}
+			expected_candidate_vector_step_count += 1;
+			expected_candidate_after_prune_total_count += int32_t(step.candidates_after_prune_4a1ad8.size());
+		}
+		if (!require(owner.coordinate_candidate_vectors_0x4a1f3b_known
+						&& owner.coordinate_candidate_vector_step_count == expected_candidate_vector_step_count
+						&& int32_t(owner.coordinate_candidate_vectors_0x4a1f3b.size()) == expected_candidate_vector_step_count
+						&& owner.coordinate_candidate_after_prune_total_count == expected_candidate_after_prune_total_count,
+					"0x4a1f3b relation owner coordinate candidate vectors were not preserved")) {
+			return 1;
+		}
+		for (const GeneratorCoordinateCandidateVectorState4a1f3b &candidate_vector : owner.coordinate_candidate_vectors_0x4a1f3b) {
+			if (!require(candidate_vector.runtime_zone_index == owner.runtime_zone_index
+							&& candidate_vector.candidate_count_before_prune == int32_t(candidate_vector.candidates_before_prune_4a17f5.size())
+							&& candidate_vector.candidate_count_after_prune == int32_t(candidate_vector.candidates_after_prune_4a1ad8.size()),
+						"0x4a1f3b candidate vector count did not match preserved candidate contents")) {
+				return 1;
+			}
+			if (!candidate_vector.blocked) {
+				if (!require(candidate_vector.selected_candidate_known
+								&& candidate_vector.selected_candidate_index >= 0
+								&& candidate_vector.selected_candidate_index < int32_t(candidate_vector.candidates_after_prune_4a1ad8.size()),
+							"0x4a1f3b candidate vector did not preserve selected candidate metadata")) {
+					return 1;
+				}
+				const auto &selected = candidate_vector.candidates_after_prune_4a1ad8[size_t(candidate_vector.selected_candidate_index)];
+				if (!require(candidate_vector.selected_candidate.x == selected.x
+								&& candidate_vector.selected_candidate.y == selected.y
+								&& candidate_vector.selected_candidate.level == selected.level,
+							"0x4a1f3b selected candidate does not match preserved pruned candidate vector")) {
+					return 1;
+				}
 			}
 		}
 		if (owner.source_owner_slot_0x1c_known) {
