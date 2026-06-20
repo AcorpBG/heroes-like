@@ -887,6 +887,18 @@ int main() {
 	if (!require(generator_state.relation_vector_10e4_10e8.present && !generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
 		return 1;
 	}
+	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {
+		return 1;
+	}
+	if (!require(generator_state.descriptor_counter_table_0x1110_known_count == aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT, "generator object private state descriptor counter table count mismatch")) {
+		return 1;
+	}
+	if (!require(generator_state.descriptor_counter_table_0x1110.size() == size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), "generator object private state descriptor counter table vector size mismatch")) {
+		return 1;
+	}
+	if (!require(std::all_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value == 0U; }), "generator object private state descriptor counter table was not zero-initialized")) {
+		return 1;
+	}
 	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {
 		return 1;
 	}

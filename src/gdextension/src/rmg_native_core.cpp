@@ -280,6 +280,7 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.descriptor_counter_table_0x1110_present = input.descriptor_counter_table_0x1110_present;
 	out.descriptor_counter_table_0x1110_contents_known = input.descriptor_counter_table_0x1110_contents_known;
 	out.descriptor_counter_table_0x1110_known_count = input.descriptor_counter_table_0x1110_known_count;
+	out.descriptor_counter_table_0x1110_zero_count = int32_t(std::count(input.descriptor_counter_table_0x1110.begin(), input.descriptor_counter_table_0x1110.end(), 0U));
 	out.source_owner_player_slots_ed8_ee0_ee4_present = input.source_owner_player_slots_ed8_ee0_ee4_present;
 	out.selected_color_order_ed8_count = input.selected_color_order_ed8_count;
 	out.raw_source_owner_slots_ee0_count = input.raw_source_owner_slots_ee0_count;
@@ -1050,6 +1051,9 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"descriptor_counter_table_0x1110_present\":" << (state.descriptor_counter_table_0x1110_present ? "true" : "false") << ","
 		<< "\"descriptor_counter_table_0x1110_contents_known\":" << (state.descriptor_counter_table_0x1110_contents_known ? "true" : "false") << ","
 		<< "\"descriptor_counter_table_0x1110_known_count\":" << state.descriptor_counter_table_0x1110_known_count << ","
+		<< "\"descriptor_counter_table_0x1110_byte_size\":" << h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE << ","
+		<< "\"descriptor_counter_table_0x1110_zero_count\":" << state.descriptor_counter_table_0x1110_zero_count << ","
+		<< "\"descriptor_counter_table_0x1110_source\":\"0x49ecf2_zeroes_generator_plus_0x1110_over_0x3a0_bytes_before_relation_object_commits\","
 		<< "\"vectors\":[";
 	append_generator_object_vector_state_json(out, state.endpoint_vector_c8_cc);
 	out << ",";

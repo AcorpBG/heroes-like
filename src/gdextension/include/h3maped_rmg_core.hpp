@@ -32,6 +32,8 @@ constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH = 0x7d00U;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_BITS_12_14 = 0U;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X20_BYTE3 = 0xffffffffU;
 constexpr uint32_t RELATION_WORD_0X28_BITS_12_14_MASK = 0x7U << 12U;
+constexpr int32_t DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE = 0x3a0;
+constexpr int32_t DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT = DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE / 4;
 constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_RECTANGLE_VERTEX_0 = 0x004a28c8U;
 constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_RECTANGLE_VERTEX_1 = 0x004a28dcU;
 constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_RECTANGLE_VERTEX_2 = 0x004a28f3U;
@@ -929,6 +931,7 @@ struct GeneratorObjectPrivateState {
 	bool descriptor_counter_table_0x1110_present = false;
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
+	std::vector<uint32_t> descriptor_counter_table_0x1110;
 	bool source_owner_player_slots_ed8_ee0_ee4_present = false;
 	int32_t selected_color_order_ed8_count = 0;
 	int32_t raw_source_owner_slots_ee0_count = 0;

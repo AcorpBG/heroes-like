@@ -322,6 +322,7 @@ struct SharedGeneratorObjectPrivateState {
 	bool descriptor_counter_table_0x1110_present = false;
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
+	int32_t descriptor_counter_table_0x1110_zero_count = 0;
 	bool source_owner_player_slots_ed8_ee0_ee4_present = false;
 	int32_t selected_color_order_ed8_count = 0;
 	int32_t raw_source_owner_slots_ee0_count = 0;

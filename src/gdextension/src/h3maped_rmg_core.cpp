@@ -3341,8 +3341,9 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.endpoint_cursor_0xf5c_present = true;
 	state.endpoint_cursor_0xf5c_known = false;
 	state.descriptor_counter_table_0x1110_present = true;
-	state.descriptor_counter_table_0x1110_contents_known = false;
-	state.descriptor_counter_table_0x1110_known_count = 0;
+	state.descriptor_counter_table_0x1110_contents_known = true;
+	state.descriptor_counter_table_0x1110_known_count = DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	state.descriptor_counter_table_0x1110.assign(size_t(DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
 	state.source_owner_player_slots_ed8_ee0_ee4_present = template_selection.player_assignment.complete;
 	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
 	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
@@ -3353,7 +3354,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"source_pair_vector_0xedc_live_contents_unported",
 		"relation_vector_0x10e4_0x10e8_contents_unported",
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
-		"descriptor_counter_table_0x1110_contents_unported",
+		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"source_order_relation_object_mutations_not_applied_to_generated_cell_buffer",
 	};
 	return state;
