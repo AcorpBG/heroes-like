@@ -1064,6 +1064,30 @@ struct GeneratorObjectPrivateState {
 	std::vector<std::string> remaining_private_state_blockers;
 };
 
+struct EndpointPointerRecord4a5e73 {
+	int32_t key_0x20 = -1;
+};
+
+struct EndpointMaterializationState4a5e73 {
+	std::vector<EndpointPointerRecord4a5e73> endpoint_vector_d8_dc;
+	std::vector<EndpointPointerRecord4a5e73> endpoint_vector_c8_cc;
+	std::vector<uint8_t> byte_state_vector_1104_1108;
+	int32_t cursor_0xf5c = 0;
+};
+
+struct EndpointMaterializationResult4a5e73 {
+	int32_t original_cursor_0xf5c = 0;
+	int32_t return_value = -1;
+	bool d8_match_found = false;
+	bool c8_match_found = false;
+	bool rejected_by_projection_helper_0x4a7312 = false;
+	bool byte_state_marked = false;
+	int32_t cursor_advanced_count = 0;
+	int32_t mutated_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t skipped_unknown_word_count = 0;
+};
+
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 int64_t generated_cell_flat_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 uint32_t generated_cell_zone_word_4a325d(uint32_t existing_word, int32_t zone_id);
@@ -1101,6 +1125,7 @@ bool generated_cell_49abd6_body_reject_stamp(std::vector<uint32_t> &word_0x28, i
 GeneratedCell49a85dStampResult generated_cell_49a85d_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<uint32_t> &word_0x24, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<int32_t> &terrain_code, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
+EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, bool projection_helper_0x4a7312_accepts = true);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 bool private_zone_word_unassigned_4a325d(const std::vector<uint32_t> &zone_words, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);

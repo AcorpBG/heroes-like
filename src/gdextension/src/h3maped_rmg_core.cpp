@@ -2010,6 +2010,66 @@ GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_
 	return result;
 }
 
+static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
+	return std::any_of(records.begin(), records.end(), [&](const EndpointPointerRecord4a5e73 &record) {
+		return record.key_0x20 == key_0x20;
+	});
+}
+
+EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, bool projection_helper_0x4a7312_accepts) {
+	EndpointMaterializationResult4a5e73 result;
+	result.original_cursor_0xf5c = state.cursor_0xf5c;
+	result.return_value = -1;
+
+	result.d8_match_found = endpoint_vector_contains_key_4a5e73(state.endpoint_vector_d8_dc, state.cursor_0xf5c);
+	if (!result.d8_match_found) {
+		return result;
+	}
+
+	result.c8_match_found = endpoint_vector_contains_key_4a5e73(state.endpoint_vector_c8_cc, state.cursor_0xf5c);
+	if (!result.c8_match_found) {
+		result.return_value = 0;
+		return result;
+	}
+
+	if (!projection_helper_0x4a7312_accepts) {
+		result.rejected_by_projection_helper_0x4a7312 = true;
+		return result;
+	}
+
+	for (int32_t offset = 0; offset < repeat_count; ++offset) {
+		const int64_t flat = cell_index(grid.width, grid.height, x + offset, y, level);
+		if (flat < 0 || flat >= int64_t(grid.records.size())) {
+			result.out_of_bounds_cell_count += 1;
+			continue;
+		}
+		GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+		if (!record.word_0x28_known || !record.word_0x2c_known) {
+			result.skipped_unknown_word_count += 1;
+			continue;
+		}
+		record.word_0x2c &= ~uint32_t(0x1fU);
+		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		result.mutated_cell_count += 1;
+	}
+
+	if (state.cursor_0xf5c >= 0 && state.cursor_0xf5c < int32_t(state.byte_state_vector_1104_1108.size())) {
+		state.byte_state_vector_1104_1108[size_t(state.cursor_0xf5c)] = 1U;
+		result.byte_state_marked = true;
+	}
+
+	state.cursor_0xf5c = 0;
+	while (state.cursor_0xf5c < int32_t(state.byte_state_vector_1104_1108.size())
+			&& state.byte_state_vector_1104_1108[size_t(state.cursor_0xf5c)] != 0U) {
+		state.cursor_0xf5c += 1;
+		result.cursor_advanced_count += 1;
+	}
+
+	result.return_value = result.original_cursor_0xf5c;
+	return result;
+}
+
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span) {
 	return span.x >= 0 && span.x < width && span.y >= 0 && span.y < height && span.level >= 0 && span.level < level_count;
 }

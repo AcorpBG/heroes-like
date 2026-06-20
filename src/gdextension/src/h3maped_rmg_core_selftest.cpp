@@ -11,6 +11,9 @@ using aurelion::h3maped_rmg_core::BoundaryMaterialization4a2777;
 using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
+using aurelion::h3maped_rmg_core::EndpointMaterializationResult4a5e73;
+using aurelion::h3maped_rmg_core::EndpointMaterializationState4a5e73;
+using aurelion::h3maped_rmg_core::EndpointPointerRecord4a5e73;
 using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
 using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
@@ -245,7 +248,7 @@ int main() {
 	}
 
 	{
-		const GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+		GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
 		if (!require(record_grid.stride_bytes == aurelion::h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES, "generated-cell record grid did not preserve stride 0x30")) {
 			return 1;
 		}
@@ -355,6 +358,43 @@ int main() {
 			return 1;
 		}
 		if (!require(!aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_record(mutable_record), "record 0x49a1d8 accepted after +0x2b bit0x02 was cleared")) {
+			return 1;
+		}
+		EndpointMaterializationState4a5e73 endpoint_state;
+		endpoint_state.endpoint_vector_d8_dc = { EndpointPointerRecord4a5e73 { 2 }, EndpointPointerRecord4a5e73 { 4 } };
+		endpoint_state.byte_state_vector_1104_1108 = { 1U, 1U, 0U, 1U, 0U };
+		endpoint_state.cursor_0xf5c = 7;
+		EndpointMaterializationResult4a5e73 endpoint_result =
+				aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, endpoint_state, 0, 0, 0, 1);
+		if (!require(endpoint_result.return_value == -1 && !endpoint_result.d8_match_found, "0x4a5e73 did not reject stale +0xf5c without a +0xd8 key match")) {
+			return 1;
+		}
+		endpoint_state.cursor_0xf5c = 2;
+		endpoint_result = aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, endpoint_state, 0, 0, 0, 1);
+		if (!require(endpoint_result.return_value == 0 && endpoint_result.d8_match_found && !endpoint_result.c8_match_found, "0x4a5e73 did not return 0 for a +0xd8 match without a +0xc8 key match")) {
+			return 1;
+		}
+		endpoint_state.endpoint_vector_c8_cc = { EndpointPointerRecord4a5e73 { 2 } };
+		endpoint_state.cursor_0xf5c = 2;
+		record_grid.records[0].word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		record_grid.records[0].word_0x2c = 0x3fU;
+		record_grid.records[1].word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		record_grid.records[1].word_0x2c = 0x3fU;
+		endpoint_result = aurelion::h3maped_rmg_core::endpoint_materialization_4a5e73(record_grid, endpoint_state, 0, 0, 0, 2);
+		if (!require(endpoint_result.return_value == 2 && endpoint_result.c8_match_found && endpoint_result.byte_state_marked, "0x4a5e73 success path did not return the original +0xf5c key and mark byte state")) {
+			return 1;
+		}
+		if (!require(endpoint_result.mutated_cell_count == 2 && (record_grid.records[0].word_0x2c & 0x1fU) == 0U && (record_grid.records[1].word_0x2c & 0x1fU) == 0U, "0x4a5e73 success path did not clear low five +0x2c bits for repeated cells")) {
+			return 1;
+		}
+		if (!require((record_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+					&& (record_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U
+					&& (record_grid.records[1].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+					&& (record_grid.records[1].word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U,
+				"0x4a5e73 success path did not set +0x28 bit27 and clear bit26")) {
+			return 1;
+		}
+		if (!require(endpoint_state.byte_state_vector_1104_1108[2] == 1U && endpoint_state.cursor_0xf5c == 4 && endpoint_result.cursor_advanced_count == 4, "0x4a5e73 success path did not advance +0xf5c through marked byte-state entries")) {
 			return 1;
 		}
 	}

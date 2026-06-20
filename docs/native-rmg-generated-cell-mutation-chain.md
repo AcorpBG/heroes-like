@@ -249,6 +249,7 @@ Native helpers:
 - `generated_cell_49a962_terrain`
 - `generated_cell_49cf34_attach_word28`
 - `generated_cell_4aa3e9_reward_word28`
+- `endpoint_materialization_4a5e73` for the recovered explicit-input endpoint helper contract only.
 
 Mutation surface:
 
@@ -260,6 +261,7 @@ Mutation surface:
 - Uses `+0x2c` gates.
 - Tracks `+0x2b` bit `0x02` knowledge at record level and clears it on recovered `0x49abd6` body-reject behavior.
 - Depletes score/distance fields in `+0x20`.
+- `0x4a5e73` consumes generator-level endpoint pointer vectors and byte-state/cursor state: a missing `+0xd8/+0xdc` key returns `-1`, a missing `+0xc8/+0xcc` key returns `0`, and the accepted path clears low five bits of repeated generated-cell `+0x2c`, sets `+0x28` bit27, clears bit26, marks `+0x1104[old +0xf5c]`, then advances `+0xf5c` through marked byte-state entries.
 
 Known blockers:
 
@@ -267,6 +269,7 @@ Known blockers:
 - Record-level helper semantics do not yet mutate the live generated-cell grid in recovered source order.
 - Native now applies the recovered `0x4a5767` full-grid projection reset over the live generated-cell grid, but still lacks source-order object-reference vector contents, the `0x4a5767` relation-local scan, and ordered `0x49a318` propagation replay.
 - Native now carries recovered `0x49b452` relation-owner constructor/default fields plus the recovered `0x4a1f3b/0x4a19ed` selected coordinate triple `+0x10..+0x18`, source-zone endpoint vector `+0xc8/+0xcc` contents/count, `0x4a17f5/0x4a1ad8` coordinate candidate vectors consumed by `0x4a1f3b`, and the recovered `0x49f95a` endpoint byte-state vector zero-init relationship to endpoint pointer vector `+0xd8/+0xdc`. The remaining relation-owner/private-state gap is the `0x4a1f3b` scan-bounds updates, endpoint pointer-vector contents/count required for concrete byte-state contents, and later source-order scan consumers.
+- Native still lacks source-owned generator-level `+0xd8/+0xdc` and `+0xc8/+0xcc` vector contents, the live `+0xf5c` cursor producer, and the downstream `0x4a606b` / `0x4a696b` / fallback materialization callers. The implemented `0x4a5e73` helper must not be wired to guessed endpoint state.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
 
 Implementation rule: keep helpers available, but do not use them to claim pre-object generated-cell parity until their source callers and inputs are ordered and same-run validated.
