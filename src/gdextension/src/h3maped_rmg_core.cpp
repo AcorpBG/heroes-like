@@ -3273,6 +3273,72 @@ static GeneratorObjectVectorState generator_object_vector_state(const std::strin
 	return state;
 }
 
+static uint32_t relation_record_control_dword_0x49f7c4(bool wide, bool border_guard) {
+	uint32_t control = 0U;
+	if (wide) {
+		control |= 0x00000001U;
+	}
+	if (border_guard) {
+		control |= 0x00000100U;
+	}
+	return control;
+}
+
+static void append_relation_record_0x49f7c4(GeneratorRelationOwnerState4a218c &owner, int32_t source_link_index, int32_t target_runtime_zone_index, int32_t target_source_zone_id, const RuntimeLinkSeedInput4a218c &link, bool reciprocal) {
+	GeneratorRelationRecordState4a218c record;
+	record.source_link_index = source_link_index;
+	record.owner_runtime_zone_index = owner.runtime_zone_index;
+	record.owner_source_zone_id = owner.source_zone_id;
+	record.target_runtime_zone_index = target_runtime_zone_index;
+	record.target_source_zone_id = target_source_zone_id;
+	record.guard_value = link.guard_value;
+	record.wide = link.wide;
+	record.border_guard = link.border_guard;
+	record.reciprocal = reciprocal;
+	record.control_dword_0x08 = relation_record_control_dword_0x49f7c4(link.wide, link.border_guard);
+	owner.relation_records.push_back(record);
+	owner.relation_record_count = int32_t(owner.relation_records.size());
+}
+
+static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, int32_t &missing_endpoint_count) {
+	std::vector<GeneratorRelationOwnerState4a218c> owners;
+	owners.reserve(runtime_seed.runtime_zone_seeds.size());
+	for (size_t index = 0; index < runtime_seed.runtime_zone_seeds.size(); ++index) {
+		const RuntimeZoneSeedInput4a218c &seed = runtime_seed.runtime_zone_seeds[index];
+		GeneratorRelationOwnerState4a218c owner;
+		owner.owner_vector_index = int32_t(index);
+		owner.runtime_zone_index = seed.runtime_zone_index;
+		owner.source_zone_id = seed.source_zone_id;
+		owner.source_index = seed.source_index;
+		owners.push_back(owner);
+	}
+
+	auto owner_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
+		for (size_t index = 0; index < owners.size(); ++index) {
+			if (owners[index].runtime_zone_index == runtime_zone_index) {
+				return int32_t(index);
+			}
+		}
+		return -1;
+	};
+
+	for (size_t link_index = 0; link_index < runtime_seed.runtime_links.size(); ++link_index) {
+		const RuntimeLinkSeedInput4a218c &link = runtime_seed.runtime_links[link_index];
+		const int32_t from_owner_index = owner_index_for_runtime_zone(link.from_index);
+		const int32_t to_owner_index = owner_index_for_runtime_zone(link.to_index);
+		if (from_owner_index < 0 || to_owner_index < 0) {
+			missing_endpoint_count += 1;
+			continue;
+		}
+		const int32_t from_source_zone_id = owners[size_t(from_owner_index)].source_zone_id;
+		const int32_t to_source_zone_id = owners[size_t(to_owner_index)].source_zone_id;
+		append_relation_record_0x49f7c4(owners[size_t(from_owner_index)], int32_t(link_index), link.to_index, to_source_zone_id, link, false);
+		append_relation_record_0x49f7c4(owners[size_t(to_owner_index)], int32_t(link_index), link.from_index, from_source_zone_id, link, true);
+	}
+
+	return owners;
+}
+
 static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, const std::vector<uint32_t> &word_0x10, const std::vector<uint32_t> &word_0x1c, const std::vector<uint32_t> &word_0x20, const std::vector<uint32_t> &word_0x24, const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c) {
 	for (size_t index = 0; index < grid.records.size(); ++index) {
 		GeneratedCellRecord0x30 &record = grid.records[index];
@@ -3359,11 +3425,20 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
 	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
 	state.mapped_source_owner_slots_ee4_count = int32_t(template_selection.player_assignment.mapped_ee4_slots.size());
+	state.relation_owner_records_10e4_10e8_partial_known = !template_selection.blocked;
+	state.relation_owner_vectors_10e4_10e8 =
+			relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(
+					template_selection.runtime_seed,
+					state.relation_record_missing_endpoint_count_10e4_10e8);
+	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
+	}
 	state.remaining_private_state_blockers = {
 		"endpoint_vectors_0xc8_0xcc_and_0xd8_0xdc_contents_unported",
 		"object_record_vector_0xec4_0xecc_contents_unported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_contents_unported_after_count_adoption",
+		"relation_vector_0x10e4_0x10e8_full_pointer_bounds_fields_unported_after_recovered_owner_link_records",
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
 		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",

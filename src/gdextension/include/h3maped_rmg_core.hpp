@@ -907,6 +907,28 @@ struct GeneratorObjectVectorState {
 	int32_t count = 0;
 };
 
+struct GeneratorRelationRecordState4a218c {
+	int32_t source_link_index = -1;
+	int32_t owner_runtime_zone_index = -1;
+	int32_t owner_source_zone_id = -1;
+	int32_t target_runtime_zone_index = -1;
+	int32_t target_source_zone_id = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+	bool reciprocal = false;
+	uint32_t control_dword_0x08 = 0U;
+};
+
+struct GeneratorRelationOwnerState4a218c {
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t source_index = -1;
+	int32_t relation_record_count = 0;
+	std::vector<GeneratorRelationRecordState4a218c> relation_records;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -939,6 +961,11 @@ struct GeneratorObjectPrivateState {
 	int32_t selected_color_order_ed8_count = 0;
 	int32_t raw_source_owner_slots_ee0_count = 0;
 	int32_t mapped_source_owner_slots_ee4_count = 0;
+	bool relation_owner_records_10e4_10e8_partial_known = false;
+	int32_t relation_owner_vector_count_10e4_10e8 = 0;
+	int32_t relation_record_count_10e4_10e8 = 0;
+	int32_t relation_record_missing_endpoint_count_10e4_10e8 = 0;
+	std::vector<GeneratorRelationOwnerState4a218c> relation_owner_vectors_10e4_10e8;
 	std::vector<std::string> remaining_private_state_blockers;
 };
 
