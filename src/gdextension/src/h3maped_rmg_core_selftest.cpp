@@ -862,13 +862,25 @@ int main() {
 	if (!require(composed.terrain_repaint.full_map_water_repaint_count_0x4a4025 == 36 * 36, "composed chain did not apply terrain full-map repaint")) {
 		return 1;
 	}
+	const CoordinateOwnerGridResult4a218c selected_composed = aurelion::h3maped_rmg_core::coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(
+			36,
+			36,
+			1,
+			aurelion::h3maped_rmg_core::water_mode_code("land"),
+			setup3.generator_mode_0x10b8,
+			selected_after_setup3.rng_state_after_template_selection,
+			selected_after_setup3.runtime_seed.runtime_zone_seeds,
+			selected_after_setup3.runtime_seed.runtime_links);
+	if (!require(!selected_composed.coordinate_seed_blocked, "selected-template coordinate chain blocked before generator private-state handoff")) {
+		return 1;
+	}
 	const GeneratorObjectPrivateState generator_state =
 			aurelion::h3maped_rmg_core::generator_object_private_state_from_recovered_partial_chain(
 					36,
 					36,
 					1,
 					selected_after_setup3,
-					composed);
+					selected_composed);
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
 		return 1;
 	}
@@ -936,6 +948,33 @@ int main() {
 						&& owner.owner_local_vector_0x3f4_count == 0
 						&& owner.owner_local_vector_0x404_count == 0,
 					"0x49b452 relation owner local vectors were not initialized empty")) {
+			return 1;
+		}
+		const auto boundary_input = std::find_if(selected_composed.coordinate_seed.boundary_inputs.begin(), selected_composed.coordinate_seed.boundary_inputs.end(), [&](const RuntimeZoneBoundaryInput4a3a03 &input) {
+			return input.footprint.runtime_zone_index == owner.runtime_zone_index;
+		});
+		if (!require(boundary_input != selected_composed.coordinate_seed.boundary_inputs.end(), "0x4a1f3b/0x4a19ed relation owner coordinate source was not found")) {
+			return 1;
+		}
+		if (!require(owner.coordinate_triple_0x10_0x18_known
+						&& owner.coordinate_x_0x10 == boundary_input->footprint.x_after_bbox_rescale
+						&& owner.coordinate_y_0x14 == boundary_input->footprint.y_after_bbox_rescale
+						&& owner.coordinate_level_0x18 == boundary_input->footprint.level,
+					"0x4a1f3b/0x4a19ed relation owner coordinate triple +0x10..+0x18 was not preserved")) {
+			return 1;
+		}
+		int32_t expected_source_endpoint_count = 0;
+		for (const RuntimeLinkSeedInput4a218c &link : selected_after_setup3.runtime_seed.runtime_links) {
+			if (link.from_index == owner.runtime_zone_index || link.to_index == owner.runtime_zone_index) {
+				expected_source_endpoint_count += 1;
+			}
+		}
+		if (!require(owner.source_endpoint_vector_0xc8_0xcc_present
+						&& !owner.source_endpoint_vector_0xc8_0xcc_contents_known
+						&& owner.source_endpoint_vector_0xc8_0xcc_count_known
+						&& owner.source_endpoint_vector_0xc8_0xcc_count == expected_source_endpoint_count
+						&& owner.source_endpoint_vector_0xc8_0xcc_stride_bytes == 0x1c,
+					"0x4a1f3b source-zone endpoint vector +0xc8/+0xcc shape was not preserved")) {
 			return 1;
 		}
 		if (owner.source_owner_slot_0x1c_known) {

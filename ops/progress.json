@@ -67641,12 +67641,12 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-relation-count-f58-setup-20260620",
-    "evidenceId": "native-rmg-relation-count-f58-setup-20260620",
-    "timestamp": "2026-06-20T00:31:28Z",
+    "id": "native-rmg-relation-owner-coordinate-surface-20260620",
+    "evidenceId": "native-rmg-relation-owner-coordinate-surface-20260620",
+    "timestamp": "2026-06-20T01:23:38Z",
     "status": "pass_supporting_generator_private_state_field_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed generator+0x10e4/+0x10e8 relation-vector count adoption from selected 0x4ac552 -> 0x4a218c runtime-zone owners, generator+0xf58 setup zero from 0x49ecf2 while keeping +0xf5c unclaimed, and generator+0x1110 descriptor counter table initialization from 0x49ecf2. Relation contents and later object/relation replay remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now carries the recovered 0x4a1f3b/0x4a19ed relation-owner selected coordinate triple +0x10..+0x18 and the source-zone endpoint vector +0xc8/+0xcc shape/count consumed by 0x4a1f3b, in addition to the existing 0x49b452 constructor/defaults and 0x49f7c4 relation records. Candidate-vector contents, scan-bounds updates, relation-local scans, ordered 0x49a318 propagation, object/reference vectors, descriptor joins, same-run private-state comparison, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -67657,31 +67657,16 @@
       "PLAN.md",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-      ".artifacts/rmg_native_cli_relation_count_f58_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_relation_count_f58_smoke/manifest.json"
+      "docs/native-rmg-generated-cell-mutation-chain.md"
     ],
     "checks": [
       {
-        "command": "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-        "status": "passed_debug_linux"
+        "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+        "status": "passed_linux_no_godot"
       },
       {
         "command": "bin/h3maped_rmg_core_selftest",
         "status": "passed"
-      },
-      {
-        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_relation_count_f58_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-        "status": "expected_blocked_exit_2_no_godot_snapshot_written"
-      },
-      {
-        "command": "jq '.shared_coordinate_owner_grid_chain | {runtime_zone_seed_count, same_run_recovered_template_runtime_zone_seed_count, generator_object_private_state: (.generator_object_private_state | {endpoint_cursor_0xf58_present, endpoint_cursor_0xf58_known, endpoint_cursor_0xf58, endpoint_cursor_0xf5c_known, relation_vector: (.vectors[] | select(.label == \"relation_vector_0x10e4_0x10e8\")), remaining_private_state_blockers})}' .artifacts/rmg_native_cli_relation_count_f58_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-        "status": "passed_relation_count_5_f58_zero_f5c_unknown"
-      },
-      {
-        "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-        "status": "passed_release_linux"
       },
       {
         "command": "jq empty ops/progress.json",
@@ -67689,6 +67674,10 @@
       },
       {
         "command": "git diff --check",
+        "status": "passed"
+      },
+      {
+        "command": "python3 tests/validate_repo.py",
         "status": "passed"
       }
     ],
@@ -67704,6 +67693,9 @@
       "relation_vector_0x10e4_0x10e8_count_known": true,
       "relation_vector_0x10e4_0x10e8_count": 5,
       "relation_vector_0x10e4_0x10e8_contents_known": false,
+      "relation_owner_coordinate_triple_0x10_0x18_known": true,
+      "source_endpoint_vector_0xc8_0xcc_shape_known": true,
+      "source_endpoint_vector_0xc8_0xcc_contents_known": false,
       "endpoint_cursor_0xf58_present": true,
       "endpoint_cursor_0xf58_known": true,
       "endpoint_cursor_0xf58": 0,
@@ -67713,6 +67705,8 @@
       "descriptor_counter_table_0x1110_byte_size": 928,
       "descriptor_counter_table_0x1110_dword_count": 232,
       "descriptor_counter_table_0x1110_zero_count": 232,
+      "relation_owner_candidate_vector_contents_ported": false,
+      "relation_owner_scan_bounds_updates_ported": false,
       "descriptor_counter_increment_decrement_replay_ported": false,
       "ordered_relation_replay_ported": false,
       "object_reference_vector_contents_ported": false,
@@ -67720,7 +67714,7 @@
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "endpoint/object/relation/byte-state vector contents, 0xf5c cursor seed, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, and same-run private-state comparison remain unported"
+    "blocker": "source endpoint vector contents, object/relation/byte-state vector contents, 0x4a1f3b candidate-vector contents and scan-bounds updates, 0xf5c cursor seed, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, and same-run private-state comparison remain unported"
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state plus the recovered 0x4a1f3b/0x4a19ed selected coordinate triple +0x10..+0x18 and source-zone endpoint vector +0xc8/+0xcc shape/count consumed by 0x4a1f3b. Candidate-vector contents, scan-bounds updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers."
 }
