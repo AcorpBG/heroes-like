@@ -475,6 +475,10 @@ struct RuntimeLinkSeedInput4a218c {
 	int32_t guard_value = 0;
 	bool wide = false;
 	bool border_guard = false;
+	int32_t source_zone_a = -1;
+	int32_t source_zone_b = -1;
+	int32_t source_endpoint_a = -1;
+	int32_t source_endpoint_b = -1;
 };
 
 struct PlayerSlotAssignmentRecord4ac62a {
@@ -521,6 +525,8 @@ struct TemplateLinkRecord4a1f3b {
 	int32_t player_filter_max_human = 8;
 	int32_t player_filter_min_total = 0;
 	int32_t player_filter_max_total = 8;
+	int32_t source_endpoint_a = -1;
+	int32_t source_endpoint_b = -1;
 };
 
 struct RuntimeSeedBuildResult4a218c {
@@ -926,6 +932,20 @@ struct GeneratorRelationRecordState4a218c {
 	uint32_t control_dword_0x08 = 0U;
 };
 
+struct GeneratorSourceEndpointRecordState4a1f3b {
+	int32_t source_link_index = -1;
+	int32_t owner_runtime_zone_index = -1;
+	int32_t owner_source_zone_id = -1;
+	int32_t target_runtime_zone_index = -1;
+	int32_t target_source_zone_id = -1;
+	int32_t source_endpoint = -1;
+	int32_t target_source_endpoint = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+	bool reciprocal = false;
+};
+
 struct GeneratorRelationOwnerState4a218c {
 	int32_t owner_vector_index = -1;
 	int32_t runtime_zone_index = -1;
@@ -962,6 +982,7 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t owner_local_vector_0x3f4_count = 0;
 	int32_t owner_local_vector_0x404_count = 0;
 	int32_t relation_record_count = 0;
+	std::vector<GeneratorSourceEndpointRecordState4a1f3b> source_endpoint_records_0xc8_0xcc;
 	std::vector<GeneratorRelationRecordState4a218c> relation_records;
 };
 

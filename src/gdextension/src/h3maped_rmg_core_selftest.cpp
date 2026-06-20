@@ -12,6 +12,7 @@ using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
+using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
@@ -646,9 +647,9 @@ int main() {
 	template_zones[0].source_payload.mines.minimum_wood = 1;
 	template_zones[0].source_payload.treasure_band_0 = aurelion::h3maped_rmg_core::SourceTreasureBand4a218c { 9, 500, 3000 };
 	const std::vector<TemplateLinkRecord4a1f3b> template_links = {
-		TemplateLinkRecord4a1f3b { 1, 2, 1200, false, false },
-		TemplateLinkRecord4a1f3b { 2, 3, 2400, true, false },
-		TemplateLinkRecord4a1f3b { 3, 4, 3600, false, true },
+		TemplateLinkRecord4a1f3b { 1, 2, 1200, false, false, 0, 8, 0, 8, 101, 102 },
+		TemplateLinkRecord4a1f3b { 2, 3, 2400, true, false, 0, 8, 0, 8, 201, 202 },
+		TemplateLinkRecord4a1f3b { 3, 4, 3600, false, true, 0, 8, 0, 8, 301, 302 },
 		TemplateLinkRecord4a1f3b { 4, 5, 4800, true, true },
 		TemplateLinkRecord4a1f3b { 1, 5, 0, false, false, 4, 8, 4, 8 },
 	};
@@ -670,13 +671,21 @@ int main() {
 	if (!require(template_seed_result.runtime_links[0].guard_value == 1200
 				&& !template_seed_result.runtime_links[0].wide
 				&& !template_seed_result.runtime_links[0].border_guard
+				&& template_seed_result.runtime_links[0].source_zone_a == 1
+				&& template_seed_result.runtime_links[0].source_zone_b == 2
+				&& template_seed_result.runtime_links[0].source_endpoint_a == 101
+				&& template_seed_result.runtime_links[0].source_endpoint_b == 102
 				&& template_seed_result.runtime_links[1].guard_value == 2400
 				&& template_seed_result.runtime_links[1].wide
 				&& !template_seed_result.runtime_links[1].border_guard
+				&& template_seed_result.runtime_links[1].source_endpoint_a == 201
+				&& template_seed_result.runtime_links[1].source_endpoint_b == 202
 				&& template_seed_result.runtime_links[2].guard_value == 3600
 				&& !template_seed_result.runtime_links[2].wide
-				&& template_seed_result.runtime_links[2].border_guard,
-				"template seed producer did not preserve link guard/wide/border-guard payloads")) {
+				&& template_seed_result.runtime_links[2].border_guard
+				&& template_seed_result.runtime_links[2].source_endpoint_a == 301
+				&& template_seed_result.runtime_links[2].source_endpoint_b == 302,
+				"template seed producer did not preserve link guard/wide/border-guard/source-endpoint payloads")) {
 		return 1;
 	}
 	if (!require(template_seed_result.skipped_zone_filter_count == 1 && template_seed_result.skipped_link_filter_count == 1, "template seed producer did not report player-filter exclusions")) {
@@ -970,12 +979,29 @@ int main() {
 			}
 		}
 		if (!require(owner.source_endpoint_vector_0xc8_0xcc_present
-						&& !owner.source_endpoint_vector_0xc8_0xcc_contents_known
+						&& owner.source_endpoint_vector_0xc8_0xcc_contents_known
 						&& owner.source_endpoint_vector_0xc8_0xcc_count_known
 						&& owner.source_endpoint_vector_0xc8_0xcc_count == expected_source_endpoint_count
+						&& int32_t(owner.source_endpoint_records_0xc8_0xcc.size()) == expected_source_endpoint_count
 						&& owner.source_endpoint_vector_0xc8_0xcc_stride_bytes == 0x1c,
-					"0x4a1f3b source-zone endpoint vector +0xc8/+0xcc shape was not preserved")) {
+					"0x4a1f3b source-zone endpoint vector +0xc8/+0xcc contents were not preserved")) {
 			return 1;
+		}
+		for (const GeneratorSourceEndpointRecordState4a1f3b &endpoint_record : owner.source_endpoint_records_0xc8_0xcc) {
+			if (!require(endpoint_record.owner_runtime_zone_index == owner.runtime_zone_index
+							&& endpoint_record.owner_source_zone_id == owner.source_zone_id
+							&& endpoint_record.source_link_index >= 0
+							&& endpoint_record.source_link_index < int32_t(selected_after_setup3.runtime_seed.runtime_links.size()),
+						"0x4a1f3b source endpoint record did not preserve owner/link identity")) {
+				return 1;
+			}
+			const RuntimeLinkSeedInput4a218c &runtime_link = selected_after_setup3.runtime_seed.runtime_links[size_t(endpoint_record.source_link_index)];
+			if (!require(endpoint_record.guard_value == runtime_link.guard_value
+							&& endpoint_record.wide == runtime_link.wide
+							&& endpoint_record.border_guard == runtime_link.border_guard,
+						"0x4a1f3b source endpoint record did not preserve selected link payload")) {
+				return 1;
+			}
 		}
 		if (owner.source_owner_slot_0x1c_known) {
 			relation_owner_source_slot_known_count += 1;

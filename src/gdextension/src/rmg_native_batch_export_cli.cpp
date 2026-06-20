@@ -247,7 +247,7 @@ Options parse_options(int argc, char **argv) {
 			std::string raw;
 			take_value(raw);
 			std::vector<int32_t> fields;
-			if (parse_i32_csv(raw, 5, fields) || parse_i32_csv(raw, 2, fields)) {
+			if (parse_i32_csv(raw, 9, fields) || parse_i32_csv(raw, 7, fields) || parse_i32_csv(raw, 5, fields) || parse_i32_csv(raw, 2, fields)) {
 				SharedRuntimeLinkInput input;
 				input.from_index = fields[0];
 				input.to_index = fields[1];
@@ -255,6 +255,14 @@ Options parse_options(int argc, char **argv) {
 					input.guard_value = fields[2];
 					input.wide = fields[3] != 0;
 					input.border_guard = fields[4] != 0;
+				}
+				if (fields.size() >= 7) {
+					input.source_zone_a = fields[5];
+					input.source_zone_b = fields[6];
+				}
+				if (fields.size() >= 9) {
+					input.source_endpoint_a = fields[7];
+					input.source_endpoint_b = fields[8];
 				}
 				options.shared_runtime_chain_input.runtime_links.push_back(input);
 			}
