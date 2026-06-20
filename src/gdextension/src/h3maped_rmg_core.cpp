@@ -1719,6 +1719,51 @@ RelationResetCell generated_cell_4a5767_reset_cell(uint32_t source_word_0x20, ui
 	return cell;
 }
 
+bool generated_cell_4a5767_reset_projection(GeneratedCellRecord0x30 &record) {
+	if (!record.word_0x20_known || !record.word_0x28_known) {
+		return false;
+	}
+	const RelationResetCell reset = generated_cell_4a5767_reset_cell(record.word_0x20, record.word_0x28);
+	const bool changed = !record.word_0x10_known || record.word_0x10 != reset.word_0x10
+			|| !record.word_0x14_known || record.word_0x14 != reset.word_0x14
+			|| !record.word_0x18_known || record.word_0x18 != reset.word_0x18
+			|| !record.word_0x1c_known || record.word_0x1c != reset.word_0x1c
+			|| !record.word_0x20_known || record.word_0x20 != reset.word_0x20
+			|| !record.word_0x28_known || record.word_0x28 != reset.word_0x28;
+	record.word_0x10_known = true;
+	record.word_0x10 = reset.word_0x10;
+	record.word_0x14_known = true;
+	record.word_0x14 = reset.word_0x14;
+	record.word_0x18_known = true;
+	record.word_0x18 = reset.word_0x18;
+	record.word_0x1c_known = true;
+	record.word_0x1c = reset.word_0x1c;
+	record.word_0x20_known = true;
+	record.word_0x20 = reset.word_0x20;
+	record.word_0x28_known = true;
+	record.word_0x28 = reset.word_0x28;
+	return changed;
+}
+
+bool generated_cell_49a318_clear_source_projection(GeneratedCellRecord0x30 &record) {
+	if (!record.word_0x1c_known) {
+		return false;
+	}
+	const uint32_t cleared_word_0x1c = generated_cell_49a318_clear_source_word_0x1c(record.word_0x1c);
+	const bool changed = record.word_0x1c != cleared_word_0x1c
+			|| !record.word_0x10_known || record.word_0x10 != RELATION_RESET_COORD_MINUS_ONE
+			|| !record.word_0x14_known || record.word_0x14 != RELATION_RESET_COORD_MINUS_ONE
+			|| !record.word_0x18_known || record.word_0x18 != RELATION_RESET_COORD_MINUS_ONE;
+	record.word_0x1c = cleared_word_0x1c;
+	record.word_0x10_known = true;
+	record.word_0x10 = RELATION_RESET_COORD_MINUS_ONE;
+	record.word_0x14_known = true;
+	record.word_0x14 = RELATION_RESET_COORD_MINUS_ONE;
+	record.word_0x18_known = true;
+	record.word_0x18 = RELATION_RESET_COORD_MINUS_ONE;
+	return changed;
+}
+
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
 	return flat >= 0
 			&& flat < int64_t(word_0x28.size())

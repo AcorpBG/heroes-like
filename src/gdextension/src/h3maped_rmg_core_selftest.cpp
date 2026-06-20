@@ -278,6 +278,43 @@ int main() {
 		if (!require(!record.byte_0x2b_known, "generated-cell validity byte +0x2b must stay unknown until its mutators are ported")) {
 			return 1;
 		}
+		auto projection_record = record;
+		projection_record.word_0x20 = 0x00123456U;
+		projection_record.word_0x28 |= aurelion::h3maped_rmg_core::RELATION_WORD_0X28_BITS_12_14_MASK;
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(projection_record), "record 0x4a5767 reset projection did not mutate the generated-cell record")) {
+			return 1;
+		}
+		if (!require(projection_record.word_0x10_known && projection_record.word_0x10 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& projection_record.word_0x14_known && projection_record.word_0x14 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& projection_record.word_0x18_known && projection_record.word_0x18 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE,
+					"record 0x4a5767 reset projection did not write +0x10/+0x14/+0x18 to -1")) {
+			return 1;
+		}
+		if (!require(projection_record.word_0x1c_known && projection_record.word_0x1c == aurelion::h3maped_rmg_core::RELATION_RESET_WORD_0X1C, "record 0x4a5767 reset projection did not write +0x1c reset word")) {
+			return 1;
+		}
+		if (!require(projection_record.word_0x20_known && projection_record.word_0x20 == 0xff123456U, "record 0x4a5767 reset projection did not pack +0x20 byte3")) {
+			return 1;
+		}
+		if (!require(projection_record.word_0x28_known && (projection_record.word_0x28 & aurelion::h3maped_rmg_core::RELATION_WORD_0X28_BITS_12_14_MASK) == 0U, "record 0x4a5767 reset projection did not clear +0x28 bits 12..14")) {
+			return 1;
+		}
+		projection_record.word_0x10 = 0x00000011U;
+		projection_record.word_0x14 = 0x00000022U;
+		projection_record.word_0x18 = 0x00000033U;
+		projection_record.word_0x1c = 0x7d001234U;
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49a318_clear_source_projection(projection_record), "record 0x49a318 source clear did not mutate the generated-cell record")) {
+			return 1;
+		}
+		if (!require(projection_record.word_0x1c == 0x7d000000U, "record 0x49a318 source clear did not clear +0x1c low word")) {
+			return 1;
+		}
+		if (!require(projection_record.word_0x10 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& projection_record.word_0x14 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& projection_record.word_0x18 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE,
+					"record 0x49a318 source clear did not reset +0x10/+0x14/+0x18 to -1")) {
+			return 1;
+		}
 		const GeneratedCellWordGrid word_grid = aurelion::h3maped_rmg_core::generated_cell_grid_reset_0x49a072(2, 2, 1);
 		if (!require(word_grid.word_0x20.size() == record_grid.records.size() && word_grid.word_0x20[0] == record.word_0x20, "legacy generated-cell word grid no longer projects from record grid")) {
 			return 1;

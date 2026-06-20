@@ -235,7 +235,9 @@ Addresses:
 Native helpers:
 
 - `generated_cell_4a5767_reset_cell`
+- record-level `generated_cell_4a5767_reset_projection`
 - `generated_cell_49a318_clear_source_word_0x1c`
+- record-level `generated_cell_49a318_clear_source_projection`
 - `deplete_generated_cell_scores_4a54a7`
 - record-level `generated_cell_49a1d8_valid_record`
 - record-level and legacy word-array `generated_cell_49aa63`
@@ -251,6 +253,8 @@ Native helpers:
 Mutation surface:
 
 - Mutates relation/reset fields in `+0x1c`, high/low parts of `+0x20`, and selected `+0x28` bits.
+- `0x4a5767` record helper writes projection triple `+0x10/+0x14/+0x18` to `-1`, writes the reset `+0x1c`, packs `+0x20` byte3, and clears `+0x28` bits 12..14 from source words.
+- `0x49a318` record helper clears source `+0x1c` low word and resets projection triple `+0x10/+0x14/+0x18` to `-1`.
 - Sets/clears candidate and occupied bits.
 - Sets action/control bits.
 - Uses `+0x2c` gates.
@@ -261,7 +265,7 @@ Known blockers:
 
 - Exact caller sequence from terrain/relation/object phases into these helpers is not fully owned as a single source-order native chain.
 - Record-level helper semantics do not yet mutate the live generated-cell grid in recovered source order.
-- Native still lacks source-order object-reference vector contents and `0x4a5767` projection writes to `+0x14/+0x18`.
+- Native still lacks source-order object-reference vector contents and ordered `0x4a5767`/`0x49a318` relation replay over the live generated-cell grid.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
 
 Implementation rule: keep helpers available, but do not use them to claim pre-object generated-cell parity until their source callers and inputs are ordered and same-run validated.
