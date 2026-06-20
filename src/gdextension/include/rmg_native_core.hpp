@@ -453,6 +453,18 @@ struct SharedConnectionMaterializationCallerPrepD014 {
 	std::string remaining_live_materialization_blocker;
 };
 
+struct SharedWeightedSchedulerThreshold4a8db2 {
+	bool source_density_fields_known = false;
+	int32_t player_castle_density_0x2c = 0;
+	int32_t player_town_density_0x28 = 0;
+	int32_t neutral_castle_density_0x3c = 0;
+	int32_t neutral_town_density_0x38 = 0;
+	int32_t positive_density_sum = 0;
+	bool threshold_arg_0x18_known = false;
+	int32_t threshold_arg_0x18 = 0;
+	std::string blocked_reason;
+};
+
 struct SharedGeneratorObjectPrivateState {
 	bool present = false;
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
@@ -495,6 +507,9 @@ struct SharedGeneratorObjectPrivateState {
 	bool native_object_record_key_allocator_0x4a93a2_known = false;
 	uint32_t next_native_object_record_key_0x4a93a2 = 1U;
 	int32_t object_record_allocation_count_0x4a93a2 = 0;
+	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
+	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
+	std::vector<SharedWeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
 	std::vector<SharedObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;

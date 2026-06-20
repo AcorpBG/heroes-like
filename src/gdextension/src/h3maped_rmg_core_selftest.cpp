@@ -38,6 +38,7 @@ using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
 using aurelion::h3maped_rmg_core::SourceObjectResolverResult4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverState4af785;
 using aurelion::h3maped_rmg_core::SourceObjectSelectorResult4a9e40;
+using aurelion::h3maped_rmg_core::SourceZonePayload4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucket0xe8;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucketSummary0xe8;
 using aurelion::h3maped_rmg_core::SourceNodeFootprintResult4a3a03;
@@ -1187,12 +1188,12 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
-		if (!require(owner.scan_bounds_0x20_0x2c_known
+		if (!require(!owner.scan_bounds_0x20_0x2c_known
 						&& owner.scan_bound_low_x_0x20 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
 						&& owner.scan_bound_low_y_0x24 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
 						&& owner.scan_bound_high_x_0x28 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452
 						&& owner.scan_bound_high_y_0x2c == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452,
-					"0x49b452 relation owner default scan bounds were not preserved")) {
+					"0x49b452 relation owner default scan bounds were not preserved as unrecovered sentinels")) {
 			return 1;
 		}
 		if (!require(owner.byte_0x3c_known && owner.byte_0x3c == 0U, "0x49b452 relation owner byte +0x3c was not zeroed")) {
@@ -1753,6 +1754,44 @@ int main() {
 	if (!require(!mismatched_weighted_join.descriptor_source_fields_match
 					&& !mismatched_weighted_join.descriptor_mask_fields_match_source_0x34_0x48,
 				"0x4903e8 descriptor/source join accepted mismatched recovered .msk fields")) {
+		return 1;
+	}
+	SourceZonePayload4a218c weighted_threshold_payload;
+	weighted_threshold_payload.player_towns.town_density = 1;
+	weighted_threshold_payload.player_towns.castle_density = 1;
+	auto weighted_threshold = aurelion::h3maped_rmg_core::weighted_scheduler_threshold_0x4a8db2(weighted_threshold_payload);
+	if (!require(weighted_threshold.source_density_fields_known
+					&& weighted_threshold.positive_density_sum == 2
+					&& weighted_threshold.threshold_arg_0x18_known
+					&& weighted_threshold.threshold_arg_0x18 == 203,
+				"0x4a8db2 weighted scheduler threshold did not match recovered density total 2 -> 203")) {
+		return 1;
+	}
+	weighted_threshold_payload.player_towns.town_density = 3;
+	weighted_threshold_payload.player_towns.castle_density = 3;
+	weighted_threshold_payload.neutral_towns.town_density = 3;
+	weighted_threshold_payload.neutral_towns.castle_density = 3;
+	weighted_threshold = aurelion::h3maped_rmg_core::weighted_scheduler_threshold_0x4a8db2(weighted_threshold_payload);
+	if (!require(weighted_threshold.positive_density_sum == 12
+					&& weighted_threshold.threshold_arg_0x18_known
+					&& weighted_threshold.threshold_arg_0x18 == 83,
+				"0x4a8db2 weighted scheduler threshold did not match recovered density total 12 -> 83")) {
+		return 1;
+	}
+	weighted_threshold_payload.neutral_towns.castle_density = 4;
+	weighted_threshold = aurelion::h3maped_rmg_core::weighted_scheduler_threshold_0x4a8db2(weighted_threshold_payload);
+	if (!require(weighted_threshold.positive_density_sum == 13
+					&& weighted_threshold.threshold_arg_0x18_known
+					&& weighted_threshold.threshold_arg_0x18 == 79,
+				"0x4a8db2 weighted scheduler threshold did not match recovered density total 13 -> 79")) {
+		return 1;
+	}
+	SourceZonePayload4a218c zero_weighted_threshold_payload;
+	weighted_threshold = aurelion::h3maped_rmg_core::weighted_scheduler_threshold_0x4a8db2(zero_weighted_threshold_payload);
+	if (!require(weighted_threshold.source_density_fields_known
+					&& !weighted_threshold.threshold_arg_0x18_known
+					&& weighted_threshold.blocked_reason == "0x4a8db2_weighted_scheduler_no_positive_town_castle_density",
+				"0x4a8db2 weighted scheduler threshold did not fail closed on zero density")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState weighted_commit_state;

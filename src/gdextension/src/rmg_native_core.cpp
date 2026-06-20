@@ -506,6 +506,22 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.native_object_record_key_allocator_0x4a93a2_known = input.native_object_record_key_allocator_0x4a93a2_known;
 	out.next_native_object_record_key_0x4a93a2 = input.next_native_object_record_key_0x4a93a2;
 	out.object_record_allocation_count_0x4a93a2 = input.object_record_allocation_count_0x4a93a2;
+	out.weighted_scheduler_thresholds_0x4a8db2_known = input.weighted_scheduler_thresholds_0x4a8db2_known;
+	out.weighted_scheduler_threshold_count_0x4a8db2 = input.weighted_scheduler_threshold_count_0x4a8db2;
+	out.weighted_scheduler_thresholds_0x4a8db2.reserve(input.weighted_scheduler_thresholds_0x4a8db2.size());
+	for (const h3maped_rmg_core::WeightedSchedulerThreshold4a8db2 &threshold : input.weighted_scheduler_thresholds_0x4a8db2) {
+		SharedWeightedSchedulerThreshold4a8db2 shared_threshold;
+		shared_threshold.source_density_fields_known = threshold.source_density_fields_known;
+		shared_threshold.player_castle_density_0x2c = threshold.player_castle_density_0x2c;
+		shared_threshold.player_town_density_0x28 = threshold.player_town_density_0x28;
+		shared_threshold.neutral_castle_density_0x3c = threshold.neutral_castle_density_0x3c;
+		shared_threshold.neutral_town_density_0x38 = threshold.neutral_town_density_0x38;
+		shared_threshold.positive_density_sum = threshold.positive_density_sum;
+		shared_threshold.threshold_arg_0x18_known = threshold.threshold_arg_0x18_known;
+		shared_threshold.threshold_arg_0x18 = threshold.threshold_arg_0x18;
+		shared_threshold.blocked_reason = threshold.blocked_reason;
+		out.weighted_scheduler_thresholds_0x4a8db2.push_back(shared_threshold);
+	}
 	out.object_records_0xec4_ecc.reserve(input.object_records_0xec4_ecc.size());
 	for (const h3maped_rmg_core::ObjectRecordReference4a54a7 &record : input.object_records_0xec4_ecc) {
 		out.object_records_0xec4_ecc.push_back(from_h3maped_object_record_reference_4a54a7(record));
@@ -1506,6 +1522,27 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 	out << "]";
 }
 
+void append_weighted_scheduler_thresholds_4a8db2_json(std::ostream &out, const std::vector<SharedWeightedSchedulerThreshold4a8db2> &thresholds) {
+	out << "[";
+	for (size_t index = 0; index < thresholds.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedWeightedSchedulerThreshold4a8db2 &threshold = thresholds[index];
+		out << "{\"source_density_fields_known\":" << (threshold.source_density_fields_known ? "true" : "false")
+			<< ",\"player_castle_density_0x2c\":" << threshold.player_castle_density_0x2c
+			<< ",\"player_town_density_0x28\":" << threshold.player_town_density_0x28
+			<< ",\"neutral_castle_density_0x3c\":" << threshold.neutral_castle_density_0x3c
+			<< ",\"neutral_town_density_0x38\":" << threshold.neutral_town_density_0x38
+			<< ",\"positive_density_sum\":" << threshold.positive_density_sum
+			<< ",\"threshold_arg_0x18_known\":" << (threshold.threshold_arg_0x18_known ? "true" : "false")
+			<< ",\"threshold_arg_0x18\":" << threshold.threshold_arg_0x18
+			<< ",\"blocked_reason\":\"" << json_escape(threshold.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_generator_object_private_state_json(std::ostream &out, const SharedGeneratorObjectPrivateState &state) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_generator_object_private_state_v1\","
@@ -1573,6 +1610,11 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"native_object_record_key_allocator_0x4a93a2_known\":" << (state.native_object_record_key_allocator_0x4a93a2_known ? "true" : "false") << ","
 		<< "\"next_native_object_record_key_0x4a93a2\":" << state.next_native_object_record_key_0x4a93a2 << ","
 		<< "\"object_record_allocation_count_0x4a93a2\":" << state.object_record_allocation_count_0x4a93a2 << ","
+		<< "\"weighted_scheduler_thresholds_0x4a8db2_known\":" << (state.weighted_scheduler_thresholds_0x4a8db2_known ? "true" : "false") << ","
+		<< "\"weighted_scheduler_threshold_count_0x4a8db2\":" << state.weighted_scheduler_threshold_count_0x4a8db2 << ","
+		<< "\"weighted_scheduler_thresholds_0x4a8db2\":";
+	append_weighted_scheduler_thresholds_4a8db2_json(out, state.weighted_scheduler_thresholds_0x4a8db2);
+	out << ","
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
 		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","
