@@ -1893,6 +1893,18 @@ static uint32_t generated_cell_word20_set_owner_byte3_49a318(uint32_t word_0x20,
 	return (word_0x20 & 0x00ffffffU) | ((uint32_t(owner_byte) & 0xffU) << 24U);
 }
 
+static uint32_t generated_cell_word1c_set_low_word_49a318(uint32_t word_0x1c, int32_t low_word) {
+	return (word_0x1c & 0xffff0000U) | (uint32_t(low_word) & 0x0000ffffU);
+}
+
+static uint32_t generated_cell_word1c_set_high_word_49a318(uint32_t word_0x1c, int32_t high_word) {
+	return (word_0x1c & 0x0000ffffU) | ((uint32_t(high_word) & 0x0000ffffU) << 16U);
+}
+
+static uint32_t generated_cell_word28_set_direction_49a318(uint32_t word_0x28, int32_t direction_ordinal) {
+	return generated_cell_4a59e2_pack_word_0x28(word_0x28, uint32_t(direction_ordinal));
+}
+
 static int32_t generated_cell_terrain_code_0x24(const GeneratedCellRecord0x30 &record) {
 	return record.word_0x24_known ? int32_t(record.word_0x24 & 0x3fU) : 9;
 }
@@ -1943,7 +1955,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 			result.seed_reports.push_back(report);
 			continue;
 		}
-		const GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
+		GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
 		report.source_owner_byte = seed_record.word_0x20_known ? generated_cell_owner_byte2_signed_4a4142(seed_record.word_0x20) : -1;
 		if (report.source_owner_byte < 0 || !generated_cell_relation_member_49a318(seed_record) || generated_cell_terrain_code_0x24(seed_record) == 9) {
 			report.status = "blocked_seed_not_materialized_or_unowned";
@@ -1951,6 +1963,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 			result.seed_reports.push_back(report);
 			continue;
 		}
+		generated_cell_49a318_clear_source_projection(seed_record);
 
 		std::vector<HighOwnerQueueNode> queue;
 		path_low_word[size_t(seed_flat)] = 0;
@@ -2006,6 +2019,14 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 					const int32_t next_score = base_score + step;
 					if (next_score < path_low_word[size_t(next_flat)]) {
 						path_low_word[size_t(next_flat)] = next_score;
+						next_record.word_0x1c = generated_cell_word1c_set_low_word_49a318(next_record.word_0x1c_known ? next_record.word_0x1c : 0U, next_score);
+						next_record.word_0x1c_known = true;
+						next_record.word_0x10 = uint32_t(node.x);
+						next_record.word_0x10_known = true;
+						next_record.word_0x14 = uint32_t(node.y);
+						next_record.word_0x14_known = true;
+						next_record.word_0x18 = uint32_t(node.level);
+						next_record.word_0x18_known = true;
 						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
 						report.same_owner_relax_count += 1;
 						result.same_owner_relax_count += 1;
@@ -2015,8 +2036,12 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 					if (next_score < path_high_word[size_t(next_flat)]) {
 						path_high_word[size_t(next_flat)] = next_score;
 						result.owner_high_byte_grid[size_t(next_flat)] = report.source_owner_byte;
+						next_record.word_0x1c = generated_cell_word1c_set_high_word_49a318(next_record.word_0x1c_known ? next_record.word_0x1c : 0U, next_score);
+						next_record.word_0x1c_known = true;
 						next_record.word_0x20 = generated_cell_word20_set_owner_byte3_49a318(next_record.word_0x20, report.source_owner_byte);
 						next_record.word_0x20_known = true;
+						next_record.word_0x28 = generated_cell_word28_set_direction_49a318(next_record.word_0x28_known ? next_record.word_0x28 : 0U, direction);
+						next_record.word_0x28_known = true;
 						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
 						report.cross_owner_high_byte_write_count += 1;
 						result.cross_owner_high_byte_write_count += 1;

@@ -260,7 +260,7 @@ Mutation surface:
 - Mutates relation/reset fields in `+0x1c`, high/low parts of `+0x20`, and selected `+0x28` bits.
 - `0x4a5767` record helper writes projection triple `+0x10/+0x14/+0x18` to `-1`, writes the reset `+0x1c`, packs `+0x20` byte3, and clears `+0x28` bits 12..14 from source words.
 - `0x49a318` record helper clears source `+0x1c` low word and resets projection triple `+0x10/+0x14/+0x18` to `-1`.
-- `0x49a318` high-owner propagation now seeds from recovered relation-owner coordinates, flood-fills materialized non-rock generated cells in recovered neighbor order, and writes source owner into `GeneratedCell+0x20` byte3 when crossing low-owner channels.
+- `0x49a318` high-owner propagation now seeds from recovered relation-owner coordinates, flood-fills materialized non-rock generated cells in recovered neighbor order, clears the source projection, writes same-owner projection triples and `+0x1c` low words, and writes cross-owner `+0x1c` high words, `+0x28` direction bits, and source owner into `GeneratedCell+0x20` byte3 when crossing low-owner channels. The bit22 object-metadata descriptor-policy branch remains blocked.
 - Sets/clears candidate and occupied bits.
 - Sets action/control bits.
 - Uses `+0x2c` gates.
