@@ -16,7 +16,7 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -24,9 +24,9 @@
       "title": "Native RMG source-order H3MapEd alignment",
       "updatedAt": "2026-06-20T20:58:14Z",
       "latestEvidenceId": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
-      "remainingWork": "Port the remaining source-order object-bearing materialization path: the 0x4a5767 scan-consumer object-materialization branch, 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
-      "blocker": "scan-consumer object-materialization branch and live source-order object-record-key producer remain unported"
+      "remainingWork": "Port the remaining source-order object-bearing materialization path: 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+      "blocker": "0x49a318 object-metadata branch and live source-order object-record-key producer remain unported"
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -749,8 +749,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
     "currentSliceUpdatedAt": "2026-06-20T22:01:31Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
@@ -764,7 +764,7 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed_partial_implementation_not_parity",
       "timestamp": "2026-06-20T22:02:25Z",
-      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
       "checks": {
         "linux_debug_native_build": "passed",
         "linux_release_native_build": "passed",
@@ -777,7 +777,7 @@
       },
       "metrics": {
         "relation_scan_consumers_4a5767_no_object_projection_chain_ported": true,
-        "relation_scan_consumers_4a5767_object_materialization_branch_ported": false,
+        "relation_scan_consumers_4a5767_object_materialization_branch_ported": true,
         "source_order_object_materialization_callers_ported": false,
         "checkpoint2_complete": false,
         "native_rmg_end_to_end_parity_complete": false
@@ -793,7 +793,7 @@
         "PLAN.md",
         "ops/progress.json"
       ],
-      "blocker": "Port the remaining source-order object-bearing materialization path: the 0x4a5767 scan-consumer object-materialization branch, 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
+      "blocker": "Port the remaining source-order object-bearing materialization path: 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
     "latestEvidence": {
       "id": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
@@ -1617,7 +1617,7 @@
       "object_commit_0x4a54a7_relation_descriptor_counter_increment_selftest_added": true,
       "source_order_weighted_candidate_producer_0x4a8d2c_0x4a901a_ported": false,
       "relation_scan_consumers_4a5767_no_object_projection_chain_ported": true,
-      "relation_scan_consumers_4a5767_object_materialization_branch_ported": false
+      "relation_scan_consumers_4a5767_object_materialization_branch_ported": true
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -1629,7 +1629,7 @@
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
     "remainingGap": "Checkpoint 2 remains blocked by live source-order caller/scanner replay; explicit 0x4a54a7 now carries generator-local and relation-local descriptor counter increments, but source-order object materialization is still not complete.",
-    "remainingWork": "Port the remaining source-order object-bearing materialization path: the 0x4a5767 scan-consumer object-materialization branch, 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+    "remainingWork": "Port the remaining source-order object-bearing materialization path: 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
     "result": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -1754,7 +1754,7 @@
       ],
       "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
-    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
     "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
   },
   "completedImplementationEvidence": [
@@ -12444,11 +12444,11 @@
       "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
     }
   ],
-  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-20T22:01:31Z",
@@ -15855,7 +15855,7 @@
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed_partial_implementation_not_parity",
     "timestamp": "2026-06-20T22:02:25Z",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered no-object 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors the counters through rmg_native_core JSON, and selftests that the pass stamps occupied bit27 / clears bit26 while stopping on the object-materialization branch. This is source-backed private-state progress only: the scan-consumer object-materialization branch, remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now runs the recovered 0x4a5767 scan-consumer projection chain over native 0x4a1f3b relation scan bounds, mirrors object-branch attempt/commit counters through rmg_native_core JSON, and selftests that the pass materializes the 0x4a5a23 bit0 object branch through 0x4a9e40, 0x4af785, 0x49ba89, and 0x4a54a7. This is source-backed private-state progress only: remaining 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2 -> 0x4a901a object-record-key producer, reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run private-state comparison, and final payload generation remain unported.",
     "checks": {
       "linux_debug_native_build": "passed",
       "linux_release_native_build": "passed",
@@ -15868,7 +15868,7 @@
     },
     "metrics": {
       "relation_scan_consumers_4a5767_no_object_projection_chain_ported": true,
-      "relation_scan_consumers_4a5767_object_materialization_branch_ported": false,
+      "relation_scan_consumers_4a5767_object_materialization_branch_ported": true,
       "source_order_object_materialization_callers_ported": false,
       "checkpoint2_complete": false,
       "native_rmg_end_to_end_parity_complete": false
@@ -15884,7 +15884,7 @@
       "PLAN.md",
       "ops/progress.json"
     ],
-    "blocker": "Port the remaining source-order object-bearing materialization path: the 0x4a5767 scan-consumer object-materialization branch, 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
+    "blocker": "Port the remaining source-order object-bearing materialization path: 0x49a318 object-metadata branch, live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
   },
   "latestEvidence": {
     "id": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
@@ -68240,7 +68240,7 @@
         "connection_region_writer_0x4a606b_static_contract_implemented": true,
         "connection_region_writer_0x4a606b_live_caller_wired": false,
         "projected_cell_chain_0x4a5a23_no_object_contract_implemented": true,
-        "projected_cell_chain_0x4a5a23_object_materialization_branch_ported": false,
+        "projected_cell_chain_0x4a5a23_object_materialization_branch_ported": true,
         "object_footprint_commit_0x4a54a7_static_contract_implemented": true,
         "object_footprint_commit_0x4a54a7_live_caller_wired": false,
         "endpoint_helper_0x4a5e73_live_caller_wired": false,
