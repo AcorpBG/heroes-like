@@ -1263,12 +1263,21 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
-		if (!require(!owner.scan_bounds_0x20_0x2c_known
-						&& owner.scan_bound_low_x_0x20 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
-						&& owner.scan_bound_low_y_0x24 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
-						&& owner.scan_bound_high_x_0x28 == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452
-						&& owner.scan_bound_high_y_0x2c == aurelion::h3maped_rmg_core::RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452,
-					"0x49b452 relation owner default scan bounds were not preserved as unrecovered sentinels")) {
+		if (!require(owner.scan_bounds_0x20_0x2c_known
+						&& owner.scan_bound_low_x_0x20 >= 0
+						&& owner.scan_bound_low_y_0x24 >= 0
+						&& owner.scan_bound_high_x_0x28 <= generator_state.width
+						&& owner.scan_bound_high_y_0x2c <= generator_state.height
+						&& owner.scan_bound_low_x_0x20 < owner.scan_bound_high_x_0x28
+						&& owner.scan_bound_low_y_0x24 < owner.scan_bound_high_y_0x2c,
+					"0x4a1f3b relation owner scan bounds were not materialized as a valid exclusive rectangle")) {
+			return 1;
+		}
+		if (!require(owner.coordinate_x_0x10 >= owner.scan_bound_low_x_0x20
+						&& owner.coordinate_x_0x10 < owner.scan_bound_high_x_0x28
+						&& owner.coordinate_y_0x14 >= owner.scan_bound_low_y_0x24
+						&& owner.coordinate_y_0x14 < owner.scan_bound_high_y_0x2c,
+					"0x4a1f3b relation owner scan bounds do not contain the source coordinate triple")) {
 			return 1;
 		}
 		if (!require(owner.byte_0x3c_known && owner.byte_0x3c == 0U, "0x49b452 relation owner byte +0x3c was not zeroed")) {
@@ -1385,6 +1394,12 @@ int main() {
 		return 1;
 	}
 	if (!require(relation_owner_town_choice_known_count > 0, "0x49b452 relation owner town choice +0x04 was not carried from post-0x49b3c1 seed state")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_owner_scan_bounds_0x4a1f3b_applied
+					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b == generator_state.relation_owner_vector_count_10e4_10e8
+					&& generator_state.relation_owner_scan_bounds_blocked_count_0x4a1f3b == 0,
+				"0x4a1f3b relation-owner scan-bound pass did not materialize every selected relation owner")) {
 		return 1;
 	}
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {

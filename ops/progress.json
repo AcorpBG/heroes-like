@@ -12495,14 +12495,14 @@
       "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
     }
   ],
-  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x4a8db2 weighted scheduler threshold argument from source-zone town/castle density lanes, mirrors it through rmg_native_core JSON, and selftests the recovered floor(sqrt(0x14400 / positive_density_sum)) values. The relation-owner constructor no longer marks 0x49b452 scan-bound sentinels as known non-sentinel bounds. This is source-backed private-state progress only: full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path plus the 0x4a1f3b non-sentinel scan-bound writer and consumers.",
+  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now materializes recovered 0x4a1f3b non-sentinel relation-owner scan bounds from generated-cell owner-byte rectangles after owner-grid materialization and 0x4a5767 reset, mirrors the counters through rmg_native_core JSON, and selftests that every selected relation owner has a valid exclusive scan rectangle containing its source coordinate. This is source-backed private-state progress only: source-order scan consumers, 0x49a318 object-metadata branch, live object/reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run comparison, and final payload generation remain unported.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x4a8db2 weighted scheduler threshold argument from source-zone town/castle density lanes, mirrors it through rmg_native_core JSON, and selftests the recovered floor(sqrt(0x14400 / positive_density_sum)) values. The relation-owner constructor no longer marks 0x49b452 scan-bound sentinels as known non-sentinel bounds. This is source-backed private-state progress only: full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path plus the 0x4a1f3b non-sentinel scan-bound writer and consumers.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now materializes recovered 0x4a1f3b non-sentinel relation-owner scan bounds from generated-cell owner-byte rectangles after owner-grid materialization and 0x4a5767 reset, mirrors the counters through rmg_native_core JSON, and selftests that every selected relation owner has a valid exclusive scan rectangle containing its source coordinate. This is source-backed private-state progress only: source-order scan consumers, 0x49a318 object-metadata branch, live object/reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run comparison, and final payload generation remain unported.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-20T20:58:14Z",
+  "currentSliceUpdatedAt": "2026-06-20T21:30:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -50062,7 +50062,7 @@
         "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
       ],
       "latestEvidenceId": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x4a8db2 weighted scheduler threshold argument from source-zone town/castle density lanes, mirrors it through rmg_native_core JSON, and selftests the recovered floor(sqrt(0x14400 / positive_density_sum)) values. The relation-owner constructor no longer marks 0x49b452 scan-bound sentinels as known non-sentinel bounds. This is source-backed private-state progress only: full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path plus the 0x4a1f3b non-sentinel scan-bound writer and consumers.",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now materializes recovered 0x4a1f3b non-sentinel relation-owner scan bounds from generated-cell owner-byte rectangles after owner-grid materialization and 0x4a5767 reset, mirrors the counters through rmg_native_core JSON, and selftests that every selected relation owner has a valid exclusive scan rectangle containing its source coordinate. This is source-backed private-state progress only: source-order scan consumers, 0x49a318 object-metadata branch, live object/reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run comparison, and final payload generation remain unported.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -50532,7 +50532,7 @@
         "final_payload_generation_complete": false,
         "shared_core_relation_owner_constructor_0x49b452_ported": true,
         "runtime_zone_seed_source_owner_index_preserved": true,
-        "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+        "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": true,
         "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
         "object_reference_vector_contents_ported": false,
         "source_object_passability_action_masks_ported": true,
@@ -50553,7 +50553,9 @@
         "weighted_scheduler_threshold_density_total_13_arg_0x18": 79,
         "weighted_scheduler_threshold_zero_density_fails_closed": true,
         "relation_owner_constructor_0x49b452_sentinel_values_preserved": true,
-        "relation_owner_constructor_0x49b452_scan_bounds_known_after_constructor": false
+        "relation_owner_constructor_0x49b452_scan_bounds_known_after_constructor": false,
+        "relation_owner_scan_bounds_known_count_0x4a1f3b": 8,
+        "relation_owner_scan_bounds_blocked_count_0x4a1f3b": 0
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -50565,7 +50567,7 @@
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "Checkpoint 2 remains blocked by the later source-order relation/object generated-cell mutation chain, not by 0x49b452 constructor/default relation-owner state.",
-      "remainingWork": "Port non-default 0x4a1f3b relation-owner bounds/coordinate updates, source-order 0x4a5767 relation-local scan, ordered 0x49a318 propagation, object-reference vector contents, and relation/object caller order before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
+      "remainingWork": "Port the remaining live source-order scanner/materialization order: relation scan consumers after the now-native 0x4a1f3b bounds, exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
       "result": "Native RMG checkpoint 2 remains pending. The active wrapper no longer accepts --shared-runtime-input-snapshot, so stale phase snapshots cannot feed shared runtime-zone/link inputs. h3maped_rmg_core now has typed source-record producer APIs for 0x4ac62a..0x4ac6ec player-slot assignment and 0x4a218c/0x4a1f3b runtime-zone/link seed construction, and the selftest covers template-record -> seed/link -> coordinate -> owner-grid flow without Godot or map output. Runtime generation remains fail-closed.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -50576,7 +50578,7 @@
       "status": "in_progress",
       "summary": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-20T20:58:14Z",
+      "updatedAt": "2026-06-20T21:30:39Z",
       "validation": {
         "id": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
         "evidenceId": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
@@ -50709,7 +50711,7 @@
           "windows_dll_build_deferred": true
         }
       },
-      "blocker": "Port the live source-order materialization producer and scanner order: exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, real 0x4a1f3b non-sentinel scan-bound writers/consumers, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
+      "blocker": "Port the remaining live source-order scanner/materialization order: relation scan consumers after the now-native 0x4a1f3b bounds, exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
     {
       "baselineChecks": [
@@ -57082,8 +57084,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Checkpoint 2 remains blocked by active caller-order replay and real 0x4a1f3b scan-bound production; the recovered 0x4a7312 source-bounded candidate picker and typed 0x4a5e73 projection result are now ported instead of a raw acceptance proxy.",
-  "remainingWork": "Port the generic live source-order materialization producer and scanner order around the now-live 0x4a7312 picker: real 0x4a1f3b non-sentinel scan-bound writers/consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
+  "remainingGap": "Checkpoint 2 remains blocked by active caller-order replay and source-order scan/materialization consumers; the 0x4a1f3b non-sentinel relation scan-bound producer is now ported.",
+  "remainingWork": "Port the remaining live source-order scanner/materialization order: relation scan consumers after the now-native 0x4a1f3b bounds, exact 0x4a8d2c/0x4a8db2 caller feed into 0x4a901a candidate-vector construction/selection and 0x4a93a2 object-record-key creation, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -57514,7 +57516,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG checkpoint 2 remains pending. The shared h3maped_rmg_core and native mirror now preserve the recovered objects.txt passability/action masks for every 0x49da08 source object record, and core code exposes the recovered 0x490f3f 48-slot text-mask decoder. The type-98 town selftest proves the recovered row carries pass_count=35, action_count=1, decodes 13 non-passable body cells, and keeps the action cell inside that blocking body footprint. This removes the hardcoded-footprint/source-mask prerequisite for source-order materialization, but source-order object materialization itself is not complete until the live 0x4a7312/0x4a8d2c/0x4a8db2 caller order and scan bounds are ported into the active chain.",
+  "result": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now materializes recovered 0x4a1f3b non-sentinel relation-owner scan bounds from generated-cell owner-byte rectangles after owner-grid materialization and 0x4a5767 reset, mirrors the counters through rmg_native_core JSON, and selftests that every selected relation owner has a valid exclusive scan rectangle containing its source coordinate. This is source-backed private-state progress only: source-order scan consumers, 0x49a318 object-metadata branch, live object/reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run comparison, and final payload generation remain unported.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -57615,9 +57617,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x4a8db2 weighted scheduler threshold argument from source-zone town/castle density lanes, mirrors it through rmg_native_core JSON, and selftests the recovered floor(sqrt(0x14400 / positive_density_sum)) values. The relation-owner constructor no longer marks 0x49b452 scan-bound sentinels as known non-sentinel bounds. This is source-backed private-state progress only: full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path plus the 0x4a1f3b non-sentinel scan-bound writer and consumers.",
+  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now materializes recovered 0x4a1f3b non-sentinel relation-owner scan bounds from generated-cell owner-byte rectangles after owner-grid materialization and 0x4a5767 reset, mirrors the counters through rmg_native_core JSON, and selftests that every selected relation owner has a valid exclusive scan rectangle containing its source coordinate. This is source-backed private-state progress only: source-order scan consumers, 0x49a318 object-metadata branch, live object/reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run comparison, and final payload generation remain unported.",
   "taskId": "10184",
-  "updatedAt": "2026-06-20T20:58:14Z",
+  "updatedAt": "2026-06-20T21:30:39Z",
   "validation": {
     "id": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
     "evidenceId": "native-rmg-4a8db2-threshold-and-sentinel-bounds-20260620",
@@ -68777,5 +68779,5 @@
       "windows_dll_build_deferred": true
     }
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered 0x499ee8 generated-cell object-reference removal helper: known object-reference vectors are scanned for the object record key, the matching key is removed, and empty vectors clear +0x28 bit22, set +0x28 bit25, and reset the low word of +0x20 to 0x7fbc while preserving the high word. This is source-backed helper progress only; full source-order object materialization still waits on the live 0x4a8d2c/0x4a8db2 -> 0x4a901a producer/candidate-vector/object-record-key path, the 0x499ee8 callers 0x4add76/0x4af910, and the 0x4a1f3b non-sentinel scan-bound writer and consumers."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now materializes recovered 0x4a1f3b non-sentinel relation-owner scan bounds from generated-cell owner-byte rectangles after owner-grid materialization and 0x4a5767 reset, mirrors the counters through rmg_native_core JSON, and selftests that every selected relation owner has a valid exclusive scan rectangle containing its source coordinate. This is source-backed private-state progress only: source-order scan consumers, 0x49a318 object-metadata branch, live object/reward/guard materialization, endpoint +0xd8/+0xdc/+0xf5c, same-run comparison, and final payload generation remain unported."
 }

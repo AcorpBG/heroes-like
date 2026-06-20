@@ -4476,6 +4476,67 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 	return owners;
 }
 
+static bool apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(const GeneratedCellRecordGrid0x30 &grid, GeneratorRelationOwnerState4a218c &owner) {
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty() || !owner.coordinate_triple_0x10_0x18_known) {
+		return false;
+	}
+	const int64_t seed_flat = cell_index(grid.width, grid.height, owner.coordinate_x_0x10, owner.coordinate_y_0x14, owner.coordinate_level_0x18);
+	if (seed_flat < 0 || seed_flat >= int64_t(grid.records.size())) {
+		return false;
+	}
+	const GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
+	if (!seed_record.word_0x20_known) {
+		return false;
+	}
+	const int32_t owner_byte2 = generated_cell_owner_byte2_signed_4a4142(seed_record.word_0x20);
+	if (owner_byte2 < 0) {
+		return false;
+	}
+
+	int32_t low_x = grid.width;
+	int32_t low_y = grid.height;
+	int32_t high_x = -1;
+	int32_t high_y = -1;
+	for (int32_t y = 0; y < grid.height; ++y) {
+		for (int32_t x = 0; x < grid.width; ++x) {
+			const int64_t flat = cell_index(grid.width, grid.height, x, y, owner.coordinate_level_0x18);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+			if (!record.word_0x20_known || generated_cell_owner_byte2_signed_4a4142(record.word_0x20) != owner_byte2) {
+				continue;
+			}
+			low_x = std::min(low_x, x);
+			low_y = std::min(low_y, y);
+			high_x = std::max(high_x, x + 1);
+			high_y = std::max(high_y, y + 1);
+		}
+	}
+	if (high_x <= low_x || high_y <= low_y) {
+		return false;
+	}
+	owner.scan_bounds_0x20_0x2c_known = true;
+	owner.scan_bound_low_x_0x20 = low_x;
+	owner.scan_bound_low_y_0x24 = low_y;
+	owner.scan_bound_high_x_0x28 = high_x;
+	owner.scan_bound_high_y_0x2c = high_y;
+	return true;
+}
+
+static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(GeneratorObjectPrivateState &state) {
+	state.relation_owner_scan_bounds_0x4a1f3b_applied = true;
+	state.relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
+	state.relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
+	for (GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state.generated_cell_buffer, owner)) {
+			state.relation_owner_scan_bounds_known_count_0x4a1f3b += 1;
+		} else {
+			state.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
+		}
+	}
+}
+
 static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateState &state) {
 	state.endpoint_projection_records_c8_cc.clear();
 	bool projection_vectors_known = state.relation_owner_records_10e4_10e8_partial_known
@@ -4674,6 +4735,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
+	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
 			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
 	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
@@ -4693,7 +4755,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_vector_0xd8_0xdc_success_path_source_producer_unrecovered_for_live_materialization",
 		"object_record_vector_0xec4_0xecc_contents_unported_after_0x4a8db2_thresholds_until_0x4a901a_candidate_vector_append_selection_is_ported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_0x4a1f3b_scan_bounds_and_scan_consumers_unported_after_coordinate_candidate_vector_surface",
+		"relation_vector_0x10e4_0x10e8_scan_consumers_unported_after_0x4a1f3b_scan_bounds",
 		"endpoint_byte_state_vector_0x1104_0x1108_zero_init_waiting_on_source_owned_endpoint_vector_0xd8_0xdc_count",
 		"endpoint_cursor_0xf5c_success_seed_source_unrecovered_after_0xf58_zero_setup",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",

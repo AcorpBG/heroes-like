@@ -543,6 +543,9 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	for (const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : input.relation_owner_vectors_10e4_10e8) {
 		out.relation_owner_vectors_10e4_10e8.push_back(from_h3maped_generator_relation_owner_state(owner));
 	}
+	out.relation_owner_scan_bounds_0x4a1f3b_applied = input.relation_owner_scan_bounds_0x4a1f3b_applied;
+	out.relation_owner_scan_bounds_known_count_0x4a1f3b = input.relation_owner_scan_bounds_known_count_0x4a1f3b;
+	out.relation_owner_scan_bounds_blocked_count_0x4a1f3b = input.relation_owner_scan_bounds_blocked_count_0x4a1f3b;
 	out.relation_normalization_4a5767_full_grid_reset_applied = input.relation_normalization_4a5767_full_grid_reset_applied;
 	out.relation_normalization_4a5767_full_grid_reset_visited_count = input.relation_normalization_4a5767_full_grid_reset_visited_count;
 	out.relation_normalization_4a5767_full_grid_reset_changed_count = input.relation_normalization_4a5767_full_grid_reset_changed_count;
@@ -1627,10 +1630,14 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_owner_vector_count_10e4_10e8\":" << state.relation_owner_vector_count_10e4_10e8 << ","
 		<< "\"relation_record_count_10e4_10e8\":" << state.relation_record_count_10e4_10e8 << ","
 		<< "\"relation_record_missing_endpoint_count_10e4_10e8\":" << state.relation_record_missing_endpoint_count_10e4_10e8 << ","
-		<< "\"relation_record_source\":\"0x49b452_constructs_relation_owner_source_pointer_town_choice_source_owner_slot_default_scan_bounds_local_vectors_then_0x4a218c_clones_selected_relation_owners_and_0x49f7c4_appends_reciprocal_7_dword_relation_records_guard_wide_border_guard_fields\","
+		<< "\"relation_record_source\":\"0x49b452_constructs_relation_owner_source_pointer_town_choice_default_scan_bounds_local_vectors_then_0x4a1f3b_materializes_non_sentinel_scan_bounds_and_0x4a218c_clones_selected_relation_owners_and_0x49f7c4_appends_reciprocal_7_dword_relation_records_guard_wide_border_guard_fields\","
 		<< "\"relation_owner_vectors_10e4_10e8\":";
 	append_generator_relation_owner_vectors_json(out, state.relation_owner_vectors_10e4_10e8);
 	out << ","
+		<< "\"relation_owner_scan_bounds_0x4a1f3b_applied\":" << (state.relation_owner_scan_bounds_0x4a1f3b_applied ? "true" : "false") << ","
+		<< "\"relation_owner_scan_bounds_known_count_0x4a1f3b\":" << state.relation_owner_scan_bounds_known_count_0x4a1f3b << ","
+		<< "\"relation_owner_scan_bounds_blocked_count_0x4a1f3b\":" << state.relation_owner_scan_bounds_blocked_count_0x4a1f3b << ","
+		<< "\"relation_owner_scan_bounds_source\":\"0x4a1f3b_relation_owner_scan_bounds_from_generated_cell_owner_byte_rectangles_after_0x4a2777_0x4a325d_owner_grid_and_0x4a5767_reset\","
 		<< "\"relation_normalization_4a5767_full_grid_reset_applied\":" << (state.relation_normalization_4a5767_full_grid_reset_applied ? "true" : "false") << ","
 		<< "\"relation_normalization_4a5767_full_grid_reset_visited_count\":" << state.relation_normalization_4a5767_full_grid_reset_visited_count << ","
 		<< "\"relation_normalization_4a5767_full_grid_reset_changed_count\":" << state.relation_normalization_4a5767_full_grid_reset_changed_count << ","
