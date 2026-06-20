@@ -28,7 +28,10 @@ using aurelion::h3maped_rmg_core::RuntimeTerrainSelectionResult49b53d;
 using aurelion::h3maped_rmg_core::RuntimeZoneSeedInput4a218c;
 using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectCatalogSummary0x49da08;
+using aurelion::h3maped_rmg_core::SourceObjectDescriptor4903e8;
+using aurelion::h3maped_rmg_core::SourceObjectDescriptorJoinResult4903e8;
 using aurelion::h3maped_rmg_core::SourceObjectMaskLaneResult4af89f;
+using aurelion::h3maped_rmg_core::ObjectMaterializationPrep4a8db2_4a901a;
 using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
 using aurelion::h3maped_rmg_core::SourceObjectResolverResult4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverState4af785;
@@ -239,6 +242,68 @@ int main() {
 				}
 				break;
 			}
+		}
+		SourceObjectResolverState4af785 descriptor_join_state;
+		SourceObjectDescriptor4903e8 type45_descriptor;
+		type45_descriptor.target_context_0x4903e8 = 45;
+		type45_descriptor.source_key_0x00 = 0x491eed;
+		type45_descriptor.descriptor_type_0x1c = type45_records[0].type_id_0x1c;
+		type45_descriptor.subtype_0x20 = type45_records[0].subtype_0x20;
+		type45_descriptor.group_0x24 = type45_records[0].group_0x24;
+		type45_descriptor.projection_enabled_0x29 = true;
+		type45_descriptor.source_cell_x_0x2c = 1;
+		type45_descriptor.source_cell_y_0x30 = 2;
+		const SourceObjectDescriptorJoinResult4903e8 type45_join =
+				aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(descriptor_join_state, type45_descriptor, type45_records[0]);
+		if (!require(type45_join.joined
+						&& type45_join.recovered_target_context
+						&& type45_join.resolver_invoked_0x4af785
+						&& type45_join.resolver_0x4af785.created_new_wrapper,
+					"0x4903e8 descriptor/source join did not invoke 0x4af785 for recovered target context 45")) {
+			return 1;
+		}
+		if (!require(type45_join.copied_source_record_is_identity_authority
+						&& type45_join.descriptor_source_key_is_not_source_row_id
+						&& type45_join.source_record_copy.source_row == type45_records[0].source_row
+						&& type45_join.source_record_copy.def_name == type45_records[0].def_name,
+					"0x4903e8 descriptor/source join did not carry the copied 0x4c source record as identity authority")) {
+			return 1;
+		}
+		const SourceObjectDescriptorJoinResult4903e8 type45_reuse_join =
+				aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(descriptor_join_state, type45_descriptor, type45_records[0]);
+		if (!require(type45_reuse_join.joined
+						&& type45_reuse_join.resolver_0x4af785.reused_existing_wrapper
+						&& descriptor_join_state.wrappers.size() == 1
+						&& descriptor_join_state.source_pairs_0xedc.size() == 1,
+					"0x4903e8 descriptor/source join did not reuse the existing 0x4af785 copied wrapper")) {
+			return 1;
+		}
+		SourceObjectDescriptor4903e8 mine_descriptor;
+		mine_descriptor.target_context_0x4903e8 = 53;
+		mine_descriptor.source_key_0x00 = 53;
+		mine_descriptor.descriptor_type_0x1c = mine_subtype_records[0].type_id_0x1c;
+		mine_descriptor.subtype_0x20 = mine_subtype_records[0].subtype_0x20;
+		mine_descriptor.group_0x24 = mine_subtype_records[0].group_0x24;
+		const SourceObjectDescriptorJoinResult4903e8 mine_join =
+				aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(descriptor_join_state, mine_descriptor, mine_subtype_records[0]);
+		if (!require(mine_join.joined
+						&& mine_join.descriptor_only_identity_ambiguous
+						&& mine_join.copied_source_record_is_identity_authority
+						&& mine_join.source_record_copy.def_name == mine_subtype_records[0].def_name,
+					"0x4903e8 type-53 mine join did not preserve copied source record identity over descriptor-only ambiguity")) {
+			return 1;
+		}
+		SourceObjectDescriptor4903e8 unsupported_descriptor = type45_descriptor;
+		unsupported_descriptor.target_context_0x4903e8 = 199;
+		const size_t wrapper_count_before_unsupported = descriptor_join_state.wrappers.size();
+		const SourceObjectDescriptorJoinResult4903e8 unsupported_join =
+				aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(descriptor_join_state, unsupported_descriptor, type45_records[0]);
+		if (!require(!unsupported_join.joined
+						&& !unsupported_join.resolver_invoked_0x4af785
+						&& unsupported_join.blocked_reason == "0x4903e8_target_context_unrecovered_for_descriptor_source_join"
+						&& descriptor_join_state.wrappers.size() == wrapper_count_before_unsupported,
+					"0x4903e8 unsupported descriptor context mutated resolver state instead of blocking")) {
+			return 1;
 		}
 		SourceObjectRecord0x4c blank_record;
 		const SourceObjectMaskLaneResult4af89f blank_lane =
@@ -1028,6 +1093,7 @@ int main() {
 		return 1;
 	}
 	int32_t summed_relation_record_count = 0;
+	int32_t summed_source_endpoint_record_count = 0;
 	int32_t relation_owner_source_slot_known_count = 0;
 	int32_t relation_owner_town_choice_known_count = 0;
 	for (const aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : generator_state.relation_owner_vectors_10e4_10e8) {
@@ -1091,6 +1157,7 @@ int main() {
 			return 1;
 		}
 		for (const GeneratorSourceEndpointRecordState4a1f3b &endpoint_record : owner.source_endpoint_records_0xc8_0xcc) {
+			summed_source_endpoint_record_count += 1;
 			if (!require(endpoint_record.owner_runtime_zone_index == owner.runtime_zone_index
 							&& endpoint_record.owner_source_zone_id == owner.source_zone_id
 							&& endpoint_record.source_link_index >= 0
@@ -1164,6 +1231,19 @@ int main() {
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {
 		return 1;
 	}
+	if (!require(generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
+					&& generator_state.endpoint_vector_c8_cc.contents_known
+					&& generator_state.endpoint_vector_c8_cc.count_known
+					&& generator_state.endpoint_vector_c8_cc.element_size_bytes == 0x1c,
+				"generator endpoint projection vector +0xc8/+0xcc was not promoted from recovered 0x4a1f3b source endpoint records")) {
+		return 1;
+	}
+	if (!require(generator_state.endpoint_projection_vector_c8_cc_record_count == summed_source_endpoint_record_count
+					&& int32_t(generator_state.endpoint_projection_records_c8_cc.size()) == summed_source_endpoint_record_count
+					&& generator_state.endpoint_vector_c8_cc.count == summed_source_endpoint_record_count,
+				"generator endpoint projection vector +0xc8/+0xcc count does not match recovered relation-owner endpoint records")) {
+		return 1;
+	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply recovered 0x4a5767 full-grid reset")) {
 		return 1;
 	}
@@ -1192,6 +1272,11 @@ int main() {
 	if (!require(generator_state.endpoint_vector_d8_dc.present && !generator_state.endpoint_vector_d8_dc.count_known, "generator object private state must keep endpoint vector +0xd8/+0xdc unclaimed until source endpoint records are ported")) {
 		return 1;
 	}
+	if (!require(!generator_state.endpoint_cursor_vector_d8_dc_source_owned
+					&& generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
+				"generator endpoint vector +0xd8/+0xdc must stay blocked by the recovered supported-land exclusion instead of synthesized from +0xc8/+0xcc")) {
+		return 1;
+	}
 	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.present
 					&& generator_state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector
 					&& generator_state.endpoint_byte_state_vector_1104_1108.count_source_vector_label == generator_state.endpoint_vector_d8_dc.label
@@ -1203,6 +1288,26 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_cursor_0xf5c_present && !generator_state.endpoint_cursor_0xf5c_known, "generator object private state must not claim recovered 0xf5c cursor seed")) {
+		return 1;
+	}
+	if (!require(generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
+					&& generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
+					&& generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
+					&& !generator_state.endpoint_cursor_producer_d014.setup_seeds_cursor_0xf5c
+					&& !generator_state.endpoint_cursor_producer_d014.successful_cursor_0xf5c_seed_source_known
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 3,
+				"D-014 endpoint cursor producer state did not preserve the recovered +0xf5c target-mode exclusion")) {
+		return 1;
+	}
+	if (!require(generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
+					&& generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
+					&& generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
+					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
+					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
+					&& generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
+					&& !generator_state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed,
+				"D-014 connection materialization caller prep did not keep live endpoint paths blocked while preserving recovered fallback knowledge")) {
 		return 1;
 	}
 	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {
@@ -1279,6 +1384,82 @@ int main() {
 					&& commit_result.projection_score_depletion_count > 0
 					&& commit_state.projection_score_depletion_count_0x4a54a7 == commit_result.projection_score_depletion_count,
 				"0x4a54a7 did not run the descriptor +0x29 projection score-depletion wave")) {
+		return 1;
+	}
+	const std::vector<SourceObjectRecord0x4c> type54_records =
+			aurelion::h3maped_rmg_core::source_object_records_by_type_0x49da08(54);
+	if (!require(!type54_records.empty(), "0x49da08 type-54 monster source records missing for materialization prep")) {
+		return 1;
+	}
+	SourceObjectDescriptor4903e8 monster_descriptor;
+	monster_descriptor.target_context_0x4903e8 = 54;
+	monster_descriptor.source_key_0x00 = 0x491eed;
+	monster_descriptor.descriptor_type_0x1c = type54_records[0].type_id_0x1c;
+	monster_descriptor.subtype_0x20 = type54_records[0].subtype_0x20;
+	monster_descriptor.group_0x24 = type54_records[0].group_0x24;
+	monster_descriptor.projection_enabled_0x29 = true;
+	monster_descriptor.source_cell_x_0x2c = 0;
+	monster_descriptor.source_cell_y_0x30 = 0;
+	SourceObjectResolverState4af785 materialization_resolver_state;
+	const SourceObjectDescriptorJoinResult4903e8 monster_join =
+			aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(materialization_resolver_state, monster_descriptor, type54_records[0]);
+	if (!require(monster_join.joined && monster_join.resolver_invoked_0x4af785 && monster_join.copied_source_record_is_identity_authority, "0x4903e8 type-54 join did not wire 0x4af785 before materialization prep")) {
+		return 1;
+	}
+	const ObjectMaterializationPrep4a8db2_4a901a blocked_prep =
+			aurelion::h3maped_rmg_core::object_materialization_prep_from_descriptor_join_0x4a8db2_0x4a901a(monster_join, 0U, false, 2, 2, 0);
+	if (!require(!blocked_prep.ready_for_object_vector_commit_0x4a54a7
+					&& blocked_prep.blocked_reason == "0x4a8d2c_0x4a8db2_0x4a93a2_0x4a901a_object_record_key_caller_unported",
+				"materialization prep did not block when recovered weighted materialization did not supply an object-record key")) {
+		return 1;
+	}
+	const ObjectMaterializationPrep4a8db2_4a901a prepared =
+			aurelion::h3maped_rmg_core::object_materialization_prep_from_descriptor_join_0x4a8db2_0x4a901a(monster_join, 0x036260c1U, true, 2, 2, 0);
+	if (!require(prepared.ready_for_object_vector_commit_0x4a54a7
+					&& prepared.copied_source_record_carried
+					&& prepared.source_record_copy.def_name == type54_records[0].def_name
+					&& prepared.selected_wrapper_index_0x4af785 == monster_join.resolver_0x4af785.selected_wrapper_index,
+				"materialization prep did not carry selected copied 0x4c source record and resolver wrapper identity")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState prep_commit_state;
+	prep_commit_state.width = 4;
+	prep_commit_state.height = 4;
+	prep_commit_state.level_count = 1;
+	prep_commit_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(4, 4, 1);
+	prep_commit_state.generated_cell_buffer_owned = true;
+	prep_commit_state.descriptor_counter_table_0x1110_present = true;
+	prep_commit_state.descriptor_counter_table_0x1110_contents_known = true;
+	prep_commit_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	prep_commit_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	for (GeneratedCellRecord0x30 &record : prep_commit_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0x00010008U;
+		record.word_0x28_known = true;
+		record.word_0x28 = 0x12005000U;
+	}
+	const auto prepared_commit_result = aurelion::h3maped_rmg_core::object_footprint_commit_4a54a7(prep_commit_state, prepared);
+	const GeneratedCellRecord0x30 &prepared_target = prep_commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(4, 4, 2, 2, 0))];
+	if (!require(prepared_commit_result.object_vector_appended && !prep_commit_state.object_records_0xec4_ecc.empty(), "prepared object-vector commit did not append an object record")) {
+		return 1;
+	}
+	const auto &prepared_object_record = prep_commit_state.object_records_0xec4_ecc.back();
+	if (!require(prepared_commit_result.object_vector_appended
+					&& prepared_object_record.source_descriptor_join_0x4903e8_known
+					&& prepared_object_record.copied_source_record_carried
+					&& prepared_object_record.source_catalog_index_0x49da08 == monster_join.source_catalog_index_0x49da08
+					&& prepared_object_record.source_record_copy.def_name == type54_records[0].def_name,
+				"prepared object-vector commit did not preserve 0x4903e8 copied source record identity")) {
+		return 1;
+	}
+	if (!require(prepared_commit_result.generated_cell_reference_appended
+					&& prepared_target.object_reference_count == 1
+					&& prepared_target.object_references_0x04_0x08[0] == 0x036260c1U
+					&& prep_commit_state.descriptor_counter_table_0x1110[size_t(54)] == 1U,
+				"prepared object-vector commit did not feed recovered 0x4a54a7 object-reference/counter mutation")) {
 		return 1;
 	}
 	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {
