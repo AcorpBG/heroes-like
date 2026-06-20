@@ -277,6 +277,7 @@ struct CoordinateZone4a218c {
 	int32_t source_index = -1;
 	int32_t h3maped_zone_word_id = -1;
 	int32_t source_bucket = -1;
+	int32_t source_owner_index = -1;
 	int32_t actual_player_color = -1;
 	int32_t source_base_size = 0;
 	uint16_t allowed_town_mask_0x41_0x49 = 0U;
@@ -1054,6 +1055,7 @@ RuntimeZoneSeedInput4a218c runtime_seed_from_coordinate_zone_after_49b3c1(const 
 	seed.source_index = zone.source_index;
 	seed.h3maped_zone_word_id = zone.h3maped_zone_word_id;
 	seed.source_bucket = zone.source_bucket;
+	seed.source_owner_index = zone.source_owner_index;
 	seed.actual_player_color = zone.actual_player_color;
 	seed.source_base_size = zone.source_base_size;
 	seed.allowed_town_mask_0x41_0x49 = zone.allowed_town_mask_0x41_0x49;
@@ -2258,6 +2260,7 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 		seed.source_index = zone.source_index >= 0 ? zone.source_index : (zone.source_zone_id > 0 ? zone.source_zone_id - 1 : source_position);
 		seed.h3maped_zone_word_id = zone.h3maped_zone_word_id >= 0 ? zone.h3maped_zone_word_id : seed.source_index;
 		seed.source_bucket = zone.source_bucket;
+		seed.source_owner_index = zone.source_owner_index;
 		if (zone.source_owner_index >= 0 && zone.source_owner_index < int32_t(assignment.mapped_ee4_slots.size())) {
 			seed.actual_player_color = assignment.mapped_ee4_slots[size_t(zone.source_owner_index)];
 		} else {
@@ -2333,6 +2336,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		zone.source_index = input.source_index >= 0 ? input.source_index : zone.runtime_zone_index;
 		zone.h3maped_zone_word_id = input.h3maped_zone_word_id;
 		zone.source_bucket = input.source_bucket;
+		zone.source_owner_index = input.source_owner_index;
 		zone.actual_player_color = input.actual_player_color;
 		zone.source_base_size = input.source_base_size;
 		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
@@ -3300,7 +3304,41 @@ static void append_relation_record_0x49f7c4(GeneratorRelationOwnerState4a218c &o
 	owner.relation_record_count = int32_t(owner.relation_records.size());
 }
 
-static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, int32_t &missing_endpoint_count) {
+static const RuntimeZoneSeedInput4a218c *runtime_zone_after_town_choice_0x49b3c1(const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, int32_t runtime_zone_index) {
+	for (const RuntimeZoneSeedInput4a218c &zone : runtime_zones_after_0x49b3c1) {
+		if (zone.runtime_zone_index == runtime_zone_index) {
+			return &zone;
+		}
+	}
+	return nullptr;
+}
+
+static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerState4a218c &owner, const RuntimeZoneSeedInput4a218c &seed, const RuntimeZoneSeedInput4a218c *post_town_choice_seed) {
+	owner.constructor_0x49b452_known = true;
+	owner.source_pointer_0x00_known = seed.source_index >= 0;
+	owner.source_pointer_source_index_0x00 = seed.source_index;
+	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
+	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
+	owner.town_choice_0x04 = town_choice;
+	owner.source_owner_slot_0x1c_known = seed.source_owner_index >= 0;
+	owner.source_owner_slot_0x1c = seed.source_owner_index;
+	owner.scan_bounds_0x20_0x2c_known = true;
+	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	owner.scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	owner.scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	owner.byte_0x3c_known = true;
+	owner.byte_0x3c = 0U;
+	owner.descriptor_type_counter_table_0x44_known = true;
+	owner.descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
+	owner.descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
+	owner.owner_local_vector_0x3e4_count = 0;
+	owner.owner_local_vector_0x3f4_count = 0;
+	owner.owner_local_vector_0x404_count = 0;
+}
+
+static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, int32_t &missing_endpoint_count) {
 	std::vector<GeneratorRelationOwnerState4a218c> owners;
 	owners.reserve(runtime_seed.runtime_zone_seeds.size());
 	for (size_t index = 0; index < runtime_seed.runtime_zone_seeds.size(); ++index) {
@@ -3310,6 +3348,7 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 		owner.runtime_zone_index = seed.runtime_zone_index;
 		owner.source_zone_id = seed.source_zone_id;
 		owner.source_index = seed.source_index;
+		apply_relation_owner_constructor_0x49b452(owner, seed, runtime_zone_after_town_choice_0x49b3c1(runtime_zones_after_0x49b3c1, seed.runtime_zone_index));
 		owners.push_back(owner);
 	}
 
@@ -3444,6 +3483,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_owner_vectors_10e4_10e8 =
 			relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(
 					template_selection.runtime_seed,
+					coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1,
 					state.relation_record_missing_endpoint_count_10e4_10e8);
 	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
@@ -3453,7 +3493,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_vectors_0xc8_0xcc_and_0xd8_0xdc_contents_unported",
 		"object_record_vector_0xec4_0xecc_contents_unported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_full_pointer_bounds_fields_unported_after_recovered_owner_link_records",
+		"relation_vector_0x10e4_0x10e8_non_default_0x4a1f3b_bounds_updates_and_scan_consumers_unported_after_0x49b452_constructor_defaults",
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
 		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",

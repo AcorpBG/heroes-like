@@ -483,21 +483,24 @@
         "closureCriteria": "Focused Python compare reports zero unexplained pre-0x4a4c8e generated-cell word drift for the selected references before route/object adoption is treated as valid.",
         "id": "native-rmg-private-generated-cell-grid-alignment-10184",
         "latestEvidenceArtifacts": [
-          ".artifacts/rmg_full_generated_cell_words_smoke_20260619/small_2p_seed11_setup0.phase_snapshot.json",
-          ".artifacts/rmg_full_generated_cell_words_smoke_20260619/manifest.json",
-          ".artifacts/rmg_full_generated_cell_words_smoke_20260619/wrapper_manifest.json",
-          "src/gdextension/src/rmg_native_core.cpp",
+          "src/gdextension/include/h3maped_rmg_core.hpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/include/rmg_native_core.hpp",
-          "tests/validate_repo.py"
+          "src/gdextension/src/rmg_native_core.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+          "PLAN.md",
+          "docs/native-rmg-core-h3maped-drift-audit.md",
+          "docs/native-rmg-generated-cell-mutation-chain.md"
         ],
-        "latestEvidenceId": "native-rmg-generated-cell-mutation-chain-failclosed-20260619",
-        "latestFinding": "Native RMG checkpoint 2 remains pending. The generated-cell mutation chain is now written in docs/native-rmg-generated-cell-mutation-chain.md, and the no-Godot snapshot is being corrected to fail closed instead of emitting reset-filled +0x10/+0x1c/+0x24/+0x28/+0x2c as a comparable generated-cell checkpoint. Owner-grid +0x20 remains a support artifact only.",
-        "remainingWork": "Implement later relation/object generated-cell caller order from docs/native-rmg-generated-cell-mutation-chain.md before emitting any comparable pre-0x4a4c8e generated-cell checkpoint or allowing terrain, relation, object, route, package, session, or public map output to consume the support artifact.",
+        "latestEvidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
+        "remainingWork": "Port non-default 0x4a1f3b relation-owner bounds/coordinate updates, source-order 0x4a5767 relation-local scan, ordered 0x49a318 propagation, object-reference vector contents, and relation/object caller order before emitting a comparable pre-0x4a4c8e checkpoint.",
         "status": "pending",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment",
-        "updatedAt": "2026-06-19T05:36:40Z",
-        "blocker": "same-run pre-0x4a4c8e generated-cell private-state comparison and live owner-grid payload adoption are still missing",
+        "updatedAt": "2026-06-20T00:00:00Z",
+        "blocker": "later relation/object generated-cell mutation caller order remains unported",
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
@@ -515,7 +518,13 @@
           "snapshot_materialization_source_handoff_count": 5,
           "snapshot_materialization_source_record_seed_count": 5,
           "snapshot_materialization_span_fill_zone_count": 5,
-          "windows_dll_build_deferred": true
+          "windows_dll_build_deferred": true,
+          "final_payload_generation_complete": false,
+          "shared_core_relation_owner_constructor_0x49b452_ported": true,
+          "runtime_zone_seed_source_owner_index_preserved": true,
+          "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+          "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+          "object_reference_vector_contents_ported": false
         }
       },
       {
@@ -631,9 +640,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
-    "currentSliceNotes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
-    "currentSliceUpdatedAt": "2026-06-19T23:27:23Z",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
+    "currentSliceUpdatedAt": "2026-06-20T00:00:00Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -728,90 +737,46 @@
       "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
     },
     "latestEvidence": {
-      "id": "native-rmg-object-selector-surface-20260619",
-      "evidenceId": "native-rmg-object-selector-surface-20260619",
-      "timestamp": "2026-06-19T23:27:23Z",
-      "status": "pass_supporting_object_selector_surface_not_parity",
+      "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "timestamp": "2026-06-20T00:00:00Z",
+      "status": "pass_supporting_relation_owner_constructor_state_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
       "artifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
         "src/gdextension/include/rmg_native_core.hpp",
         "src/gdextension/src/rmg_native_core.cpp",
-        "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli",
-        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "PLAN.md",
-        ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
+        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "docs/native-rmg-generated-cell-mutation-chain.md"
       ],
       "checks": [
         {
-          "command": "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-          "status": "passed_debug_linux"
-        },
-        {
-          "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-          "status": "passed_release_linux"
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed"
         },
         {
           "command": "bin/h3maped_rmg_core_selftest",
-          "status": "passed"
-        },
-        {
-          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_selector_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-          "status": "expected_blocked_exit_2_no_godot_snapshot_written"
-        },
-        {
-          "command": "selector snapshot assertion for selector_samples_0x4a9e40",
-          "status": "passed"
-        },
-        {
-          "command": "python3 tests/validate_repo.py",
-          "status": "passed"
-        },
-        {
-          "command": "jq empty ops/progress.json",
-          "status": "passed"
-        },
-        {
-          "command": "git diff --check",
           "status": "passed"
         }
       ],
       "metrics": {
         "checkpoint2_complete": false,
         "godot_process_started": false,
-        "live_generation_surface_present": false,
-        "native_rmg_end_to_end_parity_complete": false,
-        "phase_snapshot_only_status_blocked": true,
-        "phase_snapshot_only_status_passed": false,
         "runtime_generation_allowed": false,
         "same_run_private_state_compare_passed": false,
-        "source_object_catalog_record_count": 1328,
-        "wrapper_bucket_count_0xe8": 232,
-        "wrapper_initialized_bucket_count": 232,
-        "wrapper_non_empty_bucket_count": 8,
-        "wrapper_total_source_record_references": 1328,
-        "wrapper_out_of_range_source_record_count": 0,
-        "wrapper_max_bucket_index_0x08": 0,
-        "wrapper_max_bucket_record_count": 1252,
-        "wrapper_raw_type_bucket_model_removed": true,
-        "selector_samples_0x4a9e40_count": 3,
-        "selector_sample_rng_value_seed10": 71,
-        "selector_sample_no_candidate_consumed_rng": false,
-        "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
-        "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
-        "wrapper_selector_0x4af785_live_chain_ported": false,
-        "descriptor_join_0x4903e8_ported": false,
-        "object_materialization_ported": false,
-        "windows_dll_build_deferred": true
+        "final_payload_generation_complete": false,
+        "shared_core_relation_owner_constructor_0x49b452_ported": true,
+        "runtime_zone_seed_source_owner_index_preserved": true,
+        "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+        "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+        "object_reference_vector_contents_ported": false
       },
-      "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
+      "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
     },
     "latestEvidenceArtifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -819,16 +784,12 @@
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/include/rmg_native_core.hpp",
       "src/gdextension/src/rmg_native_core.cpp",
-      "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli",
-      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-      "docs/native-rmg-core-h3maped-drift-audit.md",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
+      "docs/native-rmg-core-h3maped-drift-audit.md",
+      "docs/native-rmg-generated-cell-mutation-chain.md"
     ],
-    "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
+    "latestEvidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -1516,7 +1477,13 @@
       "snapshot_word_0x20_hash_fnv1a64": 0,
       "snapshot_materialization_source_handoff_count": 5,
       "snapshot_materialization_source_record_seed_count": 5,
-      "snapshot_materialization_span_fill_zone_count": 5
+      "snapshot_materialization_span_fill_zone_count": 5,
+      "final_payload_generation_complete": false,
+      "shared_core_relation_owner_constructor_0x49b452_ported": true,
+      "runtime_zone_seed_source_owner_index_preserved": true,
+      "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+      "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+      "object_reference_vector_contents_ported": false
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -1527,8 +1494,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Missing H3MapEd generated-cell mutating phases listed in docs/native-rmg-generated-cell-mutation-chain.md are not yet implemented end to end.",
-    "remainingWork": "Implement later relation/object generated-cell caller order from docs/native-rmg-generated-cell-mutation-chain.md before emitting any comparable pre-0x4a4c8e generated-cell checkpoint or allowing terrain, relation, object, route, package, session, or public map output to consume the support artifact.",
+    "remainingGap": "Checkpoint 2 remains blocked by the later source-order relation/object generated-cell mutation chain, not by 0x49b452 constructor/default relation-owner state.",
+    "remainingWork": "Port non-default 0x4a1f3b relation-owner bounds/coordinate updates, source-order 0x4a5767 relation-local scan, ordered 0x49a318 propagation, object-reference vector contents, and relation/object caller order before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
     "result": "Native RMG checkpoint 2 remains pending. The generated-cell phase ledger is now explicit, and native is being corrected to fail closed instead of exposing a reset-plus-owner-word private-state checkpoint.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -1537,7 +1504,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG checkpoint 2 remains pending. The reset-plus-owner-word checkpoint surface is no longer considered comparable; owner-grid +0x20 is support state only until the full H3MapEd generated-cell mutation chain is implemented.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -1550,154 +1517,92 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-19T04:07:43Z",
+    "updatedAt": "2026-06-20T00:00:00Z",
     "validation": {
-      "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
-      "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
-      "timestamp": "2026-06-19T23:06:47Z",
-      "status": "pass_supporting_object_bucket_identity_not_parity",
+      "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "timestamp": "2026-06-20T00:00:00Z",
+      "status": "pass_supporting_relation_owner_constructor_state_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Native RMG D-011 reduced further: shared core and no-Godot blocked snapshot now preserve recovered 0x49da08 object source-record catalog plus metadata +0x08 0xe8 0x49db76 wrapper bucket lanes (232 initialized, 8 non-empty, 1328 refs, max bucket 0 has 1252 refs, no out-of-range metadata buckets). Source selection 0x4af785/0x4af89f/0x4a9e40, 0x4903e8 descriptor joins, selected copied records, object vectors, and materialization remain blockers.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
       "artifacts": [
-        "tools/generate_h3maped_rmg_object_catalog_cpp.py",
         "src/gdextension/include/h3maped_rmg_core.hpp",
-        "src/gdextension/include/rmg_native_core.hpp",
-        "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
         "src/gdextension/src/rmg_native_core.cpp",
-        "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli",
-        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "PLAN.md",
-        ".artifacts/rmg_native_cli_metadata_bucket_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_cli_metadata_bucket_smoke/manifest.json"
+        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "docs/native-rmg-generated-cell-mutation-chain.md"
       ],
       "checks": [
         {
-          "command": "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-          "status": "passed_debug_linux"
-        },
-        {
-          "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-          "status": "passed_release_linux"
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed"
         },
         {
           "command": "bin/h3maped_rmg_core_selftest",
-          "status": "passed"
-        },
-        {
-          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_metadata_bucket_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-          "status": "expected_blocked_exit_2_no_godot_snapshot_written"
-        },
-        {
-          "command": "metadata bucket snapshot assertion for source_object_record_catalog_0x49da08",
-          "status": "passed"
-        },
-        {
-          "command": "python3 -m py_compile tools/generate_h3maped_rmg_object_catalog_cpp.py",
-          "status": "passed"
-        },
-        {
-          "command": "python3 tests/validate_repo.py",
-          "status": "passed"
-        },
-        {
-          "command": "jq empty ops/progress.json",
-          "status": "passed"
-        },
-        {
-          "command": "git diff --check",
           "status": "passed"
         }
       ],
       "metrics": {
         "checkpoint2_complete": false,
         "godot_process_started": false,
-        "live_generation_surface_present": false,
-        "native_rmg_end_to_end_parity_complete": false,
-        "phase_snapshot_only_status_blocked": true,
-        "phase_snapshot_only_status_passed": false,
         "runtime_generation_allowed": false,
         "same_run_private_state_compare_passed": false,
-        "source_object_catalog_record_count": 1328,
-        "wrapper_bucket_count_0xe8": 232,
-        "wrapper_initialized_bucket_count": 232,
-        "wrapper_non_empty_bucket_count": 8,
-        "wrapper_total_source_record_references": 1328,
-        "wrapper_out_of_range_source_record_count": 0,
-        "wrapper_max_bucket_index_0x08": 0,
-        "wrapper_max_bucket_record_count": 1252,
-        "wrapper_raw_type_bucket_model_removed": true,
-        "wrapper_selector_0x4af785_0x4af89f_0x4a9e40_ported": false,
-        "descriptor_join_0x4903e8_ported": false,
-        "object_materialization_ported": false,
-        "windows_dll_build_deferred": true
+        "final_payload_generation_complete": false,
+        "shared_core_relation_owner_constructor_0x49b452_ported": true,
+        "runtime_zone_seed_source_owner_index_preserved": true,
+        "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+        "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+        "object_reference_vector_contents_ported": false
       },
-      "blocker": "wrapper/source selector calls, descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
+      "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
     },
     "validationResults": {
-      "id": "native-rmg-source-order-4a3710-finalizer-20260619",
-      "evidenceId": "native-rmg-source-order-4a3710-finalizer-20260619",
-      "timestamp": "2026-06-19T03:39:00Z",
-      "status": "pass_supporting_checkpoint_not_parity",
+      "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "timestamp": "2026-06-20T00:00:00Z",
+      "status": "pass_supporting_relation_owner_constructor_state_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Native RMG checkpoint 2 remains pending. The active shared H3MapEd chain now executes the recovered one-level land 0x4a3710 finalizer after 0x4a2777 -> 0x4a325d. Medium seed-10 setup0 confirms 10 original/final zones, 0 appended zones, 10 order-reset calls, and 10 per-zone rebuild calls, but same-run private-state comparison still mismatches H3MapEd (owner_byte2_signed_mismatch=4396, word_0x20_mismatch=5184). Runtime output remains blocked.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
       "artifacts": [
-        ".artifacts/rmg_current_medium_hc4_4a3710_20260619/medium_4p_seed10_hc4_setup0.phase_snapshot.json",
-        ".artifacts/rmg_current_medium_hc4_4a3710_20260619/private_state_compare_hc4_setup0_after_boundary_span_fill_owner_words.json",
-        ".artifacts/rmg_current_medium_hc4_4a3710_20260619/manifest.json",
-        "src/gdextension/src/rmg_native_core.cpp",
-        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
-        "src/gdextension/include/h3maped_rmg_core.hpp"
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "PLAN.md",
+        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "docs/native-rmg-generated-cell-mutation-chain.md"
       ],
       "checks": [
         {
-          "command": "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
           "status": "passed"
         },
         {
           "command": "bin/h3maped_rmg_core_selftest",
           "status": "passed"
-        },
-        {
-          "command": "python3 tools/rmg_native_batch_export.py --runner native-cli --phase-snapshot-only --controlled-case medium_4p_seed10_hc4_setup0:medium:4:10:land:1:4:0:0 --out .artifacts/rmg_current_medium_hc4_4a3710_20260619 --print-manifest",
-          "status": "expected_blocked_no_godot_one_snapshot"
-        },
-        {
-          "command": "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_current_medium_hc4_4a3710_20260619/medium_4p_seed10_hc4_setup0.phase_snapshot.json --native-checkpoint-id after_boundary_span_fill_owner_words --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --expected-template-zone-count 10 --max-mismatches 20 --out .artifacts/rmg_current_medium_hc4_4a3710_20260619/private_state_compare_hc4_setup0_after_boundary_span_fill_owner_words.json",
-          "status": "expected_mismatch_checkpoint2_still_pending"
         }
       ],
       "metrics": {
         "checkpoint2_complete": false,
         "godot_process_started": false,
-        "live_generation_surface_present": false,
-        "native_rmg_end_to_end_parity_complete": false,
-        "phase_snapshot_only_status_blocked": true,
-        "phase_snapshot_only_status_passed": false,
         "runtime_generation_allowed": false,
         "same_run_private_state_compare_passed": false,
-        "shared_core_full_generated_cell_word_checkpoint_surface": true,
-        "snapshot_generated_cell_record_count": 5184,
-        "snapshot_materialization_source_handoff_count": 10,
-        "snapshot_materialization_source_record_seed_count": 10,
-        "snapshot_materialization_span_fill_zone_count": 10,
-        "footprint_finalizer_4a3710_executed": true,
-        "footprint_finalizer_4a3710_blocked": false,
-        "footprint_finalizer_4a3710_appended_runtime_zone_count": 0,
-        "footprint_finalizer_4a3710_zone_order_reset_call_count": 10,
-        "footprint_finalizer_4a3710_per_zone_order_helper_call_count": 10,
-        "medium_hc4_owner_byte2_signed_mismatch_after_4a3710": 4396,
-        "medium_hc4_word_0x20_mismatch_after_4a3710": 5184,
-        "windows_dll_build_deferred": true
+        "final_payload_generation_complete": false,
+        "shared_core_relation_owner_constructor_0x49b452_ported": true,
+        "runtime_zone_seed_source_owner_index_preserved": true,
+        "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+        "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+        "object_reference_vector_contents_ported": false
       },
-      "blocker": "same-run pre-0x4a4c8e generated-cell private-state comparison and live owner-grid payload adoption are still missing",
-      "remainingWork": "Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, reconstructed runtime-zone seed fallbacks, or Windows DLL churn."
+      "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
     },
-    "latestFinding": "Native RMG checkpoint 2 remains pending. The no-Godot shared H3MapEd chain checkpoint now carries the full recovered generated-cell word surface: reset-owned +0x10/+0x1c/+0x24/+0x28/+0x2c from 0x49a072 -> 0x499ea3 plus owner-grid +0x20 from 0x4a2777 -> 0x4a325d. The Small seed-11 setup0 blocked snapshot has 1296 records with all six word fields and FNV hashes for +0x10/+0x1c/+0x20. This is checkpoint-surface completeness only; parity/output remain blocked until same-run private-state comparison passes and the matched owner grid becomes live payload."
+    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers."
   },
   "completedImplementationEvidence": [
     {
@@ -12314,14 +12219,14 @@
       "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
     }
   ],
-  "currentNotes": "Native RMG checkpoint 2 remains pending. The shared core now carries recovered source-zone town/terrain bytes, interleaves 0x49b3c1 town choice, runs 0x49b53d terrain selection, applies 0x4a3f27 terrain repaint, and runs TerrainPlacement visual row/flag selection through 0x4bb74b/0x4bad0f/0x4bcfc3/0x4bce6d into generated-cell +0x24/+0x28 support words, with final-sweep current-record preservation through 0x4bc5a3 for corrected-class 0x4bbfcc cases without direct row buckets. Full comparable pre-0x4a4c8e parity remains blocked by later relation/object caller order; runtime map output remains fail-closed.",
+  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-19T23:27:23Z",
+  "currentSliceUpdatedAt": "2026-06-20T00:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -15681,100 +15586,46 @@
     "blocker": "endpoint vector contents, object vector contents, relation vector contents, endpoint byte-state vector contents, descriptor counter contents, source-order relation/object generated-cell mutations, live 0x4af785 resolver wiring into materialization, 0x4903e8 descriptor/source joins, same-run private-state comparison, and final payload generation remain unported"
   },
   "latestEvidence": {
-    "id": "native-rmg-generator-object-private-state-surface-20260619",
-    "evidenceId": "native-rmg-generator-object-private-state-surface-20260619",
-    "timestamp": "2026-06-19T23:58:12Z",
-    "status": "pass_supporting_generator_object_private_state_surface_not_parity",
+    "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+    "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+    "timestamp": "2026-06-20T00:00:00Z",
+    "status": "pass_supporting_relation_owner_constructor_state_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG D-006/D-022 reduced further: shared core now builds a recovered generator-object private-state carrier with generated-cell buffer +0x14, dimensions +0x18/+0x1c/+0x20, accepted candidate-vector count, source-owner/player-slot counts, and explicit present-but-unowned endpoint/object/relation/byte-state/descriptor-counter vectors. The no-Godot blocked snapshot emits generator_object_private_state and sources the partial generated-cell record surface from that carrier. Endpoint vector contents, object vector contents, relation vector contents, descriptor counters, source-order relation/object mutations, same-run private-state comparison, and final payload generation remain blockers.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/include/rmg_native_core.hpp",
       "src/gdextension/src/rmg_native_core.cpp",
-      "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli",
-      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-      "docs/native-rmg-core-h3maped-drift-audit.md",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md",
-      ".artifacts/rmg_native_cli_generator_state_smoke/small_2p_seed58_setup3.phase_snapshot.json"
+      "docs/native-rmg-core-h3maped-drift-audit.md",
+      "docs/native-rmg-generated-cell-mutation-chain.md"
     ],
     "checks": [
       {
-        "command": "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-        "status": "passed_debug_linux"
-      },
-      {
-        "command": "cmake --build .artifacts/map_persistence_native_build_release --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2",
-        "status": "passed_release_linux"
+        "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+        "status": "passed"
       },
       {
         "command": "bin/h3maped_rmg_core_selftest",
-        "status": "passed"
-      },
-      {
-        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_cli_generator_state_smoke --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-        "status": "expected_blocked_exit_2_no_godot_snapshot_written"
-      },
-      {
-        "command": "generator object private-state snapshot assertion",
-        "status": "passed"
-      },
-      {
-        "command": "python3 tests/validate_repo.py",
-        "status": "passed"
-      },
-      {
-        "command": "jq empty ops/progress.json",
-        "status": "passed"
-      },
-      {
-        "command": "git diff --check",
         "status": "passed"
       }
     ],
     "metrics": {
       "checkpoint2_complete": false,
       "godot_process_started": false,
-      "live_generation_surface_present": false,
-      "native_rmg_end_to_end_parity_complete": false,
-      "phase_snapshot_only_status_blocked": true,
-      "phase_snapshot_only_status_passed": false,
       "runtime_generation_allowed": false,
       "same_run_private_state_compare_passed": false,
-      "generator_object_private_state_present": true,
-      "generator_object_generated_cell_buffer_offset_0x14": true,
-      "generator_object_dimensions_0x18_0x1c_0x20_present": true,
-      "generator_object_generated_cell_buffer_record_count": 1296,
-      "generator_object_candidate_container_count_0x10d4_0x10d8": 21,
-      "generator_object_source_owner_player_slot_counts_present": true,
-      "generator_object_endpoint_vector_contents_known": false,
-      "generator_object_object_vector_contents_known": false,
-      "generator_object_relation_vector_contents_known": false,
-      "generator_object_descriptor_counter_contents_known": false,
-      "source_object_catalog_record_count": 1328,
-      "wrapper_bucket_count_0xe8": 232,
-      "wrapper_initialized_bucket_count": 232,
-      "wrapper_non_empty_bucket_count": 8,
-      "wrapper_total_source_record_references": 1328,
-      "wrapper_out_of_range_source_record_count": 0,
-      "wrapper_max_bucket_index_0x08": 0,
-      "wrapper_max_bucket_record_count": 1252,
-      "resolver_samples_0x4af785_count": 3,
-      "resolver_sample_create_count": 2,
-      "resolver_sample_reuse_count": 1,
-      "selector_samples_0x4a9e40_count": 3,
-      "mask_lane_selector_0x4af89f_ported_as_support_surface": true,
-      "wrapper_selector_0x4a9e40_ported_as_support_surface": true,
-      "wrapper_resolver_0x4af785_ported_as_support_surface": true,
-      "wrapper_resolver_0x4af785_live_materialization_wiring_ported": false,
-      "descriptor_join_0x4903e8_ported": false,
-      "object_materialization_ported": false,
-      "windows_dll_build_deferred": true
+      "final_payload_generation_complete": false,
+      "shared_core_relation_owner_constructor_0x49b452_ported": true,
+      "runtime_zone_seed_source_owner_index_preserved": true,
+      "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+      "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+      "object_reference_vector_contents_ported": false
     },
-    "blocker": "endpoint vector contents, object vector contents, relation vector contents, endpoint byte-state vector contents, descriptor counter contents, source-order relation/object generated-cell mutations, live 0x4af785 resolver wiring into materialization, 0x4903e8 descriptor/source joins, same-run private-state comparison, and final payload generation remain unported"
+    "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
   },
   "latestEvidenceArtifacts": [
     "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -15782,16 +15633,12 @@
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
     "src/gdextension/include/rmg_native_core.hpp",
     "src/gdextension/src/rmg_native_core.cpp",
-    "bin/h3maped_rmg_core_selftest",
-    "bin/rmg_native_batch_export_cli",
-    "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-    "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-    "docs/native-rmg-core-h3maped-drift-audit.md",
+    "src/gdextension/src/rmg_native_batch_export_cli.cpp",
     "PLAN.md",
-    ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-    ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
+    "docs/native-rmg-core-h3maped-drift-audit.md",
+    "docs/native-rmg-generated-cell-mutation-chain.md"
   ],
-  "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
+  "latestEvidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -49504,20 +49351,33 @@
             "src/gdextension/include/h3maped_rmg_core.hpp",
             "src/gdextension/src/h3maped_rmg_core.cpp",
             "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-            "tools/rmg_native_batch_export.py",
-            "tests/validate_repo.py",
+            "src/gdextension/include/rmg_native_core.hpp",
+            "src/gdextension/src/rmg_native_core.cpp",
+            "src/gdextension/src/rmg_native_batch_export_cli.cpp",
             "PLAN.md",
-            "docs/rmg-python-validation-workflow.md",
-            ".artifacts/rmg_no_snapshot_bridge_smoke_20260618/wrapper_manifest.json",
-            ".artifacts/rmg_no_snapshot_bridge_smoke_20260618/manifest.json",
-            ".artifacts/rmg_no_snapshot_bridge_smoke_20260618/small_3p_seed_11_controlled.phase_snapshot.json"
+            "docs/native-rmg-core-h3maped-drift-audit.md",
+            "docs/native-rmg-generated-cell-mutation-chain.md"
           ],
-          "latestEvidenceId": "native-rmg-template-seed-producer-no-snapshot-bridge-20260618",
-          "latestFinding": "Native RMG checkpoint 2 remains pending. The active wrapper no longer accepts --shared-runtime-input-snapshot, so stale phase snapshots cannot feed shared runtime-zone/link inputs. h3maped_rmg_core now has typed source-record producer APIs for 0x4ac62a..0x4ac6ec player-slot assignment and 0x4a218c/0x4a1f3b runtime-zone/link seed construction, and the selftest covers template-record -> seed/link -> coordinate -> owner-grid flow without Godot or map output. Runtime generation remains fail-closed.",
-          "remainingWork": "Feed exact same-run H3MapEd template selection/catalog records into the typed producer so the shared coordinate-to-owner-grid chain becomes the native live owner-grid payload, then pass same-run pre-0x4a4c8e generated-cell private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
+          "latestEvidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+          "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
+          "remainingWork": "Port non-default 0x4a1f3b relation-owner bounds/coordinate updates, source-order 0x4a5767 relation-local scan, ordered 0x49a318 propagation, object-reference vector contents, and relation/object caller order before emitting a comparable pre-0x4a4c8e checkpoint.",
           "status": "pending",
           "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
-          "title": "Private generated-cell grid alignment"
+          "title": "Private generated-cell grid alignment",
+          "updatedAt": "2026-06-20T00:00:00Z",
+          "blocker": "later relation/object generated-cell mutation caller order remains unported",
+          "metrics": {
+            "checkpoint2_complete": false,
+            "godot_process_started": false,
+            "runtime_generation_allowed": false,
+            "same_run_private_state_compare_passed": false,
+            "final_payload_generation_complete": false,
+            "shared_core_relation_owner_constructor_0x49b452_ported": true,
+            "runtime_zone_seed_source_owner_index_preserved": true,
+            "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+            "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+            "object_reference_vector_contents_ported": false
+          }
         },
         {
           "closureCriteria": "Selected reward/object descriptor and copied source-record identity match the recovered same-run stream through materialization for the selected references.",
@@ -49578,9 +49438,9 @@
       ],
       "classification": "implementation_slice",
       "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-      "currentNotes": "Native RMG checkpoint 2 remains pending. The active wrapper no longer accepts --shared-runtime-input-snapshot, so stale phase snapshots cannot feed shared runtime-zone/link inputs. h3maped_rmg_core now has typed source-record producer APIs for 0x4ac62a..0x4ac6ec player-slot assignment and 0x4a218c/0x4a1f3b runtime-zone/link seed construction, and the selftest covers template-record -> seed/link -> coordinate -> owner-grid flow without Godot or map output. Runtime generation remains fail-closed.",
-      "currentSliceNotes": "Native RMG checkpoint 2 remains pending. The active wrapper no longer accepts --shared-runtime-input-snapshot, so stale phase snapshots cannot feed shared runtime-zone/link inputs. h3maped_rmg_core now has typed source-record producer APIs for 0x4ac62a..0x4ac6ec player-slot assignment and 0x4a218c/0x4a1f3b runtime-zone/link seed construction, and the selftest covers template-record -> seed/link -> coordinate -> owner-grid flow without Godot or map output. Runtime generation remains fail-closed.",
-      "currentSliceUpdatedAt": "2026-06-18T22:00:09Z",
+      "currentNotes": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
+      "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
+      "currentSliceUpdatedAt": "2026-06-20T00:00:00Z",
       "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation. Do not reopen reverse engineering unless Python/Ghidra evidence contradicts the authority artifacts, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
@@ -49642,58 +49502,46 @@
         "validatedAt": "2026-06-18T22:00:09Z"
       },
       "latestEvidence": {
-        "id": "native-rmg-4cca55-source-cycle-identity-handoff-20260619",
-        "evidenceId": "native-rmg-4cca55-source-cycle-identity-handoff-20260619",
+        "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "timestamp": "2026-06-20T00:00:00Z",
+        "status": "pass_supporting_relation_owner_constructor_state_not_parity",
         "sliceId": "rmg-small-generalization-hardening-10184",
-        "status": "pass_supporting_checkpoint_not_parity",
-        "date": "2026-06-19",
-        "recordedAt": "2026-06-19T01:54:28Z",
-        "summary": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core now preserves descriptor-cycle identity through the 0x4cca55 -> 0x4a2777 handoff: BoundaryCyclePoint4a2777 carries source descriptor link indexes, raw +0x00/+0x04 coordinates, and finalized +0x1c/+0x20 coordinates instead of collapsing to finalized x/y only. The no-Godot Small seed-11 setup0 snapshot remains blocked/no-output and reports 5 source handoffs, 24 descriptor-indexed handoff points, 24 raw-coordinate handoff points, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones.",
-        "checks": [
-          "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed; covers descriptor indexes plus raw/finalized coordinate preservation through 0x4cca55 -> 0x4a2777 handoff)",
-          "python3 tools/rmg_native_batch_export.py --runner native-cli --phase-snapshot-only --controlled-case small_2p_seed11_setup0:small:2:11:land:1:2:0:0 --out .artifacts/rmg_source_descriptor_identity_smoke_20260619 --print-manifest (expected blocked wrapper exit; no Godot; one snapshot written)",
-          "jq snapshot check for .artifacts/rmg_source_descriptor_identity_smoke_20260619/small_2p_seed11_setup0.phase_snapshot.json (passed; source handoffs 5, descriptor-indexed handoff points 24, raw-coordinate handoff points 24, source-record seeds 5, missing source-record seeds 0, span-fill zones 5, generated-cell word_0x20 count 1296)"
-        ],
+        "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
         "artifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/include/rmg_native_core.hpp",
           "src/gdextension/src/rmg_native_core.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "PLAN.md",
-          "docs/native-rmg-small-h3maped-reset.md",
-          "docs/rmg-python-validation-workflow.md",
-          ".artifacts/rmg_source_descriptor_identity_smoke_20260619/wrapper_manifest.json",
-          ".artifacts/rmg_source_descriptor_identity_smoke_20260619/manifest.json",
-          ".artifacts/rmg_source_descriptor_identity_smoke_20260619/small_2p_seed11_setup0.phase_snapshot.json"
+          "docs/native-rmg-core-h3maped-drift-audit.md",
+          "docs/native-rmg-generated-cell-mutation-chain.md"
+        ],
+        "checks": [
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+            "status": "passed"
+          },
+          {
+            "command": "bin/h3maped_rmg_core_selftest",
+            "status": "passed"
+          }
         ],
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
-          "live_generation_surface_present": false,
-          "native_rmg_end_to_end_parity_complete": false,
-          "phase_snapshot_only_status_blocked": true,
-          "phase_snapshot_only_status_passed": false,
           "runtime_generation_allowed": false,
           "same_run_private_state_compare_passed": false,
-          "shared_core_4cca55_source_cycle_identity_preserved": true,
-          "shared_core_4a2777_cycle_no_longer_flattens_source_identity_to_xy_only": true,
-          "snapshot_materialization_source_handoff_count": 5,
-          "snapshot_materialization_source_handoff_descriptor_indexed_point_count": 24,
-          "snapshot_materialization_source_handoff_raw_coordinate_point_count": 24,
-          "snapshot_materialization_source_record_seed_count": 5,
-          "snapshot_materialization_missing_source_record_seed_count": 0,
-          "snapshot_materialization_span_fill_zone_count": 5,
-          "windows_dll_build_deferred": true
+          "final_payload_generation_complete": false,
+          "shared_core_relation_owner_constructor_0x49b452_ported": true,
+          "runtime_zone_seed_source_owner_index_preserved": true,
+          "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+          "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+          "object_reference_vector_contents_ported": false
         },
-        "blocker": "same-run pre-0x4a4c8e generated-cell private-state comparison and live owner-grid payload adoption are still missing",
-        "remainingWork": "Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, reconstructed runtime-zone seed fallbacks, or Windows DLL churn.",
-        "implementationChanged": true,
-        "nativeBehaviorChanged": true,
-        "phase": "Phase 5 - Playable Alpha Baseline",
-        "runtimeGenerationAllowed": false,
-        "godotProcessStarted": false
+        "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
       },
       "latestEvidenceArtifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -49701,17 +49549,13 @@
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
         "src/gdextension/include/rmg_native_core.hpp",
         "src/gdextension/src/rmg_native_core.cpp",
-        "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli",
-        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
-        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "PLAN.md",
-        ".artifacts/rmg_native_cli_selector_smoke/small_2p_seed58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_cli_selector_smoke/manifest.json"
+        "docs/native-rmg-core-h3maped-drift-audit.md",
+        "docs/native-rmg-generated-cell-mutation-chain.md"
       ],
-      "latestEvidenceId": "native-rmg-object-selector-surface-20260619",
-      "latestFinding": "Native RMG D-011 reduced further: shared core now implements recovered 0x4af89f source mask-lane scan and 0x4a9e40 metadata-bucket/source-field/mask RNG selector samples, and the no-Godot blocked snapshot emits selector_samples_0x4a9e40. Live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain blockers.",
+      "latestEvidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -50177,7 +50021,13 @@
         "snapshot_word_0x20_hash_fnv1a64": 13249429473879865537,
         "snapshot_materialization_source_handoff_count": 5,
         "snapshot_materialization_source_record_seed_count": 5,
-        "snapshot_materialization_span_fill_zone_count": 5
+        "snapshot_materialization_span_fill_zone_count": 5,
+        "final_payload_generation_complete": false,
+        "shared_core_relation_owner_constructor_0x49b452_ported": true,
+        "runtime_zone_seed_source_owner_index_preserved": true,
+        "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+        "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+        "object_reference_vector_contents_ported": false
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -50188,8 +50038,8 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-      "remainingGap": "Feed exact same-run H3MapEd template selection/catalog records into the typed producer so the shared coordinate-to-owner-grid chain becomes the native live owner-grid payload, then pass same-run pre-0x4a4c8e generated-cell private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
-      "remainingWork": "Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, reconstructed runtime-zone seed fallbacks, or Windows DLL churn.",
+      "remainingGap": "Checkpoint 2 remains blocked by the later source-order relation/object generated-cell mutation chain, not by 0x49b452 constructor/default relation-owner state.",
+      "remainingWork": "Port non-default 0x4a1f3b relation-owner bounds/coordinate updates, source-order 0x4a5767 relation-local scan, ordered 0x49a318 propagation, object-reference vector contents, and relation/object caller order before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
       "result": "Native RMG checkpoint 2 remains pending. The active wrapper no longer accepts --shared-runtime-input-snapshot, so stale phase snapshots cannot feed shared runtime-zone/link inputs. h3maped_rmg_core now has typed source-record producer APIs for 0x4ac62a..0x4ac6ec player-slot assignment and 0x4a218c/0x4a1f3b runtime-zone/link seed construction, and the selftest covers template-record -> seed/link -> coordinate -> owner-grid flow without Godot or map output. Runtime generation remains fail-closed.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -50198,113 +50048,92 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core now preserves descriptor-cycle identity through the 0x4cca55 -> 0x4a2777 handoff: BoundaryCyclePoint4a2777 carries source descriptor link indexes, raw +0x00/+0x04 coordinates, and finalized +0x1c/+0x20 coordinates instead of collapsing to finalized x/y only. The no-Godot Small seed-11 setup0 snapshot remains blocked/no-output and reports 5 source handoffs, 24 descriptor-indexed handoff points, 24 raw-coordinate handoff points, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-19T23:27:23Z",
+      "updatedAt": "2026-06-20T00:00:00Z",
       "validation": {
-        "id": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
-        "evidenceId": "native-rmg-4a3a03-source-record-seed-handoff-20260619",
+        "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "timestamp": "2026-06-20T00:00:00Z",
+        "status": "pass_supporting_relation_owner_constructor_state_not_parity",
         "sliceId": "rmg-small-generalization-hardening-10184",
-        "status": "pass_supporting_checkpoint_not_parity",
-        "date": "2026-06-19",
-        "recordedAt": "2026-06-19T00:00:00Z",
-        "summary": "Native RMG checkpoint 2 remains pending. The shared recovered H3MapEd core no longer feeds 0x4a325d from a reconstructed runtime-zone seed field: BoundarySourceCycleHandoff4a2777 and RuntimeZoneBoundaryInput4a3a03 now carry the selected 0x4a3a03 generator+0x10e4 source-record vector index and source-record +0x10/+0x14/+0x18 seed, boundary_cycles_from_source_handoffs_4a2777 converts only that source-record seed into the 0x4a325d span seed, and missing source-record seeds are counted without substitution. The no-Godot Small seed-11 setup0 snapshot remains blocked/no-output and reports 5 source handoffs, 5 source-record seeds, 0 missing source-record seeds, and 5 span-fill zones.",
-        "checks": [
-          "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed; covers source-record +0x10 seed conversion and verifies missing source-record seeds do not span-fill from reconstructed fallback)",
-          "python3 tools/rmg_native_batch_export.py --runner native-cli --phase-snapshot-only --controlled-case small_2p_seed11_setup0:small:2:11:land:1:2:0:0 --out .artifacts/rmg_source_record_seed_4a325d_smoke_20260619 --print-manifest (expected blocked wrapper exit; no Godot; one snapshot written)",
-          "jq snapshot check for .artifacts/rmg_source_record_seed_4a325d_smoke_20260619/small_2p_seed11_setup0.phase_snapshot.json (passed; source handoffs 5, source-record seeds 5, missing source-record seeds 0, span-fill zones 5, generated-cell word_0x20 count 1296)"
-        ],
+        "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
         "artifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/include/rmg_native_core.hpp",
           "src/gdextension/src/rmg_native_core.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "PLAN.md",
-          "docs/native-rmg-small-h3maped-reset.md",
-          "docs/rmg-python-validation-workflow.md",
-          ".artifacts/rmg_source_record_seed_4a325d_smoke_20260619/wrapper_manifest.json",
-          ".artifacts/rmg_source_record_seed_4a325d_smoke_20260619/manifest.json",
-          ".artifacts/rmg_source_record_seed_4a325d_smoke_20260619/small_2p_seed11_setup0.phase_snapshot.json"
+          "docs/native-rmg-core-h3maped-drift-audit.md",
+          "docs/native-rmg-generated-cell-mutation-chain.md"
+        ],
+        "checks": [
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+            "status": "passed"
+          },
+          {
+            "command": "bin/h3maped_rmg_core_selftest",
+            "status": "passed"
+          }
         ],
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
-          "live_generation_surface_present": false,
-          "native_rmg_end_to_end_parity_complete": false,
-          "phase_snapshot_only_status_blocked": true,
-          "phase_snapshot_only_status_passed": false,
           "runtime_generation_allowed": false,
           "same_run_private_state_compare_passed": false,
-          "shared_core_4a3a03_source_record_seed_handoff_ported": true,
-          "snapshot_materialization_source_handoff_count": 5,
-          "snapshot_materialization_source_record_seed_count": 5,
-          "snapshot_materialization_missing_source_record_seed_count": 0,
-          "snapshot_materialization_span_fill_zone_count": 5,
-          "windows_dll_build_deferred": true,
-          "shared_core_reconstructed_seed_handoff_removed_from_active_source": true
+          "final_payload_generation_complete": false,
+          "shared_core_relation_owner_constructor_0x49b452_ported": true,
+          "runtime_zone_seed_source_owner_index_preserved": true,
+          "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+          "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+          "object_reference_vector_contents_ported": false
         },
-        "blocker": "same-run pre-0x4a4c8e generated-cell private-state comparison and live owner-grid payload adoption are still missing",
-        "remainingWork": "Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, reconstructed runtime-zone seed fallbacks, or Windows DLL churn.",
-        "implementationChanged": true,
-        "nativeBehaviorChanged": true,
-        "phase": "Phase 5 - Playable Alpha Baseline",
-        "runtimeGenerationAllowed": false,
-        "godotProcessStarted": false
+        "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
       },
       "validationResults": {
+        "id": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "evidenceId": "native-rmg-relation-owner-constructor-49b452-20260620",
+        "timestamp": "2026-06-20T00:00:00Z",
+        "status": "pass_supporting_relation_owner_constructor_state_not_parity",
+        "sliceId": "rmg-small-generalization-hardening-10184",
+        "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
         "artifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-          "tools/rmg_native_batch_export.py",
-          "tests/validate_repo.py",
+          "src/gdextension/include/rmg_native_core.hpp",
+          "src/gdextension/src/rmg_native_core.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "PLAN.md",
-          "docs/rmg-python-validation-workflow.md",
-          ".artifacts/rmg_no_snapshot_bridge_smoke_20260618/wrapper_manifest.json",
-          ".artifacts/rmg_no_snapshot_bridge_smoke_20260618/manifest.json",
-          ".artifacts/rmg_no_snapshot_bridge_smoke_20260618/small_3p_seed_11_controlled.phase_snapshot.json"
+          "docs/native-rmg-core-h3maped-drift-audit.md",
+          "docs/native-rmg-generated-cell-mutation-chain.md"
         ],
-        "blocker": "exact same-run H3MapEd template selection/catalog record feed and pre-0x4a4c8e generated-cell private-state comparison are still missing",
         "checks": [
-          "cmake --build .artifacts/map_persistence_native_build --target aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
-          "python3 -m py_compile tools/rmg_native_batch_export.py (passed; tools/__pycache__ removed)",
-          "bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --runner native-cli --phase-snapshot-only --controlled-case small_3p_seed_11_controlled:small:3:11:land:1 --out .artifacts/rmg_no_snapshot_bridge_smoke_20260618 --print-manifest (expected blocked exit; no Godot; phase snapshot written)",
-          "python3 tools/rmg_native_batch_export.py --shared-runtime-input-snapshot does-not-matter --phase-snapshot-only --out .artifacts/rmg_removed_snapshot_arg_20260618 (expected argparse rejection; passed)",
-          "jq snapshot check for .artifacts/rmg_no_snapshot_bridge_smoke_20260618/small_3p_seed_11_controlled.phase_snapshot.json (passed; live_generation_surface_present=false, runtime_generation_allowed=false, input_status=missing_exact_runtime_zone_seed_link_inputs)",
-          "python3 tests/validate_repo.py (passed after tracker update)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)",
-          "rg active RMG/runtime source for proxy/reconstruction/generation-helper terms (no matches)",
-          "rg removed snapshot-input bridge tokens in active wrapper/native source (no removed bridge tokens)"
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+            "status": "passed"
+          },
+          {
+            "command": "bin/h3maped_rmg_core_selftest",
+            "status": "passed"
+          }
         ],
-        "date": "2026-06-18",
-        "evidenceId": "native-rmg-template-seed-producer-no-snapshot-bridge-20260618",
-        "id": "native-rmg-template-seed-producer-no-snapshot-bridge-20260618",
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
-          "live_generation_surface_present": false,
-          "native_rmg_end_to_end_parity_complete": false,
-          "phase_snapshot_only_status_blocked": true,
-          "phase_snapshot_only_status_passed": false,
           "runtime_generation_allowed": false,
           "same_run_private_state_compare_passed": false,
-          "same_run_template_catalog_records_live": false,
-          "shared_core_player_slot_assignment_4ac62a_ported": true,
-          "shared_core_template_record_seed_link_producer_4a218c_4a1f3b_ported": true,
-          "shared_core_template_to_owner_grid_selftest_passed": true,
-          "shared_runtime_input_snapshot_argument_rejected": true,
-          "shared_runtime_input_snapshot_ingestion_available": false
+          "final_payload_generation_complete": false,
+          "shared_core_relation_owner_constructor_0x49b452_ported": true,
+          "runtime_zone_seed_source_owner_index_preserved": true,
+          "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
+          "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
+          "object_reference_vector_contents_ported": false
         },
-        "recordedAt": "2026-06-18T22:00:09Z",
-        "remainingWork": "Feed exact same-run H3MapEd template selection/catalog records into the typed producer so the shared coordinate-to-owner-grid chain becomes the native live owner-grid payload, then pass same-run pre-0x4a4c8e generated-cell private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
-        "sliceId": "rmg-small-generalization-hardening-10184",
-        "status": "in_progress",
-        "summary": "Native RMG checkpoint 2 remains pending. The active wrapper no longer accepts --shared-runtime-input-snapshot, so stale phase snapshots cannot feed shared runtime-zone/link inputs. h3maped_rmg_core now has typed source-record producer APIs for 0x4ac62a..0x4ac6ec player-slot assignment and 0x4a218c/0x4a1f3b runtime-zone/link seed construction, and the selftest covers template-record -> seed/link -> coordinate -> owner-grid flow without Godot or map output. Runtime generation remains fail-closed.",
-        "validatedAt": "2026-06-18T22:00:09Z"
+        "blocker": "non-default 0x4a1f3b relation-owner bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain unported"
       }
     },
     {
@@ -56678,8 +56507,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Native RMG still lacks live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor joins, selected copied source records carried through object selection, relation/object caller order, materialization, and same-run private-state comparison.",
-  "remainingWork": "Implement later relation/object generated-cell caller order from docs/native-rmg-generated-cell-mutation-chain.md before emitting any comparable pre-0x4a4c8e generated-cell checkpoint or allowing terrain, relation, object, route, package, session, or public map output to consume the support artifact.",
+  "remainingGap": "Checkpoint 2 remains blocked by the later source-order relation/object generated-cell mutation chain, not by 0x49b452 constructor/default relation-owner state.",
+  "remainingWork": "Port non-default 0x4a1f3b relation-owner bounds/coordinate updates, source-order 0x4a5767 relation-local scan, ordered 0x49a318 propagation, object-reference vector contents, and relation/object caller order before emitting a comparable pre-0x4a4c8e checkpoint or enabling map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -57211,9 +57040,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG checkpoint 2 remains pending. The reset-plus-owner-word generated-cell snapshot surface is invalid as a comparable pre-0x4a4c8e checkpoint; native now tracks the missing H3MapEd mutating phases explicitly.",
+  "summary": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers.",
   "taskId": "10184",
-  "updatedAt": "2026-06-19T23:06:47Z",
+  "updatedAt": "2026-06-20T00:00:00Z",
   "validation": {
     "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
     "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
@@ -67892,5 +67721,6 @@
       "windows_dll_build_deferred": true
     },
     "blocker": "endpoint/object/relation/byte-state vector contents, 0xf5c cursor seed, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, and same-run private-state comparison remain unported"
-  }
+  },
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared core now preserves recovered 0x49b452 relation-owner constructor/default state: source pointer +0x00, town-choice result +0x04, source owner slot +0x1c, default scan bounds +0x20..+0x2c, byte +0x3c zero, +0x44 zero table, and empty +0x3e4/+0x3f4/+0x404 local vectors. Runtime-zone seed state now carries source_owner_index. Non-default 0x4a1f3b bounds/coordinate updates, relation-local 0x4a5767 scan, ordered 0x49a318 propagation, object-reference contents, relation/object caller order, same-run private-state comparison, and final payload generation remain blockers."
 }
