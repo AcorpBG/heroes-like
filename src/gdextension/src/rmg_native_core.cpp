@@ -190,6 +190,17 @@ void append_json_i32_array(std::ostream &out, const std::vector<int32_t> &values
 	out << "]";
 }
 
+void append_json_u32_array(std::ostream &out, const std::vector<uint32_t> &values) {
+	out << "[";
+	for (size_t index = 0; index < values.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		out << values[index];
+	}
+	out << "]";
+}
+
 int32_t generated_cell_record_known_count(const std::vector<SharedGeneratedCellRecord0x30> &records, bool SharedGeneratedCellRecord0x30::*member) {
 	return int32_t(std::count_if(records.begin(), records.end(), [member](const SharedGeneratedCellRecord0x30 &record) {
 		return record.*member;
@@ -221,6 +232,7 @@ void populate_generated_cell_record_surface_0x30(RecoveredOwnerGridPayload &payl
 		out.object_reference_vector_fields_0x04_0x08_present = record.object_reference_vector_fields_0x04_0x08_present;
 		out.object_reference_vector_contents_known = record.object_reference_vector_contents_known;
 		out.object_reference_count = record.object_reference_count;
+		out.object_references_0x04_0x08 = record.object_references_0x04_0x08;
 		out.word_0x10_known = record.word_0x10_known;
 		out.word_0x10 = flat < int32_t(payload.generated_cell_word_0x10.size()) ? payload.generated_cell_word_0x10[size_t(flat)] : record.word_0x10;
 		out.word_0x14_known = record.word_0x14_known;
@@ -405,6 +417,16 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	return out;
 }
 
+SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(const h3maped_rmg_core::ObjectRecordReference4a54a7 &input) {
+	SharedObjectRecordReference4a54a7 out;
+	out.object_record_key = input.object_record_key;
+	out.descriptor_type_0x1c = input.descriptor_type_0x1c;
+	out.x = input.x;
+	out.y = input.y;
+	out.level = input.level;
+	return out;
+}
+
 SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(const h3maped_rmg_core::GeneratorObjectPrivateState &input) {
 	SharedGeneratorObjectPrivateState out;
 	out.present = input.generated_cell_buffer_owned;
@@ -435,6 +457,15 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.descriptor_counter_table_0x1110_contents_known = input.descriptor_counter_table_0x1110_contents_known;
 	out.descriptor_counter_table_0x1110_known_count = input.descriptor_counter_table_0x1110_known_count;
 	out.descriptor_counter_table_0x1110_zero_count = int32_t(std::count(input.descriptor_counter_table_0x1110.begin(), input.descriptor_counter_table_0x1110.end(), 0U));
+	out.object_records_0xec4_ecc.reserve(input.object_records_0xec4_ecc.size());
+	for (const h3maped_rmg_core::ObjectRecordReference4a54a7 &record : input.object_records_0xec4_ecc) {
+		out.object_records_0xec4_ecc.push_back(from_h3maped_object_record_reference_4a54a7(record));
+	}
+	out.object_record_vector_append_count_0x4a54a7 = input.object_record_vector_append_count_0x4a54a7;
+	out.generated_cell_object_reference_append_count_0x4a54a7 = input.generated_cell_object_reference_append_count_0x4a54a7;
+	out.descriptor_counter_increment_count_0x4a54a7 = input.descriptor_counter_increment_count_0x4a54a7;
+	out.target_cell_word_mutation_count_0x4a54a7 = input.target_cell_word_mutation_count_0x4a54a7;
+	out.projection_score_depletion_count_0x4a54a7 = input.projection_score_depletion_count_0x4a54a7;
 	out.source_owner_player_slots_ed8_ee0_ee4_present = input.source_owner_player_slots_ed8_ee0_ee4_present;
 	out.selected_color_order_ed8_count = input.selected_color_order_ed8_count;
 	out.raw_source_owner_slots_ee0_count = input.raw_source_owner_slots_ee0_count;
@@ -1204,6 +1235,23 @@ void append_generator_object_vector_state_json(std::ostream &out, const SharedGe
 		<< "}";
 }
 
+void append_object_record_references_4a54a7_json(std::ostream &out, const std::vector<SharedObjectRecordReference4a54a7> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedObjectRecordReference4a54a7 &record = records[index];
+		out << "{\"object_record_key\":" << record.object_record_key
+			<< ",\"descriptor_type_0x1c\":" << record.descriptor_type_0x1c
+			<< ",\"x\":" << record.x
+			<< ",\"y\":" << record.y
+			<< ",\"level\":" << record.level
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_generator_relation_records_json(std::ostream &out, const std::vector<SharedGeneratorRelationRecordState> &records) {
 	out << "[";
 	for (size_t index = 0; index < records.size(); ++index) {
@@ -1384,6 +1432,14 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"descriptor_counter_table_0x1110_byte_size\":" << h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE << ","
 		<< "\"descriptor_counter_table_0x1110_zero_count\":" << state.descriptor_counter_table_0x1110_zero_count << ","
 		<< "\"descriptor_counter_table_0x1110_source\":\"0x49ecf2_zeroes_generator_plus_0x1110_over_0x3a0_bytes_before_relation_object_commits\","
+		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
+		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
+		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","
+		<< "\"target_cell_word_mutation_count_0x4a54a7\":" << state.target_cell_word_mutation_count_0x4a54a7 << ","
+		<< "\"projection_score_depletion_count_0x4a54a7\":" << state.projection_score_depletion_count_0x4a54a7 << ","
+		<< "\"object_records_0xec4_ecc\":";
+	append_object_record_references_4a54a7_json(out, state.object_records_0xec4_ecc);
+	out << ","
 		<< "\"relation_owner_records_10e4_10e8_partial_known\":" << (state.relation_owner_records_10e4_10e8_partial_known ? "true" : "false") << ","
 		<< "\"relation_owner_vector_count_10e4_10e8\":" << state.relation_owner_vector_count_10e4_10e8 << ","
 		<< "\"relation_record_count_10e4_10e8\":" << state.relation_record_count_10e4_10e8 << ","
@@ -1594,6 +1650,13 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 		out << "\"object_reference_vector_fields_0x04_0x08_present\":" << (record != nullptr && record->object_reference_vector_fields_0x04_0x08_present ? "true" : "false") << ",";
 		out << "\"object_reference_vector_contents_known\":" << (record != nullptr && record->object_reference_vector_contents_known ? "true" : "false") << ",";
 		out << "\"object_reference_count\":" << (record != nullptr ? record->object_reference_count : 0) << ",";
+		out << "\"object_references_0x04_0x08\":";
+		if (record != nullptr) {
+			append_json_u32_array(out, record->object_references_0x04_0x08);
+		} else {
+			out << "[]";
+		}
+		out << ",";
 		out << "\"word_0x10_known\":" << (record != nullptr && record->word_0x10_known ? "true" : "false") << ",";
 		out << "\"word_0x10\":" << word_0x10 << ",";
 		out << "\"word_0x14_known\":" << (record != nullptr && record->word_0x14_known ? "true" : "false") << ",";

@@ -88,6 +88,7 @@ struct GeneratedCellRecord0x30 {
 	bool object_reference_vector_fields_0x04_0x08_present = true;
 	bool object_reference_vector_contents_known = false;
 	int32_t object_reference_count = 0;
+	std::vector<uint32_t> object_references_0x04_0x08;
 	bool word_0x10_known = true;
 	uint32_t word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
 	bool word_0x14_known = false;
@@ -1051,6 +1052,14 @@ struct GeneratorRelationOwnerState4a218c {
 	std::vector<GeneratorRelationRecordState4a218c> relation_records;
 };
 
+struct ObjectRecordReference4a54a7 {
+	uint32_t object_record_key = 0U;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -1079,6 +1088,12 @@ struct GeneratorObjectPrivateState {
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
 	std::vector<uint32_t> descriptor_counter_table_0x1110;
+	std::vector<ObjectRecordReference4a54a7> object_records_0xec4_ecc;
+	int32_t object_record_vector_append_count_0x4a54a7 = 0;
+	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
+	int32_t descriptor_counter_increment_count_0x4a54a7 = 0;
+	int32_t target_cell_word_mutation_count_0x4a54a7 = 0;
+	int32_t projection_score_depletion_count_0x4a54a7 = 0;
 	bool source_owner_player_slots_ed8_ee0_ee4_present = false;
 	int32_t selected_color_order_ed8_count = 0;
 	int32_t raw_source_owner_slots_ee0_count = 0;
@@ -1117,6 +1132,21 @@ struct EndpointMaterializationResult4a5e73 {
 	int32_t mutated_cell_count = 0;
 	int32_t out_of_bounds_cell_count = 0;
 	int32_t skipped_unknown_word_count = 0;
+};
+
+struct ObjectFootprintCommitResult4a54a7 {
+	bool target_cell_in_bounds = false;
+	bool target_cell_words_known = false;
+	bool object_vector_appended = false;
+	bool generated_cell_reference_appended = false;
+	bool descriptor_counter_incremented = false;
+	bool projection_enabled = false;
+	bool projection_anchor_in_bounds = false;
+	int32_t object_vector_count_after = 0;
+	int32_t target_cell_reference_count_after = 0;
+	int32_t descriptor_counter_after = 0;
+	int32_t target_cell_word_mutation_count = 0;
+	int32_t projection_score_depletion_count = 0;
 };
 
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
@@ -1158,6 +1188,7 @@ GeneratedCell49a962SweepResult generated_cell_49a962_word24(std::vector<uint32_t
 GeneratedCell49a962SweepResult generated_cell_49a962_terrain(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, const std::vector<int32_t> &terrain_code, int32_t width, int32_t height, int32_t level_count, int32_t x, int32_t y, int32_t level);
 ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, bool projection_helper_0x4a7312_accepts = true);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);

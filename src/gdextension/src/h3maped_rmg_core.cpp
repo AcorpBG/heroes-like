@@ -2175,6 +2175,115 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 	return result;
 }
 
+static std::vector<uint32_t> generated_cell_word20_vector_from_record_grid(const GeneratedCellRecordGrid0x30 &grid, bool &all_known) {
+	std::vector<uint32_t> words;
+	words.reserve(grid.records.size());
+	all_known = true;
+	for (const GeneratedCellRecord0x30 &record : grid.records) {
+		if (!record.word_0x20_known) {
+			all_known = false;
+		}
+		words.push_back(record.word_0x20);
+	}
+	return words;
+}
+
+static void apply_generated_cell_word20_vector_to_record_grid(GeneratedCellRecordGrid0x30 &grid, const std::vector<uint32_t> &words) {
+	for (size_t index = 0; index < grid.records.size() && index < words.size(); ++index) {
+		grid.records[index].word_0x20_known = true;
+		grid.records[index].word_0x20 = words[index];
+	}
+}
+
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30) {
+	ObjectFootprintCommitResult4a54a7 result;
+	ObjectRecordReference4a54a7 object_record;
+	object_record.object_record_key = object_record_key;
+	object_record.descriptor_type_0x1c = descriptor_type_0x1c;
+	object_record.x = x;
+	object_record.y = y;
+	object_record.level = level;
+	state.object_records_0xec4_ecc.push_back(object_record);
+	state.object_record_vector_append_count_0x4a54a7 += 1;
+	state.object_record_vector_ec4_ecc.present = true;
+	state.object_record_vector_ec4_ecc.contents_known = true;
+	state.object_record_vector_ec4_ecc.count_known = true;
+	state.object_record_vector_ec4_ecc.count = int32_t(state.object_records_0xec4_ecc.size());
+	state.object_record_vector_ec4_ecc.element_size_bytes = 4;
+	result.object_vector_appended = true;
+	result.object_vector_count_after = state.object_record_vector_ec4_ecc.count;
+
+	if (state.descriptor_counter_table_0x1110_present
+			&& state.descriptor_counter_table_0x1110_contents_known
+			&& descriptor_type_0x1c >= 0
+			&& descriptor_type_0x1c < int32_t(state.descriptor_counter_table_0x1110.size())) {
+		uint32_t &counter = state.descriptor_counter_table_0x1110[size_t(descriptor_type_0x1c)];
+		counter += 1U;
+		state.descriptor_counter_increment_count_0x4a54a7 += 1;
+		result.descriptor_counter_incremented = true;
+		result.descriptor_counter_after = int32_t(counter);
+	}
+
+	const int64_t target_flat = cell_index(state.width, state.height, x, y, level);
+	if (target_flat < 0 || target_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		return result;
+	}
+	result.target_cell_in_bounds = true;
+	GeneratedCellRecord0x30 &target_record = state.generated_cell_buffer.records[size_t(target_flat)];
+	if (target_record.object_reference_vector_contents_known) {
+		target_record.object_references_0x04_0x08.push_back(object_record_key);
+		target_record.object_reference_count = int32_t(target_record.object_references_0x04_0x08.size());
+		state.generated_cell_object_reference_append_count_0x4a54a7 += 1;
+		result.generated_cell_reference_appended = true;
+		result.target_cell_reference_count_after = target_record.object_reference_count;
+	}
+	if (target_record.word_0x20_known && target_record.word_0x28_known) {
+		result.target_cell_words_known = true;
+		const uint32_t old_word_0x20 = target_record.word_0x20;
+		const uint32_t old_word_0x28 = target_record.word_0x28;
+		target_record.word_0x20 = generated_cell_word20_set_low_word(target_record.word_0x20, 0U);
+		target_record.word_0x28 = generated_cell_4a54a7_endpoint_word28(target_record.word_0x28);
+		if (target_record.word_0x20 != old_word_0x20) {
+			result.target_cell_word_mutation_count += 1;
+		}
+		if (target_record.word_0x28 != old_word_0x28) {
+			result.target_cell_word_mutation_count += 1;
+		}
+		state.target_cell_word_mutation_count_0x4a54a7 += result.target_cell_word_mutation_count;
+	}
+
+	result.projection_enabled = descriptor_projection_enabled_0x29;
+	if (!descriptor_projection_enabled_0x29) {
+		return result;
+	}
+
+	const int32_t projection_x = x - descriptor_offset_x_0x2c;
+	const int32_t projection_y = y - descriptor_offset_y_0x30;
+	const int64_t projection_flat = cell_index(state.width, state.height, projection_x, projection_y, level);
+	if (projection_flat < 0 || projection_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		return result;
+	}
+	result.projection_anchor_in_bounds = true;
+	bool all_word20_known = false;
+	std::vector<uint32_t> word_0x20 = generated_cell_word20_vector_from_record_grid(state.generated_cell_buffer, all_word20_known);
+	if (!all_word20_known) {
+		return result;
+	}
+	result.projection_score_depletion_count = deplete_generated_cell_scores_4a54a7(
+			word_0x20,
+			state.width,
+			state.height,
+			state.level_count,
+			projection_x,
+			projection_y,
+			level);
+	if (result.projection_score_depletion_count > 0) {
+		apply_generated_cell_word20_vector_to_record_grid(state.generated_cell_buffer, word_0x20);
+		state.projection_score_depletion_count_0x4a54a7 += result.projection_score_depletion_count;
+	}
+	return result;
+}
+
 static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
 	return std::any_of(records.begin(), records.end(), [&](const EndpointPointerRecord4a5e73 &record) {
 		return record.key_0x20 == key_0x20;
