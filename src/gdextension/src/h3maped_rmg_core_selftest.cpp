@@ -392,21 +392,24 @@ int main() {
 					"record 0x49a318 source clear did not reset +0x10/+0x14/+0x18 to -1")) {
 			return 1;
 		}
-		GeneratedCellRecordGrid0x30 high_owner_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 1, 1);
-		for (int32_t x = 0; x < 3; ++x) {
-			GeneratedCellRecord0x30 &cell = high_owner_grid.records[size_t(x)];
-			cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(cell.word_0x20, x == 0 ? 0 : 1);
-			cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(cell.word_0x24, 0, 0);
-			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
-			if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(cell), "test setup 0x4a5767 reset failed before 0x49a318 high-owner propagation")) {
-				return 1;
+		GeneratedCellRecordGrid0x30 high_owner_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 2, 1);
+		for (int32_t y = 0; y < 2; ++y) {
+			for (int32_t x = 0; x < 3; ++x) {
+				GeneratedCellRecord0x30 &cell = high_owner_grid.records[size_t(y * 3 + x)];
+				const bool source_channel_cell = x == 1;
+				cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(cell.word_0x20, source_channel_cell ? 0 : 1);
+				cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(cell.word_0x24, 0, 0);
+				cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+				if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(cell), "test setup 0x4a5767 reset failed before 0x49a318 high-owner propagation")) {
+					return 1;
+				}
 			}
 		}
 		GeneratorRelationOwnerState4a218c high_owner_seed;
 		high_owner_seed.owner_vector_index = 0;
 		high_owner_seed.runtime_zone_index = 0;
 		high_owner_seed.coordinate_triple_0x10_0x18_known = true;
-		high_owner_seed.coordinate_x_0x10 = 0;
+		high_owner_seed.coordinate_x_0x10 = 1;
 		high_owner_seed.coordinate_y_0x14 = 0;
 		high_owner_seed.coordinate_level_0x18 = 0;
 		const RelationHighOwnerPropagationResult49a318 high_owner_result =
@@ -417,10 +420,29 @@ int main() {
 		if (!require(high_owner_result.seed_attempt_count == 1 && high_owner_result.seed_blocked_count == 0, "0x49a318 high-owner propagation did not accept the source relation seed")) {
 			return 1;
 		}
-		if (!require(high_owner_result.cross_owner_high_byte_write_count >= 2 && high_owner_result.owner_high_byte_materialized_count >= 2, "0x49a318 high-owner propagation did not write cross-owner high bytes")) {
+		if (!require(high_owner_result.cross_owner_high_byte_write_count >= 4 && high_owner_result.owner_high_byte_materialized_count >= 4, "0x49a318 high-owner propagation did not write cross-owner high bytes")) {
 			return 1;
 		}
-		if (!require(((high_owner_grid.records[1].word_0x20 >> 24U) & 0xffU) == 0U
+		if (!require((high_owner_grid.records[1].word_0x1c & 0x0000ffffU) == 0U
+					&& high_owner_grid.records[1].word_0x10 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& high_owner_grid.records[1].word_0x14 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE
+					&& high_owner_grid.records[1].word_0x18 == aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE,
+					"0x49a318 high-owner propagation did not clear the source projection fields")) {
+			return 1;
+		}
+		if (!require((high_owner_grid.records[4].word_0x1c & 0x0000ffffU) == 1U
+					&& high_owner_grid.records[4].word_0x10 == 1U
+					&& high_owner_grid.records[4].word_0x14 == 0U
+					&& high_owner_grid.records[4].word_0x18 == 0U,
+					"0x49a318 high-owner propagation did not write same-owner projection fields")) {
+			return 1;
+		}
+		if (!require(((high_owner_grid.records[0].word_0x1c >> 16U) & 0xffffU) == 10U
+					&& ((high_owner_grid.records[0].word_0x28 >> 12U) & 0x7U) == 4U,
+					"0x49a318 high-owner propagation did not write cross-owner score and direction fields")) {
+			return 1;
+		}
+		if (!require(((high_owner_grid.records[0].word_0x20 >> 24U) & 0xffU) == 0U
 					&& ((high_owner_grid.records[2].word_0x20 >> 24U) & 0xffU) == 0U,
 					"0x49a318 high-owner propagation did not materialize source owner in +0x20 byte3")) {
 			return 1;

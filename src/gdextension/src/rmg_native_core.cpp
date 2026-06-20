@@ -147,7 +147,8 @@ bool supported_one_level_land_scope(const ControlledCase &controlled_case) {
 
 std::vector<std::string> generated_cell_mutation_phase_blockers() {
 	return {
-		"0x4a1f3b_scan_bounds_scan_consumers_and_0x49a318_object_metadata_bit22_branch_after_high_owner_propagation",
+		"0x4a1f3b_relation_scan_bound_producer_or_scan_consumer_order_unported",
+		"0x49a318_object_metadata_bit22_descriptor_policy_branch_after_source_backed_projection_word_mutations",
 		"0x49aa63_0x49a932_0x49abd6_0x49a85d_0x49a962_candidate_occupied_action_caller_order",
 		"0x49cf34_0x4aa3e9_relation_reward_attachment_caller_order"
 	};
@@ -1563,7 +1564,7 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_high_owner_max_queue_size_49a318\":" << state.relation_high_owner_max_queue_size_49a318 << ","
 		<< "\"relation_high_owner_materialized_count_49a318\":" << state.relation_high_owner_materialized_count_49a318 << ","
 		<< "\"relation_high_owner_sentinel_count_49a318\":" << state.relation_high_owner_sentinel_count_49a318 << ","
-		<< "\"relation_high_owner_propagation_49a318_source\":\"source_backed_0x49a318_relation_owner_coordinate_seed_flood_writes_generated_cell_word_0x20_owner_high_byte_after_0x4a5767_reset_object_metadata_branch_still_blocked\","
+		<< "\"relation_high_owner_propagation_49a318_source\":\"source_backed_0x49a318_relation_owner_coordinate_seed_flood_writes_source_projection_clear_same_owner_projection_0x10_0x14_0x18_word_0x1c_low_cross_owner_word_0x1c_high_word_0x28_direction_and_word_0x20_owner_high_byte_after_0x4a5767_reset_object_metadata_branch_still_blocked\","
 		<< "\"vectors\":[";
 	append_generator_object_vector_state_json(out, state.endpoint_vector_c8_cc);
 	out << ",";
