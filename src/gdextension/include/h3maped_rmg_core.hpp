@@ -1236,6 +1236,41 @@ struct RelationHighOwnerPropagationResult49a318 {
 	std::vector<RelationHighOwnerPropagationSeedReport49a318> seed_reports;
 };
 
+struct RelationScanConsumerOwnerReport4a5767 {
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_sentinel = false;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_word_skip_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t invalid_49a1d8_skip_count = 0;
+	int32_t object_metadata_branch_blocked_count = 0;
+	int32_t low_word_gate_skip_count = 0;
+	int32_t projected_chain_call_count = 0;
+	int32_t projected_chain_occupied_stamp_count = 0;
+	int32_t projected_chain_cleanup_clear_count = 0;
+	int32_t projected_chain_object_branch_blocked_count = 0;
+};
+
+struct RelationScanConsumerResult4a5767 {
+	bool applied = false;
+	bool grid_available = false;
+	bool no_object_projection_chain_complete = false;
+	int32_t owner_scan_count = 0;
+	int32_t owner_bounds_blocked_count = 0;
+	int32_t scanned_cell_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t invalid_49a1d8_skip_count = 0;
+	int32_t object_metadata_branch_blocked_count = 0;
+	int32_t projected_chain_call_count = 0;
+	int32_t projected_chain_occupied_stamp_count = 0;
+	int32_t projected_chain_cleanup_clear_count = 0;
+	int32_t projected_chain_object_branch_blocked_count = 0;
+	std::vector<RelationScanConsumerOwnerReport4a5767> owner_reports;
+};
+
 struct ObjectRecordReference4a54a7 {
 	uint32_t object_record_key = 0U;
 	int32_t descriptor_type_0x1c = -1;
@@ -1325,6 +1360,15 @@ struct GeneratorObjectPrivateState {
 	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_skipped_count = 0;
+	bool relation_scan_consumers_4a5767_applied = false;
+	bool relation_scan_consumers_4a5767_no_object_projection_chain_complete = false;
+	int32_t relation_scan_consumer_owner_scan_count_4a5767 = 0;
+	int32_t relation_scan_consumer_owner_bounds_blocked_count_4a5767 = 0;
+	int32_t relation_scan_consumer_scanned_cell_count_4a5767 = 0;
+	int32_t relation_scan_consumer_object_branch_blocked_count_4a5767 = 0;
+	int32_t relation_scan_consumer_projected_chain_call_count_4a5767 = 0;
+	int32_t relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = 0;
+	int32_t relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = 0;
 	bool relation_high_owner_propagation_49a318_applied = false;
 	bool relation_high_owner_propagation_49a318_grid_available = false;
 	bool relation_high_owner_propagation_49a318_object_metadata_gate_complete = false;
@@ -1442,6 +1486,7 @@ uint32_t generated_cell_49a318_clear_source_word_0x1c(uint32_t word_0x1c);
 RelationResetCell generated_cell_4a5767_reset_cell(uint32_t source_word_0x20, uint32_t source_word_0x28);
 bool generated_cell_4a5767_reset_projection(GeneratedCellRecord0x30 &record);
 bool generated_cell_49a318_clear_source_projection(GeneratedCellRecord0x30 &record);
+RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
 RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);

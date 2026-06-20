@@ -2779,6 +2779,83 @@ static bool relation_scan_bounds_0x4a7312_non_sentinel(const GeneratorRelationOw
 			&& source_relation.scan_bound_low_y_0x24 < source_relation.scan_bound_high_y_0x2c;
 }
 
+RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+	RelationScanConsumerResult4a5767 result;
+	result.applied = true;
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty()) {
+		return result;
+	}
+	result.grid_available = true;
+
+	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
+		RelationScanConsumerOwnerReport4a5767 report;
+		report.owner_vector_index = owner.owner_vector_index;
+		report.runtime_zone_index = owner.runtime_zone_index;
+		report.scan_bounds_known = owner.scan_bounds_0x20_0x2c_known;
+		report.scan_bounds_non_sentinel = relation_scan_bounds_0x4a7312_non_sentinel(owner);
+		result.owner_scan_count += 1;
+		if (!report.scan_bounds_non_sentinel || !owner.coordinate_triple_0x10_0x18_known || owner.runtime_zone_index < 0) {
+			result.owner_bounds_blocked_count += 1;
+			result.owner_reports.push_back(report);
+			continue;
+		}
+
+		const int32_t level = owner.coordinate_level_0x18;
+		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
+			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
+				report.scanned_cell_count += 1;
+				result.scanned_cell_count += 1;
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					report.out_of_bounds_cell_count += 1;
+					continue;
+				}
+				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				if (!record.word_0x1c_known || !record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known || !record.word_0x2c_known) {
+					report.unknown_word_skip_count += 1;
+					continue;
+				}
+				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(owner.runtime_zone_index & 0xff)) {
+					report.owner_byte_reject_count += 1;
+					result.owner_byte_reject_count += 1;
+					continue;
+				}
+				if ((record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+					report.object_metadata_branch_blocked_count += 1;
+					result.object_metadata_branch_blocked_count += 1;
+					continue;
+				}
+				if (!generated_cell_49a1d8_valid_record(record)) {
+					report.invalid_49a1d8_skip_count += 1;
+					result.invalid_49a1d8_skip_count += 1;
+					continue;
+				}
+				const uint32_t low_word = record.word_0x1c & 0x0000ffffU;
+				if (low_word == 0U || low_word >= 0x7530U) {
+					report.low_word_gate_skip_count += 1;
+					continue;
+				}
+
+				const ProjectedCellChainResult4a5a23 chain = projected_cell_chain_no_object_4a5a23(grid, x, y, level, false);
+				report.projected_chain_call_count += 1;
+				report.projected_chain_occupied_stamp_count += chain.occupied_stamp_count;
+				report.projected_chain_cleanup_clear_count += chain.cleanup_bit_0x04_clear_count;
+				result.projected_chain_call_count += 1;
+				result.projected_chain_occupied_stamp_count += chain.occupied_stamp_count;
+				result.projected_chain_cleanup_clear_count += chain.cleanup_bit_0x04_clear_count;
+				if (chain.stopped_on_object_materialization_required) {
+					report.projected_chain_object_branch_blocked_count += 1;
+					result.projected_chain_object_branch_blocked_count += 1;
+				}
+			}
+		}
+		result.owner_reports.push_back(report);
+	}
+
+	result.no_object_projection_chain_complete = result.projected_chain_object_branch_blocked_count == 0;
+	return result;
+}
+
 static bool source_relation_object_coordinate_eligibility_0x49aa93(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectDescriptorJoinResult4903e8 &join,
@@ -4781,6 +4858,17 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
+	const RelationScanConsumerResult4a5767 relation_scan_consumers =
+			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
+	state.relation_scan_consumers_4a5767_applied = relation_scan_consumers.applied;
+	state.relation_scan_consumers_4a5767_no_object_projection_chain_complete = relation_scan_consumers.no_object_projection_chain_complete;
+	state.relation_scan_consumer_owner_scan_count_4a5767 = relation_scan_consumers.owner_scan_count;
+	state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 = relation_scan_consumers.owner_bounds_blocked_count;
+	state.relation_scan_consumer_scanned_cell_count_4a5767 = relation_scan_consumers.scanned_cell_count;
+	state.relation_scan_consumer_object_branch_blocked_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_blocked_count;
+	state.relation_scan_consumer_projected_chain_call_count_4a5767 = relation_scan_consumers.projected_chain_call_count;
+	state.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = relation_scan_consumers.projected_chain_occupied_stamp_count;
+	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
 			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
 	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
@@ -4800,7 +4888,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_vector_0xd8_0xdc_success_path_source_producer_unrecovered_for_live_materialization",
 		"object_record_vector_0xec4_0xecc_contents_unported_after_0x4a8db2_thresholds_until_0x4a901a_candidate_vector_append_selection_is_ported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_scan_consumers_unported_after_0x4a1f3b_scan_bounds",
+		"relation_vector_0x10e4_0x10e8_scan_consumers_object_materialization_branch_unported_after_no_object_projection_chain",
 		"endpoint_byte_state_vector_0x1104_0x1108_zero_init_waiting_on_source_owned_endpoint_vector_0xd8_0xdc_count",
 		"endpoint_cursor_0xf5c_success_seed_source_unrecovered_after_0xf58_zero_setup",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",
