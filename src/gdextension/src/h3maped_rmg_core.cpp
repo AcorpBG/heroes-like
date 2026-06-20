@@ -3267,7 +3267,7 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 	return result;
 }
 
-static GeneratorObjectVectorState generator_object_vector_state(const std::string &label, uint32_t begin_offset, uint32_t end_offset, uint32_t capacity_offset, bool present, bool contents_known, bool count_known, int32_t count) {
+static GeneratorObjectVectorState generator_object_vector_state(const std::string &label, uint32_t begin_offset, uint32_t end_offset, uint32_t capacity_offset, bool present, bool contents_known, bool count_known, int32_t count, int32_t element_size_bytes = 0) {
 	GeneratorObjectVectorState state;
 	state.label = label;
 	state.begin_offset = begin_offset;
@@ -3277,6 +3277,24 @@ static GeneratorObjectVectorState generator_object_vector_state(const std::strin
 	state.contents_known = contents_known;
 	state.count_known = count_known;
 	state.count = count;
+	state.element_size_bytes = element_size_bytes;
+	return state;
+}
+
+static GeneratorObjectVectorState endpoint_byte_state_vector_from_d8_count_0x49f95a(const GeneratorObjectVectorState &endpoint_vector_d8_dc) {
+	GeneratorObjectVectorState state = generator_object_vector_state(
+			"endpoint_byte_state_vector_0x1104_0x1108",
+			0x1104U,
+			0x1108U,
+			0U,
+			true,
+			endpoint_vector_d8_dc.count_known,
+			endpoint_vector_d8_dc.count_known,
+			endpoint_vector_d8_dc.count_known ? endpoint_vector_d8_dc.count : 0,
+			1);
+	state.count_sourced_from_vector = true;
+	state.count_source_vector_label = endpoint_vector_d8_dc.label;
+	state.zero_initialized_contents_known_when_count_known = true;
 	return state;
 }
 
@@ -3536,12 +3554,12 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	}
 	apply_relation_normalization_full_grid_reset_0x4a5767(state);
 
-	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0);
-	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0);
-	state.object_record_vector_ec4_ecc = generator_object_vector_state("object_record_vector_0xec4_0xecc", 0xec4U, 0xeccU, 0U, true, false, false, 0);
-	state.source_pair_vector_edc = generator_object_vector_state("source_pair_metadata_vector_0xedc", 0xedcU, 0U, 0U, true, false, false, 0);
-	state.pending_entry_vector_eec_ef0_ef4 = generator_object_vector_state("source_handler_pending_entry_vector_0xeec_0xef0_0xef4_source_excluded_for_direct_mode", 0xeecU, 0xef0U, 0xef4U, true, false, true, 0);
-	state.candidate_container_vector_10d4_10d8 = generator_object_vector_state("accepted_candidate_container_vector_0x10d4_0x10d8", 0x10d4U, 0x10d8U, 0U, template_selection.accepted_template_count > 0 || !template_selection.accepted_candidate_containers_10d4_10d8.empty(), true, true, int32_t(template_selection.accepted_candidate_containers_10d4_10d8.size()));
+	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0, 4);
+	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0, 4);
+	state.object_record_vector_ec4_ecc = generator_object_vector_state("object_record_vector_0xec4_0xecc", 0xec4U, 0xeccU, 0U, true, false, false, 0, 4);
+	state.source_pair_vector_edc = generator_object_vector_state("source_pair_metadata_vector_0xedc", 0xedcU, 0U, 0U, true, false, false, 0, 8);
+	state.pending_entry_vector_eec_ef0_ef4 = generator_object_vector_state("source_handler_pending_entry_vector_0xeec_0xef0_0xef4_source_excluded_for_direct_mode", 0xeecU, 0xef0U, 0xef4U, true, false, true, 0, 8);
+	state.candidate_container_vector_10d4_10d8 = generator_object_vector_state("accepted_candidate_container_vector_0x10d4_0x10d8", 0x10d4U, 0x10d8U, 0U, template_selection.accepted_template_count > 0 || !template_selection.accepted_candidate_containers_10d4_10d8.empty(), true, true, int32_t(template_selection.accepted_candidate_containers_10d4_10d8.size()), 4);
 	state.relation_vector_10e4_10e8 = generator_object_vector_state(
 			"relation_vector_0x10e4_0x10e8",
 			0x10e4U,
@@ -3550,8 +3568,9 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			!template_selection.blocked,
 			false,
 			!template_selection.blocked,
-			int32_t(template_selection.runtime_seed.runtime_zone_seeds.size()));
-	state.endpoint_byte_state_vector_1104_1108 = generator_object_vector_state("endpoint_byte_state_vector_0x1104_0x1108", 0x1104U, 0x1108U, 0U, true, false, false, 0);
+			int32_t(template_selection.runtime_seed.runtime_zone_seeds.size()),
+			4);
+	state.endpoint_byte_state_vector_1104_1108 = endpoint_byte_state_vector_from_d8_count_0x49f95a(state.endpoint_vector_d8_dc);
 	state.endpoint_cursor_0xf58_present = true;
 	state.endpoint_cursor_0xf58_known = true;
 	state.endpoint_cursor_0xf58 = 0;
@@ -3582,7 +3601,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"object_record_vector_0xec4_0xecc_contents_unported",
 		"source_pair_vector_0xedc_live_contents_unported",
 		"relation_vector_0x10e4_0x10e8_0x4a1f3b_scan_bounds_and_scan_consumers_unported_after_coordinate_candidate_vector_surface",
-		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
+		"endpoint_byte_state_vector_0x1104_0x1108_zero_init_waiting_on_endpoint_vector_0xd8_0xdc_count",
 		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"source_order_relation_scan_0x4a5767_0x49a318_and_object_mutations_not_applied_after_full_grid_reset",

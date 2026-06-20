@@ -277,6 +277,10 @@ SharedGeneratorObjectVectorState from_h3maped_generator_object_vector_state(cons
 	out.contents_known = input.contents_known;
 	out.count_known = input.count_known;
 	out.count = input.count;
+	out.count_sourced_from_vector = input.count_sourced_from_vector;
+	out.count_source_vector_label = input.count_source_vector_label;
+	out.zero_initialized_contents_known_when_count_known = input.zero_initialized_contents_known_when_count_known;
+	out.element_size_bytes = input.element_size_bytes;
 	return out;
 }
 
@@ -1193,6 +1197,10 @@ void append_generator_object_vector_state_json(std::ostream &out, const SharedGe
 		<< ",\"contents_known\":" << (state.contents_known ? "true" : "false")
 		<< ",\"count_known\":" << (state.count_known ? "true" : "false")
 		<< ",\"count\":" << state.count
+		<< ",\"count_sourced_from_vector\":" << (state.count_sourced_from_vector ? "true" : "false")
+		<< ",\"count_source_vector_label\":\"" << json_escape(state.count_source_vector_label) << "\""
+		<< ",\"zero_initialized_contents_known_when_count_known\":" << (state.zero_initialized_contents_known_when_count_known ? "true" : "false")
+		<< ",\"element_size_bytes\":" << state.element_size_bytes
 		<< "}";
 }
 
