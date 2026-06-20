@@ -3336,8 +3336,19 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.source_pair_vector_edc = generator_object_vector_state("source_pair_metadata_vector_0xedc", 0xedcU, 0U, 0U, true, false, false, 0);
 	state.pending_entry_vector_eec_ef0_ef4 = generator_object_vector_state("source_handler_pending_entry_vector_0xeec_0xef0_0xef4_source_excluded_for_direct_mode", 0xeecU, 0xef0U, 0xef4U, true, false, true, 0);
 	state.candidate_container_vector_10d4_10d8 = generator_object_vector_state("accepted_candidate_container_vector_0x10d4_0x10d8", 0x10d4U, 0x10d8U, 0U, template_selection.accepted_template_count > 0 || !template_selection.accepted_candidate_containers_10d4_10d8.empty(), true, true, int32_t(template_selection.accepted_candidate_containers_10d4_10d8.size()));
-	state.relation_vector_10e4_10e8 = generator_object_vector_state("relation_vector_0x10e4_0x10e8", 0x10e4U, 0x10e8U, 0U, true, false, false, 0);
+	state.relation_vector_10e4_10e8 = generator_object_vector_state(
+			"relation_vector_0x10e4_0x10e8",
+			0x10e4U,
+			0x10e8U,
+			0U,
+			!template_selection.blocked,
+			false,
+			!template_selection.blocked,
+			int32_t(template_selection.runtime_seed.runtime_zone_seeds.size()));
 	state.endpoint_byte_state_vector_1104_1108 = generator_object_vector_state("endpoint_byte_state_vector_0x1104_0x1108", 0x1104U, 0x1108U, 0U, true, false, false, 0);
+	state.endpoint_cursor_0xf58_present = true;
+	state.endpoint_cursor_0xf58_known = true;
+	state.endpoint_cursor_0xf58 = 0;
 	state.endpoint_cursor_0xf5c_present = true;
 	state.endpoint_cursor_0xf5c_known = false;
 	state.descriptor_counter_table_0x1110_present = true;
@@ -3352,8 +3363,9 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_vectors_0xc8_0xcc_and_0xd8_0xdc_contents_unported",
 		"object_record_vector_0xec4_0xecc_contents_unported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_contents_unported",
+		"relation_vector_0x10e4_0x10e8_contents_unported_after_count_adoption",
 		"endpoint_byte_state_vector_0x1104_0x1108_contents_unported",
+		"endpoint_cursor_0xf5c_unseeded_after_0xf58_zero_setup",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"source_order_relation_object_mutations_not_applied_to_generated_cell_buffer",
 	};

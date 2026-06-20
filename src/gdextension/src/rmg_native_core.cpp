@@ -12,6 +12,9 @@
 namespace aurelion::rmg_native_core {
 namespace {
 
+std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zone_seeds(const std::vector<SharedRuntimeZoneSeedInput> &inputs);
+std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> to_h3maped_runtime_links(const std::vector<SharedRuntimeLinkInput> &inputs);
+
 std::string lower_ascii(const std::string &value) {
 	std::string out = value;
 	std::transform(out.begin(), out.end(), out.begin(), [](unsigned char ch) {
@@ -274,6 +277,9 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.candidate_container_vector_10d4_10d8 = from_h3maped_generator_object_vector_state(input.candidate_container_vector_10d4_10d8);
 	out.relation_vector_10e4_10e8 = from_h3maped_generator_object_vector_state(input.relation_vector_10e4_10e8);
 	out.endpoint_byte_state_vector_1104_1108 = from_h3maped_generator_object_vector_state(input.endpoint_byte_state_vector_1104_1108);
+	out.endpoint_cursor_0xf58_present = input.endpoint_cursor_0xf58_present;
+	out.endpoint_cursor_0xf58_known = input.endpoint_cursor_0xf58_known;
+	out.endpoint_cursor_0xf58 = input.endpoint_cursor_0xf58;
 	out.endpoint_cursor_0xf5c_present = input.endpoint_cursor_0xf5c_present;
 	out.endpoint_cursor_0xf5c_known = input.endpoint_cursor_0xf5c_known;
 	out.endpoint_cursor_0xf5c = input.endpoint_cursor_0xf5c;
@@ -709,6 +715,12 @@ h3maped_rmg_core::TemplateSelectionRuntimeResult4ac552 to_h3maped_template_selec
 			record.link_count,
 		});
 	}
+	out.runtime_seed.blocked = input.recovered_template_selection_blocked;
+	out.runtime_seed.skipped_zone_filter_count = input.recovered_template_skipped_zone_filter_count;
+	out.runtime_seed.skipped_link_filter_count = input.recovered_template_skipped_link_filter_count;
+	out.runtime_seed.missing_link_endpoint_count = input.recovered_template_missing_link_endpoint_count;
+	out.runtime_seed.runtime_zone_seeds = to_h3maped_runtime_zone_seeds(input.runtime_zone_seeds);
+	out.runtime_seed.runtime_links = to_h3maped_runtime_links(input.runtime_links);
 	return out;
 }
 
@@ -1045,6 +1057,10 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"selected_color_order_ed8_count\":" << state.selected_color_order_ed8_count << ","
 		<< "\"raw_source_owner_slots_ee0_count\":" << state.raw_source_owner_slots_ee0_count << ","
 		<< "\"mapped_source_owner_slots_ee4_count\":" << state.mapped_source_owner_slots_ee4_count << ","
+		<< "\"endpoint_cursor_0xf58_present\":" << (state.endpoint_cursor_0xf58_present ? "true" : "false") << ","
+		<< "\"endpoint_cursor_0xf58_known\":" << (state.endpoint_cursor_0xf58_known ? "true" : "false") << ","
+		<< "\"endpoint_cursor_0xf58\":" << state.endpoint_cursor_0xf58 << ","
+		<< "\"endpoint_cursor_0xf58_source\":\"0x49ecf2_zeroes_generator_plus_0xf58_before_endpoint_cursor_plus_0xf5c_remains_unseeded\","
 		<< "\"endpoint_cursor_0xf5c_present\":" << (state.endpoint_cursor_0xf5c_present ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf5c_known\":" << (state.endpoint_cursor_0xf5c_known ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf5c\":" << state.endpoint_cursor_0xf5c << ","

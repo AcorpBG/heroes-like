@@ -887,6 +887,15 @@ int main() {
 	if (!require(generator_state.relation_vector_10e4_10e8.present && !generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
 		return 1;
 	}
+	if (!require(generator_state.relation_vector_10e4_10e8.count_known && generator_state.relation_vector_10e4_10e8.count == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size()), "generator object private state did not preserve adopted relation-vector count")) {
+		return 1;
+	}
+	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
+		return 1;
+	}
+	if (!require(generator_state.endpoint_cursor_0xf5c_present && !generator_state.endpoint_cursor_0xf5c_known, "generator object private state must not claim recovered 0xf5c cursor seed")) {
+		return 1;
+	}
 	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {
 		return 1;
 	}

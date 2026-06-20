@@ -316,6 +316,9 @@ struct SharedGeneratorObjectPrivateState {
 	SharedGeneratorObjectVectorState candidate_container_vector_10d4_10d8;
 	SharedGeneratorObjectVectorState relation_vector_10e4_10e8;
 	SharedGeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
+	bool endpoint_cursor_0xf58_present = false;
+	bool endpoint_cursor_0xf58_known = false;
+	int32_t endpoint_cursor_0xf58 = 0;
 	bool endpoint_cursor_0xf5c_present = false;
 	bool endpoint_cursor_0xf5c_known = false;
 	int32_t endpoint_cursor_0xf5c = 0;
