@@ -1424,6 +1424,60 @@ int main() {
 				"0x4a54a7 did not run the descriptor +0x29 projection score-depletion wave")) {
 		return 1;
 	}
+	GeneratorObjectPrivateState offset_commit_state;
+	offset_commit_state.width = 5;
+	offset_commit_state.height = 5;
+	offset_commit_state.level_count = 1;
+	offset_commit_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(5, 5, 1);
+	offset_commit_state.generated_cell_buffer_owned = true;
+	offset_commit_state.descriptor_counter_table_0x1110_present = true;
+	offset_commit_state.descriptor_counter_table_0x1110_contents_known = true;
+	offset_commit_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	offset_commit_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	for (GeneratedCellRecord0x30 &record : offset_commit_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0x00010014U;
+		record.word_0x28_known = true;
+		record.word_0x28 = 0x12005000U;
+	}
+	const auto offset_commit_result = aurelion::h3maped_rmg_core::object_footprint_commit_4a54a7(
+			offset_commit_state,
+			0x0362fda0U,
+			98,
+			1,
+			2,
+			0,
+			true,
+			-1,
+			0);
+	const GeneratedCellRecord0x30 &offset_target = offset_commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(5, 5, 1, 2, 0))];
+	const GeneratedCellRecord0x30 &offset_source = offset_commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(5, 5, 2, 2, 0))];
+	if (!require(offset_commit_result.object_vector_appended
+					&& offset_commit_result.generated_cell_reference_appended
+					&& offset_commit_state.object_records_0xec4_ecc.size() == 1
+					&& offset_target.object_reference_count == 1
+					&& offset_target.object_references_0x04_0x08[0] == 0x0362fda0U
+					&& offset_commit_state.descriptor_counter_table_0x1110[size_t(98)] == 1U,
+				"0x4a54a7 nonzero-offset commit did not preserve object-vector/object-reference/counter mutations")) {
+		return 1;
+	}
+	if (!require((offset_source.word_0x20 & 0xffffU) == 0U
+					&& (offset_target.word_0x20 & 0xffffU) == 2U
+					&& (offset_target.word_0x20 & 0xffff0000U) == 0x00010000U
+					&& offset_commit_result.projection_enabled
+					&& offset_commit_result.projection_anchor_in_bounds
+					&& offset_commit_result.projection_score_depletion_count > 0,
+				"0x4a54a7 nonzero-offset projection must clear the descriptor source cell and lower, not zero, the target cell")) {
+		return 1;
+	}
+	if (!require(offset_commit_result.target_cell_word_mutation_count == 2
+					&& offset_commit_state.target_cell_word_mutation_count_0x4a54a7 == 2,
+				"0x4a54a7 nonzero-offset target mutations did not count target +0x28 plus projection-lowered +0x20")) {
+		return 1;
+	}
 	const std::vector<SourceObjectRecord0x4c> type54_records =
 			aurelion::h3maped_rmg_core::source_object_records_by_type_0x49da08(54);
 	if (!require(!type54_records.empty(), "0x49da08 type-54 monster source records missing for materialization prep")) {
