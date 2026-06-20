@@ -2587,6 +2587,171 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 	return result;
 }
 
+ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup) {
+	ProjectedCellChainResult4a5a23 result;
+	GeneratedCellRecordGrid0x30 &grid = state.generated_cell_buffer;
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0) {
+		result.stopped_on_out_of_bounds = true;
+		return result;
+	}
+
+	const int32_t max_steps = int32_t(grid.records.size()) + 1;
+	for (int32_t step = 0; step < max_steps; ++step) {
+		const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+		if (flat < 0 || flat >= int64_t(grid.records.size())) {
+			result.stopped_on_out_of_bounds = true;
+			return result;
+		}
+		if (step == 0) {
+			result.start_cell_in_bounds = true;
+		}
+		GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+		if (!record.word_0x1c_known || !record.word_0x20_known || !record.word_0x28_known || !record.word_0x2c_known) {
+			result.stopped_on_unknown_word = true;
+			return result;
+		}
+		const uint32_t low_word = record.word_0x1c & 0x0000ffffU;
+		if (low_word == 0U) {
+			result.stopped_on_low_word_zero = true;
+			return result;
+		}
+		if (low_word >= 0x7530U) {
+			result.stopped_on_low_word_limit = true;
+			return result;
+		}
+		result.visited_cell_count += 1;
+
+		if ((record.word_0x2c & 0x01U) != 0U) {
+			result.object_branch_attempt_count += 1;
+			const int32_t low_nibble_source = int32_t((record.word_0x2c >> 1U) & 0x0fU);
+			const SourceObjectSelectorResult4a9e40 selector =
+					source_object_wrapper_selector_0x4a9e40(rng.state, 9, 0, low_nibble_source);
+			if (!selector.selected || selector.selected_source_record_index < 0) {
+				result.object_branch_blocked_count += 1;
+				result.object_branch_blocked_reason = "0x4a5a23_object_branch_0x4a9e40_selector_unresolved";
+				result.stopped_on_object_materialization_required = true;
+				return result;
+			}
+			rng.state = selector.rng_state_after;
+			result.object_branch_selector_selected_count += 1;
+			const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+			if (selector.selected_source_record_index >= int32_t(records.size())) {
+				result.object_branch_blocked_count += 1;
+				result.object_branch_blocked_reason = "0x4a5a23_object_branch_selected_source_record_out_of_range";
+				result.stopped_on_object_materialization_required = true;
+				return result;
+			}
+			if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+				result.object_branch_blocked_count += 1;
+				result.object_branch_blocked_reason = "0x4a5a23_object_branch_native_object_record_key_allocator_unavailable";
+				result.stopped_on_object_materialization_required = true;
+				return result;
+			}
+			const SourceObjectRecord0x4c &selected_record = records[size_t(selector.selected_source_record_index)];
+			const SourceObjectResolverResult4af785 resolver =
+					source_object_descriptor_resolver_0x4af785(resolver_state, selected_record);
+			if (!resolver.reused_existing_wrapper && !resolver.created_new_wrapper) {
+				result.object_branch_blocked_count += 1;
+				result.object_branch_blocked_reason = "0x4a5a23_object_branch_0x4af785_wrapper_unresolved";
+				result.stopped_on_object_materialization_required = true;
+				return result;
+			}
+			state.source_pair_vector_edc.present = true;
+			state.source_pair_vector_edc.contents_known = true;
+			state.source_pair_vector_edc.count_known = true;
+			state.source_pair_vector_edc.count = int32_t(resolver_state.source_pairs_0xedc.size());
+			state.source_pair_vector_edc.element_size_bytes = 8;
+
+			const uint32_t object_record_key = state.next_native_object_record_key_0x4a93a2++;
+			result.object_branch_allocated_record_count += 1;
+			result.object_branch_record_keys.push_back(object_record_key);
+			record.word_0x2c &= ~uint32_t(0x1fU);
+			result.object_branch_low_bits_cleared_count += 1;
+			const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+					state,
+					object_record_key,
+					selected_record.type_id_0x1c,
+					x,
+					y,
+					level,
+					false,
+					0,
+					0);
+			if (!commit.object_vector_appended) {
+				result.object_branch_blocked_count += 1;
+				result.object_branch_blocked_reason = "0x4a5a23_object_branch_vtable_slot_0x04_commit_failed";
+				result.stopped_on_object_materialization_required = true;
+				return result;
+			}
+			result.object_branch_commit_count += 1;
+			const uint32_t before_branch_word_0x28 = record.word_0x28;
+			record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
+			record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+			if (record.word_0x28 != before_branch_word_0x28) {
+				result.occupied_stamp_count += 1;
+			}
+			if (!state.object_records_0xec4_ecc.empty()) {
+				ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+				object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+				object_record.descriptor_source_key_0x00 = selected_record.source_row;
+				object_record.selected_wrapper_index_0x4af785 = resolver.selected_wrapper_index;
+				object_record.source_catalog_index_0x49da08 = selector.selected_source_record_index;
+				object_record.copied_source_record_carried = true;
+				object_record.source_record_copy = selected_record;
+			}
+		} else {
+			const uint32_t before_word_0x28 = record.word_0x28;
+			record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
+			record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+			if (record.word_0x28 != before_word_0x28) {
+				result.occupied_stamp_count += 1;
+			}
+		}
+
+		if (!suppress_cleanup) {
+			const uint8_t owner_byte2 = generated_cell_word20_owner_byte2(record.word_0x20);
+			const int32_t min_x = std::max<int32_t>(0, x - 1);
+			const int32_t min_y = std::max<int32_t>(0, y - 1);
+			const int32_t max_x = std::min<int32_t>(grid.width, x + 2);
+			const int32_t max_y = std::min<int32_t>(grid.height, y + 2);
+			for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+				for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+					const int64_t local_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+					if (local_flat < 0 || local_flat >= int64_t(grid.records.size())) {
+						continue;
+					}
+					result.cleanup_scan_count += 1;
+					GeneratedCellRecord0x30 &nearby = grid.records[size_t(local_flat)];
+					if (!nearby.word_0x20_known || !nearby.word_0x2c_known) {
+						continue;
+					}
+					if (generated_cell_word20_owner_byte2(nearby.word_0x20) != owner_byte2 || (nearby.word_0x2c & 0x01U) != 0U) {
+						continue;
+					}
+					result.cleanup_owner_match_count += 1;
+					if ((nearby.byte_0x2b_known_mask & 0x04U) == 0U || (nearby.byte_0x2b & 0x04U) != 0U) {
+						result.cleanup_bit_0x04_clear_count += 1;
+					}
+					nearby.byte_0x2b &= ~uint8_t(0x04U);
+					nearby.byte_0x2b_known_mask |= 0x04U;
+					nearby.byte_0x2b_known = nearby.byte_0x2b_known_mask == 0xffU;
+				}
+			}
+		}
+
+		if (!record.word_0x10_known || !record.word_0x14_known || !record.word_0x18_known) {
+			result.stopped_on_unknown_projection = true;
+			return result;
+		}
+		x = int32_t(record.word_0x10);
+		y = int32_t(record.word_0x14);
+		level = int32_t(record.word_0x18);
+	}
+
+	result.truncated_by_cycle_guard = true;
+	return result;
+}
+
 static std::vector<uint32_t> generated_cell_word20_vector_from_record_grid(const GeneratedCellRecordGrid0x30 &grid, bool &all_known) {
 	std::vector<uint32_t> words;
 	words.reserve(grid.records.size());
@@ -2779,7 +2944,7 @@ static bool relation_scan_bounds_0x4a7312_non_sentinel(const GeneratorRelationOw
 			&& source_relation.scan_bound_low_y_0x24 < source_relation.scan_bound_high_y_0x2c;
 }
 
-RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767_impl(GeneratedCellRecordGrid0x30 &grid, GeneratorObjectPrivateState *state, SourceObjectResolverState4af785 *resolver_state, H3MapedRng *rng, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
 	RelationScanConsumerResult4a5767 result;
 	result.applied = true;
 	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty()) {
@@ -2836,13 +3001,20 @@ RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4
 					continue;
 				}
 
-				const ProjectedCellChainResult4a5a23 chain = projected_cell_chain_no_object_4a5a23(grid, x, y, level, false);
+				const ProjectedCellChainResult4a5a23 chain =
+						state != nullptr && resolver_state != nullptr && rng != nullptr && (record.word_0x2c & 0x01U) != 0U
+						? projected_cell_chain_with_object_branch_4a5a23(*state, *resolver_state, *rng, x, y, level, false)
+						: projected_cell_chain_no_object_4a5a23(grid, x, y, level, false);
 				report.projected_chain_call_count += 1;
 				report.projected_chain_occupied_stamp_count += chain.occupied_stamp_count;
 				report.projected_chain_cleanup_clear_count += chain.cleanup_bit_0x04_clear_count;
+				report.projected_chain_object_branch_attempt_count += chain.object_branch_attempt_count;
+				report.projected_chain_object_branch_commit_count += chain.object_branch_commit_count;
 				result.projected_chain_call_count += 1;
 				result.projected_chain_occupied_stamp_count += chain.occupied_stamp_count;
 				result.projected_chain_cleanup_clear_count += chain.cleanup_bit_0x04_clear_count;
+				result.projected_chain_object_branch_attempt_count += chain.object_branch_attempt_count;
+				result.projected_chain_object_branch_commit_count += chain.object_branch_commit_count;
 				if (chain.stopped_on_object_materialization_required) {
 					report.projected_chain_object_branch_blocked_count += 1;
 					result.projected_chain_object_branch_blocked_count += 1;
@@ -2854,6 +3026,14 @@ RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4
 
 	result.no_object_projection_chain_complete = result.projected_chain_object_branch_blocked_count == 0;
 	return result;
+}
+
+RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+	return relation_scan_consumers_after_0x4a1f3b_bounds_4a5767_impl(grid, nullptr, nullptr, nullptr, owners);
+}
+
+RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+	return relation_scan_consumers_after_0x4a1f3b_bounds_4a5767_impl(state.generated_cell_buffer, &state, &resolver_state, &rng, owners);
 }
 
 static bool source_relation_object_coordinate_eligibility_0x49aa93(
@@ -4858,8 +5038,17 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
+	SourceObjectResolverState4af785 relation_scan_resolver_state;
+	H3MapedRng relation_scan_rng;
+	if (coordinate_result.terrain_repaint_executed) {
+		relation_scan_rng.state = coordinate_result.terrain_repaint.terrain_visual_rng_state_after_0x4bb74b;
+	} else if (coordinate_result.terrain_selection_executed) {
+		relation_scan_rng.state = coordinate_result.terrain_selection.rng_state_after;
+	} else {
+		relation_scan_rng.state = coordinate_result.coordinate_seed.rng_state_after;
+	}
 	const RelationScanConsumerResult4a5767 relation_scan_consumers =
-			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
+			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(state, relation_scan_resolver_state, relation_scan_rng, state.relation_owner_vectors_10e4_10e8);
 	state.relation_scan_consumers_4a5767_applied = relation_scan_consumers.applied;
 	state.relation_scan_consumers_4a5767_no_object_projection_chain_complete = relation_scan_consumers.no_object_projection_chain_complete;
 	state.relation_scan_consumer_owner_scan_count_4a5767 = relation_scan_consumers.owner_scan_count;
@@ -4869,6 +5058,8 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_scan_consumer_projected_chain_call_count_4a5767 = relation_scan_consumers.projected_chain_call_count;
 	state.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = relation_scan_consumers.projected_chain_occupied_stamp_count;
 	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
+	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
+	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
 			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
 	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
@@ -4888,7 +5079,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"endpoint_vector_0xd8_0xdc_success_path_source_producer_unrecovered_for_live_materialization",
 		"object_record_vector_0xec4_0xecc_contents_unported_after_0x4a8db2_thresholds_until_0x4a901a_candidate_vector_append_selection_is_ported",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_scan_consumers_object_materialization_branch_unported_after_no_object_projection_chain",
+		"relation_vector_0x10e4_0x10e8_remaining_object_metadata_branch_unported_after_source_order_0x4a5a23_object_materialization",
 		"endpoint_byte_state_vector_0x1104_0x1108_zero_init_waiting_on_source_owned_endpoint_vector_0xd8_0xdc_count",
 		"endpoint_cursor_0xf5c_success_seed_source_unrecovered_after_0xf58_zero_setup",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",

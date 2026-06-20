@@ -690,6 +690,132 @@ int main() {
 		if (!require(chain_object_result.stopped_on_object_materialization_required && chain_object_result.occupied_stamp_count == 0, "0x4a5a23 must stop instead of guessing the +0x2c bit0 object-materialization branch")) {
 			return 1;
 		}
+		int32_t object_branch_source_nibble = -1;
+		SourceObjectSelectorResult4a9e40 object_branch_selector;
+		for (int32_t source_nibble = 0; source_nibble < 16; ++source_nibble) {
+			object_branch_selector = aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, 9, 0, source_nibble);
+			if (object_branch_selector.selected) {
+				object_branch_source_nibble = source_nibble;
+				break;
+			}
+		}
+		if (!require(object_branch_source_nibble >= 0, "test setup could not find recovered 0x4a9e40 selector input for 0x4a5a23 object branch")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState chain_object_state;
+		chain_object_state.width = 2;
+		chain_object_state.height = 2;
+		chain_object_state.level_count = 1;
+		chain_object_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+		chain_object_state.generated_cell_buffer_owned = true;
+		chain_object_state.descriptor_counter_table_0x1110_present = true;
+		chain_object_state.descriptor_counter_table_0x1110_contents_known = true;
+		chain_object_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+		chain_object_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+		chain_object_state.native_object_record_key_allocator_0x4a93a2_known = true;
+		chain_object_state.next_native_object_record_key_0x4a93a2 = 0x03625000U;
+		GeneratedCellRecord0x30 &chain_materialize_cell = chain_object_state.generated_cell_buffer.records[0];
+		chain_materialize_cell.object_reference_vector_contents_known = true;
+		chain_materialize_cell.object_reference_count = 0;
+		chain_materialize_cell.object_references_0x04_0x08.clear();
+		chain_materialize_cell.word_0x1c = 0x00000002U;
+		chain_materialize_cell.word_0x10_known = true;
+		chain_materialize_cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
+		chain_materialize_cell.word_0x14_known = true;
+		chain_materialize_cell.word_0x14 = 0U;
+		chain_materialize_cell.word_0x18_known = true;
+		chain_materialize_cell.word_0x18 = 0U;
+		chain_materialize_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		chain_materialize_cell.word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
+		SourceObjectResolverState4af785 chain_object_resolver;
+		aurelion::h3maped_rmg_core::H3MapedRng chain_object_rng;
+		chain_object_rng.state = 10U;
+		const auto chain_materialize_result =
+				aurelion::h3maped_rmg_core::projected_cell_chain_with_object_branch_4a5a23(chain_object_state, chain_object_resolver, chain_object_rng, 0, 0, 0, false);
+		if (!require(chain_materialize_result.object_branch_attempt_count == 1
+						&& chain_materialize_result.object_branch_selector_selected_count == 1
+						&& chain_materialize_result.object_branch_allocated_record_count == 1
+						&& chain_materialize_result.object_branch_low_bits_cleared_count == 1
+						&& chain_materialize_result.object_branch_commit_count == 1
+						&& chain_materialize_result.stopped_on_out_of_bounds,
+					"0x4a5a23 object branch did not select, allocate, clear low +0x2c bits, and commit before following projection")) {
+			return 1;
+		}
+		if (!require((chain_materialize_cell.word_0x2c & 0x1fU) == 0U
+						&& (chain_materialize_cell.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+						&& (chain_materialize_cell.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U
+						&& chain_materialize_cell.object_reference_count == 1
+						&& chain_materialize_cell.object_references_0x04_0x08[0] == 0x03625000U,
+					"0x4a5a23 object branch did not mutate target cell/object reference through vtable slot +0x04")) {
+			return 1;
+		}
+		if (!require(!chain_object_state.object_records_0xec4_ecc.empty()
+						&& chain_object_state.object_records_0xec4_ecc.back().object_record_vtable_0x00 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74
+						&& chain_object_state.object_records_0xec4_ecc.back().copied_source_record_carried
+						&& chain_object_state.object_records_0xec4_ecc.back().source_catalog_index_0x49da08 == object_branch_selector.selected_source_record_index,
+					"0x4a5a23 object branch did not preserve recovered 0x49ba89/0x4a9e40 source identity")) {
+			return 1;
+		}
+		if (!require(chain_object_state.source_pair_vector_edc.contents_known && chain_object_state.source_pair_vector_edc.count == 1, "0x4a5a23 object branch did not materialize generator +0xedc source-pair vector count")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState scan_object_state;
+		scan_object_state.width = 1;
+		scan_object_state.height = 1;
+		scan_object_state.level_count = 1;
+		scan_object_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(1, 1, 1);
+		scan_object_state.generated_cell_buffer_owned = true;
+		scan_object_state.descriptor_counter_table_0x1110_present = true;
+		scan_object_state.descriptor_counter_table_0x1110_contents_known = true;
+		scan_object_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+		scan_object_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+		scan_object_state.native_object_record_key_allocator_0x4a93a2_known = true;
+		scan_object_state.next_native_object_record_key_0x4a93a2 = 0x03626000U;
+		GeneratedCellRecord0x30 &scan_object_cell = scan_object_state.generated_cell_buffer.records[0];
+		scan_object_cell.object_reference_vector_contents_known = true;
+		scan_object_cell.object_reference_count = 0;
+		scan_object_cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(scan_object_cell.word_0x20, 0);
+		scan_object_cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(scan_object_cell.word_0x24, 0, 0);
+		scan_object_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(scan_object_cell), "test setup 0x4a5767 reset failed before live object-branch scan-consumer pass")) {
+			return 1;
+		}
+		scan_object_cell.word_0x1c = 0x00000002U;
+		scan_object_cell.word_0x10_known = true;
+		scan_object_cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
+		scan_object_cell.word_0x14_known = true;
+		scan_object_cell.word_0x14 = 0U;
+		scan_object_cell.word_0x18_known = true;
+		scan_object_cell.word_0x18 = 0U;
+		scan_object_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		scan_object_cell.word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
+		scan_object_cell.byte_0x2b = 0x02U;
+		scan_object_cell.byte_0x2b_known_mask = 0x02U;
+		GeneratorRelationOwnerState4a218c scan_object_owner;
+		scan_object_owner.owner_vector_index = 0;
+		scan_object_owner.runtime_zone_index = 0;
+		scan_object_owner.coordinate_triple_0x10_0x18_known = true;
+		scan_object_owner.coordinate_level_0x18 = 0;
+		scan_object_owner.scan_bounds_0x20_0x2c_known = true;
+		scan_object_owner.scan_bound_low_x_0x20 = 0;
+		scan_object_owner.scan_bound_low_y_0x24 = 0;
+		scan_object_owner.scan_bound_high_x_0x28 = 1;
+		scan_object_owner.scan_bound_high_y_0x2c = 1;
+		SourceObjectResolverState4af785 scan_object_resolver;
+		aurelion::h3maped_rmg_core::H3MapedRng scan_object_rng;
+		scan_object_rng.state = 10U;
+		const auto scan_object_result = aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(scan_object_state, scan_object_resolver, scan_object_rng, { scan_object_owner });
+		if (!require(scan_object_result.applied
+						&& scan_object_result.projected_chain_call_count == 1
+						&& scan_object_result.projected_chain_object_branch_attempt_count == 1
+						&& scan_object_result.projected_chain_object_branch_commit_count == 1
+						&& scan_object_result.projected_chain_object_branch_blocked_count == 0
+						&& scan_object_state.object_record_vector_append_count_0x4a54a7 == 1
+						&& scan_object_state.source_pair_vector_edc.contents_known
+						&& scan_object_state.source_pair_vector_edc.count == 1,
+					"relation scan consumer live-state overload did not materialize the recovered 0x4a5a23 object branch")) {
+			return 1;
+		}
 
 		EndpointMaterializationState4a5e73 endpoint_state;
 		endpoint_state.endpoint_vector_d8_dc = { EndpointPointerRecord4a5e73 { 2 }, EndpointPointerRecord4a5e73 { 4 } };

@@ -543,6 +543,8 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t relation_scan_consumer_projected_chain_call_count_4a5767 = 0;
 	int32_t relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = 0;
 	int32_t relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = 0;
+	int32_t relation_scan_consumer_object_branch_attempt_count_4a5767 = 0;
+	int32_t relation_scan_consumer_object_branch_commit_count_4a5767 = 0;
 	bool relation_high_owner_propagation_49a318_applied = false;
 	bool relation_high_owner_propagation_49a318_grid_available = false;
 	bool relation_high_owner_propagation_49a318_object_metadata_gate_complete = false;
