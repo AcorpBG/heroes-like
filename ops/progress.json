@@ -12291,14 +12291,14 @@
       "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
     }
   ],
-  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported.",
+  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-20T02:20:01Z",
+  "currentSliceUpdatedAt": "2026-06-20T02:32:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -15634,25 +15634,32 @@
     "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
   },
   "latestEvidence": {
-    "id": "native-rmg-generated-cell-helper-contracts-20260620",
-    "evidenceId": "native-rmg-generated-cell-helper-contracts-20260620",
-    "timestamp": "2026-06-20T02:20:01Z",
-    "status": "pass_supporting_generated_cell_helper_contracts_not_live_materialization_not_parity",
+    "id": "native-rmg-object-footprint-4a54a7-contract-20260620",
+    "evidenceId": "native-rmg-object-footprint-4a54a7-contract-20260620",
+    "timestamp": "2026-06-20T02:32:26Z",
+    "status": "pass_supporting_object_footprint_commit_contract_not_live_materialization_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/include/rmg_native_core.hpp",
+      "src/gdextension/src/rmg_native_core.cpp",
       "docs/native-rmg-core-h3maped-drift-audit.md",
       "docs/native-rmg-generated-cell-mutation-chain.md",
       "PLAN.md",
       "ops/progress.json",
-      "bin/h3maped_rmg_core_selftest"
+      "bin/h3maped_rmg_core_selftest",
+      "bin/rmg_native_batch_export_cli"
     ],
     "checks": [
       {
         "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest --parallel 2",
+        "status": "passed_linux_no_godot"
+      },
+      {
+        "command": "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2",
         "status": "passed_linux_no_godot"
       },
       {
@@ -15684,6 +15691,8 @@
       "connection_region_writer_0x4a606b_live_caller_wired": false,
       "projected_cell_chain_0x4a5a23_no_object_contract_implemented": true,
       "projected_cell_chain_0x4a5a23_object_materialization_branch_ported": false,
+      "object_footprint_commit_0x4a54a7_static_contract_implemented": true,
+      "object_footprint_commit_0x4a54a7_live_caller_wired": false,
       "endpoint_helper_0x4a5e73_live_caller_wired": false,
       "endpoint_pointer_vector_0xd8_0xdc_contents_known": false,
       "endpoint_projection_vector_0xc8_0xcc_contents_known": false,
@@ -15694,19 +15703,22 @@
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "Live endpoint/object materialization remains blocked until source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, +0xf5c producer state, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation are ported."
+    "blocker": "Live relation/object/endpoint materialization remains blocked until source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, +0xf5c producer state, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation are ported."
   },
   "latestEvidenceArtifacts": [
     "src/gdextension/include/h3maped_rmg_core.hpp",
     "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+    "src/gdextension/include/rmg_native_core.hpp",
+    "src/gdextension/src/rmg_native_core.cpp",
     "docs/native-rmg-core-h3maped-drift-audit.md",
     "docs/native-rmg-generated-cell-mutation-chain.md",
     "PLAN.md",
     "ops/progress.json",
-    "bin/h3maped_rmg_core_selftest"
+    "bin/h3maped_rmg_core_selftest",
+    "bin/rmg_native_batch_export_cli"
   ],
-  "latestEvidenceId": "native-rmg-generated-cell-helper-contracts-20260620",
+  "latestEvidenceId": "native-rmg-object-footprint-4a54a7-contract-20260620",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -57108,9 +57120,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported.",
+  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported.",
   "taskId": "10184",
-  "updatedAt": "2026-06-20T02:20:01Z",
+  "updatedAt": "2026-06-20T02:32:26Z",
   "validation": {
     "id": "native-rmg-object-wrapper-metadata-buckets-20260619",
     "evidenceId": "native-rmg-object-wrapper-metadata-buckets-20260619",
@@ -67780,25 +67792,32 @@
       "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
     },
     {
-      "id": "native-rmg-generated-cell-helper-contracts-20260620",
-      "evidenceId": "native-rmg-generated-cell-helper-contracts-20260620",
-      "timestamp": "2026-06-20T02:20:01Z",
-      "status": "pass_supporting_generated_cell_helper_contracts_not_live_materialization_not_parity",
+      "id": "native-rmg-object-footprint-4a54a7-contract-20260620",
+      "evidenceId": "native-rmg-object-footprint-4a54a7-contract-20260620",
+      "timestamp": "2026-06-20T02:32:26Z",
+      "status": "pass_supporting_object_footprint_commit_contract_not_live_materialization_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported.",
       "artifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
         "docs/native-rmg-core-h3maped-drift-audit.md",
         "docs/native-rmg-generated-cell-mutation-chain.md",
         "PLAN.md",
         "ops/progress.json",
-        "bin/h3maped_rmg_core_selftest"
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli"
       ],
       "checks": [
         {
           "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest --parallel 2",
+          "status": "passed_linux_no_godot"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2",
           "status": "passed_linux_no_godot"
         },
         {
@@ -67830,6 +67849,8 @@
         "connection_region_writer_0x4a606b_live_caller_wired": false,
         "projected_cell_chain_0x4a5a23_no_object_contract_implemented": true,
         "projected_cell_chain_0x4a5a23_object_materialization_branch_ported": false,
+        "object_footprint_commit_0x4a54a7_static_contract_implemented": true,
+        "object_footprint_commit_0x4a54a7_live_caller_wired": false,
         "endpoint_helper_0x4a5e73_live_caller_wired": false,
         "endpoint_pointer_vector_0xd8_0xdc_contents_known": false,
         "endpoint_projection_vector_0xc8_0xcc_contents_known": false,
@@ -67840,29 +67861,36 @@
         "object_materialization_ported": false,
         "windows_dll_build_deferred": true
       },
-      "blocker": "Live endpoint/object materialization remains blocked until source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, +0xf5c producer state, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation are ported."
+      "blocker": "Live relation/object/endpoint materialization remains blocked until source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, +0xf5c producer state, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation are ported."
     }
   ],
   "validationResults": {
-    "id": "native-rmg-generated-cell-helper-contracts-20260620",
-    "evidenceId": "native-rmg-generated-cell-helper-contracts-20260620",
-    "timestamp": "2026-06-20T02:20:01Z",
-    "status": "pass_supporting_generated_cell_helper_contracts_not_live_materialization_not_parity",
+    "id": "native-rmg-object-footprint-4a54a7-contract-20260620",
+    "evidenceId": "native-rmg-object-footprint-4a54a7-contract-20260620",
+    "timestamp": "2026-06-20T02:32:26Z",
+    "status": "pass_supporting_object_footprint_commit_contract_not_live_materialization_not_parity",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/include/rmg_native_core.hpp",
+      "src/gdextension/src/rmg_native_core.cpp",
       "docs/native-rmg-core-h3maped-drift-audit.md",
       "docs/native-rmg-generated-cell-mutation-chain.md",
       "PLAN.md",
       "ops/progress.json",
-      "bin/h3maped_rmg_core_selftest"
+      "bin/h3maped_rmg_core_selftest",
+      "bin/rmg_native_batch_export_cli"
     ],
     "checks": [
       {
         "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest --parallel 2",
+        "status": "passed_linux_no_godot"
+      },
+      {
+        "command": "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli --parallel 2",
         "status": "passed_linux_no_godot"
       },
       {
@@ -67894,6 +67922,8 @@
       "connection_region_writer_0x4a606b_live_caller_wired": false,
       "projected_cell_chain_0x4a5a23_no_object_contract_implemented": true,
       "projected_cell_chain_0x4a5a23_object_materialization_branch_ported": false,
+      "object_footprint_commit_0x4a54a7_static_contract_implemented": true,
+      "object_footprint_commit_0x4a54a7_live_caller_wired": false,
       "endpoint_helper_0x4a5e73_live_caller_wired": false,
       "endpoint_pointer_vector_0xd8_0xdc_contents_known": false,
       "endpoint_projection_vector_0xc8_0xcc_contents_known": false,
@@ -67904,7 +67934,7 @@
       "object_materialization_ported": false,
       "windows_dll_build_deferred": true
     },
-    "blocker": "Live endpoint/object materialization remains blocked until source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, +0xf5c producer state, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation are ported."
+    "blocker": "Live relation/object/endpoint materialization remains blocked until source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, +0xf5c producer state, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation are ported."
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, the recovered explicit-input 0x4a606b connection-region writer, and the recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior. This does not wire live endpoint or object materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, same-run private-state comparison, and final payload generation remain unported."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now implements the recovered static 0x4a5e73 endpoint helper contract, recovered explicit-input 0x4a606b connection-region writer, recovered no-object 0x4a5a23 projection-chain occupancy/cleanup behavior, and recovered explicit-call 0x4a54a7 object-footprint commit afterstate. This does not wire live relation/object/endpoint materialization: source-owned generator-level +0xd8/+0xdc and +0xc8/+0xcc vector contents, the live +0xf5c producer, live 0x4a606b/0x4a696b/fallback caller order, ordered relation/object replay, descriptor/source joins, the 0x4a5a23 object-materialization branch, live 0x4a54a7 caller order, same-run private-state comparison, and final payload generation remain unported."
 }

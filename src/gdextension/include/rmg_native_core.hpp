@@ -270,6 +270,7 @@ struct SharedGeneratedCellRecord0x30 {
 	bool object_reference_vector_fields_0x04_0x08_present = true;
 	bool object_reference_vector_contents_known = false;
 	int32_t object_reference_count = 0;
+	std::vector<uint32_t> object_references_0x04_0x08;
 	bool word_0x10_known = false;
 	uint32_t word_0x10 = 0U;
 	bool word_0x14_known = false;
@@ -399,6 +400,14 @@ struct SharedGeneratorRelationOwnerState {
 	std::vector<SharedGeneratorRelationRecordState> relation_records;
 };
 
+struct SharedObjectRecordReference4a54a7 {
+	uint32_t object_record_key = 0U;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
 struct SharedGeneratorObjectPrivateState {
 	bool present = false;
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
@@ -428,6 +437,12 @@ struct SharedGeneratorObjectPrivateState {
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
 	int32_t descriptor_counter_table_0x1110_zero_count = 0;
+	std::vector<SharedObjectRecordReference4a54a7> object_records_0xec4_ecc;
+	int32_t object_record_vector_append_count_0x4a54a7 = 0;
+	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
+	int32_t descriptor_counter_increment_count_0x4a54a7 = 0;
+	int32_t target_cell_word_mutation_count_0x4a54a7 = 0;
+	int32_t projection_score_depletion_count_0x4a54a7 = 0;
 	bool source_owner_player_slots_ed8_ee0_ee4_present = false;
 	int32_t selected_color_order_ed8_count = 0;
 	int32_t raw_source_owner_slots_ee0_count = 0;

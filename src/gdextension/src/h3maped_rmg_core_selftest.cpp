@@ -1217,6 +1217,70 @@ int main() {
 	if (!require(std::all_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value == 0U; }), "generator object private state descriptor counter table was not zero-initialized")) {
 		return 1;
 	}
+	GeneratorObjectPrivateState commit_state;
+	commit_state.width = 3;
+	commit_state.height = 3;
+	commit_state.level_count = 1;
+	commit_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);
+	commit_state.generated_cell_buffer_owned = true;
+	commit_state.descriptor_counter_table_0x1110_present = true;
+	commit_state.descriptor_counter_table_0x1110_contents_known = true;
+	commit_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+	commit_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	for (GeneratedCellRecord0x30 &record : commit_state.generated_cell_buffer.records) {
+		record.object_reference_vector_contents_known = true;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20_known = true;
+		record.word_0x20 = 0x00010008U;
+		record.word_0x28_known = true;
+		record.word_0x28 = 0x12005000U;
+	}
+	const auto commit_result = aurelion::h3maped_rmg_core::object_footprint_commit_4a54a7(
+			commit_state,
+			0x036260c0U,
+			54,
+			1,
+			1,
+			0,
+			true,
+			0,
+			0);
+	const GeneratedCellRecord0x30 &commit_target = commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0))];
+	if (!require(commit_result.object_vector_appended
+					&& commit_state.object_records_0xec4_ecc.size() == 1
+					&& commit_state.object_record_vector_ec4_ecc.contents_known
+					&& commit_state.object_record_vector_ec4_ecc.count == 1,
+				"0x4a54a7 did not append the object record to generator +0xec4/+0xecc")) {
+		return 1;
+	}
+	if (!require(commit_result.generated_cell_reference_appended
+					&& commit_target.object_reference_vector_contents_known
+					&& commit_target.object_reference_count == 1
+					&& commit_target.object_references_0x04_0x08[0] == 0x036260c0U,
+				"0x4a54a7 did not append the object record to the target cell object-reference vector")) {
+		return 1;
+	}
+	if (!require(commit_result.descriptor_counter_incremented
+					&& commit_state.descriptor_counter_table_0x1110[size_t(54)] == 1U
+					&& commit_state.descriptor_counter_increment_count_0x4a54a7 == 1,
+				"0x4a54a7 did not increment generator +0x1110[descriptor+0x1c]")) {
+		return 1;
+	}
+	if (!require((commit_target.word_0x20 & 0xffffU) == 0U
+					&& (commit_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
+					&& (commit_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+					&& commit_result.target_cell_word_mutation_count == 2,
+				"0x4a54a7 did not clear target low score word and set target action/occupied bits")) {
+		return 1;
+	}
+	if (!require(commit_result.projection_enabled
+					&& commit_result.projection_anchor_in_bounds
+					&& commit_result.projection_score_depletion_count > 0
+					&& commit_state.projection_score_depletion_count_0x4a54a7 == commit_result.projection_score_depletion_count,
+				"0x4a54a7 did not run the descriptor +0x29 projection score-depletion wave")) {
+		return 1;
+	}
 	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {
 		return 1;
 	}
