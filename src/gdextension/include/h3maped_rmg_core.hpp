@@ -340,6 +340,57 @@ struct WeightedObjectRecord4a93a2 {
 	bool enabled_low_byte_0x24 = false;
 };
 
+struct SourceOrderObjectCandidate4a93a2 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t distance_squared_to_anchor = 0;
+};
+
+struct SourceOrderObjectPlacementState4a93a2 {
+	bool descriptor_source_bridge_known = false;
+	bool copied_source_record_carried = false;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_empty = false;
+	bool relation_owner_byte_known = false;
+	bool source_pair_key_known = false;
+	bool source_pair_key_not_minus_one = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t source_pair_key_0x0c = -1;
+	int32_t selected_index_0x20 = -1;
+	bool enabled_low_byte_0x24 = false;
+	int32_t anchor_x_0x10 = 0;
+	int32_t anchor_y_0x14 = 0;
+	int32_t anchor_level_0x18 = 0;
+	int32_t scan_bound_low_x_0x20 = 0;
+	int32_t scan_bound_low_y_0x24 = 0;
+	int32_t scan_bound_high_x_0x28 = 0;
+	int32_t scan_bound_high_y_0x2c = 0;
+	int32_t best_distance_squared_initial_0x7d00 = 0x7d00;
+	int32_t best_distance_squared_after_scan = 0x7d00;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_cell_word_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t distance_reject_count = 0;
+	int32_t eligibility_reject_count_0x49aa93 = 0;
+	int32_t local_vector_clear_count_0x4ae52a = 0;
+	int32_t local_vector_append_count_0x4ae1fd = 0;
+	int32_t accepted_candidate_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected_candidate_known = false;
+	SourceOrderObjectCandidate4a93a2 selected_candidate;
+	std::vector<SourceOrderObjectCandidate4a93a2> accepted_candidates_0x4ae1fd;
+	bool allocated_record_0x4a93a2 = false;
+	bool committed_through_0x4a54a7 = false;
+	bool source_pair_success_byte_0x3c_set = false;
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	int32_t object_vector_count_after = 0;
+	std::string blocked_reason;
+};
+
 struct WeightedSchedulerThreshold4a8db2 {
 	bool source_density_fields_known = false;
 	int32_t player_castle_density_0x2c = 0;
@@ -1342,6 +1393,7 @@ struct ObjectRecordReference4a54a7 {
 	int32_t y = 0;
 	int32_t level = 0;
 	bool object_record_key_allocated_by_0x4a93a2 = false;
+	bool source_order_direct_record_0x4a8d2c_0x4a93a2_known = false;
 	bool weighted_record_0x4a93a2_known = false;
 	uint32_t object_record_vtable_0x00 = 0U;
 	int32_t object_record_sequence_0x1c = -1;
@@ -1407,6 +1459,12 @@ struct GeneratorObjectPrivateState {
 	int32_t weighted_candidate_selected_count_0x4a901a = 0;
 	int32_t weighted_candidate_commit_count_0x4a901a = 0;
 	std::vector<WeightedObjectCandidateVectorState4a901a> weighted_candidate_vectors_0x4a901a;
+	bool source_order_direct_candidates_0x4a93a2_known = false;
+	int32_t source_order_direct_candidate_vector_count_0x4a93a2 = 0;
+	int32_t source_order_direct_candidate_total_count_0x4a93a2 = 0;
+	int32_t source_order_direct_selected_count_0x4a93a2 = 0;
+	int32_t source_order_direct_commit_count_0x4a93a2 = 0;
+	std::vector<SourceOrderObjectPlacementState4a93a2> source_order_direct_candidate_vectors_0x4a93a2;
 	std::vector<ObjectRecordReference4a54a7> object_records_0xec4_ecc;
 	int32_t object_record_vector_append_count_0x4a54a7 = 0;
 	int32_t generated_cell_object_reference_append_count_0x4a54a7 = 0;
@@ -1537,6 +1595,43 @@ struct WeightedObjectMaterializationCommitResult4a93a2 {
 	std::string blocked_reason;
 };
 
+struct SourceOrderObjectPlacementResult4a93a2 {
+	SourceOrderObjectPlacementState4a93a2 placement_state_0x4a93a2;
+	WeightedObjectRecord4a93a2 object_record_0x4a93a2;
+	WeightedObjectMaterializationCommitResult4a93a2 commit_0x4a93a2_0x4a54a7;
+	bool allocated_record_0x4a93a2 = false;
+	bool committed = false;
+	std::string blocked_reason;
+};
+
+struct SourceOrderObjectDispatcherBranch4a8d2c {
+	int32_t source_field_offset = 0;
+	int32_t source_field_value = 0;
+	bool source_field_known = true;
+	bool branch_gate_positive = false;
+	int32_t selected_index_0x20 = -1;
+	bool enabled_low_byte_0x24 = false;
+	bool attempted = false;
+	SourceOrderObjectPlacementResult4a93a2 placement_0x4a93a2;
+	std::string blocked_reason;
+};
+
+struct SourceOrderObjectDispatcherResult4a8d2c {
+	int32_t source_field_0x20 = 0;
+	int32_t source_field_0x24 = 0;
+	bool source_field_0x30_known = false;
+	int32_t source_field_0x30 = 0;
+	bool source_field_0x34_known = false;
+	int32_t source_field_0x34 = 0;
+	int32_t lane_index_0x1c = -1;
+	int32_t source_pair_key_0x0c = -1;
+	std::vector<SourceOrderObjectDispatcherBranch4a8d2c> branches;
+	int32_t attempted_branch_count = 0;
+	int32_t selected_branch_index = -1;
+	bool committed = false;
+	std::string blocked_reason;
+};
+
 struct WeightedObjectCandidateScanResult4a901a {
 	WeightedObjectCandidateVectorState4a901a vector_state_0x4a901a;
 	WeightedObjectRecord4a93a2 weighted_record_0x4a93a2;
@@ -1594,7 +1689,10 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
 SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng);
 WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const SourceZonePayload4a218c &source_payload);
+WeightedObjectRecord4a93a2 allocate_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24);
 WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24);
+SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t selected_index_0x20, bool enabled_low_byte_0x24, H3MapedRng &rng);
+SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
 WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);

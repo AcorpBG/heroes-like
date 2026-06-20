@@ -428,6 +428,7 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.y = input.y;
 	out.level = input.level;
 	out.object_record_key_allocated_by_0x4a93a2 = input.object_record_key_allocated_by_0x4a93a2;
+	out.source_order_direct_record_0x4a8d2c_0x4a93a2_known = input.source_order_direct_record_0x4a8d2c_0x4a93a2_known;
 	out.weighted_record_0x4a93a2_known = input.weighted_record_0x4a93a2_known;
 	out.object_record_vtable_0x00 = input.object_record_vtable_0x00;
 	out.object_record_sequence_0x1c = input.object_record_sequence_0x1c;
@@ -590,6 +591,11 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	for (const h3maped_rmg_core::WeightedObjectCandidateVectorState4a901a &vector_state : input.weighted_candidate_vectors_0x4a901a) {
 		out.weighted_candidate_vectors_0x4a901a.push_back(from_h3maped_weighted_object_candidate_vector_4a901a(vector_state));
 	}
+	out.source_order_direct_candidates_0x4a93a2_known = input.source_order_direct_candidates_0x4a93a2_known;
+	out.source_order_direct_candidate_vector_count_0x4a93a2 = input.source_order_direct_candidate_vector_count_0x4a93a2;
+	out.source_order_direct_candidate_total_count_0x4a93a2 = input.source_order_direct_candidate_total_count_0x4a93a2;
+	out.source_order_direct_selected_count_0x4a93a2 = input.source_order_direct_selected_count_0x4a93a2;
+	out.source_order_direct_commit_count_0x4a93a2 = input.source_order_direct_commit_count_0x4a93a2;
 	out.object_records_0xec4_ecc.reserve(input.object_records_0xec4_ecc.size());
 	for (const h3maped_rmg_core::ObjectRecordReference4a54a7 &record : input.object_records_0xec4_ecc) {
 		out.object_records_0xec4_ecc.push_back(from_h3maped_object_record_reference_4a54a7(record));
@@ -1433,6 +1439,7 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
 			<< ",\"object_record_key_allocated_by_0x4a93a2\":" << (record.object_record_key_allocated_by_0x4a93a2 ? "true" : "false")
+			<< ",\"source_order_direct_record_0x4a8d2c_0x4a93a2_known\":" << (record.source_order_direct_record_0x4a8d2c_0x4a93a2_known ? "true" : "false")
 			<< ",\"weighted_record_0x4a93a2_known\":" << (record.weighted_record_0x4a93a2_known ? "true" : "false")
 			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
 			<< ",\"object_record_sequence_0x1c\":" << record.object_record_sequence_0x1c
@@ -1782,6 +1789,11 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"weighted_candidate_vectors_0x4a901a\":";
 	append_weighted_object_candidate_vectors_4a901a_json(out, state.weighted_candidate_vectors_0x4a901a);
 	out << ","
+		<< "\"source_order_direct_candidates_0x4a93a2_known\":" << (state.source_order_direct_candidates_0x4a93a2_known ? "true" : "false") << ","
+		<< "\"source_order_direct_candidate_vector_count_0x4a93a2\":" << state.source_order_direct_candidate_vector_count_0x4a93a2 << ","
+		<< "\"source_order_direct_candidate_total_count_0x4a93a2\":" << state.source_order_direct_candidate_total_count_0x4a93a2 << ","
+		<< "\"source_order_direct_selected_count_0x4a93a2\":" << state.source_order_direct_selected_count_0x4a93a2 << ","
+		<< "\"source_order_direct_commit_count_0x4a93a2\":" << state.source_order_direct_commit_count_0x4a93a2 << ","
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
 		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","
