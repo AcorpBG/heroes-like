@@ -320,6 +320,18 @@ int main() {
 					"0x4903e8 descriptor/source join did not carry the copied 0x4c source record as identity authority")) {
 			return 1;
 		}
+		if (!require(descriptor_join_state.source_pairs_0xedc.size() == 1
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_0x4903e8_known
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_joined_0x4903e8
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_source_pair_index_0xedc == 0
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.target_context_0x4903e8 == 45
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_key_0x00 == type45_descriptor.source_key_0x00
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.descriptor_type_0x1c == type45_descriptor.descriptor_type_0x1c
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_cell_x_0x2c == 1
+						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_cell_y_0x30 == 2,
+					"0x4903e8-created +0xedc source pair did not retain descriptor join context for live source-order replay")) {
+			return 1;
+		}
 		const SourceObjectDescriptorJoinResult4903e8 type45_reuse_join =
 				aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(descriptor_join_state, type45_descriptor, type45_records[0]);
 		if (!require(type45_reuse_join.joined
@@ -931,6 +943,7 @@ int main() {
 		if (!require(chain_object_state.source_pair_records_edc.size() == 1
 						&& chain_object_state.source_pair_records_edc[0].source_record_pointer_0x00_carried
 						&& chain_object_state.source_pair_records_edc[0].context_pointer_0x04_carried
+						&& !chain_object_state.source_pair_records_edc[0].descriptor_join_0x4903e8_known
 						&& chain_object_state.source_pair_records_edc[0].copied_source_catalog_index == object_branch_selector.selected_source_record_index
 						&& aurelion::h3maped_rmg_core::same_source_object_record_0x4c(chain_object_state.source_pair_records_edc[0].source_record_copy, object_branch_selected_record),
 					"0x4a5a23 object branch did not preserve generator +0xedc source-pair payload")) {
@@ -995,7 +1008,8 @@ int main() {
 		}
 		if (!require(scan_object_state.source_pair_records_edc.size() == 1
 						&& scan_object_state.source_pair_records_edc[0].source_record_pointer_0x00_carried
-						&& scan_object_state.source_pair_records_edc[0].context_pointer_0x04_carried,
+						&& scan_object_state.source_pair_records_edc[0].context_pointer_0x04_carried
+						&& !scan_object_state.source_pair_records_edc[0].descriptor_join_0x4903e8_known,
 					"relation scan consumer live-state overload did not preserve generator +0xedc source-pair payload")) {
 			return 1;
 		}
@@ -1604,6 +1618,12 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.source_owner_player_slots_ed8_ee0_ee4_present && generator_state.selected_color_order_ed8_count == int32_t(selected_after_setup3.player_assignment.selected_color_order_ed8.size()), "generator object private state did not preserve source-owner/player-slot buffers")) {
+		return 1;
+	}
+	if (!require(generator_state.selected_color_order_ed8 == selected_after_setup3.player_assignment.selected_color_order_ed8
+					&& generator_state.raw_source_owner_slots_ee0 == selected_after_setup3.player_assignment.raw_ee0_slots
+					&& generator_state.mapped_source_owner_slots_ee4 == selected_after_setup3.player_assignment.mapped_ee4_slots,
+				"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
 	}
 	if (!require(generator_state.object_record_vector_ec4_ecc.present && !generator_state.object_record_vector_ec4_ecc.contents_known, "generator object private state must keep object-vector contents unclaimed until materialization is ported")) {

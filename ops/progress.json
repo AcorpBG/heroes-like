@@ -16,17 +16,17 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct/weighted placement, source-backed 0x49a318 bit22 object-metadata policy, the exact 0x4a7605 -> 0x4a5e03 fallback payload commit helper for the two sampled seed-controlled records through 0x4a54a7, and preserved 0x4af785 generator +0xedc source-pair payload contents through object-branch/relation-scan state. This still does not complete live map generation: 0x4a8db2 scheduler replay over the preserved pair feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, live fallback payload feed/caller order, generic town/reward/guard materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input direct/weighted placement, 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads, descriptor-join context on 0x4903e8-created +0xedc pairs, actual +0xed8/+0xee0/+0xee4 player-slot arrays, source-backed 0x49a318 bit22 object-metadata policy, and the exact 0x4a7605 -> 0x4a5e03 fallback helper for sampled records. This still does not complete live map generation: live producer/caller order feeding every preserved source pair into implemented paths, true source-record +0x30/+0x34/+0x3c fields, exact 0x49a318 call-site order/same-run comparison, live fallback payload feed/caller order, town/reward/guard materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T00:55:14Z",
-      "latestEvidenceId": "native-rmg-source-pair-payload-preservation-20260621",
-      "remainingWork": "Port the remaining source-order object-bearing materialization path: 0x4a8db2 scheduler replay over the preserved 0x4af785 +0xedc source-pair feed into 0x4a901a, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order and same-run private-state comparison around the ported bit22 policy, live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct/weighted placement, source-backed 0x49a318 bit22 object-metadata policy, the exact 0x4a7605 -> 0x4a5e03 fallback payload commit helper for the two sampled seed-controlled records through 0x4a54a7, and preserved 0x4af785 generator +0xedc source-pair payload contents through object-branch/relation-scan state. This still does not complete live map generation: 0x4a8db2 scheduler replay over the preserved pair feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, live fallback payload feed/caller order, generic town/reward/guard materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
-      "blocker": "0x4a8db2 scheduler replay over the preserved 0x4af785 +0xedc source-pair feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, live fallback payload feed/caller order, town/reward/guard materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
+      "updatedAt": "2026-06-21T01:38:50Z",
+      "latestEvidenceId": "native-rmg-descriptor-join-player-slot-state-20260621",
+      "remainingWork": "Port the remaining source-order object-bearing materialization path: live producer/caller order feeding every preserved source pair into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input direct/weighted placement, 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads, descriptor-join context on 0x4903e8-created +0xedc pairs, actual +0xed8/+0xee0/+0xee4 player-slot arrays, source-backed 0x49a318 bit22 object-metadata policy, and the exact 0x4a7605 -> 0x4a5e03 fallback helper for sampled records. This still does not complete live map generation: live producer/caller order feeding every preserved source pair into implemented paths, true source-record +0x30/+0x34/+0x3c fields, exact 0x49a318 call-site order/same-run comparison, live fallback payload feed/caller order, town/reward/guard materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "blocker": "Live source-pair producer/caller order, true live source-record +0x30/+0x34/+0x3c fields, exact 0x49a318 call-site order/same-run comparison, town/reward/guard/fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -784,9 +784,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads: pair +0x00/+0x04 gating, direct prepass order +0x24/+0x20/+0x34/+0x30 into 0x4a901a, weighted density order +0x2c/+0x28/+0x3c/+0x38, threshold calculation, lane score/tie/disable behavior, and a controlled successful 0x4a901a -> 0x4a93a2 -> 0x4a54a7 mutation path. Native mirror/JSON exposes source_order_scheduler_replays_0x4a8db2 state. This is not full live object parity.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads: pair +0x00/+0x04 gating, direct prepass order +0x24/+0x20/+0x34/+0x30 into 0x4a901a, weighted density order +0x2c/+0x28/+0x3c/+0x38, threshold calculation, lane score/tie/disable behavior, and a controlled successful 0x4a901a -> 0x4a93a2 -> 0x4a54a7 mutation path. Native mirror/JSON exposes source_order_scheduler_replays_0x4a8db2 state. This is not full live object parity.",
-    "currentSliceUpdatedAt": "2026-06-21T01:18:04Z",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input direct/weighted placement, 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads, descriptor-join context on 0x4903e8-created +0xedc pairs, actual +0xed8/+0xee0/+0xee4 player-slot arrays, source-backed 0x49a318 bit22 object-metadata policy, and the exact 0x4a7605 -> 0x4a5e03 fallback helper for sampled records. This is partial implementation progress, not full live object parity.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input direct/weighted placement, 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads, descriptor-join context on 0x4903e8-created +0xedc pairs, actual +0xed8/+0xee0/+0xee4 player-slot arrays, source-backed 0x49a318 bit22 object-metadata policy, and the exact 0x4a7605 -> 0x4a5e03 fallback helper for sampled records. This is partial implementation progress, not full live object parity.",
+    "currentSliceUpdatedAt": "2026-06-21T01:38:50Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -795,11 +795,11 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-source-pair-payload-preservation-20260621",
+      "id": "native-rmg-descriptor-join-player-slot-state-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed_partial_implementation_not_parity",
-      "timestamp": "2026-06-21T00:55:14Z",
-      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core and native mirror now preserve 0x4af785 generator +0xedc source-pair payload contents through object-branch and relation-scan state: pair +0x00 carries the copied source record and pair +0x04 carries the wrapper/context copy. This removes the count-only +0xedc blocker only; 0x4a8db2 scheduler replay over that preserved feed, true source-record +0x30/+0x34 fields, live materialization caller order, roads/rivers, and final payload generation remain unported.",
+      "timestamp": "2026-06-21T01:38:50Z",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core and native mirror now preserve 0x4903e8 descriptor-join context on created +0xedc source pairs and actual +0xed8/+0xee0/+0xee4 player-slot arrays through generator object private state. This removes two source-order replay input-loss points only; live source-pair producer/caller order, true source-record +0x30/+0x34/+0x3c fields, town/reward/guard/fallback materialization, roads/rivers, and final payload generation remain unported.",
       "checks": {
         "linux_debug_native_build": "passed",
         "linux_release_native_build": "passed",
@@ -816,8 +816,10 @@
         "source_pair_0xedc_selftest_payload_count": 1,
         "source_pair_0xedc_carries_source_record_0x00": true,
         "source_pair_0xedc_carries_context_wrapper_0x04": true,
+        "descriptor_join_context_on_0x4903e8_created_0xedc_pairs_preserved": true,
+        "generator_player_slot_arrays_ed8_ee0_ee4_preserved": true,
         "source_pair_0xedc_relation_scan_preservation_selftest_passed": true,
-        "live_0x4a8db2_scheduler_replay_ported": false,
+        "live_0x4a8db2_scheduler_replay_ported": true,
         "source_order_object_materialization_callers_ported": false,
         "checkpoint2_complete": false,
         "native_rmg_end_to_end_parity_complete": false
@@ -834,12 +836,12 @@
       "blocker": "Port the remaining source-order object-bearing materialization path: 0x49a318 object-metadata branch, generic live 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key producer/candidate selection, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
     "latestEvidence": {
-      "id": "native-rmg-4a8db2-scheduler-replay-20260621",
-      "evidenceId": "native-rmg-4a8db2-scheduler-replay-20260621",
-      "timestamp": "2026-06-21T01:18:04Z",
-      "recordedAt": "2026-06-21T01:18:04Z",
-      "validatedAt": "2026-06-21T01:18:04Z",
-      "date": "2026-06-21T01:18:04Z",
+      "id": "native-rmg-descriptor-join-player-slot-state-20260621",
+      "evidenceId": "native-rmg-descriptor-join-player-slot-state-20260621",
+      "timestamp": "2026-06-21T01:38:50Z",
+      "recordedAt": "2026-06-21T01:38:50Z",
+      "validatedAt": "2026-06-21T01:38:50Z",
+      "date": "2026-06-21T01:38:50Z",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "phase": "Phase 5 - Playable Alpha Baseline",
       "status": "passed_partial_implementation_not_parity",
@@ -847,7 +849,7 @@
       "nativeBehaviorChanged": true,
       "runtimeGenerationAllowed": false,
       "godotProcessStarted": false,
-      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads: pair +0x00/+0x04 gating, direct prepass order +0x24/+0x20/+0x34/+0x30 into 0x4a901a, weighted density order +0x2c/+0x28/+0x3c/+0x38, threshold calculation, lane score/tie/disable behavior, and a controlled successful 0x4a901a -> 0x4a93a2 -> 0x4a54a7 mutation path. Native mirror/JSON exposes source_order_scheduler_replays_0x4a8db2 state. This is not full live object parity.",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now preserves descriptor-join context on 0x4903e8-created +0xedc source pairs and carries actual +0xed8/+0xee0/+0xee4 player-slot arrays through generator object private state and the native mirror. This reduces source-order replay input loss only; full live source-order object materialization remains unported.",
       "remainingWork": "Port the remaining source-order object-bearing materialization path: live producer/caller order feeding every preserved source pair into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
       "artifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -910,6 +912,8 @@
         "weighted_candidate_scan_0x4a901a_ported": true,
         "direct_0x4a8d2c_0x4a93a2_exact_input_ported": true,
         "source_pair_vector_0xedc_payload_preserved": true,
+        "descriptor_join_context_on_0x4903e8_created_0xedc_pairs_preserved": true,
+        "generator_player_slot_arrays_ed8_ee0_ee4_preserved": true,
         "live_source_pair_producer_caller_order_ported": false,
         "direct_0x4a8d2c_true_source_record_0x30_0x34_fields_ported": false,
         "source_order_object_materialization_callers_ported": false,
@@ -69253,5 +69257,5 @@
     "godot_started": "not_started",
     "windows_dll_build_run": "deferred_until_linux_parity_final_boundary"
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads: pair +0x00/+0x04 gating, direct prepass order +0x24/+0x20/+0x34/+0x30 into 0x4a901a, weighted density order +0x2c/+0x28/+0x3c/+0x38, threshold calculation, lane score/tie/disable behavior, and a controlled successful 0x4a901a -> 0x4a93a2 -> 0x4a54a7 mutation path. Native mirror/JSON exposes source_order_scheduler_replays_0x4a8db2 state. This is not full live object parity."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns source-backed exact-input direct/weighted placement, 0x4a8db2 scheduler replay over preserved 0x4af785 +0xedc source-pair payloads, descriptor-join context on 0x4903e8-created +0xedc pairs, actual +0xed8/+0xee0/+0xee4 player-slot arrays, source-backed 0x49a318 bit22 object-metadata policy, and the exact 0x4a7605 -> 0x4a5e03 fallback helper for sampled records. This is partial implementation progress, not full live object parity."
 }

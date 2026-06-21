@@ -718,6 +718,9 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.selected_color_order_ed8_count = input.selected_color_order_ed8_count;
 	out.raw_source_owner_slots_ee0_count = input.raw_source_owner_slots_ee0_count;
 	out.mapped_source_owner_slots_ee4_count = input.mapped_source_owner_slots_ee4_count;
+	out.selected_color_order_ed8 = input.selected_color_order_ed8;
+	out.raw_source_owner_slots_ee0 = input.raw_source_owner_slots_ee0;
+	out.mapped_source_owner_slots_ee4 = input.mapped_source_owner_slots_ee4;
 	out.relation_owner_records_10e4_10e8_partial_known = input.relation_owner_records_10e4_10e8_partial_known;
 	out.relation_owner_vector_count_10e4_10e8 = input.relation_owner_vector_count_10e4_10e8;
 	out.relation_record_count_10e4_10e8 = input.relation_record_count_10e4_10e8;
@@ -925,6 +928,28 @@ SharedSourceObjectResolvedWrapper4af785 from_h3maped_source_object_resolved_wrap
 	return out;
 }
 
+SharedSourceObjectDescriptorJoinContext4903e8 from_h3maped_source_object_descriptor_join_context(const h3maped_rmg_core::SourceObjectDescriptorJoinContext4903e8 &input) {
+	SharedSourceObjectDescriptorJoinContext4903e8 out;
+	out.target_context_0x4903e8 = input.target_context_0x4903e8;
+	out.source_key_0x00 = input.source_key_0x00;
+	out.descriptor_type_0x1c = input.descriptor_type_0x1c;
+	out.subtype_0x20 = input.subtype_0x20;
+	out.group_0x24 = input.group_0x24;
+	out.projection_enabled_0x29 = input.projection_enabled_0x29;
+	out.source_cell_x_0x2c = input.source_cell_x_0x2c;
+	out.source_cell_y_0x30 = input.source_cell_y_0x30;
+	out.score_adjust_0x30_known = input.score_adjust_0x30_known;
+	out.score_adjust_0x30 = input.score_adjust_0x30;
+	out.score_adjust_0x40_known = input.score_adjust_0x40_known;
+	out.score_adjust_0x40 = input.score_adjust_0x40;
+	out.descriptor_mask_fields_0x34_0x48_known = input.descriptor_mask_fields_0x34_0x48_known;
+	out.descriptor_width_0x34 = input.descriptor_width_0x34;
+	out.descriptor_height_0x38 = input.descriptor_height_0x38;
+	out.descriptor_mask_a_0x3c_0x40 = input.descriptor_mask_a_0x3c_0x40;
+	out.descriptor_mask_b_0x44_0x48 = input.descriptor_mask_b_0x44_0x48;
+	return out;
+}
+
 SharedSourceObjectResolverSourcePair4af785 from_h3maped_source_object_resolver_source_pair(const h3maped_rmg_core::SourceObjectResolverSourcePair4af785 &input) {
 	SharedSourceObjectResolverSourcePair4af785 out;
 	out.copied_source_catalog_index = input.copied_source_catalog_index;
@@ -938,6 +963,10 @@ SharedSourceObjectResolverSourcePair4af785 from_h3maped_source_object_resolver_s
 	out.context_wrapper_lane_0x04 = input.context_wrapper_lane_0x04;
 	out.context_wrapper_0x10_known = input.context_wrapper_0x10_known;
 	out.context_wrapper_0x10 = input.context_wrapper_0x10;
+	out.descriptor_join_0x4903e8_known = input.descriptor_join_0x4903e8_known;
+	out.descriptor_join_descriptor_0x4903e8 = from_h3maped_source_object_descriptor_join_context(input.descriptor_join_descriptor_0x4903e8);
+	out.descriptor_joined_0x4903e8 = input.descriptor_joined_0x4903e8;
+	out.descriptor_join_source_pair_index_0xedc = input.descriptor_join_source_pair_index_0xedc;
 	return out;
 }
 
@@ -1525,6 +1554,28 @@ void append_source_object_resolved_wrapper_json(std::ostream &out, const SharedS
 	out << "}";
 }
 
+void append_source_object_descriptor_join_context_json(std::ostream &out, const SharedSourceObjectDescriptorJoinContext4903e8 &descriptor) {
+	out << "{"
+		<< "\"target_context_0x4903e8\":" << descriptor.target_context_0x4903e8
+		<< ",\"source_key_0x00\":" << descriptor.source_key_0x00
+		<< ",\"descriptor_type_0x1c\":" << descriptor.descriptor_type_0x1c
+		<< ",\"subtype_0x20\":" << descriptor.subtype_0x20
+		<< ",\"group_0x24\":" << descriptor.group_0x24
+		<< ",\"projection_enabled_0x29\":" << (descriptor.projection_enabled_0x29 ? "true" : "false")
+		<< ",\"source_cell_x_0x2c\":" << descriptor.source_cell_x_0x2c
+		<< ",\"source_cell_y_0x30\":" << descriptor.source_cell_y_0x30
+		<< ",\"score_adjust_0x30_known\":" << (descriptor.score_adjust_0x30_known ? "true" : "false")
+		<< ",\"score_adjust_0x30\":" << descriptor.score_adjust_0x30
+		<< ",\"score_adjust_0x40_known\":" << (descriptor.score_adjust_0x40_known ? "true" : "false")
+		<< ",\"score_adjust_0x40\":" << descriptor.score_adjust_0x40
+		<< ",\"descriptor_mask_fields_0x34_0x48_known\":" << (descriptor.descriptor_mask_fields_0x34_0x48_known ? "true" : "false")
+		<< ",\"descriptor_width_0x34\":" << descriptor.descriptor_width_0x34
+		<< ",\"descriptor_height_0x38\":" << descriptor.descriptor_height_0x38
+		<< ",\"descriptor_mask_a_0x3c_0x40\":" << descriptor.descriptor_mask_a_0x3c_0x40
+		<< ",\"descriptor_mask_b_0x44_0x48\":" << descriptor.descriptor_mask_b_0x44_0x48
+		<< "}";
+}
+
 void append_source_object_resolver_source_pair_json(std::ostream &out, const SharedSourceObjectResolverSourcePair4af785 &source_pair) {
 	out << "{"
 		<< "\"copied_source_catalog_index\":" << source_pair.copied_source_catalog_index
@@ -1536,10 +1587,15 @@ void append_source_object_resolver_source_pair_json(std::ostream &out, const Sha
 		<< ",\"context_wrapper_lane_0x04\":" << source_pair.context_wrapper_lane_0x04
 		<< ",\"context_wrapper_0x10_known\":" << (source_pair.context_wrapper_0x10_known ? "true" : "false")
 		<< ",\"context_wrapper_0x10\":" << source_pair.context_wrapper_0x10
+		<< ",\"descriptor_join_0x4903e8_known\":" << (source_pair.descriptor_join_0x4903e8_known ? "true" : "false")
+		<< ",\"descriptor_joined_0x4903e8\":" << (source_pair.descriptor_joined_0x4903e8 ? "true" : "false")
+		<< ",\"descriptor_join_source_pair_index_0xedc\":" << source_pair.descriptor_join_source_pair_index_0xedc
 		<< ",\"source_record_copy\":";
 	append_source_object_record_sample_json(out, source_pair.source_record_copy);
 	out << ",\"context_wrapper_copy\":";
 	append_source_object_resolved_wrapper_json(out, source_pair.context_wrapper_copy);
+	out << ",\"descriptor_join_descriptor_0x4903e8\":";
+	append_source_object_descriptor_join_context_json(out, source_pair.descriptor_join_descriptor_0x4903e8);
 	out << "}";
 }
 
@@ -2052,6 +2108,13 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"selected_color_order_ed8_count\":" << state.selected_color_order_ed8_count << ","
 		<< "\"raw_source_owner_slots_ee0_count\":" << state.raw_source_owner_slots_ee0_count << ","
 		<< "\"mapped_source_owner_slots_ee4_count\":" << state.mapped_source_owner_slots_ee4_count << ","
+		<< "\"selected_color_order_ed8\":";
+	append_json_i32_array(out, state.selected_color_order_ed8);
+	out << ",\"raw_source_owner_slots_ee0\":";
+	append_json_i32_array(out, state.raw_source_owner_slots_ee0);
+	out << ",\"mapped_source_owner_slots_ee4\":";
+	append_json_i32_array(out, state.mapped_source_owner_slots_ee4);
+	out << ","
 		<< "\"endpoint_cursor_0xf58_present\":" << (state.endpoint_cursor_0xf58_present ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf58_known\":" << (state.endpoint_cursor_0xf58_known ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf58\":" << state.endpoint_cursor_0xf58 << ","
