@@ -44,6 +44,7 @@ constexpr int32_t REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947 = 0x90;
 constexpr int32_t REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00 = 0x7d00;
 constexpr uint32_t WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C = 0x00540a9cU;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540A74 = 0x00540a74U;
+constexpr uint32_t PROJECTION_OBJECT_VTABLE_0X540B14 = 0x00540b14U;
 constexpr int32_t RELATION_OWNER_ALLOC_SIZE_0X49B452 = 0x414;
 constexpr int32_t RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452 = 0x7d00;
 constexpr int32_t RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452 = -32000;
@@ -1574,6 +1575,33 @@ struct RewardGuardProjectionDriverSelectionResult4ad947 {
 	std::string blocked_reason;
 };
 
+struct RewardGuardProjectionObject540b14 {
+	bool live_input_known = false;
+	bool vtable_0x00_known = false;
+	uint32_t vtable_0x00 = 0U;
+	bool generator_context_plus_0x1c_known = false;
+	bool cleanup_pointer_plus_0x20_known = false;
+	bool projection_coordinate_known = false;
+	int32_t projection_x = 0;
+	int32_t projection_y = 0;
+	int32_t projection_level = 0;
+};
+
+struct RewardGuardProjectionChainResult49c0a6 {
+	bool invoked = false;
+	bool projection_object_input_known = false;
+	bool projection_vtable_0x540b14_confirmed = false;
+	bool projection_context_plus_0x1c_forwarded_to_0x4ad947 = false;
+	bool projection_cleanup_plus_0x20_cleared = false;
+	bool projection_driver_invoked_0x4ad947 = false;
+	bool source_relation_lookup_invoked_0x4ad947 = false;
+	bool relation_priority_invoked_0x4ad7f7 = false;
+	RewardGuardProjectionDriverSelectionResult4ad947 projection_driver_0x4ad947;
+	RewardGuardProjectionSourceRelationResult4ad947 source_relation_0x4ad947;
+	RewardGuardRelationPriorityResult4ad7f7 relation_priority_0x4ad7f7;
+	std::string blocked_reason;
+};
+
 struct RelationHighOwnerPropagationSeedReport49a318 {
 	int32_t owner_vector_index = -1;
 	int32_t runtime_zone_index = -1;
@@ -1890,6 +1918,9 @@ struct GeneratorObjectPrivateState {
 	bool reward_guard_projection_driver_selection_0x4ad947_ported = false;
 	bool reward_guard_projection_driver_selection_input_known = false;
 	RewardGuardProjectionDriverSelectionResult4ad947 reward_guard_projection_driver_selection_0x4ad947;
+	bool reward_guard_projection_object_0x540b14_input_known = false;
+	RewardGuardProjectionObject540b14 reward_guard_projection_object_0x540b14;
+	RewardGuardProjectionChainResult49c0a6 reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
 	bool reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = false;
 	bool reward_guard_candidate_records_10f4_10f8_contents_known = false;
 	int32_t reward_guard_candidate_record_count_10f4_10f8 = 0;
