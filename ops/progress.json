@@ -16,36 +16,36 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Advanced the single shared native H3MapEd workflow by deriving generated-cell +0x2b from the high byte of +0x28 across reset, overlay, projection, object/reference, reward/guard, and connection mutators. Medium seed 10 now executes one weighted 0x4a901a -> 0x4a54a7 source-order commit before the existing 0x4a79a3 fallback target-word blocker; Small seed 11 still blocks because no source-backed fallback records exist for that scope.",
+      "notes": "Enforced the single shared native H3MapEd workflow boundary at reward/guard materialization. When the active 0x4aab7e source stream has materialization attempts but zero successful 0x4aa9b7 coordinate commits, the generator object private-state builder now stops there and does not execute D-014 endpoint prep, 0x49eb8d decorative dispatch, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, roads/rivers, or final writeout.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T12:41:38Z",
-      "latestEvidenceId": "native-rmg-generated-cell-byte2b-word28-sync-20260621",
-      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback blockers: recover or port source-scoped 0x4a7605 -> 0x4a5e03 fallback record feed for supported scopes, port the upstream generated-cell target-word prestate that makes the recovered Medium seed-10 fallback commits apply, then continue through the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-      "latestFinding": "Native RMG no-Godot workflow now uses recovered generated-cell +0x2b semantics as the high byte of +0x28. This unblocks source-order weighted candidate selection enough for Medium seed 10 to commit one 0x4a901a -> 0x4a54a7 object before the same 0x4a79a3 fallback target-word blocker. Small seed 11 exits at missing scoped fallback records; Medium seed 10 exits at 0x4a5e03 target word 0x20 mismatch. This is implementation progress inside the chain, not parity.",
-      "blocker": "The shared workflow stops inside 0x4a79a3 because source-scoped fallback records are incomplete for Small and the recovered Medium seed-10 fallback record fails against current live generated-cell word 0x20 prestate. Final tile/object/header writeout remains unowned.",
+      "updatedAt": "2026-06-21T13:29:34Z",
+      "latestEvidenceId": "native-rmg-reward-guard-zero-commit-gate-20260621",
+      "remainingWork": "Port source-order reward/guard coordinate materialization so 0x4aab7e attempts can produce source-owned 0x4aa9b7 -> 0x4aa3e9 commits. Only after reward/guard commits are owned should the workflow enter D-014 endpoint prep, 0x49eb8d, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout.",
+      "latestFinding": "No-Godot Small seed 11 and Medium seed 10 now both stop at reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. Connection/fallback helpers remain uninvoked, so the workflow no longer advances downstream on a helper-only prestate.",
+      "blocker": "The shared workflow has source-stream reward/guard attempts but zero source-owned 0x4aa9b7 coordinate commits. Final tile/object/header writeout remains unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-generated-cell-byte2b-word28-sync-20260621",
+        "id": "native-rmg-reward-guard-zero-commit-gate-20260621",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Generated Cell +0x2b Word28 Sync",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now derives generated-cell +0x2b from +0x28 high byte and applies recovered bit25/bit26 validity semantics in the live workflow. Medium seed 10 now produces one source-order weighted object commit before the same 0x4a79a3 fallback target-word prestate blocker. This is not parity and not final map output.",
-        "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback blockers: recover or port source-scoped fallback record feed for supported scopes, port the upstream generated-cell target-word prestate that makes the recovered Medium fallback commits apply, then continue through the recovered 0x4a79a3 tail, 0x4ab52a road/river/object-adjacency replay, and final writeout before enabling map output.",
-        "blocker": "The shared workflow still stops inside 0x4a79a3 because source-scoped fallback records are incomplete for Small and the recovered Medium seed-10 fallback record fails against current live generated-cell word 0x20 prestate. Final tile/object/header writeout remains unowned.",
-        "artifacts": [],
+        "title": "Reward Guard Zero Commit Workflow Gate",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared workflow now fails closed at reward/guard when active 0x4aab7e attempts produce zero successful 0x4aa9b7 commits, and leaves endpoint, decorative, connection, fallback, road/river, and final writeout phases pending.",
+        "remainingWork": "Port source-order reward/guard coordinate materialization so 0x4aab7e attempts can produce source-owned 0x4aa9b7 -> 0x4aa3e9 commits. Only after reward/guard commits are owned should the workflow enter D-014 endpoint prep, 0x49eb8d, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout.",
+        "blocker": "The shared workflow has source-stream reward/guard attempts but zero source-owned 0x4aa9b7 coordinate commits. Final tile/object/header writeout remains unowned.",
+        "artifacts": [
+          ".artifacts/tmp_workflow_current/medium_2p_seed10.phase_snapshot.json",
+          ".artifacts/tmp_workflow_current/small_3p_seed11.phase_snapshot.json"
+        ],
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
           "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --phase-snapshot-only --out .artifacts/tmp_workflow_current --controlled-case medium_2p_seed10:medium:2:10:land:1:1:2:0 --controlled-case small_3p_seed11:small:3:11:land:1:1:2:0 --print-manifest || true (blocked as expected: Medium source_order_scheduler_commit_count_0x4a8db2=1 then target word 0x20 mismatch; Small missing scoped fallback records)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)",
-          "python3 tests/validate_repo.py (passed)"
+          "./bin/rmg_native_batch_export_cli --phase-snapshot-only --out .artifacts/tmp_workflow_current --controlled-case medium_2p_seed10:medium:2:10:land:1:1:2:0 --controlled-case small_3p_seed11:small:3:11:land:1:1:2:0 --print-manifest || true (blocked as expected at reward_guard_materialization for both cases)"
         ],
-        "updatedAt": "2026-06-21T12:41:38Z"
+        "updatedAt": "2026-06-21T13:29:34Z"
       }
     },
     {
