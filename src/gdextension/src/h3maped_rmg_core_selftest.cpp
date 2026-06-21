@@ -842,7 +842,9 @@ int main() {
 		if (!require(record.word_0x28_known && record.word_0x28 == aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE, "generated-cell +0x28 reset word mismatch")) {
 			return 1;
 		}
-		if (!require(!record.byte_0x2b_known, "generated-cell validity byte +0x2b must stay unknown until its mutators are ported")) {
+		if (!require(record.byte_0x2b_known && record.byte_0x2b_known_mask == 0xffU
+						&& record.byte_0x2b == uint8_t((aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE >> 24U) & 0xffU),
+					"generated-cell validity byte +0x2b reset must mirror high byte of +0x28")) {
 			return 1;
 		}
 		auto projection_record = record;
@@ -1085,10 +1087,7 @@ int main() {
 			cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
 			cell.word_0x14 = 0U;
 			cell.word_0x18 = 0U;
-			cell.word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
-			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
-			cell.byte_0x2b = 0x02U;
-			cell.byte_0x2b_known_mask = 0x02U;
+			aurelion::h3maped_rmg_core::generated_cell_49aa63(cell, true);
 		}
 		scan_consumer_grid.records[1].word_0x2c |= 0x01U;
 		GeneratorRelationOwnerState4a218c scan_consumer_owner;
@@ -1142,15 +1141,13 @@ int main() {
 		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U && (mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U, "record 0x49abd6 action stamp did not leave bit22 and bit27 set")) {
 			return 1;
 		}
-		mutable_record.byte_0x2b = 0x02U;
-		mutable_record.byte_0x2b_known_mask = 0x02U;
-		if (!require(aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_record(mutable_record), "record 0x49a1d8 did not accept known +0x2b bit0x02 with non-rock terrain")) {
+		if (!require(aurelion::h3maped_rmg_core::generated_cell_49a1d8_valid_record(mutable_record), "record 0x49a1d8 did not accept +0x28 bit25 with non-rock terrain")) {
 			return 1;
 		}
 		if (!require(aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(mutable_record), "record 0x49abd6 body reject did not clear bit25")) {
 			return 1;
 		}
-		if (!require((mutable_record.byte_0x2b_known_mask & 0x02U) != 0U && (mutable_record.byte_0x2b & 0x02U) == 0U, "record 0x49abd6 body reject did not mark +0x2b bit0x02 known-clear")) {
+		if (!require(mutable_record.byte_0x2b_known && mutable_record.byte_0x2b_known_mask == 0xffU && (mutable_record.byte_0x2b & 0x02U) == 0U, "record 0x49abd6 body reject did not mirror cleared +0x28 bit25 into +0x2b")) {
 			return 1;
 		}
 		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25) == 0U, "record 0x49abd6 body reject did not clear bit25")) {
@@ -1261,8 +1258,7 @@ int main() {
 
 		GeneratedCellRecordGrid0x30 chain_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(4, 4, 1);
 		for (GeneratedCellRecord0x30 &chain_record : chain_grid.records) {
-			chain_record.byte_0x2b_known_mask = 0x04U;
-			chain_record.byte_0x2b = 0x04U;
+			aurelion::h3maped_rmg_core::generated_cell_49aa63(chain_record, true);
 		}
 		GeneratedCellRecord0x30 &chain_start = chain_grid.records[size_t(aurelion::h3maped_rmg_core::cell_index(4, 4, 1, 1, 0))];
 		chain_start.word_0x1c = 0x00000002U;
@@ -1279,7 +1275,7 @@ int main() {
 		if (!require(chain_result.start_cell_in_bounds && chain_result.visited_cell_count == 1 && chain_result.occupied_stamp_count == 1 && chain_result.stopped_on_low_word_zero, "0x4a5a23 no-object projection chain did not stamp the start cell then stop on low-word zero")) {
 			return 1;
 		}
-		if (!require(chain_result.cleanup_scan_count == 9 && chain_result.cleanup_owner_match_count == 9 && chain_result.cleanup_bit_0x04_clear_count == 9, "0x4a5a23 cleanup did not clear nearby same-owner +0x2b bit0x04")) {
+		if (!require(chain_result.cleanup_scan_count == 9 && chain_result.cleanup_owner_match_count == 9 && chain_result.cleanup_bit_0x04_clear_count == 8, "0x4a5a23 cleanup did not clear nearby same-owner +0x2b bit0x04 mirrors")) {
 			return 1;
 		}
 		if (!require((chain_start.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U && (chain_start.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U, "0x4a5a23 no-object branch did not set bit27 and clear bit26")) {
@@ -1407,10 +1403,8 @@ int main() {
 		scan_object_cell.word_0x14 = 0U;
 		scan_object_cell.word_0x18_known = true;
 		scan_object_cell.word_0x18 = 0U;
-		scan_object_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		aurelion::h3maped_rmg_core::generated_cell_49aa63(scan_object_cell, true);
 		scan_object_cell.word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
-		scan_object_cell.byte_0x2b = 0x02U;
-		scan_object_cell.byte_0x2b_known_mask = 0x02U;
 		GeneratorRelationOwnerState4a218c scan_object_owner;
 		scan_object_owner.owner_vector_index = 0;
 		scan_object_owner.runtime_zone_index = 0;
@@ -2867,18 +2861,17 @@ int main() {
 		record.word_0x24_known = true;
 		record.word_0x24 = 0U;
 		record.word_0x28_known = true;
-		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+		record.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
+		aurelion::h3maped_rmg_core::generated_cell_49a932(record, false);
 		record.word_0x2c_known = true;
 		record.word_0x2c = 0U;
-		record.byte_0x2b_known_mask = 0x02U;
-		record.byte_0x2b = 0x02U;
 	}
 	GeneratedCellRecord0x30 &reward_guard_target =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
 	reward_guard_target.word_0x20 = 0x0002000aU;
 	GeneratedCellRecord0x30 &reward_guard_contour_cell =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 3, 2, 0))];
-	reward_guard_contour_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_contour_cell, true);
 	RewardGuardWrapperState4aa3e9 reward_guard_wrapper;
 	reward_guard_wrapper.wrapper_bounds_0x18_0x24_known = true;
 	reward_guard_wrapper.bound_left_0x18 = 0;
@@ -2904,19 +2897,16 @@ int main() {
 		wrapper_cell.word_0x24_known = true;
 		wrapper_cell.word_0x24 = 0U;
 		wrapper_cell.word_0x28_known = true;
-		wrapper_cell.word_0x28 = 0U;
+		wrapper_cell.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
+		aurelion::h3maped_rmg_core::generated_cell_49a932(wrapper_cell, false);
 		wrapper_cell.word_0x2c_known = true;
 		wrapper_cell.word_0x2c = 0U;
-		wrapper_cell.byte_0x2b_known_mask = 0x02U;
-		wrapper_cell.byte_0x2b = 0x02U;
 	}
 	GeneratedCellRecord0x30 &reward_guard_wrapper_direction_cell =
 			reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 0, 1, 0))];
-	reward_guard_wrapper_direction_cell.word_0x28 =
-			aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27
-			| aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_DIRECTION_BIT_23;
-	reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0].word_0x28 =
-			aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_wrapper_direction_cell, true);
+	reward_guard_wrapper_direction_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_DIRECTION_BIT_23;
+	aurelion::h3maped_rmg_core::generated_cell_49aa63(reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0], true);
 	reward_guard_wrapper.candidate_coordinate_vector_0x3c_0x40_known = true;
 	reward_guard_wrapper.candidate_coordinates_0x3c_0x40.push_back({ 1, 0, 0 });
 	GeneratorRelationOwnerState4a218c reward_guard_relation;
@@ -3039,13 +3029,11 @@ int main() {
 		record.word_0x24_known = true;
 		record.word_0x24 = 0U;
 		record.word_0x28_known = true;
-		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25 | aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
-		record.byte_0x2b_known_mask = 0x02U;
-		record.byte_0x2b = 0x02U;
+		record.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
 	}
 	GeneratedCellRecord0x30 &contour_boundary =
 			contour_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(5, 5, 2, 2, 0))];
-	contour_boundary.word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+	aurelion::h3maped_rmg_core::generated_cell_49a932(contour_boundary, false);
 	const auto contour_result = aurelion::h3maped_rmg_core::reward_guard_wrapper_rebuild_candidates_0x49d7c3(contour_wrapper);
 	const std::vector<aurelion::h3maped_rmg_core::CoordinateCandidate4a17f5> expected_contour = {
 		{ 2, 1, 0 },
@@ -3087,23 +3075,21 @@ int main() {
 		record.word_0x24_known = true;
 		record.word_0x24 = 0U;
 		record.word_0x28_known = true;
-		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25 | aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
 		record.word_0x2c_known = true;
 		record.word_0x2c = 0U;
-		record.byte_0x2b_known_mask = 0x02U;
-		record.byte_0x2b = 0x02U;
 	}
 	auto attach_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
 		return attach_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(16, 16, x, y, 0))];
 	};
 	for (int32_t y = 10; y <= 12; ++y) {
 		for (int32_t x = 7; x <= 9; ++x) {
-			attach_cell(x, y).word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+			aurelion::h3maped_rmg_core::generated_cell_49a932(attach_cell(x, y), false);
 		}
 	}
 	aurelion::h3maped_rmg_core::generated_cell_49aa63(attach_cell(8, 11), true);
 	aurelion::h3maped_rmg_core::generated_cell_49aa63(attach_cell(7, 11), true);
-	attach_cell(7, 11).byte_0x2b &= ~uint8_t(0x02U);
+	aurelion::h3maped_rmg_core::generated_cell_49abd6_body_reject_stamp(attach_cell(7, 11));
 	attach_wrapper.candidate_coordinates_0x3c_0x40 = {
 		{ 8, 11, 0 },
 		{ 7, 11, 0 },
@@ -3199,11 +3185,9 @@ int main() {
 		record.word_0x24_known = true;
 		record.word_0x24 = 0U;
 		record.word_0x28_known = true;
-		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25 | aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
 		record.word_0x2c_known = true;
 		record.word_0x2c = 0U;
-		record.byte_0x2b_known_mask = 0x02U;
-		record.byte_0x2b = 0x02U;
 	}
 	auto blocked_attach_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
 		return blocked_attach_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(16, 16, x, y, 0))];
@@ -3211,7 +3195,7 @@ int main() {
 	blocked_attach_wrapper.candidate_coordinates_0x3c_0x40 = {
 		{ 8, 11, 0 },
 	};
-	blocked_attach_cell(8, 11).word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+	aurelion::h3maped_rmg_core::generated_cell_49a932(blocked_attach_cell(8, 11), false);
 	aurelion::h3maped_rmg_core::generated_cell_49aa63(blocked_attach_cell(8, 11), true);
 	RewardGuardWrapperMember4aa3e9 blocked_attach_member = attach_member;
 	blocked_attach_member.descriptor_body_offsets_0x49a6f9_known = false;

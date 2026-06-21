@@ -1889,6 +1889,22 @@ GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_
 	return cell;
 }
 
+static uint8_t generated_cell_byte_0x2b_from_word28(uint32_t word_0x28) {
+	return uint8_t((word_0x28 >> 24U) & 0xffU);
+}
+
+static void sync_generated_cell_byte_0x2b_from_word28(GeneratedCellRecord0x30 &record) {
+	if (!record.word_0x28_known) {
+		record.byte_0x2b_known = false;
+		record.byte_0x2b_known_mask = 0U;
+		record.byte_0x2b = 0U;
+		return;
+	}
+	record.byte_0x2b_known = true;
+	record.byte_0x2b_known_mask = 0xffU;
+	record.byte_0x2b = generated_cell_byte_0x2b_from_word28(record.word_0x28);
+}
+
 GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t width, int32_t height, int32_t level_count) {
 	GeneratedCellRecordGrid0x30 grid;
 	grid.width = width;
@@ -1924,12 +1940,10 @@ GeneratedCellRecordGrid0x30 generated_cell_record_grid_reset_0x49a072(int32_t wi
 		record.word_0x24 = initial.word_0x24;
 		record.word_0x28_known = true;
 		record.word_0x28 = initial.word_0x28;
+		sync_generated_cell_byte_0x2b_from_word28(record);
 		record.byte_0x2a_known = false;
 		record.byte_0x2a_known_mask = 0U;
 		record.byte_0x2a = 0U;
-		record.byte_0x2b_known = false;
-		record.byte_0x2b_known_mask = 0U;
-		record.byte_0x2b = 0U;
 		record.word_0x2c_known = true;
 		record.word_0x2c = initial.word_0x2c;
 	}
@@ -2088,6 +2102,7 @@ bool generated_cell_4a5767_reset_projection(GeneratedCellRecord0x30 &record) {
 	record.word_0x20 = reset.word_0x20;
 	record.word_0x28_known = true;
 	record.word_0x28 = reset.word_0x28;
+	sync_generated_cell_byte_0x2b_from_word28(record);
 	return changed;
 }
 
@@ -2376,6 +2391,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 						next_record.word_0x20_known = true;
 						next_record.word_0x28 = generated_cell_word28_set_direction_49a318(next_record.word_0x28_known ? next_record.word_0x28 : 0U, direction);
 						next_record.word_0x28_known = true;
+						sync_generated_cell_byte_0x2b_from_word28(next_record);
 						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
 						report.cross_owner_high_byte_write_count += 1;
 						result.cross_owner_high_byte_write_count += 1;
@@ -2569,7 +2585,7 @@ bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const st
 }
 
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record) {
-	if ((record.byte_0x2b_known_mask & 0x02U) == 0U || (record.byte_0x2b & 0x02U) == 0U) {
+	if (!record.word_0x28_known || (record.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U) {
 		return false;
 	}
 	return record.word_0x24_known && (record.word_0x24 & 0x3fU) != 9U;
@@ -2599,9 +2615,11 @@ bool generated_cell_49aa63(GeneratedCellRecord0x30 &record, bool set_candidate) 
 	if (set_candidate) {
 		record.word_0x28 |= CELL_DECOR_CANDIDATE_BIT_26;
 		record.word_0x28 &= ~CELL_OCCUPIED_BLOCKED_BIT_27;
+		sync_generated_cell_byte_0x2b_from_word28(record);
 		return !was_set;
 	}
 	record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+	sync_generated_cell_byte_0x2b_from_word28(record);
 	return was_set;
 }
 
@@ -2630,9 +2648,11 @@ bool generated_cell_49a932(GeneratedCellRecord0x30 &record, bool set_occupied) {
 	if (set_occupied) {
 		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		sync_generated_cell_byte_0x2b_from_word28(record);
 		return !was_set;
 	}
 	record.word_0x28 &= ~CELL_OCCUPIED_BLOCKED_BIT_27;
+	sync_generated_cell_byte_0x2b_from_word28(record);
 	return was_set;
 }
 
@@ -2660,6 +2680,7 @@ bool generated_cell_49abd6_action_stamp(GeneratedCellRecord0x30 &record) {
 	const uint32_t before = record.word_0x28;
 	record.word_0x28 |= CELL_ACTION_CONTROL_BIT_22;
 	generated_cell_49a932(record, true);
+	sync_generated_cell_byte_0x2b_from_word28(record);
 	return before != record.word_0x28;
 }
 
@@ -2678,10 +2699,8 @@ bool generated_cell_49abd6_body_reject_stamp(GeneratedCellRecord0x30 &record) {
 		return false;
 	}
 	const bool was_set = (record.word_0x28 & CELL_DECOR_READY_BIT_25) != 0U;
-	record.byte_0x2b_known_mask |= 0x02U;
-	record.byte_0x2b &= ~uint8_t(0x02U);
-	record.byte_0x2b_known = record.byte_0x2b_known_mask == 0xffU;
 	record.word_0x28 &= ~CELL_DECOR_READY_BIT_25;
+	sync_generated_cell_byte_0x2b_from_word28(record);
 	return was_set;
 }
 
@@ -2842,6 +2861,7 @@ GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_
 	result.word_0x28_before = record.word_0x28;
 	record.word_0x28 &= ~CELL_ACTION_CONTROL_BIT_22;
 	record.word_0x28 |= CELL_DECOR_READY_BIT_25;
+	sync_generated_cell_byte_0x2b_from_word28(record);
 	record.word_0x20 = generated_cell_word20_set_low_word(record.word_0x20, 0x7fbcU);
 	result.word_0x20_after = record.word_0x20;
 	result.word_0x28_after = record.word_0x28;
@@ -3175,6 +3195,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 		const uint32_t before_word_0x28 = record.word_0x28;
 		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		sync_generated_cell_byte_0x2b_from_word28(record);
 		if (record.word_0x28 != before_word_0x28) {
 			result.occupied_stamp_count += 1;
 		}
@@ -3200,12 +3221,13 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 						continue;
 					}
 					result.cleanup_owner_match_count += 1;
-					if ((nearby.byte_0x2b_known_mask & 0x04U) == 0U || (nearby.byte_0x2b & 0x04U) != 0U) {
+					if (!nearby.word_0x28_known || (nearby.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
 						result.cleanup_bit_0x04_clear_count += 1;
 					}
-					nearby.byte_0x2b &= ~uint8_t(0x04U);
-					nearby.byte_0x2b_known_mask |= 0x04U;
-					nearby.byte_0x2b_known = nearby.byte_0x2b_known_mask == 0xffU;
+					if (nearby.word_0x28_known) {
+						nearby.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+						sync_generated_cell_byte_0x2b_from_word28(nearby);
+					}
 				}
 			}
 		}
@@ -3335,6 +3357,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 			const uint32_t before_branch_word_0x28 = record.word_0x28;
 			record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 			record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+			sync_generated_cell_byte_0x2b_from_word28(record);
 			if (record.word_0x28 != before_branch_word_0x28) {
 				result.occupied_stamp_count += 1;
 			}
@@ -3351,6 +3374,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 			const uint32_t before_word_0x28 = record.word_0x28;
 			record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 			record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+			sync_generated_cell_byte_0x2b_from_word28(record);
 			if (record.word_0x28 != before_word_0x28) {
 				result.occupied_stamp_count += 1;
 			}
@@ -3377,12 +3401,13 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 						continue;
 					}
 					result.cleanup_owner_match_count += 1;
-					if ((nearby.byte_0x2b_known_mask & 0x04U) == 0U || (nearby.byte_0x2b & 0x04U) != 0U) {
+					if (!nearby.word_0x28_known || (nearby.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
 						result.cleanup_bit_0x04_clear_count += 1;
 					}
-					nearby.byte_0x2b &= ~uint8_t(0x04U);
-					nearby.byte_0x2b_known_mask |= 0x04U;
-					nearby.byte_0x2b_known = nearby.byte_0x2b_known_mask == 0xffU;
+					if (nearby.word_0x28_known) {
+						nearby.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+						sync_generated_cell_byte_0x2b_from_word28(nearby);
+					}
 				}
 			}
 		}
@@ -3509,6 +3534,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 		result.target_cell_words_known = true;
 		const uint32_t old_word_0x28 = target_record.word_0x28;
 		target_record.word_0x28 = generated_cell_4a54a7_endpoint_word28(target_record.word_0x28);
+		sync_generated_cell_byte_0x2b_from_word28(target_record);
 		if (target_record.word_0x28 != old_word_0x28) {
 			result.target_cell_word_mutation_count += 1;
 		}
@@ -4678,6 +4704,7 @@ RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04(
 		}
 		if (record.word_0x28_known) {
 			record.word_0x28 = generated_cell_49acf6_word28(record.word_0x28, 0, 0);
+			sync_generated_cell_byte_0x2b_from_word28(record);
 		}
 		result.reset_cell_count_0x49ce64 += 1;
 	}
@@ -6429,7 +6456,10 @@ static bool source_relation_object_coordinate_eligibility_0x49aa93(
 		if ((record.word_0x24 & 0x3fU) == 9U) {
 			return false;
 		}
-		if ((record.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U || (record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+		if (!generated_cell_49a1d8_valid_record(record)) {
+			return false;
+		}
+		if ((record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
 			return false;
 		}
 		if ((record.word_0x2c & 0x01U) != 0U) {
@@ -7295,6 +7325,7 @@ EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCel
 		record.word_0x2c &= ~uint32_t(0x1fU);
 		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		sync_generated_cell_byte_0x2b_from_word28(record);
 		result.mutated_cell_count += 1;
 	}
 
@@ -9040,6 +9071,7 @@ static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, cons
 		if (index < word_0x28.size()) {
 			record.word_0x28_known = true;
 			record.word_0x28 = word_0x28[index];
+			sync_generated_cell_byte_0x2b_from_word28(record);
 		}
 		if (index < word_0x2c.size()) {
 			record.word_0x2c_known = true;
