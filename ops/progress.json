@@ -16,17 +16,17 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T03:41:51Z",
-      "latestEvidenceId": "native-rmg-reward-guard-49d7c3-contour-port-20260621",
-      "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed, true 0x49d2e0/0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
+      "updatedAt": "2026-06-21T03:58:16Z",
+      "latestEvidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+      "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -498,14 +498,14 @@
           "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
           "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
         ],
-        "latestEvidenceId": "native-rmg-4a7605-exact-prestate-replay-20260621",
-        "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now invokes the recovered exact-prestate 0x4a7605 -> 0x4a5e03 fallback replay from the active generator private-state builder for the two sampled seed-controlled records: target +0x20/+0x24/+0x28 pre-state words are carried on the records, mismatches fail closed before mutation, and matching records commit through 0x4a54a7. This is behavior-backed active private-state progress, not full live connection/object parity.",
-        "remainingWork": "Port the remaining source-order object-bearing materialization path: live producer/caller order feeding every preserved source pair into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond the exact-prestate sampled records, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+        "latestEvidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+        "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+        "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
         "status": "pending",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment",
-        "updatedAt": "2026-06-21T01:55:14Z",
-        "blocker": "Live source-pair producer/caller order, true live source-record +0x30/+0x34/+0x3c fields, exact 0x49a318 call-site order/same-run comparison, generic live fallback payload feed/caller order, town/reward/guard materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+        "updatedAt": "2026-06-21T03:58:16Z",
+        "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
@@ -609,7 +609,14 @@
           "connection_fallback_0x4a7605_0x4a5e03_phase_snapshot_attempted_record_count": 2,
           "connection_fallback_0x4a7605_0x4a5e03_phase_snapshot_commit_count": 0,
           "connection_fallback_0x4a7605_0x4a5e03_phase_snapshot_blocked_count": 2,
-          "generic_live_connection_fallback_0x4a7605_0x4a5e03_caller_order_ported": false
+          "generic_live_connection_fallback_0x4a7605_0x4a5e03_caller_order_ported": false,
+          "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+          "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+          "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+          "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+          "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+          "reward_guard_feasibility_filter_0x4aa603_ported": false,
+          "live_reward_guard_caller_feed_ported": false
         },
         "remainingGap": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, exact 0x49a318 call-site order and same-run private-state comparison, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond the exact-prestate sampled records, reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
         "latestEvidence": {
@@ -811,9 +818,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "currentSliceUpdatedAt": "2026-06-21T03:41:51Z",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+    "currentSliceUpdatedAt": "2026-06-21T03:58:16Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -969,7 +976,7 @@
       "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
       "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
     ],
-    "latestEvidenceId": "native-rmg-4a7605-exact-prestate-replay-20260621",
+    "latestEvidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -1747,7 +1754,7 @@
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
     "remainingGap": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
-    "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+    "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
     "result": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -1873,10 +1880,42 @@
       ],
       "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
-    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed, true 0x49d2e0/0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
+    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
   },
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "completed_partial_implementation_not_parity",
+      "title": "Reward/Guard 0x49d2e0 Attach Filter Port",
+      "completedAt": "2026-06-21T03:58:16Z",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli"
+      ],
+      "metrics": {
+        "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+        "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+        "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+        "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+        "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+        "reward_guard_feasibility_filter_0x4aa603_ported": false,
+        "live_reward_guard_caller_feed_ported": false,
+        "source_order_object_materialization_callers_ported": false,
+        "checkpoint2_complete": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true
+      }
+    },
     {
       "completedAt": "2026-05-31T05:30:27Z",
       "id": "strategic-ai-empire-build-arbitration-10184",
@@ -12827,14 +12866,14 @@
       "blocker": "Live source-relation/wrapper caller feed and true runtime 0x4aa603 inputs are still not wired into the now-ported explicit 0x4aa9b7 -> 0x4aa3e9 reward/guard helper."
     }
   ],
-  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-21T03:41:51Z",
+  "currentSliceUpdatedAt": "2026-06-21T03:58:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -16657,17 +16696,87 @@
         "windows_dll_build_deferred": true
       },
       "blocker": "Live source-relation/wrapper caller feed and true runtime 0x4aa603 inputs are still not wired into the now-ported explicit 0x4aa9b7 -> 0x4aa3e9 reward/guard helper."
+    },
+    "native-rmg-reward-guard-49d2e0-filter-port-20260621": {
+      "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+      "evidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "timestamp": "2026-06-21T03:58:16Z",
+      "status": "passed_partial_implementation_not_parity",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli"
+      ],
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed_linux_debug_native_targets"
+        },
+        {
+          "command": "./bin/h3maped_rmg_core_selftest",
+          "status": "passed_debug_build"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed_linux_release_native_targets"
+        },
+        {
+          "command": "./bin/h3maped_rmg_core_selftest",
+          "status": "passed_release_build"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "passed_after_progress_update"
+        },
+        {
+          "command": "git diff --check",
+          "status": "passed_after_progress_update"
+        },
+        {
+          "command": "Godot/headless Godot",
+          "status": "not_run_per_current_RMG_guardrail"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+        }
+      ],
+      "metrics": {
+        "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+        "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+        "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+        "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+        "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+        "reward_guard_feasibility_filter_0x4aa603_ported": false,
+        "live_reward_guard_caller_feed_ported": false,
+        "source_order_object_materialization_callers_ported": false,
+        "checkpoint2_complete": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true
+      }
     }
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-reward-guard-49d7c3-contour-port-20260621",
-    "evidenceId": "native-rmg-reward-guard-49d7c3-contour-port-20260621",
+    "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+    "evidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-21T03:41:51Z",
+    "timestamp": "2026-06-21T03:58:16Z",
     "status": "passed_partial_implementation_not_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed, true 0x49d2e0/0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -16700,11 +16809,11 @@
       },
       {
         "command": "jq empty ops/progress.json",
-        "status": "passed_before_progress_update"
+        "status": "passed_after_progress_update"
       },
       {
         "command": "git diff --check",
-        "status": "passed_before_progress_update"
+        "status": "passed_after_progress_update"
       },
       {
         "command": "Godot/headless Godot",
@@ -16716,9 +16825,12 @@
       }
     ],
     "metrics": {
-      "reward_guard_candidate_rebuild_0x49d7c3_contour_ported": true,
-      "reward_guard_candidate_rebuild_0x49d7c3_prevalidated_placeholder_removed_from_helper": true,
-      "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d7c3_coordinates": false,
+      "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+      "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+      "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+      "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+      "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+      "reward_guard_feasibility_filter_0x4aa603_ported": false,
       "live_reward_guard_caller_feed_ported": false,
       "source_order_object_materialization_callers_ported": false,
       "checkpoint2_complete": false,
@@ -16728,13 +16840,13 @@
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-reward-guard-49d7c3-contour-port-20260621",
-    "evidenceId": "native-rmg-reward-guard-49d7c3-contour-port-20260621",
+    "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+    "evidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-21T03:41:51Z",
+    "timestamp": "2026-06-21T03:58:16Z",
     "status": "passed_partial_implementation_not_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed, true 0x49d2e0/0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -16767,11 +16879,11 @@
       },
       {
         "command": "jq empty ops/progress.json",
-        "status": "passed_before_progress_update"
+        "status": "passed_after_progress_update"
       },
       {
         "command": "git diff --check",
-        "status": "passed_before_progress_update"
+        "status": "passed_after_progress_update"
       },
       {
         "command": "Godot/headless Godot",
@@ -16783,9 +16895,12 @@
       }
     ],
     "metrics": {
-      "reward_guard_candidate_rebuild_0x49d7c3_contour_ported": true,
-      "reward_guard_candidate_rebuild_0x49d7c3_prevalidated_placeholder_removed_from_helper": true,
-      "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d7c3_coordinates": false,
+      "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+      "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+      "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+      "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+      "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+      "reward_guard_feasibility_filter_0x4aa603_ported": false,
       "live_reward_guard_caller_feed_ported": false,
       "source_order_object_materialization_callers_ported": false,
       "checkpoint2_complete": false,
@@ -16803,7 +16918,7 @@
     "bin/h3maped_rmg_core_selftest",
     "bin/rmg_native_batch_export_cli"
   ],
-  "latestEvidenceId": "native-rmg-reward-guard-49d7c3-contour-port-20260621",
+  "latestEvidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -17169,10 +17284,17 @@
     "linux_release_native_build_passed": true,
     "linux_release_selftest_passed": true,
     "reward_guard_candidate_rebuild_0x49d7c3_contour_ported": true,
-    "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d7c3_coordinates": false
+    "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d7c3_coordinates": false,
+    "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+    "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+    "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+    "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+    "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+    "reward_guard_feasibility_filter_0x4aa603_ported": false,
+    "live_reward_guard_caller_feed_ported": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -57929,8 +58051,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
-  "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+  "remainingGap": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+  "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -58361,7 +58483,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "result": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -58462,9 +58584,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "taskId": "10184",
-  "updatedAt": "2026-06-21T03:41:51Z",
+  "updatedAt": "2026-06-21T03:58:16Z",
   "validation": {
     "linux_debug_native_build": "passed",
     "linux_release_native_build": "passed",
@@ -58476,6 +58598,76 @@
     "windows_dll_build_run": "deferred_until_linux_parity_final_boundary"
   },
   "validationHistory": [
+    {
+      "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+      "evidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "timestamp": "2026-06-21T03:58:16Z",
+      "status": "passed_partial_implementation_not_parity",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli"
+      ],
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed_linux_debug_native_targets"
+        },
+        {
+          "command": "./bin/h3maped_rmg_core_selftest",
+          "status": "passed_debug_build"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed_linux_release_native_targets"
+        },
+        {
+          "command": "./bin/h3maped_rmg_core_selftest",
+          "status": "passed_release_build"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "passed_after_progress_update"
+        },
+        {
+          "command": "git diff --check",
+          "status": "passed_after_progress_update"
+        },
+        {
+          "command": "Godot/headless Godot",
+          "status": "not_run_per_current_RMG_guardrail"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+        }
+      ],
+      "metrics": {
+        "reward_guard_attach_filter_0x49d2e0_ported_for_0x49cf34": true,
+        "reward_guard_attach_0x49cf34_requires_prevalidated_0x49d2e0_coordinates": false,
+        "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
+        "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
+        "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
+        "reward_guard_feasibility_filter_0x4aa603_ported": false,
+        "live_reward_guard_caller_feed_ported": false,
+        "source_order_object_materialization_callers_ported": false,
+        "checkpoint2_complete": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true
+      }
+    },
     {
       "commands": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --quit-after 300 --log-file /tmp/heroes-like-active-enemy-source-route.log --path . --scene res://tests/active_scenario_town_economy_source_route_report.tscn (passed; 16 active scenarios, 18 player-town cases, 54/54 player source routes, 20 enemy-town cases, 60/60 enemy source routes)",
@@ -69724,10 +69916,10 @@
     "h3maped_rmg_core_selftest": "passed",
     "h3maped_rmg_core_selftest_release": "passed",
     "python3_tests_validate_repo_py": "passed",
-    "jq_empty_ops_progress_json": "passed_before_progress_update",
-    "git_diff_check": "passed_before_progress_update",
+    "jq_empty_ops_progress_json": "passed_after_progress_update",
+    "git_diff_check": "passed_after_progress_update",
     "godot_started": "not_started",
     "windows_dll_build_run": "deferred_until_linux_parity_final_boundary"
   },
-  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d7c3 reward/guard wrapper candidate-vector contour rebuild: empty candidate vectors scan the wrapper generated-cell grid for the first bit22/invalid/bit27-clear boundary, start at boundary x/y-1, walk the recovered 0x5a2658/0x5a265c direction table with the four-probe limit, and append the closed contour vector. 0x49cf34 no longer requires prevalidated 0x49d7c3 coordinates. This removes the prevalidated contour placeholder only; live 0x4adb72/0x4ad7f7 source-relation/wrapper caller feed, true 0x49d2e0 and 0x4aa603 runtime filter inputs, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported."
+  "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported."
 }

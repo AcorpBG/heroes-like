@@ -2672,20 +2672,21 @@ int main() {
 	}
 	aurelion::h3maped_rmg_core::generated_cell_49aa63(attach_cell(8, 11), true);
 	aurelion::h3maped_rmg_core::generated_cell_49aa63(attach_cell(7, 11), true);
+	attach_cell(7, 11).byte_0x2b &= ~uint8_t(0x02U);
 	attach_wrapper.candidate_coordinates_0x3c_0x40 = {
 		{ 8, 11, 0 },
 		{ 7, 11, 0 },
 		{ 5, 5, 0 },
-	};
-	attach_wrapper.attach_filter_0x49d2e0_prevalidated_candidates_known = true;
-	attach_wrapper.attach_filter_0x49d2e0_prevalidated_candidates = {
-		{ 8, 11, 0 },
 	};
 	RewardGuardWrapperMember4aa3e9 attach_member;
 	attach_member.object_record_key = 0x036225e0U;
 	attach_member.object_record_key_known = true;
 	attach_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74;
 	attach_member.descriptor_type_0x1c = 54;
+	attach_member.descriptor_body_offsets_0x49a6f9_known = true;
+	attach_member.descriptor_body_offsets_0x49a6f9 = {
+		{ 0, 0, 0 },
+	};
 	H3MapedRng attach_rng;
 	attach_rng.state = 11U;
 	const RewardGuardAttachResult49cf34 attach_result =
@@ -2697,7 +2698,12 @@ int main() {
 					&& attach_result.candidate_count_before_filter == 3
 					&& attach_result.bit26_clear_candidate_erase_count_0x4afaea == 1
 					&& attach_result.filter_reject_count_0x49d2e0 == 1
+					&& attach_result.filter_missing_input_count_0x49d2e0 == 0
 					&& attach_result.candidate_count_after_filter == 1
+					&& attach_result.filter_results_0x49d2e0.size() == 2
+					&& attach_result.filter_results_0x49d2e0[0].accepted
+					&& !attach_result.filter_results_0x49d2e0[1].accepted
+					&& attach_result.filter_results_0x49d2e0[1].footprint_reject_count_0x49a6f9 == 1
 					&& attach_result.selected_candidate_known
 					&& attach_result.selected_candidate.x == 8
 					&& attach_result.selected_candidate.y == 11
@@ -2756,11 +2762,35 @@ int main() {
 		return 1;
 	}
 	RewardGuardWrapperState4aa3e9 blocked_attach_wrapper = attach_construct.wrapper;
+	for (GeneratedCellRecord0x30 &record : blocked_attach_wrapper.generated_cell_grid_0x08_0x10.records) {
+		record.word_0x20_known = true;
+		record.word_0x20 = 0U;
+		record.word_0x24_known = true;
+		record.word_0x24 = 0U;
+		record.word_0x28_known = true;
+		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25 | aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x2c_known = true;
+		record.word_0x2c = 0U;
+		record.byte_0x2b_known_mask = 0x02U;
+		record.byte_0x2b = 0x02U;
+	}
+	auto blocked_attach_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
+		return blocked_attach_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(16, 16, x, y, 0))];
+	};
+	blocked_attach_wrapper.candidate_coordinates_0x3c_0x40 = {
+		{ 8, 11, 0 },
+	};
+	blocked_attach_cell(8, 11).word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+	aurelion::h3maped_rmg_core::generated_cell_49aa63(blocked_attach_cell(8, 11), true);
+	RewardGuardWrapperMember4aa3e9 blocked_attach_member = attach_member;
+	blocked_attach_member.descriptor_body_offsets_0x49a6f9_known = false;
+	blocked_attach_member.descriptor_body_offsets_0x49a6f9.clear();
 	H3MapedRng blocked_attach_rng;
 	blocked_attach_rng.state = 11U;
 	const RewardGuardAttachResult49cf34 blocked_attach_result =
-			aurelion::h3maped_rmg_core::reward_guard_attach_member_0x49cf34(blocked_attach_wrapper, attach_member, blocked_attach_rng);
+			aurelion::h3maped_rmg_core::reward_guard_attach_member_0x49cf34(blocked_attach_wrapper, blocked_attach_member, blocked_attach_rng);
 	if (!require(!blocked_attach_result.applied
+					&& blocked_attach_result.filter_missing_input_count_0x49d2e0 == 1
 					&& blocked_attach_result.blocked_reason == "0x49cf34_0x49d2e0_candidate_filter_inputs_missing",
 				"0x49cf34 did not fail closed when recovered 0x49d2e0 filter inputs are missing")) {
 		return 1;

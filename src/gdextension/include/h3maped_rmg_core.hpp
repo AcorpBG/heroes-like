@@ -1815,6 +1815,8 @@ struct RewardGuardWrapperMember4aa3e9 {
 	bool descriptor_projection_enabled_0x29 = false;
 	int32_t descriptor_offset_x_0x2c = 0;
 	int32_t descriptor_offset_y_0x30 = 0;
+	bool descriptor_body_offsets_0x49a6f9_known = false;
+	std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_0x49a6f9;
 };
 
 struct RewardGuardWrapperState4aa3e9 {
@@ -1840,10 +1842,6 @@ struct RewardGuardWrapperState4aa3e9 {
 	int32_t selected_level_0x5c = 0;
 	bool final_projection_mark_byte_0x60_known = false;
 	bool final_projection_mark_byte_0x60 = false;
-	bool attach_filter_0x49d2e0_prevalidated_candidates_known = false;
-	std::vector<CoordinateCandidate4a17f5> attach_filter_0x49d2e0_prevalidated_candidates;
-	bool candidate_rebuild_0x49d7c3_prevalidated_coordinates_known = false;
-	std::vector<CoordinateCandidate4a17f5> candidate_rebuild_0x49d7c3_prevalidated_coordinates;
 	bool feasibility_filter_0x4aa603_prevalidated_candidates_known = false;
 	std::vector<CoordinateCandidate4a17f5> feasibility_filter_0x4aa603_prevalidated_candidates;
 };
@@ -1885,6 +1883,26 @@ struct RewardGuardWrapperConstructResult49ce04 {
 	std::string blocked_reason;
 };
 
+struct RewardGuardCandidateFilterResult49d2e0 {
+	bool inputs_available = false;
+	bool accepted = false;
+	bool descriptor_type_policy_known = false;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t descriptor_relative_x = 0;
+	int32_t descriptor_relative_y = 0;
+	int32_t policy_precheck_scan_count_0x5a2680 = 0;
+	int32_t policy_precheck_bit22_reject_count = 0;
+	int32_t neighbor_policy_scan_count_0x5a2658 = 0;
+	int32_t neighbor_bit22_policy_check_count = 0;
+	int32_t neighbor_policy_plus_1_reject_count = 0;
+	int32_t neighbor_policy_plus_2_reject_count = 0;
+	int32_t footprint_scan_count_0x49a6f9 = 0;
+	int32_t footprint_reject_count_0x49a6f9 = 0;
+	int32_t type54_9_neighbor_scan_count = 0;
+	int32_t type54_9_available_neighbor_count = 0;
+	std::string blocked_reason;
+};
+
 struct RewardGuardAttachResult49cf34 {
 	bool applied = false;
 	bool initial_candidate_refresh_0x49d7c3_applied = false;
@@ -1892,7 +1910,9 @@ struct RewardGuardAttachResult49cf34 {
 	int32_t candidate_count_before_filter = 0;
 	int32_t bit26_clear_candidate_erase_count_0x4afaea = 0;
 	int32_t filter_reject_count_0x49d2e0 = 0;
+	int32_t filter_missing_input_count_0x49d2e0 = 0;
 	int32_t candidate_count_after_filter = 0;
+	std::vector<RewardGuardCandidateFilterResult49d2e0> filter_results_0x49d2e0;
 	int32_t rng_value_0x4e7276 = -1;
 	int32_t selected_candidate_index = -1;
 	bool selected_candidate_known = false;
