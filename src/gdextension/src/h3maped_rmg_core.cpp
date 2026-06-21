@@ -3869,6 +3869,260 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	return result;
 }
 
+SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x3c_known, int32_t source_field_0x3c) {
+	SourceOrderSchedulerResult4a8db2 result;
+	result.source_pair_pointer_carried = source_pair.source_record_pointer_0x00_carried;
+	result.source_pair_copied_source_catalog_index = source_pair.copied_source_catalog_index;
+	result.context_pointer_carried = source_pair.context_pointer_0x04_carried;
+	result.context_wrapper_index_0x04 = source_pair.context_wrapper_index_0x04;
+	result.lane_state_0xee4 = lane_state_0xee4;
+	result.scan_bounds_known = true;
+	result.scan_bounds_non_empty = scan_high_x > scan_low_x && scan_high_y > scan_low_y;
+	result.relation_owner_byte_known = relation_owner_byte2 >= 0;
+	result.relation_owner_byte2 = relation_owner_byte2;
+	result.scan_bound_low_x = scan_low_x;
+	result.scan_bound_low_y = scan_low_y;
+	result.scan_bound_high_x = scan_high_x;
+	result.scan_bound_high_y = scan_high_y;
+	result.level = level;
+	result.descriptor_source_bridge_known = join.joined
+			|| (!join.joined
+					&& join.descriptor.descriptor_type_0x1c == 98
+					&& join.descriptor_source_fields_match
+					&& join.source_catalog_index_0x49da08 >= 0);
+
+	const SourceObjectRecord0x4c &record = source_pair.source_record_copy;
+	const bool field_0x30_known = record.raw_field_0x30_known || source_field_0x30_known;
+	const int32_t field_0x30 = record.raw_field_0x30_known ? record.raw_field_0x30 : source_field_0x30;
+	const bool field_0x34_known = record.raw_field_0x34_known || source_field_0x34_known;
+	const int32_t field_0x34 = record.raw_field_0x34_known ? record.raw_field_0x34 : source_field_0x34;
+
+	auto make_lane = [&](int32_t lane_index,
+			uint32_t direct_callsite,
+			uint32_t weighted_callsite,
+			int32_t count_offset,
+			bool count_known,
+			int32_t count_value,
+			int32_t density_offset,
+			bool density_known,
+			int32_t density_value,
+			bool use_lane_state,
+			bool enabled_low_byte) {
+		SourceOrderSchedulerLane4a8db2 lane;
+		lane.lane_index = lane_index;
+		lane.direct_callsite = direct_callsite;
+		lane.weighted_callsite = weighted_callsite;
+		lane.count_field_offset = count_offset;
+		lane.count_field_known = count_known;
+		lane.count_field_value = count_value;
+		lane.density_field_offset = density_offset;
+		lane.density_field_known = density_known;
+		lane.density_field_value = density_value;
+		lane.use_lane_state_0xee4 = use_lane_state;
+		lane.selected_index_0x20 = use_lane_state ? lane_state_0xee4 : -1;
+		lane.enabled_low_byte_0x24 = enabled_low_byte;
+		lane.initially_disabled = !density_known || density_value <= 0;
+		lane.disabled_after_replay = lane.initially_disabled;
+		return lane;
+	};
+
+	result.lanes.push_back(make_lane(0, 0x4a8df7U, 0x4a8ffdU, 0x24, record.raw_field_0x24_known, record.raw_field_0x24, 0x2c, record.raw_field_0x2c_known, record.raw_field_0x2c, true, true));
+	result.lanes.push_back(make_lane(1, 0x4a8e26U, 0x4a8fd6U, 0x20, record.raw_field_0x20_known, record.raw_field_0x20, 0x28, record.raw_field_0x28_known, record.raw_field_0x28, true, false));
+	result.lanes.push_back(make_lane(2, 0x4a8e55U, 0x4a8fb4U, 0x34, field_0x34_known, field_0x34, 0x3c, source_field_0x3c_known, source_field_0x3c, false, true));
+	result.lanes.push_back(make_lane(3, 0x4a8e83U, 0x4a8f96U, 0x30, field_0x30_known, field_0x30, 0x38, record.raw_field_0x38_known, record.raw_field_0x38, false, false));
+
+	auto finish = [&](const std::string &reason, bool finished) {
+		result.blocked_reason = reason;
+		result.replay_finished = finished;
+		result.disabled_lane_count = 0;
+		for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
+			if (lane.disabled_after_replay) {
+				result.disabled_lane_count += 1;
+			}
+		}
+		state.source_order_scheduler_replay_0x4a8db2_known = true;
+		state.source_order_scheduler_replays_0x4a8db2.push_back(result);
+		state.source_order_scheduler_replay_count_0x4a8db2 = int32_t(state.source_order_scheduler_replays_0x4a8db2.size());
+		state.source_order_scheduler_direct_call_count_0x4a8db2 += result.direct_prepass_call_count;
+		state.source_order_scheduler_weighted_call_count_0x4a8db2 += result.weighted_call_count;
+		state.source_order_scheduler_commit_count_0x4a8db2 += result.committed_call_count;
+		if (!reason.empty() && !finished) {
+			state.source_order_scheduler_blocked_count_0x4a8db2 += 1;
+		}
+		return result;
+	};
+	auto field_offset_label = [](int32_t offset) -> const char * {
+		switch (offset) {
+			case 0x20:
+				return "0x20";
+			case 0x24:
+				return "0x24";
+			case 0x28:
+				return "0x28";
+			case 0x2c:
+				return "0x2c";
+			case 0x30:
+				return "0x30";
+			case 0x34:
+				return "0x34";
+			case 0x38:
+				return "0x38";
+			case 0x3c:
+				return "0x3c";
+			default:
+				return "unknown";
+		}
+	};
+
+	if (!result.source_pair_pointer_carried) {
+		return finish("0x4a8db2_source_pair_plus_0x00_source_record_missing", false);
+	}
+	if (!result.context_pointer_carried) {
+		return finish("0x4a8db2_source_pair_plus_0x04_context_missing", false);
+	}
+	if (!result.descriptor_source_bridge_known) {
+		return finish(join.blocked_reason.empty() ? "0x4a8db2_descriptor_source_bridge_unresolved" : join.blocked_reason, false);
+	}
+	if (!result.scan_bounds_non_empty) {
+		return finish("0x4a8db2_scan_bounds_empty_or_unordered", false);
+	}
+	if (!result.relation_owner_byte_known) {
+		return finish("0x4a8db2_relation_owner_byte2_missing", false);
+	}
+
+	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
+		if (!lane.count_field_known) {
+			return finish(std::string("0x4a8db2_source_count_field_") + field_offset_label(lane.count_field_offset) + "_unknown", false);
+		}
+	}
+
+	auto run_scan_call = [&](SourceOrderSchedulerLane4a8db2 &lane,
+			const std::string &phase,
+			uint32_t callsite,
+			int32_t loop_index,
+			int32_t threshold_arg,
+			int64_t score_before,
+			int64_t increment,
+			int64_t score_after) {
+		SourceOrderSchedulerCall4a8db2 call;
+		call.phase = phase;
+		call.callsite = callsite;
+		call.lane_index = lane.lane_index;
+		call.loop_index = loop_index;
+		call.selected_index_0x20 = lane.selected_index_0x20;
+		call.enabled_low_byte_0x24 = lane.enabled_low_byte_0x24;
+		call.threshold_arg_0x18 = threshold_arg;
+		call.scheduler_score_before = score_before;
+		call.scheduler_increment = increment;
+		call.scheduler_score_after = score_after;
+		call.weighted_candidate_vector_index_0x4a901a = int32_t(state.weighted_candidate_vectors_0x4a901a.size());
+		call.attempted_0x4a901a = true;
+		const WeightedObjectCandidateScanResult4a901a scan = weighted_object_candidate_scan_0x4a901a(
+				state,
+				join,
+				relation_owner_byte2,
+				scan_low_x,
+				scan_low_y,
+				scan_high_x,
+				scan_high_y,
+				level,
+				threshold_arg,
+				rng,
+				lane.selected_index_0x20,
+				0U,
+				lane.enabled_low_byte_0x24);
+		call.returned_nonzero = scan.committed;
+		call.committed = scan.committed;
+		call.weighted_candidate_accepted_count_0x4a901a = scan.vector_state_0x4a901a.accepted_candidate_count;
+		call.blocked_reason = scan.blocked_reason;
+		lane.committed_call_count += scan.committed ? 1 : 0;
+		result.committed_call_count += scan.committed ? 1 : 0;
+		result.calls.push_back(call);
+		return scan.committed;
+	};
+
+	bool first_count_branch = true;
+	for (size_t lane_index = 0; lane_index < result.lanes.size(); ++lane_index) {
+		SourceOrderSchedulerLane4a8db2 &lane = result.lanes[lane_index];
+		if (lane.count_field_value <= 0) {
+			continue;
+		}
+		const int32_t start_index = lane_index == 0 ? 1 : (first_count_branch ? 1 : 0);
+		for (int32_t loop_index = start_index; loop_index < lane.count_field_value; ++loop_index) {
+			lane.direct_prepass_call_count += 1;
+			result.direct_prepass_call_count += 1;
+			run_scan_call(lane, "direct_prepass", lane.direct_callsite, loop_index, 0, 0, 0, 0);
+		}
+		first_count_branch = false;
+	}
+
+	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
+		if (!lane.density_field_known) {
+			return finish(std::string("0x4a8db2_source_density_field_") + field_offset_label(lane.density_field_offset) + "_unknown", false);
+		}
+		if (lane.density_field_value > 0) {
+			result.positive_density_sum += lane.density_field_value;
+			result.positive_density_product *= int64_t(lane.density_field_value);
+		}
+	}
+	if (result.positive_density_sum <= 0) {
+		return finish("0x4a8db2_weighted_scheduler_no_positive_density", true);
+	}
+
+	const int32_t quotient = 0x14400 / result.positive_density_sum;
+	int32_t threshold = int32_t(std::sqrt(double(quotient)));
+	while (int64_t(threshold + 1) * int64_t(threshold + 1) <= quotient) {
+		++threshold;
+	}
+	while (int64_t(threshold) * int64_t(threshold) > quotient) {
+		--threshold;
+	}
+	result.threshold_arg_0x18_known = true;
+	result.threshold_arg_0x18 = threshold;
+
+	for (SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
+		if (lane.density_field_value <= 0) {
+			lane.initially_disabled = true;
+			lane.disabled_after_replay = true;
+			lane.blocked_reason = "0x4a8db2_density_lane_nonpositive";
+			continue;
+		}
+		lane.initially_disabled = false;
+		lane.disabled_after_replay = false;
+		lane.scheduler_increment = result.positive_density_product / int64_t(lane.density_field_value);
+		lane.scheduler_score = int64_t(lane.count_field_value) * lane.scheduler_increment;
+	}
+
+	while (true) {
+		int32_t selected_lane_index = -1;
+		int64_t selected_score = 0;
+		for (int32_t index = 0; index < int32_t(result.lanes.size()); ++index) {
+			const SourceOrderSchedulerLane4a8db2 &lane = result.lanes[size_t(index)];
+			if (lane.disabled_after_replay) {
+				continue;
+			}
+			if (selected_lane_index < 0 || lane.scheduler_score < selected_score) {
+				selected_lane_index = index;
+				selected_score = lane.scheduler_score;
+			}
+		}
+		if (selected_lane_index < 0) {
+			return finish("", true);
+		}
+		SourceOrderSchedulerLane4a8db2 &lane = result.lanes[size_t(selected_lane_index)];
+		const int64_t score_before = lane.scheduler_score;
+		lane.scheduler_score += lane.scheduler_increment;
+		lane.weighted_call_count += 1;
+		result.weighted_call_count += 1;
+		const bool committed = run_scan_call(lane, "weighted", lane.weighted_callsite, lane.weighted_call_count - 1, result.threshold_arg_0x18, score_before, lane.scheduler_increment, lane.scheduler_score);
+		if (!committed) {
+			lane.disabled_after_replay = true;
+			lane.blocked_reason = result.calls.empty() ? "0x4a8db2_weighted_scan_returned_zero" : result.calls.back().blocked_reason;
+			result.calls.back().disabled_after_false = true;
+		}
+	}
+}
+
 static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
 	return std::any_of(records.begin(), records.end(), [&](const EndpointPointerRecord4a5e73 &record) {
 		return record.key_0x20 == key_0x20;

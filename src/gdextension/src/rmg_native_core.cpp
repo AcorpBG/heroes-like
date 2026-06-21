@@ -503,6 +503,91 @@ SharedWeightedObjectCandidateVectorState4a901a from_h3maped_weighted_object_cand
 	return out;
 }
 
+SharedSourceOrderSchedulerLane4a8db2 from_h3maped_source_order_scheduler_lane_4a8db2(const h3maped_rmg_core::SourceOrderSchedulerLane4a8db2 &input) {
+	SharedSourceOrderSchedulerLane4a8db2 out;
+	out.lane_index = input.lane_index;
+	out.direct_callsite = input.direct_callsite;
+	out.weighted_callsite = input.weighted_callsite;
+	out.count_field_offset = input.count_field_offset;
+	out.count_field_known = input.count_field_known;
+	out.count_field_value = input.count_field_value;
+	out.density_field_offset = input.density_field_offset;
+	out.density_field_known = input.density_field_known;
+	out.density_field_value = input.density_field_value;
+	out.use_lane_state_0xee4 = input.use_lane_state_0xee4;
+	out.selected_index_0x20 = input.selected_index_0x20;
+	out.enabled_low_byte_0x24 = input.enabled_low_byte_0x24;
+	out.initially_disabled = input.initially_disabled;
+	out.disabled_after_replay = input.disabled_after_replay;
+	out.scheduler_increment = input.scheduler_increment;
+	out.scheduler_score = input.scheduler_score;
+	out.direct_prepass_call_count = input.direct_prepass_call_count;
+	out.weighted_call_count = input.weighted_call_count;
+	out.committed_call_count = input.committed_call_count;
+	out.blocked_reason = input.blocked_reason;
+	return out;
+}
+
+SharedSourceOrderSchedulerCall4a8db2 from_h3maped_source_order_scheduler_call_4a8db2(const h3maped_rmg_core::SourceOrderSchedulerCall4a8db2 &input) {
+	SharedSourceOrderSchedulerCall4a8db2 out;
+	out.phase = input.phase;
+	out.callsite = input.callsite;
+	out.lane_index = input.lane_index;
+	out.loop_index = input.loop_index;
+	out.selected_index_0x20 = input.selected_index_0x20;
+	out.enabled_low_byte_0x24 = input.enabled_low_byte_0x24;
+	out.threshold_arg_0x18 = input.threshold_arg_0x18;
+	out.scheduler_score_before = input.scheduler_score_before;
+	out.scheduler_increment = input.scheduler_increment;
+	out.scheduler_score_after = input.scheduler_score_after;
+	out.attempted_0x4a901a = input.attempted_0x4a901a;
+	out.returned_nonzero = input.returned_nonzero;
+	out.committed = input.committed;
+	out.disabled_after_false = input.disabled_after_false;
+	out.weighted_candidate_vector_index_0x4a901a = input.weighted_candidate_vector_index_0x4a901a;
+	out.weighted_candidate_accepted_count_0x4a901a = input.weighted_candidate_accepted_count_0x4a901a;
+	out.blocked_reason = input.blocked_reason;
+	return out;
+}
+
+SharedSourceOrderSchedulerResult4a8db2 from_h3maped_source_order_scheduler_result_4a8db2(const h3maped_rmg_core::SourceOrderSchedulerResult4a8db2 &input) {
+	SharedSourceOrderSchedulerResult4a8db2 out;
+	out.source_pair_pointer_carried = input.source_pair_pointer_carried;
+	out.source_pair_copied_source_catalog_index = input.source_pair_copied_source_catalog_index;
+	out.context_pointer_carried = input.context_pointer_carried;
+	out.context_wrapper_index_0x04 = input.context_wrapper_index_0x04;
+	out.lane_state_0xee4 = input.lane_state_0xee4;
+	out.descriptor_source_bridge_known = input.descriptor_source_bridge_known;
+	out.scan_bounds_known = input.scan_bounds_known;
+	out.scan_bounds_non_empty = input.scan_bounds_non_empty;
+	out.relation_owner_byte_known = input.relation_owner_byte_known;
+	out.relation_owner_byte2 = input.relation_owner_byte2;
+	out.scan_bound_low_x = input.scan_bound_low_x;
+	out.scan_bound_low_y = input.scan_bound_low_y;
+	out.scan_bound_high_x = input.scan_bound_high_x;
+	out.scan_bound_high_y = input.scan_bound_high_y;
+	out.level = input.level;
+	out.positive_density_sum = input.positive_density_sum;
+	out.positive_density_product = input.positive_density_product;
+	out.threshold_arg_0x18_known = input.threshold_arg_0x18_known;
+	out.threshold_arg_0x18 = input.threshold_arg_0x18;
+	out.direct_prepass_call_count = input.direct_prepass_call_count;
+	out.weighted_call_count = input.weighted_call_count;
+	out.committed_call_count = input.committed_call_count;
+	out.disabled_lane_count = input.disabled_lane_count;
+	out.lanes.reserve(input.lanes.size());
+	for (const h3maped_rmg_core::SourceOrderSchedulerLane4a8db2 &lane : input.lanes) {
+		out.lanes.push_back(from_h3maped_source_order_scheduler_lane_4a8db2(lane));
+	}
+	out.calls.reserve(input.calls.size());
+	for (const h3maped_rmg_core::SourceOrderSchedulerCall4a8db2 &call : input.calls) {
+		out.calls.push_back(from_h3maped_source_order_scheduler_call_4a8db2(call));
+	}
+	out.replay_finished = input.replay_finished;
+	out.blocked_reason = input.blocked_reason;
+	return out;
+}
+
 SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(const h3maped_rmg_core::GeneratorObjectPrivateState &input) {
 	SharedGeneratorObjectPrivateState out;
 	out.present = input.generated_cell_buffer_owned;
@@ -594,6 +679,16 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 		shared_threshold.threshold_arg_0x18 = threshold.threshold_arg_0x18;
 		shared_threshold.blocked_reason = threshold.blocked_reason;
 		out.weighted_scheduler_thresholds_0x4a8db2.push_back(shared_threshold);
+	}
+	out.source_order_scheduler_replay_0x4a8db2_known = input.source_order_scheduler_replay_0x4a8db2_known;
+	out.source_order_scheduler_replay_count_0x4a8db2 = input.source_order_scheduler_replay_count_0x4a8db2;
+	out.source_order_scheduler_direct_call_count_0x4a8db2 = input.source_order_scheduler_direct_call_count_0x4a8db2;
+	out.source_order_scheduler_weighted_call_count_0x4a8db2 = input.source_order_scheduler_weighted_call_count_0x4a8db2;
+	out.source_order_scheduler_commit_count_0x4a8db2 = input.source_order_scheduler_commit_count_0x4a8db2;
+	out.source_order_scheduler_blocked_count_0x4a8db2 = input.source_order_scheduler_blocked_count_0x4a8db2;
+	out.source_order_scheduler_replays_0x4a8db2.reserve(input.source_order_scheduler_replays_0x4a8db2.size());
+	for (const h3maped_rmg_core::SourceOrderSchedulerResult4a8db2 &replay : input.source_order_scheduler_replays_0x4a8db2) {
+		out.source_order_scheduler_replays_0x4a8db2.push_back(from_h3maped_source_order_scheduler_result_4a8db2(replay));
 	}
 	out.weighted_candidate_vectors_0x4a901a_known = input.weighted_candidate_vectors_0x4a901a_known;
 	out.weighted_candidate_vector_count_0x4a901a = input.weighted_candidate_vector_count_0x4a901a;
@@ -1770,6 +1865,108 @@ void append_weighted_scheduler_thresholds_4a8db2_json(std::ostream &out, const s
 	out << "]";
 }
 
+void append_source_order_scheduler_lanes_4a8db2_json(std::ostream &out, const std::vector<SharedSourceOrderSchedulerLane4a8db2> &lanes) {
+	out << "[";
+	for (size_t index = 0; index < lanes.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedSourceOrderSchedulerLane4a8db2 &lane = lanes[index];
+		out << "{\"lane_index\":" << lane.lane_index
+			<< ",\"direct_callsite\":" << lane.direct_callsite
+			<< ",\"weighted_callsite\":" << lane.weighted_callsite
+			<< ",\"count_field_offset\":" << lane.count_field_offset
+			<< ",\"count_field_known\":" << (lane.count_field_known ? "true" : "false")
+			<< ",\"count_field_value\":" << lane.count_field_value
+			<< ",\"density_field_offset\":" << lane.density_field_offset
+			<< ",\"density_field_known\":" << (lane.density_field_known ? "true" : "false")
+			<< ",\"density_field_value\":" << lane.density_field_value
+			<< ",\"use_lane_state_0xee4\":" << (lane.use_lane_state_0xee4 ? "true" : "false")
+			<< ",\"selected_index_0x20\":" << lane.selected_index_0x20
+			<< ",\"enabled_low_byte_0x24\":" << (lane.enabled_low_byte_0x24 ? "true" : "false")
+			<< ",\"initially_disabled\":" << (lane.initially_disabled ? "true" : "false")
+			<< ",\"disabled_after_replay\":" << (lane.disabled_after_replay ? "true" : "false")
+			<< ",\"scheduler_increment\":" << lane.scheduler_increment
+			<< ",\"scheduler_score\":" << lane.scheduler_score
+			<< ",\"direct_prepass_call_count\":" << lane.direct_prepass_call_count
+			<< ",\"weighted_call_count\":" << lane.weighted_call_count
+			<< ",\"committed_call_count\":" << lane.committed_call_count
+			<< ",\"blocked_reason\":\"" << json_escape(lane.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_source_order_scheduler_calls_4a8db2_json(std::ostream &out, const std::vector<SharedSourceOrderSchedulerCall4a8db2> &calls) {
+	out << "[";
+	for (size_t index = 0; index < calls.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedSourceOrderSchedulerCall4a8db2 &call = calls[index];
+		out << "{\"phase\":\"" << json_escape(call.phase) << "\""
+			<< ",\"callsite\":" << call.callsite
+			<< ",\"lane_index\":" << call.lane_index
+			<< ",\"loop_index\":" << call.loop_index
+			<< ",\"selected_index_0x20\":" << call.selected_index_0x20
+			<< ",\"enabled_low_byte_0x24\":" << (call.enabled_low_byte_0x24 ? "true" : "false")
+			<< ",\"threshold_arg_0x18\":" << call.threshold_arg_0x18
+			<< ",\"scheduler_score_before\":" << call.scheduler_score_before
+			<< ",\"scheduler_increment\":" << call.scheduler_increment
+			<< ",\"scheduler_score_after\":" << call.scheduler_score_after
+			<< ",\"attempted_0x4a901a\":" << (call.attempted_0x4a901a ? "true" : "false")
+			<< ",\"returned_nonzero\":" << (call.returned_nonzero ? "true" : "false")
+			<< ",\"committed\":" << (call.committed ? "true" : "false")
+			<< ",\"disabled_after_false\":" << (call.disabled_after_false ? "true" : "false")
+			<< ",\"weighted_candidate_vector_index_0x4a901a\":" << call.weighted_candidate_vector_index_0x4a901a
+			<< ",\"weighted_candidate_accepted_count_0x4a901a\":" << call.weighted_candidate_accepted_count_0x4a901a
+			<< ",\"blocked_reason\":\"" << json_escape(call.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_source_order_scheduler_replays_4a8db2_json(std::ostream &out, const std::vector<SharedSourceOrderSchedulerResult4a8db2> &replays) {
+	out << "[";
+	for (size_t index = 0; index < replays.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedSourceOrderSchedulerResult4a8db2 &replay = replays[index];
+		out << "{\"source_pair_pointer_carried\":" << (replay.source_pair_pointer_carried ? "true" : "false")
+			<< ",\"source_pair_copied_source_catalog_index\":" << replay.source_pair_copied_source_catalog_index
+			<< ",\"context_pointer_carried\":" << (replay.context_pointer_carried ? "true" : "false")
+			<< ",\"context_wrapper_index_0x04\":" << replay.context_wrapper_index_0x04
+			<< ",\"lane_state_0xee4\":" << replay.lane_state_0xee4
+			<< ",\"descriptor_source_bridge_known\":" << (replay.descriptor_source_bridge_known ? "true" : "false")
+			<< ",\"scan_bounds_known\":" << (replay.scan_bounds_known ? "true" : "false")
+			<< ",\"scan_bounds_non_empty\":" << (replay.scan_bounds_non_empty ? "true" : "false")
+			<< ",\"relation_owner_byte_known\":" << (replay.relation_owner_byte_known ? "true" : "false")
+			<< ",\"relation_owner_byte2\":" << replay.relation_owner_byte2
+			<< ",\"scan_bound_low_x\":" << replay.scan_bound_low_x
+			<< ",\"scan_bound_low_y\":" << replay.scan_bound_low_y
+			<< ",\"scan_bound_high_x\":" << replay.scan_bound_high_x
+			<< ",\"scan_bound_high_y\":" << replay.scan_bound_high_y
+			<< ",\"level\":" << replay.level
+			<< ",\"positive_density_sum\":" << replay.positive_density_sum
+			<< ",\"positive_density_product\":" << replay.positive_density_product
+			<< ",\"threshold_arg_0x18_known\":" << (replay.threshold_arg_0x18_known ? "true" : "false")
+			<< ",\"threshold_arg_0x18\":" << replay.threshold_arg_0x18
+			<< ",\"direct_prepass_call_count\":" << replay.direct_prepass_call_count
+			<< ",\"weighted_call_count\":" << replay.weighted_call_count
+			<< ",\"committed_call_count\":" << replay.committed_call_count
+			<< ",\"disabled_lane_count\":" << replay.disabled_lane_count
+			<< ",\"lanes\":";
+		append_source_order_scheduler_lanes_4a8db2_json(out, replay.lanes);
+		out << ",\"calls\":";
+		append_source_order_scheduler_calls_4a8db2_json(out, replay.calls);
+		out << ",\"replay_finished\":" << (replay.replay_finished ? "true" : "false")
+			<< ",\"blocked_reason\":\"" << json_escape(replay.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_weighted_object_candidate_4a901a_json(std::ostream &out, const SharedWeightedObjectCandidate4a901a &candidate) {
 	out << "{\"x\":" << candidate.x
 		<< ",\"y\":" << candidate.y
@@ -1915,6 +2112,15 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"weighted_scheduler_threshold_count_0x4a8db2\":" << state.weighted_scheduler_threshold_count_0x4a8db2 << ","
 		<< "\"weighted_scheduler_thresholds_0x4a8db2\":";
 	append_weighted_scheduler_thresholds_4a8db2_json(out, state.weighted_scheduler_thresholds_0x4a8db2);
+	out << ","
+		<< "\"source_order_scheduler_replay_0x4a8db2_known\":" << (state.source_order_scheduler_replay_0x4a8db2_known ? "true" : "false") << ","
+		<< "\"source_order_scheduler_replay_count_0x4a8db2\":" << state.source_order_scheduler_replay_count_0x4a8db2 << ","
+		<< "\"source_order_scheduler_direct_call_count_0x4a8db2\":" << state.source_order_scheduler_direct_call_count_0x4a8db2 << ","
+		<< "\"source_order_scheduler_weighted_call_count_0x4a8db2\":" << state.source_order_scheduler_weighted_call_count_0x4a8db2 << ","
+		<< "\"source_order_scheduler_commit_count_0x4a8db2\":" << state.source_order_scheduler_commit_count_0x4a8db2 << ","
+		<< "\"source_order_scheduler_blocked_count_0x4a8db2\":" << state.source_order_scheduler_blocked_count_0x4a8db2 << ","
+		<< "\"source_order_scheduler_replays_0x4a8db2\":";
+	append_source_order_scheduler_replays_4a8db2_json(out, state.source_order_scheduler_replays_0x4a8db2);
 	out << ","
 		<< "\"weighted_candidate_vectors_0x4a901a_known\":" << (state.weighted_candidate_vectors_0x4a901a_known ? "true" : "false") << ","
 		<< "\"weighted_candidate_vector_count_0x4a901a\":" << state.weighted_candidate_vector_count_0x4a901a << ","
