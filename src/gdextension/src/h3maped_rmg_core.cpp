@@ -10433,6 +10433,113 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_selected_obj
 	return result;
 }
 
+static bool mine_resource_density_failure_disables_0x4a9c7c(const std::string &reason) {
+	return reason.empty()
+			|| reason == "0x4a9911_no_mine_resource_descriptor_candidate_for_category"
+			|| reason == "0x4a9641_candidate_vector_empty_after_owner_0x49aa93_value_body_filters";
+}
+
+static int32_t mine_resource_density_threshold_0x4a9c7c(int32_t density_total) {
+	if (density_total <= 0) {
+		return 0;
+	}
+	const int32_t quotient = 0x14400 / density_total;
+	return int32_t(std::sqrt(double(quotient)));
+}
+
+static bool mine_resource_density_followup_0x4a9c7c(
+		GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c &owner,
+		std::array<MineResourceMaterializationCategory4a9d6a, 7> &categories,
+		MineResourceMaterializationResult4a9d6a &result,
+		H3MapedRng &rng) {
+	result.density_followup_0x4a9c7c_reached = true;
+	int32_t density_total = 0;
+	int32_t density_product = 1;
+	for (MineResourceMaterializationCategory4a9d6a &category : categories) {
+		if (category.density_count <= 0) {
+			category.density_disabled_0x4a9c7c = true;
+			continue;
+		}
+		category.density_active_0x4a9c7c = true;
+		result.density_active_category_count_0x4a9c7c += 1;
+		density_total += category.density_count;
+		density_product *= category.density_count;
+	}
+	if (density_total <= 0) {
+		result.density_followup_0x4a9c7c_applied = true;
+		return true;
+	}
+
+	result.density_product_0x4a9c7c = density_product;
+	result.density_threshold_0x4e7dec = mine_resource_density_threshold_0x4a9c7c(density_total);
+	for (MineResourceMaterializationCategory4a9d6a &category : categories) {
+		if (!category.density_active_0x4a9c7c || category.density_disabled_0x4a9c7c) {
+			continue;
+		}
+		category.density_step_0x4a9c7c =
+				category.density_count > 0 ? density_product / category.density_count : 0;
+		category.density_counter_initial_0x4a9c7c =
+				category.required_count_0x4c * category.density_step_0x4a9c7c;
+		category.density_counter_current_0x4a9c7c = category.density_counter_initial_0x4a9c7c;
+	}
+
+	while (true) {
+		int32_t selected_category = -1;
+		int32_t selected_counter = 0;
+		for (int32_t category_index = 0; category_index <= 6; ++category_index) {
+			const MineResourceMaterializationCategory4a9d6a &category = categories[size_t(category_index)];
+			if (!category.density_active_0x4a9c7c || category.density_disabled_0x4a9c7c) {
+				continue;
+			}
+			if (selected_category < 0 || category.density_counter_current_0x4a9c7c < selected_counter) {
+				selected_category = category_index;
+				selected_counter = category.density_counter_current_0x4a9c7c;
+			}
+		}
+		if (selected_category < 0) {
+			break;
+		}
+
+		MineResourceMaterializationCategory4a9d6a &category = categories[size_t(selected_category)];
+		category.density_counter_current_0x4a9c7c += category.density_step_0x4a9c7c;
+		category.density_attempted_callback_count_0x4a9911 += 1;
+		result.density_scheduler_selection_count_0x4a9c7c += 1;
+		result.density_callback_attempt_count_0x4a9911 += 1;
+		result.callback_attempt_count_0x4a9911 += 1;
+		category.density_selected_object_callback_0x4a9911 =
+				mine_resource_selected_object_callback_0x4a9911(
+						state,
+						owner,
+						selected_category,
+						false,
+						result.density_threshold_0x4e7dec,
+						rng);
+		if (category.density_selected_object_callback_0x4a9911.applied
+				&& category.density_selected_object_callback_0x4a9911.blocked_reason.empty()) {
+			category.density_successful_callback_count_0x4a9911 += 1;
+			result.density_successful_count_0x4a9911 += 1;
+			result.successful_count_0x4a9911 += 1;
+			continue;
+		}
+
+		const std::string failure_reason = category.density_selected_object_callback_0x4a9911.blocked_reason;
+		category.density_disabled_0x4a9c7c = true;
+		category.density_disabled_after_failure_0x4a9c7c = true;
+		result.density_disabled_count_0x4a9c7c += 1;
+		if (!mine_resource_density_failure_disables_0x4a9c7c(failure_reason)) {
+			category.blocked_reason = failure_reason.empty()
+					? "0x4a9c7c_density_0x4a9911_selected_object_callback_not_applied"
+					: failure_reason;
+			result.blocked_reason = category.blocked_reason;
+			return false;
+		}
+	}
+
+	result.density_followup_0x4a9c7c_applied = true;
+	return true;
+}
+
 static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4a9d6a(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	MineResourceMaterializationResult4a9d6a result;
 	result.invoked = true;
@@ -10451,8 +10558,9 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 			result.blocked_reason = "0x4a9d6a_relation_leading_descriptor_mine_counts_0x4c_missing";
 			return result;
 		}
+		std::array<MineResourceMaterializationCategory4a9d6a, 7> owner_categories;
 		for (int32_t category = 0; category <= 6; ++category) {
-			MineResourceMaterializationCategory4a9d6a category_result;
+			MineResourceMaterializationCategory4a9d6a &category_result = owner_categories[size_t(category)];
 			category_result.owner_vector_index = owner.owner_vector_index;
 			category_result.runtime_zone_index = owner.runtime_zone_index;
 			category_result.relation_source_index_0x00 = owner.source_pointer_source_index_0x00;
@@ -10469,7 +10577,11 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 			result.category_scan_count += 1;
 			result.required_total_count_0x4c += category_result.required_count_0x4c;
 			result.density_total_count += category_result.density_count;
+		}
+		for (int32_t category = 0; category <= 6; ++category) {
+			MineResourceMaterializationCategory4a9d6a &category_result = owner_categories[size_t(category)];
 			if (category_result.required_count_0x4c > 0) {
+				bool force_flag = category_result.force_flag_from_relation_byte_0x3c;
 				for (int32_t attempt = 0; attempt < category_result.required_count_0x4c; ++attempt) {
 					category_result.attempted_callback_count_0x4a9911 += 1;
 					category_result.selected_object_callback_0x4a9911 =
@@ -10477,7 +10589,7 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 									state,
 									owner,
 									category,
-									category_result.force_flag_from_relation_byte_0x3c,
+									force_flag,
 									0,
 									rng);
 					result.callback_attempt_count_0x4a9911 += 1;
@@ -10488,18 +10600,23 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 								? "0x4a9911_selected_object_callback_not_applied_before_mine_resource_commit"
 								: category_result.selected_object_callback_0x4a9911.blocked_reason;
 						result.blocked_reason = category_result.blocked_reason;
-						result.categories.push_back(category_result);
+						result.categories.insert(result.categories.end(), owner_categories.begin(), owner_categories.end());
 						return result;
 					}
+					force_flag = false;
 					category_result.successful_callback_count_0x4a9911 += 1;
 					result.successful_count_0x4a9911 += 1;
 				}
 			}
-			result.categories.push_back(category_result);
 		}
-		result.density_followup_0x4a9c7c_reached = true;
-		result.blocked_reason = "0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums";
-		return result;
+		if (!mine_resource_density_followup_0x4a9c7c(state, owner, owner_categories, result, rng)) {
+			result.categories.insert(result.categories.end(), owner_categories.begin(), owner_categories.end());
+			if (result.blocked_reason.empty()) {
+				result.blocked_reason = "0x4a9c7c_density_followup_not_applied";
+			}
+			return result;
+		}
+		result.categories.insert(result.categories.end(), owner_categories.begin(), owner_categories.end());
 	}
 
 	result.applied = true;

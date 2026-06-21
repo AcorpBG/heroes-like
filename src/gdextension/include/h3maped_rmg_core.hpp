@@ -2218,6 +2218,15 @@ struct MineResourceMaterializationCategory4a9d6a {
 	int32_t attempted_callback_count_0x4a9911 = 0;
 	int32_t successful_callback_count_0x4a9911 = 0;
 	MineResourceSelectedObjectCallbackResult4a9911 selected_object_callback_0x4a9911;
+	bool density_active_0x4a9c7c = false;
+	bool density_disabled_0x4a9c7c = false;
+	bool density_disabled_after_failure_0x4a9c7c = false;
+	int32_t density_step_0x4a9c7c = 0;
+	int32_t density_counter_initial_0x4a9c7c = 0;
+	int32_t density_counter_current_0x4a9c7c = 0;
+	int32_t density_attempted_callback_count_0x4a9911 = 0;
+	int32_t density_successful_callback_count_0x4a9911 = 0;
+	MineResourceSelectedObjectCallbackResult4a9911 density_selected_object_callback_0x4a9911;
 	std::string blocked_reason;
 };
 
@@ -2232,6 +2241,14 @@ struct MineResourceMaterializationResult4a9d6a {
 	int32_t callback_attempt_count_0x4a9911 = 0;
 	int32_t successful_count_0x4a9911 = 0;
 	bool density_followup_0x4a9c7c_reached = false;
+	bool density_followup_0x4a9c7c_applied = false;
+	int32_t density_active_category_count_0x4a9c7c = 0;
+	int32_t density_product_0x4a9c7c = 1;
+	int32_t density_threshold_0x4e7dec = 0;
+	int32_t density_scheduler_selection_count_0x4a9c7c = 0;
+	int32_t density_callback_attempt_count_0x4a9911 = 0;
+	int32_t density_successful_count_0x4a9911 = 0;
+	int32_t density_disabled_count_0x4a9c7c = 0;
 	bool optional_handler_ed4_slot8_invoked = false;
 	std::vector<MineResourceMaterializationCategory4a9d6a> categories;
 	std::string blocked_reason;
