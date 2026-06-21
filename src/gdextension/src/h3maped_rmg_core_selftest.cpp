@@ -2197,6 +2197,19 @@ int main() {
 	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
 		return 1;
 	}
+	if (!require(generator_state.reward_guard_projection_generator_0x10b4_known
+					&& !generator_state.reward_guard_projection_generator_0x10b4,
+				"generator object private state did not preserve recovered 0x49ecf2 zeroed reward/guard projection +0x10b4 byte")) {
+		return 1;
+	}
+	if (!require(generator_state.reward_guard_projection_used_flags_0x1024_known
+					&& generator_state.reward_guard_projection_used_flags_0x1024_count == aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947
+					&& generator_state.reward_guard_projection_used_flags_0x1024_zero_count == aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947
+					&& generator_state.reward_guard_projection_used_flags_0x1024.size() == size_t(aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947)
+					&& std::all_of(generator_state.reward_guard_projection_used_flags_0x1024.begin(), generator_state.reward_guard_projection_used_flags_0x1024.end(), [](uint8_t value) { return value == 0U; }),
+				"generator object private state did not preserve recovered 0x49ecf2 zeroed 0x90-byte reward/guard projection +0x1024 used-slot array")) {
+		return 1;
+	}
 	if (!require(generator_state.endpoint_vector_d8_dc.present
 					&& generator_state.endpoint_vector_d8_dc.count_known
 					&& generator_state.endpoint_vector_d8_dc.count == 8

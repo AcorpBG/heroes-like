@@ -805,6 +805,11 @@ struct SharedGeneratorObjectPrivateState {
 	bool reward_guard_projection_source_relation_known_0x4ad947 = false;
 	int32_t reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 = -1;
 	std::string reward_guard_projection_source_relation_blocked_reason_0x4ad947;
+	bool reward_guard_projection_generator_0x10b4_known = false;
+	bool reward_guard_projection_generator_0x10b4 = false;
+	bool reward_guard_projection_used_flags_0x1024_known = false;
+	int32_t reward_guard_projection_used_flags_0x1024_count = 0;
+	int32_t reward_guard_projection_used_flags_0x1024_zero_count = 0;
 	bool reward_guard_projection_driver_selection_0x4ad947_ported = false;
 	bool reward_guard_projection_driver_selection_input_known = false;
 	bool reward_guard_projection_driver_selection_applied_0x4ad947 = false;
