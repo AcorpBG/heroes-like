@@ -1559,10 +1559,19 @@ SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(Sour
 	wrapper.initialized_by_0x49db76 = true;
 	wrapper.copied_source_record = true;
 	state.wrappers.push_back(wrapper);
-	state.source_pairs_0xedc.push_back(SourceObjectResolverSourcePair4af785 {
-		wrapper.source_catalog_index,
-		wrapper.wrapper_index,
-	});
+	SourceObjectResolverSourcePair4af785 source_pair;
+	source_pair.copied_source_catalog_index = wrapper.source_catalog_index;
+	source_pair.wrapper_index = wrapper.wrapper_index;
+	source_pair.source_record_pointer_0x00_carried = true;
+	source_pair.source_record_copy = wrapper.source_record_copy;
+	source_pair.source_lane_0x1c = wrapper.source_record_copy.type_id_0x1c;
+	source_pair.context_pointer_0x04_carried = true;
+	source_pair.context_wrapper_copy = wrapper;
+	source_pair.context_wrapper_index_0x04 = wrapper.wrapper_index;
+	source_pair.context_wrapper_lane_0x04 = wrapper.wrapper_0x04;
+	source_pair.context_wrapper_0x10_known = wrapper.wrapper_0x10_known;
+	source_pair.context_wrapper_0x10 = wrapper.wrapper_0x10;
+	state.source_pairs_0xedc.push_back(source_pair);
 
 	result.created_new_wrapper = true;
 	result.selected_wrapper_index = wrapper.wrapper_index;
@@ -1574,6 +1583,15 @@ SourceObjectResolverResult4af785 source_object_descriptor_resolver_0x4af785(Sour
 	result.wrapper_0x10_known = wrapper.wrapper_0x10_known;
 	result.wrapper_0x10 = wrapper.wrapper_0x10;
 	return result;
+}
+
+void preserve_source_pair_vector_edc(GeneratorObjectPrivateState &state, const SourceObjectResolverState4af785 &resolver_state) {
+	state.source_pair_vector_edc.present = true;
+	state.source_pair_vector_edc.contents_known = true;
+	state.source_pair_vector_edc.count_known = true;
+	state.source_pair_vector_edc.count = int32_t(resolver_state.source_pairs_0xedc.size());
+	state.source_pair_vector_edc.element_size_bytes = 8;
+	state.source_pair_records_edc = resolver_state.source_pairs_0xedc;
 }
 
 bool recovered_descriptor_join_context_0x4903e8(int32_t target_context) {
@@ -2787,11 +2805,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 				result.stopped_on_object_materialization_required = true;
 				return result;
 			}
-			state.source_pair_vector_edc.present = true;
-			state.source_pair_vector_edc.contents_known = true;
-			state.source_pair_vector_edc.count_known = true;
-			state.source_pair_vector_edc.count = int32_t(resolver_state.source_pairs_0xedc.size());
-			state.source_pair_vector_edc.element_size_bytes = 8;
+			preserve_source_pair_vector_edc(state, resolver_state);
 
 			const uint32_t object_record_key = state.next_native_object_record_key_0x4a93a2++;
 			result.object_branch_allocated_record_count += 1;
@@ -5675,6 +5689,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	}
 	const RelationScanConsumerResult4a5767 relation_scan_consumers =
 			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(state, relation_scan_resolver_state, relation_scan_rng, state.relation_owner_vectors_10e4_10e8);
+	preserve_source_pair_vector_edc(state, relation_scan_resolver_state);
 	state.relation_scan_consumers_4a5767_applied = relation_scan_consumers.applied;
 	state.relation_scan_consumers_4a5767_no_object_projection_chain_complete = relation_scan_consumers.no_object_projection_chain_complete;
 	state.relation_scan_consumer_owner_scan_count_4a5767 = relation_scan_consumers.owner_scan_count;
@@ -5703,7 +5718,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	apply_endpoint_materialization_state_d014(state);
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_unported_until_0x4a8d2c_0x4a8db2_source_order_dispatcher_feeds_implemented_0x4a901a_scan",
-		"source_pair_vector_0xedc_live_contents_unported",
+		"source_pair_vector_0xedc_contents_preserved_0x4a8db2_scheduler_replay_pending",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_payload_commit_helper_port",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",

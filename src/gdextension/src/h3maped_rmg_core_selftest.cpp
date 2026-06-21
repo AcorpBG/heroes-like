@@ -244,6 +244,19 @@ int main() {
 		if (!require(resolver_state.wrappers.size() == 1 && resolver_state.source_pairs_0xedc.size() == 1, "0x4af785 resolver state did not record first wrapper/source pair")) {
 			return 1;
 		}
+		const auto &first_source_pair = resolver_state.source_pairs_0xedc[0];
+		if (!require(first_source_pair.source_record_pointer_0x00_carried
+						&& first_source_pair.context_pointer_0x04_carried
+						&& first_source_pair.copied_source_catalog_index == first_resolve.input_source_catalog_index
+						&& first_source_pair.wrapper_index == first_resolve.selected_wrapper_index
+						&& first_source_pair.context_wrapper_index_0x04 == first_resolve.selected_wrapper_index
+						&& first_source_pair.context_wrapper_lane_0x04 == type199_lane.selected_lane
+						&& first_source_pair.source_lane_0x1c == type199_records[0].type_id_0x1c
+						&& aurelion::h3maped_rmg_core::same_source_object_record_0x4c(first_source_pair.source_record_copy, type199_records[0])
+						&& aurelion::h3maped_rmg_core::same_source_object_record_0x4c(first_source_pair.context_wrapper_copy.source_record_copy, type199_records[0]),
+					"0x4af785 first +0xedc pair did not preserve source-record pointer and context wrapper payload")) {
+			return 1;
+		}
 		const SourceObjectResolverResult4af785 reuse_resolve =
 				aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(resolver_state, type199_records[0]);
 		if (!require(reuse_resolve.reused_existing_wrapper && !reuse_resolve.created_new_wrapper && reuse_resolve.selected_wrapper_index == first_resolve.selected_wrapper_index, "0x4af785 did not reuse an identical copied source record")) {
@@ -265,6 +278,15 @@ int main() {
 					return 1;
 				}
 				if (!require(resolver_state.wrappers.size() == 2 && resolver_state.source_pairs_0xedc.size() == 2, "0x4af785 mismatch create did not append second wrapper/source pair")) {
+					return 1;
+				}
+				const auto &second_source_pair = resolver_state.source_pairs_0xedc[1];
+				if (!require(second_source_pair.source_record_pointer_0x00_carried
+								&& second_source_pair.context_pointer_0x04_carried
+								&& second_source_pair.copied_source_catalog_index == mismatch_resolve.input_source_catalog_index
+								&& second_source_pair.wrapper_index == mismatch_resolve.selected_wrapper_index
+								&& aurelion::h3maped_rmg_core::same_source_object_record_0x4c(second_source_pair.source_record_copy, candidate),
+							"0x4af785 mismatch +0xedc pair did not carry the second copied source record")) {
 					return 1;
 				}
 				break;
@@ -897,6 +919,21 @@ int main() {
 		if (!require(chain_object_state.source_pair_vector_edc.contents_known && chain_object_state.source_pair_vector_edc.count == 1, "0x4a5a23 object branch did not materialize generator +0xedc source-pair vector count")) {
 			return 1;
 		}
+		const std::vector<SourceObjectRecord0x4c> &source_catalog = aurelion::h3maped_rmg_core::source_object_catalog_0x49da08();
+		if (!require(object_branch_selector.selected_source_record_index >= 0
+						&& object_branch_selector.selected_source_record_index < int32_t(source_catalog.size()),
+					"0x4a5a23 object branch selected source record index outside recovered source catalog")) {
+			return 1;
+		}
+		const SourceObjectRecord0x4c &object_branch_selected_record = source_catalog[size_t(object_branch_selector.selected_source_record_index)];
+		if (!require(chain_object_state.source_pair_records_edc.size() == 1
+						&& chain_object_state.source_pair_records_edc[0].source_record_pointer_0x00_carried
+						&& chain_object_state.source_pair_records_edc[0].context_pointer_0x04_carried
+						&& chain_object_state.source_pair_records_edc[0].copied_source_catalog_index == object_branch_selector.selected_source_record_index
+						&& aurelion::h3maped_rmg_core::same_source_object_record_0x4c(chain_object_state.source_pair_records_edc[0].source_record_copy, object_branch_selected_record),
+					"0x4a5a23 object branch did not preserve generator +0xedc source-pair payload")) {
+			return 1;
+		}
 		GeneratorObjectPrivateState scan_object_state;
 		scan_object_state.width = 1;
 		scan_object_state.height = 1;
@@ -952,6 +989,12 @@ int main() {
 						&& scan_object_state.source_pair_vector_edc.contents_known
 						&& scan_object_state.source_pair_vector_edc.count == 1,
 					"relation scan consumer live-state overload did not materialize the recovered 0x4a5a23 object branch")) {
+			return 1;
+		}
+		if (!require(scan_object_state.source_pair_records_edc.size() == 1
+						&& scan_object_state.source_pair_records_edc[0].source_record_pointer_0x00_carried
+						&& scan_object_state.source_pair_records_edc[0].context_pointer_0x04_carried,
+					"relation scan consumer live-state overload did not preserve generator +0xedc source-pair payload")) {
 			return 1;
 		}
 

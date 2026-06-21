@@ -249,6 +249,15 @@ struct SourceObjectResolvedWrapper4af785 {
 struct SourceObjectResolverSourcePair4af785 {
 	int32_t copied_source_catalog_index = -1;
 	int32_t wrapper_index = -1;
+	bool source_record_pointer_0x00_carried = false;
+	SourceObjectRecord0x4c source_record_copy;
+	int32_t source_lane_0x1c = -1;
+	bool context_pointer_0x04_carried = false;
+	SourceObjectResolvedWrapper4af785 context_wrapper_copy;
+	int32_t context_wrapper_index_0x04 = -1;
+	int32_t context_wrapper_lane_0x04 = -1;
+	bool context_wrapper_0x10_known = false;
+	int32_t context_wrapper_0x10 = 0;
 };
 
 struct SourceObjectResolverState4af785 {
@@ -1469,6 +1478,7 @@ struct GeneratorObjectPrivateState {
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
 	GeneratorObjectVectorState object_record_vector_ec4_ecc;
 	GeneratorObjectVectorState source_pair_vector_edc;
+	std::vector<SourceObjectResolverSourcePair4af785> source_pair_records_edc;
 	GeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
 	GeneratorObjectVectorState candidate_container_vector_10d4_10d8;
 	GeneratorObjectVectorState relation_vector_10e4_10e8;

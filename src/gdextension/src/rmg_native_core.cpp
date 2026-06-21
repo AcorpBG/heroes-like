@@ -15,6 +15,7 @@ namespace {
 std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zone_seeds(const std::vector<SharedRuntimeZoneSeedInput> &inputs);
 std::vector<h3maped_rmg_core::RuntimeLinkSeedInput4a218c> to_h3maped_runtime_links(const std::vector<SharedRuntimeLinkInput> &inputs);
 SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg_core::SourceObjectRecord0x4c &input);
+SharedSourceObjectResolverSourcePair4af785 from_h3maped_source_object_resolver_source_pair(const h3maped_rmg_core::SourceObjectResolverSourcePair4af785 &input);
 
 std::string lower_ascii(const std::string &value) {
 	std::string out = value;
@@ -518,6 +519,10 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.endpoint_vector_d8_dc = from_h3maped_generator_object_vector_state(input.endpoint_vector_d8_dc);
 	out.object_record_vector_ec4_ecc = from_h3maped_generator_object_vector_state(input.object_record_vector_ec4_ecc);
 	out.source_pair_vector_edc = from_h3maped_generator_object_vector_state(input.source_pair_vector_edc);
+	out.source_pair_records_edc.reserve(input.source_pair_records_edc.size());
+	for (const h3maped_rmg_core::SourceObjectResolverSourcePair4af785 &source_pair : input.source_pair_records_edc) {
+		out.source_pair_records_edc.push_back(from_h3maped_source_object_resolver_source_pair(source_pair));
+	}
 	out.pending_entry_vector_eec_ef0_ef4 = from_h3maped_generator_object_vector_state(input.pending_entry_vector_eec_ef0_ef4);
 	out.candidate_container_vector_10d4_10d8 = from_h3maped_generator_object_vector_state(input.candidate_container_vector_10d4_10d8);
 	out.relation_vector_10e4_10e8 = from_h3maped_generator_object_vector_state(input.relation_vector_10e4_10e8);
@@ -808,6 +813,37 @@ SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg
 		input.terrain_b_names,
 		input.rand_trn_backed,
 	};
+}
+
+SharedSourceObjectResolvedWrapper4af785 from_h3maped_source_object_resolved_wrapper(const h3maped_rmg_core::SourceObjectResolvedWrapper4af785 &input) {
+	SharedSourceObjectResolvedWrapper4af785 out;
+	out.wrapper_index = input.wrapper_index;
+	out.source_catalog_index = input.source_catalog_index;
+	out.source_record_copy = from_h3maped_source_object_record(input.source_record_copy);
+	out.metadata_bucket_index_0x08 = input.metadata_bucket_index_0x08;
+	out.resolver_lane_0x04 = input.resolver_lane_0x04;
+	out.wrapper_0x04 = input.wrapper_0x04;
+	out.wrapper_0x10_known = input.wrapper_0x10_known;
+	out.wrapper_0x10 = input.wrapper_0x10;
+	out.initialized_by_0x49db76 = input.initialized_by_0x49db76;
+	out.copied_source_record = input.copied_source_record;
+	return out;
+}
+
+SharedSourceObjectResolverSourcePair4af785 from_h3maped_source_object_resolver_source_pair(const h3maped_rmg_core::SourceObjectResolverSourcePair4af785 &input) {
+	SharedSourceObjectResolverSourcePair4af785 out;
+	out.copied_source_catalog_index = input.copied_source_catalog_index;
+	out.wrapper_index = input.wrapper_index;
+	out.source_record_pointer_0x00_carried = input.source_record_pointer_0x00_carried;
+	out.source_record_copy = from_h3maped_source_object_record(input.source_record_copy);
+	out.source_lane_0x1c = input.source_lane_0x1c;
+	out.context_pointer_0x04_carried = input.context_pointer_0x04_carried;
+	out.context_wrapper_copy = from_h3maped_source_object_resolved_wrapper(input.context_wrapper_copy);
+	out.context_wrapper_index_0x04 = input.context_wrapper_index_0x04;
+	out.context_wrapper_lane_0x04 = input.context_wrapper_lane_0x04;
+	out.context_wrapper_0x10_known = input.context_wrapper_0x10_known;
+	out.context_wrapper_0x10 = input.context_wrapper_0x10;
+	return out;
 }
 
 bool same_source_object_record_sample(const SharedSourceObjectRecord0x4c &left, const SharedSourceObjectRecord0x4c &right) {
@@ -1378,6 +1414,51 @@ void append_source_object_resolver_samples_json(std::ostream &out, const std::ve
 	out << "]";
 }
 
+void append_source_object_resolved_wrapper_json(std::ostream &out, const SharedSourceObjectResolvedWrapper4af785 &wrapper) {
+	out << "{"
+		<< "\"wrapper_index\":" << wrapper.wrapper_index
+		<< ",\"source_catalog_index\":" << wrapper.source_catalog_index
+		<< ",\"metadata_bucket_index_0x08\":" << wrapper.metadata_bucket_index_0x08
+		<< ",\"resolver_lane_0x04\":" << wrapper.resolver_lane_0x04
+		<< ",\"wrapper_0x04\":" << wrapper.wrapper_0x04
+		<< ",\"wrapper_0x10_known\":" << (wrapper.wrapper_0x10_known ? "true" : "false")
+		<< ",\"wrapper_0x10\":" << wrapper.wrapper_0x10
+		<< ",\"initialized_by_0x49db76\":" << (wrapper.initialized_by_0x49db76 ? "true" : "false")
+		<< ",\"copied_source_record\":" << (wrapper.copied_source_record ? "true" : "false")
+		<< ",\"source_record_copy\":";
+	append_source_object_record_sample_json(out, wrapper.source_record_copy);
+	out << "}";
+}
+
+void append_source_object_resolver_source_pair_json(std::ostream &out, const SharedSourceObjectResolverSourcePair4af785 &source_pair) {
+	out << "{"
+		<< "\"copied_source_catalog_index\":" << source_pair.copied_source_catalog_index
+		<< ",\"wrapper_index\":" << source_pair.wrapper_index
+		<< ",\"source_record_pointer_0x00_carried\":" << (source_pair.source_record_pointer_0x00_carried ? "true" : "false")
+		<< ",\"source_lane_0x1c\":" << source_pair.source_lane_0x1c
+		<< ",\"context_pointer_0x04_carried\":" << (source_pair.context_pointer_0x04_carried ? "true" : "false")
+		<< ",\"context_wrapper_index_0x04\":" << source_pair.context_wrapper_index_0x04
+		<< ",\"context_wrapper_lane_0x04\":" << source_pair.context_wrapper_lane_0x04
+		<< ",\"context_wrapper_0x10_known\":" << (source_pair.context_wrapper_0x10_known ? "true" : "false")
+		<< ",\"context_wrapper_0x10\":" << source_pair.context_wrapper_0x10
+		<< ",\"source_record_copy\":";
+	append_source_object_record_sample_json(out, source_pair.source_record_copy);
+	out << ",\"context_wrapper_copy\":";
+	append_source_object_resolved_wrapper_json(out, source_pair.context_wrapper_copy);
+	out << "}";
+}
+
+void append_source_object_resolver_source_pairs_json(std::ostream &out, const std::vector<SharedSourceObjectResolverSourcePair4af785> &source_pairs) {
+	out << "[";
+	for (size_t index = 0; index < source_pairs.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		append_source_object_resolver_source_pair_json(out, source_pairs[index]);
+	}
+	out << "]";
+}
+
 void append_source_object_record_catalog_json(std::ostream &out, const RecoveredOwnerGridPayload &payload) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_source_object_record_catalog_0x49da08_v1\","
@@ -1848,6 +1929,10 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"source_order_direct_candidate_total_count_0x4a93a2\":" << state.source_order_direct_candidate_total_count_0x4a93a2 << ","
 		<< "\"source_order_direct_selected_count_0x4a93a2\":" << state.source_order_direct_selected_count_0x4a93a2 << ","
 		<< "\"source_order_direct_commit_count_0x4a93a2\":" << state.source_order_direct_commit_count_0x4a93a2 << ","
+		<< "\"source_pair_records_edc_count\":" << state.source_pair_records_edc.size() << ","
+		<< "\"source_pair_records_edc\":";
+	append_source_object_resolver_source_pairs_json(out, state.source_pair_records_edc);
+	out << ","
 		<< "\"connection_fallback_materialization_0x4a7605_0x4a5e03_known\":" << (state.connection_fallback_materialization_0x4a7605_0x4a5e03_known ? "true" : "false") << ","
 		<< "\"connection_fallback_materialization_record_count\":" << state.connection_fallback_materialization_record_count << ","
 		<< "\"connection_fallback_materialization_commit_count\":" << state.connection_fallback_materialization_commit_count << ","
