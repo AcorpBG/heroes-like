@@ -37,6 +37,7 @@ using aurelion::h3maped_rmg_core::RewardGuardWrapperFinalMarkResult49cefb;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperMember4aa3e9;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperState4aa3e9;
 using aurelion::h3maped_rmg_core::RewardGuardRelationPriorityResult4ad7f7;
+using aurelion::h3maped_rmg_core::RewardGuardProjectionChainResult49c0a6;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
@@ -3929,7 +3930,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_reward_guard_blocker =
-				"selector_relation_counter_table_0x44_unavailable_for_0x4a9f1c_limit_check";
+				"0x49c0a6_projection_object_0x540b14_live_input_pending_before_0x4ad947";
 		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
@@ -3971,23 +3972,29 @@ int main() {
 		const RewardGuardMaterializationDriverResult4aa354 &materialization_driver =
 				workflow_generator_state.reward_guard_materialization_driver_0x4aa354;
 		if (!require(workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
-						&& materialization_driver.invoked
-						&& materialization_driver.wrapper_reset_0x49ce64_applied
-						&& materialization_driver.selected_object_helper_invoked_0x4aa1db
-						&& materialization_driver.selected_object_0x4aa1db.invoked
-						&& materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
-						&& materialization_driver.selected_object_0x4aa1db.selector_attempt_count == 1
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.applied
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.candidate_vector_contents_known
-						&& !materialization_driver.selected_object_0x4aa1db.applied
-						&& materialization_driver.blocked_reason == current_reward_guard_blocker
-						&& materialization_driver.selected_object_0x4aa1db.blocked_reason == current_reward_guard_blocker
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not enter recovered 0x4aa354 -> 0x4aa1db -> 0x4a9f1c reward/guard materialization order before blocking")) {
+						&& !workflow_generator_state.reward_guard_materialization_driver_input_known
+						&& !materialization_driver.invoked
+						&& !materialization_driver.wrapper_reset_0x49ce64_applied
+						&& !materialization_driver.selected_object_helper_invoked_0x4aa1db
+						&& !materialization_driver.selected_object_0x4aa1db.invoked
+						&& !materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
+						&& materialization_driver.blocked_reason == "0x4aa354_not_entered_until_0x49c0a6_projection_chain_produces_source_backed_selector",
+					"entry-to-writeout workflow invoked 0x4aa354/0x4aa1db/0x4a9f1c before the recovered projection chain provided a source-backed selector")) {
 			return 1;
 		}
-		if (!require(workflow_generator_state.reward_guard_selector_0x4a9f1c.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not mirror the live 0x4a9f1c blocker on generator private state")) {
+		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
+				workflow_generator_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
+		if (!require(projection_chain.invoked
+						&& !projection_chain.projection_object_input_known
+						&& projection_chain.blocked_reason == current_reward_guard_blocker
+						&& workflow_generator_state.reward_guard_relation_priority_live_replay_blocker == current_reward_guard_blocker
+						&& workflow_generator_state.reward_guard_relation_priority_0x4ad7f7.blocked_reason == current_reward_guard_blocker,
+					"entry-to-writeout workflow did not gate reward/guard materialization on recovered 0x49c0a6 -> 0x4ad947 projection-object input")) {
+			return 1;
+		}
+		if (!require(!workflow_generator_state.reward_guard_selector_0x4a9f1c.applied
+						&& workflow_generator_state.reward_guard_selector_0x4a9f1c.blocked_reason.empty(),
+					"entry-to-writeout workflow still executed 0x4a9f1c without a source-backed selector relation")) {
 			return 1;
 		}
 	}
