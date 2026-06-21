@@ -2679,7 +2679,7 @@ void append_partial_generated_cell_word_surface_json(std::ostream &out, const Re
 	}
 	out << "      \"byte_0x2b_bit_0x02_known_count\": " << byte_0x2b_bit_0x02_known_count << ",\n";
 	out << "      \"word_0x14_0x18_source\": \"0x4a5767_full_grid_projection_reset_owned_before_relation_scan_0x49a318_and_0x4a606b_projection_consumers\",\n";
-	out << "      \"byte_0x2b_source\": \"not_native_owned_until_validity_private_byte_mutations_0x49a1d8_0x49abd6_0x4a5a23_are_ported\",\n";
+	out << "      \"byte_0x2b_source\": \"derived_from_word_0x28_high_byte_with_recovered_0x49a1d8_bit25_validity_and_0x4a5a23_bit26_clear_semantics\",\n";
 	out << "      \"word_0x10_0x1c_partial_source\": \"generated_cell_grid_reset_0x49a072_0x499ea3_plus_0x4a5767_full_grid_projection_reset_before_relation_scan_not_pre_0x4a4c8e_checkpoint\",\n";
 	out << "      \"word_0x20_source\": \"shared_recovered_owner_grid_materialization_plus_0x4a5767_byte3_projection_reset_plus_source_backed_0x49a318_owner_high_byte_propagation_when_relation_seeds_are_available\",\n";
 	out << "      \"word_0x24_0x28_source\": \"0x49b3c1_0x49b53d_0x4a3f27_terrain_repaint_0x4bb74b_0x4bad0f_0x4bcfc3_0x4bce6d_visual_rows_plus_0x4a5767_direction_bits_reset\",\n";

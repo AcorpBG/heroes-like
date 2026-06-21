@@ -123,9 +123,9 @@ struct GeneratedCellRecord0x30 {
 	bool byte_0x2a_known = false;
 	uint8_t byte_0x2a_known_mask = 0U;
 	uint8_t byte_0x2a = 0U;
-	bool byte_0x2b_known = false;
-	uint8_t byte_0x2b_known_mask = 0U;
-	uint8_t byte_0x2b = 0U;
+	bool byte_0x2b_known = true;
+	uint8_t byte_0x2b_known_mask = 0xffU;
+	uint8_t byte_0x2b = uint8_t((GENERATED_CELL_INITIAL_WORD_0X28_VALUE >> 24U) & 0xffU);
 	bool word_0x2c_known = true;
 	uint32_t word_0x2c = 0U;
 };
