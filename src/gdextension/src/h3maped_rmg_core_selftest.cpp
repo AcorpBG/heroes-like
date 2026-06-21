@@ -4013,19 +4013,20 @@ int main() {
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "reward_guard_materialization"
+						&& workflow.current_phase_id == "connection_road_river"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not run through the owned phases before blocking at reward/guard materialization")) {
+					"entry-to-writeout workflow did not run through the owned phases before blocking at connection/road/river materialization")) {
 			return 1;
 		}
-		const std::string current_reward_guard_blocker =
-				"0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7";
-		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
+		const std::string current_connection_blocker =
+				"connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d";
+		if (!require(workflow.blocked_reason == current_connection_blocker,
+					std::string("entry-to-writeout workflow did not advance to the exact current 0x49eb8d connection/road/river blocker; actual=")
+							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() >= 8
+		if (!require(workflow.phases.size() >= 9
 						&& workflow.phases[0].id == "entry_scope"
 						&& workflow.phases[1].id == "setup_template_selection"
 						&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4034,7 +4035,9 @@ int main() {
 						&& workflow.phases[5].id == "source_order_object_materialization"
 						&& workflow.phases[6].id == "relation_high_owner_propagation"
 						&& workflow.phases[7].id == "reward_guard_materialization"
-						&& workflow.phases[7].status == "blocked",
+						&& workflow.phases[7].status == "complete_partial_state"
+						&& workflow.phases[8].id == "connection_road_river"
+						&& workflow.phases[8].status == "blocked",
 					"entry-to-writeout workflow did not preserve recovered phase order up to the current blocker")) {
 			return 1;
 		}
@@ -4127,14 +4130,27 @@ int main() {
 				workflow_generator_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
 		if (!require(!projection_chain.invoked
 						&& !projection_chain.projection_object_input_known
-						&& projection_chain.blocked_reason == current_reward_guard_blocker
-						&& workflow_generator_state.reward_guard_relation_priority_live_replay_blocker == current_reward_guard_blocker
-						&& workflow_generator_state.reward_guard_relation_priority_0x4ad7f7.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow invoked 0x49c0a6 before selected-create produced a source-backed projection object")) {
+						&& projection_chain.blocked_reason.empty()
+						&& !workflow_generator_state.reward_guard_relation_priority_live_replay_blocked,
+					"entry-to-writeout workflow treated absent pre-source projection input as an active reward/guard blocker")) {
 			return 1;
 		}
 		if (!require(materialization_driver.selected_object_0x4aa1db.blocked_reason.empty(),
 					"entry-to-writeout workflow did not complete selected-object allocation and initial wrapper seeding before the current source-stream blocker")) {
+			return 1;
+		}
+		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
+				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
+		if (!require(workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
+						&& decorative_dispatch.invoked
+						&& decorative_dispatch.generated_cell_grid_known
+						&& decorative_dispatch.scanned_cell_count_pass1 == workflow_config.width * workflow_config.height * workflow_config.level_count
+						&& decorative_dispatch.bit26_candidate_count == 0
+						&& !decorative_dispatch.budget_known
+						&& decorative_dispatch.valid_0x49e700_dispatch_candidate_count == 0
+						&& decorative_dispatch.applied
+						&& decorative_dispatch.blocked_reason.empty(),
+					"entry-to-writeout workflow did not advance through recovered 0x49eb8d pass-1 before the current connection/road/river blocker")) {
 			return 1;
 		}
 	}
