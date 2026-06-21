@@ -3296,6 +3296,112 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	return result;
 }
 
+int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type) {
+	static constexpr std::pair<int32_t, int32_t> OVERRIDES[] = {
+		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
+		{ 32, 32 }, { 51, 32 }, { 61, 32 }, { 102, 32 }, { 41, 32 }, { 4, 32 },
+		{ 47, 32 }, { 107, 32 }, { 104, 32 }, { 113, 32 }, { 88, 32 }, { 89, 32 },
+		{ 90, 32 }, { 92, 32 }, { 55, 32 }, { 109, 32 }, { 112, 32 }, { 48, 32 },
+		{ 22, 32 }, { 39, 32 }, { 108, 32 }, { 105, 32 }, { 83, 48 }, { 7, 32 },
+	};
+	for (const auto &entry : OVERRIDES) {
+		if (entry.first == descriptor_type) {
+			return entry.second;
+		}
+	}
+	return REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00;
+}
+
+int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type) {
+	static constexpr std::pair<int32_t, int32_t> OVERRIDES[] = {
+		{ 2, 1 }, { 13, 1 }, { 14, 1 }, { 15, 1 }, { 27, 1 }, { 28, 1 },
+		{ 30, 1 }, { 31, 1 }, { 35, 1 }, { 38, 1 }, { 42, 1 }, { 48, 1 },
+		{ 49, 1 }, { 56, 1 }, { 58, 1 }, { 60, 1 }, { 64, 1 }, { 80, 1 },
+		{ 94, 1 }, { 96, 1 }, { 99, 1 }, { 106, 1 }, { 110, 1 }, { 113, 3 },
+	};
+	for (const auto &entry : OVERRIDES) {
+		if (entry.first == descriptor_type) {
+			return entry.second;
+		}
+	}
+	return REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00;
+}
+
+RewardGuardSelectorResult4a9f1c reward_guard_value_bounded_selector_counter_pass_0x4a9f1c(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound) {
+	RewardGuardSelectorResult4a9f1c result;
+	result.applied = true;
+	result.candidate_vector_present = state.reward_guard_candidate_vector_10f4_10f8.present;
+	result.candidate_vector_contents_known = state.reward_guard_candidate_records_10f4_10f8_contents_known;
+	if (!state.reward_guard_candidate_vector_10f4_10f8.present || !state.reward_guard_candidate_records_10f4_10f8_contents_known) {
+		result.blocked_reason = "reward_guard_candidate_vector_0x10f4_0x10f8_live_contents_pending_before_0x4a9f1c";
+		return result;
+	}
+	if (!state.descriptor_counter_table_0x1110_present
+			|| !state.descriptor_counter_table_0x1110_contents_known
+			|| state.descriptor_counter_table_0x1110.size() != size_t(DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT)) {
+		result.counter_input_missing_count += 1;
+		result.blocked_reason = "descriptor_counter_table_0x1110_unavailable_for_0x4a9f1c_limit_check";
+		return result;
+	}
+	if (selector == nullptr || !selector->descriptor_type_counter_table_0x44_known
+			|| selector->descriptor_type_counters_0x44.size() != size_t(RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT)) {
+		result.counter_input_missing_count += 1;
+		result.blocked_reason = "selector_relation_counter_table_0x44_unavailable_for_0x4a9f1c_limit_check";
+		return result;
+	}
+
+	result.candidate_scan_count = int32_t(state.reward_guard_candidate_records_10f4_10f8.size());
+	result.candidate_decisions.reserve(state.reward_guard_candidate_records_10f4_10f8.size());
+	for (const RewardGuardCandidateRecord4a9f1c &candidate : state.reward_guard_candidate_records_10f4_10f8) {
+		RewardGuardCandidateDecision4a9f1c decision;
+		decision.descriptor_type_known = candidate.descriptor_type_0x04_known;
+		decision.descriptor_type_0x04 = candidate.descriptor_type_0x04;
+		if (!candidate.descriptor_type_0x04_known
+				|| candidate.descriptor_type_0x04 < 0
+				|| candidate.descriptor_type_0x04 >= DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT
+				|| candidate.descriptor_type_0x04 >= RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT) {
+			result.descriptor_type_missing_count += 1;
+			decision.blocked_reason = "candidate_descriptor_type_0x04_missing_or_out_of_range";
+			result.candidate_decisions.push_back(decision);
+			continue;
+		}
+
+		const size_t descriptor_type_index = size_t(candidate.descriptor_type_0x04);
+		decision.global_counter_0x1110 = int32_t(state.descriptor_counter_table_0x1110[descriptor_type_index]);
+		decision.global_limit_0x5a26e4 = reward_guard_global_type_limit_0x5a26e4(candidate.descriptor_type_0x04);
+		decision.relation_counter_0x44 = int32_t(selector->descriptor_type_counters_0x44[descriptor_type_index]);
+		decision.relation_limit_0x5a2a8c = reward_guard_relation_type_limit_0x5a2a8c(candidate.descriptor_type_0x04);
+
+		if (decision.global_counter_0x1110 >= decision.global_limit_0x5a26e4) {
+			decision.rejected_by_global_limit_0x5a26e4 = true;
+			result.global_limit_reject_count += 1;
+			result.candidate_decisions.push_back(decision);
+			continue;
+		}
+		if (decision.relation_counter_0x44 >= decision.relation_limit_0x5a2a8c) {
+			decision.rejected_by_relation_limit_0x5a2a8c = true;
+			result.relation_limit_reject_count += 1;
+			result.candidate_decisions.push_back(decision);
+			continue;
+		}
+		if (candidate.direct_value_0x0c_known
+				&& (candidate.direct_value_0x0c < lower_value_bound || candidate.direct_value_0x0c > upper_value_bound)) {
+			decision.rejected_by_value_bounds = true;
+			result.value_bound_reject_count += 1;
+			result.candidate_decisions.push_back(decision);
+			continue;
+		}
+
+		decision.accepted_after_counter_and_value_checks = true;
+		result.accepted_count += 1;
+		result.candidate_decisions.push_back(decision);
+	}
+	if (result.accepted_count > 0) {
+		result.blocked_reason = "0x4a9f1c_counter_pass_only_0x4a9e40_descriptor_selection_and_selected_object_vtable_allocation_not_invoked";
+	}
+	return result;
+}
+
 static bool reward_guard_coordinate_vector_contains(const std::vector<CoordinateCandidate4a17f5> &candidates, int32_t x, int32_t y, int32_t level) {
 	return std::any_of(candidates.begin(), candidates.end(), [&](const CoordinateCandidate4a17f5 &candidate) {
 		return candidate.x == x && candidate.y == y && candidate.level == level;
@@ -7570,6 +7676,18 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			!template_selection.blocked,
 			int32_t(template_selection.runtime_seed.runtime_zone_seeds.size()),
 			4);
+	state.reward_guard_candidate_vector_10f4_10f8 = generator_object_vector_state(
+			"reward_guard_candidate_bucket_vector_0x10f4_0x10f8",
+			REWARD_GUARD_CANDIDATE_VECTOR_BEGIN_0X10F4,
+			REWARD_GUARD_CANDIDATE_VECTOR_END_0X10F8,
+			REWARD_GUARD_CANDIDATE_VECTOR_CAPACITY_0X10FC,
+			!template_selection.blocked,
+			false,
+			false,
+			0,
+			4);
+	state.reward_guard_candidate_records_10f4_10f8_contents_known = false;
+	state.reward_guard_candidate_record_count_10f4_10f8 = 0;
 	state.endpoint_byte_state_vector_1104_1108 = endpoint_byte_state_vector_from_d8_count_0x49f95a(state.endpoint_vector_d8_dc);
 	state.endpoint_cursor_0xf58_present = true;
 	state.endpoint_cursor_0xf58_known = true;
@@ -7615,6 +7733,8 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.reward_guard_relation_priority_live_replay_blocker = "0x4ad7f7_live_source_relation_wrapper_caller_pending";
 	state.reward_guard_relation_priority_0x4ad7f7.blocked_reason = state.reward_guard_relation_priority_live_replay_blocker;
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
+	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
+	state.reward_guard_selector_0x4a9f1c = reward_guard_value_bounded_selector_counter_pass_0x4a9f1c(state, nullptr, 0, REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00);
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
 	SourceObjectResolverState4af785 relation_scan_resolver_state;
 	H3MapedRng relation_scan_rng;
@@ -7662,7 +7782,8 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
-		"reward_guard_relation_priority_0x4ad7f7_live_source_relation_wrapper_caller_pending_after_0x4ad6a8_0x4ad7f7_helper_port",
+		"reward_guard_candidate_vector_0x10f4_0x10f8_live_producer_contents_pending_before_0x4a9f1c_and_0x4aa1db_selected_create",
+		"reward_guard_relation_priority_0x4ad7f7_live_source_relation_wrapper_caller_pending_after_0x4a9f1c_0x4aa1db_selected_create",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",

@@ -619,6 +619,7 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.pending_entry_vector_eec_ef0_ef4 = from_h3maped_generator_object_vector_state(input.pending_entry_vector_eec_ef0_ef4);
 	out.candidate_container_vector_10d4_10d8 = from_h3maped_generator_object_vector_state(input.candidate_container_vector_10d4_10d8);
 	out.relation_vector_10e4_10e8 = from_h3maped_generator_object_vector_state(input.relation_vector_10e4_10e8);
+	out.reward_guard_candidate_vector_10f4_10f8 = from_h3maped_generator_object_vector_state(input.reward_guard_candidate_vector_10f4_10f8);
 	out.endpoint_byte_state_vector_1104_1108 = from_h3maped_generator_object_vector_state(input.endpoint_byte_state_vector_1104_1108);
 	out.endpoint_cursor_0xf58_present = input.endpoint_cursor_0xf58_present;
 	out.endpoint_cursor_0xf58_known = input.endpoint_cursor_0xf58_known;
@@ -747,6 +748,20 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = input.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported;
 	out.reward_guard_relation_priority_live_replay_blocked = input.reward_guard_relation_priority_live_replay_blocked;
 	out.reward_guard_relation_priority_live_replay_blocker = input.reward_guard_relation_priority_live_replay_blocker;
+	out.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = input.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported;
+	out.reward_guard_candidate_records_10f4_10f8_contents_known = input.reward_guard_candidate_records_10f4_10f8_contents_known;
+	out.reward_guard_candidate_record_count_10f4_10f8 = input.reward_guard_candidate_record_count_10f4_10f8;
+	out.reward_guard_selector_0x4a9f1c_applied = input.reward_guard_selector_0x4a9f1c.applied;
+	out.reward_guard_selector_0x4a9f1c_candidate_vector_present = input.reward_guard_selector_0x4a9f1c.candidate_vector_present;
+	out.reward_guard_selector_0x4a9f1c_candidate_vector_contents_known = input.reward_guard_selector_0x4a9f1c.candidate_vector_contents_known;
+	out.reward_guard_selector_0x4a9f1c_candidate_scan_count = input.reward_guard_selector_0x4a9f1c.candidate_scan_count;
+	out.reward_guard_selector_0x4a9f1c_descriptor_type_missing_count = input.reward_guard_selector_0x4a9f1c.descriptor_type_missing_count;
+	out.reward_guard_selector_0x4a9f1c_counter_input_missing_count = input.reward_guard_selector_0x4a9f1c.counter_input_missing_count;
+	out.reward_guard_selector_0x4a9f1c_global_limit_reject_count = input.reward_guard_selector_0x4a9f1c.global_limit_reject_count;
+	out.reward_guard_selector_0x4a9f1c_relation_limit_reject_count = input.reward_guard_selector_0x4a9f1c.relation_limit_reject_count;
+	out.reward_guard_selector_0x4a9f1c_value_bound_reject_count = input.reward_guard_selector_0x4a9f1c.value_bound_reject_count;
+	out.reward_guard_selector_0x4a9f1c_accepted_count = input.reward_guard_selector_0x4a9f1c.accepted_count;
+	out.reward_guard_selector_0x4a9f1c_blocked_reason = input.reward_guard_selector_0x4a9f1c.blocked_reason;
 	out.relation_owner_vectors_10e4_10e8.reserve(input.relation_owner_vectors_10e4_10e8.size());
 	for (const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : input.relation_owner_vectors_10e4_10e8) {
 		out.relation_owner_vectors_10e4_10e8.push_back(from_h3maped_generator_relation_owner_state(owner));
@@ -2292,6 +2307,24 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported\":" << (state.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported ? "true" : "false") << ","
 		<< "\"reward_guard_relation_priority_live_replay_blocked\":" << (state.reward_guard_relation_priority_live_replay_blocked ? "true" : "false") << ","
 		<< "\"reward_guard_relation_priority_live_replay_blocker\":\"" << json_escape(state.reward_guard_relation_priority_live_replay_blocker) << "\","
+		<< "\"reward_guard_candidate_vector_10f4_10f8\":";
+	append_generator_object_vector_state_json(out, state.reward_guard_candidate_vector_10f4_10f8);
+	out << ","
+		<< "\"reward_guard_selector_0x4a9f1c_counter_limit_contract_ported\":" << (state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported ? "true" : "false") << ","
+		<< "\"reward_guard_candidate_records_10f4_10f8_contents_known\":" << (state.reward_guard_candidate_records_10f4_10f8_contents_known ? "true" : "false") << ","
+		<< "\"reward_guard_candidate_record_count_10f4_10f8\":" << state.reward_guard_candidate_record_count_10f4_10f8 << ","
+		<< "\"reward_guard_selector_0x4a9f1c_applied\":" << (state.reward_guard_selector_0x4a9f1c_applied ? "true" : "false") << ","
+		<< "\"reward_guard_selector_0x4a9f1c_candidate_vector_present\":" << (state.reward_guard_selector_0x4a9f1c_candidate_vector_present ? "true" : "false") << ","
+		<< "\"reward_guard_selector_0x4a9f1c_candidate_vector_contents_known\":" << (state.reward_guard_selector_0x4a9f1c_candidate_vector_contents_known ? "true" : "false") << ","
+		<< "\"reward_guard_selector_0x4a9f1c_candidate_scan_count\":" << state.reward_guard_selector_0x4a9f1c_candidate_scan_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_descriptor_type_missing_count\":" << state.reward_guard_selector_0x4a9f1c_descriptor_type_missing_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_counter_input_missing_count\":" << state.reward_guard_selector_0x4a9f1c_counter_input_missing_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_global_limit_reject_count\":" << state.reward_guard_selector_0x4a9f1c_global_limit_reject_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_relation_limit_reject_count\":" << state.reward_guard_selector_0x4a9f1c_relation_limit_reject_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_value_bound_reject_count\":" << state.reward_guard_selector_0x4a9f1c_value_bound_reject_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_accepted_count\":" << state.reward_guard_selector_0x4a9f1c_accepted_count << ","
+		<< "\"reward_guard_selector_0x4a9f1c_blocked_reason\":\"" << json_escape(state.reward_guard_selector_0x4a9f1c_blocked_reason) << "\","
+		<< "\"reward_guard_selector_0x4a9f1c_source\":\"0x4a9f1c_iterates_generator_plus_0x10f4_0x10f8_and_checks_generator_plus_0x1110_against_0x5a26e4_and_relation_plus_0x44_against_0x5a2a8c\","
 		<< "\"relation_owner_vectors_10e4_10e8\":";
 	append_generator_relation_owner_vectors_json(out, state.relation_owner_vectors_10e4_10e8);
 	out << ","
@@ -2342,6 +2375,8 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 	append_generator_object_vector_state_json(out, state.candidate_container_vector_10d4_10d8);
 	out << ",";
 	append_generator_object_vector_state_json(out, state.relation_vector_10e4_10e8);
+	out << ",";
+	append_generator_object_vector_state_json(out, state.reward_guard_candidate_vector_10f4_10f8);
 	out << ",";
 	append_generator_object_vector_state_json(out, state.endpoint_byte_state_vector_1104_1108);
 	out << "],\"remaining_private_state_blockers\":";

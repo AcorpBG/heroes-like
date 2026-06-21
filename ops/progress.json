@@ -16,17 +16,18 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "notes": "Native RMG source-order alignment remains in progress. Generic descriptor-joined non-type98 +0xedc source-pair replay is still the solved lane. Current update adds the active reward/guard candidate bucket vector generator+0x10f4/+0x10f8 to shared h3maped_rmg_core state, ports the recovered 0x4a9f1c counter/limit check contract using generator+0x1110, relation+0x44, 0x5a26e4, and 0x5a2a8c, and exposes the fail-closed selector state through the no-Godot native CLI phase snapshot. The blocker is now explicit: reward_guard_candidate_vector_0x10f4_0x10f8 live producer contents are still pending before 0x4a9f1c/0x4aa1db selected reward/guard creation; no parity-complete or final map writeout claim is made.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T04:43:01Z",
+      "updatedAt": "2026-06-21T05:16:18Z",
       "latestEvidenceId": "native-rmg-generic-nontype98-source-pair-replay-20260621",
       "remainingWork": "Port complete live descriptor producers/raw source-field capture for all generic non-type98 source pairs feeding the partial 0x4a8d2c/0x4a8db2 replay bridge; port exact 0x49a318 call-site order and same-run private-state comparison; port live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7/0x4aa603 -> 0x4aa3e9 helper chain; port generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records; then port downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
       "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-      "blocker": "Checkpoint 2 is still not parity. Remaining blockers are complete live descriptor producers/raw source-field capture for all generic non-type98 source pairs, exact 0x49a318 call-site order and same-run private-state comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported helper chain, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled records, downstream relation/object caller order, roads/rivers, and final payload generation."
+      "blocker": "Checkpoint 2 is still not parity. Remaining blockers are complete live descriptor producers/raw source-field capture for all generic non-type98 source pairs, exact 0x49a318 call-site order and same-run private-state comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported helper chain, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled records, downstream relation/object caller order, roads/rivers, and final payload generation.",
+      "startedAt": "2026-06-21T05:16:18Z"
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -13024,10 +13025,10 @@
   "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
-  "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress. Generic descriptor-joined non-type98 +0xedc source-pair replay is still the solved lane. Current update adds the active reward/guard candidate bucket vector generator+0x10f4/+0x10f8 to shared h3maped_rmg_core state, ports the recovered 0x4a9f1c counter/limit check contract using generator+0x1110, relation+0x44, 0x5a26e4, and 0x5a2a8c, and exposes the fail-closed selector state through the no-Godot native CLI phase snapshot. The blocker is now explicit: reward_guard_candidate_vector_0x10f4_0x10f8 live producer contents are still pending before 0x4a9f1c/0x4aa1db selected reward/guard creation; no parity-complete or final map writeout claim is made.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "RMG Small Generalization Hardening",
+  "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-06-21T04:43:01Z",
   "deferredRiskRegister": [
     {
@@ -58789,7 +58790,7 @@
   ],
   "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "taskId": "10184",
-  "updatedAt": "2026-06-21T04:43:01Z",
+  "updatedAt": "2026-06-21T05:16:18Z",
   "validation": {
     "linux_debug_native_build": "passed",
     "linux_release_native_build": "passed",

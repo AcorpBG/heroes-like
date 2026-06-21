@@ -36,6 +36,11 @@ constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X20_BYTE3 = 0xffffffffU;
 constexpr uint32_t RELATION_WORD_0X28_BITS_12_14_MASK = 0x7U << 12U;
 constexpr int32_t DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE = 0x3a0;
 constexpr int32_t DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT = DESCRIPTOR_COUNTER_TABLE_0X1110_BYTE_SIZE / 4;
+constexpr uint32_t REWARD_GUARD_CANDIDATE_VECTOR_HEADER_0X10F0 = 0x10f0U;
+constexpr uint32_t REWARD_GUARD_CANDIDATE_VECTOR_BEGIN_0X10F4 = 0x10f4U;
+constexpr uint32_t REWARD_GUARD_CANDIDATE_VECTOR_END_0X10F8 = 0x10f8U;
+constexpr uint32_t REWARD_GUARD_CANDIDATE_VECTOR_CAPACITY_0X10FC = 0x10fcU;
+constexpr int32_t REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00 = 0x7d00;
 constexpr uint32_t WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C = 0x00540a9cU;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540A74 = 0x00540a74U;
 constexpr int32_t RELATION_OWNER_ALLOC_SIZE_0X49B452 = 0x414;
@@ -1652,6 +1657,48 @@ struct ObjectRecordReference4a54a7 {
 	SourceObjectRecord0x4c source_record_copy;
 };
 
+struct RewardGuardCandidateRecord4a9f1c {
+	bool candidate_vtable_0x00_known = false;
+	uint32_t candidate_vtable_0x00 = 0U;
+	bool descriptor_type_0x04_known = false;
+	int32_t descriptor_type_0x04 = -1;
+	bool cursor_source_0x08_known = false;
+	int32_t cursor_source_0x08 = 0;
+	bool direct_value_0x0c_known = false;
+	int32_t direct_value_0x0c = 0;
+	bool selection_weight_0x10_known = false;
+	int32_t selection_weight_0x10 = 0;
+};
+
+struct RewardGuardCandidateDecision4a9f1c {
+	bool descriptor_type_known = false;
+	int32_t descriptor_type_0x04 = -1;
+	int32_t global_counter_0x1110 = 0;
+	int32_t global_limit_0x5a26e4 = REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00;
+	int32_t relation_counter_0x44 = 0;
+	int32_t relation_limit_0x5a2a8c = REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00;
+	bool rejected_by_global_limit_0x5a26e4 = false;
+	bool rejected_by_relation_limit_0x5a2a8c = false;
+	bool rejected_by_value_bounds = false;
+	bool accepted_after_counter_and_value_checks = false;
+	std::string blocked_reason;
+};
+
+struct RewardGuardSelectorResult4a9f1c {
+	bool applied = false;
+	bool candidate_vector_present = false;
+	bool candidate_vector_contents_known = false;
+	int32_t candidate_scan_count = 0;
+	int32_t descriptor_type_missing_count = 0;
+	int32_t counter_input_missing_count = 0;
+	int32_t global_limit_reject_count = 0;
+	int32_t relation_limit_reject_count = 0;
+	int32_t value_bound_reject_count = 0;
+	int32_t accepted_count = 0;
+	std::vector<RewardGuardCandidateDecision4a9f1c> candidate_decisions;
+	std::string blocked_reason;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -1670,6 +1717,7 @@ struct GeneratorObjectPrivateState {
 	GeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
 	GeneratorObjectVectorState candidate_container_vector_10d4_10d8;
 	GeneratorObjectVectorState relation_vector_10e4_10e8;
+	GeneratorObjectVectorState reward_guard_candidate_vector_10f4_10f8;
 	GeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
 	bool endpoint_cursor_0xf58_present = false;
 	bool endpoint_cursor_0xf58_known = false;
@@ -1755,6 +1803,11 @@ struct GeneratorObjectPrivateState {
 	bool reward_guard_relation_priority_live_replay_blocked = false;
 	std::string reward_guard_relation_priority_live_replay_blocker;
 	RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_0x4ad7f7;
+	bool reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = false;
+	bool reward_guard_candidate_records_10f4_10f8_contents_known = false;
+	int32_t reward_guard_candidate_record_count_10f4_10f8 = 0;
+	std::vector<RewardGuardCandidateRecord4a9f1c> reward_guard_candidate_records_10f4_10f8;
+	RewardGuardSelectorResult4a9f1c reward_guard_selector_0x4a9f1c;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
@@ -2198,6 +2251,9 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
+int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
+int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);
+RewardGuardSelectorResult4a9f1c reward_guard_value_bounded_selector_counter_pass_0x4a9f1c(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound);
 RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04();
 RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6e0(RewardGuardWrapperState4aa3e9 &wrapper);
 RewardGuardWrapperCandidateRebuildResult49d7c3 reward_guard_wrapper_rebuild_candidates_0x49d7c3(RewardGuardWrapperState4aa3e9 &wrapper);
