@@ -2468,8 +2468,11 @@ int main() {
 		record.byte_0x2b = 0x02U;
 	}
 	GeneratedCellRecord0x30 &reward_guard_target =
-			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 4, 3, 0))];
+			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
 	reward_guard_target.word_0x20 = 0x0002000aU;
+	GeneratedCellRecord0x30 &reward_guard_contour_cell =
+			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 3, 2, 0))];
+	reward_guard_contour_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
 	RewardGuardWrapperState4aa3e9 reward_guard_wrapper;
 	reward_guard_wrapper.wrapper_bounds_0x18_0x24_known = true;
 	reward_guard_wrapper.bound_left_0x18 = 0;
@@ -2482,33 +2485,47 @@ int main() {
 	reward_guard_member.object_record_key_known = true;
 	reward_guard_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74;
 	reward_guard_member.descriptor_type_0x1c = 45;
+	reward_guard_member.descriptor_offset_x_0x2c = 1;
+	reward_guard_member.descriptor_offset_y_0x30 = 1;
+	reward_guard_member.descriptor_body_offsets_0x49a6f9_known = true;
+	reward_guard_member.descriptor_body_offsets_0x49a6f9.push_back({ 0, 0, 0 });
 	reward_guard_wrapper.selected_members_0x2c_0x30.push_back(reward_guard_member);
 	reward_guard_wrapper.generated_cell_grid_0x08_0x10_known = true;
-	reward_guard_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(1, 1, 1);
-	GeneratedCellRecord0x30 &reward_guard_wrapper_cell = reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0];
-	reward_guard_wrapper_cell.word_0x20_known = true;
-	reward_guard_wrapper_cell.word_0x20 = 0x0002000aU;
-	reward_guard_wrapper_cell.word_0x24_known = true;
-	reward_guard_wrapper_cell.word_0x24 = 0U;
-	reward_guard_wrapper_cell.word_0x28_known = true;
-	reward_guard_wrapper_cell.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
-	reward_guard_wrapper_cell.word_0x2c_known = true;
-	reward_guard_wrapper_cell.word_0x2c = 0U;
-	reward_guard_wrapper_cell.byte_0x2b_known_mask = 0x02U;
-	reward_guard_wrapper_cell.byte_0x2b = 0x02U;
-	reward_guard_wrapper.feasibility_filter_0x4aa603_prevalidated_candidates_known = true;
-	reward_guard_wrapper.feasibility_filter_0x4aa603_prevalidated_candidates.push_back({ 4, 3, 0 });
+	reward_guard_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);
+	for (GeneratedCellRecord0x30 &wrapper_cell : reward_guard_wrapper.generated_cell_grid_0x08_0x10.records) {
+		wrapper_cell.word_0x20_known = true;
+		wrapper_cell.word_0x20 = 0x0002000aU;
+		wrapper_cell.word_0x24_known = true;
+		wrapper_cell.word_0x24 = 0U;
+		wrapper_cell.word_0x28_known = true;
+		wrapper_cell.word_0x28 = 0U;
+		wrapper_cell.word_0x2c_known = true;
+		wrapper_cell.word_0x2c = 0U;
+		wrapper_cell.byte_0x2b_known_mask = 0x02U;
+		wrapper_cell.byte_0x2b = 0x02U;
+	}
+	GeneratedCellRecord0x30 &reward_guard_wrapper_direction_cell =
+			reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 0, 1, 0))];
+	reward_guard_wrapper_direction_cell.word_0x28 =
+			aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27
+			| aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_DIRECTION_BIT_23;
+	reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0].word_0x28 =
+			aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+	reward_guard_wrapper.candidate_coordinate_vector_0x3c_0x40_known = true;
+	reward_guard_wrapper.candidate_coordinates_0x3c_0x40.push_back({ 1, 0, 0 });
 	GeneratorRelationOwnerState4a218c reward_guard_relation;
 	reward_guard_relation.runtime_zone_index = 2;
+	reward_guard_relation.terrain_policy_0x0c_known = true;
+	reward_guard_relation.terrain_policy_0x0c = 0;
 	reward_guard_relation.coordinate_triple_0x10_0x18_known = true;
-	reward_guard_relation.coordinate_x_0x10 = 4;
-	reward_guard_relation.coordinate_y_0x14 = 3;
+	reward_guard_relation.coordinate_x_0x10 = 2;
+	reward_guard_relation.coordinate_y_0x14 = 2;
 	reward_guard_relation.coordinate_level_0x18 = 0;
 	reward_guard_relation.scan_bounds_0x20_0x2c_known = true;
-	reward_guard_relation.scan_bound_low_x_0x20 = 4;
-	reward_guard_relation.scan_bound_low_y_0x24 = 3;
-	reward_guard_relation.scan_bound_high_x_0x28 = 4;
-	reward_guard_relation.scan_bound_high_y_0x2c = 3;
+	reward_guard_relation.scan_bound_low_x_0x20 = 2;
+	reward_guard_relation.scan_bound_low_y_0x24 = 2;
+	reward_guard_relation.scan_bound_high_x_0x28 = 2;
+	reward_guard_relation.scan_bound_high_y_0x2c = 2;
 	H3MapedRng reward_guard_rng;
 	reward_guard_rng.state = 58U;
 	const RewardGuardCoordinateScanResult4aa9b7 reward_guard_result =
@@ -2520,25 +2537,30 @@ int main() {
 					true,
 					reward_guard_rng);
 	const GeneratedCellRecord0x30 &reward_guard_target_after =
-			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 4, 3, 0))];
+			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
 	const GeneratedCellRecord0x30 &reward_guard_wrapper_cell_after = reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0];
 	if (!require(reward_guard_result.applied
 					&& reward_guard_result.committed
 					&& reward_guard_result.scanned_cell_count == 1
 					&& reward_guard_result.accepted_candidate_count == 1
+					&& reward_guard_result.feasibility_results_0x4aa603.size() == 1
+					&& reward_guard_result.feasibility_results_0x4aa603[0].accepted
+					&& reward_guard_result.feasibility_results_0x4aa603[0].footprint_body_cell_scan_count_0x49a6f9 == 1
+					&& reward_guard_result.feasibility_results_0x4aa603[0].direction_accept_count == 1
+					&& reward_guard_result.feasibility_results_0x4aa603[0].contour_scan_count_0x49a09c == 2
 					&& reward_guard_result.local_vector_clear_count_0x4ae52a == 1
 					&& reward_guard_result.local_vector_append_count_0x4ae1fd == 1
 					&& reward_guard_result.selected_candidate_known
-					&& reward_guard_result.selected_candidate.x == 4
-					&& reward_guard_result.selected_candidate.y == 3
+					&& reward_guard_result.selected_candidate.x == 2
+					&& reward_guard_result.selected_candidate.y == 2
 					&& reward_guard_result.selected_candidate.level == 0
 					&& reward_guard_result.threshold_after_scan == 10,
-				"0x4aa9b7 did not scan, best-score clear, append, and select the recovered reward/guard coordinate")) {
+				"0x4aa9b7 did not scan, run recovered 0x4aa603, append, and select the reward/guard coordinate")) {
 		return 1;
 	}
 	if (!require(reward_guard_wrapper.selected_coordinate_0x54_0x5c_known
-					&& reward_guard_wrapper.selected_x_0x54 == 4
-					&& reward_guard_wrapper.selected_y_0x58 == 3
+					&& reward_guard_wrapper.selected_x_0x54 == 2
+					&& reward_guard_wrapper.selected_y_0x58 == 2
 					&& reward_guard_wrapper.selected_level_0x5c == 0
 					&& reward_guard_result.commit_0x4aa3e9.selected_coordinate_stored_0x54_0x5c
 					&& reward_guard_result.commit_0x4aa3e9.selected_member_commit_count_0x4a54a7 == 1,
@@ -2554,17 +2576,20 @@ int main() {
 				"0x4aa3e9 wrapper member commit did not append recovered object key/reference/counter state")) {
 		return 1;
 	}
-	if (!require((reward_guard_target_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
-					&& (reward_guard_target_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
-					&& (reward_guard_wrapper_cell_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U
-					&& (reward_guard_wrapper_cell_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
-					&& reward_guard_result.commit_0x4aa3e9.destination_bit26_mirror_count == 1
-					&& reward_guard_result.commit_0x4aa3e9.destination_bit27_mirror_count == 1,
+	const bool reward_guard_mirror_ok =
+			(reward_guard_target_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
+			&& (reward_guard_target_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+			&& (reward_guard_wrapper_cell_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U
+			&& (reward_guard_wrapper_cell_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+			&& reward_guard_result.commit_0x4aa3e9.destination_bit26_mirror_count == 1
+			&& reward_guard_result.commit_0x4aa3e9.destination_bit27_mirror_count >= 1;
+	if (!require(reward_guard_mirror_ok,
 				"0x4aa3e9 did not mirror captured source bit26/bit27 into the wrapper generated-cell grid after member commit")) {
 		return 1;
 	}
 	RewardGuardWrapperState4aa3e9 blocked_reward_guard_wrapper = reward_guard_wrapper;
-	blocked_reward_guard_wrapper.feasibility_filter_0x4aa603_prevalidated_candidates_known = false;
+	blocked_reward_guard_wrapper.selected_members_0x2c_0x30[0].descriptor_body_offsets_0x49a6f9_known = false;
+	blocked_reward_guard_wrapper.selected_members_0x2c_0x30[0].descriptor_body_offsets_0x49a6f9.clear();
 	H3MapedRng blocked_reward_guard_rng;
 	blocked_reward_guard_rng.state = 58U;
 	const RewardGuardCoordinateScanResult4aa9b7 blocked_reward_guard_result =
