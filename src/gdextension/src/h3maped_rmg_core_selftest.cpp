@@ -42,6 +42,7 @@ using aurelion::h3maped_rmg_core::SourceObjectResolverResult4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverSourcePair4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverState4af785;
 using aurelion::h3maped_rmg_core::SourceObjectSelectorResult4a9e40;
+using aurelion::h3maped_rmg_core::SourceOrderSchedulerSourceRecord4a8db2;
 using aurelion::h3maped_rmg_core::SourceOrderSchedulerResult4a8db2;
 using aurelion::h3maped_rmg_core::SourceZonePayload4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucket0xe8;
@@ -1629,6 +1630,14 @@ int main() {
 	if (!require(generator_state.object_record_vector_ec4_ecc.present && !generator_state.object_record_vector_ec4_ecc.contents_known, "generator object private state must keep object-vector contents unclaimed until materialization is ported")) {
 		return 1;
 	}
+	if (!require(generator_state.source_order_scheduler_replay_0x4a8db2_known
+					&& generator_state.source_order_scheduler_replay_count_0x4a8db2 == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size())
+					&& !generator_state.source_order_scheduler_replays_0x4a8db2.empty()
+					&& generator_state.source_order_scheduler_replays_0x4a8db2[0].source_record_id_0x00 >= 0
+					&& generator_state.source_order_scheduler_replays_0x4a8db2[0].lanes.size() == 4,
+				"generator object private state did not run live 0x4a8db2 scheduler replay from runtime-zone source records")) {
+		return 1;
+	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && !generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
 		return 1;
 	}
@@ -2497,6 +2506,34 @@ int main() {
 					&& !weighted_threshold.threshold_arg_0x18_known
 					&& weighted_threshold.blocked_reason == "0x4a8db2_weighted_scheduler_no_positive_town_castle_density",
 				"0x4a8db2 weighted scheduler threshold did not fail closed on zero density")) {
+		return 1;
+	}
+	RuntimeZoneSeedInput4a218c scheduler_source_zone;
+	scheduler_source_zone.source_index = 5;
+	scheduler_source_zone.source_owner_index = 2;
+	scheduler_source_zone.source_payload.source_ownership = 1;
+	scheduler_source_zone.source_payload.player_towns.min_towns = 3;
+	scheduler_source_zone.source_payload.player_towns.min_castles = 4;
+	scheduler_source_zone.source_payload.player_towns.town_density = 5;
+	scheduler_source_zone.source_payload.player_towns.castle_density = 6;
+	scheduler_source_zone.source_payload.neutral_towns.min_towns = 7;
+	scheduler_source_zone.source_payload.neutral_towns.min_castles = 8;
+	scheduler_source_zone.source_payload.neutral_towns.town_density = 9;
+	scheduler_source_zone.source_payload.neutral_towns.castle_density = 10;
+	const SourceOrderSchedulerSourceRecord4a8db2 scheduler_source_record =
+			aurelion::h3maped_rmg_core::source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(scheduler_source_zone);
+	if (!require(scheduler_source_record.source_id_0x00 == 5
+					&& scheduler_source_record.owner_or_type_0x04 == 1
+					&& scheduler_source_record.relation_selector_0x1c == 2
+					&& scheduler_source_record.field_0x20_known && scheduler_source_record.field_0x20 == 3
+					&& scheduler_source_record.field_0x24_known && scheduler_source_record.field_0x24 == 4
+					&& scheduler_source_record.field_0x28_known && scheduler_source_record.field_0x28 == 5
+					&& scheduler_source_record.field_0x2c_known && scheduler_source_record.field_0x2c == 6
+					&& scheduler_source_record.field_0x30_known && scheduler_source_record.field_0x30 == 7
+					&& scheduler_source_record.field_0x34_known && scheduler_source_record.field_0x34 == 8
+					&& scheduler_source_record.field_0x38_known && scheduler_source_record.field_0x38 == 9
+					&& scheduler_source_record.field_0x3c_known && scheduler_source_record.field_0x3c == 10,
+				"0x4a8db2 runtime-zone scheduler source record did not map recovered source town/castle fields")) {
 		return 1;
 	}
 	auto make_scheduler_pair = [&](const SourceObjectRecord0x4c &record) {
