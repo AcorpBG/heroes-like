@@ -1813,6 +1813,8 @@ struct RewardGuardSelectedObjectResult4aa1db {
 	bool candidate_selector_invoked_0x4a9f1c = false;
 	bool generator_descriptor_vector_0x398_0x39c_known = false;
 	bool selected_descriptor_state_0x94_0x95_known = false;
+	int32_t policy_word_0x10 = 0;
+	int32_t selected_value_0x14 = 0;
 	int32_t selector_retry_limit = 3;
 	int32_t selector_attempt_count = 0;
 	RewardGuardSelectorResult4a9f1c selector_0x4a9f1c;
@@ -1826,6 +1828,13 @@ struct RewardGuardSelectedObjectResult4aa1db {
 struct RewardGuardMaterializationDriverResult4aa354 {
 	bool invoked = false;
 	bool applied = false;
+	int32_t policy_word_0x10 = 0;
+	int32_t low_value_0x14 = 0;
+	int32_t high_value_0x18 = 0;
+	bool selected_value_known = false;
+	int32_t selected_value_for_0x4aa1db = 0;
+	bool rng_consumed_for_value_selection_0x4e7276 = false;
+	int32_t rng_value_for_value_selection_0x4e7276 = -1;
 	bool wrapper_reset_0x49ce64_applied = false;
 	int32_t wrapper_reset_cell_count_0x49ce64 = 0;
 	bool selected_object_helper_invoked_0x4aa1db = false;
@@ -1833,6 +1842,53 @@ struct RewardGuardMaterializationDriverResult4aa354 {
 	bool final_candidate_rebuild_invoked_0x49d7c3 = false;
 	bool final_mark_invoked_0x49cefb = false;
 	int32_t final_candidate_count_0x49cefb = 0;
+	std::string blocked_reason;
+};
+
+struct RewardGuardSourceStreamRecord4aab7e {
+	bool fields_known = false;
+	int32_t low_value_0xa0 = 0;
+	int32_t high_value_0xa4 = 0;
+	int32_t source_count_0xa8 = 0;
+};
+
+struct RewardGuardSourceStreamLane4aab7e {
+	int32_t lane_index = -1;
+	bool active = false;
+	int32_t low_value_0xa0 = 0;
+	int32_t high_value_0xa4 = 0;
+	int32_t source_count_0xa8 = 0;
+	int64_t quota = 0;
+};
+
+struct RewardGuardSourceStreamAttempt4aab7e {
+	int32_t lane_index = -1;
+	int32_t pass_policy_word_0x10 = 0;
+	int32_t attempt_index = 0;
+	bool materialization_invoked_0x4aa354 = false;
+	RewardGuardMaterializationDriverResult4aa354 materialization_0x4aa354;
+	bool coordinate_scan_invoked_0x4aa9b7 = false;
+	bool coordinate_scan_applied_0x4aa9b7 = false;
+	bool wrapper_cleanup_invoked_0x49cebd = false;
+	std::string blocked_reason;
+};
+
+struct RewardGuardSourceStreamResult4aab7e {
+	bool invoked = false;
+	bool applied = false;
+	bool source_triplet_known = false;
+	bool source_object_kind_0x0c_known = false;
+	int32_t source_object_kind_0x0c = 0;
+	int32_t source_record_count = 0;
+	int32_t active_lane_count = 0;
+	int32_t total_source_count = 0;
+	int64_t source_count_product = 1;
+	int32_t minimum_low_word_score_0x10 = 0;
+	int32_t selected_lane_count = 0;
+	int32_t materialization_attempt_count = 0;
+	int32_t successful_coordinate_scan_count = 0;
+	std::vector<RewardGuardSourceStreamLane4aab7e> lanes;
+	std::vector<RewardGuardSourceStreamAttempt4aab7e> attempts;
 	std::string blocked_reason;
 };
 
@@ -1963,6 +2019,12 @@ struct GeneratorObjectPrivateState {
 	bool reward_guard_materialization_driver_0x4aa354_ported = false;
 	bool reward_guard_materialization_driver_input_known = false;
 	RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_0x4aa354;
+	bool reward_guard_source_stream_0x4aab7e_ported = false;
+	bool reward_guard_source_stream_0x4aab7e_input_known = false;
+	bool reward_guard_source_stream_owner_kind_0x0c_known = false;
+	int32_t reward_guard_source_stream_owner_kind_0x0c = 0;
+	std::vector<RewardGuardSourceStreamRecord4aab7e> reward_guard_source_stream_records_0x4aab7e;
+	RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_0x4aab7e;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
@@ -2454,8 +2516,9 @@ RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6
 RewardGuardWrapperCandidateRebuildResult49d7c3 reward_guard_wrapper_rebuild_candidates_0x49d7c3(RewardGuardWrapperState4aa3e9 &wrapper);
 RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, H3MapedRng &rng);
 RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cells_0x49cefb(RewardGuardWrapperState4aa3e9 &wrapper);
-RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng);
-RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng);
+RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng);
+RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t low_value_0x14, int32_t high_value_0x18, H3MapedRng &rng);
+RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0x4aab7e(GeneratorObjectPrivateState &state, const std::vector<RewardGuardSourceStreamRecord4aab7e> &source_records, bool source_object_kind_0x0c_known, int32_t source_object_kind_0x0c, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng);
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
 RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x4aa9b7(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c &relation, int32_t minimum_low_word_score_0x10, bool policy_byte_0x13, H3MapedRng &rng);
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
