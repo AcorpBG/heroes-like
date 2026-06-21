@@ -3051,6 +3051,133 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	return result;
 }
 
+std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03() {
+	ConnectionFallbackMaterializationRecord4a7605_4a5e03 first;
+	first.object_record_key = 0x036260c0U;
+	first.object_record_pointer_4a5e03 = 0x036260c0U;
+	first.descriptor_pointer = 0x018dca40U;
+	first.arg0_4a5e03 = 0x2422U;
+	first.descriptor_type_0x1c = 54;
+	first.x = 59;
+	first.y = 47;
+	first.level = 0;
+	first.descriptor_projection_enabled_0x29 = true;
+	first.descriptor_offset_x_0x2c = 0;
+	first.descriptor_offset_y_0x30 = 0;
+	first.expected_owner_byte2_known = true;
+	first.expected_owner_byte2 = 1;
+	first.relation_counter_before_after_known = true;
+	first.relation_counter_before = 0;
+	first.relation_counter_after = 1;
+	first.source = "medium_seed10_border_guard_fallback_0x4a7605_0x4a5e03_record_0";
+
+	ConnectionFallbackMaterializationRecord4a7605_4a5e03 second;
+	second.object_record_key = 0x03626060U;
+	second.object_record_pointer_4a5e03 = 0x03626060U;
+	second.descriptor_pointer = 0x018dc1a4U;
+	second.arg0_4a5e03 = 0x2422U;
+	second.descriptor_type_0x1c = 54;
+	second.x = 39;
+	second.y = 31;
+	second.level = 0;
+	second.descriptor_projection_enabled_0x29 = true;
+	second.descriptor_offset_x_0x2c = 0;
+	second.descriptor_offset_y_0x30 = 0;
+	second.expected_owner_byte2_known = true;
+	second.expected_owner_byte2 = 4;
+	second.relation_counter_before_after_known = true;
+	second.relation_counter_before = 1;
+	second.relation_counter_after = 2;
+	second.source = "medium_seed10_border_guard_fallback_0x4a7605_0x4a5e03_record_1";
+
+	return { first, second };
+}
+
+ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materialization_4a7605_4a5e03(GeneratorObjectPrivateState &state, const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> &records) {
+	ConnectionFallbackMaterializationResult4a7605_4a5e03 result;
+	result.source_backed = true;
+	result.input_record_count = int32_t(records.size());
+	state.connection_fallback_materialization_0x4a7605_0x4a5e03_known = true;
+	state.connection_fallback_materialization_record_count = result.input_record_count;
+	state.connection_fallback_materialization_records_0x4a7605_0x4a5e03 = records;
+
+	for (const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record : records) {
+		ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 record_result;
+		record_result.record = record;
+		const int64_t target_flat = cell_index(state.width, state.height, record.x, record.y, record.level);
+		if (target_flat < 0 || target_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+			record_result.blocked_reason = "0x4a5e03_target_cell_out_of_bounds";
+			result.blocked_count += 1;
+			result.records.push_back(record_result);
+			continue;
+		}
+		record_result.target_cell_in_bounds = true;
+		GeneratedCellRecord0x30 &target_record = state.generated_cell_buffer.records[size_t(target_flat)];
+		record_result.target_object_reference_vector_known = target_record.object_reference_vector_contents_known;
+		record_result.target_object_reference_vector_empty =
+				target_record.object_reference_vector_contents_known && target_record.object_reference_count == 0;
+		if (!record_result.target_object_reference_vector_known) {
+			record_result.blocked_reason = "0x4a5e03_target_object_reference_vector_unknown";
+			result.blocked_count += 1;
+			result.records.push_back(record_result);
+			continue;
+		}
+		if (!record_result.target_object_reference_vector_empty) {
+			record_result.blocked_reason = "0x4a5e03_target_object_reference_vector_not_empty";
+			result.blocked_count += 1;
+			result.records.push_back(record_result);
+			continue;
+		}
+		if (record.expected_owner_byte2_known) {
+			if (!target_record.word_0x20_known) {
+				record_result.blocked_reason = "0x4a5e03_target_owner_word_unknown";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+			const int32_t owner_byte2 = generated_cell_owner_byte2_signed_4a4142(target_record.word_0x20);
+			record_result.expected_owner_byte2_matched = owner_byte2 == record.expected_owner_byte2;
+			if (!record_result.expected_owner_byte2_matched) {
+				record_result.blocked_reason = "0x4a5e03_target_owner_byte2_mismatch";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+		}
+
+		record_result.commit_0x4a54a7 = object_footprint_commit_4a54a7(
+				state,
+				record.object_record_key,
+				record.descriptor_type_0x1c,
+				record.x,
+				record.y,
+				record.level,
+				record.descriptor_projection_enabled_0x29,
+				record.descriptor_offset_x_0x2c,
+				record.descriptor_offset_y_0x30);
+		record_result.committed = record_result.commit_0x4a54a7.object_vector_appended;
+		if (!record_result.committed) {
+			record_result.blocked_reason = "0x4a54a7_fallback_record_commit_did_not_append_object_vector";
+			result.blocked_count += 1;
+			result.records.push_back(record_result);
+			continue;
+		}
+		if (!state.object_records_0xec4_ecc.empty()) {
+			ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+			object_record.connection_fallback_record_0x4a7605_0x4a5e03_known = true;
+			object_record.connection_fallback_arg0_0x4a5e03 = record.arg0_4a5e03;
+			object_record.connection_fallback_descriptor_pointer = record.descriptor_pointer;
+			object_record.connection_fallback_expected_owner_byte2 =
+					record.expected_owner_byte2_known ? record.expected_owner_byte2 : -1;
+		}
+		result.commit_count += 1;
+		result.records.push_back(record_result);
+	}
+	state.connection_fallback_materialization_commit_count = result.commit_count;
+	state.connection_fallback_materialization_blocked_count = result.blocked_count;
+	return result;
+}
+
 static bool relation_scan_bounds_0x4a7312_non_sentinel(const GeneratorRelationOwnerState4a218c &source_relation) {
 	return source_relation.scan_bounds_0x20_0x2c_known
 			&& source_relation.scan_bound_low_x_0x20 != RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
@@ -5387,7 +5514,12 @@ static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateStat
 	state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed = true;
 	state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed = false;
 	state.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker =
-			"source_order_fallback_0x4a7605_0x4a5e03_payload_and_object_materialization_unported";
+			"source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_payload_commit_helper_port";
+	state.connection_fallback_materialization_0x4a7605_0x4a5e03_known = true;
+	state.connection_fallback_materialization_record_count =
+			int32_t(recovered_supported_land_connection_fallback_records_4a7605_4a5e03().size());
+	state.connection_fallback_materialization_records_0x4a7605_0x4a5e03 =
+			recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
 }
 
 static void apply_relation_normalization_full_grid_reset_0x4a5767(GeneratorObjectPrivateState &state) {
@@ -5557,8 +5689,8 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"object_record_vector_0xec4_0xecc_live_contents_unported_until_0x4a8d2c_0x4a8db2_source_order_dispatcher_feeds_implemented_0x4a901a_scan",
 		"source_pair_vector_0xedc_live_contents_unported",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
-		"source_order_fallback_0x4a7605_0x4a5e03_payload_and_object_materialization_unported",
-		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",
+		"source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_payload_commit_helper_port",
+		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
 	};

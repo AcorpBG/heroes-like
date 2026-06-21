@@ -427,6 +427,10 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.x = input.x;
 	out.y = input.y;
 	out.level = input.level;
+	out.connection_fallback_record_0x4a7605_0x4a5e03_known = input.connection_fallback_record_0x4a7605_0x4a5e03_known;
+	out.connection_fallback_arg0_0x4a5e03 = input.connection_fallback_arg0_0x4a5e03;
+	out.connection_fallback_descriptor_pointer = input.connection_fallback_descriptor_pointer;
+	out.connection_fallback_expected_owner_byte2 = input.connection_fallback_expected_owner_byte2;
 	out.object_record_key_allocated_by_0x4a93a2 = input.object_record_key_allocated_by_0x4a93a2;
 	out.source_order_direct_record_0x4a8d2c_0x4a93a2_known = input.source_order_direct_record_0x4a8d2c_0x4a93a2_known;
 	out.weighted_record_0x4a93a2_known = input.weighted_record_0x4a93a2_known;
@@ -556,6 +560,10 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed = input.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed;
 	out.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed = input.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed;
 	out.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker = input.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker;
+	out.connection_fallback_materialization_0x4a7605_0x4a5e03_known = input.connection_fallback_materialization_0x4a7605_0x4a5e03_known;
+	out.connection_fallback_materialization_record_count = input.connection_fallback_materialization_record_count;
+	out.connection_fallback_materialization_commit_count = input.connection_fallback_materialization_commit_count;
+	out.connection_fallback_materialization_blocked_count = input.connection_fallback_materialization_blocked_count;
 	out.descriptor_counter_table_0x1110_present = input.descriptor_counter_table_0x1110_present;
 	out.descriptor_counter_table_0x1110_contents_known = input.descriptor_counter_table_0x1110_contents_known;
 	out.descriptor_counter_table_0x1110_known_count = input.descriptor_counter_table_0x1110_known_count;
@@ -1438,6 +1446,10 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"x\":" << record.x
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
+			<< ",\"connection_fallback_record_0x4a7605_0x4a5e03_known\":" << (record.connection_fallback_record_0x4a7605_0x4a5e03_known ? "true" : "false")
+			<< ",\"connection_fallback_arg0_0x4a5e03\":" << record.connection_fallback_arg0_0x4a5e03
+			<< ",\"connection_fallback_descriptor_pointer\":" << record.connection_fallback_descriptor_pointer
+			<< ",\"connection_fallback_expected_owner_byte2\":" << record.connection_fallback_expected_owner_byte2
 			<< ",\"object_record_key_allocated_by_0x4a93a2\":" << (record.object_record_key_allocated_by_0x4a93a2 ? "true" : "false")
 			<< ",\"source_order_direct_record_0x4a8d2c_0x4a93a2_known\":" << (record.source_order_direct_record_0x4a8d2c_0x4a93a2_known ? "true" : "false")
 			<< ",\"weighted_record_0x4a93a2_known\":" << (record.weighted_record_0x4a93a2_known ? "true" : "false")
@@ -1794,6 +1806,10 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"source_order_direct_candidate_total_count_0x4a93a2\":" << state.source_order_direct_candidate_total_count_0x4a93a2 << ","
 		<< "\"source_order_direct_selected_count_0x4a93a2\":" << state.source_order_direct_selected_count_0x4a93a2 << ","
 		<< "\"source_order_direct_commit_count_0x4a93a2\":" << state.source_order_direct_commit_count_0x4a93a2 << ","
+		<< "\"connection_fallback_materialization_0x4a7605_0x4a5e03_known\":" << (state.connection_fallback_materialization_0x4a7605_0x4a5e03_known ? "true" : "false") << ","
+		<< "\"connection_fallback_materialization_record_count\":" << state.connection_fallback_materialization_record_count << ","
+		<< "\"connection_fallback_materialization_commit_count\":" << state.connection_fallback_materialization_commit_count << ","
+		<< "\"connection_fallback_materialization_blocked_count\":" << state.connection_fallback_materialization_blocked_count << ","
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
 		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","

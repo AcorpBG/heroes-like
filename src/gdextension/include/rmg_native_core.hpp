@@ -415,6 +415,10 @@ struct SharedObjectRecordReference4a54a7 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool connection_fallback_record_0x4a7605_0x4a5e03_known = false;
+	uint32_t connection_fallback_arg0_0x4a5e03 = 0U;
+	uint32_t connection_fallback_descriptor_pointer = 0U;
+	int32_t connection_fallback_expected_owner_byte2 = -1;
 	bool object_record_key_allocated_by_0x4a93a2 = false;
 	bool source_order_direct_record_0x4a8d2c_0x4a93a2_known = false;
 	bool weighted_record_0x4a93a2_known = false;
@@ -550,6 +554,10 @@ struct SharedGeneratorObjectPrivateState {
 	bool endpoint_cursor_vector_d8_dc_supported_land_exclusion_known = false;
 	SharedGeneratorEndpointCursorProducerStateD014 endpoint_cursor_producer_d014;
 	SharedConnectionMaterializationCallerPrepD014 connection_materialization_caller_prep_d014;
+	bool connection_fallback_materialization_0x4a7605_0x4a5e03_known = false;
+	int32_t connection_fallback_materialization_record_count = 0;
+	int32_t connection_fallback_materialization_commit_count = 0;
+	int32_t connection_fallback_materialization_blocked_count = 0;
 	bool descriptor_counter_table_0x1110_present = false;
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
