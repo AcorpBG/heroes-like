@@ -1945,6 +1945,19 @@ struct RewardGuardSourceStreamResult4aab7e {
 	std::string blocked_reason;
 };
 
+struct DecorativeFlaggedCellDispatchResult49eb8d {
+	bool invoked = false;
+	bool applied = false;
+	bool generated_cell_grid_known = false;
+	int32_t scanned_cell_count_pass1 = 0;
+	int32_t bit26_candidate_count = 0;
+	bool budget_known = false;
+	int32_t budget_0x4374c_div_bit26 = 0;
+	int32_t valid_0x49e700_dispatch_candidate_count = 0;
+	int32_t invalid_optional_handler_candidate_count = 0;
+	std::string blocked_reason;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -2086,6 +2099,8 @@ struct GeneratorObjectPrivateState {
 	int32_t reward_guard_source_stream_owner_kind_0x0c = 0;
 	std::vector<RewardGuardSourceStreamRecord4aab7e> reward_guard_source_stream_records_0x4aab7e;
 	RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_0x4aab7e;
+	bool decorative_flagged_cell_dispatch_0x49eb8d_ported = false;
+	DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
@@ -2580,6 +2595,7 @@ RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cell
 RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng);
 RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t low_value_0x14, int32_t high_value_0x18, H3MapedRng &rng);
 RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0x4aab7e(GeneratorObjectPrivateState &state, const std::vector<RewardGuardSourceStreamRecord4aab7e> &source_records, bool source_object_kind_0x0c_known, int32_t source_object_kind_0x0c, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng);
+DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d(GeneratorObjectPrivateState &state);
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
 RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x4aa9b7(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c &relation, int32_t minimum_low_word_score_0x10, bool policy_byte_0x13, H3MapedRng &rng);
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
