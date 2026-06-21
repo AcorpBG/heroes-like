@@ -3432,7 +3432,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now scopes recovered connection fallback records to their proven case; Small lacks source-backed 0x4a7605 records and Medium seed 10 blocks on exact target word 0x20 prestate before 0x4a5e03\",\n";
+	out << "    \"current_blocker\": \"native workflow fails closed at reward/guard 0x4aab7e when active source-order attempts produce zero successful 0x4aa9b7 commits; connection, decorative, fallback, road, river, and final writeout phases stay pending until reward/guard commits are source-owned\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3449,7 +3449,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_source_scoped_0x4a7605_fallback_record_feed_and_medium_seed10_target_word_prestate_into_0x4a79a3_connection_tail\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_source_order_reward_guard_coordinate_materialization_0x4aab7e_0x4aa9b7_before_connection_tail\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

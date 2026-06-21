@@ -1718,12 +1718,28 @@ struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
 	int32_t source_level_count = 0;
 	uint32_t source_seed = 0U;
 	int32_t descriptor_type_0x1c = -1;
+	bool descriptor_fields_recovered_0x4a7605 = false;
+	int32_t descriptor_source_key_0x00 = -1;
+	int32_t descriptor_subtype_0x20 = -1;
+	int32_t descriptor_class_0x24 = -1;
+	int32_t descriptor_mask_width_0x34 = -1;
+	int32_t descriptor_mask_height_0x38 = -1;
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
 	bool descriptor_projection_enabled_0x29 = false;
 	int32_t descriptor_offset_x_0x2c = 0;
 	int32_t descriptor_offset_y_0x30 = 0;
+	bool source_cell_prestate_recovered_0x4a7605 = false;
+	int32_t source_cell_x = 0;
+	int32_t source_cell_y = 0;
+	int32_t source_cell_level = 0;
+	bool expected_source_word_0x20_known = false;
+	uint32_t expected_source_word_0x20 = 0U;
+	bool expected_source_word_0x24_known = false;
+	uint32_t expected_source_word_0x24 = 0U;
+	bool expected_source_word_0x28_known = false;
+	uint32_t expected_source_word_0x28 = 0U;
 	bool expected_owner_byte2_known = false;
 	int32_t expected_owner_byte2 = -1;
 	bool expected_target_word_0x20_known = false;
@@ -2484,6 +2500,12 @@ struct RewardGuardCoordinateScanResult4aa9b7 {
 
 struct ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 {
 	ConnectionFallbackMaterializationRecord4a7605_4a5e03 record;
+	bool source_cell_prestate_checked_0x4a7605 = false;
+	bool source_cell_in_bounds_0x4a7605 = false;
+	bool source_cell_word_0x20_matched_0x4a7605 = false;
+	bool source_cell_word_0x24_matched_0x4a7605 = false;
+	bool source_cell_word_0x28_matched_0x4a7605 = false;
+	bool descriptor_fields_recovered_0x4a7605 = false;
 	bool target_cell_in_bounds = false;
 	bool target_object_reference_vector_known = false;
 	bool target_object_reference_vector_empty = false;
