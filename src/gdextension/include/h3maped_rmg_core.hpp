@@ -1863,8 +1863,15 @@ struct RewardGuardWrapperRefreshResult49d6e0 {
 struct RewardGuardWrapperCandidateRebuildResult49d7c3 {
 	bool applied = false;
 	bool returned_without_rebuild_existing_vector = false;
+	bool seed_boundary_found = false;
+	int32_t seed_boundary_x = 0;
+	int32_t seed_boundary_y = 0;
+	int32_t contour_append_count = 0;
+	int32_t contour_probe_count = 0;
+	int32_t contour_forced_step_count = 0;
 	int32_t candidate_count_before = 0;
 	int32_t candidate_count_after = 0;
+	std::vector<CoordinateCandidate4a17f5> appended_coordinates;
 	std::string blocked_reason;
 };
 

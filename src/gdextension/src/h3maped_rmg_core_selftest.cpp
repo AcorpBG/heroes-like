@@ -2600,6 +2600,55 @@ int main() {
 				"0x49ce04/0x49ce64 wrapper construct did not initialize the recovered 16x16x1 wrapper fields")) {
 		return 1;
 	}
+	RewardGuardWrapperState4aa3e9 contour_wrapper;
+	contour_wrapper.candidate_coordinate_vector_0x3c_0x40_known = true;
+	contour_wrapper.generated_cell_grid_0x08_0x10_known = true;
+	contour_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(5, 5, 1);
+	for (GeneratedCellRecord0x30 &record : contour_wrapper.generated_cell_grid_0x08_0x10.records) {
+		record.word_0x24_known = true;
+		record.word_0x24 = 0U;
+		record.word_0x28_known = true;
+		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25 | aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.byte_0x2b_known_mask = 0x02U;
+		record.byte_0x2b = 0x02U;
+	}
+	GeneratedCellRecord0x30 &contour_boundary =
+			contour_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(5, 5, 2, 2, 0))];
+	contour_boundary.word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+	const auto contour_result = aurelion::h3maped_rmg_core::reward_guard_wrapper_rebuild_candidates_0x49d7c3(contour_wrapper);
+	const std::vector<aurelion::h3maped_rmg_core::CoordinateCandidate4a17f5> expected_contour = {
+		{ 2, 1, 0 },
+		{ 3, 1, 0 },
+		{ 3, 2, 0 },
+		{ 3, 3, 0 },
+		{ 2, 3, 0 },
+		{ 1, 3, 0 },
+		{ 1, 2, 0 },
+		{ 1, 1, 0 },
+	};
+	bool contour_matches_expected = contour_result.appended_coordinates.size() == expected_contour.size()
+			&& contour_wrapper.candidate_coordinates_0x3c_0x40.size() == expected_contour.size();
+	for (size_t index = 0; contour_matches_expected && index < expected_contour.size(); ++index) {
+		contour_matches_expected =
+				contour_result.appended_coordinates[index].x == expected_contour[index].x
+				&& contour_result.appended_coordinates[index].y == expected_contour[index].y
+				&& contour_result.appended_coordinates[index].level == expected_contour[index].level
+				&& contour_wrapper.candidate_coordinates_0x3c_0x40[index].x == expected_contour[index].x
+				&& contour_wrapper.candidate_coordinates_0x3c_0x40[index].y == expected_contour[index].y
+				&& contour_wrapper.candidate_coordinates_0x3c_0x40[index].level == expected_contour[index].level;
+	}
+	if (!require(contour_result.applied
+					&& contour_result.seed_boundary_found
+					&& contour_result.seed_boundary_x == 2
+					&& contour_result.seed_boundary_y == 2
+					&& contour_result.candidate_count_before == 0
+					&& contour_result.candidate_count_after == 8
+					&& contour_result.contour_append_count == 8
+					&& contour_result.contour_forced_step_count == 0
+					&& contour_matches_expected,
+				"0x49d7c3 did not rebuild the recovered wrapper contour from generated-cell passability")) {
+		return 1;
+	}
 	RewardGuardWrapperState4aa3e9 attach_wrapper = attach_construct.wrapper;
 	for (GeneratedCellRecord0x30 &record : attach_wrapper.generated_cell_grid_0x08_0x10.records) {
 		record.word_0x20_known = true;
@@ -2632,12 +2681,6 @@ int main() {
 	attach_wrapper.attach_filter_0x49d2e0_prevalidated_candidates = {
 		{ 8, 11, 0 },
 	};
-	attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates_known = true;
-	for (int32_t y = 0; y < 16 && attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates.size() < 26; ++y) {
-		for (int32_t x = 0; x < 16 && attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates.size() < 26; ++x) {
-			attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates.push_back({ x, y, 0 });
-		}
-	}
 	RewardGuardWrapperMember4aa3e9 attach_member;
 	attach_member.object_record_key = 0x036225e0U;
 	attach_member.object_record_key_known = true;
@@ -2647,6 +2690,7 @@ int main() {
 	attach_rng.state = 11U;
 	const RewardGuardAttachResult49cf34 attach_result =
 			aurelion::h3maped_rmg_core::reward_guard_attach_member_0x49cf34(attach_wrapper, attach_member, attach_rng);
+	const int32_t attach_rebuilt_candidate_count = attach_result.candidate_rebuild_0x49d7c3.candidate_count_after;
 	if (!require(attach_result.applied
 					&& attach_result.initial_candidate_refresh_0x49d7c3_applied
 					&& attach_result.initial_candidate_refresh_returned_existing_vector_0x49d7c3
@@ -2678,7 +2722,9 @@ int main() {
 					&& attach_result.candidate_cleanup_count_0x4ae2d0 == 1
 					&& attach_result.bounds_refresh_0x49d6e0.applied
 					&& attach_result.candidate_rebuild_0x49d7c3.applied
-					&& attach_result.candidate_rebuild_0x49d7c3.candidate_count_after == 26,
+					&& attach_result.candidate_rebuild_0x49d7c3.seed_boundary_found
+					&& attach_rebuilt_candidate_count > 0
+					&& attach_rebuilt_candidate_count == attach_result.candidate_rebuild_0x49d7c3.contour_append_count,
 				"0x49cf34 did not stamp, block, set wrapper fields, cleanup, and rebuild recovered wrapper candidates")) {
 		return 1;
 	}
@@ -2690,16 +2736,22 @@ int main() {
 	}
 	const RewardGuardWrapperFinalMarkResult49cefb final_mark_result =
 			aurelion::h3maped_rmg_core::reward_guard_wrapper_mark_candidate_cells_0x49cefb(attach_wrapper);
-	const GeneratedCellRecord0x30 &final_mark_cell = attach_wrapper.generated_cell_grid_0x08_0x10.records[0];
+	int32_t final_marked_grid_cell_count = 0;
+	for (const GeneratedCellRecord0x30 &record : attach_wrapper.generated_cell_grid_0x08_0x10.records) {
+		if (record.byte_0x2a_known
+				&& (record.byte_0x2a_known_mask & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U
+				&& (record.byte_0x2a & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U) {
+			final_marked_grid_cell_count += 1;
+		}
+	}
 	if (!require(final_mark_result.applied
 					&& attach_wrapper.final_projection_mark_byte_0x60_known
 					&& attach_wrapper.final_projection_mark_byte_0x60
-					&& final_mark_result.candidate_count == 26
-					&& final_mark_result.marked_candidate_cell_count == 26
+					&& final_mark_result.candidate_count == attach_rebuilt_candidate_count
+					&& final_mark_result.marked_candidate_cell_count > 0
+					&& final_mark_result.marked_candidate_cell_count <= attach_rebuilt_candidate_count
 					&& final_mark_result.out_of_bounds_candidate_count == 0
-					&& final_mark_cell.byte_0x2a_known
-					&& (final_mark_cell.byte_0x2a_known_mask & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U
-					&& (final_mark_cell.byte_0x2a & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U,
+					&& final_marked_grid_cell_count == final_mark_result.marked_candidate_cell_count,
 				"0x49cefb did not set wrapper +0x60 and mark candidate cells at cell+0x2a bit7")) {
 		return 1;
 	}
