@@ -3929,7 +3929,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_reward_guard_blocker =
-				"reward_guard_candidate_vector_0x10f4_0x10f8_live_contents_pending_before_0x4a9f1c";
+				"selector_relation_counter_table_0x44_unavailable_for_0x4a9f1c_limit_check";
 		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
@@ -3958,6 +3958,16 @@ int main() {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
+		if (!require(workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.present
+						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.contents_known
+						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.count_known
+						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.count == 704
+						&& workflow_generator_state.reward_guard_candidate_records_10f4_10f8_contents_known
+						&& workflow_generator_state.reward_guard_candidate_record_count_10f4_10f8 == 704
+						&& workflow_generator_state.reward_guard_candidate_records_10f4_10f8.size() == size_t(704),
+					"entry-to-writeout workflow did not materialize the recovered 704-record 0x49f95a reward/guard candidate vector before 0x4a9f1c")) {
+			return 1;
+		}
 		const RewardGuardMaterializationDriverResult4aa354 &materialization_driver =
 				workflow_generator_state.reward_guard_materialization_driver_0x4aa354;
 		if (!require(workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
@@ -3968,6 +3978,7 @@ int main() {
 						&& materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
 						&& materialization_driver.selected_object_0x4aa1db.selector_attempt_count == 1
 						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.applied
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.candidate_vector_contents_known
 						&& !materialization_driver.selected_object_0x4aa1db.applied
 						&& materialization_driver.blocked_reason == current_reward_guard_blocker
 						&& materialization_driver.selected_object_0x4aa1db.blocked_reason == current_reward_guard_blocker
