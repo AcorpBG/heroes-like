@@ -3184,13 +3184,74 @@ NativeH3MapedWorkflowResult run_native_h3maped_workflow(const ControlledCase &co
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
 	}
-	add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "complete_partial_state", "remaining_private_state_blockers_must_be_resolved_before_consumers");
+	const SharedGeneratorObjectPrivateState &object_state = result.payload.generator_object_private_state;
+	add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "complete_partial_state", "continues_into_relation_object_materialization");
 
-	result.current_phase_id = "relation_object_materialization";
+	const bool relation_scan_owned = object_state.relation_owner_scan_bounds_0x4a1f3b_applied
+			&& object_state.relation_scan_consumers_4a5767_applied;
+	if (!relation_scan_owned) {
+		result.current_phase_id = "relation_scan_consumers";
+		result.status = "blocked";
+		result.blocked_reason = "native_workflow_relation_scan_0x4a1f3b_0x4a5767_not_owned";
+		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "blocked", result.blocked_reason);
+		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
+		add_phase("reward_guard_materialization", "0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "complete_partial_state", "source_pair_preservation_continues_into_source_order_object_materialization");
+
+	const bool source_order_replay_owned = object_state.source_order_scheduler_replay_0x4a8db2_known
+			&& object_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2;
+	if (!source_order_replay_owned) {
+		result.current_phase_id = "source_order_object_materialization";
+		result.status = "blocked";
+		result.blocked_reason = "native_workflow_source_order_object_materialization_not_owned";
+		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "blocked", result.blocked_reason);
+		add_phase("reward_guard_materialization", "0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	std::ostringstream source_order_blocker;
+	source_order_blocker << "live_descriptor_producer_coverage_remaining";
+	if (object_state.generic_source_order_pair_descriptor_context_missing_count > 0
+			|| object_state.generic_source_order_pair_relation_context_missing_count > 0
+			|| object_state.generic_source_order_pair_source_fields_missing_count > 0) {
+		source_order_blocker
+				<< ":descriptor_context_missing=" << object_state.generic_source_order_pair_descriptor_context_missing_count
+				<< ",relation_context_missing=" << object_state.generic_source_order_pair_relation_context_missing_count
+				<< ",source_fields_missing=" << object_state.generic_source_order_pair_source_fields_missing_count;
+	}
+	add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "complete_partial_state", source_order_blocker.str());
+
+	const bool relation_high_owner_owned = object_state.relation_high_owner_propagation_49a318_applied;
+	if (!relation_high_owner_owned) {
+		result.current_phase_id = "relation_high_owner_propagation";
+		result.status = "blocked";
+		result.blocked_reason = "native_workflow_relation_high_owner_0x49a318_not_owned";
+		add_phase("relation_high_owner_propagation", "0x49a318", "blocked", result.blocked_reason);
+		add_phase("reward_guard_materialization", "0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_relation_high_owner_propagation");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("relation_high_owner_propagation", "0x49a318", "complete_partial_state", "callsite_order_and_private_state_compare_still_pending");
+
+	result.current_phase_id = "reward_guard_materialization";
 	result.status = "blocked";
-	result.blocked_reason = "native_workflow_stops_after_partial_generator_object_private_state_relation_object_reward_guard_connection_road_and_final_writeout_not_owned";
-	add_phase("relation_object_materialization", "0x4a5767_0x49a318_0x49e700_0x4a54a7_0x4a8d2c_0x4a8db2_0x4a93a2_0x4a9d6a_0x4aa9b7_0x4aa3e9", "blocked", result.blocked_reason);
-	add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_relation_object_materialization");
+	if (object_state.reward_guard_relation_priority_live_replay_blocked && !object_state.reward_guard_relation_priority_live_replay_blocker.empty()) {
+		result.blocked_reason = object_state.reward_guard_relation_priority_live_replay_blocker;
+	} else if (!object_state.reward_guard_candidate_records_10f4_10f8_contents_known) {
+		result.blocked_reason = "reward_guard_candidate_vector_0x10f4_0x10f8_live_contents_pending_before_0x4a9f1c";
+	} else if (!object_state.reward_guard_selector_0x4a9f1c_blocked_reason.empty()) {
+		result.blocked_reason = object_state.reward_guard_selector_0x4a9f1c_blocked_reason;
+	} else {
+		result.blocked_reason = "reward_guard_materialization_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9_live_caller_feed_not_owned";
+	}
+	add_phase("reward_guard_materialization", "0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "blocked", result.blocked_reason);
+	add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
 	add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 	return result;
 }
@@ -3259,7 +3320,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native owns only partial coordinate owner-grid and TerrainPlacement support; source records, descriptor identity, full generated-cell records, relation/object callers, endpoint/connection, roads/rivers, writeout, and same-run private-state comparison remain unported\",\n";
+	out << "    \"current_blocker\": \"native workflow now consumes the currently ported relation scan, source-order object replay, and high-owner propagation phases; live reward/guard caller feed, endpoint/connection, roads/rivers, writeout, and same-run private-state comparison remain unported\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3276,7 +3337,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_relation_object_materialization_into_the_single_native_h3maped_workflow\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_reward_guard_materialization_into_the_single_native_h3maped_workflow\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
