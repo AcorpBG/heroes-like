@@ -10,6 +10,8 @@ namespace {
 using aurelion::h3maped_rmg_core::BoundaryMaterialization4a2777;
 using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
+using aurelion::h3maped_rmg_core::ConnectionFallbackMaterializationRecord4a7605_4a5e03;
+using aurelion::h3maped_rmg_core::ConnectionFallbackMaterializationResult4a7605_4a5e03;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
 using aurelion::h3maped_rmg_core::EndpointMaterializationResult4a5e73;
 using aurelion::h3maped_rmg_core::EndpointMaterializationState4a5e73;
@@ -1927,6 +1929,139 @@ int main() {
 					&& commit_state.projection_score_depletion_count_0x4a54a7 == commit_result.projection_score_depletion_count,
 				"0x4a54a7 did not run the descriptor +0x29 projection score-depletion wave")) {
 		return 1;
+	}
+	{
+		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> fallback_records =
+				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
+		if (!require(fallback_records.size() == 2
+						&& fallback_records[0].object_record_key == 0x036260c0U
+						&& fallback_records[0].descriptor_pointer == 0x018dca40U
+						&& fallback_records[0].descriptor_type_0x1c == 54
+						&& fallback_records[0].x == 59
+						&& fallback_records[0].y == 47
+						&& fallback_records[0].level == 0
+						&& fallback_records[0].expected_owner_byte2 == 1
+						&& fallback_records[1].object_record_key == 0x03626060U
+						&& fallback_records[1].descriptor_pointer == 0x018dc1a4U
+						&& fallback_records[1].descriptor_type_0x1c == 54
+						&& fallback_records[1].x == 39
+						&& fallback_records[1].y == 31
+						&& fallback_records[1].level == 0
+						&& fallback_records[1].expected_owner_byte2 == 4,
+					"0x4a7605 -> 0x4a5e03 recovered fallback records are not the exact seed-controlled source records")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState fallback_state;
+		fallback_state.width = 72;
+		fallback_state.height = 72;
+		fallback_state.level_count = 1;
+		fallback_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(72, 72, 1);
+		fallback_state.generated_cell_buffer_owned = true;
+		fallback_state.descriptor_counter_table_0x1110_present = true;
+		fallback_state.descriptor_counter_table_0x1110_contents_known = true;
+		fallback_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+		fallback_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+		GeneratorRelationOwnerState4a218c fallback_owner1;
+		fallback_owner1.runtime_zone_index = 1;
+		fallback_owner1.descriptor_type_counter_table_0x44_known = true;
+		fallback_owner1.descriptor_type_counter_table_0x44_byte_size = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
+		fallback_owner1.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+		fallback_owner1.descriptor_type_counters_0x44.assign(size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+		GeneratorRelationOwnerState4a218c fallback_owner4 = fallback_owner1;
+		fallback_owner4.runtime_zone_index = 4;
+		fallback_owner4.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT - 1;
+		fallback_owner4.descriptor_type_counters_0x44[size_t(54)] = 1U;
+		fallback_state.relation_owner_vectors_10e4_10e8.push_back(fallback_owner1);
+		fallback_state.relation_owner_vectors_10e4_10e8.push_back(fallback_owner4);
+		for (GeneratedCellRecord0x30 &record : fallback_state.generated_cell_buffer.records) {
+			record.object_reference_vector_contents_known = true;
+			record.object_reference_count = 0;
+			record.object_references_0x04_0x08.clear();
+			record.word_0x20_known = true;
+			record.word_0x20 = 0x00010002U;
+			record.word_0x24_known = true;
+			record.word_0x24 = 0x00000d07U;
+			record.word_0x28_known = true;
+			record.word_0x28 = 0x12005000U;
+			record.word_0x2c_known = true;
+			record.word_0x2c = 0U;
+		}
+		GeneratedCellRecord0x30 &fallback_first_cell = fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 59, 47, 0))];
+		fallback_first_cell.word_0x20 = 0x00010002U;
+		fallback_first_cell.word_0x24 = 0x00000d07U;
+		fallback_first_cell.word_0x28 = 0x12005000U;
+		GeneratedCellRecord0x30 &fallback_second_cell = fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 39, 31, 0))];
+		fallback_second_cell.word_0x20 = 0x00040002U;
+		fallback_second_cell.word_0x24 = 0x00000dc3U;
+		fallback_second_cell.word_0x28 = 0x1a000000U;
+		const ConnectionFallbackMaterializationResult4a7605_4a5e03 fallback_result =
+				aurelion::h3maped_rmg_core::connection_fallback_materialization_4a7605_4a5e03(fallback_state, fallback_records);
+		if (!require(fallback_result.source_backed
+						&& fallback_result.input_record_count == 2
+						&& fallback_result.commit_count == 2
+						&& fallback_result.blocked_count == 0
+						&& fallback_state.connection_fallback_materialization_0x4a7605_0x4a5e03_known
+						&& fallback_state.connection_fallback_materialization_record_count == 2
+						&& fallback_state.connection_fallback_materialization_commit_count == 2
+						&& fallback_state.connection_fallback_materialization_blocked_count == 0,
+					"0x4a7605 -> 0x4a5e03 fallback materialization did not commit the two recovered records")) {
+			return 1;
+		}
+		const GeneratedCellRecord0x30 &fallback_first_after = fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 59, 47, 0))];
+		const GeneratedCellRecord0x30 &fallback_second_after = fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 39, 31, 0))];
+		if (!require(fallback_state.object_records_0xec4_ecc.size() == 2
+						&& fallback_state.object_records_0xec4_ecc[0].connection_fallback_record_0x4a7605_0x4a5e03_known
+						&& fallback_state.object_records_0xec4_ecc[0].object_record_key == 0x036260c0U
+						&& fallback_state.object_records_0xec4_ecc[0].connection_fallback_arg0_0x4a5e03 == 0x2422U
+						&& fallback_state.object_records_0xec4_ecc[0].connection_fallback_descriptor_pointer == 0x018dca40U
+						&& fallback_state.object_records_0xec4_ecc[1].connection_fallback_record_0x4a7605_0x4a5e03_known
+						&& fallback_state.object_records_0xec4_ecc[1].object_record_key == 0x03626060U
+						&& fallback_state.object_records_0xec4_ecc[1].connection_fallback_arg0_0x4a5e03 == 0x2422U
+						&& fallback_state.object_records_0xec4_ecc[1].connection_fallback_descriptor_pointer == 0x018dc1a4U,
+					"fallback materialization did not preserve recovered object-record pointer/descriptor provenance")) {
+			return 1;
+		}
+		if (!require(fallback_first_after.object_reference_count == 1
+						&& fallback_first_after.object_references_0x04_0x08[0] == 0x036260c0U
+						&& fallback_second_after.object_reference_count == 1
+						&& fallback_second_after.object_references_0x04_0x08[0] == 0x03626060U,
+					"fallback materialization did not append recovered object keys to target generated-cell reference vectors")) {
+			return 1;
+		}
+		if (!require((fallback_first_after.word_0x20 & 0xffffU) == 0U
+						&& (fallback_first_after.word_0x20 & 0xffff0000U) == 0x00010000U
+						&& fallback_first_after.word_0x28 == 0x1a405000U
+						&& (fallback_second_after.word_0x20 & 0xffffU) == 0U
+						&& (fallback_second_after.word_0x20 & 0xffff0000U) == 0x00040000U
+						&& fallback_second_after.word_0x28 == 0x1a400000U,
+					"fallback materialization did not reproduce recovered target-cell low-word clear and occupied/action bits")) {
+			return 1;
+		}
+		if (!require(fallback_state.descriptor_counter_table_0x1110[size_t(54)] == 2U
+						&& fallback_state.relation_owner_vectors_10e4_10e8[0].descriptor_type_counters_0x44[size_t(54)] == 1U
+						&& fallback_state.relation_owner_vectors_10e4_10e8[1].descriptor_type_counters_0x44[size_t(54)] == 2U
+						&& fallback_result.records[0].commit_0x4a54a7.relation_descriptor_counter_owner_runtime_zone_index == 1
+						&& fallback_result.records[1].commit_0x4a54a7.relation_descriptor_counter_owner_runtime_zone_index == 4
+						&& fallback_result.records[0].commit_0x4a54a7.projection_score_depletion_count > 0
+						&& fallback_result.records[1].commit_0x4a54a7.projection_score_depletion_count > 0,
+					"fallback materialization did not route descriptor counters through recovered owner bytes and projection-enabled commits")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState blocked_fallback_state = fallback_state;
+		blocked_fallback_state.object_records_0xec4_ecc.clear();
+		GeneratedCellRecord0x30 &blocked_target = blocked_fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 59, 47, 0))];
+		blocked_target.object_reference_vector_contents_known = true;
+		blocked_target.object_references_0x04_0x08 = { 0x12345678U };
+		blocked_target.object_reference_count = 1;
+		const ConnectionFallbackMaterializationResult4a7605_4a5e03 blocked_fallback_result =
+				aurelion::h3maped_rmg_core::connection_fallback_materialization_4a7605_4a5e03(blocked_fallback_state, { fallback_records[0] });
+		if (!require(blocked_fallback_result.commit_count == 0
+						&& blocked_fallback_result.blocked_count == 1
+						&& blocked_fallback_result.records[0].blocked_reason == "0x4a5e03_target_object_reference_vector_not_empty"
+						&& blocked_fallback_state.object_records_0xec4_ecc.empty(),
+					"0x4a5e03 fallback materialization did not fail closed on non-empty target object-reference vector")) {
+			return 1;
+		}
 	}
 	GeneratorObjectPrivateState offset_commit_state;
 	offset_commit_state.width = 5;

@@ -1394,12 +1394,36 @@ struct RelationScanConsumerResult4a5767 {
 	std::vector<RelationScanConsumerOwnerReport4a5767> owner_reports;
 };
 
+struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
+	uint32_t object_record_key = 0U;
+	uint32_t object_record_pointer_4a5e03 = 0U;
+	uint32_t descriptor_pointer = 0U;
+	uint32_t arg0_4a5e03 = 0U;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	bool descriptor_projection_enabled_0x29 = false;
+	int32_t descriptor_offset_x_0x2c = 0;
+	int32_t descriptor_offset_y_0x30 = 0;
+	bool expected_owner_byte2_known = false;
+	int32_t expected_owner_byte2 = -1;
+	bool relation_counter_before_after_known = false;
+	int32_t relation_counter_before = 0;
+	int32_t relation_counter_after = 0;
+	std::string source;
+};
+
 struct ObjectRecordReference4a54a7 {
 	uint32_t object_record_key = 0U;
 	int32_t descriptor_type_0x1c = -1;
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool connection_fallback_record_0x4a7605_0x4a5e03_known = false;
+	uint32_t connection_fallback_arg0_0x4a5e03 = 0U;
+	uint32_t connection_fallback_descriptor_pointer = 0U;
+	int32_t connection_fallback_expected_owner_byte2 = -1;
 	bool object_record_key_allocated_by_0x4a93a2 = false;
 	bool source_order_direct_record_0x4a8d2c_0x4a93a2_known = false;
 	bool weighted_record_0x4a93a2_known = false;
@@ -1448,6 +1472,11 @@ struct GeneratorObjectPrivateState {
 	bool endpoint_cursor_vector_d8_dc_supported_land_exclusion_known = false;
 	GeneratorEndpointCursorProducerStateD014 endpoint_cursor_producer_d014;
 	ConnectionMaterializationCallerPrepD014 connection_materialization_caller_prep_d014;
+	bool connection_fallback_materialization_0x4a7605_0x4a5e03_known = false;
+	int32_t connection_fallback_materialization_record_count = 0;
+	int32_t connection_fallback_materialization_commit_count = 0;
+	int32_t connection_fallback_materialization_blocked_count = 0;
+	std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> connection_fallback_materialization_records_0x4a7605_0x4a5e03;
 	bool descriptor_counter_table_0x1110_present = false;
 	bool descriptor_counter_table_0x1110_contents_known = false;
 	int32_t descriptor_counter_table_0x1110_known_count = 0;
@@ -1562,6 +1591,25 @@ struct ObjectFootprintCommitResult4a54a7 {
 	int32_t relation_descriptor_counter_after = 0;
 	int32_t target_cell_word_mutation_count = 0;
 	int32_t projection_score_depletion_count = 0;
+};
+
+struct ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 {
+	ConnectionFallbackMaterializationRecord4a7605_4a5e03 record;
+	bool target_cell_in_bounds = false;
+	bool target_object_reference_vector_known = false;
+	bool target_object_reference_vector_empty = false;
+	bool expected_owner_byte2_matched = false;
+	bool committed = false;
+	ObjectFootprintCommitResult4a54a7 commit_0x4a54a7;
+	std::string blocked_reason;
+};
+
+struct ConnectionFallbackMaterializationResult4a7605_4a5e03 {
+	bool source_backed = false;
+	int32_t input_record_count = 0;
+	int32_t commit_count = 0;
+	int32_t blocked_count = 0;
+	std::vector<ConnectionFallbackMaterializationRecordResult4a7605_4a5e03> records;
 };
 
 struct SourceBoundedCandidatePickerResult4a7312 {
@@ -1696,6 +1744,8 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
+std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
+ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materialization_4a7605_4a5e03(GeneratorObjectPrivateState &state, const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> &records);
 SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng);
 WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const SourceZonePayload4a218c &source_payload);
 WeightedObjectRecord4a93a2 allocate_object_record_0x4a93a2(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24);
