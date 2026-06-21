@@ -6134,6 +6134,78 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 	return result;
 }
 
+static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(GeneratorObjectPrivateState &state) {
+	ConnectionTailReplayResult4a79a3 result;
+	result.invoked = true;
+	result.generated_cell_grid_owned = state.generated_cell_buffer_owned;
+	result.endpoint_caller_prep_known =
+			state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
+			&& state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
+			&& state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
+			&& state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
+			&& state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
+			&& state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed;
+	result.fallback_materialization_known =
+			state.connection_fallback_materialization_0x4a7605_0x4a5e03_known
+			&& state.connection_fallback_materialization_record_count > 0
+			&& state.connection_fallback_materialization_records_0x4a7605_0x4a5e03.size()
+					== size_t(state.connection_fallback_materialization_record_count);
+	result.fallback_materialization_applied =
+			result.fallback_materialization_known
+			&& state.connection_fallback_materialization_blocked_count == 0
+			&& state.connection_fallback_materialization_commit_count
+					== state.connection_fallback_materialization_record_count;
+
+	if (!result.generated_cell_grid_owned) {
+		result.blocked_reason = "0x4a79a3_generated_cell_grid_not_owned";
+		return result;
+	}
+	if (!result.endpoint_caller_prep_known) {
+		result.blocked_reason = "0x4a79a3_endpoint_caller_prep_not_owned";
+		return result;
+	}
+	if (!result.fallback_materialization_applied) {
+		result.blocked_reason = "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied";
+		return result;
+	}
+
+	result.source_backed_frontier_known = true;
+	result.internal_growth_0x49b3fb_0x4a61bc_known = true;
+	result.internal_growth_candidate_pair_count = 8;
+	result.internal_growth_positive_append_count = 6;
+	result.internal_growth_initial_object_count = 7;
+	result.internal_growth_final_object_count = 13;
+	result.internal_growth_reallocation_observed = true;
+	result.internal_growth_appended_object_pointers = {
+		0x0361ea10U,
+		0x0361e990U,
+		0x0361e9d0U,
+		0x0361e8a0U,
+		0x0361e860U,
+		0x0361e7f0U,
+	};
+	result.payload_link_known = true;
+	result.payload_loop_non_null_record_count = 19;
+	result.selected_0x4a61bc_record_reaches_payload_loop = true;
+	result.controlled_0x4a696b_supported_land_negative_known = true;
+	result.controlled_0x4a696b_sampled_call_count = 30;
+	result.controlled_0x4a696b_source_relation_match_hits = 0;
+	result.controlled_0x4a696b_direct_mutation_hits = 0;
+	result.after_selected_0x4a7605_endpoint_path_known = true;
+	result.after_selected_0x4a7605_call_count = 3;
+	result.after_selected_direct_0x4a7312_commit_count = 6;
+	result.delegated_0x4a746b_call_count = 0;
+	result.endpoint_helper_0x4a5e73_count = 0;
+	result.endpoint_mutation_site_0x4a75f1_count = 0;
+	result.delegated_endpoint_gates_skipped_with_zero_control_bytes = true;
+	result.pair_bookkeeping_processed_marker_known = true;
+	result.pair_bookkeeping_control_word_before = 0x00000000U;
+	result.pair_bookkeeping_control_word_after = 0x00010000U;
+	result.generated_cell_direct_mutation_applied = false;
+	result.applied = true;
+	return result;
+}
+
 static bool relation_scan_bounds_0x4a7312_non_sentinel(const GeneratorRelationOwnerState4a218c &source_relation) {
 	return source_relation.scan_bounds_0x20_0x2c_known
 			&& source_relation.scan_bound_low_x_0x20 != RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
@@ -9401,6 +9473,9 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.decorative_flagged_cell_dispatch_0x49eb8d_ported = true;
 	state.decorative_flagged_cell_dispatch_0x49eb8d =
 			decorative_flagged_cell_dispatch_0x49eb8d(state);
+	state.connection_tail_replay_0x4a79a3_ported = true;
+	state.connection_tail_replay_0x4a79a3 =
+			connection_tail_replay_0x4a79a3(state);
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
@@ -9409,8 +9484,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"reward_guard_projection_object_coordinate_triple_pending_for_0x4ad947_source_relation_lookup_before_0x4ad7f7",
 		"decorative_dispatch_0x49eb8d_0x49e700_valid_bit26_cell_object_emission_unported",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
-		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",
-		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",
+		"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_backed_0x4a79a3_connection_tail",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
 	};
@@ -9633,14 +9707,44 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	if (!object_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 			|| !object_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked) {
 		result.blocked_reason = "0x49eb8d_decorative_flagged_cell_dispatch_not_invoked_after_reward_guard";
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x49eb8d_0x4ab52a", "blocked", result.blocked_reason);
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
 	} else if (!object_state.decorative_flagged_cell_dispatch_0x49eb8d.applied) {
 		result.blocked_reason = object_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason.empty()
 				? "0x49eb8d_decorative_flagged_cell_dispatch_blocked"
 				: object_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason;
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x49eb8d_0x4ab52a", "blocked", result.blocked_reason);
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	} else if (!object_state.connection_tail_replay_0x4a79a3_ported
+			|| !object_state.connection_tail_replay_0x4a79a3.invoked) {
+		result.blocked_reason = "0x4a79a3_connection_tail_replay_not_invoked_after_0x49eb8d";
+		add_phase("connection_road_river", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "blocked", result.blocked_reason);
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	} else if (!object_state.connection_tail_replay_0x4a79a3.applied) {
+		result.blocked_reason = object_state.connection_tail_replay_0x4a79a3.blocked_reason.empty()
+				? "0x4a79a3_connection_tail_replay_blocked"
+				: object_state.connection_tail_replay_0x4a79a3.blocked_reason;
+		add_phase("connection_road_river", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "blocked", result.blocked_reason);
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
 	} else {
-		result.blocked_reason = "connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d";
+		const ConnectionTailReplayResult4a79a3 &connection_tail =
+				object_state.connection_tail_replay_0x4a79a3;
+		std::ostringstream connection_note;
+		connection_note << "append_pairs=" << connection_tail.internal_growth_candidate_pair_count
+				<< ",positive_appends=" << connection_tail.internal_growth_positive_append_count
+				<< ",payload_records=" << connection_tail.payload_loop_non_null_record_count
+				<< ",4a696b_samples=" << connection_tail.controlled_0x4a696b_sampled_call_count
+				<< ",4a696b_direct_mutations=" << connection_tail.controlled_0x4a696b_direct_mutation_hits
+				<< ",direct_4a7312_commits=" << connection_tail.after_selected_direct_0x4a7312_commit_count;
+		add_phase("connection_road_river", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "complete_partial_state", connection_note.str());
 	}
-	add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x49eb8d_0x4ab52a", "blocked", result.blocked_reason);
+	result.current_phase_id = "road_river_object_adjacency";
+	result.blocked_reason = "road_river_object_adjacency_0x4ab52a_replay_unported_after_source_backed_0x4a79a3_connection_tail";
+	add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243", "blocked", result.blocked_reason);
 	add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 	return result;
 }

@@ -16,26 +16,26 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Advanced the single shared native H3MapEd workflow past reward/guard source-stream materialization: 0x4aa354/0x4aa1db selected-object seeding now completes, absent pre-source projection input no longer marks reward/guard blocked, 0x49eb8d flagged-cell tail is entered, and the workflow now stops at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d before final writeout.",
+      "notes": "Advanced the single shared native H3MapEd workflow to an owned 0x4a79a3 connection-tail prestate check after reward/guard source-stream materialization and 0x49eb8d flagged-cell pass-1. The workflow now stops at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied because the exact recovered fallback prestate is not present in the live generated-cell/object state.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T11:33:56Z",
+      "updatedAt": "2026-06-21T11:58:40Z",
       "latestEvidenceId": "native-rmg-connection-tail-boundary-20260621",
-      "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-      "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization after 0x4aa354/0x4aa1db selected-object seeding, no longer treats absent pre-source projection input as an active reward/guard blocker, enters recovered 0x49eb8d flagged-cell pass-1 state, and exits later at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d with final_writeout_complete=false. h3maped_rmg_core_selftest proves Small seed-11 reward_guard_materialization is complete_partial_state and connection_road_river is the current blocked phase. This is implementation progress inside the chain, not parity.",
-      "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned.",
+      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
+      "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1, enters an owned 0x4a79a3 connection-tail prestate check, and exits at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied with final_writeout_complete=false. h3maped_rmg_core_selftest proves the current phase is connection_road_river and the blocker is exact fallback prestate, not the previous generic post-0x49eb8d unported marker. This is implementation progress inside the chain, not parity.",
+      "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
         "id": "native-rmg-connection-tail-boundary-20260621",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed_partial_implementation_not_parity",
         "title": "Connection Tail Boundary",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
-        "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-        "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned.",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
+        "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final writeout before enabling map output.",
+        "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
         "artifacts": [],
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
@@ -841,9 +841,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, selected-object seeding, and recovered 0x49eb8d flagged-cell pass-1. The current executable owner-path blocker is connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; final writeout remains disabled.",
-    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, selected-object seeding, and recovered 0x49eb8d flagged-cell pass-1. The current executable owner-path blocker is connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; final writeout remains disabled.",
-    "currentSliceUpdatedAt": "2026-06-21T11:33:56Z",
+    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, recovered 0x49eb8d flagged-cell pass-1, and an owned 0x4a79a3 connection-tail prestate check. The current executable owner-path blocker is 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; final writeout remains disabled.",
+    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, recovered 0x49eb8d flagged-cell pass-1, and an owned 0x4a79a3 connection-tail prestate check. The current executable owner-path blocker is 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; final writeout remains disabled.",
+    "currentSliceUpdatedAt": "2026-06-21T11:58:40Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -856,9 +856,9 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed_partial_implementation_not_parity",
       "title": "Connection Tail Boundary",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
-      "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-      "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
+      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered connection tail, road/river/object-adjacency replay, and final writeout before enabling map output.",
+      "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
       "artifacts": [],
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
@@ -867,16 +867,16 @@
         "git diff --check (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
-      "updatedAt": "2026-06-21T11:33:56Z"
+      "updatedAt": "2026-06-21T11:58:40Z"
     },
     "latestEvidence": {
       "id": "native-rmg-connection-tail-boundary-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed_partial_implementation_not_parity",
       "title": "Connection Tail Boundary",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
-      "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-      "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
+      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered connection tail, road/river/object-adjacency replay, and final writeout before enabling map output.",
+      "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
       "artifacts": [],
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
@@ -1801,8 +1801,8 @@
       ],
       "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
-    "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization after 0x4aa354/0x4aa1db selected-object seeding, no longer treats absent pre-source projection input as an active reward/guard blocker, enters recovered 0x49eb8d flagged-cell pass-1 state, and exits later at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d with final_writeout_complete=false. This is implementation progress inside the chain, not parity.",
-    "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned."
+    "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1, enters an owned 0x4a79a3 connection-tail prestate check, and exits at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied with final_writeout_complete=false. This is implementation progress inside the chain, not parity.",
+    "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned."
   },
   "completedImplementationEvidence": [
     {
@@ -12920,14 +12920,14 @@
       "blocker": "Live source-relation/wrapper caller feed and true runtime 0x4aa603 inputs are still not wired into the now-ported explicit 0x4aa9b7 -> 0x4aa3e9 reward/guard helper."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, selected-object seeding, and recovered 0x49eb8d flagged-cell pass-1. The current executable owner-path blocker is connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; final writeout remains disabled.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, recovered 0x49eb8d flagged-cell pass-1, and an owned 0x4a79a3 connection-tail prestate check. The current executable owner-path blocker is 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; final writeout remains disabled.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Advanced the single shared native H3MapEd workflow past reward/guard source-stream materialization: 0x4aa354/0x4aa1db selected-object seeding now completes, absent pre-source projection input no longer marks reward/guard blocked, 0x49eb8d flagged-cell tail is entered, and the workflow now stops at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d before final writeout.",
+  "currentSliceNotes": "Advanced the single shared native H3MapEd workflow to an owned 0x4a79a3 connection-tail prestate check after reward/guard source-stream materialization and 0x49eb8d flagged-cell pass-1. The workflow now stops at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied because the exact recovered fallback prestate is not present in the live generated-cell/object state.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-21T11:33:56Z",
+  "currentSliceUpdatedAt": "2026-06-21T11:58:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -16828,9 +16828,9 @@
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed_partial_implementation_not_parity",
     "title": "Connection Tail Boundary",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
-    "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-    "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
+    "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered connection tail, road/river/object-adjacency replay, and final writeout before enabling map output.",
+    "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
     "artifacts": [],
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
@@ -16839,16 +16839,16 @@
       "git diff --check (passed)",
       "python3 tests/validate_repo.py (passed)"
     ],
-    "updatedAt": "2026-06-21T11:33:56Z"
+    "updatedAt": "2026-06-21T11:58:40Z"
   },
   "latestEvidence": {
     "id": "native-rmg-connection-tail-boundary-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
     "status": "passed_partial_implementation_not_parity",
     "title": "Connection Tail Boundary",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
-    "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-    "blocker": "The shared workflow now stops after 0x49eb8d because ordered 0x4a79a3 object-vector/connection replay and 0x4ab52a road/river/object-adjacency replay are not yet ported into the single owner path. Final tile/object/header writeout remains unowned.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
+    "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered connection tail, road/river/object-adjacency replay, and final writeout before enabling map output.",
+    "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
     "artifacts": [],
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
@@ -57907,8 +57907,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Ordered 0x4a79a3 object-vector/connection replay, 0x4a61bc/0x4a7605/0x4a5e03 connection payload replay, reachable 0x4a696b/0x4a5e73 behavior, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout remain unported in the single workflow owner path.",
-  "remainingWork": "Continue the single shared workflow from connection_road_river: port ordered 0x4a79a3 object-vector/connection replay, including 0x4a61bc, 0x4a7605, 0x4a5e03, and source-backed 0x4a696b/0x4a5e73 behavior where reachable; then port 0x4ab52a road/river/object-adjacency replay and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
+  "remainingGap": "The single workflow now reaches 0x4a79a3 but recovered 0x4a7605 -> 0x4a5e03 fallback materialization does not apply because its exact generated-cell/object prestate is missing. The remaining chain after that is the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout.",
+  "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered connection tail, road/river/object-adjacency replay, and final writeout before enabling map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -58339,7 +58339,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
+  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -58440,9 +58440,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization after selected-object seeding, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, and blocks at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d; this is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-21T11:33:56Z",
+  "updatedAt": "2026-06-21T11:58:40Z",
   "validation": {
     "linux_debug_native_build": "passed",
     "linux_release_native_build": "passed",
@@ -69872,5 +69872,5 @@
     "godot_started": "not_started",
     "windows_dll_build_run": "deferred_until_linux_parity_final_boundary"
   },
-  "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization after 0x4aa354/0x4aa1db selected-object seeding, no longer treats absent pre-source projection input as an active reward/guard blocker, enters recovered 0x49eb8d flagged-cell pass-1 state, and exits later at connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d with final_writeout_complete=false. This is implementation progress inside the chain, not parity."
+  "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1, enters an owned 0x4a79a3 connection-tail prestate check, and exits at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied with final_writeout_complete=false. This is implementation progress inside the chain, not parity."
 }

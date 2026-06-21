@@ -3429,7 +3429,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_reward_guard_materialization_into_the_single_native_h3maped_workflow\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_exact_0x4a7605_0x4a5e03_fallback_prestate_into_0x4a79a3_connection_tail\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

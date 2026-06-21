@@ -4020,9 +4020,9 @@ int main() {
 			return 1;
 		}
 		const std::string current_connection_blocker =
-				"connection_road_river_0x4a79a3_0x4ab52a_ordered_replay_unported_after_0x49eb8d";
+				"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied";
 		if (!require(workflow.blocked_reason == current_connection_blocker,
-					std::string("entry-to-writeout workflow did not advance to the exact current 0x49eb8d connection/road/river blocker; actual=")
+					std::string("entry-to-writeout workflow did not advance to the exact current 0x4a79a3 fallback-materialization prestate blocker; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
@@ -4038,7 +4038,7 @@ int main() {
 						&& workflow.phases[7].status == "complete_partial_state"
 						&& workflow.phases[8].id == "connection_road_river"
 						&& workflow.phases[8].status == "blocked",
-					"entry-to-writeout workflow did not preserve recovered phase order up to the current blocker")) {
+					"entry-to-writeout workflow did not preserve recovered phase order up to the current 0x4a79a3 prestate blocker")) {
 			return 1;
 		}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -4139,21 +4139,35 @@ int main() {
 					"entry-to-writeout workflow did not complete selected-object allocation and initial wrapper seeding before the current source-stream blocker")) {
 			return 1;
 		}
-		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
-				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
-		if (!require(workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
-						&& decorative_dispatch.invoked
-						&& decorative_dispatch.generated_cell_grid_known
-						&& decorative_dispatch.scanned_cell_count_pass1 == workflow_config.width * workflow_config.height * workflow_config.level_count
-						&& decorative_dispatch.bit26_candidate_count == 0
-						&& !decorative_dispatch.budget_known
-						&& decorative_dispatch.valid_0x49e700_dispatch_candidate_count == 0
-						&& decorative_dispatch.applied
-						&& decorative_dispatch.blocked_reason.empty(),
-					"entry-to-writeout workflow did not advance through recovered 0x49eb8d pass-1 before the current connection/road/river blocker")) {
-			return 1;
+			const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
+					workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
+			if (!require(workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
+							&& decorative_dispatch.invoked
+							&& decorative_dispatch.generated_cell_grid_known
+							&& decorative_dispatch.scanned_cell_count_pass1 == workflow_config.width * workflow_config.height * workflow_config.level_count
+							&& decorative_dispatch.bit26_candidate_count == 0
+							&& !decorative_dispatch.budget_known
+							&& decorative_dispatch.valid_0x49e700_dispatch_candidate_count == 0
+							&& decorative_dispatch.applied
+							&& decorative_dispatch.blocked_reason.empty(),
+						"entry-to-writeout workflow did not advance through recovered 0x49eb8d pass-1 before the current connection/road/river blocker")) {
+				return 1;
+			}
+			const aurelion::h3maped_rmg_core::ConnectionTailReplayResult4a79a3 &connection_tail =
+					workflow_generator_state.connection_tail_replay_0x4a79a3;
+			if (!require(workflow_generator_state.connection_tail_replay_0x4a79a3_ported
+							&& connection_tail.invoked
+							&& !connection_tail.applied
+							&& connection_tail.generated_cell_grid_owned
+							&& connection_tail.endpoint_caller_prep_known
+							&& connection_tail.fallback_materialization_known
+							&& !connection_tail.fallback_materialization_applied
+							&& !connection_tail.source_backed_frontier_known
+							&& connection_tail.blocked_reason == current_connection_blocker,
+						"entry-to-writeout workflow did not stop at the exact recovered 0x4a79a3 fallback-materialization prestate blocker")) {
+				return 1;
+			}
 		}
-	}
 
 	std::cout << "h3maped_rmg_core_selftest: ok\n";
 	return 0;
