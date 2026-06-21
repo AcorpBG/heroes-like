@@ -2082,6 +2082,10 @@ struct GeneratorObjectPrivateState {
 	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
 	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	std::vector<WeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
+	bool route_container_free_cell_sweep_0x4a8260_ported = false;
+	bool route_container_free_cell_sweep_0x4a8260_input_known = false;
+	bool route_container_free_cell_sweep_0x4a8260_applied = false;
+	std::string route_container_free_cell_sweep_0x4a8260_blocked_reason;
 	bool source_order_scheduler_replay_0x4a8db2_known = false;
 	int32_t source_order_scheduler_replay_count_0x4a8db2 = 0;
 	int32_t source_order_scheduler_direct_call_count_0x4a8db2 = 0;

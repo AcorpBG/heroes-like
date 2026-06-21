@@ -9472,8 +9472,6 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 				{},
 				{});
 	}
-	apply_relation_normalization_full_grid_reset_0x4a5767(state);
-
 	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0, 4);
 	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0, 4);
 	state.descriptor_vector_entries_398_39c = generator_descriptor_vector_entries_from_source_catalog_0x49da08_0x398_0x39c();
@@ -9593,6 +9591,23 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.reward_guard_source_stream_owner_kind_0x0c_known = false;
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
 	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
+
+	state.route_container_free_cell_sweep_0x4a8260_ported = false;
+	state.route_container_free_cell_sweep_0x4a8260_input_known = false;
+	state.route_container_free_cell_sweep_0x4a8260_applied = false;
+	state.route_container_free_cell_sweep_0x4a8260_blocked_reason =
+			"route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e";
+	state.remaining_private_state_blockers = {
+		"route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e",
+		"candidate_relation_phase_0x4a4c8e_unported_after_0x4a8260",
+		"relation_scan_consumers_0x4a5767_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
+		"source_order_object_materialization_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
+		"reward_guard_materialization_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
+		"connection_road_river_0x4a79a3_not_executed_until_upstream_generated_cell_phase_is_owned",
+		"final_writeout_not_executed_until_source_order_payload_is_owned",
+	};
+	return state;
+
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
 	SourceObjectResolverState4af785 relation_scan_resolver_state;
 	H3MapedRng relation_scan_rng;
@@ -9784,7 +9799,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.missing_inputs.push_back(result.blocked_reason);
 		add_phase("setup_template_selection", "0x49ecf2_0x49f0cd_0x4ac552", "blocked", result.blocked_reason);
 		add_phase("coordinate_boundary_terrain", "0x4a218c_0x4a1f3b_0x4a19ed_0x4a3a03_0x4cca55_0x4a2777_0x4a325d_0x4a3710_0x49b53d_0x4a3f27", "pending", "blocked_before_setup_template_selection");
-		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_route_free_cell_sweep");
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
@@ -9816,7 +9832,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		}
 		add_phase("setup_template_selection", "0x49ecf2_0x49f0cd_0x4ac552", "blocked", result.blocked_reason);
 		add_phase("coordinate_boundary_terrain", "0x4a218c_0x4a1f3b_0x4a19ed_0x4a3a03_0x4cca55_0x4a2777_0x4a325d_0x4a3710_0x49b53d_0x4a3f27", "pending", "blocked_before_runtime_zone_seed_inputs");
-		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_route_free_cell_sweep");
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
@@ -9845,7 +9862,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				? "h3maped_workflow_coordinate_seed_blocked"
 				: "h3maped_workflow_coordinate_boundary_terrain_not_executed";
 		add_phase("coordinate_boundary_terrain", "0x4a218c_0x4a1f3b_0x4a19ed_0x4a3a03_0x4cca55_0x4a2777_0x4a325d_0x4a3710_0x49b53d_0x4a3f27", "blocked", result.blocked_reason);
-		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_route_free_cell_sweep");
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
@@ -9869,16 +9887,37 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.status = "blocked";
 		result.blocked_reason = "h3maped_workflow_generator_object_private_state_not_built";
 		add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "blocked", result.blocked_reason);
-		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_generator_object_private_state");
+		add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "pending", "blocked_before_generator_object_private_state");
+		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_route_free_cell_sweep");
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
 	}
-	add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "complete_partial_state", "continues_into_relation_object_materialization");
+	add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "complete_partial_state", "continues_into_route_free_cell_sweep");
 
 	const GeneratorObjectPrivateState &object_state = result.generator_object_private_state;
+	const bool route_free_cell_sweep_owned = object_state.route_container_free_cell_sweep_0x4a8260_ported
+			&& object_state.route_container_free_cell_sweep_0x4a8260_input_known
+			&& object_state.route_container_free_cell_sweep_0x4a8260_applied
+			&& object_state.route_container_free_cell_sweep_0x4a8260_blocked_reason.empty();
+	if (!route_free_cell_sweep_owned) {
+		result.current_phase_id = "route_free_cell_sweep";
+		result.status = "blocked";
+		result.blocked_reason = object_state.route_container_free_cell_sweep_0x4a8260_blocked_reason.empty()
+				? "route_container_free_cell_sweep_0x4a8260_not_owned_before_0x4a4c8e"
+				: object_state.route_container_free_cell_sweep_0x4a8260_blocked_reason;
+		add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "blocked", result.blocked_reason);
+		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_route_free_cell_sweep");
+		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
+		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "complete_partial_state", "continues_into_relation_scan_consumers");
+
 	const bool relation_scan_owned = object_state.relation_owner_scan_bounds_0x4a1f3b_applied
 			&& object_state.relation_scan_consumers_4a5767_applied;
 	if (!relation_scan_owned) {
