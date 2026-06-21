@@ -4020,7 +4020,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_reward_guard_blocker =
-				"0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create";
+				"0x4aa1db_0x4a5c07_selected_object_create_and_0x49cf34_attach_not_yet_ported_for_live_descriptor_vector";
 		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
@@ -4049,6 +4049,18 @@ int main() {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
+		if (!require(workflow_generator_state.descriptor_vector_398_39c.present
+						&& workflow_generator_state.descriptor_vector_398_39c.contents_known
+						&& workflow_generator_state.descriptor_vector_398_39c.count_known
+						&& workflow_generator_state.descriptor_vector_398_39c.count == 1328
+						&& workflow_generator_state.descriptor_vector_398_39c_source_owned
+						&& workflow_generator_state.descriptor_vector_entry_count_398_39c == 1328
+						&& workflow_generator_state.descriptor_vector_entries_398_39c.size() == size_t(1328)
+						&& workflow_generator_state.descriptor_vector_entries_398_39c.front().vector_index == 0
+						&& workflow_generator_state.descriptor_vector_entries_398_39c.back().vector_index == 1327,
+					"entry-to-writeout workflow did not materialize recovered generator descriptor vector +0x398/+0x39c before 0x4a5c07")) {
+			return 1;
+		}
 		if (!require(workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.present
 						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.contents_known
 						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.count_known
@@ -4086,8 +4098,13 @@ int main() {
 						&& materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
 						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.applied
 						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.blocked_reason.empty()
+						&& materialization_driver.selected_object_0x4aa1db.generator_descriptor_vector_0x398_0x39c_known
+						&& materialization_driver.selected_object_0x4aa1db.selected_descriptor_state_0x94_0x95_known
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_record_known_0x4a9e40
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_catalog_index_0x49da08 == 909
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 == 640
 						&& materialization_driver.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not advance from 0x4aab7e through 0x4aa354/0x4aa1db/0x4a9f1c before the current selected-object descriptor blocker")) {
+					"entry-to-writeout workflow did not advance from 0x4aab7e through 0x4aa354/0x4aa1db/0x4a9f1c/0x4a9e40 before the current selected-object allocation blocker")) {
 			return 1;
 		}
 		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
@@ -4100,7 +4117,7 @@ int main() {
 			return 1;
 		}
 		if (!require(materialization_driver.selected_object_0x4aa1db.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not surface the current selected-object descriptor-vector blocker after 0x4a9f1c selection")) {
+					"entry-to-writeout workflow did not surface the current selected-object allocation/attach blocker after 0x4a9f1c descriptor selection")) {
 			return 1;
 		}
 	}
