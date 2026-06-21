@@ -1453,6 +1453,8 @@ bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const So
 			&& left.raw_field_0x34 == right.raw_field_0x34
 			&& left.raw_field_0x38_known == right.raw_field_0x38_known
 			&& left.raw_field_0x38 == right.raw_field_0x38
+			&& left.raw_field_0x3c_known == right.raw_field_0x3c_known
+			&& left.raw_field_0x3c == right.raw_field_0x3c
 			&& left.pass_count == right.pass_count
 			&& left.action_count == right.action_count
 			&& left.passability_mask == right.passability_mask
@@ -3003,6 +3005,22 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 				result.object_branch_blocked_reason = "0x4a5a23_object_branch_0x4af785_wrapper_unresolved";
 				result.stopped_on_object_materialization_required = true;
 				return result;
+			}
+			if (resolver.appended_source_pair_0xedc && !resolver_state.source_pairs_0xedc.empty()) {
+				SourceObjectResolverSourcePair4af785 &source_pair = resolver_state.source_pairs_0xedc.back();
+				source_pair.source_order_relation_context_known = true;
+				source_pair.source_order_relation_owner_byte2 = generated_cell_word20_owner_byte2(record.word_0x20);
+				source_pair.source_order_source_pair_key_0x0c_known = true;
+				source_pair.source_order_source_pair_key_0x0c = low_nibble_source;
+				source_pair.source_order_anchor_known = true;
+				source_pair.source_order_anchor_x_0x10 = x;
+				source_pair.source_order_anchor_y_0x14 = y;
+				source_pair.source_order_anchor_level_0x18 = level;
+				const int32_t source_selector = source_pair.source_record_copy.type_id_0x1c;
+				if (source_selector >= 0 && source_selector < int32_t(state.mapped_source_owner_slots_ee4.size())) {
+					source_pair.source_order_lane_state_0xee4_known = true;
+					source_pair.source_order_lane_state_0xee4 = state.mapped_source_owner_slots_ee4[size_t(source_selector)];
+				}
 			}
 			preserve_source_pair_vector_edc(state, resolver_state);
 
@@ -7344,6 +7362,170 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 	}
 }
 
+static SourceObjectDescriptor4903e8 source_descriptor_from_preserved_pair_context_0x4903e8(const SourceObjectDescriptorJoinContext4903e8 &context) {
+	SourceObjectDescriptor4903e8 descriptor;
+	descriptor.target_context_0x4903e8 = context.target_context_0x4903e8;
+	descriptor.source_key_0x00 = context.source_key_0x00;
+	descriptor.descriptor_type_0x1c = context.descriptor_type_0x1c;
+	descriptor.subtype_0x20 = context.subtype_0x20;
+	descriptor.group_0x24 = context.group_0x24;
+	descriptor.projection_enabled_0x29 = context.projection_enabled_0x29;
+	descriptor.source_cell_x_0x2c = context.source_cell_x_0x2c;
+	descriptor.source_cell_y_0x30 = context.source_cell_y_0x30;
+	descriptor.score_adjust_0x30_known = context.score_adjust_0x30_known;
+	descriptor.score_adjust_0x30 = context.score_adjust_0x30;
+	descriptor.score_adjust_0x40_known = context.score_adjust_0x40_known;
+	descriptor.score_adjust_0x40 = context.score_adjust_0x40;
+	descriptor.descriptor_mask_fields_0x34_0x48_known = context.descriptor_mask_fields_0x34_0x48_known;
+	descriptor.descriptor_width_0x34 = context.descriptor_width_0x34;
+	descriptor.descriptor_height_0x38 = context.descriptor_height_0x38;
+	descriptor.descriptor_mask_a_0x3c_0x40 = context.descriptor_mask_a_0x3c_0x40;
+	descriptor.descriptor_mask_b_0x44_0x48 = context.descriptor_mask_b_0x44_0x48;
+	return descriptor;
+}
+
+static SourceObjectDescriptorJoinResult4903e8 source_descriptor_join_from_preserved_pair_0x4903e8(const SourceObjectResolverSourcePair4af785 &pair) {
+	SourceObjectDescriptorJoinResult4903e8 result;
+	result.descriptor = source_descriptor_from_preserved_pair_context_0x4903e8(pair.descriptor_join_descriptor_0x4903e8);
+	result.source_record_copy = pair.source_record_copy;
+	result.source_catalog_index_0x49da08 = pair.copied_source_catalog_index >= 0
+			? pair.copied_source_catalog_index
+			: source_object_catalog_index_0x49da08(pair.source_record_copy);
+	const int32_t target_context = result.descriptor.target_context_0x4903e8 >= 0
+			? result.descriptor.target_context_0x4903e8
+			: result.descriptor.descriptor_type_0x1c;
+	result.recovered_target_context = recovered_descriptor_join_context_0x4903e8(target_context);
+	result.descriptor_type_matches_source_type_0x1c = result.descriptor.descriptor_type_0x1c == pair.source_record_copy.type_id_0x1c;
+	result.descriptor_subtype_matches_source_0x20 = result.descriptor.subtype_0x20 == pair.source_record_copy.subtype_0x20;
+	result.descriptor_group_matches_source_0x24 = result.descriptor.group_0x24 == pair.source_record_copy.group_0x24;
+	result.descriptor_mask_fields_match_source_0x34_0x48 =
+			!result.descriptor.descriptor_mask_fields_0x34_0x48_known
+			|| !pair.source_record_copy.descriptor_mask_fields_0x34_0x48_known
+			|| (result.descriptor.descriptor_width_0x34 == pair.source_record_copy.descriptor_width_0x34
+					&& result.descriptor.descriptor_height_0x38 == pair.source_record_copy.descriptor_height_0x38
+					&& result.descriptor.descriptor_mask_a_0x3c_0x40 == pair.source_record_copy.descriptor_mask_a_0x3c_0x40
+					&& result.descriptor.descriptor_mask_b_0x44_0x48 == pair.source_record_copy.descriptor_mask_b_0x44_0x48);
+	result.descriptor_source_fields_match = result.descriptor_type_matches_source_type_0x1c
+			&& result.descriptor_subtype_matches_source_0x20
+			&& result.descriptor_group_matches_source_0x24
+			&& result.descriptor_mask_fields_match_source_0x34_0x48;
+	result.descriptor_source_key_is_not_source_row_id = result.descriptor.source_key_0x00 != pair.source_record_copy.source_row;
+	result.descriptor_only_identity_ambiguous = descriptor_only_source_identity_is_ambiguous(pair.source_record_copy);
+	result.copied_source_record_is_identity_authority = true;
+	result.resolver_invoked_0x4af785 = false;
+	result.resolver_0x4af785.selected_wrapper_index = pair.context_wrapper_index_0x04 >= 0
+			? pair.context_wrapper_index_0x04
+			: pair.wrapper_index;
+	result.resolver_0x4af785.input_source_catalog_index = result.source_catalog_index_0x49da08;
+	result.resolver_0x4af785.input_source_row = pair.source_record_copy.source_row;
+	result.resolver_0x4af785.input_def_name = pair.source_record_copy.def_name;
+	result.resolver_0x4af785.input_type_id_0x1c = pair.source_record_copy.type_id_0x1c;
+	result.resolver_0x4af785.input_subtype_0x20 = pair.source_record_copy.subtype_0x20;
+	result.resolver_0x4af785.metadata_bucket_index_0x08 = pair.source_record_copy.metadata_bucket_index_0x08;
+	result.resolver_0x4af785.resolver_lane_0x04 = pair.context_wrapper_lane_0x04;
+	result.joined = pair.descriptor_joined_0x4903e8;
+
+	if (!result.recovered_target_context) {
+		result.blocked_reason = "preserved_0x4903e8_target_context_unrecovered";
+	} else if (!pair.source_record_pointer_0x00_carried || !pair.context_pointer_0x04_carried) {
+		result.blocked_reason = "preserved_0xedc_source_pair_pointer_context_missing";
+	} else if (result.source_catalog_index_0x49da08 < 0) {
+		result.blocked_reason = "preserved_0xedc_copied_source_record_not_found_in_0x49da08_catalog";
+	} else if (!result.descriptor_source_fields_match) {
+		result.blocked_reason = "preserved_0x4903e8_descriptor_fields_do_not_match_copied_0x4c_source_record";
+	} else if (!result.joined) {
+		result.blocked_reason = "preserved_0x4903e8_descriptor_pair_not_marked_joined";
+	}
+	return result;
+}
+
+void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
+	state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2 = true;
+	for (size_t index = 0; index < state.source_pair_records_edc.size(); ++index) {
+		const SourceObjectResolverSourcePair4af785 &pair = state.source_pair_records_edc[index];
+		state.generic_source_order_pair_scan_count_0xedc += 1;
+		if (pair.source_record_copy.type_id_0x1c == 98) {
+			state.generic_source_order_pair_type98_skip_count += 1;
+			continue;
+		}
+		if (!pair.descriptor_join_0x4903e8_known) {
+			state.generic_source_order_pair_descriptor_context_missing_count += 1;
+			state.generic_source_order_pair_replay_blockers_0xedc.push_back("0xedc_pair_" + std::to_string(index) + "_0x4903e8_descriptor_context_missing");
+			continue;
+		}
+		const SourceObjectDescriptorJoinResult4903e8 join = source_descriptor_join_from_preserved_pair_0x4903e8(pair);
+		if (!join.joined || !join.blocked_reason.empty()) {
+			state.generic_source_order_pair_descriptor_context_missing_count += 1;
+			state.generic_source_order_pair_replay_blockers_0xedc.push_back("0xedc_pair_" + std::to_string(index) + "_" + (join.blocked_reason.empty() ? "0x4903e8_join_unresolved" : join.blocked_reason));
+			continue;
+		}
+		if (!pair.source_order_relation_context_known || !pair.source_order_source_pair_key_0x0c_known) {
+			state.generic_source_order_pair_relation_context_missing_count += 1;
+			state.generic_source_order_pair_replay_blockers_0xedc.push_back("0xedc_pair_" + std::to_string(index) + "_source_order_relation_or_key_context_missing");
+			continue;
+		}
+		GeneratorRelationOwnerState4a218c *owner = relation_owner_for_runtime_zone_0x4a54a7(state, pair.source_order_relation_owner_byte2);
+		if (owner == nullptr || !owner->scan_bounds_0x20_0x2c_known) {
+			state.generic_source_order_pair_relation_context_missing_count += 1;
+			state.generic_source_order_pair_replay_blockers_0xedc.push_back("0xedc_pair_" + std::to_string(index) + "_relation_owner_scan_bounds_missing");
+			continue;
+		}
+		const int32_t anchor_x = pair.source_order_anchor_known ? pair.source_order_anchor_x_0x10 : owner->coordinate_x_0x10;
+		const int32_t anchor_y = pair.source_order_anchor_known ? pair.source_order_anchor_y_0x14 : owner->coordinate_y_0x14;
+		const int32_t anchor_level = pair.source_order_anchor_known ? pair.source_order_anchor_level_0x18 : owner->coordinate_level_0x18;
+		const int32_t lane_state = pair.source_order_lane_state_0xee4_known ? pair.source_order_lane_state_0xee4 : pair.source_lane_0x1c;
+		if (!pair.source_record_copy.raw_field_0x20_known
+				|| !pair.source_record_copy.raw_field_0x24_known
+				|| !pair.source_record_copy.raw_field_0x28_known
+				|| !pair.source_record_copy.raw_field_0x2c_known
+				|| !pair.source_record_copy.raw_field_0x38_known) {
+			state.generic_source_order_pair_source_fields_missing_count += 1;
+			state.generic_source_order_pair_replay_blockers_0xedc.push_back("0xedc_pair_" + std::to_string(index) + "_copied_0x4c_source_count_or_density_fields_missing");
+			continue;
+		}
+		const SourceOrderObjectDispatcherResult4a8d2c direct = source_order_object_dispatcher_0x4a8d2c(
+				state,
+				join,
+				pair.source_order_relation_owner_byte2,
+				anchor_x,
+				anchor_y,
+				anchor_level,
+				owner->scan_bound_low_x_0x20,
+				owner->scan_bound_low_y_0x24,
+				owner->scan_bound_high_x_0x28,
+				owner->scan_bound_high_y_0x2c,
+				pair.source_order_source_pair_key_0x0c,
+				lane_state,
+				rng);
+		state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c += 1;
+		if (direct.committed) {
+			state.generic_source_order_pair_direct_commit_count_0x4a8d2c += 1;
+		}
+		const int32_t before_weighted_commit_count = state.source_order_scheduler_commit_count_0x4a8db2;
+		source_order_weighted_scheduler_0x4a8db2(
+				state,
+				join,
+				pair,
+				pair.source_order_relation_owner_byte2,
+				owner->scan_bound_low_x_0x20,
+				owner->scan_bound_low_y_0x24,
+				owner->scan_bound_high_x_0x28,
+				owner->scan_bound_high_y_0x2c,
+				anchor_level,
+				lane_state,
+				rng,
+				pair.source_record_copy.raw_field_0x30_known,
+				pair.source_record_copy.raw_field_0x30,
+				pair.source_record_copy.raw_field_0x34_known,
+				pair.source_record_copy.raw_field_0x34,
+				pair.source_record_copy.raw_field_0x3c_known,
+				pair.source_record_copy.raw_field_0x3c);
+		state.generic_source_order_pair_weighted_replay_count_0x4a8db2 += 1;
+		state.generic_source_order_pair_weighted_commit_count_0x4a8db2 +=
+				state.source_order_scheduler_commit_count_0x4a8db2 - before_weighted_commit_count;
+	}
+}
+
 GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	GeneratorObjectPrivateState state;
 	state.width = width;
@@ -7458,6 +7640,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
 	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
 	replay_live_type98_source_order_scheduler_0x4a8db2(state, template_selection, coordinate_result, relation_scan_rng);
+	replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(state, relation_scan_rng);
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
 			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8, &state.object_records_0xec4_ecc);
 	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
@@ -7477,8 +7660,8 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			state,
 			state.connection_fallback_materialization_records_0x4a7605_0x4a5e03);
 	state.remaining_private_state_blockers = {
-		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_source_order_town_reward_guard_object_caller_order_ported",
-		"generic_non_type98_source_pair_feed_into_0x4a8d2c_0x4a8db2_pending_after_type98_runtime_zone_replay",
+		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
+		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
 		"reward_guard_relation_priority_0x4ad7f7_live_source_relation_wrapper_caller_pending_after_0x4ad6a8_0x4ad7f7_helper_port",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",

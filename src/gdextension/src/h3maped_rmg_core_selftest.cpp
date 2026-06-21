@@ -332,13 +332,121 @@ int main() {
 		if (!require(descriptor_join_state.source_pairs_0xedc.size() == 1
 						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_0x4903e8_known
 						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_joined_0x4903e8
-						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_source_pair_index_0xedc == 0
-						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.target_context_0x4903e8 == 45
-						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_key_0x00 == type45_descriptor.source_key_0x00
-						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.descriptor_type_0x1c == type45_descriptor.descriptor_type_0x1c
-						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_cell_x_0x2c == 1
-						&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_cell_y_0x30 == 2,
+					&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_source_pair_index_0xedc == 0
+					&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.target_context_0x4903e8 == 45
+					&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_key_0x00 == type45_descriptor.source_key_0x00
+					&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.descriptor_type_0x1c == type45_descriptor.descriptor_type_0x1c
+					&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_cell_x_0x2c == 1
+					&& descriptor_join_state.source_pairs_0xedc[0].descriptor_join_descriptor_0x4903e8.source_cell_y_0x30 == 2,
 					"0x4903e8-created +0xedc source pair did not retain descriptor join context for live source-order replay")) {
+			return 1;
+		}
+		SourceObjectRecord0x4c generic_record = type45_records[0];
+		generic_record.raw_field_0x20_known = true;
+		generic_record.raw_field_0x20 = 0;
+		generic_record.raw_field_0x24_known = true;
+		generic_record.raw_field_0x24 = 1;
+		generic_record.raw_field_0x28_known = true;
+		generic_record.raw_field_0x28 = 0;
+		generic_record.raw_field_0x2c_known = true;
+		generic_record.raw_field_0x2c = 0;
+		generic_record.raw_field_0x30_known = true;
+		generic_record.raw_field_0x30 = 0;
+		generic_record.raw_field_0x34_known = true;
+		generic_record.raw_field_0x34 = 0;
+		generic_record.raw_field_0x38_known = true;
+		generic_record.raw_field_0x38 = 0;
+		generic_record.raw_field_0x3c_known = true;
+		generic_record.raw_field_0x3c = 0;
+		SourceObjectDescriptor4903e8 generic_descriptor = type45_descriptor;
+		generic_descriptor.source_cell_x_0x2c = 0;
+		generic_descriptor.source_cell_y_0x30 = 0;
+		SourceObjectResolverState4af785 generic_replay_join_state;
+		const SourceObjectDescriptorJoinResult4903e8 generic_join =
+				aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(generic_replay_join_state, generic_descriptor, type45_records[0]);
+		if (!require(generic_join.joined
+						&& generic_replay_join_state.source_pairs_0xedc.size() == 1,
+					"generic non-type98 replay fixture failed to build a descriptor-joined +0xedc source pair")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState generic_replay_state;
+		generic_replay_state.width = 16;
+		generic_replay_state.height = 16;
+		generic_replay_state.level_count = 1;
+		generic_replay_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(16, 16, 1);
+		generic_replay_state.generated_cell_buffer_owned = true;
+		generic_replay_state.descriptor_counter_table_0x1110_present = true;
+		generic_replay_state.descriptor_counter_table_0x1110_contents_known = true;
+		generic_replay_state.descriptor_counter_table_0x1110_known_count = aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
+		generic_replay_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+		generic_replay_state.object_record_sequence_allocator_0xf44_present = true;
+		generic_replay_state.object_record_sequence_allocator_0xf44_known = true;
+		generic_replay_state.object_record_sequence_allocator_0xf44 = 1;
+		generic_replay_state.native_object_record_key_allocator_0x4a93a2_known = true;
+		generic_replay_state.next_native_object_record_key_0x4a93a2 = 0x036b7000U;
+		for (GeneratedCellRecord0x30 &record : generic_replay_state.generated_cell_buffer.records) {
+			record.object_reference_vector_contents_known = true;
+			record.object_reference_count = 0;
+			record.object_references_0x04_0x08.clear();
+			record.word_0x20_known = true;
+			record.word_0x20 = 0xff000064U;
+			record.word_0x24_known = true;
+			record.word_0x24 = 0x00000548U;
+			record.word_0x28_known = true;
+			record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+			record.word_0x2c_known = true;
+			record.word_0x2c = 0U;
+		}
+		GeneratorRelationOwnerState4a218c generic_owner;
+		generic_owner.runtime_zone_index = 0;
+		generic_owner.owner_vector_index = 0;
+		generic_owner.coordinate_triple_0x10_0x18_known = true;
+		generic_owner.coordinate_x_0x10 = 6;
+		generic_owner.coordinate_y_0x14 = 6;
+		generic_owner.coordinate_level_0x18 = 0;
+		generic_owner.scan_bounds_0x20_0x2c_known = true;
+		generic_owner.scan_bound_low_x_0x20 = 6;
+		generic_owner.scan_bound_low_y_0x24 = 6;
+		generic_owner.scan_bound_high_x_0x28 = 7;
+		generic_owner.scan_bound_high_y_0x2c = 7;
+		generic_owner.descriptor_type_counter_table_0x44_known = true;
+		generic_owner.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+		generic_owner.descriptor_type_counters_0x44.assign(size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+		generic_replay_state.relation_owner_vectors_10e4_10e8.push_back(generic_owner);
+		generic_replay_state.relation_owner_vector_count_10e4_10e8 = 1;
+		SourceObjectResolverSourcePair4af785 generic_pair = generic_replay_join_state.source_pairs_0xedc[0];
+		generic_pair.source_record_copy = generic_record;
+		generic_pair.source_order_relation_context_known = true;
+		generic_pair.source_order_relation_owner_byte2 = 0;
+		generic_pair.source_order_source_pair_key_0x0c_known = true;
+		generic_pair.source_order_source_pair_key_0x0c = 5;
+		generic_pair.source_order_anchor_known = true;
+		generic_pair.source_order_anchor_x_0x10 = 6;
+		generic_pair.source_order_anchor_y_0x14 = 6;
+		generic_pair.source_order_anchor_level_0x18 = 0;
+		generic_pair.source_order_lane_state_0xee4_known = true;
+		generic_pair.source_order_lane_state_0xee4 = 2;
+		generic_replay_state.source_pair_records_edc.push_back(generic_pair);
+		aurelion::h3maped_rmg_core::H3MapedRng generic_replay_rng;
+		generic_replay_rng.state = 10U;
+		aurelion::h3maped_rmg_core::replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(generic_replay_state, generic_replay_rng);
+		const int64_t generic_target_flat = aurelion::h3maped_rmg_core::cell_index(16, 16, 6, 6, 0);
+		const GeneratedCellRecord0x30 &generic_target = generic_replay_state.generated_cell_buffer.records[size_t(generic_target_flat)];
+		if (!require(generic_replay_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
+						&& generic_replay_state.generic_source_order_pair_scan_count_0xedc == 1
+						&& generic_replay_state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c == 1
+						&& generic_replay_state.generic_source_order_pair_direct_commit_count_0x4a8d2c == 1
+						&& generic_replay_state.generic_source_order_pair_weighted_replay_count_0x4a8db2 == 1
+						&& generic_replay_state.generic_source_order_pair_weighted_commit_count_0x4a8db2 == 0
+						&& generic_replay_state.object_records_0xec4_ecc.size() == 1
+						&& generic_replay_state.object_records_0xec4_ecc.back().source_order_direct_record_0x4a8d2c_0x4a93a2_known
+						&& generic_replay_state.object_records_0xec4_ecc.back().object_record_key == 0x036b7000U
+						&& generic_replay_state.object_records_0xec4_ecc.back().object_record_selected_index_0x20 == 2
+						&& generic_replay_state.descriptor_counter_table_0x1110[size_t(generic_record.type_id_0x1c)] == 1U
+						&& generic_replay_state.relation_owner_vectors_10e4_10e8[0].descriptor_type_counters_0x44[size_t(generic_record.type_id_0x1c)] == 1U
+						&& generic_target.object_reference_count == 1
+						&& generic_target.object_references_0x04_0x08[0] == 0x036b7000U,
+					"generic non-type98 +0xedc source-pair replay did not commit through 0x4a8d2c -> 0x4a93a2 -> 0x4a54a7")) {
 			return 1;
 		}
 		const SourceObjectDescriptorJoinResult4903e8 type45_reuse_join =

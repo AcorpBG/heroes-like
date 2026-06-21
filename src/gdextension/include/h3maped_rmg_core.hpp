@@ -149,6 +149,8 @@ struct SourceObjectRecord0x4c {
 	int32_t raw_field_0x34 = 0;
 	bool raw_field_0x38_known = false;
 	int32_t raw_field_0x38 = 0;
+	bool raw_field_0x3c_known = false;
+	int32_t raw_field_0x3c = 0;
 	int32_t pass_count = 0;
 	int32_t action_count = 0;
 	std::string passability_mask;
@@ -287,6 +289,16 @@ struct SourceObjectResolverSourcePair4af785 {
 	SourceObjectDescriptorJoinContext4903e8 descriptor_join_descriptor_0x4903e8;
 	bool descriptor_joined_0x4903e8 = false;
 	int32_t descriptor_join_source_pair_index_0xedc = -1;
+	bool source_order_relation_context_known = false;
+	int32_t source_order_relation_owner_byte2 = -1;
+	bool source_order_source_pair_key_0x0c_known = false;
+	int32_t source_order_source_pair_key_0x0c = -1;
+	bool source_order_anchor_known = false;
+	int32_t source_order_anchor_x_0x10 = 0;
+	int32_t source_order_anchor_y_0x14 = 0;
+	int32_t source_order_anchor_level_0x18 = 0;
+	bool source_order_lane_state_0xee4_known = false;
+	int32_t source_order_lane_state_0xee4 = -1;
 };
 
 struct SourceObjectResolverState4af785 {
@@ -1697,6 +1709,17 @@ struct GeneratorObjectPrivateState {
 	int32_t source_order_scheduler_commit_count_0x4a8db2 = 0;
 	int32_t source_order_scheduler_blocked_count_0x4a8db2 = 0;
 	std::vector<SourceOrderSchedulerResult4a8db2> source_order_scheduler_replays_0x4a8db2;
+	bool generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2 = false;
+	int32_t generic_source_order_pair_scan_count_0xedc = 0;
+	int32_t generic_source_order_pair_type98_skip_count = 0;
+	int32_t generic_source_order_pair_descriptor_context_missing_count = 0;
+	int32_t generic_source_order_pair_relation_context_missing_count = 0;
+	int32_t generic_source_order_pair_source_fields_missing_count = 0;
+	int32_t generic_source_order_pair_direct_dispatch_count_0x4a8d2c = 0;
+	int32_t generic_source_order_pair_direct_commit_count_0x4a8d2c = 0;
+	int32_t generic_source_order_pair_weighted_replay_count_0x4a8db2 = 0;
+	int32_t generic_source_order_pair_weighted_commit_count_0x4a8db2 = 0;
+	std::vector<std::string> generic_source_order_pair_replay_blockers_0xedc;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
 	int32_t weighted_candidate_total_count_0x4a901a = 0;
@@ -2195,6 +2218,7 @@ WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_fr
 WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false);
 SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng);
 SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0, bool source_field_0x3c_known = false, int32_t source_field_0x3c = 0);
+void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state, H3MapedRng &rng);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);

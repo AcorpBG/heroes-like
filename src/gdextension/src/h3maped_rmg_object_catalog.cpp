@@ -1406,6 +1406,8 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 	out.raw_field_0x34 = 0;
 	out.raw_field_0x38_known = false;
 	out.raw_field_0x38 = 0;
+	out.raw_field_0x3c_known = false;
+	out.raw_field_0x3c = 0;
 	out.pass_count = row.pass_count;
 	out.action_count = row.action_count;
 	out.passability_mask = row.passability_mask;

@@ -94,6 +94,8 @@ struct SharedSourceObjectRecord0x4c {
 	int32_t raw_field_0x34 = 0;
 	bool raw_field_0x38_known = false;
 	int32_t raw_field_0x38 = 0;
+	bool raw_field_0x3c_known = false;
+	int32_t raw_field_0x3c = 0;
 	int32_t pass_count = 0;
 	int32_t action_count = 0;
 	std::string passability_mask;
@@ -221,6 +223,16 @@ struct SharedSourceObjectResolverSourcePair4af785 {
 	SharedSourceObjectDescriptorJoinContext4903e8 descriptor_join_descriptor_0x4903e8;
 	bool descriptor_joined_0x4903e8 = false;
 	int32_t descriptor_join_source_pair_index_0xedc = -1;
+	bool source_order_relation_context_known = false;
+	int32_t source_order_relation_owner_byte2 = -1;
+	bool source_order_source_pair_key_0x0c_known = false;
+	int32_t source_order_source_pair_key_0x0c = -1;
+	bool source_order_anchor_known = false;
+	int32_t source_order_anchor_x_0x10 = 0;
+	int32_t source_order_anchor_y_0x14 = 0;
+	int32_t source_order_anchor_level_0x18 = 0;
+	bool source_order_lane_state_0xee4_known = false;
+	int32_t source_order_lane_state_0xee4 = -1;
 };
 
 struct SharedRuntimeZoneSeedInput {
@@ -725,6 +737,17 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t source_order_scheduler_commit_count_0x4a8db2 = 0;
 	int32_t source_order_scheduler_blocked_count_0x4a8db2 = 0;
 	std::vector<SharedSourceOrderSchedulerResult4a8db2> source_order_scheduler_replays_0x4a8db2;
+	bool generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2 = false;
+	int32_t generic_source_order_pair_scan_count_0xedc = 0;
+	int32_t generic_source_order_pair_type98_skip_count = 0;
+	int32_t generic_source_order_pair_descriptor_context_missing_count = 0;
+	int32_t generic_source_order_pair_relation_context_missing_count = 0;
+	int32_t generic_source_order_pair_source_fields_missing_count = 0;
+	int32_t generic_source_order_pair_direct_dispatch_count_0x4a8d2c = 0;
+	int32_t generic_source_order_pair_direct_commit_count_0x4a8d2c = 0;
+	int32_t generic_source_order_pair_weighted_replay_count_0x4a8db2 = 0;
+	int32_t generic_source_order_pair_weighted_commit_count_0x4a8db2 = 0;
+	std::vector<std::string> generic_source_order_pair_replay_blockers_0xedc;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
 	int32_t weighted_candidate_total_count_0x4a901a = 0;
