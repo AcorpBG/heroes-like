@@ -4076,6 +4076,86 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	return result;
 }
 
+RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound) {
+	RewardGuardSelectedObjectResult4aa1db result;
+	result.invoked = true;
+	result.candidate_selector_invoked_0x4a9f1c = true;
+	result.selector_attempt_count = 1;
+	result.selector_0x4a9f1c = reward_guard_value_bounded_selector_counter_pass_0x4a9f1c(
+			state,
+			selector,
+			lower_value_bound,
+			upper_value_bound);
+	if (!result.selector_0x4a9f1c.blocked_reason.empty()) {
+		result.blocked_reason = result.selector_0x4a9f1c.blocked_reason;
+		return result;
+	}
+	if (!result.generator_descriptor_vector_0x398_0x39c_known) {
+		result.blocked_reason = "0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create";
+		return result;
+	}
+	if (!result.selected_descriptor_state_0x94_0x95_known) {
+		result.blocked_reason = "0x4aa1db_selected_descriptor_state_0x94_0x95_pending_before_0x4a5c07_0x49cf34_attach";
+		return result;
+	}
+	result.blocked_reason = "0x4aa1db_0x4a5c07_selected_object_create_and_0x49cf34_attach_not_yet_ported_for_live_descriptor_vector";
+	return result;
+}
+
+RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng) {
+	RewardGuardMaterializationDriverResult4aa354 result;
+	result.invoked = true;
+
+	RewardGuardWrapperConstructResult49ce04 wrapper_reset = reward_guard_wrapper_construct_0x49ce04();
+	result.wrapper_reset_0x49ce64_applied = wrapper_reset.applied;
+	result.wrapper_reset_cell_count_0x49ce64 = wrapper_reset.reset_cell_count_0x49ce64;
+	if (!wrapper_reset.applied) {
+		result.blocked_reason = wrapper_reset.blocked_reason.empty()
+				? "0x4aa354_0x49ce64_wrapper_reset_failed"
+				: wrapper_reset.blocked_reason;
+		return result;
+	}
+
+	result.selected_object_helper_invoked_0x4aa1db = true;
+	result.selected_object_0x4aa1db = reward_guard_selected_object_create_shell_0x4aa1db(
+			state,
+			selector,
+			0,
+			REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00);
+	if (!result.selected_object_0x4aa1db.applied) {
+		result.blocked_reason = result.selected_object_0x4aa1db.blocked_reason.empty()
+				? "0x4aa354_0x4aa1db_selected_object_create_failed"
+				: result.selected_object_0x4aa1db.blocked_reason;
+		return result;
+	}
+
+	RewardGuardWrapperState4aa3e9 wrapper = wrapper_reset.wrapper;
+	result.final_candidate_rebuild_invoked_0x49d7c3 = true;
+	const RewardGuardWrapperCandidateRebuildResult49d7c3 final_rebuild =
+			reward_guard_wrapper_rebuild_candidates_0x49d7c3(wrapper);
+	if (!final_rebuild.applied) {
+		result.blocked_reason = final_rebuild.blocked_reason.empty()
+				? "0x4aa354_final_0x49d7c3_candidate_rebuild_failed"
+				: final_rebuild.blocked_reason;
+		return result;
+	}
+
+	result.final_mark_invoked_0x49cefb = true;
+	const RewardGuardWrapperFinalMarkResult49cefb final_mark =
+			reward_guard_wrapper_mark_candidate_cells_0x49cefb(wrapper);
+	result.final_candidate_count_0x49cefb = final_mark.candidate_count;
+	if (!final_mark.applied) {
+		result.blocked_reason = final_mark.blocked_reason.empty()
+				? "0x4aa354_final_0x49cefb_candidate_mark_failed"
+				: final_mark.blocked_reason;
+		return result;
+	}
+
+	(void)rng;
+	result.applied = true;
+	return result;
+}
+
 static const GeneratedCellRecord0x30 *generator_state_cell_0x4aa603(const GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level) {
 	if (!state.generated_cell_buffer_owned
 			|| state.generated_cell_buffer.records.empty()
@@ -7950,6 +8030,25 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_high_owner_materialized_count_49a318 = high_owner_propagation.owner_high_byte_materialized_count;
 	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
 	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
+	state.reward_guard_materialization_driver_0x4aa354_ported = true;
+	state.reward_guard_materialization_driver_input_known = false;
+	state.reward_guard_materialization_driver_0x4aa354 =
+			reward_guard_materialization_driver_shell_0x4aa354(
+					state,
+					nullptr,
+					relation_scan_rng);
+	if (state.reward_guard_materialization_driver_0x4aa354.selected_object_helper_invoked_0x4aa1db
+			&& state.reward_guard_materialization_driver_0x4aa354.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c) {
+		state.reward_guard_selector_0x4a9f1c =
+				state.reward_guard_materialization_driver_0x4aa354.selected_object_0x4aa1db.selector_0x4a9f1c;
+	}
+	if (!state.reward_guard_materialization_driver_0x4aa354.blocked_reason.empty()) {
+		state.reward_guard_relation_priority_live_replay_blocked = true;
+		state.reward_guard_relation_priority_live_replay_blocker =
+				state.reward_guard_materialization_driver_0x4aa354.blocked_reason;
+		state.reward_guard_relation_priority_0x4ad7f7.blocked_reason =
+				state.reward_guard_materialization_driver_0x4aa354.blocked_reason;
+	}
 	apply_endpoint_materialization_state_d014(state);
 	connection_fallback_materialization_4a7605_4a5e03(
 			state,
@@ -7957,6 +8056,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
+		"reward_guard_0x4aa354_0x4aa1db_caller_shell_entered_but_generator_descriptor_vector_0x398_0x39c_and_selected_descriptor_state_0x94_0x95_are_pending",
 		"reward_guard_candidate_vector_0x10f4_0x10f8_live_producer_contents_pending_before_0x4a9f1c_and_0x4aa1db_selected_create",
 		"reward_guard_projection_global_table_and_projection_object_pending_for_0x4ad947_selected_global_entry",
 		"reward_guard_projection_object_coordinate_triple_pending_for_0x4ad947_source_relation_lookup_before_0x4ad7f7",

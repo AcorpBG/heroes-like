@@ -31,6 +31,7 @@ using aurelion::h3maped_rmg_core::ObjectRecordReference4a54a7;
 using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
 using aurelion::h3maped_rmg_core::RewardGuardCoordinateScanResult4aa9b7;
 using aurelion::h3maped_rmg_core::RewardGuardAttachResult49cf34;
+using aurelion::h3maped_rmg_core::RewardGuardMaterializationDriverResult4aa354;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperConstructResult49ce04;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperFinalMarkResult49cefb;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperMember4aa3e9;
@@ -3927,7 +3928,9 @@ int main() {
 					"entry-to-writeout workflow did not run through the owned phases before blocking at reward/guard materialization")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason == "0x4ad947_projection_object_and_global_candidate_table_live_input_pending_before_selected_global_entry",
+		const std::string current_reward_guard_blocker =
+				"reward_guard_candidate_vector_0x10f4_0x10f8_live_contents_pending_before_0x4a9f1c";
+		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
 		}
@@ -3952,6 +3955,28 @@ int main() {
 						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
 						&& workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied,
 					"entry-to-writeout workflow did not carry setup/template/coordinate/object private state through the shared core runner")) {
+			return 1;
+		}
+		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
+		const RewardGuardMaterializationDriverResult4aa354 &materialization_driver =
+				workflow_generator_state.reward_guard_materialization_driver_0x4aa354;
+		if (!require(workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
+						&& materialization_driver.invoked
+						&& materialization_driver.wrapper_reset_0x49ce64_applied
+						&& materialization_driver.selected_object_helper_invoked_0x4aa1db
+						&& materialization_driver.selected_object_0x4aa1db.invoked
+						&& materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
+						&& materialization_driver.selected_object_0x4aa1db.selector_attempt_count == 1
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.applied
+						&& !materialization_driver.selected_object_0x4aa1db.applied
+						&& materialization_driver.blocked_reason == current_reward_guard_blocker
+						&& materialization_driver.selected_object_0x4aa1db.blocked_reason == current_reward_guard_blocker
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.blocked_reason == current_reward_guard_blocker,
+					"entry-to-writeout workflow did not enter recovered 0x4aa354 -> 0x4aa1db -> 0x4a9f1c reward/guard materialization order before blocking")) {
+			return 1;
+		}
+		if (!require(workflow_generator_state.reward_guard_selector_0x4a9f1c.blocked_reason == current_reward_guard_blocker,
+					"entry-to-writeout workflow did not mirror the live 0x4a9f1c blocker on generator private state")) {
 			return 1;
 		}
 	}
