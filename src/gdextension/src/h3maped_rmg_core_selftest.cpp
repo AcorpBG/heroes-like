@@ -2006,13 +2006,25 @@ int main() {
 						&& fallback_records[0].y == 47
 						&& fallback_records[0].level == 0
 						&& fallback_records[0].expected_owner_byte2 == 1
+						&& fallback_records[0].expected_target_word_0x20_known
+						&& fallback_records[0].expected_target_word_0x20 == 0x00010002U
+						&& fallback_records[0].expected_target_word_0x24_known
+						&& fallback_records[0].expected_target_word_0x24 == 0x00000d07U
+						&& fallback_records[0].expected_target_word_0x28_known
+						&& fallback_records[0].expected_target_word_0x28 == 0x12005000U
 						&& fallback_records[1].object_record_key == 0x03626060U
 						&& fallback_records[1].descriptor_pointer == 0x018dc1a4U
 						&& fallback_records[1].descriptor_type_0x1c == 54
 						&& fallback_records[1].x == 39
 						&& fallback_records[1].y == 31
 						&& fallback_records[1].level == 0
-						&& fallback_records[1].expected_owner_byte2 == 4,
+						&& fallback_records[1].expected_owner_byte2 == 4
+						&& fallback_records[1].expected_target_word_0x20_known
+						&& fallback_records[1].expected_target_word_0x20 == 0x00040002U
+						&& fallback_records[1].expected_target_word_0x24_known
+						&& fallback_records[1].expected_target_word_0x24 == 0x00000dc3U
+						&& fallback_records[1].expected_target_word_0x28_known
+						&& fallback_records[1].expected_target_word_0x28 == 0x1a000000U,
 					"0x4a7605 -> 0x4a5e03 recovered fallback records are not the exact seed-controlled source records")) {
 			return 1;
 		}
@@ -2125,6 +2137,28 @@ int main() {
 						&& blocked_fallback_result.records[0].blocked_reason == "0x4a5e03_target_object_reference_vector_not_empty"
 						&& blocked_fallback_state.object_records_0xec4_ecc.empty(),
 					"0x4a5e03 fallback materialization did not fail closed on non-empty target object-reference vector")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState preword_blocked_state = fallback_state;
+		preword_blocked_state.object_records_0xec4_ecc.clear();
+		GeneratedCellRecord0x30 &preword_blocked_target =
+				preword_blocked_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 59, 47, 0))];
+		preword_blocked_target.object_reference_vector_contents_known = true;
+		preword_blocked_target.object_references_0x04_0x08.clear();
+		preword_blocked_target.object_reference_count = 0;
+		preword_blocked_target.word_0x20_known = true;
+		preword_blocked_target.word_0x20 = 0x00010002U;
+		preword_blocked_target.word_0x24_known = true;
+		preword_blocked_target.word_0x24 = 0x00000d06U;
+		preword_blocked_target.word_0x28_known = true;
+		preword_blocked_target.word_0x28 = 0x12005000U;
+		const ConnectionFallbackMaterializationResult4a7605_4a5e03 preword_blocked_result =
+				aurelion::h3maped_rmg_core::connection_fallback_materialization_4a7605_4a5e03(preword_blocked_state, { fallback_records[0] });
+		if (!require(preword_blocked_result.commit_count == 0
+						&& preword_blocked_result.blocked_count == 1
+						&& preword_blocked_result.records[0].blocked_reason == "0x4a5e03_target_word_0x24_mismatch"
+						&& preword_blocked_state.object_records_0xec4_ecc.empty(),
+					"0x4a5e03 fallback materialization did not fail closed on exact target pre-word mismatch")) {
 			return 1;
 		}
 	}

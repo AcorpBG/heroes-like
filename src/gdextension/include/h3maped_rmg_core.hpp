@@ -1528,6 +1528,12 @@ struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
 	int32_t descriptor_offset_y_0x30 = 0;
 	bool expected_owner_byte2_known = false;
 	int32_t expected_owner_byte2 = -1;
+	bool expected_target_word_0x20_known = false;
+	uint32_t expected_target_word_0x20 = 0U;
+	bool expected_target_word_0x24_known = false;
+	uint32_t expected_target_word_0x24 = 0U;
+	bool expected_target_word_0x28_known = false;
+	uint32_t expected_target_word_0x28 = 0U;
 	bool relation_counter_before_after_known = false;
 	int32_t relation_counter_before = 0;
 	int32_t relation_counter_after = 0;

@@ -3125,6 +3125,12 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	first.descriptor_offset_y_0x30 = 0;
 	first.expected_owner_byte2_known = true;
 	first.expected_owner_byte2 = 1;
+	first.expected_target_word_0x20_known = true;
+	first.expected_target_word_0x20 = 0x00010002U;
+	first.expected_target_word_0x24_known = true;
+	first.expected_target_word_0x24 = 0x00000d07U;
+	first.expected_target_word_0x28_known = true;
+	first.expected_target_word_0x28 = 0x12005000U;
 	first.relation_counter_before_after_known = true;
 	first.relation_counter_before = 0;
 	first.relation_counter_after = 1;
@@ -3144,6 +3150,12 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	second.descriptor_offset_y_0x30 = 0;
 	second.expected_owner_byte2_known = true;
 	second.expected_owner_byte2 = 4;
+	second.expected_target_word_0x20_known = true;
+	second.expected_target_word_0x20 = 0x00040002U;
+	second.expected_target_word_0x24_known = true;
+	second.expected_target_word_0x24 = 0x00000dc3U;
+	second.expected_target_word_0x28_known = true;
+	second.expected_target_word_0x28 = 0x1a000000U;
 	second.relation_counter_before_after_known = true;
 	second.relation_counter_before = 1;
 	second.relation_counter_after = 2;
@@ -3186,6 +3198,48 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 			result.blocked_count += 1;
 			result.records.push_back(record_result);
 			continue;
+		}
+		if (record.expected_target_word_0x20_known) {
+			if (!target_record.word_0x20_known) {
+				record_result.blocked_reason = "0x4a5e03_target_word_0x20_unknown";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+			if (target_record.word_0x20 != record.expected_target_word_0x20) {
+				record_result.blocked_reason = "0x4a5e03_target_word_0x20_mismatch";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+		}
+		if (record.expected_target_word_0x24_known) {
+			if (!target_record.word_0x24_known) {
+				record_result.blocked_reason = "0x4a5e03_target_word_0x24_unknown";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+			if (target_record.word_0x24 != record.expected_target_word_0x24) {
+				record_result.blocked_reason = "0x4a5e03_target_word_0x24_mismatch";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+		}
+		if (record.expected_target_word_0x28_known) {
+			if (!target_record.word_0x28_known) {
+				record_result.blocked_reason = "0x4a5e03_target_word_0x28_unknown";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
+			if (target_record.word_0x28 != record.expected_target_word_0x28) {
+				record_result.blocked_reason = "0x4a5e03_target_word_0x28_mismatch";
+				result.blocked_count += 1;
+				result.records.push_back(record_result);
+				continue;
+			}
 		}
 		if (record.expected_owner_byte2_known) {
 			if (!target_record.word_0x20_known) {
@@ -6004,11 +6058,14 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
 	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
 	apply_endpoint_materialization_state_d014(state);
+	connection_fallback_materialization_4a7605_4a5e03(
+			state,
+			state.connection_fallback_materialization_records_0x4a7605_0x4a5e03);
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_unported_until_0x4a8d2c_0x4a8db2_source_order_dispatcher_feeds_implemented_0x4a901a_scan",
 		"source_pair_vector_0xedc_contents_preserved_0x4a8db2_scheduler_replay_pending",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
-		"source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_payload_commit_helper_port",
+		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 		"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
