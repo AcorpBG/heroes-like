@@ -3433,6 +3433,283 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	return result;
 }
 
+struct RecoveredRewardGuardCandidateSpec49f95a {
+	uint32_t vtable_0x00 = 0U;
+	int32_t descriptor_type_0x04 = -1;
+	int32_t subtype_or_cursor_0x08 = 0;
+	int32_t value_0x0c = 0;
+	int32_t weight_0x10 = 0;
+	bool direct_value_known = true;
+};
+
+static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(const RecoveredRewardGuardCandidateSpec49f95a &spec) {
+	RewardGuardCandidateRecord4a9f1c record;
+	record.candidate_vtable_0x00_known = true;
+	record.candidate_vtable_0x00 = spec.vtable_0x00;
+	record.descriptor_type_0x04_known = true;
+	record.descriptor_type_0x04 = spec.descriptor_type_0x04;
+	record.cursor_source_0x08_known = true;
+	record.cursor_source_0x08 = spec.subtype_or_cursor_0x08;
+	record.direct_value_0x0c_known = spec.direct_value_known;
+	record.direct_value_0x0c = spec.value_0x0c;
+	record.selection_weight_0x10_known = true;
+	record.selection_weight_0x10 = spec.weight_0x10;
+	return record;
+}
+
+static void append_reward_guard_candidate_49f95a(std::vector<RewardGuardCandidateRecord4a9f1c> &records, const RecoveredRewardGuardCandidateSpec49f95a &spec) {
+	records.push_back(reward_guard_candidate_record_49f95a(spec));
+}
+
+static void append_reward_guard_candidates_49f95a(std::vector<RewardGuardCandidateRecord4a9f1c> &records, const RecoveredRewardGuardCandidateSpec49f95a *begin, size_t count) {
+	for (size_t index = 0; index < count; ++index) {
+		append_reward_guard_candidate_49f95a(records, begin[index]);
+	}
+}
+
+static void append_reward_guard_type10_candidates_49ff59(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr int32_t VALUES[] = { 5000, 7500, 10000, 15000, 20000 };
+	for (int32_t subtype = 7; subtype >= 0; --subtype) {
+		for (const int32_t value : VALUES) {
+			append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
+					0x540ca0U,
+					10,
+					subtype,
+					value,
+					10,
+					false });
+		}
+	}
+}
+
+static void append_reward_guard_monster_candidates_49f9ed(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr int32_t MONSTER_VALUES_0X49F9ED[] = {
+		19375, 15000, 9450, 12075, 16500, 7120, 23724, 24720, 22770, 20250,
+		10710, 11040, 8960, 8960, 15420, 13350, 7020, 7560, 5400, 5040,
+		24672, 25296, 21645, 18990, 16590, 15405, 10080, 12480, 8400, 8640,
+		7105, 6500, 4680, 4800, 26163, 23510, 23835, 23205, 16020, 16700,
+		11540, 12925, 9175, 8400, 7140, 6930, 5040, 4720, 23480, 27104,
+		19056, 20870, 16185, 16960, 11745, 11100, 9450, 8820, 6400, 6860,
+		5100, 4800, 21345, 25505, 22176, 20040, 18360, 15300, 12000, 11125,
+		7840, 8925, 7200, 7155, 4800, 5000, 22500, 29744, 22720, 20160,
+		14130, 17680, 10200, 11400, 8240, 8750, 7035, 6600, 5280, 4840,
+		25839, 24360, 20300, 21672, 16060, 15510, 10640, 12950, 8275, 9360,
+		7315, 6900, 4830, 5000, 26328, 25095, 21000, 19460, 15000, 14550,
+		11760, 11125, 8960, 8775, 7360, 7560, 5175, 4800,
+	};
+	for (const int32_t value : MONSTER_VALUES_0X49F9ED) {
+		append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
+				0x540bc0U,
+				6,
+				0,
+				value,
+				3,
+				true });
+	}
+}
+
+static void append_reward_guard_type17_candidates_4a0402(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr std::pair<int32_t, int32_t> TYPE17_CANDIDATES_0X4A0402[] = {
+		{ 57, 1134 }, { 56, 1120 }, { 55, 784 }, { 54, 720 }, { 53, 2220 }, { 52, 2544 },
+		{ 51, 3612 }, { 50, 2590 }, { 49, 2700 }, { 48, 1764 }, { 47, 1890 }, { 46, 826 },
+		{ 45, 1551 }, { 44, 3718 }, { 43, 704 }, { 42, 3081 }, { 41, 4702 }, { 40, 2295 },
+		{ 39, 1344 }, { 38, 1664 }, { 37, 1780 }, { 36, 4032 }, { 35, 1455 }, { 34, 2505 },
+		{ 33, 2068 }, { 32, 3094 }, { 31, 2280 }, { 30, 1008 }, { 29, 750 }, { 28, 4120 },
+		{ 27, 1785 }, { 26, 1232 }, { 25, 2457 }, { 24, 4872 }, { 23, 2670 }, { 22, 1272 },
+		{ 21, 900 }, { 20, 672 }, { 19, 1170 }, { 18, 2652 }, { 17, 1485 }, { 16, 1725 },
+		{ 15, 1638 }, { 14, 3340 }, { 13, 1320 }, { 12, 1104 }, { 11, 2048 }, { 10, 5101 },
+		{ 9, 2532 }, { 8, 5019 }, { 7, 2136 }, { 6, 1400 }, { 5, 3892 }, { 4, 3388 },
+		{ 3, 4174 }, { 2, 2352 }, { 1, 3162 }, { 0, 2208 },
+	};
+	for (const auto &candidate : TYPE17_CANDIDATES_0X4A0402) {
+		append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
+				0x540c00U,
+				17,
+				candidate.first,
+				candidate.second,
+				40,
+				false });
+	}
+}
+
+static void append_reward_guard_type53_candidates_4a0eeb(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr int32_t MONSTER_VALUES_0X49F9ED[] = {
+		19375, 15000, 9450, 12075, 16500, 7120, 23724, 24720, 22770, 20250,
+		10710, 11040, 8960, 8960, 15420, 13350, 7020, 7560, 5400, 5040,
+		24672, 25296, 21645, 18990, 16590, 15405, 10080, 12480, 8400, 8640,
+		7105, 6500, 4680, 4800, 26163, 23510, 23835, 23205, 16020, 16700,
+		11540, 12925, 9175, 8400, 7140, 6930, 5040, 4720, 23480, 27104,
+		19056, 20870, 16185, 16960, 11745, 11100, 9450, 8820, 6400, 6860,
+		5100, 4800, 21345, 25505, 22176, 20040, 18360, 15300, 12000, 11125,
+		7840, 8925, 7200, 7155, 4800, 5000, 22500, 29744, 22720, 20160,
+		14130, 17680, 10200, 11400, 8240, 8750, 7035, 6600, 5280, 4840,
+		25839, 24360, 20300, 21672, 16060, 15510, 10640, 12950, 8275, 9360,
+		7315, 6900, 4830, 5000, 26328, 25095, 21000, 19460, 15000, 14550,
+		11760, 11125, 8960, 8775, 7360, 7560, 5175, 4800,
+	};
+	static constexpr RecoveredRewardGuardCandidateSpec49f95a FIXED_TYPE53_0X4A0EEB[] = {
+		{ 0x540c70U, 83, 0, 2000, 10, false },
+		{ 0x540c70U, 83, 0, 5333, 10, false },
+		{ 0x540c70U, 83, 0, 8666, 10, false },
+		{ 0x540c70U, 83, 0, 12000, 10, false },
+		{ 0x540c80U, 83, 0, 2000, 10, false },
+		{ 0x540c80U, 83, 0, 5333, 10, false },
+		{ 0x540c80U, 83, 0, 8666, 10, false },
+		{ 0x540c80U, 83, 0, 12000, 10, false },
+	};
+	for (int32_t subtype = 0; subtype <= 2; ++subtype) {
+		for (const int32_t value : MONSTER_VALUES_0X49F9ED) {
+			append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
+					0x540c60U,
+					83,
+					subtype,
+					value,
+					3,
+					false });
+		}
+		for (RecoveredRewardGuardCandidateSpec49f95a fixed : FIXED_TYPE53_0X4A0EEB) {
+			fixed.subtype_or_cursor_0x08 = subtype;
+			append_reward_guard_candidate_49f95a(records, fixed);
+		}
+	}
+}
+
+static std::vector<RewardGuardCandidateRecord4a9f1c> reward_guard_candidate_records_single_level_land_49f95a() {
+	static constexpr RecoveredRewardGuardCandidateSpec49f95a STATIC_PREFIX_0X49F95A[] = {
+		{ 0x540ba0U, 2, 0, 100, 20, true },
+		{ 0x540ba0U, 4, 0, 3000, 50, true },
+	};
+	static constexpr RecoveredRewardGuardCandidateSpec49f95a STATIC_TYPE6_BANDS_0X49F95A[] = {
+		{ 0x540bd0U, 6, 0, 6000, 20, true },
+		{ 0x540bd0U, 6, 0, 12000, 20, true },
+		{ 0x540bd0U, 6, 0, 18000, 20, true },
+		{ 0x540bd0U, 6, 0, 24000, 20, true },
+		{ 0x540be0U, 6, 0, 5000, 5, true },
+		{ 0x540be0U, 6, 0, 10000, 5, true },
+		{ 0x540be0U, 6, 0, 15000, 5, true },
+		{ 0x540be0U, 6, 0, 20000, 5, true },
+		{ 0x540bf0U, 6, 0, 5000, 2, true },
+		{ 0x540bf0U, 6, 0, 7500, 2, true },
+		{ 0x540bf0U, 6, 0, 10000, 2, true },
+		{ 0x540bf0U, 6, 0, 12500, 2, true },
+		{ 0x540bf0U, 6, 0, 15000, 2, true },
+		{ 0x540bf0U, 6, 0, 15000, 2, true },
+		{ 0x540bf0U, 6, 0, 15000, 2, true },
+		{ 0x540bf0U, 6, 0, 15000, 2, true },
+		{ 0x540bf0U, 6, 0, 15000, 2, true },
+		{ 0x540bf0U, 6, 0, 30000, 2, true },
+	};
+	static constexpr RecoveredRewardGuardCandidateSpec49f95a STATIC_AFTER_TYPE10_BEFORE_TYPE17_0X49F95A[] = {
+		{ 0x540ba0U, 7, 0, 8000, 20, true },
+		{ 0x540ba0U, 11, 0, 100, 100, true },
+		{ 0x540ba0U, 12, 0, 2000, 500, true },
+		{ 0x540ba0U, 13, 0, 5000, 20, true },
+		{ 0x540ba0U, 13, 1, 10000, 20, true },
+		{ 0x540ba0U, 13, 2, 7500, 20, true },
+		{ 0x540ba0U, 14, 0, 100, 100, true },
+		{ 0x540ba0U, 16, 0, 3000, 100, true },
+		{ 0x540ba0U, 16, 1, 2000, 100, true },
+		{ 0x540ba0U, 16, 2, 2000, 100, true },
+		{ 0x540ba0U, 16, 3, 5000, 100, true },
+		{ 0x540ba0U, 16, 4, 1500, 100, true },
+		{ 0x540ba0U, 16, 5, 3000, 100, true },
+		{ 0x540ba0U, 16, 6, 9000, 100, true },
+	};
+	static constexpr RecoveredRewardGuardCandidateSpec49f95a STATIC_AFTER_TYPE17_BEFORE_TYPE53_0X49F95A[] = {
+		{ 0x540ba0U, 22, 0, 500, 100, true },
+		{ 0x540ba0U, 23, 0, 1500, 100, true },
+		{ 0x540ba0U, 24, 0, 4000, 20, true },
+		{ 0x540ba0U, 25, 0, 10000, 100, true },
+		{ 0x540ba0U, 28, 0, 100, 100, true },
+		{ 0x540ba0U, 29, 0, 500, 1000, true },
+		{ 0x540ba0U, 30, 0, 100, 100, true },
+		{ 0x540ba0U, 31, 0, 100, 50, true },
+		{ 0x540ba0U, 32, 0, 1500, 100, true },
+		{ 0x540ba0U, 35, 0, 7000, 20, true },
+		{ 0x540ba0U, 38, 0, 100, 100, true },
+		{ 0x540ba0U, 39, 0, 500, 100, true },
+		{ 0x540ba0U, 41, 0, 12000, 20, true },
+		{ 0x540ba0U, 47, 0, 1000, 50, true },
+		{ 0x540ba0U, 48, 0, 500, 50, true },
+		{ 0x540ba0U, 49, 0, 250, 100, true },
+		{ 0x540ba0U, 51, 0, 1500, 100, true },
+		{ 0x540ba0U, 52, 0, 100, 100, true },
+		{ 0x540ba0U, 55, 0, 500, 50, true },
+		{ 0x540ba0U, 56, 0, 100, 50, true },
+		{ 0x540ba0U, 57, 0, 3500, 200, true },
+		{ 0x540ba0U, 58, 0, 750, 100, true },
+		{ 0x540ba0U, 60, 0, 750, 100, true },
+		{ 0x540ba0U, 61, 0, 1500, 100, true },
+		{ 0x540c20U, 62, 0, 2500, 30, true },
+		{ 0x540c20U, 62, 0, 5000, 30, true },
+		{ 0x540c20U, 62, 0, 10000, 30, true },
+		{ 0x540c20U, 62, 0, 20000, 30, true },
+		{ 0x540c20U, 62, 0, 30000, 30, true },
+		{ 0x540ba0U, 63, 0, 5000, 20, true },
+		{ 0x540ba0U, 64, 0, 100, 100, true },
+		{ 0x540bb0U, 66, 0, 2000, 150, true },
+		{ 0x540bb0U, 67, 0, 5000, 150, true },
+		{ 0x540bb0U, 68, 0, 10000, 150, true },
+		{ 0x540bb0U, 69, 0, 20000, 150, true },
+		{ 0x540c10U, 76, 0, 1500, 2000, true },
+		{ 0x540ba0U, 78, 0, 5000, 20, true },
+		{ 0x540c10U, 79, 0, 1400, 300, true },
+		{ 0x540c10U, 79, 2, 1400, 300, true },
+		{ 0x540c10U, 79, 1, 2000, 300, true },
+		{ 0x540c10U, 79, 3, 2000, 300, true },
+		{ 0x540c10U, 79, 4, 2000, 300, true },
+		{ 0x540c10U, 79, 5, 2000, 300, true },
+		{ 0x540c10U, 79, 6, 750, 300, true },
+		{ 0x540ba0U, 80, 0, 100, 50, true },
+		{ 0x540c30U, 81, 0, 1500, 100, true },
+		{ 0x540ba0U, 82, 0, 1500, 500, true },
+	};
+	static constexpr RecoveredRewardGuardCandidateSpec49f95a STATIC_FINAL_TAIL_0X49F95A[] = {
+		{ 0x540ba0U, 84, 0, 1000, 100, true },
+		{ 0x540ba0U, 85, 0, 2000, 100, true },
+		{ 0x540ba0U, 86, 0, 1500, 50, true },
+		{ 0x540c40U, 88, 0, 500, 100, true },
+		{ 0x540c40U, 89, 0, 2000, 100, true },
+		{ 0x540c40U, 90, 0, 3000, 100, true },
+		{ 0x540ba0U, 92, 0, 100, 20, true },
+		{ 0x540c90U, 93, 0, 500, 30, true },
+		{ 0x540c90U, 93, 0, 2000, 30, true },
+		{ 0x540c90U, 93, 0, 3000, 30, true },
+		{ 0x540c90U, 93, 0, 4000, 30, true },
+		{ 0x540c90U, 93, 0, 5000, 30, true },
+		{ 0x540ba0U, 94, 0, 200, 40, true },
+		{ 0x540ba0U, 95, 0, 100, 20, true },
+		{ 0x540ba0U, 96, 0, 100, 100, true },
+		{ 0x540ba0U, 97, 0, 100, 100, true },
+		{ 0x540ba0U, 99, 0, 100, 100, true },
+		{ 0x540ba0U, 100, 0, 1500, 200, true },
+		{ 0x540ba0U, 101, 0, 1500, 1000, true },
+		{ 0x540ba0U, 102, 0, 2500, 50, true },
+		{ 0x540ba0U, 104, 0, 2500, 20, true },
+		{ 0x540ba0U, 105, 0, 500, 50, true },
+		{ 0x540ba0U, 106, 0, 1500, 50, true },
+		{ 0x540ba0U, 107, 0, 1000, 50, true },
+		{ 0x540ba0U, 108, 0, 6000, 20, true },
+		{ 0x540ba0U, 109, 0, 750, 50, true },
+		{ 0x540ba0U, 110, 0, 500, 50, true },
+		{ 0x540ba0U, 112, 0, 2500, 150, true },
+		{ 0x540c50U, 113, 0, 1500, 80, true },
+	};
+
+	std::vector<RewardGuardCandidateRecord4a9f1c> records;
+	records.reserve(704);
+	append_reward_guard_candidates_49f95a(records, STATIC_PREFIX_0X49F95A, sizeof(STATIC_PREFIX_0X49F95A) / sizeof(STATIC_PREFIX_0X49F95A[0]));
+	append_reward_guard_monster_candidates_49f9ed(records);
+	append_reward_guard_candidates_49f95a(records, STATIC_TYPE6_BANDS_0X49F95A, sizeof(STATIC_TYPE6_BANDS_0X49F95A) / sizeof(STATIC_TYPE6_BANDS_0X49F95A[0]));
+	append_reward_guard_type10_candidates_49ff59(records);
+	append_reward_guard_candidates_49f95a(records, STATIC_AFTER_TYPE10_BEFORE_TYPE17_0X49F95A, sizeof(STATIC_AFTER_TYPE10_BEFORE_TYPE17_0X49F95A) / sizeof(STATIC_AFTER_TYPE10_BEFORE_TYPE17_0X49F95A[0]));
+	append_reward_guard_type17_candidates_4a0402(records);
+	append_reward_guard_candidates_49f95a(records, STATIC_AFTER_TYPE17_BEFORE_TYPE53_0X49F95A, sizeof(STATIC_AFTER_TYPE17_BEFORE_TYPE53_0X49F95A) / sizeof(STATIC_AFTER_TYPE17_BEFORE_TYPE53_0X49F95A[0]));
+	append_reward_guard_type53_candidates_4a0eeb(records);
+	append_reward_guard_candidates_49f95a(records, STATIC_FINAL_TAIL_0X49F95A, sizeof(STATIC_FINAL_TAIL_0X49F95A) / sizeof(STATIC_FINAL_TAIL_0X49F95A[0]));
+	return records;
+}
+
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type) {
 	static constexpr std::pair<int32_t, int32_t> OVERRIDES[] = {
 		{ 26, 200 }, { 6, 200 }, { 57, 48 }, { 8, 64 }, { 100, 32 }, { 23, 32 },
@@ -7928,8 +8205,18 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			false,
 			0,
 			4);
-	state.reward_guard_candidate_records_10f4_10f8_contents_known = false;
-	state.reward_guard_candidate_record_count_10f4_10f8 = 0;
+	state.reward_guard_candidate_records_10f4_10f8 = reward_guard_candidate_records_single_level_land_49f95a();
+	state.reward_guard_candidate_records_10f4_10f8_contents_known =
+			!template_selection.blocked
+			&& state.reward_guard_candidate_records_10f4_10f8.size() == size_t(704);
+	state.reward_guard_candidate_record_count_10f4_10f8 =
+			int32_t(state.reward_guard_candidate_records_10f4_10f8.size());
+	state.reward_guard_candidate_vector_10f4_10f8.contents_known =
+			state.reward_guard_candidate_records_10f4_10f8_contents_known;
+	state.reward_guard_candidate_vector_10f4_10f8.count_known =
+			state.reward_guard_candidate_records_10f4_10f8_contents_known;
+	state.reward_guard_candidate_vector_10f4_10f8.count =
+			state.reward_guard_candidate_record_count_10f4_10f8;
 	state.endpoint_byte_state_vector_1104_1108 = endpoint_byte_state_vector_from_d8_count_0x49f95a(state.endpoint_vector_d8_dc);
 	state.endpoint_cursor_0xf58_present = true;
 	state.endpoint_cursor_0xf58_known = true;
@@ -8057,7 +8344,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
 		"reward_guard_0x4aa354_0x4aa1db_caller_shell_entered_but_generator_descriptor_vector_0x398_0x39c_and_selected_descriptor_state_0x94_0x95_are_pending",
-		"reward_guard_candidate_vector_0x10f4_0x10f8_live_producer_contents_pending_before_0x4a9f1c_and_0x4aa1db_selected_create",
+		"reward_guard_0x4aa354_selector_relation_argument_pending_before_0x4a9f1c_relation_counter_table",
 		"reward_guard_projection_global_table_and_projection_object_pending_for_0x4ad947_selected_global_entry",
 		"reward_guard_projection_object_coordinate_triple_pending_for_0x4ad947_source_relation_lookup_before_0x4ad7f7",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
