@@ -554,6 +554,9 @@ SharedSourceOrderSchedulerResult4a8db2 from_h3maped_source_order_scheduler_resul
 	SharedSourceOrderSchedulerResult4a8db2 out;
 	out.source_pair_pointer_carried = input.source_pair_pointer_carried;
 	out.source_pair_copied_source_catalog_index = input.source_pair_copied_source_catalog_index;
+	out.source_record_id_0x00 = input.source_record_id_0x00;
+	out.source_record_owner_or_type_0x04 = input.source_record_owner_or_type_0x04;
+	out.source_record_relation_selector_0x1c = input.source_record_relation_selector_0x1c;
 	out.context_pointer_carried = input.context_pointer_carried;
 	out.context_wrapper_index_0x04 = input.context_wrapper_index_0x04;
 	out.lane_state_0xee4 = input.lane_state_0xee4;
@@ -1991,6 +1994,9 @@ void append_source_order_scheduler_replays_4a8db2_json(std::ostream &out, const 
 		const SharedSourceOrderSchedulerResult4a8db2 &replay = replays[index];
 		out << "{\"source_pair_pointer_carried\":" << (replay.source_pair_pointer_carried ? "true" : "false")
 			<< ",\"source_pair_copied_source_catalog_index\":" << replay.source_pair_copied_source_catalog_index
+			<< ",\"source_record_id_0x00\":" << replay.source_record_id_0x00
+			<< ",\"source_record_owner_or_type_0x04\":" << replay.source_record_owner_or_type_0x04
+			<< ",\"source_record_relation_selector_0x1c\":" << replay.source_record_relation_selector_0x1c
 			<< ",\"context_pointer_carried\":" << (replay.context_pointer_carried ? "true" : "false")
 			<< ",\"context_wrapper_index_0x04\":" << replay.context_wrapper_index_0x04
 			<< ",\"lane_state_0xee4\":" << replay.lane_state_0xee4

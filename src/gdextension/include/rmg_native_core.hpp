@@ -589,6 +589,9 @@ struct SharedSourceOrderSchedulerCall4a8db2 {
 struct SharedSourceOrderSchedulerResult4a8db2 {
 	bool source_pair_pointer_carried = false;
 	int32_t source_pair_copied_source_catalog_index = -1;
+	int32_t source_record_id_0x00 = -1;
+	int32_t source_record_owner_or_type_0x04 = -1;
+	int32_t source_record_relation_selector_0x1c = -1;
 	bool context_pointer_carried = false;
 	int32_t context_wrapper_index_0x04 = -1;
 	int32_t lane_state_0xee4 = -1;

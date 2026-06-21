@@ -1797,6 +1797,31 @@ WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const Sou
 	return result;
 }
 
+SourceOrderSchedulerSourceRecord4a8db2 source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(const RuntimeZoneSeedInput4a218c &runtime_zone) {
+	SourceOrderSchedulerSourceRecord4a8db2 record;
+	const SourceZonePayload4a218c &payload = runtime_zone.source_payload;
+	record.source_id_0x00 = runtime_zone.source_index >= 0 ? runtime_zone.source_index : payload.source_row;
+	record.owner_or_type_0x04 = payload.source_ownership;
+	record.relation_selector_0x1c = runtime_zone.source_owner_index;
+	record.field_0x20_known = true;
+	record.field_0x20 = payload.player_towns.min_towns;
+	record.field_0x24_known = true;
+	record.field_0x24 = payload.player_towns.min_castles;
+	record.field_0x28_known = true;
+	record.field_0x28 = payload.player_towns.town_density;
+	record.field_0x2c_known = true;
+	record.field_0x2c = payload.player_towns.castle_density;
+	record.field_0x30_known = true;
+	record.field_0x30 = payload.neutral_towns.min_towns;
+	record.field_0x34_known = true;
+	record.field_0x34 = payload.neutral_towns.min_castles;
+	record.field_0x38_known = true;
+	record.field_0x38 = payload.neutral_towns.town_density;
+	record.field_0x3c_known = true;
+	record.field_0x3c = payload.neutral_towns.castle_density;
+	return record;
+}
+
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24, uint32_t old_word_0x28, uint32_t old_word_0x2c) {
 	GeneratedCellInitialWords cell;
 	cell.word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
@@ -3954,12 +3979,15 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	return result;
 }
 
-SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x3c_known, int32_t source_field_0x3c) {
+SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng) {
 	SourceOrderSchedulerResult4a8db2 result;
-	result.source_pair_pointer_carried = source_pair.source_record_pointer_0x00_carried;
-	result.source_pair_copied_source_catalog_index = source_pair.copied_source_catalog_index;
-	result.context_pointer_carried = source_pair.context_pointer_0x04_carried;
-	result.context_wrapper_index_0x04 = source_pair.context_wrapper_index_0x04;
+	result.source_pair_pointer_carried = source_pair_pointer_0x00_carried;
+	result.source_pair_copied_source_catalog_index = source_pair_copied_source_catalog_index;
+	result.source_record_id_0x00 = source_record.source_id_0x00;
+	result.source_record_owner_or_type_0x04 = source_record.owner_or_type_0x04;
+	result.source_record_relation_selector_0x1c = source_record.relation_selector_0x1c;
+	result.context_pointer_carried = context_pointer_0x04_carried;
+	result.context_wrapper_index_0x04 = context_wrapper_index_0x04;
 	result.lane_state_0xee4 = lane_state_0xee4;
 	result.scan_bounds_known = true;
 	result.scan_bounds_non_empty = scan_high_x > scan_low_x && scan_high_y > scan_low_y;
@@ -3975,12 +4003,6 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(Genera
 					&& join.descriptor.descriptor_type_0x1c == 98
 					&& join.descriptor_source_fields_match
 					&& join.source_catalog_index_0x49da08 >= 0);
-
-	const SourceObjectRecord0x4c &record = source_pair.source_record_copy;
-	const bool field_0x30_known = record.raw_field_0x30_known || source_field_0x30_known;
-	const int32_t field_0x30 = record.raw_field_0x30_known ? record.raw_field_0x30 : source_field_0x30;
-	const bool field_0x34_known = record.raw_field_0x34_known || source_field_0x34_known;
-	const int32_t field_0x34 = record.raw_field_0x34_known ? record.raw_field_0x34 : source_field_0x34;
 
 	auto make_lane = [&](int32_t lane_index,
 			uint32_t direct_callsite,
@@ -4011,10 +4033,10 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(Genera
 		return lane;
 	};
 
-	result.lanes.push_back(make_lane(0, 0x4a8df7U, 0x4a8ffdU, 0x24, record.raw_field_0x24_known, record.raw_field_0x24, 0x2c, record.raw_field_0x2c_known, record.raw_field_0x2c, true, true));
-	result.lanes.push_back(make_lane(1, 0x4a8e26U, 0x4a8fd6U, 0x20, record.raw_field_0x20_known, record.raw_field_0x20, 0x28, record.raw_field_0x28_known, record.raw_field_0x28, true, false));
-	result.lanes.push_back(make_lane(2, 0x4a8e55U, 0x4a8fb4U, 0x34, field_0x34_known, field_0x34, 0x3c, source_field_0x3c_known, source_field_0x3c, false, true));
-	result.lanes.push_back(make_lane(3, 0x4a8e83U, 0x4a8f96U, 0x30, field_0x30_known, field_0x30, 0x38, record.raw_field_0x38_known, record.raw_field_0x38, false, false));
+	result.lanes.push_back(make_lane(0, 0x4a8df7U, 0x4a8ffdU, 0x24, source_record.field_0x24_known, source_record.field_0x24, 0x2c, source_record.field_0x2c_known, source_record.field_0x2c, true, true));
+	result.lanes.push_back(make_lane(1, 0x4a8e26U, 0x4a8fd6U, 0x20, source_record.field_0x20_known, source_record.field_0x20, 0x28, source_record.field_0x28_known, source_record.field_0x28, true, false));
+	result.lanes.push_back(make_lane(2, 0x4a8e55U, 0x4a8fb4U, 0x34, source_record.field_0x34_known, source_record.field_0x34, 0x3c, source_record.field_0x3c_known, source_record.field_0x3c, false, true));
+	result.lanes.push_back(make_lane(3, 0x4a8e83U, 0x4a8f96U, 0x30, source_record.field_0x30_known, source_record.field_0x30, 0x38, source_record.field_0x38_known, source_record.field_0x38, false, false));
 
 	auto finish = [&](const std::string &reason, bool finished) {
 		result.blocked_reason = reason;
@@ -4206,6 +4228,46 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(Genera
 			result.calls.back().disabled_after_false = true;
 		}
 	}
+}
+
+SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x3c_known, int32_t source_field_0x3c) {
+	const SourceObjectRecord0x4c &record = source_pair.source_record_copy;
+	SourceOrderSchedulerSourceRecord4a8db2 source_record;
+	source_record.source_id_0x00 = source_pair.copied_source_catalog_index;
+	source_record.owner_or_type_0x04 = source_pair.context_wrapper_lane_0x04;
+	source_record.relation_selector_0x1c = source_pair.source_lane_0x1c;
+	source_record.field_0x20_known = record.raw_field_0x20_known;
+	source_record.field_0x20 = record.raw_field_0x20;
+	source_record.field_0x24_known = record.raw_field_0x24_known;
+	source_record.field_0x24 = record.raw_field_0x24;
+	source_record.field_0x28_known = record.raw_field_0x28_known;
+	source_record.field_0x28 = record.raw_field_0x28;
+	source_record.field_0x2c_known = record.raw_field_0x2c_known;
+	source_record.field_0x2c = record.raw_field_0x2c;
+	source_record.field_0x30_known = record.raw_field_0x30_known || source_field_0x30_known;
+	source_record.field_0x30 = record.raw_field_0x30_known ? record.raw_field_0x30 : source_field_0x30;
+	source_record.field_0x34_known = record.raw_field_0x34_known || source_field_0x34_known;
+	source_record.field_0x34 = record.raw_field_0x34_known ? record.raw_field_0x34 : source_field_0x34;
+	source_record.field_0x38_known = record.raw_field_0x38_known;
+	source_record.field_0x38 = record.raw_field_0x38;
+	source_record.field_0x3c_known = source_field_0x3c_known;
+	source_record.field_0x3c = source_field_0x3c;
+	return source_order_weighted_scheduler_from_source_record_0x4a8db2(
+			state,
+			join,
+			source_record,
+			source_pair.source_record_pointer_0x00_carried,
+			source_pair.context_pointer_0x04_carried,
+			source_pair.copied_source_catalog_index,
+			source_pair.context_wrapper_index_0x04,
+			relation_owner_byte2,
+			scan_low_x,
+			scan_low_y,
+			scan_high_x,
+			scan_high_y,
+			level,
+			lane_state_0xee4,
+			rng);
 }
 
 static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
@@ -5935,6 +5997,114 @@ static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, cons
 	}
 }
 
+static const RuntimeZoneSeedInput4a218c *runtime_zone_after_town_choice_0x49b3c1(const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, int32_t runtime_zone_index);
+
+static const SourceObjectRecord0x4c *source_type98_town_record_for_choice_0x49b3c1(int32_t town_choice) {
+	if (town_choice < 0) {
+		return nullptr;
+	}
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	for (const SourceObjectRecord0x4c &record : records) {
+		if (record.type_id_0x1c == 98 && record.subtype_0x20 == town_choice && record.group_0x24 == 1) {
+			return &record;
+		}
+	}
+	return nullptr;
+}
+
+static SourceObjectDescriptor4903e8 source_type98_town_descriptor_from_record_0x4a8db2(const SourceObjectRecord0x4c &record) {
+	SourceObjectDescriptor4903e8 descriptor;
+	descriptor.target_context_0x4903e8 = 98;
+	descriptor.source_key_0x00 = record.source_row;
+	descriptor.descriptor_type_0x1c = record.type_id_0x1c;
+	descriptor.subtype_0x20 = record.subtype_0x20;
+	descriptor.group_0x24 = record.group_0x24;
+	descriptor.projection_enabled_0x29 = true;
+	descriptor.source_cell_x_0x2c = 2;
+	descriptor.source_cell_y_0x30 = 0;
+	descriptor.descriptor_mask_fields_0x34_0x48_known = record.descriptor_mask_fields_0x34_0x48_known;
+	descriptor.descriptor_width_0x34 = record.descriptor_width_0x34;
+	descriptor.descriptor_height_0x38 = record.descriptor_height_0x38;
+	descriptor.descriptor_mask_a_0x3c_0x40 = record.descriptor_mask_a_0x3c_0x40;
+	descriptor.descriptor_mask_b_0x44_0x48 = record.descriptor_mask_b_0x44_0x48;
+	return descriptor;
+}
+
+static void append_blocked_source_order_scheduler_replay_0x4a8db2(GeneratorObjectPrivateState &state, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, int32_t relation_owner_byte2, const std::string &reason) {
+	SourceOrderSchedulerResult4a8db2 result;
+	result.source_pair_pointer_carried = source_record.source_id_0x00 >= 0;
+	result.source_record_id_0x00 = source_record.source_id_0x00;
+	result.source_record_owner_or_type_0x04 = source_record.owner_or_type_0x04;
+	result.source_record_relation_selector_0x1c = source_record.relation_selector_0x1c;
+	result.context_pointer_carried = false;
+	result.lane_state_0xee4 = -1;
+	result.relation_owner_byte_known = relation_owner_byte2 >= 0;
+	result.relation_owner_byte2 = relation_owner_byte2;
+	result.blocked_reason = reason;
+	result.replay_finished = false;
+	state.source_order_scheduler_replay_0x4a8db2_known = true;
+	state.source_order_scheduler_replays_0x4a8db2.push_back(result);
+	state.source_order_scheduler_replay_count_0x4a8db2 = int32_t(state.source_order_scheduler_replays_0x4a8db2.size());
+	state.source_order_scheduler_blocked_count_0x4a8db2 += 1;
+}
+
+static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result, H3MapedRng &rng) {
+	SourceObjectResolverState4af785 type98_descriptor_state;
+	const std::vector<RuntimeZoneSeedInput4a218c> &post_town_choice_zones =
+			coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1;
+	for (const RuntimeZoneSeedInput4a218c &base_runtime_zone : template_selection.runtime_seed.runtime_zone_seeds) {
+		const RuntimeZoneSeedInput4a218c *post_town_choice_zone =
+				runtime_zone_after_town_choice_0x49b3c1(post_town_choice_zones, base_runtime_zone.runtime_zone_index);
+		const RuntimeZoneSeedInput4a218c &runtime_zone = post_town_choice_zone != nullptr ? *post_town_choice_zone : base_runtime_zone;
+		const SourceOrderSchedulerSourceRecord4a8db2 source_record =
+				source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(runtime_zone);
+		GeneratorRelationOwnerState4a218c *owner = relation_owner_for_runtime_zone_0x4a54a7(state, runtime_zone.runtime_zone_index);
+		if (owner == nullptr) {
+			append_blocked_source_order_scheduler_replay_0x4a8db2(
+					state,
+					source_record,
+					runtime_zone.runtime_zone_index,
+					"0x4a8db2_relation_owner_record_missing_for_runtime_zone");
+			continue;
+		}
+		const int32_t town_choice = runtime_zone.selected_town_choice_index_0x49b3c1;
+		const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(town_choice);
+		if (town_record == nullptr) {
+			append_blocked_source_order_scheduler_replay_0x4a8db2(
+					state,
+					source_record,
+					owner->runtime_zone_index,
+					"0x4a8db2_type98_selected_town_source_record_missing");
+			continue;
+		}
+		const SourceObjectDescriptor4903e8 descriptor =
+				source_type98_town_descriptor_from_record_0x4a8db2(*town_record);
+		const SourceObjectDescriptorJoinResult4903e8 join =
+				source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
+		const int32_t source_selector = source_record.relation_selector_0x1c;
+		const int32_t lane_state_0xee4 =
+				source_selector >= 0 && source_selector < int32_t(state.mapped_source_owner_slots_ee4.size())
+				? state.mapped_source_owner_slots_ee4[size_t(source_selector)]
+				: -1;
+		source_order_weighted_scheduler_from_source_record_0x4a8db2(
+				state,
+				join,
+				source_record,
+				source_record.source_id_0x00 >= 0,
+				true,
+				join.source_catalog_index_0x49da08,
+				owner->owner_vector_index,
+				owner->runtime_zone_index,
+				owner->scan_bound_low_x_0x20,
+				owner->scan_bound_low_y_0x24,
+				owner->scan_bound_high_x_0x28,
+				owner->scan_bound_high_y_0x2c,
+				owner->coordinate_level_0x18,
+				lane_state_0xee4,
+				rng);
+	}
+}
+
 GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	GeneratorObjectPrivateState state;
 	state.width = width;
@@ -6043,6 +6213,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
 	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
 	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
+	replay_live_type98_source_order_scheduler_0x4a8db2(state, template_selection, coordinate_result, relation_scan_rng);
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
 			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8, &state.object_records_0xec4_ecc);
 	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
@@ -6062,8 +6233,8 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			state,
 			state.connection_fallback_materialization_records_0x4a7605_0x4a5e03);
 	state.remaining_private_state_blockers = {
-		"object_record_vector_0xec4_0xecc_live_contents_unported_until_0x4a8d2c_0x4a8db2_source_order_dispatcher_feeds_implemented_0x4a901a_scan",
-		"source_pair_vector_0xedc_contents_preserved_0x4a8db2_scheduler_replay_pending",
+		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_source_order_town_reward_guard_object_caller_order_ported",
+		"generic_non_type98_source_pair_feed_into_0x4a8d2c_0x4a8db2_pending_after_type98_runtime_zone_replay",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",
