@@ -720,6 +720,92 @@ int main() {
 	}
 
 	{
+		GeneratorObjectPrivateState selected_create_state;
+		selected_create_state.reward_guard_candidate_vector_10f4_10f8.present = true;
+		selected_create_state.reward_guard_candidate_vector_10f4_10f8.contents_known = true;
+		selected_create_state.reward_guard_candidate_records_10f4_10f8_contents_known = true;
+		selected_create_state.descriptor_counter_table_0x1110_present = true;
+		selected_create_state.descriptor_counter_table_0x1110_contents_known = true;
+		selected_create_state.descriptor_counter_table_0x1110.assign(
+				size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT),
+				0U);
+		selected_create_state.endpoint_cursor_0xf58_known = true;
+		selected_create_state.endpoint_cursor_0xf58 = 0;
+		selected_create_state.reward_guard_projection_generator_0x10b4_known = true;
+		selected_create_state.reward_guard_projection_generator_0x10b4 = false;
+
+		aurelion::h3maped_rmg_core::RewardGuardCandidateRecord4a9f1c ordinary_candidate;
+		ordinary_candidate.candidate_vtable_0x00_known = true;
+		ordinary_candidate.candidate_vtable_0x00 = 0x00540ba0U;
+		ordinary_candidate.descriptor_type_0x04_known = true;
+		ordinary_candidate.descriptor_type_0x04 = 2;
+		ordinary_candidate.cursor_source_0x08_known = true;
+		ordinary_candidate.cursor_source_0x08 = 0;
+		ordinary_candidate.direct_value_0x0c_known = true;
+		ordinary_candidate.direct_value_0x0c = 100;
+		ordinary_candidate.selection_weight_0x10_known = true;
+		ordinary_candidate.selection_weight_0x10 = 5;
+		aurelion::h3maped_rmg_core::RewardGuardCandidateRecord4a9f1c projection_candidate;
+		projection_candidate.candidate_vtable_0x00_known = true;
+		projection_candidate.candidate_vtable_0x00 =
+				aurelion::h3maped_rmg_core::REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80;
+		projection_candidate.descriptor_type_0x04_known = true;
+		projection_candidate.descriptor_type_0x04 = 83;
+		projection_candidate.cursor_source_0x08_known = true;
+		projection_candidate.cursor_source_0x08 = 0;
+		projection_candidate.direct_value_0x0c_known = true;
+		projection_candidate.direct_value_0x0c = 2000;
+		projection_candidate.selection_weight_0x10_known = true;
+		projection_candidate.selection_weight_0x10 = 100;
+		selected_create_state.reward_guard_candidate_records_10f4_10f8 = {
+			ordinary_candidate,
+			projection_candidate,
+		};
+		selected_create_state.reward_guard_candidate_record_count_10f4_10f8 = 2;
+		selected_create_state.reward_guard_candidate_vector_10f4_10f8.count_known = true;
+		selected_create_state.reward_guard_candidate_vector_10f4_10f8.count = 2;
+
+		GeneratorRelationOwnerState4a218c selector;
+		selector.descriptor_type_counter_table_0x44_known = true;
+		selector.descriptor_type_counters_0x44.assign(
+				size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT),
+				0U);
+		H3MapedRng selected_create_rng;
+		selected_create_rng.state = 1U;
+		const auto selected_create =
+				aurelion::h3maped_rmg_core::reward_guard_selected_create_dispatch_0x4a9f1c(
+						selected_create_state,
+						&selector,
+						0,
+						aurelion::h3maped_rmg_core::REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00,
+						selected_create_rng);
+		if (!require(selected_create.applied
+						&& selected_create.blocked_reason.empty()
+						&& selected_create.candidate_scan_count == 2
+						&& selected_create.accepted_count == 2
+						&& selected_create.accepted_weight_total_0x14 == 105
+						&& selected_create.rng_consumed_0x4aa110
+						&& selected_create.rng_value_0x4e7276 == 41
+						&& selected_create.selected_weight_remainder == 41
+						&& selected_create.selected_candidate_index == 1
+						&& selected_create.selected_candidate_vtable_known
+						&& selected_create.selected_candidate_vtable_0x00 == aurelion::h3maped_rmg_core::REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80
+						&& selected_create.selected_score_dispatch_replayed_0x4aa151
+						&& selected_create.selected_create_dispatched_0x4aa166
+						&& selected_create.selected_projection_object_0x540b14_known
+						&& selected_create.selected_projection_object_0x540b14.live_input_known
+						&& selected_create.selected_projection_object_0x540b14.vtable_0x00_known
+						&& selected_create.selected_projection_object_0x540b14.vtable_0x00 == aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14
+						&& selected_create.selected_projection_object_0x540b14.generator_context_plus_0x1c_known
+						&& selected_create.selected_projection_object_0x540b14.cleanup_pointer_plus_0x20_known
+						&& !selected_create.selected_projection_object_0x540b14.projection_coordinate_known
+						&& selected_create_rng.state == 0x0029e2c0U,
+					"0x4a9f1c selected-create dispatch did not use weighted RNG and recovered 0x540c80 -> 0x49cc22 -> 0x540b14 constructor behavior")) {
+			return 1;
+		}
+	}
+
+	{
 		GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
 		if (!require(record_grid.stride_bytes == aurelion::h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES, "generated-cell record grid did not preserve stride 0x30")) {
 			return 1;
@@ -3930,7 +4016,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_reward_guard_blocker =
-				"0x49c0a6_projection_object_0x540b14_live_input_pending_before_0x4ad947";
+				"0x4aa1db_selected_create_caller_feed_pending_before_0x4a9f1c_0x4aa166_0x49c0a6";
 		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
@@ -3978,18 +4064,18 @@ int main() {
 						&& !materialization_driver.selected_object_helper_invoked_0x4aa1db
 						&& !materialization_driver.selected_object_0x4aa1db.invoked
 						&& !materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
-						&& materialization_driver.blocked_reason == "0x4aa354_not_entered_until_0x49c0a6_projection_chain_produces_source_backed_selector",
-					"entry-to-writeout workflow invoked 0x4aa354/0x4aa1db/0x4a9f1c before the recovered projection chain provided a source-backed selector")) {
+						&& materialization_driver.blocked_reason == "0x4aa354_not_entered_until_0x4aa1db_selected_create_caller_feed_is_owned",
+					"entry-to-writeout workflow invoked 0x4aa354/0x4aa1db/0x4a9f1c before the selected-create caller feed was source-backed")) {
 			return 1;
 		}
 		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
 				workflow_generator_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
-		if (!require(projection_chain.invoked
+		if (!require(!projection_chain.invoked
 						&& !projection_chain.projection_object_input_known
 						&& projection_chain.blocked_reason == current_reward_guard_blocker
 						&& workflow_generator_state.reward_guard_relation_priority_live_replay_blocker == current_reward_guard_blocker
 						&& workflow_generator_state.reward_guard_relation_priority_0x4ad7f7.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not gate reward/guard materialization on recovered 0x49c0a6 -> 0x4ad947 projection-object input")) {
+					"entry-to-writeout workflow invoked 0x49c0a6 before selected-create produced a source-backed projection object")) {
 			return 1;
 		}
 		if (!require(!workflow_generator_state.reward_guard_selector_0x4a9f1c.applied
