@@ -1958,6 +1958,42 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	std::string blocked_reason;
 };
 
+struct ConnectionTailReplayResult4a79a3 {
+	bool invoked = false;
+	bool applied = false;
+	bool generated_cell_grid_owned = false;
+	bool endpoint_caller_prep_known = false;
+	bool fallback_materialization_known = false;
+	bool fallback_materialization_applied = false;
+	bool source_backed_frontier_known = false;
+	bool internal_growth_0x49b3fb_0x4a61bc_known = false;
+	int32_t internal_growth_candidate_pair_count = 0;
+	int32_t internal_growth_positive_append_count = 0;
+	int32_t internal_growth_initial_object_count = 0;
+	int32_t internal_growth_final_object_count = 0;
+	bool internal_growth_reallocation_observed = false;
+	std::vector<uint32_t> internal_growth_appended_object_pointers;
+	bool payload_link_known = false;
+	int32_t payload_loop_non_null_record_count = 0;
+	bool selected_0x4a61bc_record_reaches_payload_loop = false;
+	bool controlled_0x4a696b_supported_land_negative_known = false;
+	int32_t controlled_0x4a696b_sampled_call_count = 0;
+	int32_t controlled_0x4a696b_source_relation_match_hits = 0;
+	int32_t controlled_0x4a696b_direct_mutation_hits = 0;
+	bool after_selected_0x4a7605_endpoint_path_known = false;
+	int32_t after_selected_0x4a7605_call_count = 0;
+	int32_t after_selected_direct_0x4a7312_commit_count = 0;
+	int32_t delegated_0x4a746b_call_count = 0;
+	int32_t endpoint_helper_0x4a5e73_count = 0;
+	int32_t endpoint_mutation_site_0x4a75f1_count = 0;
+	bool delegated_endpoint_gates_skipped_with_zero_control_bytes = false;
+	bool pair_bookkeeping_processed_marker_known = false;
+	uint32_t pair_bookkeeping_control_word_before = 0U;
+	uint32_t pair_bookkeeping_control_word_after = 0U;
+	bool generated_cell_direct_mutation_applied = false;
+	std::string blocked_reason;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -2101,6 +2137,8 @@ struct GeneratorObjectPrivateState {
 	RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_0x4aab7e;
 	bool decorative_flagged_cell_dispatch_0x49eb8d_ported = false;
 	DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d;
+	bool connection_tail_replay_0x4a79a3_ported = false;
+	ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
