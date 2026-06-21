@@ -3434,7 +3434,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow fails closed at reward/guard 0x4aab7e when active source-order attempts produce zero successful 0x4aa9b7 commits; connection, decorative, fallback, road, river, and final writeout phases stay pending until reward/guard commits are source-owned\",\n";
+	out << "    \"current_blocker\": \"native workflow fails closed at source-order mine/resource materialization 0x4a9d6a because selected-object callback 0x4a9911 and density followup 0x4a9c7c/0x4a9641 are not live native materializers; relation scan, reward/guard, connection, decorative, road, river, and final writeout phases stay pending until this phase is source-owned\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3451,7 +3451,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_reward_guard_source_stream_successful_0x4aa9b7_commits_before_connection_decorative_road_river_final_writeout\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_source_order_mine_resource_materialization_0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641_before_relation_reward_connection_final_writeout\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
