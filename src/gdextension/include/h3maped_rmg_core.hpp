@@ -44,6 +44,7 @@ constexpr uint32_t REWARD_GUARD_CANDIDATE_VECTOR_CAPACITY_0X10FC = 0x10fcU;
 constexpr int32_t REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947 = 0x90;
 constexpr int32_t REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00 = 0x7d00;
 constexpr uint32_t WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C = 0x00540a9cU;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540A88 = 0x00540a88U;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540A74 = 0x00540a74U;
 constexpr uint32_t PROJECTION_OBJECT_VTABLE_0X540B14 = 0x00540b14U;
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_A_0X540C60 = 0x00540c60U;
@@ -198,6 +199,21 @@ struct SourceObjectCatalogSummary0x49da08 {
 	int32_t mine_type53_record_count = 0;
 	int32_t mine_type53_ambiguous_subtype_count = 0;
 	bool descriptor_only_mine_identity_ambiguous = false;
+};
+
+struct GeneratorDescriptorVectorEntry0x398 {
+	int32_t vector_index = -1;
+	int32_t source_catalog_index_0x49da08 = -1;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t descriptor_source_field_0x20 = 0;
+	int32_t descriptor_group_0x24 = 0;
+	int32_t descriptor_last_flag_0x28 = 0;
+	bool descriptor_dimensions_known = false;
+	int32_t descriptor_width_0x34 = 0;
+	int32_t descriptor_height_0x38 = 0;
+	uint64_t descriptor_mask_a_0x3c_0x40 = 0U;
+	uint64_t descriptor_mask_b_0x44_0x48 = 0U;
+	SourceObjectRecord0x4c source_record_copy;
 };
 
 struct SourceObjectWrapperBucket0xe8 {
@@ -1778,6 +1794,12 @@ struct RewardGuardCandidateDecision4a9f1c {
 	bool rejected_by_score_dispatch = false;
 	bool accepted_after_counter_and_value_checks = false;
 	bool accepted_after_score_dispatch = false;
+	bool descriptor_selector_invoked_0x4a9e40 = false;
+	SourceObjectSelectorResult4a9e40 descriptor_selector_0x4a9e40;
+	bool selected_source_record_known_0x4a9e40 = false;
+	int32_t selected_source_catalog_index_0x49da08 = -1;
+	int32_t selected_descriptor_vector_index_0x398 = -1;
+	SourceObjectRecord0x4c selected_source_record_copy;
 	bool selected_by_weighted_rng_0x4aa110 = false;
 	bool selected_score_replayed_0x4aa151 = false;
 	bool selected_create_dispatched_0x4aa166 = false;
@@ -1805,6 +1827,10 @@ struct RewardGuardSelectorResult4a9f1c {
 	int32_t selected_candidate_index = -1;
 	bool selected_candidate_vtable_known = false;
 	uint32_t selected_candidate_vtable_0x00 = 0U;
+	bool selected_source_record_known_0x4a9e40 = false;
+	int32_t selected_source_catalog_index_0x49da08 = -1;
+	int32_t selected_descriptor_vector_index_0x398 = -1;
+	SourceObjectRecord0x4c selected_source_record_copy;
 	bool selected_score_dispatch_replayed_0x4aa151 = false;
 	bool selected_create_dispatched_0x4aa166 = false;
 	bool selected_projection_object_0x540b14_known = false;
@@ -1913,6 +1939,10 @@ struct GeneratorObjectPrivateState {
 	int32_t level_count = 0;
 	GeneratorObjectVectorState endpoint_vector_c8_cc;
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
+	GeneratorObjectVectorState descriptor_vector_398_39c;
+	bool descriptor_vector_398_39c_source_owned = false;
+	int32_t descriptor_vector_entry_count_398_39c = 0;
+	std::vector<GeneratorDescriptorVectorEntry0x398> descriptor_vector_entries_398_39c;
 	GeneratorObjectVectorState object_record_vector_ec4_ecc;
 	GeneratorObjectVectorState source_pair_vector_edc;
 	std::vector<SourceObjectResolverSourcePair4af785> source_pair_records_edc;

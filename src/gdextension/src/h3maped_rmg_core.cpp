@@ -1430,6 +1430,59 @@ SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_
 	return result;
 }
 
+static int32_t source_object_metadata_bucket_for_type_0x57c648_0x08(int32_t type_id_0x1c) {
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	for (const SourceObjectRecord0x4c &record : records) {
+		if (record.type_id_0x1c == type_id_0x1c) {
+			return record.metadata_bucket_index_0x08;
+		}
+	}
+	return -1;
+}
+
+static std::vector<GeneratorDescriptorVectorEntry0x398> generator_descriptor_vector_entries_from_source_catalog_0x49da08_0x398_0x39c() {
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	std::vector<GeneratorDescriptorVectorEntry0x398> entries;
+	entries.reserve(records.size());
+	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+		const SourceObjectRecord0x4c &record = records[size_t(index)];
+		GeneratorDescriptorVectorEntry0x398 entry;
+		entry.source_catalog_index_0x49da08 = index;
+		entry.descriptor_type_0x1c = record.type_id_0x1c;
+		entry.descriptor_source_field_0x20 = record.subtype_0x20;
+		entry.descriptor_group_0x24 = record.group_0x24;
+		entry.descriptor_last_flag_0x28 = record.last_flag_0x28;
+		entry.descriptor_dimensions_known = record.descriptor_mask_fields_0x34_0x48_known;
+		entry.descriptor_width_0x34 = record.descriptor_width_0x34;
+		entry.descriptor_height_0x38 = record.descriptor_height_0x38;
+		entry.descriptor_mask_a_0x3c_0x40 = record.descriptor_mask_a_0x3c_0x40;
+		entry.descriptor_mask_b_0x44_0x48 = record.descriptor_mask_b_0x44_0x48;
+		entry.source_record_copy = record;
+		entries.push_back(entry);
+	}
+	std::stable_sort(entries.begin(), entries.end(), [](const GeneratorDescriptorVectorEntry0x398 &left, const GeneratorDescriptorVectorEntry0x398 &right) {
+		if (left.descriptor_source_field_0x20 != right.descriptor_source_field_0x20) {
+			return left.descriptor_source_field_0x20 < right.descriptor_source_field_0x20;
+		}
+		return left.source_catalog_index_0x49da08 < right.source_catalog_index_0x49da08;
+	});
+	for (int32_t index = 0; index < int32_t(entries.size()); ++index) {
+		entries[size_t(index)].vector_index = index;
+	}
+	return entries;
+}
+
+static int32_t descriptor_vector_index_for_source_catalog_index_0x398(
+		const GeneratorObjectPrivateState &state,
+		int32_t source_catalog_index_0x49da08) {
+	for (const GeneratorDescriptorVectorEntry0x398 &entry : state.descriptor_vector_entries_398_39c) {
+		if (entry.source_catalog_index_0x49da08 == source_catalog_index_0x49da08) {
+			return entry.vector_index;
+		}
+	}
+	return -1;
+}
+
 bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const SourceObjectRecord0x4c &right) {
 	return left.source_row == right.source_row
 			&& left.source == right.source
@@ -4285,6 +4338,76 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 			result.candidate_decisions.push_back(decision);
 			return result;
 		}
+		if (state.descriptor_vector_398_39c_source_owned) {
+			if (selector == nullptr || !selector->terrain_policy_0x0c_known) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_selector_lane_0x0c_missing_before_0x4a9e40_descriptor_selection";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+			if (!candidate.cursor_source_0x08_known) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_candidate_source_field_0x08_missing_before_0x4a9e40_descriptor_selection";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+			const int32_t metadata_bucket_0x08 =
+					source_object_metadata_bucket_for_type_0x57c648_0x08(candidate.descriptor_type_0x04);
+			if (metadata_bucket_0x08 < 0) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_candidate_type_missing_metadata_bucket_0x57c648_0x08_before_0x4a9e40";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+			decision.descriptor_selector_invoked_0x4a9e40 = true;
+			decision.descriptor_selector_0x4a9e40 = source_object_wrapper_selector_0x4a9e40(
+					rng.state,
+					selector->terrain_policy_0x0c,
+					metadata_bucket_0x08,
+					candidate.cursor_source_0x08);
+			if (decision.descriptor_selector_0x4a9e40.rng_consumed) {
+				rng.state = decision.descriptor_selector_0x4a9e40.rng_state_after;
+			}
+			if (!decision.descriptor_selector_0x4a9e40.selected
+					|| decision.descriptor_selector_0x4a9e40.selected_source_record_index < 0) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_0x4a9e40_descriptor_selection_empty";
+				result.score_dispatch_reject_count += 1;
+				result.candidate_decisions.push_back(decision);
+				continue;
+			}
+			const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+			if (decision.descriptor_selector_0x4a9e40.selected_source_record_index >= int32_t(records.size())) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_0x4a9e40_selected_source_record_out_of_range";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+			decision.selected_source_record_known_0x4a9e40 = true;
+			decision.selected_source_catalog_index_0x49da08 =
+					decision.descriptor_selector_0x4a9e40.selected_source_record_index;
+			decision.selected_source_record_copy = records[size_t(decision.selected_source_catalog_index_0x49da08)];
+			decision.selected_descriptor_vector_index_0x398 =
+					descriptor_vector_index_for_source_catalog_index_0x398(
+							state,
+							decision.selected_source_catalog_index_0x49da08);
+			if (decision.selected_descriptor_vector_index_0x398 < 0) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_selected_source_record_missing_from_generator_descriptor_vector_0x398";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+		}
 		decision.accepted_after_score_dispatch = true;
 		result.accepted_count += 1;
 		result.accepted_weight_total_0x14 += candidate.selection_weight_0x10;
@@ -4322,6 +4445,10 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 	RewardGuardCandidateDecision4a9f1c &selected_decision = result.candidate_decisions[size_t(result.selected_candidate_index)];
 	selected_decision.selected_by_weighted_rng_0x4aa110 = true;
 	selected_decision.selected_score_replayed_0x4aa151 = true;
+	result.selected_source_record_known_0x4a9e40 = selected_decision.selected_source_record_known_0x4a9e40;
+	result.selected_source_catalog_index_0x49da08 = selected_decision.selected_source_catalog_index_0x49da08;
+	result.selected_descriptor_vector_index_0x398 = selected_decision.selected_descriptor_vector_index_0x398;
+	result.selected_source_record_copy = selected_decision.selected_source_record_copy;
 	result.selected_score_dispatch_replayed_0x4aa151 = true;
 	selected_decision.selected_create_dispatched_0x4aa166 = true;
 	result.selected_create_dispatched_0x4aa166 = true;
@@ -4895,10 +5022,17 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 		result.selected_projection_object_0x540b14_known = true;
 		result.selected_projection_object_0x540b14 = result.selector_0x4a9f1c.selected_projection_object_0x540b14;
 	}
+	result.generator_descriptor_vector_0x398_0x39c_known =
+			state.descriptor_vector_398_39c_source_owned
+			&& state.descriptor_vector_entry_count_398_39c > 0
+			&& !state.descriptor_vector_entries_398_39c.empty();
 	if (!result.generator_descriptor_vector_0x398_0x39c_known) {
 		result.blocked_reason = "0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create";
 		return result;
 	}
+	result.selected_descriptor_state_0x94_0x95_known =
+			result.selector_0x4a9f1c.selected_source_record_known_0x4a9e40
+			&& result.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 >= 0;
 	if (!result.selected_descriptor_state_0x94_0x95_known) {
 		result.blocked_reason = "0x4aa1db_selected_descriptor_state_0x94_0x95_pending_before_0x4a5c07_0x49cf34_attach";
 		return result;
@@ -8881,6 +9015,22 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 
 	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0, 4);
 	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0, 4);
+	state.descriptor_vector_entries_398_39c = generator_descriptor_vector_entries_from_source_catalog_0x49da08_0x398_0x39c();
+	state.descriptor_vector_entry_count_398_39c = int32_t(state.descriptor_vector_entries_398_39c.size());
+	state.descriptor_vector_398_39c = generator_object_vector_state(
+			"descriptor_pointer_vector_0x398_0x39c",
+			0x398U,
+			0x39cU,
+			0U,
+			!state.descriptor_vector_entries_398_39c.empty(),
+			true,
+			true,
+			state.descriptor_vector_entry_count_398_39c,
+			4);
+	state.descriptor_vector_398_39c_source_owned =
+			state.descriptor_vector_398_39c.present
+			&& state.descriptor_vector_398_39c.contents_known
+			&& state.descriptor_vector_398_39c.count_known;
 	state.object_record_vector_ec4_ecc = generator_object_vector_state("object_record_vector_0xec4_0xecc", 0xec4U, 0xeccU, 0U, true, false, false, 0, 4);
 	state.source_pair_vector_edc = generator_object_vector_state("source_pair_metadata_vector_0xedc", 0xedcU, 0U, 0U, true, false, false, 0, 8);
 	state.pending_entry_vector_eec_ef0_ef4 = generator_object_vector_state("source_handler_pending_entry_vector_0xeec_0xef0_0xef4_source_excluded_for_direct_mode", 0xeecU, 0xef0U, 0xef4U, true, false, true, 0, 8);

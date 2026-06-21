@@ -16,16 +16,16 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands, terrain policy, stale supported-land +0xf5c cursor, zeroed +0xf60/+0xf64 terrain-pressure state, recovered 0x57cea0 monster terrain rows, and 0x531cc4 type-17 subtype-to-monster rows into the ordered reward/guard selector. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes recovered direct and dynamic scorer contracts, and now blocks at 0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create; this is not parity and not final map output.",
+      "notes": "Ported source-backed generator descriptor vector +0x398/+0x39c into shared H3MapEd workflow state and wired 0x4a9f1c through 0x4a9e40 selected source descriptor carry; workflow now blocks later at unported 0x4aa1db -> 0x4a5c07 selected-object creation / 0x49cf34 attach instead of missing descriptor vector.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T09:24:54Z",
+      "updatedAt": "2026-06-21T11:02:11Z",
       "latestEvidenceId": "native-rmg-reward-guard-dynamic-scorers-20260621",
-      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port selected descriptor/materialization state for 0x4aa1db -> 0x4a5c07 -> 0x49cf34, including generator +0x398/+0x39c descriptor-vector membership and selected descriptor +0x94/+0x95/+0x20 state, then port the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
-      "latestFinding": "Native RMG no-Godot workflow now executes recovered reward/guard dynamic candidate scorers instead of blocking at 0x49c64b/0x49c849. h3maped_rmg_core_selftest proves the workflow carries recovered monster terrain/type17 tables, stale +0xf5c, and zeroed +0xf60/+0xf64 pressure state through 0x4a9f1c, completes selector scoring, and exits at the selected-object descriptor-vector blocker. The focused small_3p_seed_11_controlled CLI run exits expected status 2 at 0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create with final_writeout_complete=false. This is implementation progress inside the chain, not parity.",
+      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port 0x4aa1db selected-object allocation through 0x4a5c07, ordinary 0x540a88 record construction, wrapper member creation, and 0x49cf34 attach against the selected descriptor now carried from 0x4a9f1c/0x4a9e40. Then port the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
+      "latestFinding": "Native RMG no-Godot workflow now materializes the recovered generator descriptor vector +0x398/+0x39c in shared H3MapEd workflow state, maps reward/guard candidate type through metadata +0x08 before 0x4a9e40, carries the selected source descriptor through 0x4a9f1c, and exits later at 0x4aa1db_0x4a5c07_selected_object_create_and_0x49cf34_attach_not_yet_ported_for_live_descriptor_vector. h3maped_rmg_core_selftest proves the Small seed-11 workflow selects source catalog record 909 / descriptor-vector index 640 with final_writeout_complete=false. This is implementation progress inside the chain, not parity.",
       "blocker": "The shared workflow now stops inside reward_guard_materialization after 0x4a9f1c selected a candidate, because 0x4aa1db does not yet own the source-backed generator +0x398/+0x39c descriptor vector and selected descriptor state required before 0x4a5c07 and 0x49cf34. After that, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
@@ -12926,10 +12926,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands, terrain policy, stale supported-land +0xf5c cursor, zeroed +0xf60/+0xf64 terrain-pressure state, recovered 0x57cea0 monster terrain rows, and 0x531cc4 type-17 subtype-to-monster rows into the ordered reward/guard selector. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes recovered direct and dynamic scorer contracts, and now blocks at 0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create; this is not parity and not final map output.",
+  "currentSliceNotes": "Ported source-backed generator descriptor vector +0x398/+0x39c into shared H3MapEd workflow state and wired 0x4a9f1c through 0x4a9e40 selected source descriptor carry; workflow now blocks later at unported 0x4aa1db -> 0x4a5c07 selected-object creation / 0x49cf34 attach instead of missing descriptor vector.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-21T09:24:54Z",
+  "currentSliceUpdatedAt": "2026-06-21T11:02:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -58446,7 +58446,7 @@
   ],
   "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
   "taskId": "10184",
-  "updatedAt": "2026-06-21T09:24:54Z",
+  "updatedAt": "2026-06-21T11:02:11Z",
   "validation": {
     "linux_debug_native_build": "passed",
     "linux_release_native_build": "passed",
