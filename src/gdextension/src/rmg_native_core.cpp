@@ -3094,23 +3094,144 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload(const ControlledCas
 	return payload;
 }
 
+NativeH3MapedWorkflowResult run_native_h3maped_workflow(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input) {
+	NativeH3MapedWorkflowResult result;
+	result.input = controlled_case;
+	result.supported_scope = supported_one_level_land_scope(controlled_case);
+	result.status = "blocked";
+	result.blocked_reason = "native_h3maped_workflow_not_started";
+	result.current_phase_id = "entry_scope";
+
+	auto add_phase = [&result](const std::string &id, const std::string &anchor, const std::string &status, const std::string &blocker) {
+		NativeH3MapedWorkflowPhase phase;
+		phase.id = id;
+		phase.h3maped_anchor = anchor;
+		phase.status = status;
+		phase.blocker = blocker;
+		result.phases.push_back(phase);
+	};
+
+	if (!controlled_case.parse_ok) {
+		result.status = "failed";
+		result.blocked_reason = controlled_case.parse_error;
+		add_phase("entry_scope", "native_controlled_case_to_h3maped_entry_config", "failed", controlled_case.parse_error);
+		return result;
+	}
+	if (!result.supported_scope) {
+		result.status = "unsupported_scope";
+		result.blocked_reason = "standalone_native_workflow_currently_scopes_only_small_medium_one_level_land";
+		add_phase("entry_scope", "native_controlled_case_to_h3maped_entry_config", "unsupported_scope", result.blocked_reason);
+		return result;
+	}
+
+	result.payload = build_recovered_owner_grid_payload(controlled_case, input);
+	result.executed = result.payload.executable;
+
+	add_phase("entry_scope", "native_controlled_case_to_h3maped_entry_config", "complete", "");
+
+	const bool setup_template_done = result.payload.input.recovered_template_selection_known
+			&& !result.payload.input.recovered_template_selection_blocked
+			&& result.payload.input.rng_state_after_template_selection_known
+			&& !result.payload.input.runtime_zone_seeds.empty();
+	if (!result.payload.executable || !setup_template_done) {
+		result.current_phase_id = "setup_template_selection";
+		result.status = "blocked";
+		std::ostringstream reason;
+		reason << "native_workflow_missing_recovered_setup_template_runtime_inputs";
+		if (!result.payload.missing_inputs.empty()) {
+			reason << ":";
+			for (size_t index = 0; index < result.payload.missing_inputs.size(); ++index) {
+				if (index != 0) {
+					reason << ",";
+				}
+				reason << result.payload.missing_inputs[index];
+			}
+		}
+		result.blocked_reason = reason.str();
+		add_phase("setup_template_selection", "0x4adfe1_0x49ecf2_0x49f0cd_0x4ac552", "blocked", result.blocked_reason);
+		add_phase("coordinate_boundary_terrain", "0x4a218c_0x4a1f3b_0x4a19ed_0x4a3a03_0x4cca55_0x4a2777_0x4a325d_0x4a3710_0x49b53d_0x4a3f27", "pending", "blocked_before_runtime_zone_seed_inputs");
+		add_phase("relation_object_materialization", "0x4a5767_0x49a318_0x49e700_0x4a54a7_0x4a8d2c_0x4a8db2_0x4a93a2_0x4a9d6a_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_relation_object_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("setup_template_selection", "0x4adfe1_0x49ecf2_0x49f0cd_0x4ac552", "complete", "");
+
+	const bool coordinate_terrain_done = result.payload.owner_grid_executed
+			&& !result.payload.coordinate_seed_blocked
+			&& result.payload.terrain_selection_repaint_status != "pending_execution";
+	if (!coordinate_terrain_done) {
+		result.current_phase_id = "coordinate_boundary_terrain";
+		result.status = "blocked";
+		result.blocked_reason = result.payload.coordinate_seed_blocked
+				? "native_workflow_coordinate_seed_blocked"
+				: "native_workflow_coordinate_boundary_terrain_not_executed";
+		add_phase("coordinate_boundary_terrain", "0x4a218c_0x4a1f3b_0x4a19ed_0x4a3a03_0x4cca55_0x4a2777_0x4a325d_0x4a3710_0x49b53d_0x4a3f27", "blocked", result.blocked_reason);
+		add_phase("relation_object_materialization", "0x4a5767_0x49a318_0x49e700_0x4a54a7_0x4a8d2c_0x4a8db2_0x4a93a2_0x4a9d6a_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_coordinate_boundary_terrain");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_relation_object_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("coordinate_boundary_terrain", "0x4a218c_0x4a1f3b_0x4a19ed_0x4a3a03_0x4cca55_0x4a2777_0x4a325d_0x4a3710_0x49b53d_0x4a3f27", "complete_partial_state", "continues_into_generator_object_private_state_before_comparable_payload");
+
+	if (!result.payload.generator_object_private_state.present) {
+		result.current_phase_id = "generator_object_private_state";
+		result.status = "blocked";
+		result.blocked_reason = "native_workflow_generator_object_private_state_not_built";
+		add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "blocked", result.blocked_reason);
+		add_phase("relation_object_materialization", "0x4a5767_0x49a318_0x49e700_0x4a54a7_0x4a8d2c_0x4a8db2_0x4a93a2_0x4a9d6a_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_generator_object_private_state");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_relation_object_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("generator_object_private_state", "generator_plus_0x14_0x18_0x1c_0x20_0xec4_0xedc_0x10d4_0x10e4_0x1110", "complete_partial_state", "remaining_private_state_blockers_must_be_resolved_before_consumers");
+
+	result.current_phase_id = "relation_object_materialization";
+	result.status = "blocked";
+	result.blocked_reason = "native_workflow_stops_after_partial_generator_object_private_state_relation_object_reward_guard_connection_road_and_final_writeout_not_owned";
+	add_phase("relation_object_materialization", "0x4a5767_0x49a318_0x49e700_0x4a54a7_0x4a8d2c_0x4a8db2_0x4a93a2_0x4a9d6a_0x4aa9b7_0x4aa3e9", "blocked", result.blocked_reason);
+	add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_relation_object_materialization");
+	add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+	return result;
+}
+
 std::string shared_runtime_chain_input_status(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input) {
-	const SharedRuntimeChainInput resolved = resolved_shared_runtime_chain_input(controlled_case, input);
-	const std::vector<std::string> missing = shared_runtime_chain_missing_reasons(controlled_case, resolved);
-	return missing.empty() ? "shared_inputs_ready" : "missing_exact_runtime_zone_seed_link_inputs";
+	const NativeH3MapedWorkflowResult workflow = run_native_h3maped_workflow(controlled_case, input);
+	if (workflow.status == "failed" || workflow.status == "unsupported_scope") {
+		return workflow.status;
+	}
+	return workflow.payload.executable ? "native_workflow_inputs_ready" : "missing_exact_runtime_zone_seed_link_inputs";
 }
 
 bool shared_runtime_chain_input_executable(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input) {
-	const SharedRuntimeChainInput resolved = resolved_shared_runtime_chain_input(controlled_case, input);
-	return shared_runtime_chain_missing_reasons(controlled_case, resolved).empty();
+	const NativeH3MapedWorkflowResult workflow = run_native_h3maped_workflow(controlled_case, input);
+	return workflow.executed;
 }
 
-std::string case_shared_h3maped_state_chain_blocked_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason, const SharedRuntimeChainInput &shared_input) {
+void append_native_workflow_phases_json(std::ostream &out, const std::vector<NativeH3MapedWorkflowPhase> &phases) {
+	out << "[";
+	for (size_t index = 0; index < phases.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const NativeH3MapedWorkflowPhase &phase = phases[index];
+		out << "{"
+			<< "\"id\":\"" << json_escape(phase.id) << "\","
+			<< "\"h3maped_anchor\":\"" << json_escape(phase.h3maped_anchor) << "\","
+			<< "\"status\":\"" << json_escape(phase.status) << "\","
+			<< "\"blocker\":\"" << json_escape(phase.blocker) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
+std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason, const SharedRuntimeChainInput &shared_input) {
 	const int32_t width = h3maped_rmg_core::map_width_for_size_class(controlled_case.size_class);
 	const bool supported = supported_one_level_land_scope(controlled_case);
+	const NativeH3MapedWorkflowResult workflow = run_native_h3maped_workflow(controlled_case, shared_input);
 	std::ostringstream out;
 	out << "{\n";
-	out << "  \"schema_id\": \"rmg_native_batch_export_cli_shared_h3maped_state_chain_blocked_v1\",\n";
+	out << "  \"schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"runner\": \"standalone_native_cli_no_godot\",\n";
 	out << "  \"godot_process_started\": false,\n";
 	out << "  \"status\": \"" << json_escape(status) << "\",\n";
@@ -3142,9 +3263,20 @@ std::string case_shared_h3maped_state_chain_blocked_json(const ControlledCase &c
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
+	out << "  \"native_h3maped_workflow\": {\n";
+	out << "    \"status\": \"" << json_escape(workflow.status) << "\",\n";
+	out << "    \"blocked_reason\": \"" << json_escape(workflow.blocked_reason) << "\",\n";
+	out << "    \"current_phase_id\": \"" << json_escape(workflow.current_phase_id) << "\",\n";
+	out << "    \"executed\": " << (workflow.executed ? "true" : "false") << ",\n";
+	out << "    \"final_payload_owned\": " << (workflow.final_payload_owned ? "true" : "false") << ",\n";
+	out << "    \"final_writeout_complete\": " << (workflow.final_writeout_complete ? "true" : "false") << ",\n";
+	out << "    \"phases\": ";
+	append_native_workflow_phases_json(out, workflow.phases);
+	out << "\n";
+	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_full_source_records_descriptor_identity_and_generated_cell_state_before_relation_object_consumers\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_relation_object_materialization_into_the_single_native_h3maped_workflow\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
