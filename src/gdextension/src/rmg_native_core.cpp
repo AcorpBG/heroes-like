@@ -698,6 +698,17 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	for (const h3maped_rmg_core::SourceOrderSchedulerResult4a8db2 &replay : input.source_order_scheduler_replays_0x4a8db2) {
 		out.source_order_scheduler_replays_0x4a8db2.push_back(from_h3maped_source_order_scheduler_result_4a8db2(replay));
 	}
+	out.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2 = input.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2;
+	out.generic_source_order_pair_scan_count_0xedc = input.generic_source_order_pair_scan_count_0xedc;
+	out.generic_source_order_pair_type98_skip_count = input.generic_source_order_pair_type98_skip_count;
+	out.generic_source_order_pair_descriptor_context_missing_count = input.generic_source_order_pair_descriptor_context_missing_count;
+	out.generic_source_order_pair_relation_context_missing_count = input.generic_source_order_pair_relation_context_missing_count;
+	out.generic_source_order_pair_source_fields_missing_count = input.generic_source_order_pair_source_fields_missing_count;
+	out.generic_source_order_pair_direct_dispatch_count_0x4a8d2c = input.generic_source_order_pair_direct_dispatch_count_0x4a8d2c;
+	out.generic_source_order_pair_direct_commit_count_0x4a8d2c = input.generic_source_order_pair_direct_commit_count_0x4a8d2c;
+	out.generic_source_order_pair_weighted_replay_count_0x4a8db2 = input.generic_source_order_pair_weighted_replay_count_0x4a8db2;
+	out.generic_source_order_pair_weighted_commit_count_0x4a8db2 = input.generic_source_order_pair_weighted_commit_count_0x4a8db2;
+	out.generic_source_order_pair_replay_blockers_0xedc = input.generic_source_order_pair_replay_blockers_0xedc;
 	out.weighted_candidate_vectors_0x4a901a_known = input.weighted_candidate_vectors_0x4a901a_known;
 	out.weighted_candidate_vector_count_0x4a901a = input.weighted_candidate_vector_count_0x4a901a;
 	out.weighted_candidate_total_count_0x4a901a = input.weighted_candidate_total_count_0x4a901a;
@@ -906,6 +917,8 @@ SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg
 		input.raw_field_0x34,
 		input.raw_field_0x38_known,
 		input.raw_field_0x38,
+		input.raw_field_0x3c_known,
+		input.raw_field_0x3c,
 		input.pass_count,
 		input.action_count,
 		input.passability_mask,
@@ -978,6 +991,16 @@ SharedSourceObjectResolverSourcePair4af785 from_h3maped_source_object_resolver_s
 	out.descriptor_join_descriptor_0x4903e8 = from_h3maped_source_object_descriptor_join_context(input.descriptor_join_descriptor_0x4903e8);
 	out.descriptor_joined_0x4903e8 = input.descriptor_joined_0x4903e8;
 	out.descriptor_join_source_pair_index_0xedc = input.descriptor_join_source_pair_index_0xedc;
+	out.source_order_relation_context_known = input.source_order_relation_context_known;
+	out.source_order_relation_owner_byte2 = input.source_order_relation_owner_byte2;
+	out.source_order_source_pair_key_0x0c_known = input.source_order_source_pair_key_0x0c_known;
+	out.source_order_source_pair_key_0x0c = input.source_order_source_pair_key_0x0c;
+	out.source_order_anchor_known = input.source_order_anchor_known;
+	out.source_order_anchor_x_0x10 = input.source_order_anchor_x_0x10;
+	out.source_order_anchor_y_0x14 = input.source_order_anchor_y_0x14;
+	out.source_order_anchor_level_0x18 = input.source_order_anchor_level_0x18;
+	out.source_order_lane_state_0xee4_known = input.source_order_lane_state_0xee4_known;
+	out.source_order_lane_state_0xee4 = input.source_order_lane_state_0xee4;
 	return out;
 }
 
@@ -1001,7 +1024,9 @@ bool same_source_object_record_sample(const SharedSourceObjectRecord0x4c &left, 
 			&& left.raw_field_0x34_known == right.raw_field_0x34_known
 			&& left.raw_field_0x34 == right.raw_field_0x34
 			&& left.raw_field_0x38_known == right.raw_field_0x38_known
-			&& left.raw_field_0x38 == right.raw_field_0x38;
+			&& left.raw_field_0x38 == right.raw_field_0x38
+			&& left.raw_field_0x3c_known == right.raw_field_0x3c_known
+			&& left.raw_field_0x3c == right.raw_field_0x3c;
 }
 
 void add_source_object_sample(RecoveredOwnerGridPayload &payload, const h3maped_rmg_core::SourceObjectRecord0x4c &input) {
@@ -1421,6 +1446,8 @@ void append_source_object_record_sample_json(std::ostream &out, const SharedSour
 		<< ",\"raw_field_0x34\":" << record.raw_field_0x34
 		<< ",\"raw_field_0x38_known\":" << (record.raw_field_0x38_known ? "true" : "false")
 		<< ",\"raw_field_0x38\":" << record.raw_field_0x38
+		<< ",\"raw_field_0x3c_known\":" << (record.raw_field_0x3c_known ? "true" : "false")
+		<< ",\"raw_field_0x3c\":" << record.raw_field_0x3c
 		<< ",\"pass_count\":" << record.pass_count
 		<< ",\"action_count\":" << record.action_count
 		<< ",\"passability_mask\":\"" << json_escape(record.passability_mask) << "\""
@@ -1601,6 +1628,16 @@ void append_source_object_resolver_source_pair_json(std::ostream &out, const Sha
 		<< ",\"descriptor_join_0x4903e8_known\":" << (source_pair.descriptor_join_0x4903e8_known ? "true" : "false")
 		<< ",\"descriptor_joined_0x4903e8\":" << (source_pair.descriptor_joined_0x4903e8 ? "true" : "false")
 		<< ",\"descriptor_join_source_pair_index_0xedc\":" << source_pair.descriptor_join_source_pair_index_0xedc
+		<< ",\"source_order_relation_context_known\":" << (source_pair.source_order_relation_context_known ? "true" : "false")
+		<< ",\"source_order_relation_owner_byte2\":" << source_pair.source_order_relation_owner_byte2
+		<< ",\"source_order_source_pair_key_0x0c_known\":" << (source_pair.source_order_source_pair_key_0x0c_known ? "true" : "false")
+		<< ",\"source_order_source_pair_key_0x0c\":" << source_pair.source_order_source_pair_key_0x0c
+		<< ",\"source_order_anchor_known\":" << (source_pair.source_order_anchor_known ? "true" : "false")
+		<< ",\"source_order_anchor_x_0x10\":" << source_pair.source_order_anchor_x_0x10
+		<< ",\"source_order_anchor_y_0x14\":" << source_pair.source_order_anchor_y_0x14
+		<< ",\"source_order_anchor_level_0x18\":" << source_pair.source_order_anchor_level_0x18
+		<< ",\"source_order_lane_state_0xee4_known\":" << (source_pair.source_order_lane_state_0xee4_known ? "true" : "false")
+		<< ",\"source_order_lane_state_0xee4\":" << source_pair.source_order_lane_state_0xee4
 		<< ",\"source_record_copy\":";
 	append_source_object_record_sample_json(out, source_pair.source_record_copy);
 	out << ",\"context_wrapper_copy\":";
@@ -2203,6 +2240,19 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"source_order_scheduler_blocked_count_0x4a8db2\":" << state.source_order_scheduler_blocked_count_0x4a8db2 << ","
 		<< "\"source_order_scheduler_replays_0x4a8db2\":";
 	append_source_order_scheduler_replays_4a8db2_json(out, state.source_order_scheduler_replays_0x4a8db2);
+	out << ","
+		<< "\"generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2\":" << (state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2 ? "true" : "false") << ","
+		<< "\"generic_source_order_pair_scan_count_0xedc\":" << state.generic_source_order_pair_scan_count_0xedc << ","
+		<< "\"generic_source_order_pair_type98_skip_count\":" << state.generic_source_order_pair_type98_skip_count << ","
+		<< "\"generic_source_order_pair_descriptor_context_missing_count\":" << state.generic_source_order_pair_descriptor_context_missing_count << ","
+		<< "\"generic_source_order_pair_relation_context_missing_count\":" << state.generic_source_order_pair_relation_context_missing_count << ","
+		<< "\"generic_source_order_pair_source_fields_missing_count\":" << state.generic_source_order_pair_source_fields_missing_count << ","
+		<< "\"generic_source_order_pair_direct_dispatch_count_0x4a8d2c\":" << state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c << ","
+		<< "\"generic_source_order_pair_direct_commit_count_0x4a8d2c\":" << state.generic_source_order_pair_direct_commit_count_0x4a8d2c << ","
+		<< "\"generic_source_order_pair_weighted_replay_count_0x4a8db2\":" << state.generic_source_order_pair_weighted_replay_count_0x4a8db2 << ","
+		<< "\"generic_source_order_pair_weighted_commit_count_0x4a8db2\":" << state.generic_source_order_pair_weighted_commit_count_0x4a8db2 << ","
+		<< "\"generic_source_order_pair_replay_blockers_0xedc\":";
+	append_json_string_array(out, state.generic_source_order_pair_replay_blockers_0xedc);
 	out << ","
 		<< "\"weighted_candidate_vectors_0x4a901a_known\":" << (state.weighted_candidate_vectors_0x4a901a_known ? "true" : "false") << ","
 		<< "\"weighted_candidate_vector_count_0x4a901a\":" << state.weighted_candidate_vector_count_0x4a901a << ","
