@@ -767,6 +767,22 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.reward_guard_projection_source_relation_known_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_relation_known;
 	out.reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_relation_runtime_zone_index;
 	out.reward_guard_projection_source_relation_blocked_reason_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.blocked_reason;
+	out.reward_guard_projection_driver_selection_0x4ad947_ported = input.reward_guard_projection_driver_selection_0x4ad947_ported;
+	out.reward_guard_projection_driver_selection_input_known = input.reward_guard_projection_driver_selection_input_known;
+	out.reward_guard_projection_driver_selection_applied_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.applied;
+	out.reward_guard_projection_driver_scanned_entry_count_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.scanned_entry_count;
+	out.reward_guard_projection_driver_field_unknown_count_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.field_unknown_count;
+	out.reward_guard_projection_driver_disabled_reject_count_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.disabled_reject_count;
+	out.reward_guard_projection_driver_used_flag_reject_count_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.used_flag_reject_count;
+	out.reward_guard_projection_driver_flag_bit_reject_count_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.flag_bit_reject_count;
+	out.reward_guard_projection_driver_eligible_count_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.eligible_count;
+	out.reward_guard_projection_driver_generator_0x10b4_written = input.reward_guard_projection_driver_selection_0x4ad947.generator_0x10b4_written;
+	out.reward_guard_projection_driver_generator_0x10b4_value = input.reward_guard_projection_driver_selection_0x4ad947.generator_0x10b4_value;
+	out.reward_guard_projection_driver_rng_value_0x4e7276 = input.reward_guard_projection_driver_selection_0x4ad947.rng_value_0x4e7276;
+	out.reward_guard_projection_driver_selected_eligible_ordinal = input.reward_guard_projection_driver_selection_0x4ad947.selected_eligible_ordinal;
+	out.reward_guard_projection_driver_selected_global_entry_index = input.reward_guard_projection_driver_selection_0x4ad947.selected_global_entry_index;
+	out.reward_guard_projection_driver_projection_record_0x1c_written = input.reward_guard_projection_driver_selection_0x4ad947.projection_record_selected_global_index_0x1c_written;
+	out.reward_guard_projection_driver_blocked_reason_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.blocked_reason;
 	out.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = input.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported;
 	out.reward_guard_candidate_records_10f4_10f8_contents_known = input.reward_guard_candidate_records_10f4_10f8_contents_known;
 	out.reward_guard_candidate_record_count_10f4_10f8 = input.reward_guard_candidate_record_count_10f4_10f8;
@@ -2346,6 +2362,23 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"reward_guard_projection_source_relation_runtime_zone_index_0x4ad947\":" << state.reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 << ","
 		<< "\"reward_guard_projection_source_relation_blocked_reason_0x4ad947\":\"" << json_escape(state.reward_guard_projection_source_relation_blocked_reason_0x4ad947) << "\","
 		<< "\"reward_guard_projection_source_relation_source\":\"0x4ad947_reads_projection_coordinate_cell_word_0x20_signed_high_byte_and_indexes_generator_plus_0x10e4_relation_vector_before_calling_0x4ad7f7\","
+		<< "\"reward_guard_projection_driver_selection_0x4ad947_ported\":" << (state.reward_guard_projection_driver_selection_0x4ad947_ported ? "true" : "false") << ","
+		<< "\"reward_guard_projection_driver_selection_input_known\":" << (state.reward_guard_projection_driver_selection_input_known ? "true" : "false") << ","
+		<< "\"reward_guard_projection_driver_selection_applied_0x4ad947\":" << (state.reward_guard_projection_driver_selection_applied_0x4ad947 ? "true" : "false") << ","
+		<< "\"reward_guard_projection_driver_scanned_entry_count_0x4ad947\":" << state.reward_guard_projection_driver_scanned_entry_count_0x4ad947 << ","
+		<< "\"reward_guard_projection_driver_field_unknown_count_0x4ad947\":" << state.reward_guard_projection_driver_field_unknown_count_0x4ad947 << ","
+		<< "\"reward_guard_projection_driver_disabled_reject_count_0x4ad947\":" << state.reward_guard_projection_driver_disabled_reject_count_0x4ad947 << ","
+		<< "\"reward_guard_projection_driver_used_flag_reject_count_0x4ad947\":" << state.reward_guard_projection_driver_used_flag_reject_count_0x4ad947 << ","
+		<< "\"reward_guard_projection_driver_flag_bit_reject_count_0x4ad947\":" << state.reward_guard_projection_driver_flag_bit_reject_count_0x4ad947 << ","
+		<< "\"reward_guard_projection_driver_eligible_count_0x4ad947\":" << state.reward_guard_projection_driver_eligible_count_0x4ad947 << ","
+		<< "\"reward_guard_projection_driver_generator_0x10b4_written\":" << (state.reward_guard_projection_driver_generator_0x10b4_written ? "true" : "false") << ","
+		<< "\"reward_guard_projection_driver_generator_0x10b4_value\":" << (state.reward_guard_projection_driver_generator_0x10b4_value ? "true" : "false") << ","
+		<< "\"reward_guard_projection_driver_rng_value_0x4e7276\":" << state.reward_guard_projection_driver_rng_value_0x4e7276 << ","
+		<< "\"reward_guard_projection_driver_selected_eligible_ordinal\":" << state.reward_guard_projection_driver_selected_eligible_ordinal << ","
+		<< "\"reward_guard_projection_driver_selected_global_entry_index\":" << state.reward_guard_projection_driver_selected_global_entry_index << ","
+		<< "\"reward_guard_projection_driver_projection_record_0x1c_written\":" << (state.reward_guard_projection_driver_projection_record_0x1c_written ? "true" : "false") << ","
+		<< "\"reward_guard_projection_driver_blocked_reason_0x4ad947\":\"" << json_escape(state.reward_guard_projection_driver_blocked_reason_0x4ad947) << "\","
+		<< "\"reward_guard_projection_driver_source\":\"0x4ad947_scans_0x90_entries_from_0x57c7cc_plus_0x0c_rejects_disabled_plus_0x10_used_generator_plus_0x1024_and_missing_flag_bit_0x02_sets_generator_plus_0x10b4_when_eligible_count_below_0x14_then_rng_selects_projection_record_plus_0x1c\","
 		<< "\"reward_guard_candidate_vector_10f4_10f8\":";
 	append_generator_object_vector_state_json(out, state.reward_guard_candidate_vector_10f4_10f8);
 	out << ","

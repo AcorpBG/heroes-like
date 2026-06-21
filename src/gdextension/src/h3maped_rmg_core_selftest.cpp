@@ -594,6 +594,69 @@ int main() {
 	}
 
 	{
+		std::vector<aurelion::h3maped_rmg_core::RewardGuardProjectionGlobalEntry4ad947> global_entries(0x90);
+		std::vector<uint8_t> used_flags(0x90, 0U);
+		for (int32_t index = 0; index < 0x90; ++index) {
+			global_entries[size_t(index)].entry_index = index;
+			global_entries[size_t(index)].flag_byte_0x00_known = true;
+			global_entries[size_t(index)].flag_byte_0x00 = 0U;
+			global_entries[size_t(index)].disabled_byte_0x10_known = true;
+			global_entries[size_t(index)].disabled_byte_0x10 = 0U;
+		}
+		global_entries[5].flag_byte_0x00 = 0x02U;
+		global_entries[7].flag_byte_0x00 = 0x02U;
+		global_entries[9].flag_byte_0x00 = 0x02U;
+		global_entries[11].flag_byte_0x00 = 0x02U;
+		global_entries[11].disabled_byte_0x10 = 1U;
+		used_flags[7] = 1U;
+		H3MapedRng projection_driver_rng;
+		projection_driver_rng.state = 1U;
+		const auto projection_driver =
+				aurelion::h3maped_rmg_core::reward_guard_projection_driver_select_global_entry_0x4ad947(global_entries, used_flags, projection_driver_rng);
+		if (!require(projection_driver.applied
+						&& projection_driver.scanned_entry_count == 0x90
+						&& projection_driver.eligible_count == 2
+						&& projection_driver.disabled_reject_count == 1
+						&& projection_driver.used_flag_reject_count == 1
+						&& projection_driver.flag_bit_reject_count == 0x90 - 4
+						&& projection_driver.generator_0x10b4_written
+						&& projection_driver.generator_0x10b4_value
+						&& projection_driver.rng_value_0x4e7276 == 41
+						&& projection_driver.selected_eligible_ordinal == 1
+						&& projection_driver.selected_global_entry_index == 9
+						&& projection_driver.projection_record_selected_global_index_0x1c_written
+						&& projection_driver_rng.state == 0x0029e2c0U,
+					"0x4ad947 projection driver did not scan/select global entry using recovered 0x1024/0x10b4/RNG rules")) {
+			return 1;
+		}
+		for (aurelion::h3maped_rmg_core::RewardGuardProjectionGlobalEntry4ad947 &entry : global_entries) {
+			entry.flag_byte_0x00 = 0U;
+			entry.disabled_byte_0x10 = 0U;
+		}
+		H3MapedRng no_entry_rng;
+		no_entry_rng.state = 1U;
+		const auto no_entry_projection_driver =
+				aurelion::h3maped_rmg_core::reward_guard_projection_driver_select_global_entry_0x4ad947(global_entries, used_flags, no_entry_rng);
+		if (!require(!no_entry_projection_driver.applied
+						&& no_entry_projection_driver.eligible_count == 0
+						&& no_entry_projection_driver.generator_0x10b4_written
+						&& no_entry_projection_driver.blocked_reason == "0x4ad947_projection_global_table_no_eligible_entries"
+						&& no_entry_rng.state == 1U,
+					"0x4ad947 projection driver did not fail closed without eligible global entries before consuming RNG")) {
+			return 1;
+		}
+		global_entries[3].flag_byte_0x00_known = false;
+		const auto unknown_projection_driver =
+				aurelion::h3maped_rmg_core::reward_guard_projection_driver_select_global_entry_0x4ad947(global_entries, used_flags, no_entry_rng);
+		if (!require(!unknown_projection_driver.applied
+						&& unknown_projection_driver.field_unknown_count == 1
+						&& unknown_projection_driver.blocked_reason == "0x4ad947_projection_global_table_entry_fields_missing",
+					"0x4ad947 projection driver did not fail closed on unknown global-table fields")) {
+			return 1;
+		}
+	}
+
+	{
 		GeneratorObjectPrivateState projection_state;
 		projection_state.width = 3;
 		projection_state.height = 3;
