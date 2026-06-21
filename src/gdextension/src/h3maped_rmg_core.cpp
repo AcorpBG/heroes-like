@@ -47,6 +47,7 @@ static std::string hex_u32(uint32_t value) {
 
 constexpr int32_t SUPPORTED_LAND_ENDPOINT_CURSOR_KEY_COUNT_0XD8_0XDC = 8;
 constexpr uint32_t SUPPORTED_LAND_OBSERVED_STALE_CURSOR_0XF5C = 0x7a1befdfU;
+constexpr int32_t H3MAPED_MINE_OBJECT_BUCKET_0X388_TYPE_KEY = 53;
 
 struct SourcePolygonPoint4ccb64 {
 	int32_t x = 0;
@@ -1531,32 +1532,37 @@ static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_prima
 	return offsets;
 }
 
+static GeneratorDescriptorVectorEntry0x398 generator_descriptor_vector_entry_from_source_record_0x49da08(
+		const SourceObjectRecord0x4c &record,
+		int32_t source_catalog_index_0x49da08) {
+	GeneratorDescriptorVectorEntry0x398 entry;
+	entry.source_catalog_index_0x49da08 = source_catalog_index_0x49da08;
+	entry.descriptor_type_0x1c = record.type_id_0x1c;
+	entry.descriptor_source_field_0x20 = record.subtype_0x20;
+	entry.descriptor_group_0x24 = record.group_0x24;
+	entry.descriptor_last_flag_0x28 = record.last_flag_0x28;
+	entry.descriptor_source_cell_offsets_0x2c_0x30_known =
+			descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
+					record,
+					entry.descriptor_source_cell_x_0x2c,
+					entry.descriptor_source_cell_y_0x30);
+	entry.descriptor_projection_enabled_0x29 = entry.descriptor_source_cell_offsets_0x2c_0x30_known
+			&& record.action_count > 0;
+	entry.descriptor_dimensions_known = record.descriptor_mask_fields_0x34_0x48_known;
+	entry.descriptor_width_0x34 = record.descriptor_width_0x34;
+	entry.descriptor_height_0x38 = record.descriptor_height_0x38;
+	entry.descriptor_mask_a_0x3c_0x40 = record.descriptor_mask_a_0x3c_0x40;
+	entry.descriptor_mask_b_0x44_0x48 = record.descriptor_mask_b_0x44_0x48;
+	entry.source_record_copy = record;
+	return entry;
+}
+
 static std::vector<GeneratorDescriptorVectorEntry0x398> generator_descriptor_vector_entries_from_source_catalog_0x49da08_0x398_0x39c() {
 	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
 	std::vector<GeneratorDescriptorVectorEntry0x398> entries;
 	entries.reserve(records.size());
 	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
-		const SourceObjectRecord0x4c &record = records[size_t(index)];
-		GeneratorDescriptorVectorEntry0x398 entry;
-		entry.source_catalog_index_0x49da08 = index;
-		entry.descriptor_type_0x1c = record.type_id_0x1c;
-		entry.descriptor_source_field_0x20 = record.subtype_0x20;
-		entry.descriptor_group_0x24 = record.group_0x24;
-		entry.descriptor_last_flag_0x28 = record.last_flag_0x28;
-		entry.descriptor_source_cell_offsets_0x2c_0x30_known =
-				descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
-						record,
-						entry.descriptor_source_cell_x_0x2c,
-						entry.descriptor_source_cell_y_0x30);
-		entry.descriptor_projection_enabled_0x29 = entry.descriptor_source_cell_offsets_0x2c_0x30_known
-				&& record.action_count > 0;
-		entry.descriptor_dimensions_known = record.descriptor_mask_fields_0x34_0x48_known;
-		entry.descriptor_width_0x34 = record.descriptor_width_0x34;
-		entry.descriptor_height_0x38 = record.descriptor_height_0x38;
-		entry.descriptor_mask_a_0x3c_0x40 = record.descriptor_mask_a_0x3c_0x40;
-		entry.descriptor_mask_b_0x44_0x48 = record.descriptor_mask_b_0x44_0x48;
-		entry.source_record_copy = record;
-		entries.push_back(entry);
+		entries.push_back(generator_descriptor_vector_entry_from_source_record_0x49da08(records[size_t(index)], index));
 	}
 	std::stable_sort(entries.begin(), entries.end(), [](const GeneratorDescriptorVectorEntry0x398 &left, const GeneratorDescriptorVectorEntry0x398 &right) {
 		if (left.descriptor_source_field_0x20 != right.descriptor_source_field_0x20) {
@@ -1564,6 +1570,28 @@ static std::vector<GeneratorDescriptorVectorEntry0x398> generator_descriptor_vec
 		}
 		return left.source_catalog_index_0x49da08 < right.source_catalog_index_0x49da08;
 	});
+	for (int32_t index = 0; index < int32_t(entries.size()); ++index) {
+		entries[size_t(index)].vector_index = index;
+	}
+	return entries;
+}
+
+static bool source_record_in_mine_template_bucket_0x388_0x38c(const SourceObjectRecord0x4c &record) {
+	return record.source == "objects.txt"
+			&& (record.type_id_0x1c == H3MAPED_MINE_OBJECT_BUCKET_0X388_TYPE_KEY
+					|| record.metadata_bucket_index_0x08 == H3MAPED_MINE_OBJECT_BUCKET_0X388_TYPE_KEY);
+}
+
+static std::vector<GeneratorDescriptorVectorEntry0x398> generator_mine_resource_descriptor_vector_entries_from_source_catalog_0x49da08_0x388_0x38c() {
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	std::vector<GeneratorDescriptorVectorEntry0x398> entries;
+	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+		const SourceObjectRecord0x4c &record = records[size_t(index)];
+		if (!source_record_in_mine_template_bucket_0x388_0x38c(record)) {
+			continue;
+		}
+		entries.push_back(generator_descriptor_vector_entry_from_source_record_0x49da08(record, index));
+	}
 	for (int32_t index = 0; index < int32_t(entries.size()); ++index) {
 		entries[size_t(index)].vector_index = index;
 	}
@@ -9848,7 +9876,96 @@ static int32_t mine_resource_density_count_0x68_0x4a9c7c(const SourceMineRules4a
 	}
 }
 
-static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4a9d6a(GeneratorObjectPrivateState &state) {
+static bool descriptor_terrain_bitset_index_test_0x42cc99(uint16_t mask_word_0x18, int32_t terrain_policy_index) {
+	if (terrain_policy_index < 0 || terrain_policy_index >= 10) {
+		return false;
+	}
+	return (uint32_t(mask_word_0x18) & (uint32_t(1U) << uint32_t(terrain_policy_index))) != 0U;
+}
+
+static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_selected_object_callback_0x4a9911(
+		GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c &owner,
+		int32_t category_index,
+		bool force_flag_0x0f,
+		int32_t policy_arg_0x10,
+		H3MapedRng &rng) {
+	MineResourceSelectedObjectCallbackResult4a9911 result;
+	result.invoked = true;
+	result.owner_vector_index = owner.owner_vector_index;
+	result.runtime_zone_index = owner.runtime_zone_index;
+	result.category_index = category_index;
+	result.force_flag_0x0f = force_flag_0x0f;
+	result.policy_arg_0x10 = policy_arg_0x10;
+	result.relation_terrain_policy_0x0c_known = owner.terrain_policy_0x0c_known;
+	result.relation_terrain_policy_0x0c = owner.terrain_policy_0x0c;
+	result.descriptor_bucket_0x388_0x38c_known =
+			state.mine_resource_descriptor_vector_388_38c_source_owned
+			&& state.mine_resource_descriptor_vector_entry_count_388_38c > 0
+			&& !state.mine_resource_descriptor_vector_entries_388_38c.empty();
+	result.descriptor_bucket_count_0x388_0x38c = state.mine_resource_descriptor_vector_entry_count_388_38c;
+	result.rng_state_before_0x4e7276 = rng.state;
+	result.rng_state_after_0x4e7276 = rng.state;
+	if (!result.descriptor_bucket_0x388_0x38c_known) {
+		result.blocked_reason = "0x4a9911_generator_plus_0x388_0x38c_mine_resource_descriptor_bucket_missing";
+		return result;
+	}
+	if (!owner.terrain_policy_0x0c_known) {
+		result.blocked_reason = "0x4a9911_relation_terrain_policy_0x0c_missing_before_0x42cc99";
+		return result;
+	}
+
+	std::vector<const GeneratorDescriptorVectorEntry0x398 *> accepted_candidates;
+	for (const GeneratorDescriptorVectorEntry0x398 &entry : state.mine_resource_descriptor_vector_entries_388_38c) {
+		result.descriptor_scan_count += 1;
+		if (entry.descriptor_source_field_0x20 != category_index) {
+			continue;
+		}
+		result.category_match_count += 1;
+		result.first_pass_terrain_test_count_0x42cc99 += 1;
+		if (descriptor_terrain_bitset_index_test_0x42cc99(entry.source_record_copy.terrain_mask_b_0x18, owner.terrain_policy_0x0c)) {
+			result.first_pass_terrain_match_count_0x42cc99 += 1;
+			accepted_candidates.push_back(&entry);
+		}
+	}
+
+	if (accepted_candidates.empty()) {
+		result.fallback_pass_used = true;
+		for (const GeneratorDescriptorVectorEntry0x398 &entry : state.mine_resource_descriptor_vector_entries_388_38c) {
+			result.fallback_scan_count += 1;
+			if (entry.descriptor_source_field_0x20 != category_index) {
+				continue;
+			}
+			result.fallback_match_count_0x40bb26 += 1;
+			accepted_candidates.push_back(&entry);
+		}
+	}
+
+	result.accepted_count = int32_t(accepted_candidates.size());
+	if (accepted_candidates.empty()) {
+		result.blocked_reason = "0x4a9911_no_mine_resource_descriptor_candidate_for_category";
+		return result;
+	}
+
+	result.rng_value_0x4e7276 = rng.next();
+	result.rng_state_after_0x4e7276 = rng.state;
+	result.selected_candidate_index = result.rng_value_0x4e7276 % result.accepted_count;
+	const GeneratorDescriptorVectorEntry0x398 &selected = *accepted_candidates[size_t(result.selected_candidate_index)];
+	result.selected = true;
+	result.selected_descriptor_vector_index_0x388 = selected.vector_index;
+	result.selected_source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
+	result.selected_descriptor_type_0x1c = selected.descriptor_type_0x1c;
+	result.selected_source_field_0x20 = selected.descriptor_source_field_0x20;
+	result.selected_def_name = selected.source_record_copy.def_name;
+	result.selected_object_allocated_0x5044b1 = true;
+	result.selected_object_initialized_0x49ba89 = true;
+	result.selected_object_vtable_0x540ab0 = OBJECT_RECORD_VTABLE_0X540AB0;
+	result.coordinate_builder_0x4a9641_invoked = true;
+	result.blocked_reason = "0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection";
+	return result;
+}
+
+static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4a9d6a(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	MineResourceMaterializationResult4a9d6a result;
 	result.invoked = true;
 	result.relation_vector_known =
@@ -9886,8 +10003,23 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 			result.density_total_count += category_result.density_count;
 			if (category_result.required_count_0x4c > 0) {
 				category_result.attempted_callback_count_0x4a9911 = 1;
-				category_result.blocked_reason = "0x4a9d6a_selected_object_callback_0x4a9911_unported_before_mine_resource_commit";
+				category_result.selected_object_callback_0x4a9911 =
+						mine_resource_selected_object_callback_0x4a9911(
+								state,
+								owner,
+								category,
+								category_result.force_flag_from_relation_byte_0x3c,
+								0,
+								rng);
 				result.callback_attempt_count_0x4a9911 += 1;
+				if (category_result.selected_object_callback_0x4a9911.applied) {
+					category_result.successful_callback_count_0x4a9911 += 1;
+					result.successful_count_0x4a9911 += 1;
+				}
+				category_result.blocked_reason =
+						category_result.selected_object_callback_0x4a9911.blocked_reason.empty()
+						? "0x4a9911_selected_object_callback_not_applied_before_mine_resource_commit"
+						: category_result.selected_object_callback_0x4a9911.blocked_reason;
 				result.blocked_reason = category_result.blocked_reason;
 				result.categories.push_back(category_result);
 				return result;
@@ -10979,6 +11111,22 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	}
 	state.endpoint_vector_c8_cc = generator_object_vector_state("endpoint_projection_pointer_vector_0xc8_0xcc", 0xc8U, 0xccU, 0U, true, false, false, 0, 4);
 	state.endpoint_vector_d8_dc = generator_object_vector_state("endpoint_cursor_pointer_vector_0xd8_0xdc", 0xd8U, 0xdcU, 0U, true, false, false, 0, 4);
+	state.mine_resource_descriptor_vector_entries_388_38c = generator_mine_resource_descriptor_vector_entries_from_source_catalog_0x49da08_0x388_0x38c();
+	state.mine_resource_descriptor_vector_entry_count_388_38c = int32_t(state.mine_resource_descriptor_vector_entries_388_38c.size());
+	state.mine_resource_descriptor_vector_388_38c = generator_object_vector_state(
+			"mine_resource_descriptor_pointer_vector_0x388_0x38c",
+			0x388U,
+			0x38cU,
+			0U,
+			!state.mine_resource_descriptor_vector_entries_388_38c.empty(),
+			true,
+			true,
+			state.mine_resource_descriptor_vector_entry_count_388_38c,
+			4);
+	state.mine_resource_descriptor_vector_388_38c_source_owned =
+			state.mine_resource_descriptor_vector_388_38c.present
+			&& state.mine_resource_descriptor_vector_388_38c.contents_known
+			&& state.mine_resource_descriptor_vector_388_38c.count_known;
 	state.descriptor_vector_entries_398_39c = generator_descriptor_vector_entries_from_source_catalog_0x49da08_0x398_0x39c();
 	state.descriptor_vector_entry_count_398_39c = int32_t(state.descriptor_vector_entries_398_39c.size());
 	state.descriptor_vector_398_39c = generator_object_vector_state(
@@ -11137,7 +11285,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		return state;
 	}
 	state.mine_resource_materialization_0x4a9d6a_ported = true;
-	state.mine_resource_materialization_0x4a9d6a = mine_resource_materialization_0x4a9d6a(state);
+	state.mine_resource_materialization_0x4a9d6a = mine_resource_materialization_0x4a9d6a(state, route_free_cell_rng);
 	state.mine_resource_materialization_0x4a9d6a_input_known =
 			state.mine_resource_materialization_0x4a9d6a.relation_vector_known;
 	if (!state.mine_resource_materialization_0x4a9d6a.applied

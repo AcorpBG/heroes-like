@@ -2120,6 +2120,44 @@ struct ConnectionTailReplayResult4a79a3 {
 	std::string blocked_reason;
 };
 
+struct MineResourceSelectedObjectCallbackResult4a9911 {
+	bool invoked = false;
+	bool applied = false;
+	bool descriptor_bucket_0x388_0x38c_known = false;
+	int32_t descriptor_bucket_count_0x388_0x38c = 0;
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	int32_t category_index = -1;
+	bool force_flag_0x0f = false;
+	int32_t policy_arg_0x10 = 0;
+	bool relation_terrain_policy_0x0c_known = false;
+	int32_t relation_terrain_policy_0x0c = 0;
+	int32_t descriptor_scan_count = 0;
+	int32_t category_match_count = 0;
+	int32_t first_pass_terrain_test_count_0x42cc99 = 0;
+	int32_t first_pass_terrain_match_count_0x42cc99 = 0;
+	bool fallback_pass_used = false;
+	int32_t fallback_scan_count = 0;
+	int32_t fallback_match_count_0x40bb26 = 0;
+	int32_t accepted_count = 0;
+	uint32_t rng_state_before_0x4e7276 = 0U;
+	uint32_t rng_state_after_0x4e7276 = 0U;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected = false;
+	int32_t selected_descriptor_vector_index_0x388 = -1;
+	int32_t selected_source_catalog_index_0x49da08 = -1;
+	int32_t selected_descriptor_type_0x1c = -1;
+	int32_t selected_source_field_0x20 = 0;
+	std::string selected_def_name;
+	bool selected_object_allocated_0x5044b1 = false;
+	bool selected_object_initialized_0x49ba89 = false;
+	uint32_t selected_object_vtable_0x540ab0 = 0U;
+	bool coordinate_builder_0x4a9641_invoked = false;
+	bool coordinate_builder_0x4a9641_applied = false;
+	std::string blocked_reason;
+};
+
 struct MineResourceMaterializationCategory4a9d6a {
 	int32_t owner_vector_index = -1;
 	int32_t runtime_zone_index = -1;
@@ -2130,6 +2168,7 @@ struct MineResourceMaterializationCategory4a9d6a {
 	bool force_flag_from_relation_byte_0x3c = false;
 	int32_t attempted_callback_count_0x4a9911 = 0;
 	int32_t successful_callback_count_0x4a9911 = 0;
+	MineResourceSelectedObjectCallbackResult4a9911 selected_object_callback_0x4a9911;
 	std::string blocked_reason;
 };
 
@@ -2163,6 +2202,10 @@ struct GeneratorObjectPrivateState {
 	int32_t generator_value_band_0x10bc = 0;
 	GeneratorObjectVectorState endpoint_vector_c8_cc;
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
+	GeneratorObjectVectorState mine_resource_descriptor_vector_388_38c;
+	bool mine_resource_descriptor_vector_388_38c_source_owned = false;
+	int32_t mine_resource_descriptor_vector_entry_count_388_38c = 0;
+	std::vector<GeneratorDescriptorVectorEntry0x398> mine_resource_descriptor_vector_entries_388_38c;
 	GeneratorObjectVectorState descriptor_vector_398_39c;
 	bool descriptor_vector_398_39c_source_owned = false;
 	int32_t descriptor_vector_entry_count_398_39c = 0;
