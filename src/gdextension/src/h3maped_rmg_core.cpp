@@ -1607,6 +1607,28 @@ static bool descriptor_only_source_identity_is_ambiguous(const SourceObjectRecor
 	return matching_records.size() > 1;
 }
 
+static SourceObjectDescriptorJoinContext4903e8 descriptor_join_context_from_descriptor_0x4903e8(const SourceObjectDescriptor4903e8 &descriptor) {
+	SourceObjectDescriptorJoinContext4903e8 context;
+	context.target_context_0x4903e8 = descriptor.target_context_0x4903e8;
+	context.source_key_0x00 = descriptor.source_key_0x00;
+	context.descriptor_type_0x1c = descriptor.descriptor_type_0x1c;
+	context.subtype_0x20 = descriptor.subtype_0x20;
+	context.group_0x24 = descriptor.group_0x24;
+	context.projection_enabled_0x29 = descriptor.projection_enabled_0x29;
+	context.source_cell_x_0x2c = descriptor.source_cell_x_0x2c;
+	context.source_cell_y_0x30 = descriptor.source_cell_y_0x30;
+	context.score_adjust_0x30_known = descriptor.score_adjust_0x30_known;
+	context.score_adjust_0x30 = descriptor.score_adjust_0x30;
+	context.score_adjust_0x40_known = descriptor.score_adjust_0x40_known;
+	context.score_adjust_0x40 = descriptor.score_adjust_0x40;
+	context.descriptor_mask_fields_0x34_0x48_known = descriptor.descriptor_mask_fields_0x34_0x48_known;
+	context.descriptor_width_0x34 = descriptor.descriptor_width_0x34;
+	context.descriptor_height_0x38 = descriptor.descriptor_height_0x38;
+	context.descriptor_mask_a_0x3c_0x40 = descriptor.descriptor_mask_a_0x3c_0x40;
+	context.descriptor_mask_b_0x44_0x48 = descriptor.descriptor_mask_b_0x44_0x48;
+	return context;
+}
+
 SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(SourceObjectResolverState4af785 &state, const SourceObjectDescriptor4903e8 &descriptor, const SourceObjectRecord0x4c &selected_source_record) {
 	SourceObjectDescriptorJoinResult4903e8 result;
 	result.descriptor = descriptor;
@@ -1649,6 +1671,15 @@ SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(So
 	result.copied_source_record_is_identity_authority = true;
 	result.joined = result.resolver_0x4af785.reused_existing_wrapper
 			|| result.resolver_0x4af785.created_new_wrapper;
+	if (result.resolver_0x4af785.appended_source_pair_0xedc
+			&& result.resolver_0x4af785.source_pair_count_after == result.resolver_0x4af785.source_pair_count_before + 1
+			&& result.resolver_0x4af785.source_pair_count_after == int32_t(state.source_pairs_0xedc.size())) {
+		SourceObjectResolverSourcePair4af785 &source_pair = state.source_pairs_0xedc.back();
+		source_pair.descriptor_join_0x4903e8_known = true;
+		source_pair.descriptor_join_descriptor_0x4903e8 = descriptor_join_context_from_descriptor_0x4903e8(descriptor);
+		source_pair.descriptor_joined_0x4903e8 = result.joined;
+		source_pair.descriptor_join_source_pair_index_0xedc = result.resolver_0x4af785.source_pair_count_before;
+	}
 	if (!result.joined) {
 		result.blocked_reason = "0x4af785_resolver_did_not_resolve_or_create_source_wrapper";
 	}
@@ -5919,6 +5950,9 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
 	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
 	state.mapped_source_owner_slots_ee4_count = int32_t(template_selection.player_assignment.mapped_ee4_slots.size());
+	state.selected_color_order_ed8 = template_selection.player_assignment.selected_color_order_ed8;
+	state.raw_source_owner_slots_ee0 = template_selection.player_assignment.raw_ee0_slots;
+	state.mapped_source_owner_slots_ee4 = template_selection.player_assignment.mapped_ee4_slots;
 	state.relation_owner_records_10e4_10e8_partial_known = !template_selection.blocked;
 	state.relation_owner_vectors_10e4_10e8 =
 			relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(

@@ -246,6 +246,26 @@ struct SourceObjectResolvedWrapper4af785 {
 	bool copied_source_record = false;
 };
 
+struct SourceObjectDescriptorJoinContext4903e8 {
+	int32_t target_context_0x4903e8 = -1;
+	int32_t source_key_0x00 = -1;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t subtype_0x20 = 0;
+	int32_t group_0x24 = 0;
+	bool projection_enabled_0x29 = false;
+	int32_t source_cell_x_0x2c = 0;
+	int32_t source_cell_y_0x30 = 0;
+	bool score_adjust_0x30_known = false;
+	int32_t score_adjust_0x30 = 0;
+	bool score_adjust_0x40_known = false;
+	int32_t score_adjust_0x40 = 0;
+	bool descriptor_mask_fields_0x34_0x48_known = false;
+	int32_t descriptor_width_0x34 = 0;
+	int32_t descriptor_height_0x38 = 0;
+	uint64_t descriptor_mask_a_0x3c_0x40 = 0U;
+	uint64_t descriptor_mask_b_0x44_0x48 = 0U;
+};
+
 struct SourceObjectResolverSourcePair4af785 {
 	int32_t copied_source_catalog_index = -1;
 	int32_t wrapper_index = -1;
@@ -258,6 +278,10 @@ struct SourceObjectResolverSourcePair4af785 {
 	int32_t context_wrapper_lane_0x04 = -1;
 	bool context_wrapper_0x10_known = false;
 	int32_t context_wrapper_0x10 = 0;
+	bool descriptor_join_0x4903e8_known = false;
+	SourceObjectDescriptorJoinContext4903e8 descriptor_join_descriptor_0x4903e8;
+	bool descriptor_joined_0x4903e8 = false;
+	int32_t descriptor_join_source_pair_index_0xedc = -1;
 };
 
 struct SourceObjectResolverState4af785 {
@@ -1617,6 +1641,9 @@ struct GeneratorObjectPrivateState {
 	int32_t selected_color_order_ed8_count = 0;
 	int32_t raw_source_owner_slots_ee0_count = 0;
 	int32_t mapped_source_owner_slots_ee4_count = 0;
+	std::vector<int32_t> selected_color_order_ed8;
+	std::vector<int32_t> raw_source_owner_slots_ee0;
+	std::vector<int32_t> mapped_source_owner_slots_ee4;
 	bool relation_owner_records_10e4_10e8_partial_known = false;
 	int32_t relation_owner_vector_count_10e4_10e8 = 0;
 	int32_t relation_record_count_10e4_10e8 = 0;
