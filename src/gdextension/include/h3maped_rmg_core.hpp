@@ -1987,6 +1987,7 @@ struct RewardGuardMaterializationDriverResult4aa354 {
 	bool attach_value_gate_invoked_0x4a960a = false;
 	RewardGuardAttachValueGateResult4a960a attach_value_gate_0x4a960a;
 	bool attach_value_positive_0x4a960a = false;
+	bool attach_value_nonpositive_direct_finalize_0x4aa3d2 = false;
 	int32_t attach_value_0x4a960a = 0;
 	int32_t attach_value_band_0x4a960a = 0;
 	bool ordinary_attach_record_allocated_0x4a5c07 = false;
@@ -1997,6 +1998,12 @@ struct RewardGuardMaterializationDriverResult4aa354 {
 	uint32_t ordinary_attach_record_enabled_word_0x24_0x4a5c07 = 0U;
 	bool selected_object_attach_invoked_0x49cf34 = false;
 	bool selected_object_attach_applied_0x49cf34 = false;
+	bool selected_object_attach_initial_candidate_refresh_0x49d7c3_applied = false;
+	int32_t selected_object_attach_candidate_count_before_filter_0x49cf34 = 0;
+	int32_t selected_object_attach_bit26_clear_candidate_erase_count_0x4afaea = 0;
+	int32_t selected_object_attach_filter_reject_count_0x49d2e0 = 0;
+	int32_t selected_object_attach_filter_missing_input_count_0x49d2e0 = 0;
+	std::string selected_object_attach_first_filter_blocked_reason_0x49d2e0;
 	int32_t selected_object_attach_candidate_count_after_filter_0x49cf34 = 0;
 	int32_t selected_object_attach_member_count_after_0x49cf34 = 0;
 	std::string selected_object_attach_blocked_reason_0x49cf34;
@@ -2031,6 +2038,13 @@ struct RewardGuardSourceStreamAttempt4aab7e {
 	RewardGuardMaterializationDriverResult4aa354 materialization_0x4aa354;
 	bool coordinate_scan_invoked_0x4aa9b7 = false;
 	bool coordinate_scan_applied_0x4aa9b7 = false;
+	int32_t coordinate_scan_scanned_cell_count_0x4aa9b7 = 0;
+	int32_t coordinate_scan_owner_byte_reject_count_0x4aa9b7 = 0;
+	int32_t coordinate_scan_value_floor_reject_count_0x4aa9b7 = 0;
+	int32_t coordinate_scan_feasibility_reject_count_0x4aa603 = 0;
+	int32_t coordinate_scan_feasibility_missing_input_count_0x4aa603 = 0;
+	int32_t coordinate_scan_local_vector_append_count_0x4ae1fd = 0;
+	std::string coordinate_scan_first_feasibility_blocked_reason_0x4aa603;
 	bool wrapper_cleanup_invoked_0x49cebd = false;
 	std::string blocked_reason;
 };

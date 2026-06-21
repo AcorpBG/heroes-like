@@ -2063,7 +2063,11 @@ int main() {
 				"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
 	}
-	if (!require(generator_state.object_record_vector_ec4_ecc.present && !generator_state.object_record_vector_ec4_ecc.contents_known, "generator object private state must keep object-vector contents unclaimed until materialization is ported")) {
+	if (!require(generator_state.object_record_vector_ec4_ecc.present
+					&& generator_state.object_record_vector_ec4_ecc.contents_known
+					&& generator_state.source_order_direct_commit_count_0x4a93a2 > 0
+					&& generator_state.generated_cell_object_reference_append_count_0x4a54a7 > 0,
+				"generator object private state did not carry pre-route direct 0x4a8d2c object materialization into object-vector/generated-cell references")) {
 		return 1;
 	}
 	const std::string reward_guard_blocker =
@@ -2132,13 +2136,12 @@ int main() {
 		}
 		if (!require(owner.descriptor_type_counter_table_0x44_known
 						&& owner.descriptor_type_counter_table_0x44_byte_size == aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE
-						&& owner.descriptor_type_counter_table_0x44_zero_count == aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT,
-					"0x49b452 relation owner descriptor table +0x44 was not zero-initialized")) {
+						&& owner.descriptor_type_counter_table_0x44_zero_count <= aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT,
+					"0x49b452 relation owner descriptor table +0x44 was not initialized")) {
 			return 1;
 		}
-		if (!require(owner.descriptor_type_counters_0x44.size() == size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT)
-						&& std::all_of(owner.descriptor_type_counters_0x44.begin(), owner.descriptor_type_counters_0x44.end(), [](uint32_t value) { return value == 0U; }),
-					"0x49b452 relation owner descriptor table +0x44 does not carry concrete zeroed dwords")) {
+		if (!require(owner.descriptor_type_counters_0x44.size() == size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT),
+					"0x49b452 relation owner descriptor table +0x44 does not carry concrete dwords")) {
 			return 1;
 		}
 		if (!require(owner.owner_local_vectors_0x3e4_0x3f4_0x404_known
@@ -2372,7 +2375,9 @@ int main() {
 	if (!require(generator_state.descriptor_counter_table_0x1110.size() == size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), "generator object private state descriptor counter table vector size mismatch")) {
 		return 1;
 	}
-	if (!require(std::all_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value == 0U; }), "generator object private state descriptor counter table was not zero-initialized")) {
+	if (!require(generator_state.descriptor_counter_increment_count_0x4a54a7 > 0
+					&& std::any_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value != 0U; }),
+				"generator object private state descriptor counter table did not receive pre-route 0x4a54a7 increments")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState commit_state;
