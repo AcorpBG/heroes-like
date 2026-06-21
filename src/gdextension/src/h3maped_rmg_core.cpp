@@ -2807,6 +2807,64 @@ static int32_t generated_cell_word20_owner_byte3_signed(uint32_t word_0x20) {
 	return int32_t(int8_t((word_0x20 >> 24U) & 0xffU));
 }
 
+RewardGuardProjectionDriverSelectionResult4ad947 reward_guard_projection_driver_select_global_entry_0x4ad947(const std::vector<RewardGuardProjectionGlobalEntry4ad947> &global_entries_0x57c7cc_plus_0x0c, const std::vector<uint8_t> &used_flags_0x1024, H3MapedRng &rng) {
+	constexpr int32_t kProjectionGlobalEntryCount4ad947 = 0x90;
+	RewardGuardProjectionDriverSelectionResult4ad947 result;
+	if (int32_t(global_entries_0x57c7cc_plus_0x0c.size()) < kProjectionGlobalEntryCount4ad947) {
+		result.blocked_reason = "0x4ad947_projection_global_table_0x57c7cc_plus_0x0c_missing_or_short";
+		return result;
+	}
+	result.global_table_known = true;
+	if (int32_t(used_flags_0x1024.size()) < kProjectionGlobalEntryCount4ad947) {
+		result.blocked_reason = "0x4ad947_generator_used_flag_array_0x1024_missing_or_short";
+		return result;
+	}
+	result.used_flags_0x1024_known = true;
+	for (int32_t index = 0; index < kProjectionGlobalEntryCount4ad947; ++index) {
+		const RewardGuardProjectionGlobalEntry4ad947 &entry = global_entries_0x57c7cc_plus_0x0c[size_t(index)];
+		result.scanned_entry_count += 1;
+		if (!entry.disabled_byte_0x10_known || !entry.flag_byte_0x00_known) {
+			result.field_unknown_count += 1;
+			continue;
+		}
+		if (entry.disabled_byte_0x10 != 0U) {
+			result.disabled_reject_count += 1;
+			continue;
+		}
+		if (used_flags_0x1024[size_t(index)] != 0U) {
+			result.used_flag_reject_count += 1;
+			continue;
+		}
+		if ((entry.flag_byte_0x00 & 0x02U) == 0U) {
+			result.flag_bit_reject_count += 1;
+			continue;
+		}
+		result.eligible_entry_indexes.push_back(index);
+	}
+	if (result.field_unknown_count != 0) {
+		result.blocked_reason = "0x4ad947_projection_global_table_entry_fields_missing";
+		return result;
+	}
+	result.eligible_count = int32_t(result.eligible_entry_indexes.size());
+	if (result.eligible_count < 0x14) {
+		result.generator_0x10b4_written = true;
+		result.generator_0x10b4_value = true;
+	}
+	if (result.eligible_count == 0) {
+		result.blocked_reason = "0x4ad947_projection_global_table_no_eligible_entries";
+		return result;
+	}
+	result.rng_value_0x4e7276 = rng.next();
+	result.selected_eligible_ordinal = result.rng_value_0x4e7276 % result.eligible_count;
+	if (result.selected_eligible_ordinal < 0) {
+		result.selected_eligible_ordinal += result.eligible_count;
+	}
+	result.selected_global_entry_index = result.eligible_entry_indexes[size_t(result.selected_eligible_ordinal)];
+	result.projection_record_selected_global_index_0x1c_written = true;
+	result.applied = true;
+	return result;
+}
+
 RewardGuardProjectionSourceRelationResult4ad947 reward_guard_projection_source_relation_from_coordinate_0x4ad947(const GeneratorObjectPrivateState &state, int32_t projection_x, int32_t projection_y, int32_t projection_level) {
 	RewardGuardProjectionSourceRelationResult4ad947 result;
 	result.projection_coordinate_known = true;
@@ -7835,10 +7893,13 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	}
 	state.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = true;
 	state.reward_guard_relation_priority_live_replay_blocked = true;
+	state.reward_guard_projection_driver_selection_0x4ad947_ported = true;
+	state.reward_guard_projection_driver_selection_input_known = false;
+	state.reward_guard_projection_driver_selection_0x4ad947.blocked_reason = "0x4ad947_projection_object_and_global_candidate_table_live_input_pending_before_selected_global_entry";
 	state.reward_guard_projection_source_relation_0x4ad947_ported = true;
 	state.reward_guard_projection_source_relation_input_known = false;
 	state.reward_guard_projection_source_relation_0x4ad947.blocked_reason = "0x4ad947_projection_object_coordinate_triple_live_input_pending_before_0x4ad7f7";
-	state.reward_guard_relation_priority_live_replay_blocker = state.reward_guard_projection_source_relation_0x4ad947.blocked_reason;
+	state.reward_guard_relation_priority_live_replay_blocker = state.reward_guard_projection_driver_selection_0x4ad947.blocked_reason;
 	state.reward_guard_relation_priority_0x4ad7f7.blocked_reason = state.reward_guard_relation_priority_live_replay_blocker;
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
 	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
@@ -7891,6 +7952,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
 		"reward_guard_candidate_vector_0x10f4_0x10f8_live_producer_contents_pending_before_0x4a9f1c_and_0x4aa1db_selected_create",
+		"reward_guard_projection_global_table_and_generator_0x1024_used_flags_pending_for_0x4ad947_selected_global_entry",
 		"reward_guard_projection_object_coordinate_triple_pending_for_0x4ad947_source_relation_lookup_before_0x4ad7f7",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",
