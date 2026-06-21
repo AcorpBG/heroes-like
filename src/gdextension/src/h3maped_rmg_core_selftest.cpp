@@ -594,6 +594,65 @@ int main() {
 	}
 
 	{
+		GeneratorObjectPrivateState projection_state;
+		projection_state.width = 3;
+		projection_state.height = 3;
+		projection_state.level_count = 1;
+		projection_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);
+		projection_state.generated_cell_buffer_owned = true;
+		projection_state.relation_owner_vectors_10e4_10e8.resize(2);
+		projection_state.relation_owner_vectors_10e4_10e8[0].owner_vector_index = 0;
+		projection_state.relation_owner_vectors_10e4_10e8[0].runtime_zone_index = 10;
+		projection_state.relation_owner_vectors_10e4_10e8[1].owner_vector_index = 1;
+		projection_state.relation_owner_vectors_10e4_10e8[1].runtime_zone_index = 17;
+		GeneratedCellRecord0x30 &projection_cell =
+				projection_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0))];
+		projection_cell.word_0x20_known = true;
+		projection_cell.word_0x20 = 0x0102000aU;
+		const auto source_relation =
+				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
+		if (!require(source_relation.applied
+						&& source_relation.projection_coordinate_known
+						&& source_relation.generated_cell_grid_available
+						&& source_relation.word_0x20_known
+						&& source_relation.projection_flat_index == aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0)
+						&& source_relation.projection_word_0x20 == 0x0102000aU
+						&& source_relation.source_owner_high_byte_signed == 1
+						&& source_relation.source_owner_vector_index == 1
+						&& source_relation.source_relation_known
+						&& source_relation.source_relation_runtime_zone_index == 17,
+					"0x4ad947 did not resolve source relation from projection cell +0x20 signed high byte")) {
+			return 1;
+		}
+		projection_cell.word_0x20 = 0xff02000aU;
+		const auto sentinel_relation =
+				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
+		if (!require(!sentinel_relation.applied
+						&& sentinel_relation.source_owner_high_byte_signed == -1
+						&& sentinel_relation.blocked_reason == "0x4ad947_projection_cell_owner_high_byte_sentinel",
+					"0x4ad947 did not fail closed on signed high-byte sentinel owner")) {
+			return 1;
+		}
+		projection_cell.word_0x20 = 0x0502000aU;
+		const auto out_of_range_relation =
+				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
+		if (!require(!out_of_range_relation.applied
+						&& out_of_range_relation.source_owner_high_byte_signed == 5
+						&& out_of_range_relation.blocked_reason == "0x4ad947_projection_cell_owner_high_byte_out_of_relation_vector",
+					"0x4ad947 did not fail closed on out-of-range relation vector index")) {
+			return 1;
+		}
+		projection_cell.word_0x20_known = false;
+		const auto unknown_word_relation =
+				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
+		if (!require(!unknown_word_relation.applied
+						&& unknown_word_relation.blocked_reason == "0x4ad947_projection_cell_word_0x20_unknown",
+					"0x4ad947 did not fail closed on unknown projection cell +0x20")) {
+			return 1;
+		}
+	}
+
+	{
 		GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
 		if (!require(record_grid.stride_bytes == aurelion::h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES, "generated-cell record grid did not preserve stride 0x30")) {
 			return 1;

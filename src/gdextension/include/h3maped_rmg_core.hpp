@@ -1528,6 +1528,23 @@ struct RewardGuardRelationPriorityResult4ad7f7 {
 	std::string blocked_reason;
 };
 
+struct RewardGuardProjectionSourceRelationResult4ad947 {
+	bool applied = false;
+	bool projection_coordinate_known = false;
+	bool generated_cell_grid_available = false;
+	bool word_0x20_known = false;
+	int32_t projection_x = 0;
+	int32_t projection_y = 0;
+	int32_t projection_level = 0;
+	int64_t projection_flat_index = -1;
+	uint32_t projection_word_0x20 = 0U;
+	int32_t source_owner_high_byte_signed = -1;
+	int32_t source_owner_vector_index = -1;
+	bool source_relation_known = false;
+	int32_t source_relation_runtime_zone_index = -1;
+	std::string blocked_reason;
+};
+
 struct RelationHighOwnerPropagationSeedReport49a318 {
 	int32_t owner_vector_index = -1;
 	int32_t runtime_zone_index = -1;
@@ -1807,6 +1824,9 @@ struct GeneratorObjectPrivateState {
 	bool reward_guard_relation_priority_live_replay_blocked = false;
 	std::string reward_guard_relation_priority_live_replay_blocker;
 	RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_0x4ad7f7;
+	bool reward_guard_projection_source_relation_0x4ad947_ported = false;
+	bool reward_guard_projection_source_relation_input_known = false;
+	RewardGuardProjectionSourceRelationResult4ad947 reward_guard_projection_source_relation_0x4ad947;
 	bool reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = false;
 	bool reward_guard_candidate_records_10f4_10f8_contents_known = false;
 	int32_t reward_guard_candidate_record_count_10f4_10f8 = 0;
@@ -2233,6 +2253,7 @@ RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4
 bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offset);
 RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records = nullptr);
 RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_0x4ad7f7(std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t source_owner_vector_index, H3MapedRng &rng, bool descriptor_filter_fields_known = false);
+RewardGuardProjectionSourceRelationResult4ad947 reward_guard_projection_source_relation_from_coordinate_0x4ad947(const GeneratorObjectPrivateState &state, int32_t projection_x, int32_t projection_y, int32_t projection_level);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);

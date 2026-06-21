@@ -752,6 +752,21 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = input.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported;
 	out.reward_guard_relation_priority_live_replay_blocked = input.reward_guard_relation_priority_live_replay_blocked;
 	out.reward_guard_relation_priority_live_replay_blocker = input.reward_guard_relation_priority_live_replay_blocker;
+	out.reward_guard_projection_source_relation_0x4ad947_ported = input.reward_guard_projection_source_relation_0x4ad947_ported;
+	out.reward_guard_projection_source_relation_input_known = input.reward_guard_projection_source_relation_input_known;
+	out.reward_guard_projection_source_relation_applied_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.applied;
+	out.reward_guard_projection_source_relation_grid_available_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.generated_cell_grid_available;
+	out.reward_guard_projection_source_relation_word_0x20_known = input.reward_guard_projection_source_relation_0x4ad947.word_0x20_known;
+	out.reward_guard_projection_source_relation_x_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.projection_x;
+	out.reward_guard_projection_source_relation_y_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.projection_y;
+	out.reward_guard_projection_source_relation_level_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.projection_level;
+	out.reward_guard_projection_source_relation_flat_index_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.projection_flat_index;
+	out.reward_guard_projection_source_relation_word_0x20_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.projection_word_0x20;
+	out.reward_guard_projection_source_relation_owner_high_byte_signed_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_owner_high_byte_signed;
+	out.reward_guard_projection_source_relation_owner_vector_index_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_owner_vector_index;
+	out.reward_guard_projection_source_relation_known_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_relation_known;
+	out.reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_relation_runtime_zone_index;
+	out.reward_guard_projection_source_relation_blocked_reason_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.blocked_reason;
 	out.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = input.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported;
 	out.reward_guard_candidate_records_10f4_10f8_contents_known = input.reward_guard_candidate_records_10f4_10f8_contents_known;
 	out.reward_guard_candidate_record_count_10f4_10f8 = input.reward_guard_candidate_record_count_10f4_10f8;
@@ -2315,6 +2330,22 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported\":" << (state.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported ? "true" : "false") << ","
 		<< "\"reward_guard_relation_priority_live_replay_blocked\":" << (state.reward_guard_relation_priority_live_replay_blocked ? "true" : "false") << ","
 		<< "\"reward_guard_relation_priority_live_replay_blocker\":\"" << json_escape(state.reward_guard_relation_priority_live_replay_blocker) << "\","
+		<< "\"reward_guard_projection_source_relation_0x4ad947_ported\":" << (state.reward_guard_projection_source_relation_0x4ad947_ported ? "true" : "false") << ","
+		<< "\"reward_guard_projection_source_relation_input_known\":" << (state.reward_guard_projection_source_relation_input_known ? "true" : "false") << ","
+		<< "\"reward_guard_projection_source_relation_applied_0x4ad947\":" << (state.reward_guard_projection_source_relation_applied_0x4ad947 ? "true" : "false") << ","
+		<< "\"reward_guard_projection_source_relation_grid_available_0x4ad947\":" << (state.reward_guard_projection_source_relation_grid_available_0x4ad947 ? "true" : "false") << ","
+		<< "\"reward_guard_projection_source_relation_word_0x20_known\":" << (state.reward_guard_projection_source_relation_word_0x20_known ? "true" : "false") << ","
+		<< "\"reward_guard_projection_source_relation_x_0x4ad947\":" << state.reward_guard_projection_source_relation_x_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_y_0x4ad947\":" << state.reward_guard_projection_source_relation_y_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_level_0x4ad947\":" << state.reward_guard_projection_source_relation_level_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_flat_index_0x4ad947\":" << state.reward_guard_projection_source_relation_flat_index_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_word_0x20_0x4ad947\":" << state.reward_guard_projection_source_relation_word_0x20_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_owner_high_byte_signed_0x4ad947\":" << state.reward_guard_projection_source_relation_owner_high_byte_signed_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_owner_vector_index_0x4ad947\":" << state.reward_guard_projection_source_relation_owner_vector_index_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_known_0x4ad947\":" << (state.reward_guard_projection_source_relation_known_0x4ad947 ? "true" : "false") << ","
+		<< "\"reward_guard_projection_source_relation_runtime_zone_index_0x4ad947\":" << state.reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 << ","
+		<< "\"reward_guard_projection_source_relation_blocked_reason_0x4ad947\":\"" << json_escape(state.reward_guard_projection_source_relation_blocked_reason_0x4ad947) << "\","
+		<< "\"reward_guard_projection_source_relation_source\":\"0x4ad947_reads_projection_coordinate_cell_word_0x20_signed_high_byte_and_indexes_generator_plus_0x10e4_relation_vector_before_calling_0x4ad7f7\","
 		<< "\"reward_guard_candidate_vector_10f4_10f8\":";
 	append_generator_object_vector_state_json(out, state.reward_guard_candidate_vector_10f4_10f8);
 	out << ","
