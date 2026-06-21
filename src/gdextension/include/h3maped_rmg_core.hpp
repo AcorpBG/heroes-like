@@ -1501,6 +1501,8 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t terrain_policy_0x0c = 0;
 	bool reward_guard_source_bands_0xa0_0xc0_known = false;
 	std::array<SourceTreasureBand4a218c, 3> reward_guard_source_bands_0xa0_0xc0;
+	bool mine_resource_rules_0x4c_0x84_known = false;
+	SourceMineRules4a218c mine_resource_rules_0x4c_0x84;
 	bool source_endpoint_vector_0xc8_0xcc_present = false;
 	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
 	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
@@ -2118,6 +2120,35 @@ struct ConnectionTailReplayResult4a79a3 {
 	std::string blocked_reason;
 };
 
+struct MineResourceMaterializationCategory4a9d6a {
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	int32_t relation_source_index_0x00 = -1;
+	int32_t category_index = -1;
+	int32_t required_count_0x4c = 0;
+	int32_t density_count = 0;
+	bool force_flag_from_relation_byte_0x3c = false;
+	int32_t attempted_callback_count_0x4a9911 = 0;
+	int32_t successful_callback_count_0x4a9911 = 0;
+	std::string blocked_reason;
+};
+
+struct MineResourceMaterializationResult4a9d6a {
+	bool invoked = false;
+	bool applied = false;
+	bool relation_vector_known = false;
+	int32_t relation_owner_count = 0;
+	int32_t category_scan_count = 0;
+	int32_t required_total_count_0x4c = 0;
+	int32_t density_total_count = 0;
+	int32_t callback_attempt_count_0x4a9911 = 0;
+	int32_t successful_count_0x4a9911 = 0;
+	bool density_followup_0x4a9c7c_reached = false;
+	bool optional_handler_ed4_slot8_invoked = false;
+	std::vector<MineResourceMaterializationCategory4a9d6a> categories;
+	std::string blocked_reason;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -2189,6 +2220,9 @@ struct GeneratorObjectPrivateState {
 	bool route_container_free_cell_sweep_0x4a8260_input_known = false;
 	bool route_container_free_cell_sweep_0x4a8260_applied = false;
 	std::string route_container_free_cell_sweep_0x4a8260_blocked_reason;
+	bool mine_resource_materialization_0x4a9d6a_ported = false;
+	bool mine_resource_materialization_0x4a9d6a_input_known = false;
+	MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4a9d6a;
 	bool source_order_scheduler_replay_0x4a8db2_known = false;
 	int32_t source_order_scheduler_replay_count_0x4a8db2 = 0;
 	int32_t source_order_scheduler_direct_call_count_0x4a8db2 = 0;
