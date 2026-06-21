@@ -453,6 +453,8 @@ struct SharedGeneratorRelationOwnerState {
 	bool constructor_0x49b452_known = false;
 	bool source_pointer_0x00_known = false;
 	int32_t source_pointer_source_index_0x00 = -1;
+	bool source_pointer_type_0x04_known = false;
+	int32_t source_pointer_type_0x04 = 0;
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
 	bool source_owner_slot_0x1c_known = false;
@@ -461,6 +463,8 @@ struct SharedGeneratorRelationOwnerState {
 	int32_t coordinate_x_0x10 = 0;
 	int32_t coordinate_y_0x14 = 0;
 	int32_t coordinate_level_0x18 = 0;
+	bool terrain_policy_0x0c_known = false;
+	int32_t terrain_policy_0x0c = 0;
 	bool source_endpoint_vector_0xc8_0xcc_present = false;
 	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
 	bool source_endpoint_vector_0xc8_0xcc_count_known = false;

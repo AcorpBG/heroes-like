@@ -1444,6 +1444,8 @@ struct GeneratorRelationOwnerState4a218c {
 	bool constructor_0x49b452_known = false;
 	bool source_pointer_0x00_known = false;
 	int32_t source_pointer_source_index_0x00 = -1;
+	bool source_pointer_type_0x04_known = false;
+	int32_t source_pointer_type_0x04 = 0;
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
 	bool source_owner_slot_0x1c_known = false;
@@ -1519,6 +1521,8 @@ struct RewardGuardRelationPriorityResult4ad7f7 {
 	int32_t randomized_priority_count = 0;
 	int32_t priority_limit_reject_count = 0;
 	int32_t descriptor_filter_unknown_count = 0;
+	int32_t source_pointer_type_0x04_reject_count = 0;
+	int32_t terrain_policy_0x0c_reject_count = 0;
 	std::vector<int32_t> ordered_owner_vector_indexes_0x4ccecb;
 	std::vector<RewardGuardRelationPriorityEntry4ad7f7> entries;
 	std::string blocked_reason;

@@ -374,6 +374,8 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.constructor_0x49b452_known = input.constructor_0x49b452_known;
 	out.source_pointer_0x00_known = input.source_pointer_0x00_known;
 	out.source_pointer_source_index_0x00 = input.source_pointer_source_index_0x00;
+	out.source_pointer_type_0x04_known = input.source_pointer_type_0x04_known;
+	out.source_pointer_type_0x04 = input.source_pointer_type_0x04;
 	out.town_choice_0x04_known = input.town_choice_0x04_known;
 	out.town_choice_0x04 = input.town_choice_0x04;
 	out.source_owner_slot_0x1c_known = input.source_owner_slot_0x1c_known;
@@ -382,6 +384,8 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.coordinate_x_0x10 = input.coordinate_x_0x10;
 	out.coordinate_y_0x14 = input.coordinate_y_0x14;
 	out.coordinate_level_0x18 = input.coordinate_level_0x18;
+	out.terrain_policy_0x0c_known = input.terrain_policy_0x0c_known;
+	out.terrain_policy_0x0c = input.terrain_policy_0x0c;
 	out.source_endpoint_vector_0xc8_0xcc_present = input.source_endpoint_vector_0xc8_0xcc_present;
 	out.source_endpoint_vector_0xc8_0xcc_contents_known = input.source_endpoint_vector_0xc8_0xcc_contents_known;
 	out.source_endpoint_vector_0xc8_0xcc_count_known = input.source_endpoint_vector_0xc8_0xcc_count_known;
@@ -1919,6 +1923,8 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"constructor_0x49b452_known\":" << (owner.constructor_0x49b452_known ? "true" : "false")
 			<< ",\"source_pointer_0x00_known\":" << (owner.source_pointer_0x00_known ? "true" : "false")
 			<< ",\"source_pointer_source_index_0x00\":" << owner.source_pointer_source_index_0x00
+			<< ",\"source_pointer_type_0x04_known\":" << (owner.source_pointer_type_0x04_known ? "true" : "false")
+			<< ",\"source_pointer_type_0x04\":" << owner.source_pointer_type_0x04
 			<< ",\"town_choice_0x04_known\":" << (owner.town_choice_0x04_known ? "true" : "false")
 			<< ",\"town_choice_0x04\":" << owner.town_choice_0x04
 			<< ",\"source_owner_slot_0x1c_known\":" << (owner.source_owner_slot_0x1c_known ? "true" : "false")
@@ -1927,6 +1933,8 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"coordinate_x_0x10\":" << owner.coordinate_x_0x10
 			<< ",\"coordinate_y_0x14\":" << owner.coordinate_y_0x14
 			<< ",\"coordinate_level_0x18\":" << owner.coordinate_level_0x18
+			<< ",\"terrain_policy_0x0c_known\":" << (owner.terrain_policy_0x0c_known ? "true" : "false")
+			<< ",\"terrain_policy_0x0c\":" << owner.terrain_policy_0x0c
 			<< ",\"source_endpoint_vector_0xc8_0xcc_present\":" << (owner.source_endpoint_vector_0xc8_0xcc_present ? "true" : "false")
 			<< ",\"source_endpoint_vector_0xc8_0xcc_contents_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_contents_known ? "true" : "false")
 			<< ",\"source_endpoint_vector_0xc8_0xcc_count_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_count_known ? "true" : "false")

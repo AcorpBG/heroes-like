@@ -2463,24 +2463,47 @@ RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_
 			result.entries.push_back(entry);
 			continue;
 		}
-		entry.descriptor_filter_fields_known = descriptor_filter_fields_known;
-		entry.descriptor_filter_passed = descriptor_filter_fields_known;
-		if (!descriptor_filter_fields_known) {
-			entry.blocked_reason = "0x4ad7f7_descriptor_filter_fields_plus_04_plus_0c_missing";
+		const bool source_type_known = descriptor_filter_fields_known || owner.source_pointer_type_0x04_known;
+		const bool terrain_policy_known = descriptor_filter_fields_known || owner.terrain_policy_0x0c_known;
+		entry.descriptor_filter_fields_known = source_type_known && terrain_policy_known;
+		entry.descriptor_filter_passed = false;
+		if (!entry.descriptor_filter_fields_known) {
+			if (!source_type_known && !terrain_policy_known) {
+				entry.blocked_reason = "0x4ad7f7_source_pointer_plus_04_and_relation_plus_0x0c_missing";
+			} else if (!source_type_known) {
+				entry.blocked_reason = "0x4ad7f7_source_pointer_plus_04_missing";
+			} else {
+				entry.blocked_reason = "0x4ad7f7_relation_plus_0x0c_missing";
+			}
 			result.descriptor_filter_unknown_count += 1;
 			result.entries.push_back(entry);
 			continue;
 		}
+		if (!descriptor_filter_fields_known && owner.source_pointer_type_0x04 == 3) {
+			entry.blocked_reason = "0x4ad7f7_source_pointer_plus_04_equals_3";
+			result.source_pointer_type_0x04_reject_count += 1;
+			result.entries.push_back(entry);
+			continue;
+		}
+		if (!descriptor_filter_fields_known && owner.terrain_policy_0x0c == 8) {
+			entry.blocked_reason = "0x4ad7f7_relation_plus_0x0c_equals_8";
+			result.terrain_policy_0x0c_reject_count += 1;
+			result.entries.push_back(entry);
+			continue;
+		}
+		entry.descriptor_filter_passed = true;
 		insert_by_priority_0x4ccecb(ordered_indices, index);
 		result.entries.push_back(entry);
 	}
 	for (const int32_t owner_index : ordered_indices) {
 		result.ordered_owner_vector_indexes_0x4ccecb.push_back(owners[size_t(owner_index)].owner_vector_index);
 	}
-	result.ordered_vector_0x4ccecb_built = descriptor_filter_fields_known;
-	result.ordered_vector_ready_for_0x4aa9b7 = descriptor_filter_fields_known;
-	if (!descriptor_filter_fields_known) {
+	result.ordered_vector_0x4ccecb_built = result.descriptor_filter_unknown_count == 0;
+	result.ordered_vector_ready_for_0x4aa9b7 = result.ordered_vector_0x4ccecb_built && !result.ordered_owner_vector_indexes_0x4ccecb.empty();
+	if (result.descriptor_filter_unknown_count != 0) {
 		result.blocked_reason = "0x4ad7f7_ordered_vector_descriptor_filters_missing_for_0x4aa9b7";
+	} else if (result.ordered_owner_vector_indexes_0x4ccecb.empty()) {
+		result.blocked_reason = "0x4ad7f7_ordered_relation_vector_empty_before_0x4aa9b7";
 	}
 	return result;
 }
@@ -7067,10 +7090,24 @@ static const RuntimeZoneSeedInput4a218c *runtime_zone_after_town_choice_0x49b3c1
 	return nullptr;
 }
 
+static const RuntimeTerrainSelectionRecord49b53d *runtime_terrain_selection_for_runtime_zone_0x49b53d(const RuntimeTerrainSelectionResult49b53d *terrain_selection, int32_t runtime_zone_index) {
+	if (terrain_selection == nullptr) {
+		return nullptr;
+	}
+	for (const RuntimeTerrainSelectionRecord49b53d &record : terrain_selection->records) {
+		if (record.runtime_zone_index == runtime_zone_index) {
+			return &record;
+		}
+	}
+	return nullptr;
+}
+
 static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerState4a218c &owner, const RuntimeZoneSeedInput4a218c &seed, const RuntimeZoneSeedInput4a218c *post_town_choice_seed) {
 	owner.constructor_0x49b452_known = true;
 	owner.source_pointer_0x00_known = seed.source_index >= 0;
 	owner.source_pointer_source_index_0x00 = seed.source_index;
+	owner.source_pointer_type_0x04_known = seed.source_index >= 0;
+	owner.source_pointer_type_0x04 = seed.source_payload.source_type_code;
 	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
 	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
 	owner.town_choice_0x04 = town_choice;
@@ -7091,6 +7128,16 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.owner_local_vector_0x3e4_count = 0;
 	owner.owner_local_vector_0x3f4_count = 0;
 	owner.owner_local_vector_0x404_count = 0;
+}
+
+static void apply_relation_owner_terrain_policy_0x49b53d(GeneratorRelationOwnerState4a218c &owner, const RuntimeTerrainSelectionRecord49b53d *terrain_record) {
+	if (terrain_record == nullptr) {
+		owner.terrain_policy_0x0c_known = false;
+		owner.terrain_policy_0x0c = 0;
+		return;
+	}
+	owner.terrain_policy_0x0c_known = true;
+	owner.terrain_policy_0x0c = terrain_record->selected_terrain_id_0x49b53d;
 }
 
 static const RuntimeZoneBoundaryInput4a3a03 *boundary_input_after_0x4a19ed_for_runtime_zone(const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs, int32_t runtime_zone_index) {
@@ -7119,7 +7166,7 @@ static void apply_relation_owner_coordinate_state_0x4a1f3b_0x4a19ed(GeneratorRel
 	owner.coordinate_level_0x18 = boundary_input_after_0x4a19ed->footprint.level;
 }
 
-static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs_after_0x4a19ed, const std::vector<CoordinatePlacementStep4a1f3b> &placement_steps_after_0x4a1f3b, int32_t &missing_endpoint_count) {
+static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(const RuntimeSeedBuildResult4a218c &runtime_seed, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones_after_0x49b3c1, const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs_after_0x4a19ed, const std::vector<CoordinatePlacementStep4a1f3b> &placement_steps_after_0x4a1f3b, const RuntimeTerrainSelectionResult49b53d *terrain_selection, int32_t &missing_endpoint_count) {
 	std::vector<GeneratorRelationOwnerState4a218c> owners;
 	owners.reserve(runtime_seed.runtime_zone_seeds.size());
 	for (size_t index = 0; index < runtime_seed.runtime_zone_seeds.size(); ++index) {
@@ -7131,6 +7178,7 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 		owner.source_index = seed.source_index;
 		apply_relation_owner_constructor_0x49b452(owner, seed, runtime_zone_after_town_choice_0x49b3c1(runtime_zones_after_0x49b3c1, seed.runtime_zone_index));
 		apply_relation_owner_coordinate_state_0x4a1f3b_0x4a19ed(owner, boundary_input_after_0x4a19ed_for_runtime_zone(boundary_inputs_after_0x4a19ed, seed.runtime_zone_index));
+		apply_relation_owner_terrain_policy_0x49b53d(owner, runtime_terrain_selection_for_runtime_zone_0x49b53d(terrain_selection, seed.runtime_zone_index));
 		apply_relation_owner_coordinate_candidate_vectors_0x4a1f3b(owner, placement_steps_after_0x4a1f3b);
 		owners.push_back(owner);
 	}
@@ -7723,6 +7771,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 					coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1,
 					coordinate_result.coordinate_seed.boundary_inputs,
 					coordinate_result.coordinate_seed.placement_steps,
+					coordinate_result.terrain_selection_executed ? &coordinate_result.terrain_selection : nullptr,
 					state.relation_record_missing_endpoint_count_10e4_10e8);
 	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {

@@ -550,6 +550,50 @@ int main() {
 	}
 
 	{
+		std::vector<GeneratorRelationOwnerState4a218c> owners(4);
+		for (int32_t index = 0; index < 4; ++index) {
+			owners[size_t(index)].owner_vector_index = index;
+			owners[size_t(index)].runtime_zone_index = index;
+			owners[size_t(index)].source_pointer_type_0x04_known = true;
+			owners[size_t(index)].source_pointer_type_0x04 = 0;
+			owners[size_t(index)].terrain_policy_0x0c_known = true;
+			owners[size_t(index)].terrain_policy_0x0c = 0;
+		}
+		GeneratorSourceEndpointRecordState4a1f3b edge_0_to_1;
+		edge_0_to_1.target_runtime_zone_index = 1;
+		owners[0].source_endpoint_records_0xc8_0xcc.push_back(edge_0_to_1);
+		GeneratorSourceEndpointRecordState4a1f3b edge_1_to_2;
+		edge_1_to_2.target_runtime_zone_index = 2;
+		owners[1].source_endpoint_records_0xc8_0xcc.push_back(edge_1_to_2);
+		GeneratorSourceEndpointRecordState4a1f3b edge_2_to_3;
+		edge_2_to_3.target_runtime_zone_index = 3;
+		owners[2].source_endpoint_records_0xc8_0xcc.push_back(edge_2_to_3);
+		owners[1].source_pointer_type_0x04 = 3;
+		owners[2].terrain_policy_0x0c = 8;
+		H3MapedRng priority_rng;
+		priority_rng.state = 1U;
+		const RewardGuardRelationPriorityResult4ad7f7 priority_result =
+				aurelion::h3maped_rmg_core::reward_guard_relation_priority_ordering_0x4ad7f7(owners, 0, priority_rng, false);
+		if (!require(priority_result.applied
+						&& priority_result.ordered_vector_0x4ccecb_built
+						&& priority_result.ordered_vector_ready_for_0x4aa9b7
+						&& priority_result.descriptor_filter_unknown_count == 0,
+					"0x4ad7f7 recovered field filters did not build an ordered vector from known relation owner fields")) {
+			return 1;
+		}
+		if (!require(priority_result.source_pointer_type_0x04_reject_count == 1
+						&& priority_result.terrain_policy_0x0c_reject_count == 1,
+					"0x4ad7f7 recovered source-type and terrain-policy rejects were not applied")) {
+			return 1;
+		}
+		if (!require(priority_result.ordered_owner_vector_indexes_0x4ccecb.size() == 1
+						&& priority_result.ordered_owner_vector_indexes_0x4ccecb[0] == 3,
+					"0x4ad7f7 recovered filters did not leave only the source-backed passing relation")) {
+			return 1;
+		}
+	}
+
+	{
 		GeneratedCellRecordGrid0x30 record_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
 		if (!require(record_grid.stride_bytes == aurelion::h3maped_rmg_core::GENERATED_CELL_RECORD_STRIDE_BYTES, "generated-cell record grid did not preserve stride 0x30")) {
 			return 1;
