@@ -3536,6 +3536,10 @@ struct RecoveredRewardGuardCandidateSpec49f95a {
 	int32_t value_0x0c = 0;
 	int32_t weight_0x10 = 0;
 	bool direct_value_known = true;
+	bool monster_score_fields_known = false;
+	int32_t monster_table_index_0x14 = -1;
+	int32_t monster_terrain_id_0x57cea0 = -1;
+	int32_t monster_base_score_0x49c64b = 0;
 };
 
 static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(const RecoveredRewardGuardCandidateSpec49f95a &spec) {
@@ -3550,6 +3554,10 @@ static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(con
 	record.direct_value_0x0c = spec.value_0x0c;
 	record.selection_weight_0x10_known = true;
 	record.selection_weight_0x10 = spec.weight_0x10;
+	record.monster_score_fields_known_0x49c64b = spec.monster_score_fields_known;
+	record.monster_table_index_0x14 = spec.monster_table_index_0x14;
+	record.monster_terrain_id_0x57cea0 = spec.monster_terrain_id_0x57cea0;
+	record.monster_base_score_0x49c64b = spec.monster_base_score_0x49c64b;
 	return record;
 }
 
@@ -3573,12 +3581,40 @@ static void append_reward_guard_type10_candidates_49ff59(std::vector<RewardGuard
 					subtype,
 					value,
 					10,
-					false });
+					true });
 		}
 	}
 }
 
 static void append_reward_guard_monster_candidates_49f9ed(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr int32_t MONSTER_TABLE_INDEXES_DESC_0X49F9ED[] = {
+		117, 116, 115, 114, 113, 112, 111, 110, 109, 108,
+		107, 106, 105, 104, 103, 102, 101, 100, 99, 98,
+		97, 96, 95, 94, 93, 92, 91, 90, 89, 88,
+		87, 86, 85, 84, 83, 82, 81, 80, 79, 78,
+		77, 76, 75, 74, 73, 72, 71, 70, 69, 68,
+		67, 66, 65, 64, 63, 62, 61, 60, 59, 58,
+		57, 56, 55, 54, 53, 52, 51, 50, 49, 48,
+		47, 46, 45, 44, 43, 42, 41, 40, 39, 38,
+		37, 36, 35, 34, 33, 32, 31, 30, 29, 28,
+		27, 26, 25, 24, 23, 22, 21, 20, 19, 18,
+		17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
+		7, 6, 5, 4, 3, 2, 1, 0
+	};
+	static constexpr int32_t MONSTER_TERRAIN_IDS_DESC_0X49F9ED[] = {
+		-1, -1, 8, 8, 8, 8, 7, 7, 7, 7,
+		7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+		6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+		6, 6, 6, 6, 5, 5, 5, 5, 5, 5,
+		5, 5, 5, 5, 5, 5, 5, 5, 4, 4,
+		4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+		4, 4, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 2, 2, 2, 2,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0
+	};
 	static constexpr int32_t MONSTER_VALUES_0X49F9ED[] = {
 		19375, 15000, 9450, 12075, 16500, 7120, 23724, 24720, 22770, 20250,
 		10710, 11040, 8960, 8960, 15420, 13350, 7020, 7560, 5400, 5040,
@@ -3593,18 +3629,41 @@ static void append_reward_guard_monster_candidates_49f9ed(std::vector<RewardGuar
 		7315, 6900, 4830, 5000, 26328, 25095, 21000, 19460, 15000, 14550,
 		11760, 11125, 8960, 8775, 7360, 7560, 5175, 4800,
 	};
-	for (const int32_t value : MONSTER_VALUES_0X49F9ED) {
+	static_assert(sizeof(MONSTER_TABLE_INDEXES_DESC_0X49F9ED) == sizeof(MONSTER_VALUES_0X49F9ED), "monster table index list must match value list");
+	static_assert(sizeof(MONSTER_TERRAIN_IDS_DESC_0X49F9ED) == sizeof(MONSTER_VALUES_0X49F9ED), "monster terrain list must match value list");
+	for (size_t index = 0; index < sizeof(MONSTER_VALUES_0X49F9ED) / sizeof(MONSTER_VALUES_0X49F9ED[0]); ++index) {
+		const int32_t value = MONSTER_VALUES_0X49F9ED[index];
 		append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
 				0x540bc0U,
 				6,
 				0,
-				value,
+				0,
 				3,
-				true });
+				false,
+				true,
+				MONSTER_TABLE_INDEXES_DESC_0X49F9ED[index],
+				MONSTER_TERRAIN_IDS_DESC_0X49F9ED[index],
+				value });
 	}
 }
 
 static void append_reward_guard_type17_candidates_4a0402(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr int32_t TYPE17_MONSTER_TABLE_INDEX_0X531CC4[] = {
+		106, 96, 74, 66, 68, 10, 14, 112, 12, 94,
+		54, 104, 16, 113, 52, 18, 114, 30, 36, 86,
+		98, 84, 44, 102, 26, 4, 72, 46, 110, 42,
+		100, 34, 80, 76, 78, 8, 38, 48, 90, 88,
+		50, 82, 92, 28, 40, 22, 70, 115, 60, 108,
+		20, 24, 64, 62, 56, 58, 0, 2
+	};
+	static constexpr int32_t TYPE17_MONSTER_TERRAIN_IDS_0X531CC4[] = {
+		7, 6, 5, 4, 4, 0, 1, 8, 0, 6,
+		3, 7, 1, 8, 3, 1, 8, 2, 2, 6,
+		7, 6, 3, 7, 1, 0, 5, 3, 7, 3,
+		7, 2, 5, 5, 5, 0, 2, 3, 6, 6,
+		3, 5, 6, 2, 2, 1, 5, 8, 4, 7,
+		1, 1, 4, 4, 4, 4, 0, 0
+	};
 	static constexpr std::pair<int32_t, int32_t> TYPE17_CANDIDATES_0X4A0402[] = {
 		{ 57, 1134 }, { 56, 1120 }, { 55, 784 }, { 54, 720 }, { 53, 2220 }, { 52, 2544 },
 		{ 51, 3612 }, { 50, 2590 }, { 49, 2700 }, { 48, 1764 }, { 47, 1890 }, { 46, 826 },
@@ -3617,18 +3676,53 @@ static void append_reward_guard_type17_candidates_4a0402(std::vector<RewardGuard
 		{ 9, 2532 }, { 8, 5019 }, { 7, 2136 }, { 6, 1400 }, { 5, 3892 }, { 4, 3388 },
 		{ 3, 4174 }, { 2, 2352 }, { 1, 3162 }, { 0, 2208 },
 	};
+	static_assert(sizeof(TYPE17_MONSTER_TABLE_INDEX_0X531CC4) / sizeof(TYPE17_MONSTER_TABLE_INDEX_0X531CC4[0]) == 58, "type17 subtype table must cover 58 records");
+	static_assert(sizeof(TYPE17_MONSTER_TERRAIN_IDS_0X531CC4) / sizeof(TYPE17_MONSTER_TERRAIN_IDS_0X531CC4[0]) == 58, "type17 terrain table must cover 58 records");
 	for (const auto &candidate : TYPE17_CANDIDATES_0X4A0402) {
+		const int32_t subtype = candidate.first;
 		append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
 				0x540c00U,
 				17,
-				candidate.first,
-				candidate.second,
+				subtype,
+				0,
 				40,
-				false });
+				false,
+				true,
+				TYPE17_MONSTER_TABLE_INDEX_0X531CC4[subtype],
+				TYPE17_MONSTER_TERRAIN_IDS_0X531CC4[subtype],
+				candidate.second });
 	}
 }
 
 static void append_reward_guard_type53_candidates_4a0eeb(std::vector<RewardGuardCandidateRecord4a9f1c> &records) {
+	static constexpr int32_t MONSTER_TABLE_INDEXES_DESC_0X49F9ED[] = {
+		117, 116, 115, 114, 113, 112, 111, 110, 109, 108,
+		107, 106, 105, 104, 103, 102, 101, 100, 99, 98,
+		97, 96, 95, 94, 93, 92, 91, 90, 89, 88,
+		87, 86, 85, 84, 83, 82, 81, 80, 79, 78,
+		77, 76, 75, 74, 73, 72, 71, 70, 69, 68,
+		67, 66, 65, 64, 63, 62, 61, 60, 59, 58,
+		57, 56, 55, 54, 53, 52, 51, 50, 49, 48,
+		47, 46, 45, 44, 43, 42, 41, 40, 39, 38,
+		37, 36, 35, 34, 33, 32, 31, 30, 29, 28,
+		27, 26, 25, 24, 23, 22, 21, 20, 19, 18,
+		17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
+		7, 6, 5, 4, 3, 2, 1, 0
+	};
+	static constexpr int32_t MONSTER_TERRAIN_IDS_DESC_0X49F9ED[] = {
+		-1, -1, 8, 8, 8, 8, 7, 7, 7, 7,
+		7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+		6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+		6, 6, 6, 6, 5, 5, 5, 5, 5, 5,
+		5, 5, 5, 5, 5, 5, 5, 5, 4, 4,
+		4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+		4, 4, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 2, 2, 2, 2,
+		2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0
+	};
 	static constexpr int32_t MONSTER_VALUES_0X49F9ED[] = {
 		19375, 15000, 9450, 12075, 16500, 7120, 23724, 24720, 22770, 20250,
 		10710, 11040, 8960, 8960, 15420, 13350, 7020, 7560, 5400, 5040,
@@ -3643,25 +3737,32 @@ static void append_reward_guard_type53_candidates_4a0eeb(std::vector<RewardGuard
 		7315, 6900, 4830, 5000, 26328, 25095, 21000, 19460, 15000, 14550,
 		11760, 11125, 8960, 8775, 7360, 7560, 5175, 4800,
 	};
+	static_assert(sizeof(MONSTER_TABLE_INDEXES_DESC_0X49F9ED) == sizeof(MONSTER_VALUES_0X49F9ED), "monster table index list must match type53 value list");
+	static_assert(sizeof(MONSTER_TERRAIN_IDS_DESC_0X49F9ED) == sizeof(MONSTER_VALUES_0X49F9ED), "monster terrain list must match type53 value list");
 	static constexpr RecoveredRewardGuardCandidateSpec49f95a FIXED_TYPE53_0X4A0EEB[] = {
-		{ 0x540c70U, 83, 0, 2000, 10, false },
-		{ 0x540c70U, 83, 0, 5333, 10, false },
-		{ 0x540c70U, 83, 0, 8666, 10, false },
-		{ 0x540c70U, 83, 0, 12000, 10, false },
-		{ 0x540c80U, 83, 0, 2000, 10, false },
-		{ 0x540c80U, 83, 0, 5333, 10, false },
-		{ 0x540c80U, 83, 0, 8666, 10, false },
-		{ 0x540c80U, 83, 0, 12000, 10, false },
+		{ 0x540c70U, 83, 0, 2000, 10, true },
+		{ 0x540c70U, 83, 0, 5333, 10, true },
+		{ 0x540c70U, 83, 0, 8666, 10, true },
+		{ 0x540c70U, 83, 0, 12000, 10, true },
+		{ 0x540c80U, 83, 0, 2000, 10, true },
+		{ 0x540c80U, 83, 0, 5333, 10, true },
+		{ 0x540c80U, 83, 0, 8666, 10, true },
+		{ 0x540c80U, 83, 0, 12000, 10, true },
 	};
 	for (int32_t subtype = 0; subtype <= 2; ++subtype) {
-		for (const int32_t value : MONSTER_VALUES_0X49F9ED) {
+		for (size_t index = 0; index < sizeof(MONSTER_VALUES_0X49F9ED) / sizeof(MONSTER_VALUES_0X49F9ED[0]); ++index) {
+			const int32_t value = MONSTER_VALUES_0X49F9ED[index];
 			append_reward_guard_candidate_49f95a(records, RecoveredRewardGuardCandidateSpec49f95a {
 					0x540c60U,
 					83,
 					subtype,
-					value,
+					0,
 					3,
-					false });
+					false,
+					true,
+					MONSTER_TABLE_INDEXES_DESC_0X49F9ED[index],
+					MONSTER_TERRAIN_IDS_DESC_0X49F9ED[index],
+					value });
 		}
 		for (RecoveredRewardGuardCandidateSpec49f95a fixed : FIXED_TYPE53_0X4A0EEB) {
 			fixed.subtype_or_cursor_0x08 = subtype;
@@ -3941,8 +4042,43 @@ static bool reward_guard_candidate_vtable_has_direct_value_score(uint32_t candid
 	}
 }
 
+static bool reward_guard_candidate_monster_score_0x49c64b(
+		const GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c *selector,
+		const RewardGuardCandidateRecord4a9f1c &candidate,
+		int32_t &score,
+		std::string &blocked_reason) {
+	if (selector == nullptr || !selector->terrain_policy_0x0c_known) {
+		blocked_reason = "0x49c64b_selector_relation_terrain_0x08_missing";
+		return false;
+	}
+	if (!candidate.monster_score_fields_known_0x49c64b) {
+		blocked_reason = "0x49c64b_monster_candidate_fields_0x14_terrain_base_missing";
+		return false;
+	}
+	if (candidate.monster_terrain_id_0x57cea0 != selector->terrain_policy_0x0c) {
+		score = -1;
+		return true;
+	}
+	if (!state.reward_guard_terrain_pressure_0xf60_0xf64_known) {
+		blocked_reason = "0x49c64b_generator_0xf60_0xf64_terrain_pressure_state_missing";
+		return false;
+	}
+	score = candidate.monster_base_score_0x49c64b;
+	if (state.reward_guard_terrain_pressure_total_0xf60 > 0) {
+		const int32_t terrain_id = selector->terrain_policy_0x0c;
+		if (terrain_id < 0 || terrain_id >= int32_t(state.reward_guard_terrain_pressure_by_terrain_0xf64.size())) {
+			blocked_reason = "0x49c64b_selector_relation_terrain_0x08_out_of_pressure_table_range";
+			return false;
+		}
+		score += int32_t((int64_t(state.reward_guard_terrain_pressure_by_terrain_0xf64[size_t(terrain_id)]) * int64_t(score)) / int64_t(state.reward_guard_terrain_pressure_total_0xf60));
+	}
+	return true;
+}
+
 static bool reward_guard_candidate_score_0x4aa151(
 		const GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c *selector,
 		const RewardGuardCandidateRecord4a9f1c &candidate,
 		int32_t &score,
 		std::string &blocked_reason) {
@@ -3950,19 +4086,23 @@ static bool reward_guard_candidate_score_0x4aa151(
 		blocked_reason = "0x4a9f1c_candidate_vtable_0x00_missing_before_score_dispatch";
 		return false;
 	}
-	if (!candidate.direct_value_0x0c_known) {
-		blocked_reason = "0x4a9f1c_candidate_direct_value_0x0c_missing_before_score_dispatch";
-		return false;
-	}
 
 	const uint32_t candidate_vtable = candidate.candidate_vtable_0x00;
 	if (reward_guard_candidate_vtable_has_direct_value_score(candidate_vtable)) {
+		if (!candidate.direct_value_0x0c_known) {
+			blocked_reason = "0x4a9f1c_candidate_direct_value_0x0c_missing_before_score_dispatch";
+			return false;
+		}
 		score = candidate.direct_value_0x0c;
 		return true;
 	}
 
 	if (candidate_vtable == REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_B_0X540C70
 			|| candidate_vtable == REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80) {
+		if (!candidate.direct_value_0x0c_known) {
+			blocked_reason = "0x49cb60_candidate_direct_value_0x0c_missing";
+			return false;
+		}
 		if (!candidate.cursor_source_0x08_known) {
 			blocked_reason = "0x49cb60_projection_candidate_cursor_0x08_missing";
 			return false;
@@ -3992,11 +4132,19 @@ static bool reward_guard_candidate_score_0x4aa151(
 			score = -1;
 			return true;
 		}
-		blocked_reason = "0x49ca8b_0x49c64b_projection_candidate_score_pending";
-		return false;
+		int32_t monster_score = 0;
+		if (!reward_guard_candidate_monster_score_0x49c64b(state, selector, candidate, monster_score, blocked_reason)) {
+			return false;
+		}
+		score = ((2 * monster_score) - 4000) / 3;
+		return true;
 	}
 
 	if (candidate_vtable == REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_ADJACENT_0X540CA0) {
+		if (!candidate.direct_value_0x0c_known) {
+			blocked_reason = "0x49cd97_candidate_direct_value_0x0c_missing";
+			return false;
+		}
 		if (!candidate.cursor_source_0x08_known) {
 			blocked_reason = "0x49cd97_projection_candidate_cursor_0x08_missing";
 			return false;
@@ -4014,12 +4162,10 @@ static bool reward_guard_candidate_score_0x4aa151(
 	}
 
 	if (candidate_vtable == 0x00540bc0U) {
-		blocked_reason = "0x49c64b_monster_candidate_score_semantics_pending";
-		return false;
+		return reward_guard_candidate_monster_score_0x49c64b(state, selector, candidate, score, blocked_reason);
 	}
 	if (candidate_vtable == 0x00540c00U) {
-		blocked_reason = "0x49c849_type17_candidate_score_semantics_pending";
-		return false;
+		return reward_guard_candidate_monster_score_0x49c64b(state, selector, candidate, score, blocked_reason);
 	}
 
 	blocked_reason = "0x4a9f1c_candidate_score_vtable_contract_unrecovered";
@@ -4109,7 +4255,7 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 
 		int32_t score = 0;
 		std::string score_blocker;
-		if (!reward_guard_candidate_score_0x4aa151(state, candidate, score, score_blocker)) {
+		if (!reward_guard_candidate_score_0x4aa151(state, selector, candidate, score, score_blocker)) {
 			decision.rejected_by_score_dispatch = true;
 			decision.blocked_reason = score_blocker;
 			result.score_dispatch_missing_count += 1;
@@ -8776,13 +8922,18 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.endpoint_cursor_0xf58_known = true;
 	state.endpoint_cursor_0xf58 = 0;
 	state.endpoint_cursor_0xf5c_present = true;
-	state.endpoint_cursor_0xf5c_known = false;
+	state.endpoint_cursor_0xf5c_known = true;
+	state.endpoint_cursor_0xf5c = int32_t(0x7a1befdfU);
 	state.descriptor_counter_table_0x1110_present = true;
 	state.descriptor_counter_table_0x1110_contents_known = true;
 	state.descriptor_counter_table_0x1110_known_count = DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
 	state.descriptor_counter_table_0x1110.assign(size_t(DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
 	state.reward_guard_projection_generator_0x10b4_known = true;
 	state.reward_guard_projection_generator_0x10b4 = false;
+	state.reward_guard_terrain_pressure_zeroed_0x4aadd2 = true;
+	state.reward_guard_terrain_pressure_0xf60_0xf64_known = true;
+	state.reward_guard_terrain_pressure_total_0xf60 = 0;
+	state.reward_guard_terrain_pressure_by_terrain_0xf64.fill(0);
 	state.reward_guard_projection_used_flags_0x1024_known = true;
 	state.reward_guard_projection_used_flags_0x1024_count = REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947;
 	state.reward_guard_projection_used_flags_0x1024_zero_count = REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947;

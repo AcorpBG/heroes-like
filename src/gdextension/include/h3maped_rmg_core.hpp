@@ -1753,6 +1753,10 @@ struct RewardGuardCandidateRecord4a9f1c {
 	int32_t direct_value_0x0c = 0;
 	bool selection_weight_0x10_known = false;
 	int32_t selection_weight_0x10 = 0;
+	bool monster_score_fields_known_0x49c64b = false;
+	int32_t monster_table_index_0x14 = -1;
+	int32_t monster_terrain_id_0x57cea0 = -1;
+	int32_t monster_base_score_0x49c64b = 0;
 };
 
 struct RewardGuardCandidateDecision4a9f1c {
@@ -2006,6 +2010,10 @@ struct GeneratorObjectPrivateState {
 	RewardGuardProjectionSourceRelationResult4ad947 reward_guard_projection_source_relation_0x4ad947;
 	bool reward_guard_projection_generator_0x10b4_known = false;
 	bool reward_guard_projection_generator_0x10b4 = false;
+	bool reward_guard_terrain_pressure_zeroed_0x4aadd2 = false;
+	bool reward_guard_terrain_pressure_0xf60_0xf64_known = false;
+	int32_t reward_guard_terrain_pressure_total_0xf60 = 0;
+	std::array<int32_t, 9> reward_guard_terrain_pressure_by_terrain_0xf64 = {};
 	bool reward_guard_projection_used_flags_0x1024_known = false;
 	int32_t reward_guard_projection_used_flags_0x1024_count = 0;
 	int32_t reward_guard_projection_used_flags_0x1024_zero_count = 0;
