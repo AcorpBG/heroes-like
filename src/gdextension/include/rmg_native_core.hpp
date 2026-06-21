@@ -327,6 +327,10 @@ struct CaseReport {
 	bool supported_scope = false;
 	bool shared_chain_executed = false;
 	std::string shared_chain_input_status;
+	bool native_workflow_executed = false;
+	bool native_workflow_final_writeout_complete = false;
+	std::string native_workflow_status;
+	std::string native_workflow_current_phase;
 	bool phase_snapshot_written = false;
 	std::filesystem::path phase_snapshot_path;
 	bool native_map_json_written = false;
@@ -930,14 +934,35 @@ struct RecoveredOwnerGridPayload {
 	std::vector<SharedSourceObjectResolverResult4af785> source_object_resolver_samples_0x4af785;
 };
 
+struct NativeH3MapedWorkflowPhase {
+	std::string id;
+	std::string h3maped_anchor;
+	std::string status;
+	std::string blocker;
+};
+
+struct NativeH3MapedWorkflowResult {
+	ControlledCase input;
+	bool supported_scope = false;
+	bool executed = false;
+	bool final_payload_owned = false;
+	bool final_writeout_complete = false;
+	std::string status;
+	std::string blocked_reason;
+	std::string current_phase_id;
+	RecoveredOwnerGridPayload payload;
+	std::vector<NativeH3MapedWorkflowPhase> phases;
+};
+
 ControlledCase parse_controlled_case(const std::string &raw);
 std::vector<std::string> split_case_filter(const std::string &case_filter);
 bool case_matches_filter(const ControlledCase &controlled_case, const std::vector<std::string> &filters);
 SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input);
 RecoveredOwnerGridPayload build_recovered_owner_grid_payload(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input);
+NativeH3MapedWorkflowResult run_native_h3maped_workflow(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input);
 std::string shared_runtime_chain_input_status(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input);
 bool shared_runtime_chain_input_executable(const ControlledCase &controlled_case, const SharedRuntimeChainInput &input);
-std::string case_shared_h3maped_state_chain_blocked_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason, const SharedRuntimeChainInput &shared_input);
+std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_case, const std::string &status, const std::string &blocked_reason, const SharedRuntimeChainInput &shared_input);
 std::string safe_case_filename(const std::string &case_id);
 
 } // namespace aurelion::rmg_native_core

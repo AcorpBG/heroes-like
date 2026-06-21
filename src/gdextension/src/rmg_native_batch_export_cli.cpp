@@ -102,6 +102,10 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"supported_scope\":" << (report.supported_scope ? "true" : "false") << ",";
 		out << "\"shared_chain_input_status\":\"" << json_escape(report.shared_chain_input_status) << "\",";
 		out << "\"shared_chain_executed\":" << (report.shared_chain_executed ? "true" : "false") << ",";
+		out << "\"native_workflow_executed\":" << (report.native_workflow_executed ? "true" : "false") << ",";
+		out << "\"native_workflow_final_writeout_complete\":" << (report.native_workflow_final_writeout_complete ? "true" : "false") << ",";
+		out << "\"native_workflow_status\":\"" << json_escape(report.native_workflow_status) << "\",";
+		out << "\"native_workflow_current_phase\":\"" << json_escape(report.native_workflow_current_phase) << "\",";
 		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
 		out << "\"phase_snapshot_path\":\"" << json_escape(report.phase_snapshot_path.string()) << "\",";
 		out << "\"native_map_json_written\":" << (report.native_map_json_written ? "true" : "false") << ",";
@@ -319,29 +323,21 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		CaseReport report;
 		report.input = controlled_case;
 		report.supported_scope = supported;
-		report.shared_chain_input_status = aurelion::rmg_native_core::shared_runtime_chain_input_status(controlled_case, options.shared_runtime_chain_input);
-		report.shared_chain_executed = supported && aurelion::rmg_native_core::shared_runtime_chain_input_executable(controlled_case, options.shared_runtime_chain_input);
-		if (!controlled_case.parse_ok) {
-			report.status = "failed";
-			report.blocked_reason = controlled_case.parse_error;
-		} else if (!supported) {
-			report.status = "unsupported_scope";
-			report.blocked_reason = "standalone_cli_currently_scopes_only_small_medium_one_level_land";
-		} else if (options.native_map_json_only) {
-			report.status = "blocked";
-			report.blocked_reason = "native_map_json_disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_final_payload";
-		} else if (options.phase_snapshot_only) {
-			report.status = "blocked";
-			report.blocked_reason = "phase_snapshot_diagnostic_only_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload";
-		} else {
-			report.status = "blocked";
-			report.blocked_reason = "runtime_export_disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload";
-		}
+		const aurelion::rmg_native_core::NativeH3MapedWorkflowResult workflow =
+				aurelion::rmg_native_core::run_native_h3maped_workflow(controlled_case, options.shared_runtime_chain_input);
+		report.shared_chain_input_status = workflow.payload.executable ? "native_workflow_inputs_ready" : "missing_exact_runtime_zone_seed_link_inputs";
+		report.shared_chain_executed = workflow.executed;
+		report.native_workflow_executed = workflow.executed;
+		report.native_workflow_final_writeout_complete = workflow.final_writeout_complete;
+		report.native_workflow_status = workflow.status;
+		report.native_workflow_current_phase = workflow.current_phase_id;
+		report.status = workflow.status;
+		report.blocked_reason = workflow.blocked_reason;
 		if (options.emit_phase_snapshot) {
 			const std::filesystem::path snapshot_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".phase_snapshot.json");
 			std::ofstream snapshot(snapshot_path, std::ios::binary);
 			if (snapshot) {
-				snapshot << aurelion::rmg_native_core::case_shared_h3maped_state_chain_blocked_json(controlled_case, report.status, report.blocked_reason, options.shared_runtime_chain_input);
+				snapshot << aurelion::rmg_native_core::case_native_h3maped_workflow_json(controlled_case, report.status, report.blocked_reason, options.shared_runtime_chain_input);
 				report.phase_snapshot_written = true;
 				report.phase_snapshot_path = snapshot_path;
 			}
@@ -362,6 +358,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int phase_snapshot_written_count = 0;
 	int phase_snapshot_failed_count = 0;
 	int shared_chain_executed_count = 0;
+	int native_workflow_executed_count = 0;
+	int native_workflow_final_writeout_complete_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -383,12 +381,20 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		if (report.shared_chain_executed) {
 			++shared_chain_executed_count;
 		}
+		if (report.native_workflow_executed) {
+			++native_workflow_executed_count;
+		}
+		if (report.native_workflow_final_writeout_complete) {
+			++native_workflow_final_writeout_complete_count;
+		}
 	}
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
-	const std::string status = "blocked";
-	const std::string blocked_reason = options.phase_snapshot_only
-			? "phase_snapshot_diagnostic_only_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload"
-			: "runtime_export_disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload";
+	const std::string status = native_workflow_final_writeout_complete_count == int(case_reports.size()) && !case_reports.empty()
+			? "complete"
+			: "blocked";
+	const std::string blocked_reason = status == "complete"
+			? ""
+			: "native_h3maped_workflow_stops_before_final_writeout_for_at_least_one_case";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -398,7 +404,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"godot_process_started\": false,\n";
 	out << "  \"output_dir\": \"" << json_escape(options.output_dir.string()) << "\",\n";
 	out << "  \"absolute_output_dir\": \"" << json_escape(absolute_output_dir.string()) << "\",\n";
-	out << "  \"case_scope\": \"no_godot_cli_checkpoint2_generated_cell_surface_until_core_split\",\n";
+	out << "  \"case_scope\": \"no_godot_cli_single_native_h3maped_workflow\",\n";
 	out << "  \"case_filter\": \"" << json_escape(options.case_filter) << "\",\n";
 	out << "  \"case_limit\": " << options.limit << ",\n";
 	out << "  \"include_unsupported\": " << (options.include_unsupported ? "true" : "false") << ",\n";
@@ -431,6 +437,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"shared_rng_state_after_template_selection_known\": " << (options.shared_runtime_chain_input.rng_state_after_template_selection_known ? "true" : "false") << ",\n";
 	out << "  \"shared_generator_mode_0x10b8_known\": " << (options.shared_runtime_chain_input.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
 	out << "  \"shared_coordinate_owner_grid_chain_executed_count\": " << shared_chain_executed_count << ",\n";
+	out << "  \"native_h3maped_workflow_executed_count\": " << native_workflow_executed_count << ",\n";
+	out << "  \"native_h3maped_workflow_final_writeout_complete_count\": " << native_workflow_final_writeout_complete_count << ",\n";
 	out << "  \"case_count\": " << case_reports.size() << ",\n";
 	out << "  \"blocked_count\": " << blocked_count << ",\n";
 	out << "  \"unsupported_count\": " << unsupported_count << ",\n";
@@ -444,11 +452,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"blocked_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_shared_h3maped_state_chain_blocked_v1\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_blocked_before_final_writeout\",\n";
+	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_full_source_records_descriptor_identity_and_generated_cell_state_before_relation_object_consumers\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary. In --phase-snapshot-only mode it writes only a minimal blocked partial-chain marker and exposes no live generation surface. It exits blocked until final payload generation is owned by the full recovered H3MapEd entrypoint-to-writeout chain.\",\n";
+	out << "  \"required_next_slice\": \"port_relation_object_materialization_into_the_single_native_h3maped_workflow\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked at the first unowned generation phase before final writeout.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
@@ -514,6 +522,6 @@ int main(int argc, char **argv) {
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
-			  << " reason=full_recovered_h3maped_entrypoint_to_writeout_chain_does_not_yet_own_payload\n";
+			  << " reason=native_h3maped_workflow_blocked_before_final_writeout\n";
 	return failed_count > 0 ? 1 : 2;
 }
