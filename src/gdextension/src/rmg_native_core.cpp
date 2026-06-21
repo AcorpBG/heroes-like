@@ -158,6 +158,8 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.seed = controlled_case.seed;
 	config.setup_object_0x44_known = controlled_case.setup_object_0x44_known;
 	config.setup_object_0x44 = controlled_case.setup_object_0x44;
+	config.setup_object_0x48_known = true;
+	config.setup_object_0x48 = 0;
 	return config;
 }
 

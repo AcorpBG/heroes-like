@@ -46,7 +46,17 @@ constexpr int32_t REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00 = 0x7d00;
 constexpr uint32_t WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C = 0x00540a9cU;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540A88 = 0x00540a88U;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540A74 = 0x00540a74U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540AEC = 0x00540aecU;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540AC4 = 0x00540ac4U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540AD8 = 0x00540ad8U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540AB0 = 0x00540ab0U;
+constexpr uint32_t PROJECTION_OBJECT_VTABLE_0X540B00 = 0x00540b00U;
 constexpr uint32_t PROJECTION_OBJECT_VTABLE_0X540B14 = 0x00540b14U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B3C = 0x00540b3cU;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B50 = 0x00540b50U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B64 = 0x00540b64U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B78 = 0x00540b78U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B8C = 0x00540b8cU;
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_A_0X540C60 = 0x00540c60U;
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_B_0X540C70 = 0x00540c70U;
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80 = 0x00540c80U;
@@ -208,6 +218,10 @@ struct GeneratorDescriptorVectorEntry0x398 {
 	int32_t descriptor_source_field_0x20 = 0;
 	int32_t descriptor_group_0x24 = 0;
 	int32_t descriptor_last_flag_0x28 = 0;
+	bool descriptor_source_cell_offsets_0x2c_0x30_known = false;
+	int32_t descriptor_source_cell_x_0x2c = 0;
+	int32_t descriptor_source_cell_y_0x30 = 0;
+	bool descriptor_projection_enabled_0x29 = false;
 	bool descriptor_dimensions_known = false;
 	int32_t descriptor_width_0x34 = 0;
 	int32_t descriptor_height_0x38 = 0;
@@ -1029,6 +1043,10 @@ struct CoordinateCandidate4a17f5 {
 struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x44 = 0;
 	int32_t generator_mode_0x10b8 = 0;
+	bool setup_object_0x48_known = false;
+	int32_t setup_object_0x48 = 0;
+	bool generator_value_band_0x10bc_known = false;
+	int32_t generator_value_band_0x10bc = 0;
 	bool randomized_setup_sentinel_3 = false;
 	int32_t setup_rng_value = -1;
 	int32_t setup_rng_call_count = 0;
@@ -1469,6 +1487,8 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t source_pointer_source_index_0x00 = -1;
 	bool source_pointer_type_0x04_known = false;
 	int32_t source_pointer_type_0x04 = 0;
+	bool source_pointer_value_0x90_known = false;
+	int32_t source_pointer_value_0x90 = 0;
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
 	bool source_owner_slot_0x1c_known = false;
@@ -1813,8 +1833,13 @@ struct RewardGuardCandidateDecision4a9f1c {
 	int32_t selection_weight_0x10 = 0;
 	bool rejected_by_global_limit_0x5a26e4 = false;
 	bool rejected_by_relation_limit_0x5a2a8c = false;
+	bool rejected_by_metadata_gate_0x18 = false;
 	bool rejected_by_value_bounds = false;
 	bool rejected_by_score_dispatch = false;
+	bool rejected_by_policy_extent_gate_0x20 = false;
+	bool policy_extent_gate_0x20_invoked = false;
+	int32_t policy_extent_mask_count_0x4aa195 = 0;
+	int32_t policy_extent_score_per_mask_cell = 0;
 	bool accepted_after_counter_and_value_checks = false;
 	bool accepted_after_score_dispatch = false;
 	bool descriptor_selector_invoked_0x4a9e40 = false;
@@ -1829,8 +1854,17 @@ struct RewardGuardCandidateDecision4a9f1c {
 	std::string blocked_reason;
 };
 
+struct RewardGuardSelectorCallsiteArgs4a9f1c {
+	uint8_t metadata_gate_byte_0x18 = 1U;
+	uint8_t precheck_byte_0x1c = 1U;
+	uint8_t policy_extent_byte_0x20 = 0U;
+	bool coordinate_tuple_0x24_known = true;
+	CoordinateCandidate4a17f5 coordinate_tuple_0x24 { -1, -1, -1 };
+};
+
 struct RewardGuardSelectorResult4a9f1c {
 	bool applied = false;
+	RewardGuardSelectorCallsiteArgs4a9f1c callsite_args;
 	bool candidate_vector_present = false;
 	bool candidate_vector_contents_known = false;
 	int32_t candidate_scan_count = 0;
@@ -1838,9 +1872,15 @@ struct RewardGuardSelectorResult4a9f1c {
 	int32_t counter_input_missing_count = 0;
 	int32_t global_limit_reject_count = 0;
 	int32_t relation_limit_reject_count = 0;
+	int32_t metadata_gate_reject_count_0x18 = 0;
 	int32_t value_bound_reject_count = 0;
 	int32_t score_dispatch_reject_count = 0;
 	int32_t score_dispatch_missing_count = 0;
+	bool policy_extent_gate_invoked_0x20 = false;
+	int32_t policy_extent_gate_reject_count_0x20 = 0;
+	int32_t policy_extent_best_score_per_mask_cell = 0;
+	int32_t policy_extent_vector_clear_count_0x42bde9 = 0;
+	bool coordinate_tuple_gate_0x24_skipped_negative = false;
 	int32_t accepted_weight_total_0x14 = 0;
 	bool rng_consumed_0x4aa110 = false;
 	int32_t rng_value_0x4e7276 = -1;
@@ -1850,6 +1890,10 @@ struct RewardGuardSelectorResult4a9f1c {
 	int32_t selected_candidate_index = -1;
 	bool selected_candidate_vtable_known = false;
 	uint32_t selected_candidate_vtable_0x00 = 0U;
+	bool selected_score_value_known_0x04 = false;
+	int32_t selected_score_value_0x04 = 0;
+	bool selected_object_vtable_0x00_known = false;
+	uint32_t selected_object_vtable_0x00 = 0U;
 	bool selected_source_record_known_0x4a9e40 = false;
 	int32_t selected_source_catalog_index_0x49da08 = -1;
 	int32_t selected_descriptor_vector_index_0x398 = -1;
@@ -1872,6 +1916,7 @@ struct RewardGuardSelectedObjectResult4aa1db {
 	int32_t policy_word_0x10 = 0;
 	int32_t selected_value_0x14 = 0;
 	int32_t selector_retry_limit = 3;
+	int32_t initial_lower_value_bound_0x4aa1db = 0;
 	int32_t selector_attempt_count = 0;
 	RewardGuardSelectorResult4a9f1c selector_0x4a9f1c;
 	bool selected_object_vtable_0x00_known = false;
@@ -1886,6 +1931,8 @@ struct RewardGuardSelectedObjectResult4aa1db {
 	int32_t selected_object_selected_value_0x20 = 0;
 	uint32_t selected_object_enabled_word_0x24 = 0U;
 	bool selected_object_body_anchor_fallback_0x4a5c07 = false;
+	bool selected_object_score_value_known_0x04 = false;
+	int32_t selected_object_score_value_0x04 = 0;
 	bool initial_member_appended_0x40bb26 = false;
 	int32_t initial_member_count_after = 0;
 	bool initial_center_coordinate_known = false;
@@ -1893,9 +1940,33 @@ struct RewardGuardSelectedObjectResult4aa1db {
 	int32_t initial_center_y = 0;
 	int32_t initial_center_level = 0;
 	int32_t initial_body_stamp_count_0x49abd6 = 0;
+	int32_t current_value_after_initial_0x4aa1db = 0;
+	int32_t secondary_remaining_value_before_last_attempt_0x4aa1db = 0;
+	int32_t secondary_lower_value_bound_0x4aa1db = 0;
+	int32_t secondary_upper_value_bound_0x4aa1db = 0;
+	int32_t secondary_selector_attempt_count_0x4a9f1c = 0;
+	int32_t secondary_null_selection_count_0x4a9f1c = 0;
+	int32_t secondary_validator_invocation_count_0x49d471 = 0;
+	int32_t secondary_accepted_count_0x49d471 = 0;
+	int32_t secondary_rejected_count_0x49d471 = 0;
+	int32_t secondary_destroyed_rejected_record_count = 0;
+	int32_t current_value_after_0x4aa1db = 0;
 	bool bounds_refresh_invoked_0x49d6e0 = false;
 	bool bounds_refresh_applied_0x49d6e0 = false;
 	std::string bounds_refresh_blocked_reason_0x49d6e0;
+	std::string blocked_reason;
+};
+
+struct RewardGuardAttachValueGateResult4a960a {
+	bool invoked = false;
+	bool applied = false;
+	bool generator_value_band_0x10bc_known = false;
+	int32_t generator_value_band_0x10bc = 0;
+	bool selector_source_value_0x90_known = false;
+	int32_t selector_source_value_0x90 = 0;
+	int32_t effective_value_band_0x4a960a = 0;
+	int32_t selected_value_input = 0;
+	int32_t scaled_attach_value_0x4a65a5 = 0;
 	std::string blocked_reason;
 };
 
@@ -1913,6 +1984,22 @@ struct RewardGuardMaterializationDriverResult4aa354 {
 	int32_t wrapper_reset_cell_count_0x49ce64 = 0;
 	bool selected_object_helper_invoked_0x4aa1db = false;
 	RewardGuardSelectedObjectResult4aa1db selected_object_0x4aa1db;
+	bool attach_value_gate_invoked_0x4a960a = false;
+	RewardGuardAttachValueGateResult4a960a attach_value_gate_0x4a960a;
+	bool attach_value_positive_0x4a960a = false;
+	int32_t attach_value_0x4a960a = 0;
+	int32_t attach_value_band_0x4a960a = 0;
+	bool ordinary_attach_record_allocated_0x4a5c07 = false;
+	uint32_t ordinary_attach_record_key_0x4a5c07 = 0U;
+	bool ordinary_attach_record_key_known_0x4a5c07 = false;
+	int32_t ordinary_attach_record_sequence_0x1c_0x4a5c07 = -1;
+	int32_t ordinary_attach_record_value_0x20_0x4a5c07 = 0;
+	uint32_t ordinary_attach_record_enabled_word_0x24_0x4a5c07 = 0U;
+	bool selected_object_attach_invoked_0x49cf34 = false;
+	bool selected_object_attach_applied_0x49cf34 = false;
+	int32_t selected_object_attach_candidate_count_after_filter_0x49cf34 = 0;
+	int32_t selected_object_attach_member_count_after_0x49cf34 = 0;
+	std::string selected_object_attach_blocked_reason_0x49cf34;
 	bool final_candidate_rebuild_invoked_0x49d7c3 = false;
 	bool final_mark_invoked_0x49cefb = false;
 	int32_t final_candidate_count_0x49cefb = 0;
@@ -2027,6 +2114,8 @@ struct GeneratorObjectPrivateState {
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
+	bool generator_value_band_0x10bc_known = false;
+	int32_t generator_value_band_0x10bc = 0;
 	GeneratorObjectVectorState endpoint_vector_c8_cc;
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
 	GeneratorObjectVectorState descriptor_vector_398_39c;
@@ -2227,6 +2316,8 @@ struct H3MapedRmgWorkflowConfig {
 	uint32_t seed = 0;
 	bool setup_object_0x44_known = false;
 	int32_t setup_object_0x44 = 0;
+	bool setup_object_0x48_known = true;
+	int32_t setup_object_0x48 = 0;
 };
 
 struct H3MapedRmgWorkflowResult {
@@ -2299,6 +2390,8 @@ struct RewardGuardWrapperMember4aa3e9 {
 	bool descriptor_projection_enabled_0x29 = false;
 	int32_t descriptor_offset_x_0x2c = 0;
 	int32_t descriptor_offset_y_0x30 = 0;
+	bool source_record_copy_known_0x04 = false;
+	SourceObjectRecord0x4c source_record_copy;
 	bool descriptor_body_offsets_0x49a6f9_known = false;
 	std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_0x49a6f9;
 };
@@ -2389,6 +2482,9 @@ struct RewardGuardAttachResult49cf34 {
 	bool applied = false;
 	bool initial_candidate_refresh_0x49d7c3_applied = false;
 	bool initial_candidate_refresh_returned_existing_vector_0x49d7c3 = false;
+	int32_t existing_member_probe_count_0x49cf34 = 0;
+	int32_t existing_member_candidate_set_count_0x49aa63 = 0;
+	int32_t existing_member_neighbor_bit27_clear_count_0x49a932 = 0;
 	int32_t candidate_count_before_filter = 0;
 	int32_t bit26_clear_candidate_erase_count_0x4afaea = 0;
 	int32_t filter_reject_count_0x49d2e0 = 0;
@@ -2402,6 +2498,7 @@ struct RewardGuardAttachResult49cf34 {
 	bool appended_member_0x49d69d = false;
 	int32_t selected_member_count_after = 0;
 	bool stamped_member_0x49abd6 = false;
+	int32_t body_stamp_count_0x49abd6 = 0;
 	int32_t primary_bit27_write_count_0x49d1ed = 0;
 	int32_t neighbor_bit27_write_count_0x49d270 = 0;
 	bool attached_flag_set_0x48 = false;
@@ -2667,7 +2764,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
 int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);
 RewardGuardSelectorResult4a9f1c reward_guard_value_bounded_selector_counter_pass_0x4a9f1c(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound);
-RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng);
+RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args = RewardGuardSelectorCallsiteArgs4a9f1c());
 RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04();
 RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6e0(RewardGuardWrapperState4aa3e9 &wrapper);
 RewardGuardWrapperCandidateRebuildResult49d7c3 reward_guard_wrapper_rebuild_candidates_0x49d7c3(RewardGuardWrapperState4aa3e9 &wrapper);
@@ -2703,7 +2800,7 @@ bool point_inside_bounds_4a2777(const ClipResult &point, const ClipBounds &bound
 const char *boundary_vector_append_callsite_label_4a2777(uint32_t callsite);
 bool boundary_vector_append_callsite_recovered_4a2777(uint32_t callsite);
 bool boundary_vector_append_4a2777(BoundaryVector4a2777 &vector, int32_t x, int32_t y, uint32_t callsite);
-GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44);
+GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known = true, int32_t setup_object_0x48 = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);
 PlayerSlotAssignmentResult4ac62a player_slot_assignment_4ac62a_4ac6ec(int32_t human_count, int32_t player_count, uint8_t human_capable_source_owner_mask, uint8_t player_capable_source_owner_mask, uint8_t selected_color_mask = 0xffU);
@@ -2712,7 +2809,7 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection);
-GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const std::string &size_class, const std::string &water_mode, uint32_t seed, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result);
+GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const std::string &size_class, const std::string &water_mode, uint32_t seed, const GeneratorSetupModeResult49ecf2 &setup_mode, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result);
 SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones);
 FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count);
 BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
