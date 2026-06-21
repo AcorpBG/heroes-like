@@ -4017,7 +4017,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_reward_guard_blocker =
-				"0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7";
+				"0x49c64b_monster_candidate_score_semantics_pending";
 		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
@@ -4061,37 +4061,41 @@ int main() {
 		const RewardGuardSourceStreamResult4aab7e &source_stream =
 				workflow_generator_state.reward_guard_source_stream_0x4aab7e;
 		if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e_ported
-						&& !workflow_generator_state.reward_guard_source_stream_0x4aab7e_input_known
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e_input_known
+						&& workflow_generator_state.reward_guard_source_stream_owner_kind_0x0c_known
+						&& workflow_generator_state.reward_guard_source_stream_records_0x4aab7e.size() == size_t(3)
 						&& source_stream.invoked
-						&& !source_stream.source_triplet_known
+						&& source_stream.source_triplet_known
+						&& source_stream.source_object_kind_0x0c_known
+						&& source_stream.active_lane_count > 0
+						&& source_stream.selected_lane_count > 0
+						&& !source_stream.attempts.empty()
 						&& source_stream.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not enter the recovered 0x4aab7e source-stream caller before blocking on its missing source triplet")) {
+					"entry-to-writeout workflow did not carry recovered 0x4aab7e source bands and terrain policy into selected-create")) {
 			return 1;
 		}
 		if (!require(workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
-						&& !workflow_generator_state.reward_guard_materialization_driver_input_known
-						&& !materialization_driver.invoked
-						&& !materialization_driver.wrapper_reset_0x49ce64_applied
-						&& !materialization_driver.selected_object_helper_invoked_0x4aa1db
-						&& !materialization_driver.selected_object_0x4aa1db.invoked
-						&& !materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
+						&& workflow_generator_state.reward_guard_materialization_driver_input_known
+						&& materialization_driver.invoked
+						&& materialization_driver.wrapper_reset_0x49ce64_applied
+						&& materialization_driver.selected_object_helper_invoked_0x4aa1db
+						&& materialization_driver.selected_object_0x4aa1db.invoked
+						&& materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
 						&& materialization_driver.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow invoked 0x4aa354/0x4aa1db/0x4a9f1c before the 0x4aab7e source triplet was source-backed")) {
+					"entry-to-writeout workflow did not advance from 0x4aab7e into 0x4aa354/0x4aa1db/0x4a9f1c before the current vtable blocker")) {
 			return 1;
 		}
 		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
 				workflow_generator_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
 		if (!require(!projection_chain.invoked
 						&& !projection_chain.projection_object_input_known
-						&& projection_chain.blocked_reason == current_reward_guard_blocker
 						&& workflow_generator_state.reward_guard_relation_priority_live_replay_blocker == current_reward_guard_blocker
 						&& workflow_generator_state.reward_guard_relation_priority_0x4ad7f7.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow invoked 0x49c0a6 before selected-create produced a source-backed projection object")) {
 			return 1;
 		}
-		if (!require(!workflow_generator_state.reward_guard_selector_0x4a9f1c.applied
-						&& workflow_generator_state.reward_guard_selector_0x4a9f1c.blocked_reason.empty(),
-					"entry-to-writeout workflow still executed 0x4a9f1c without a source-backed selector relation")) {
+		if (!require(materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.blocked_reason == current_reward_guard_blocker,
+					"entry-to-writeout workflow did not surface the current unrecovered nested 0x4a9f1c candidate score vtable contract")) {
 			return 1;
 		}
 	}
