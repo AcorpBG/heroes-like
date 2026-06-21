@@ -1800,6 +1800,95 @@ struct ObjectFootprintCommitResult4a54a7 {
 	int32_t projection_score_depletion_count = 0;
 };
 
+struct RewardGuardWrapperMember4aa3e9 {
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	uint32_t object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+	int32_t descriptor_type_0x1c = -1;
+	int32_t relative_x_0x08 = 0;
+	int32_t relative_y_0x0c = 0;
+	int32_t relative_level_0x10 = 0;
+	bool descriptor_projection_enabled_0x29 = false;
+	int32_t descriptor_offset_x_0x2c = 0;
+	int32_t descriptor_offset_y_0x30 = 0;
+};
+
+struct RewardGuardWrapperState4aa3e9 {
+	bool wrapper_bounds_0x18_0x24_known = false;
+	int32_t bound_left_0x18 = 0;
+	int32_t bound_top_0x1c = 0;
+	int32_t bound_right_0x20 = 0;
+	int32_t bound_bottom_0x24 = 0;
+	bool selected_member_vector_0x2c_0x30_known = false;
+	std::vector<RewardGuardWrapperMember4aa3e9> selected_members_0x2c_0x30;
+	bool generated_cell_grid_0x08_0x10_known = false;
+	GeneratedCellRecordGrid0x30 generated_cell_grid_0x08_0x10;
+	bool selected_coordinate_0x54_0x5c_known = false;
+	int32_t selected_x_0x54 = 0;
+	int32_t selected_y_0x58 = 0;
+	int32_t selected_level_0x5c = 0;
+	bool feasibility_filter_0x4aa603_prevalidated_candidates_known = false;
+	std::vector<CoordinateCandidate4a17f5> feasibility_filter_0x4aa603_prevalidated_candidates;
+};
+
+struct RewardGuardCandidate4aa9b7 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	uint32_t low_word_score = 0U;
+};
+
+struct RewardGuardWrapperProjectionResult4aa3e9 {
+	bool applied = false;
+	bool selected_coordinate_stored_0x54_0x5c = false;
+	bool wrapper_selected_members_known = false;
+	bool wrapper_generated_cell_grid_known = false;
+	int32_t selected_member_count = 0;
+	int32_t selected_member_commit_count_0x4a54a7 = 0;
+	int32_t selected_member_commit_blocked_count = 0;
+	int32_t overlap_cell_count = 0;
+	int32_t overlap_out_of_bounds_count = 0;
+	int32_t destination_bit26_mirror_count = 0;
+	int32_t destination_bit27_mirror_count = 0;
+	int32_t source_bit27_clear_count = 0;
+	int32_t source_bit26_set_count = 0;
+	std::vector<ObjectFootprintCommitResult4a54a7> member_commits_0x4a54a7;
+	std::string blocked_reason;
+};
+
+struct RewardGuardCoordinateScanResult4aa9b7 {
+	bool applied = false;
+	bool committed = false;
+	bool relation_scan_bounds_known = false;
+	bool wrapper_bounds_known = false;
+	bool feasibility_filter_prevalidated_0x4aa603 = false;
+	bool scan_bounds_non_empty = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t minimum_low_word_score_0x10 = 0;
+	bool policy_byte_0x13 = false;
+	int32_t scan_min_x = 0;
+	int32_t scan_min_y = 0;
+	int32_t scan_max_x_exclusive = 0;
+	int32_t scan_max_y_exclusive = 0;
+	int32_t threshold_after_scan = 0;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_cell_word_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t value_floor_reject_count = 0;
+	int32_t feasibility_reject_count_0x4aa603 = 0;
+	int32_t local_vector_clear_count_0x4ae52a = 0;
+	int32_t local_vector_append_count_0x4ae1fd = 0;
+	int32_t accepted_candidate_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected_candidate_known = false;
+	RewardGuardCandidate4aa9b7 selected_candidate;
+	std::vector<RewardGuardCandidate4aa9b7> accepted_candidates_0x4ae1fd;
+	RewardGuardWrapperProjectionResult4aa3e9 commit_0x4aa3e9;
+	std::string blocked_reason;
+};
+
 struct ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 {
 	ConnectionFallbackMaterializationRecord4a7605_4a5e03 record;
 	bool target_cell_in_bounds = false;
@@ -1954,6 +2043,8 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCe
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
+RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
+RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x4aa9b7(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c &relation, int32_t minimum_low_word_score_0x10, bool policy_byte_0x13, H3MapedRng &rng);
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
 ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materialization_4a7605_4a5e03(GeneratorObjectPrivateState &state, const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> &records);
 SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng);
