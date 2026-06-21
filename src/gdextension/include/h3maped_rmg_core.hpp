@@ -1855,6 +1855,24 @@ struct RewardGuardSelectedObjectResult4aa1db {
 	uint32_t selected_object_vtable_0x00 = 0U;
 	bool selected_projection_object_0x540b14_known = false;
 	RewardGuardProjectionObject540b14 selected_projection_object_0x540b14;
+	bool selected_object_record_allocated_0x4a5c07 = false;
+	uint32_t selected_object_record_key_0x4a5c07 = 0U;
+	bool selected_object_record_key_known_0x4a5c07 = false;
+	int32_t selected_object_sequence_0x1c_0x4a5c07 = -1;
+	int32_t selected_object_descriptor_type_0x1c = -1;
+	int32_t selected_object_selected_value_0x20 = 0;
+	uint32_t selected_object_enabled_word_0x24 = 0U;
+	bool selected_object_body_anchor_fallback_0x4a5c07 = false;
+	bool initial_member_appended_0x40bb26 = false;
+	int32_t initial_member_count_after = 0;
+	bool initial_center_coordinate_known = false;
+	int32_t initial_center_x = 0;
+	int32_t initial_center_y = 0;
+	int32_t initial_center_level = 0;
+	int32_t initial_body_stamp_count_0x49abd6 = 0;
+	bool bounds_refresh_invoked_0x49d6e0 = false;
+	bool bounds_refresh_applied_0x49d6e0 = false;
+	std::string bounds_refresh_blocked_reason_0x49d6e0;
 	std::string blocked_reason;
 };
 
@@ -2559,7 +2577,7 @@ RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6
 RewardGuardWrapperCandidateRebuildResult49d7c3 reward_guard_wrapper_rebuild_candidates_0x49d7c3(RewardGuardWrapperState4aa3e9 &wrapper);
 RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, H3MapedRng &rng);
 RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cells_0x49cefb(RewardGuardWrapperState4aa3e9 &wrapper);
-RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng);
+RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng);
 RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t low_value_0x14, int32_t high_value_0x18, H3MapedRng &rng);
 RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0x4aab7e(GeneratorObjectPrivateState &state, const std::vector<RewardGuardSourceStreamRecord4aab7e> &source_records, bool source_object_kind_0x0c_known, int32_t source_object_kind_0x0c, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng);
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
