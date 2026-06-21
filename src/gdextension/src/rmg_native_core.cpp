@@ -3449,7 +3449,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_source_order_route_free_cell_sweep_0x4a8260_and_candidate_phase_0x4a4c8e_before_relation_object_consumers\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_reward_guard_source_stream_successful_0x4aa9b7_commits_before_connection_decorative_road_river_final_writeout\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
