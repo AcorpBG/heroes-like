@@ -1439,6 +1439,20 @@ bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const So
 			&& left.subtype_0x20 == right.subtype_0x20
 			&& left.group_0x24 == right.group_0x24
 			&& left.last_flag_0x28 == right.last_flag_0x28
+			&& left.raw_field_0x20_known == right.raw_field_0x20_known
+			&& left.raw_field_0x20 == right.raw_field_0x20
+			&& left.raw_field_0x24_known == right.raw_field_0x24_known
+			&& left.raw_field_0x24 == right.raw_field_0x24
+			&& left.raw_field_0x28_known == right.raw_field_0x28_known
+			&& left.raw_field_0x28 == right.raw_field_0x28
+			&& left.raw_field_0x2c_known == right.raw_field_0x2c_known
+			&& left.raw_field_0x2c == right.raw_field_0x2c
+			&& left.raw_field_0x30_known == right.raw_field_0x30_known
+			&& left.raw_field_0x30 == right.raw_field_0x30
+			&& left.raw_field_0x34_known == right.raw_field_0x34_known
+			&& left.raw_field_0x34 == right.raw_field_0x34
+			&& left.raw_field_0x38_known == right.raw_field_0x38_known
+			&& left.raw_field_0x38 == right.raw_field_0x38
 			&& left.pass_count == right.pass_count
 			&& left.action_count == right.action_count
 			&& left.passability_mask == right.passability_mask
@@ -3642,12 +3656,14 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 
 SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34) {
 	SourceOrderObjectDispatcherResult4a8d2c result;
-	result.source_field_0x20 = join.source_record_copy.subtype_0x20;
-	result.source_field_0x24 = join.source_record_copy.group_0x24;
-	result.source_field_0x30_known = source_field_0x30_known;
-	result.source_field_0x30 = source_field_0x30;
-	result.source_field_0x34_known = source_field_0x34_known;
-	result.source_field_0x34 = source_field_0x34;
+	result.source_field_0x20_known = join.source_record_copy.raw_field_0x20_known;
+	result.source_field_0x20 = join.source_record_copy.raw_field_0x20;
+	result.source_field_0x24_known = join.source_record_copy.raw_field_0x24_known;
+	result.source_field_0x24 = join.source_record_copy.raw_field_0x24;
+	result.source_field_0x30_known = join.source_record_copy.raw_field_0x30_known || source_field_0x30_known;
+	result.source_field_0x30 = join.source_record_copy.raw_field_0x30_known ? join.source_record_copy.raw_field_0x30 : source_field_0x30;
+	result.source_field_0x34_known = join.source_record_copy.raw_field_0x34_known || source_field_0x34_known;
+	result.source_field_0x34 = join.source_record_copy.raw_field_0x34_known ? join.source_record_copy.raw_field_0x34 : source_field_0x34;
 	result.lane_index_0x1c = lane_index_0x1c;
 	result.source_pair_key_0x0c = source_pair_key_0x0c;
 
@@ -3662,10 +3678,10 @@ SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(
 		result.branches.push_back(branch);
 	};
 
-	append_branch(0x24, result.source_field_0x24, true, lane_index_0x1c, true);
-	append_branch(0x20, result.source_field_0x20, true, lane_index_0x1c, false);
-	append_branch(0x34, result.source_field_0x34, source_field_0x34_known, -1, true);
-	append_branch(0x30, result.source_field_0x30, source_field_0x30_known, -1, false);
+	append_branch(0x24, result.source_field_0x24, result.source_field_0x24_known, lane_index_0x1c, true);
+	append_branch(0x20, result.source_field_0x20, result.source_field_0x20_known, lane_index_0x1c, false);
+	append_branch(0x34, result.source_field_0x34, result.source_field_0x34_known, -1, true);
+	append_branch(0x30, result.source_field_0x30, result.source_field_0x30_known, -1, false);
 
 	for (size_t index = 0; index < result.branches.size(); ++index) {
 		SourceOrderObjectDispatcherBranch4a8d2c &branch = result.branches[index];

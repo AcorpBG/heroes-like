@@ -2314,6 +2314,19 @@ int main() {
 			"type-98 town source record did not preserve recovered descriptor .msk fields")) {
 		return 1;
 	}
+	if (!require(dungeon_town->raw_field_0x20_known
+					&& dungeon_town->raw_field_0x20 == dungeon_town->subtype_0x20
+					&& dungeon_town->raw_field_0x24_known
+					&& dungeon_town->raw_field_0x24 == dungeon_town->group_0x24
+					&& dungeon_town->raw_field_0x28_known
+					&& dungeon_town->raw_field_0x28 == dungeon_town->last_flag_0x28
+					&& !dungeon_town->raw_field_0x2c_known
+					&& !dungeon_town->raw_field_0x30_known
+					&& !dungeon_town->raw_field_0x34_known
+					&& !dungeon_town->raw_field_0x38_known,
+			"copied source-record raw fields were not separated from descriptor .msk fields")) {
+		return 1;
+	}
 	SourceObjectDescriptor4903e8 weighted_descriptor;
 	weighted_descriptor.target_context_0x4903e8 = 98;
 	weighted_descriptor.source_key_0x00 = 153;
@@ -2569,6 +2582,12 @@ int main() {
 					12,
 					direct_dispatch_rng);
 	if (!require(direct_dispatch.committed
+					&& direct_dispatch.source_field_0x20_known
+					&& direct_dispatch.source_field_0x20 == dungeon_town->raw_field_0x20
+					&& direct_dispatch.source_field_0x24_known
+					&& direct_dispatch.source_field_0x24 == dungeon_town->raw_field_0x24
+					&& !direct_dispatch.source_field_0x30_known
+					&& !direct_dispatch.source_field_0x34_known
 					&& direct_dispatch.selected_branch_index == 0
 					&& direct_dispatch.attempted_branch_count == 1
 					&& direct_dispatch.branches.size() == size_t(4)
@@ -2578,6 +2597,54 @@ int main() {
 					&& direct_dispatch.branches[0].placement_0x4a93a2.object_record_0x4a93a2.selected_index_0x20 == 12
 					&& direct_dispatch.branches[0].placement_0x4a93a2.object_record_0x4a93a2.enabled_low_byte_0x24,
 				"0x4a8d2c dispatcher did not try recovered +0x24 branch before +0x20/+0x34/+0x30")) {
+		return 1;
+	}
+	SourceObjectDescriptorJoinResult4903e8 descriptor_width_not_raw_join = weighted_join;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x20_known = true;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x20 = 0;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x24_known = true;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x24 = 0;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x30_known = false;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x30 = 0;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x34_known = false;
+	descriptor_width_not_raw_join.source_record_copy.raw_field_0x34 = 0;
+	descriptor_width_not_raw_join.source_record_copy.descriptor_width_0x34 = 6;
+	GeneratorObjectPrivateState descriptor_width_dispatch_state = direct_dispatch_state;
+	descriptor_width_dispatch_state.object_records_0xec4_ecc.resize(8);
+	descriptor_width_dispatch_state.object_record_sequence_allocator_0xf44 = 9;
+	descriptor_width_dispatch_state.next_native_object_record_key_0x4a93a2 = 0x036b6d50U;
+	descriptor_width_dispatch_state.object_record_allocation_count_0x4a93a2 = 0;
+	descriptor_width_dispatch_state.source_order_direct_candidate_vectors_0x4a93a2.clear();
+	descriptor_width_dispatch_state.source_order_direct_candidate_vector_count_0x4a93a2 = 0;
+	descriptor_width_dispatch_state.source_order_direct_candidate_total_count_0x4a93a2 = 0;
+	descriptor_width_dispatch_state.source_order_direct_selected_count_0x4a93a2 = 0;
+	descriptor_width_dispatch_state.source_order_direct_commit_count_0x4a93a2 = 0;
+	aurelion::h3maped_rmg_core::H3MapedRng descriptor_width_dispatch_rng;
+	descriptor_width_dispatch_rng.state = 10U;
+	const auto descriptor_width_dispatch =
+			aurelion::h3maped_rmg_core::source_order_object_dispatcher_0x4a8d2c(
+					descriptor_width_dispatch_state,
+					descriptor_width_not_raw_join,
+					0,
+					107,
+					6,
+					0,
+					107,
+					6,
+					108,
+					7,
+					77,
+					12,
+					descriptor_width_dispatch_rng);
+	if (!require(!descriptor_width_dispatch.committed
+					&& descriptor_width_dispatch.attempted_branch_count == 0
+					&& descriptor_width_dispatch.blocked_reason == "0x4a8d2c_no_positive_source_field_branch"
+					&& descriptor_width_dispatch.branches.size() == size_t(4)
+					&& !descriptor_width_dispatch.branches[2].source_field_known
+					&& descriptor_width_dispatch.branches[2].source_field_offset == 0x34
+					&& descriptor_width_dispatch.branches[2].blocked_reason == "0x4a8d2c_source_field_unrepresented_in_native_source_record"
+					&& descriptor_width_dispatch_state.object_record_allocation_count_0x4a93a2 == 0,
+				"0x4a8d2c dispatcher treated descriptor width +0x34 as copied source-record raw +0x34")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState direct_minus_one_state = direct_dispatch_state;
