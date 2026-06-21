@@ -704,6 +704,7 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t level_count = 0;
 	SharedGeneratorObjectVectorState endpoint_vector_c8_cc;
 	SharedGeneratorObjectVectorState endpoint_vector_d8_dc;
+	SharedGeneratorObjectVectorState mine_resource_descriptor_vector_388_38c;
 	SharedGeneratorObjectVectorState object_record_vector_ec4_ecc;
 	SharedGeneratorObjectVectorState source_pair_vector_edc;
 	std::vector<SharedSourceObjectResolverSourcePair4af785> source_pair_records_edc;

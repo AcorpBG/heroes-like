@@ -2072,7 +2072,16 @@ int main() {
 		return 1;
 	}
 	const std::string mine_resource_blocker =
-			"0x4a9d6a_selected_object_callback_0x4a9911_unported_before_mine_resource_commit";
+			"0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection";
+	if (!require(generator_state.mine_resource_descriptor_vector_388_38c.present
+					&& generator_state.mine_resource_descriptor_vector_388_38c.contents_known
+					&& generator_state.mine_resource_descriptor_vector_388_38c.count_known
+					&& generator_state.mine_resource_descriptor_vector_388_38c.count > 0
+					&& generator_state.mine_resource_descriptor_vector_388_38c_source_owned
+					&& generator_state.mine_resource_descriptor_vector_entry_count_388_38c == int32_t(generator_state.mine_resource_descriptor_vector_entries_388_38c.size()),
+				"generator object private state did not materialize the recovered mine/resource descriptor bucket +0x388/+0x38c before 0x4a9911")) {
+		return 1;
+	}
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_ported
 					&& generator_state.route_container_free_cell_sweep_0x4a8260_input_known
 					&& generator_state.route_container_free_cell_sweep_0x4a8260_applied
@@ -2096,6 +2105,28 @@ int main() {
 					&& generator_state.mine_resource_materialization_0x4a9d6a.callback_attempt_count_0x4a9911 == 1,
 				"generator object private state executed downstream relation/reward phases before source-order 0x4a9d6a mine/resource materialization was owned")) {
 		return 1;
+	}
+	{
+		const auto &mine_resource = generator_state.mine_resource_materialization_0x4a9d6a;
+		const auto &callback = mine_resource.categories.back().selected_object_callback_0x4a9911;
+		if (!require(callback.invoked
+						&& callback.descriptor_bucket_0x388_0x38c_known
+						&& callback.descriptor_bucket_count_0x388_0x38c == generator_state.mine_resource_descriptor_vector_entry_count_388_38c
+						&& callback.descriptor_scan_count == generator_state.mine_resource_descriptor_vector_entry_count_388_38c
+						&& callback.category_match_count > 0
+						&& callback.accepted_count > 0
+						&& callback.selected
+						&& callback.selected_source_catalog_index_0x49da08 >= 0
+						&& callback.selected_source_field_0x20 == callback.category_index
+						&& callback.selected_object_allocated_0x5044b1
+						&& callback.selected_object_initialized_0x49ba89
+						&& callback.selected_object_vtable_0x540ab0 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540AB0
+						&& callback.coordinate_builder_0x4a9641_invoked
+						&& !callback.coordinate_builder_0x4a9641_applied
+						&& callback.blocked_reason == mine_resource_blocker,
+					"generator object private state did not execute source-backed 0x4a9911 descriptor selection before blocking at 0x4a9641")) {
+			return 1;
+		}
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && !generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
 		return 1;
@@ -4152,6 +4183,17 @@ int main() {
 					"entry-to-writeout workflow did not materialize recovered generator descriptor vector +0x398/+0x39c before 0x4a5c07")) {
 			return 1;
 		}
+		if (!require(workflow_generator_state.mine_resource_descriptor_vector_388_38c.present
+						&& workflow_generator_state.mine_resource_descriptor_vector_388_38c.contents_known
+						&& workflow_generator_state.mine_resource_descriptor_vector_388_38c.count_known
+						&& workflow_generator_state.mine_resource_descriptor_vector_388_38c.count > 0
+						&& workflow_generator_state.mine_resource_descriptor_vector_388_38c_source_owned
+						&& workflow_generator_state.mine_resource_descriptor_vector_entry_count_388_38c == int32_t(workflow_generator_state.mine_resource_descriptor_vector_entries_388_38c.size())
+						&& workflow_generator_state.mine_resource_descriptor_vector_entries_388_38c.front().vector_index == 0
+						&& workflow_generator_state.mine_resource_descriptor_vector_entries_388_38c.back().vector_index == workflow_generator_state.mine_resource_descriptor_vector_entry_count_388_38c - 1,
+					"entry-to-writeout workflow did not materialize recovered generator mine/resource descriptor bucket +0x388/+0x38c before 0x4a9911")) {
+			return 1;
+		}
 		if (!require(workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.present
 						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.contents_known
 						&& workflow_generator_state.reward_guard_candidate_vector_10f4_10f8.count_known
@@ -4177,6 +4219,27 @@ int main() {
 						&& mine_resource.categories.back().blocked_reason == mine_resource_blocker,
 					"entry-to-writeout workflow did not execute source-order 0x4a9d6a from recovered mine/resource counts before blocking at 0x4a9911")) {
 			return 1;
+		}
+		{
+			const auto &callback = mine_resource.categories.back().selected_object_callback_0x4a9911;
+			if (!require(callback.invoked
+							&& callback.descriptor_bucket_0x388_0x38c_known
+							&& callback.descriptor_bucket_count_0x388_0x38c == workflow_generator_state.mine_resource_descriptor_vector_entry_count_388_38c
+							&& callback.category_match_count > 0
+							&& callback.accepted_count > 0
+							&& callback.selected
+							&& callback.selected_source_catalog_index_0x49da08 >= 0
+							&& callback.selected_source_field_0x20 == callback.category_index
+							&& !callback.selected_def_name.empty()
+							&& callback.selected_object_allocated_0x5044b1
+							&& callback.selected_object_initialized_0x49ba89
+							&& callback.selected_object_vtable_0x540ab0 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540AB0
+							&& callback.coordinate_builder_0x4a9641_invoked
+							&& !callback.coordinate_builder_0x4a9641_applied
+							&& callback.blocked_reason == mine_resource_blocker,
+						"entry-to-writeout workflow did not source-select the 0x4a9911 mine/resource object before the 0x4a9641 blocker")) {
+				return 1;
+			}
 		}
 		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
 				workflow_generator_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;

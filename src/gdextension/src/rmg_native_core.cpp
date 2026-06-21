@@ -659,6 +659,7 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.level_count = input.level_count;
 	out.endpoint_vector_c8_cc = from_h3maped_generator_object_vector_state(input.endpoint_vector_c8_cc);
 	out.endpoint_vector_d8_dc = from_h3maped_generator_object_vector_state(input.endpoint_vector_d8_dc);
+	out.mine_resource_descriptor_vector_388_38c = from_h3maped_generator_object_vector_state(input.mine_resource_descriptor_vector_388_38c);
 	out.object_record_vector_ec4_ecc = from_h3maped_generator_object_vector_state(input.object_record_vector_ec4_ecc);
 	out.source_pair_vector_edc = from_h3maped_generator_object_vector_state(input.source_pair_vector_edc);
 	out.source_pair_records_edc.reserve(input.source_pair_records_edc.size());
@@ -2464,6 +2465,9 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"reward_guard_projection_driver_projection_record_0x1c_written\":" << (state.reward_guard_projection_driver_projection_record_0x1c_written ? "true" : "false") << ","
 		<< "\"reward_guard_projection_driver_blocked_reason_0x4ad947\":\"" << json_escape(state.reward_guard_projection_driver_blocked_reason_0x4ad947) << "\","
 		<< "\"reward_guard_projection_driver_source\":\"0x4ad947_scans_0x90_entries_from_0x57c7cc_plus_0x0c_rejects_disabled_plus_0x10_used_generator_plus_0x1024_and_missing_flag_bit_0x02_sets_generator_plus_0x10b4_when_eligible_count_below_0x14_then_rng_selects_projection_record_plus_0x1c\","
+		<< "\"mine_resource_descriptor_vector_388_38c\":";
+	append_generator_object_vector_state_json(out, state.mine_resource_descriptor_vector_388_38c);
+	out << ","
 		<< "\"reward_guard_candidate_vector_10f4_10f8\":";
 	append_generator_object_vector_state_json(out, state.reward_guard_candidate_vector_10f4_10f8);
 	out << ","
@@ -2522,6 +2526,8 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 	append_generator_object_vector_state_json(out, state.endpoint_vector_c8_cc);
 	out << ",";
 	append_generator_object_vector_state_json(out, state.endpoint_vector_d8_dc);
+	out << ",";
+	append_generator_object_vector_state_json(out, state.mine_resource_descriptor_vector_388_38c);
 	out << ",";
 	append_generator_object_vector_state_json(out, state.object_record_vector_ec4_ecc);
 	out << ",";
@@ -3434,7 +3440,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow fails closed at source-order mine/resource materialization 0x4a9d6a because selected-object callback 0x4a9911 and density followup 0x4a9c7c/0x4a9641 are not live native materializers; relation scan, reward/guard, connection, decorative, road, river, and final writeout phases stay pending until this phase is source-owned\",\n";
+	out << "    \"current_blocker\": \"native workflow now executes source-backed mine/resource descriptor selection through 0x4a9d6a -> 0x4a9911 using generator +0x388/+0x38c, then fails closed before the unported 0x4a9641 coordinate builder and 0x4a9c7c density followup; relation scan, reward/guard, connection, decorative, road, river, and final writeout phases stay pending until this materialization phase is source-owned\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3451,7 +3457,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_source_order_mine_resource_materialization_0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641_before_relation_reward_connection_final_writeout\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_source_order_mine_resource_coordinate_builder_0x4a9641_and_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
