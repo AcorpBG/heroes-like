@@ -172,6 +172,33 @@ struct SharedSourceObjectResolverResult4af785 {
 	int32_t wrapper_0x10 = 0;
 };
 
+struct SharedSourceObjectResolvedWrapper4af785 {
+	int32_t wrapper_index = -1;
+	int32_t source_catalog_index = -1;
+	SharedSourceObjectRecord0x4c source_record_copy;
+	int32_t metadata_bucket_index_0x08 = -1;
+	int32_t resolver_lane_0x04 = 9;
+	int32_t wrapper_0x04 = -1;
+	bool wrapper_0x10_known = false;
+	int32_t wrapper_0x10 = 0;
+	bool initialized_by_0x49db76 = false;
+	bool copied_source_record = false;
+};
+
+struct SharedSourceObjectResolverSourcePair4af785 {
+	int32_t copied_source_catalog_index = -1;
+	int32_t wrapper_index = -1;
+	bool source_record_pointer_0x00_carried = false;
+	SharedSourceObjectRecord0x4c source_record_copy;
+	int32_t source_lane_0x1c = -1;
+	bool context_pointer_0x04_carried = false;
+	SharedSourceObjectResolvedWrapper4af785 context_wrapper_copy;
+	int32_t context_wrapper_index_0x04 = -1;
+	int32_t context_wrapper_lane_0x04 = -1;
+	bool context_wrapper_0x10_known = false;
+	int32_t context_wrapper_0x10 = 0;
+};
+
 struct SharedRuntimeZoneSeedInput {
 	int32_t runtime_zone_index = -1;
 	int32_t source_zone_id = -1;
@@ -551,6 +578,7 @@ struct SharedGeneratorObjectPrivateState {
 	SharedGeneratorObjectVectorState endpoint_vector_d8_dc;
 	SharedGeneratorObjectVectorState object_record_vector_ec4_ecc;
 	SharedGeneratorObjectVectorState source_pair_vector_edc;
+	std::vector<SharedSourceObjectResolverSourcePair4af785> source_pair_records_edc;
 	SharedGeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
 	SharedGeneratorObjectVectorState candidate_container_vector_10d4_10d8;
 	SharedGeneratorObjectVectorState relation_vector_10e4_10e8;
