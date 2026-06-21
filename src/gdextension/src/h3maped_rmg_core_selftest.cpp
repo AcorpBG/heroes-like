@@ -851,6 +851,12 @@ int main() {
 					"generated-cell validity byte +0x2b reset must mirror high byte of +0x28")) {
 			return 1;
 		}
+		const uint32_t terrain_word_0x24 =
+				aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(0x1234abcdU, 5, 7);
+		if (!require(terrain_word_0x24 == 0x123481c5U,
+					"0x49acf6 must preserve generated-cell +0x24 bits 14..31 while writing terrain/art bits")) {
+			return 1;
+		}
 		auto projection_record = record;
 		projection_record.word_0x20 = 0x00123456U;
 		projection_record.word_0x28 |= aurelion::h3maped_rmg_core::RELATION_WORD_0X28_BITS_12_14_MASK;
@@ -2073,6 +2079,15 @@ int main() {
 	}
 	const std::string reward_guard_blocker =
 			"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
+	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
+		return value.rfind(prefix, 0) == 0;
+	};
+	const bool has_reward_guard_blocker = std::any_of(
+			generator_state.remaining_private_state_blockers.begin(),
+			generator_state.remaining_private_state_blockers.end(),
+			[&](const std::string &blocker) {
+				return blocker_prefix_matches(blocker, reward_guard_blocker);
+			});
 	if (!require(generator_state.mine_resource_descriptor_vector_388_38c.present
 					&& generator_state.mine_resource_descriptor_vector_388_38c.contents_known
 					&& generator_state.mine_resource_descriptor_vector_388_38c.count_known
@@ -2091,7 +2106,7 @@ int main() {
 					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 					&& generator_state.mine_resource_materialization_0x4a9d6a.applied
 					&& generator_state.mine_resource_materialization_0x4a9d6a.blocked_reason.empty()
-					&& std::find(generator_state.remaining_private_state_blockers.begin(), generator_state.remaining_private_state_blockers.end(), reward_guard_blocker) != generator_state.remaining_private_state_blockers.end(),
+					&& has_reward_guard_blocker,
 				"generator object private state did not execute route/free-cell and mine/resource materialization before blocking at reward/guard materialization")) {
 		return 1;
 	}
@@ -3302,10 +3317,18 @@ int main() {
 				"0x49cf34 did not stamp, block, set wrapper fields, cleanup, and rebuild recovered wrapper candidates")) {
 		return 1;
 	}
-	if (!require((attach_cell(8, 11).word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
+	if (!require(attach_cell(8, 11).byte_0x2a_known
+					&& (attach_cell(8, 11).byte_0x2a & 0x40U) != 0U
 					&& (attach_cell(8, 11).word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
 					&& (attach_cell(8, 11).word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U,
-				"0x49cf34 selected wrapper cell did not end as an action/occupied non-candidate cell")) {
+				"0x49cf34 selected wrapper cell did not end with recovered byte 0x2a/body occupancy state")) {
+		return 1;
+	}
+	if (!require(std::find(
+					attach_cell(8, 11).object_references_0x04_0x08.begin(),
+					attach_cell(8, 11).object_references_0x04_0x08.end(),
+					0x036225e0U) != attach_cell(8, 11).object_references_0x04_0x08.end(),
+				"0x49cf34 selected wrapper cell did not receive the recovered 0x49abd6 object reference")) {
 		return 1;
 	}
 	const RewardGuardWrapperFinalMarkResult49cefb final_mark_result =
@@ -4180,7 +4203,7 @@ int main() {
 					"entry-to-writeout workflow did not advance to the source-order reward/guard materialization blocker")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason == workflow_reward_guard_blocker,
+		if (!require(workflow.blocked_reason.rfind(workflow_reward_guard_blocker, 0) == 0,
 					std::string("entry-to-writeout workflow did not fail closed at the reward/guard source-order blocker; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
@@ -4326,7 +4349,12 @@ int main() {
 						&& projection_chain.blocked_reason.empty()
 						&& !workflow_generator_state.reward_guard_relation_priority_live_replay_blocked
 						&& workflow_generator_state.reward_guard_relation_priority_live_replay_blocker.empty()
-						&& std::find(workflow_generator_state.remaining_private_state_blockers.begin(), workflow_generator_state.remaining_private_state_blockers.end(), workflow_reward_guard_blocker) != workflow_generator_state.remaining_private_state_blockers.end(),
+						&& std::any_of(
+								workflow_generator_state.remaining_private_state_blockers.begin(),
+								workflow_generator_state.remaining_private_state_blockers.end(),
+								[&](const std::string &blocker) {
+									return blocker.rfind(workflow_reward_guard_blocker, 0) == 0;
+								}),
 					"entry-to-writeout workflow did not surface the reward/guard materialization blocker in remaining private-state blockers")) {
 			return 1;
 		}
