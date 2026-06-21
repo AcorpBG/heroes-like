@@ -1325,6 +1325,10 @@ struct RelationHighOwnerPropagationSeedReport49a318 {
 	int32_t popped_cell_count = 0;
 	int32_t same_owner_relax_count = 0;
 	int32_t cross_owner_high_byte_write_count = 0;
+	int32_t object_metadata_source_reduced_direction_count = 0;
+	int32_t object_metadata_candidate_scan_count = 0;
+	int32_t object_metadata_candidate_reject_count = 0;
+	int32_t object_metadata_unresolved_count = 0;
 	int32_t rejected_bounds_count = 0;
 	int32_t rejected_unowned_count = 0;
 	int32_t rejected_materialized_count = 0;
@@ -1340,6 +1344,10 @@ struct RelationHighOwnerPropagationResult49a318 {
 	int32_t popped_cell_count = 0;
 	int32_t same_owner_relax_count = 0;
 	int32_t cross_owner_high_byte_write_count = 0;
+	int32_t object_metadata_source_reduced_direction_count = 0;
+	int32_t object_metadata_candidate_scan_count = 0;
+	int32_t object_metadata_candidate_reject_count = 0;
+	int32_t object_metadata_unresolved_count = 0;
 	int32_t max_queue_size = 0;
 	int32_t owner_high_byte_materialized_count = 0;
 	int32_t owner_high_byte_sentinel_count = 0;
@@ -1664,7 +1672,8 @@ bool generated_cell_4a5767_reset_projection(GeneratedCellRecord0x30 &record);
 bool generated_cell_49a318_clear_source_projection(GeneratedCellRecord0x30 &record);
 RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
 RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
-RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
+bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offset);
+RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records = nullptr);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);

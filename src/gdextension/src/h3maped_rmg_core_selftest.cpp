@@ -22,6 +22,7 @@ using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
 using aurelion::h3maped_rmg_core::GeneratedCellRecord0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
+using aurelion::h3maped_rmg_core::ObjectRecordReference4a54a7;
 using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
@@ -467,6 +468,141 @@ int main() {
 					&& ((high_owner_grid.records[2].word_0x20 >> 24U) & 0xffU) == 0U,
 					"0x49a318 high-owner propagation did not materialize source owner in +0x20 byte3")) {
 			return 1;
+		}
+		if (!require(aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(3, 0)
+					&& !aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(3, 2)
+					&& !aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(0, 1)
+					&& aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(5, 2),
+					"0x598300 recovered metadata policy flags are not exposed with the expected +0/+1/+2 bytes")) {
+			return 1;
+		}
+		auto prepare_high_owner_cell = [](GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t owner, int32_t terrain) {
+			GeneratedCellRecord0x30 &cell = grid.records[size_t(y * grid.width + x)];
+			cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(cell.word_0x20, owner);
+			cell.word_0x24 = (cell.word_0x24 & ~uint32_t(0x3fU)) | (uint32_t(terrain) & 0x3fU);
+			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+			return aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(cell);
+		};
+		auto add_bit22_object_reference = [](GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, uint32_t object_record_key) {
+			GeneratedCellRecord0x30 &cell = grid.records[size_t(y * grid.width + x)];
+			cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22;
+			cell.object_reference_vector_contents_known = true;
+			cell.object_references_0x04_0x08 = { object_record_key };
+			cell.object_reference_count = 1;
+		};
+		auto object_record = [](uint32_t object_record_key, int32_t descriptor_type) {
+			ObjectRecordReference4a54a7 record;
+			record.object_record_key = object_record_key;
+			record.descriptor_type_0x1c = descriptor_type;
+			return record;
+		};
+		{
+			GeneratedCellRecordGrid0x30 metadata_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+			if (!require(prepare_high_owner_cell(metadata_grid, 0, 1, 0, 0)
+						&& prepare_high_owner_cell(metadata_grid, 1, 0, 1, 0)
+						&& prepare_high_owner_cell(metadata_grid, 1, 1, 1, 9),
+						"test setup for 0x49a318 source metadata reduced-direction case failed")) {
+				return 1;
+			}
+			add_bit22_object_reference(metadata_grid, 0, 1, 100U);
+			GeneratorRelationOwnerState4a218c metadata_seed;
+			metadata_seed.owner_vector_index = 0;
+			metadata_seed.runtime_zone_index = 0;
+			metadata_seed.coordinate_triple_0x10_0x18_known = true;
+			metadata_seed.coordinate_x_0x10 = 0;
+			metadata_seed.coordinate_y_0x14 = 1;
+			metadata_seed.coordinate_level_0x18 = 0;
+			const std::vector<ObjectRecordReference4a54a7> records = { object_record(100U, 0) };
+			const RelationHighOwnerPropagationResult49a318 metadata_result =
+					aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(metadata_grid, { metadata_seed }, &records);
+			if (!require(metadata_result.object_metadata_gate_complete
+						&& metadata_result.object_metadata_source_reduced_direction_count == 1
+						&& metadata_result.cross_owner_high_byte_write_count == 0,
+						"0x49a318 did not apply the recovered source bit22 metadata +1 reduced five-direction policy")) {
+				return 1;
+			}
+		}
+		{
+			GeneratedCellRecordGrid0x30 metadata_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 1, 1);
+			if (!require(prepare_high_owner_cell(metadata_grid, 0, 0, 0, 0)
+						&& prepare_high_owner_cell(metadata_grid, 1, 0, 1, 0),
+						"test setup for 0x49a318 candidate metadata +0/+2 reject case failed")) {
+				return 1;
+			}
+			add_bit22_object_reference(metadata_grid, 1, 0, 101U);
+			GeneratorRelationOwnerState4a218c metadata_seed;
+			metadata_seed.owner_vector_index = 0;
+			metadata_seed.runtime_zone_index = 0;
+			metadata_seed.coordinate_triple_0x10_0x18_known = true;
+			metadata_seed.coordinate_x_0x10 = 0;
+			metadata_seed.coordinate_y_0x14 = 0;
+			metadata_seed.coordinate_level_0x18 = 0;
+			const std::vector<ObjectRecordReference4a54a7> records = { object_record(101U, 3) };
+			const RelationHighOwnerPropagationResult49a318 metadata_result =
+					aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(metadata_grid, { metadata_seed }, &records);
+			if (!require(metadata_result.object_metadata_gate_complete
+						&& metadata_result.object_metadata_candidate_scan_count == 1
+						&& metadata_result.object_metadata_candidate_reject_count == 1
+						&& metadata_result.cross_owner_high_byte_write_count == 0,
+						"0x49a318 did not reject candidate bit22 metadata where +0 is set and +2 is clear")) {
+				return 1;
+			}
+		}
+		{
+			GeneratedCellRecordGrid0x30 metadata_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+			if (!require(prepare_high_owner_cell(metadata_grid, 0, 0, 0, 0)
+						&& prepare_high_owner_cell(metadata_grid, 1, 0, 1, 9)
+						&& prepare_high_owner_cell(metadata_grid, 0, 1, 1, 9)
+						&& prepare_high_owner_cell(metadata_grid, 1, 1, 1, 0),
+						"test setup for 0x49a318 candidate metadata direction reject case failed")) {
+				return 1;
+			}
+			add_bit22_object_reference(metadata_grid, 1, 1, 102U);
+			GeneratorRelationOwnerState4a218c metadata_seed;
+			metadata_seed.owner_vector_index = 0;
+			metadata_seed.runtime_zone_index = 0;
+			metadata_seed.coordinate_triple_0x10_0x18_known = true;
+			metadata_seed.coordinate_x_0x10 = 0;
+			metadata_seed.coordinate_y_0x14 = 0;
+			metadata_seed.coordinate_level_0x18 = 0;
+			const std::vector<ObjectRecordReference4a54a7> records = { object_record(102U, 0) };
+			const RelationHighOwnerPropagationResult49a318 metadata_result =
+					aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(metadata_grid, { metadata_seed }, &records);
+			if (!require(metadata_result.object_metadata_gate_complete
+						&& metadata_result.object_metadata_candidate_scan_count == 1
+						&& metadata_result.object_metadata_candidate_reject_count == 1
+						&& metadata_result.cross_owner_high_byte_write_count == 0,
+						"0x49a318 did not reject candidate bit22 metadata directions 1..3 when +1 is clear")) {
+				return 1;
+			}
+		}
+		{
+			GeneratedCellRecordGrid0x30 metadata_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 1, 1);
+			if (!require(prepare_high_owner_cell(metadata_grid, 0, 0, 0, 0)
+						&& prepare_high_owner_cell(metadata_grid, 1, 0, 1, 0),
+						"test setup for 0x49a318 candidate metadata pass case failed")) {
+				return 1;
+			}
+			add_bit22_object_reference(metadata_grid, 1, 0, 103U);
+			GeneratorRelationOwnerState4a218c metadata_seed;
+			metadata_seed.owner_vector_index = 0;
+			metadata_seed.runtime_zone_index = 0;
+			metadata_seed.coordinate_triple_0x10_0x18_known = true;
+			metadata_seed.coordinate_x_0x10 = 0;
+			metadata_seed.coordinate_y_0x14 = 0;
+			metadata_seed.coordinate_level_0x18 = 0;
+			const std::vector<ObjectRecordReference4a54a7> records = { object_record(103U, 5) };
+			const RelationHighOwnerPropagationResult49a318 metadata_result =
+					aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(metadata_grid, { metadata_seed }, &records);
+			if (!require(metadata_result.object_metadata_gate_complete
+						&& metadata_result.object_metadata_candidate_scan_count == 1
+						&& metadata_result.object_metadata_candidate_reject_count == 0
+						&& metadata_result.cross_owner_high_byte_write_count == 1
+						&& ((metadata_grid.records[1].word_0x20 >> 24U) & 0xffU) == 0U
+						&& ((metadata_grid.records[1].word_0x1c >> 16U) & 0xffffU) == 10U,
+						"0x49a318 did not allow passing candidate bit22 metadata through normal cross-owner writes")) {
+				return 1;
+			}
 		}
 		GeneratedCellRecordGrid0x30 scan_consumer_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 1, 1);
 		for (int32_t x = 0; x < 3; ++x) {

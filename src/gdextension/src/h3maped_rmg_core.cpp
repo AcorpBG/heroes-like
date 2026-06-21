@@ -1987,7 +1987,113 @@ static bool generated_cell_relation_member_49a318(const GeneratedCellRecord0x30 
 	return record.word_0x28_known && (record.word_0x28 & CELL_DECOR_READY_BIT_25) != 0U;
 }
 
-RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+static bool int_table_contains_49a318(const int32_t *values, int32_t count, int32_t value) {
+	for (int32_t index = 0; index < count; ++index) {
+		if (values[index] == value) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offset) {
+	static constexpr int32_t METADATA_FIELD_PLUS_0_TYPES_0X52FD78[] = {
+		3, 5, 6, 8, 9, 11, 12, 22, 26, 29, 34, 36, 52, 54,
+		59, 62, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75,
+		76, 79, 81, 82, 85, 86, 92, 93, 95, 101, 162, 163,
+		164, 214, 215
+	};
+	static constexpr int32_t METADATA_FIELD_PLUS_1_TYPES_0X52FE20[] = {
+		3, 5, 6, 8, 9, 11, 12, 22, 26, 29, 33, 34, 36, 54,
+		59, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 162,
+		163, 164, 76, 79, 81, 82, 85, 86, 93, 101, 111, 212,
+		214, 215, 219
+	};
+	static constexpr int32_t METADATA_FIELD_PLUS_2_TYPES_0X52FCF0[] = {
+		5, 6, 9, 12, 26, 29, 34, 54, 59, 62, 65, 66, 67, 68,
+		69, 70, 71, 72, 73, 74, 75, 162, 163, 164, 76, 79, 81,
+		82, 86, 93, 101, 212, 214, 215
+	};
+	if (object_type_id < 0 || object_type_id >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
+		return false;
+	}
+	if (metadata_offset == 0) {
+		return int_table_contains_49a318(METADATA_FIELD_PLUS_0_TYPES_0X52FD78, int32_t(sizeof(METADATA_FIELD_PLUS_0_TYPES_0X52FD78) / sizeof(METADATA_FIELD_PLUS_0_TYPES_0X52FD78[0])), object_type_id);
+	}
+	if (metadata_offset == 1) {
+		return int_table_contains_49a318(METADATA_FIELD_PLUS_1_TYPES_0X52FE20, int32_t(sizeof(METADATA_FIELD_PLUS_1_TYPES_0X52FE20) / sizeof(METADATA_FIELD_PLUS_1_TYPES_0X52FE20[0])), object_type_id);
+	}
+	if (metadata_offset == 2) {
+		return int_table_contains_49a318(METADATA_FIELD_PLUS_2_TYPES_0X52FCF0, int32_t(sizeof(METADATA_FIELD_PLUS_2_TYPES_0X52FCF0) / sizeof(METADATA_FIELD_PLUS_2_TYPES_0X52FCF0[0])), object_type_id);
+	}
+	return false;
+}
+
+static bool generated_cell_descriptor_type_from_object_reference_49a318(const GeneratedCellRecord0x30 &record, const std::vector<ObjectRecordReference4a54a7> *object_records, int32_t &descriptor_type) {
+	descriptor_type = -1;
+	if (object_records == nullptr || !record.object_reference_vector_contents_known || record.object_references_0x04_0x08.empty()) {
+		return false;
+	}
+	const uint32_t object_record_key = record.object_references_0x04_0x08.front();
+	for (const ObjectRecordReference4a54a7 &object_record : *object_records) {
+		if (object_record.object_record_key != object_record_key) {
+			continue;
+		}
+		descriptor_type = object_record.descriptor_type_0x1c;
+		if (descriptor_type < 0 && object_record.copied_source_record_carried) {
+			descriptor_type = object_record.source_record_copy.type_id_0x1c;
+		}
+		return descriptor_type >= 0;
+	}
+	return false;
+}
+
+static int32_t relation_high_owner_direction_count_49a318(const GeneratedCellRecord0x30 &record, const std::vector<ObjectRecordReference4a54a7> *object_records, RelationHighOwnerPropagationResult49a318 &result, RelationHighOwnerPropagationSeedReport49a318 &report) {
+	if (!record.word_0x28_known || (record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) == 0U) {
+		return 8;
+	}
+	int32_t descriptor_type = -1;
+	if (!generated_cell_descriptor_type_from_object_reference_49a318(record, object_records, descriptor_type)) {
+		report.object_metadata_unresolved_count += 1;
+		result.object_metadata_unresolved_count += 1;
+		return 0;
+	}
+	if (!object_metadata_flag_0x598300(descriptor_type, 1)) {
+		report.object_metadata_source_reduced_direction_count += 1;
+		result.object_metadata_source_reduced_direction_count += 1;
+		return 5;
+	}
+	return 8;
+}
+
+static bool relation_high_owner_candidate_allowed_49a318(const GeneratedCellRecord0x30 &record, const std::vector<ObjectRecordReference4a54a7> *object_records, int32_t direction, RelationHighOwnerPropagationResult49a318 &result, RelationHighOwnerPropagationSeedReport49a318 &report) {
+	if (!record.word_0x28_known || (record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) == 0U) {
+		return true;
+	}
+	report.object_metadata_candidate_scan_count += 1;
+	result.object_metadata_candidate_scan_count += 1;
+	int32_t descriptor_type = -1;
+	if (!generated_cell_descriptor_type_from_object_reference_49a318(record, object_records, descriptor_type)) {
+		report.object_metadata_unresolved_count += 1;
+		result.object_metadata_unresolved_count += 1;
+		report.object_metadata_candidate_reject_count += 1;
+		result.object_metadata_candidate_reject_count += 1;
+		return false;
+	}
+	if (object_metadata_flag_0x598300(descriptor_type, 0) && !object_metadata_flag_0x598300(descriptor_type, 2)) {
+		report.object_metadata_candidate_reject_count += 1;
+		result.object_metadata_candidate_reject_count += 1;
+		return false;
+	}
+	if (!object_metadata_flag_0x598300(descriptor_type, 1) && direction > 0 && direction < 4) {
+		report.object_metadata_candidate_reject_count += 1;
+		result.object_metadata_candidate_reject_count += 1;
+		return false;
+	}
+	return true;
+}
+
+RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records) {
 	RelationHighOwnerPropagationResult49a318 result;
 	result.applied = true;
 	const int32_t tile_count = int32_t(grid.records.size());
@@ -2064,7 +2170,11 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 			const int32_t base_score = node_owner == report.source_owner_byte
 					? path_low_word[size_t(node_flat)]
 					: path_high_word[size_t(node_flat)];
-			for (int32_t direction = 7; direction >= 0; --direction) {
+			const int32_t direction_count = relation_high_owner_direction_count_49a318(node_record, object_records, result, report);
+			if (direction_count <= 0) {
+				continue;
+			}
+			for (int32_t direction = direction_count - 1; direction >= 0; --direction) {
 				const int32_t nx = node.x + DX[direction];
 				const int32_t ny = node.y + DY[direction];
 				const int32_t nl = node.level;
@@ -2086,6 +2196,9 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 				const int32_t terrain = generated_cell_terrain_code_0x24(next_record);
 				if (terrain == 9) {
 					report.rejected_terrain9_count += 1;
+					continue;
+				}
+				if (!relation_high_owner_candidate_allowed_49a318(next_record, object_records, direction, result, report)) {
 					continue;
 				}
 				if (next_owner == report.source_owner_byte) {
@@ -2135,6 +2248,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 			result.owner_high_byte_materialized_count += 1;
 		}
 	}
+	result.object_metadata_gate_complete = result.object_metadata_unresolved_count == 0;
 	return result;
 }
 
@@ -5425,7 +5539,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
 	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
-			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8);
+			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8, &state.object_records_0xec4_ecc);
 	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
 	state.relation_high_owner_propagation_49a318_grid_available = high_owner_propagation.grid_available;
 	state.relation_high_owner_propagation_49a318_object_metadata_gate_complete = high_owner_propagation.object_metadata_gate_complete;
@@ -5442,11 +5556,11 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_unported_until_0x4a8d2c_0x4a8db2_source_order_dispatcher_feeds_implemented_0x4a901a_scan",
 		"source_pair_vector_0xedc_live_contents_unported",
-		"relation_vector_0x10e4_0x10e8_remaining_object_metadata_branch_unported_after_source_order_0x4a5a23_object_materialization",
+		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"source_order_fallback_0x4a7605_0x4a5e03_payload_and_object_materialization_unported",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_fallback_payload_is_ported",
 		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-		"relation_high_owner_0x49a318_object_metadata_bit22_branch_unported",
+		"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
 	};
 	return state;
 }
