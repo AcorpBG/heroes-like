@@ -2808,19 +2808,18 @@ static int32_t generated_cell_word20_owner_byte3_signed(uint32_t word_0x20) {
 }
 
 RewardGuardProjectionDriverSelectionResult4ad947 reward_guard_projection_driver_select_global_entry_0x4ad947(const std::vector<RewardGuardProjectionGlobalEntry4ad947> &global_entries_0x57c7cc_plus_0x0c, const std::vector<uint8_t> &used_flags_0x1024, H3MapedRng &rng) {
-	constexpr int32_t kProjectionGlobalEntryCount4ad947 = 0x90;
 	RewardGuardProjectionDriverSelectionResult4ad947 result;
-	if (int32_t(global_entries_0x57c7cc_plus_0x0c.size()) < kProjectionGlobalEntryCount4ad947) {
+	if (int32_t(global_entries_0x57c7cc_plus_0x0c.size()) < REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947) {
 		result.blocked_reason = "0x4ad947_projection_global_table_0x57c7cc_plus_0x0c_missing_or_short";
 		return result;
 	}
 	result.global_table_known = true;
-	if (int32_t(used_flags_0x1024.size()) < kProjectionGlobalEntryCount4ad947) {
+	if (int32_t(used_flags_0x1024.size()) < REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947) {
 		result.blocked_reason = "0x4ad947_generator_used_flag_array_0x1024_missing_or_short";
 		return result;
 	}
 	result.used_flags_0x1024_known = true;
-	for (int32_t index = 0; index < kProjectionGlobalEntryCount4ad947; ++index) {
+	for (int32_t index = 0; index < REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947; ++index) {
 		const RewardGuardProjectionGlobalEntry4ad947 &entry = global_entries_0x57c7cc_plus_0x0c[size_t(index)];
 		result.scanned_entry_count += 1;
 		if (!entry.disabled_byte_0x10_known || !entry.flag_byte_0x00_known) {
@@ -7860,6 +7859,12 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.descriptor_counter_table_0x1110_contents_known = true;
 	state.descriptor_counter_table_0x1110_known_count = DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT;
 	state.descriptor_counter_table_0x1110.assign(size_t(DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	state.reward_guard_projection_generator_0x10b4_known = true;
+	state.reward_guard_projection_generator_0x10b4 = false;
+	state.reward_guard_projection_used_flags_0x1024_known = true;
+	state.reward_guard_projection_used_flags_0x1024_count = REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947;
+	state.reward_guard_projection_used_flags_0x1024_zero_count = REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947;
+	state.reward_guard_projection_used_flags_0x1024.assign(size_t(REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947), 0U);
 	state.object_record_sequence_allocator_0xf44_present = true;
 	state.object_record_sequence_allocator_0xf44_known = true;
 	state.object_record_sequence_allocator_0xf44 = 1;
@@ -7952,7 +7957,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
 		"reward_guard_candidate_vector_0x10f4_0x10f8_live_producer_contents_pending_before_0x4a9f1c_and_0x4aa1db_selected_create",
-		"reward_guard_projection_global_table_and_generator_0x1024_used_flags_pending_for_0x4ad947_selected_global_entry",
+		"reward_guard_projection_global_table_and_projection_object_pending_for_0x4ad947_selected_global_entry",
 		"reward_guard_projection_object_coordinate_triple_pending_for_0x4ad947_source_relation_lookup_before_0x4ad7f7",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",

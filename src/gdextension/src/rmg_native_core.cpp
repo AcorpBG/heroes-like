@@ -767,6 +767,11 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.reward_guard_projection_source_relation_known_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_relation_known;
 	out.reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.source_relation_runtime_zone_index;
 	out.reward_guard_projection_source_relation_blocked_reason_0x4ad947 = input.reward_guard_projection_source_relation_0x4ad947.blocked_reason;
+	out.reward_guard_projection_generator_0x10b4_known = input.reward_guard_projection_generator_0x10b4_known;
+	out.reward_guard_projection_generator_0x10b4 = input.reward_guard_projection_generator_0x10b4;
+	out.reward_guard_projection_used_flags_0x1024_known = input.reward_guard_projection_used_flags_0x1024_known;
+	out.reward_guard_projection_used_flags_0x1024_count = input.reward_guard_projection_used_flags_0x1024_count;
+	out.reward_guard_projection_used_flags_0x1024_zero_count = input.reward_guard_projection_used_flags_0x1024_zero_count;
 	out.reward_guard_projection_driver_selection_0x4ad947_ported = input.reward_guard_projection_driver_selection_0x4ad947_ported;
 	out.reward_guard_projection_driver_selection_input_known = input.reward_guard_projection_driver_selection_input_known;
 	out.reward_guard_projection_driver_selection_applied_0x4ad947 = input.reward_guard_projection_driver_selection_0x4ad947.applied;
@@ -2362,6 +2367,12 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"reward_guard_projection_source_relation_runtime_zone_index_0x4ad947\":" << state.reward_guard_projection_source_relation_runtime_zone_index_0x4ad947 << ","
 		<< "\"reward_guard_projection_source_relation_blocked_reason_0x4ad947\":\"" << json_escape(state.reward_guard_projection_source_relation_blocked_reason_0x4ad947) << "\","
 		<< "\"reward_guard_projection_source_relation_source\":\"0x4ad947_reads_projection_coordinate_cell_word_0x20_signed_high_byte_and_indexes_generator_plus_0x10e4_relation_vector_before_calling_0x4ad7f7\","
+		<< "\"reward_guard_projection_generator_0x10b4_known\":" << (state.reward_guard_projection_generator_0x10b4_known ? "true" : "false") << ","
+		<< "\"reward_guard_projection_generator_0x10b4\":" << (state.reward_guard_projection_generator_0x10b4 ? "true" : "false") << ","
+		<< "\"reward_guard_projection_used_flags_0x1024_known\":" << (state.reward_guard_projection_used_flags_0x1024_known ? "true" : "false") << ","
+		<< "\"reward_guard_projection_used_flags_0x1024_count\":" << state.reward_guard_projection_used_flags_0x1024_count << ","
+		<< "\"reward_guard_projection_used_flags_0x1024_zero_count\":" << state.reward_guard_projection_used_flags_0x1024_zero_count << ","
+		<< "\"reward_guard_projection_setup_source\":\"0x49ecf2_zeroes_generator_plus_0x10b4_via_BL_and_memsets_0x90_bytes_at_generator_plus_0x1024_before_projection_driver_use\","
 		<< "\"reward_guard_projection_driver_selection_0x4ad947_ported\":" << (state.reward_guard_projection_driver_selection_0x4ad947_ported ? "true" : "false") << ","
 		<< "\"reward_guard_projection_driver_selection_input_known\":" << (state.reward_guard_projection_driver_selection_input_known ? "true" : "false") << ","
 		<< "\"reward_guard_projection_driver_selection_applied_0x4ad947\":" << (state.reward_guard_projection_driver_selection_applied_0x4ad947 ? "true" : "false") << ","
