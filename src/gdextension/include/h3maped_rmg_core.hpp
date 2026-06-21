@@ -9,6 +9,7 @@ namespace aurelion::h3maped_rmg_core {
 
 constexpr uint32_t UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 constexpr uint32_t CELL_ACTION_CONTROL_BIT_22 = 1U << 22U;
+constexpr uint32_t CELL_REWARD_GUARD_DIRECTION_BIT_23 = 1U << 23U;
 constexpr uint32_t CELL_DECOR_READY_BIT_25 = 1U << 25U;
 constexpr uint32_t CELL_DECOR_CANDIDATE_BIT_26 = 1U << 26U;
 constexpr uint32_t CELL_OCCUPIED_BLOCKED_BIT_27 = 1U << 27U;
@@ -1434,6 +1435,8 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t coordinate_x_0x10 = 0;
 	int32_t coordinate_y_0x14 = 0;
 	int32_t coordinate_level_0x18 = 0;
+	bool terrain_policy_0x0c_known = false;
+	int32_t terrain_policy_0x0c = 0;
 	bool source_endpoint_vector_0xc8_0xcc_present = false;
 	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
 	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
@@ -1842,8 +1845,6 @@ struct RewardGuardWrapperState4aa3e9 {
 	int32_t selected_level_0x5c = 0;
 	bool final_projection_mark_byte_0x60_known = false;
 	bool final_projection_mark_byte_0x60 = false;
-	bool feasibility_filter_0x4aa603_prevalidated_candidates_known = false;
-	std::vector<CoordinateCandidate4a17f5> feasibility_filter_0x4aa603_prevalidated_candidates;
 };
 
 struct RewardGuardWrapperRefreshResult49d6e0 {
@@ -1945,6 +1946,28 @@ struct RewardGuardCandidate4aa9b7 {
 	uint32_t low_word_score = 0U;
 };
 
+struct RewardGuardFeasibilityResult4aa603 {
+	bool inputs_available = false;
+	bool accepted = false;
+	bool relation_terrain_policy_known = false;
+	bool selected_member_vector_known = false;
+	bool wrapper_candidate_vector_known = false;
+	bool wrapper_generated_cell_grid_known = false;
+	int32_t selected_member_count = 0;
+	int32_t footprint_member_scan_count_0x49a6f9 = 0;
+	int32_t footprint_body_cell_scan_count_0x49a6f9 = 0;
+	int32_t footprint_reject_count_0x49a6f9 = 0;
+	int32_t attached_neighbor_scan_count = 0;
+	int32_t attached_type36_reject_count = 0;
+	int32_t direction_scan_count = 0;
+	int32_t direction_accept_count = 0;
+	int32_t contour_scan_count_0x49a09c = 0;
+	int32_t contour_reject_count_0x49a09c = 0;
+	int32_t overlap_scan_count = 0;
+	int32_t overlap_bit26_reject_count = 0;
+	std::string blocked_reason;
+};
+
 struct RewardGuardWrapperProjectionResult4aa3e9 {
 	bool applied = false;
 	bool selected_coordinate_stored_0x54_0x5c = false;
@@ -1968,7 +1991,7 @@ struct RewardGuardCoordinateScanResult4aa9b7 {
 	bool committed = false;
 	bool relation_scan_bounds_known = false;
 	bool wrapper_bounds_known = false;
-	bool feasibility_filter_prevalidated_0x4aa603 = false;
+	bool feasibility_filter_inputs_known_0x4aa603 = false;
 	bool scan_bounds_non_empty = false;
 	int32_t relation_owner_byte2 = -1;
 	int32_t minimum_low_word_score_0x10 = 0;
@@ -1984,6 +2007,7 @@ struct RewardGuardCoordinateScanResult4aa9b7 {
 	int32_t owner_byte_reject_count = 0;
 	int32_t value_floor_reject_count = 0;
 	int32_t feasibility_reject_count_0x4aa603 = 0;
+	int32_t feasibility_missing_input_count_0x4aa603 = 0;
 	int32_t local_vector_clear_count_0x4ae52a = 0;
 	int32_t local_vector_append_count_0x4ae1fd = 0;
 	int32_t accepted_candidate_count = 0;
@@ -1992,6 +2016,7 @@ struct RewardGuardCoordinateScanResult4aa9b7 {
 	bool selected_candidate_known = false;
 	RewardGuardCandidate4aa9b7 selected_candidate;
 	std::vector<RewardGuardCandidate4aa9b7> accepted_candidates_0x4ae1fd;
+	std::vector<RewardGuardFeasibilityResult4aa603> feasibility_results_0x4aa603;
 	RewardGuardWrapperProjectionResult4aa3e9 commit_0x4aa3e9;
 	std::string blocked_reason;
 };

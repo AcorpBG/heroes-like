@@ -16,17 +16,17 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T03:58:16Z",
-      "latestEvidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
-      "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
+      "updatedAt": "2026-06-21T04:13:41Z",
+      "latestEvidenceId": "native-rmg-reward-guard-4aa603-filter-port-20260621",
+      "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7/0x4aa603 -> 0x4aa3e9 helper chain with terrain policy, descriptor body offsets, object-reference descriptor resolution, and real object keys, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -498,14 +498,14 @@
           "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
           "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
         ],
-        "latestEvidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
-        "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-        "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7 -> 0x4aa3e9 helper chain with descriptor body offsets and object-reference descriptor resolution, true 0x4aa603 runtime filter inputs, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+        "latestEvidenceId": "native-rmg-reward-guard-4aa603-filter-port-20260621",
+        "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+        "remainingWork": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, true live source-record +0x30/+0x34/+0x3c fields from the recovered source stream, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7/0x4aa603 -> 0x4aa3e9 helper chain with terrain policy, descriptor body offsets, object-reference descriptor resolution, and real object keys, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
         "status": "pending",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment",
-        "updatedAt": "2026-06-21T03:58:16Z",
-        "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+        "updatedAt": "2026-06-21T04:13:41Z",
+        "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
@@ -615,7 +615,11 @@
           "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
           "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
           "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
-          "reward_guard_feasibility_filter_0x4aa603_ported": false,
+          "reward_guard_feasibility_filter_0x4aa603_ported": true,
+          "reward_guard_0x4aa603_prevalidated_coordinate_placeholder_removed": true,
+          "reward_guard_0x4aa603_uses_descriptor_body_offsets": true,
+          "reward_guard_0x4aa603_uses_0x49a09c_contour_validation": true,
+          "reward_guard_0x4aa603_uses_overlap_bit26_rejection": true,
           "live_reward_guard_caller_feed_ported": false
         },
         "remainingGap": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, exact 0x49a318 call-site order and same-run private-state comparison, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond the exact-prestate sampled records, reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
@@ -818,9 +822,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "currentSliceUpdatedAt": "2026-06-21T03:58:16Z",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+    "currentSliceUpdatedAt": "2026-06-21T04:13:41Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -1880,10 +1884,67 @@
       ],
       "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
-    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
+    "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
   },
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-reward-guard-4aa603-filter-port-20260621",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "status": "completed_partial_implementation_not_parity",
+      "title": "Reward/Guard 0x4aa603 Feasibility Filter Port",
+      "completedAt": "2026-06-21T04:13:41Z",
+      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+      "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli"
+      ],
+      "metrics": {
+        "reward_guard_feasibility_filter_0x4aa603_ported": true,
+        "reward_guard_0x4aa603_prevalidated_coordinate_placeholder_removed": true,
+        "reward_guard_0x4aa603_uses_descriptor_body_offsets": true,
+        "reward_guard_0x4aa603_uses_0x49a09c_contour_validation": true,
+        "reward_guard_0x4aa603_uses_overlap_bit26_rejection": true,
+        "live_reward_guard_caller_feed_ported": false,
+        "source_order_object_materialization_callers_ported": false,
+        "checkpoint2_complete": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true
+      },
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed_linux_debug_native_targets"
+        },
+        {
+          "command": "./bin/h3maped_rmg_core_selftest",
+          "status": "passed_debug_build"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed_linux_release_native_targets"
+        },
+        {
+          "command": "./bin/h3maped_rmg_core_selftest",
+          "status": "passed_release_build"
+        },
+        {
+          "command": "Godot/headless Godot",
+          "status": "not_run_per_current_RMG_guardrail"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+        }
+      ]
+    },
     {
       "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -16770,13 +16831,13 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
-    "evidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+    "id": "native-rmg-reward-guard-4aa603-filter-port-20260621",
+    "evidenceId": "native-rmg-reward-guard-4aa603-filter-port-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-21T03:58:16Z",
+    "timestamp": "2026-06-21T04:13:41Z",
     "status": "passed_partial_implementation_not_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -16830,7 +16891,11 @@
       "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
       "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
       "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
-      "reward_guard_feasibility_filter_0x4aa603_ported": false,
+      "reward_guard_feasibility_filter_0x4aa603_ported": true,
+      "reward_guard_0x4aa603_prevalidated_coordinate_placeholder_removed": true,
+      "reward_guard_0x4aa603_uses_descriptor_body_offsets": true,
+      "reward_guard_0x4aa603_uses_0x49a09c_contour_validation": true,
+      "reward_guard_0x4aa603_uses_overlap_bit26_rejection": true,
       "live_reward_guard_caller_feed_ported": false,
       "source_order_object_materialization_callers_ported": false,
       "checkpoint2_complete": false,
@@ -16840,13 +16905,13 @@
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
-    "evidenceId": "native-rmg-reward-guard-49d2e0-filter-port-20260621",
+    "id": "native-rmg-reward-guard-4aa603-filter-port-20260621",
+    "evidenceId": "native-rmg-reward-guard-4aa603-filter-port-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-21T03:58:16Z",
+    "timestamp": "2026-06-21T04:13:41Z",
     "status": "passed_partial_implementation_not_parity",
-    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed including descriptor body offsets and object-reference descriptor resolution for 0x49d2e0, true 0x4aa603 runtime filter inputs, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+    "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
+    "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -16900,7 +16965,11 @@
       "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
       "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
       "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
-      "reward_guard_feasibility_filter_0x4aa603_ported": false,
+      "reward_guard_feasibility_filter_0x4aa603_ported": true,
+      "reward_guard_0x4aa603_prevalidated_coordinate_placeholder_removed": true,
+      "reward_guard_0x4aa603_uses_descriptor_body_offsets": true,
+      "reward_guard_0x4aa603_uses_0x49a09c_contour_validation": true,
+      "reward_guard_0x4aa603_uses_overlap_bit26_rejection": true,
       "live_reward_guard_caller_feed_ported": false,
       "source_order_object_materialization_callers_ported": false,
       "checkpoint2_complete": false,
@@ -17290,11 +17359,15 @@
     "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_policy_bytes": true,
     "reward_guard_candidate_filter_0x49d2e0_uses_descriptor_body_offsets": true,
     "live_reward_guard_caller_feed_descriptor_body_offsets_ported": false,
-    "reward_guard_feasibility_filter_0x4aa603_ported": false,
+    "reward_guard_feasibility_filter_0x4aa603_ported": true,
+    "reward_guard_0x4aa603_prevalidated_coordinate_placeholder_removed": true,
+    "reward_guard_0x4aa603_uses_descriptor_body_offsets": true,
+    "reward_guard_0x4aa603_uses_0x49a09c_contour_validation": true,
+    "reward_guard_0x4aa603_uses_overlap_bit26_rejection": true,
     "live_reward_guard_caller_feed_ported": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports the recovered 0x49d2e0 reward/guard attach candidate filter inside 0x49cf34: the prevalidated coordinate allow-list is removed, and bit26 candidates now pass through descriptor type metadata policy, wrapper bit22 neighbor policy checks, descriptor body-offset footprint rejection, and the type 54/9 available-neighbor rule. This removes the 0x49d2e0 coordinate-filter placeholder only; live 0x4adb72/0x4ad7f7 caller feed must still provide descriptor body offsets and object-reference descriptor resolution, and 0x4aa603, generic non-type98 source-pair feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+  "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now ports recovered reward/guard feasibility filtering for explicit helper inputs: 0x49cf34 uses recovered 0x49d2e0, and 0x4aa9b7 now uses recovered 0x4aa603 instead of a prevalidated coordinate allow-list. 0x4aa603 checks selected-member descriptor body offsets through 0x49a6f9, attached-wrapper type-0x36 rejection, direction-policy cells, 0x49a09c contour validation, and wrapper/generated overlap bit26 rejection. This removes the 0x4aa603 placeholder only; live 0x4adb72/0x4ad7f7 caller feed still must construct wrapper/source-relation/object-record inputs with terrain policy, body offsets, object-reference descriptor resolution, and real object keys. Generic non-type98 feed, fallback caller order, roads/rivers, and final payload remain unported.",
   "plannedSlices": [
     {
       "baselineChecks": [

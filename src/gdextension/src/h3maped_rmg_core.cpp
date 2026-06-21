@@ -3815,15 +3815,310 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	return result;
 }
 
-static bool reward_guard_candidate_prevalidated_0x4aa603(const RewardGuardWrapperState4aa3e9 &wrapper, int32_t x, int32_t y, int32_t level) {
-	if (!wrapper.feasibility_filter_0x4aa603_prevalidated_candidates_known) {
+static const GeneratedCellRecord0x30 *generator_state_cell_0x4aa603(const GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level) {
+	if (!state.generated_cell_buffer_owned
+			|| state.generated_cell_buffer.records.empty()
+			|| state.width <= 0
+			|| state.height <= 0
+			|| state.level_count <= 0) {
+		return nullptr;
+	}
+	const int64_t flat = cell_index(state.width, state.height, x, y, level);
+	if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		return nullptr;
+	}
+	return &state.generated_cell_buffer.records[size_t(flat)];
+}
+
+static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorObjectPrivateState &state, const GeneratedCellRecord0x30 &record) {
+	if (!record.object_reference_vector_contents_known) {
+		return -1;
+	}
+	for (const uint32_t object_record_key : record.object_references_0x04_0x08) {
+		const auto it = std::find_if(state.object_records_0xec4_ecc.begin(),
+				state.object_records_0xec4_ecc.end(),
+				[&](const ObjectRecordReference4a54a7 &object_record) {
+					return object_record.object_record_key == object_record_key;
+				});
+		if (it != state.object_records_0xec4_ecc.end()) {
+			return it->descriptor_type_0x1c;
+		}
+	}
+	return -1;
+}
+
+static bool reward_guard_generated_footprint_rejects_0x4aa603(
+		const GeneratorObjectPrivateState &state,
+		const RewardGuardWrapperMember4aa3e9 &member,
+		const GeneratorRelationOwnerState4a218c &relation,
+		int32_t absolute_x,
+		int32_t absolute_y,
+		int32_t absolute_level,
+		RewardGuardFeasibilityResult4aa603 &result) {
+	result.footprint_member_scan_count_0x49a6f9 += 1;
+	if (!member.descriptor_body_offsets_0x49a6f9_known || member.descriptor_body_offsets_0x49a6f9.empty()) {
+		result.inputs_available = false;
+		result.blocked_reason = "0x4aa603_0x49a6f9_descriptor_body_offsets_missing";
+		return true;
+	}
+	for (const CoordinateCandidate4a17f5 &offset : member.descriptor_body_offsets_0x49a6f9) {
+		result.footprint_body_cell_scan_count_0x49a6f9 += 1;
+		const GeneratedCellRecord0x30 *record = generator_state_cell_0x4aa603(
+				state,
+				absolute_x + offset.x,
+				absolute_y + offset.y,
+				absolute_level + offset.level);
+		if (record == nullptr
+				|| !record->word_0x20_known
+				|| !record->word_0x24_known
+				|| !record->word_0x28_known
+				|| !record->word_0x2c_known) {
+			result.inputs_available = false;
+			result.footprint_reject_count_0x49a6f9 += 1;
+			result.blocked_reason = "0x4aa603_0x49a6f9_footprint_cell_missing";
+			return true;
+		}
+		const bool bit22 = (record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+		const bool bit27 = (record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+		if (generated_cell_word20_owner_byte2(record->word_0x20) != uint8_t(relation.runtime_zone_index & 0xff)
+				|| !generated_cell_49a1d8_valid_record(*record)
+				|| bit22
+				|| bit27
+				|| (record->word_0x2c & 0x01U) != 0U) {
+			result.footprint_reject_count_0x49a6f9 += 1;
+			result.blocked_reason = "0x4aa603_0x49a6f9_footprint_rejected";
+			return true;
+		}
+	}
+	return false;
+}
+
+static bool reward_guard_contour_passes_0x49a09c_for_0x4aa603(
+		const GeneratorObjectPrivateState &state,
+		const RewardGuardWrapperState4aa3e9 &wrapper,
+		const GeneratorRelationOwnerState4a218c &relation,
+		int32_t candidate_x,
+		int32_t candidate_y,
+		int32_t candidate_level,
+		bool allow_existing_bit22,
+		RewardGuardFeasibilityResult4aa603 &result) {
+	if (!wrapper.candidate_coordinate_vector_0x3c_0x40_known) {
+		result.inputs_available = false;
+		result.blocked_reason = "0x4aa603_0x49a09c_candidate_offset_vector_missing";
 		return false;
 	}
-	return std::any_of(wrapper.feasibility_filter_0x4aa603_prevalidated_candidates.begin(),
-			wrapper.feasibility_filter_0x4aa603_prevalidated_candidates.end(),
-			[&](const CoordinateCandidate4a17f5 &candidate) {
-				return candidate.x == x && candidate.y == y && candidate.level == level;
+	const bool terrain8_policy = relation.terrain_policy_0x0c == 8;
+	const int32_t count = int32_t(wrapper.candidate_coordinates_0x3c_0x40.size());
+	if (count <= 0) {
+		result.contour_reject_count_0x49a09c += 1;
+		result.blocked_reason = "0x4aa603_0x49a09c_candidate_offset_vector_empty";
+		return false;
+	}
+	for (int32_t index = 0; index <= count; ++index) {
+		const CoordinateCandidate4a17f5 &offset = wrapper.candidate_coordinates_0x3c_0x40[size_t(index % count)];
+		result.contour_scan_count_0x49a09c += 1;
+		const GeneratedCellRecord0x30 *record = generator_state_cell_0x4aa603(
+				state,
+				candidate_x + offset.x,
+				candidate_y + offset.y,
+				candidate_level + offset.level);
+		if (record == nullptr
+				|| !record->word_0x20_known
+				|| !record->word_0x24_known
+				|| !record->word_0x28_known) {
+			result.contour_reject_count_0x49a09c += 1;
+			result.blocked_reason = "0x4aa603_0x49a09c_contour_cell_missing";
+			return false;
+		}
+		const bool bit22 = (record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+		const bool bit27 = (record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+		if (!allow_existing_bit22 && bit22) {
+			result.contour_reject_count_0x49a09c += 1;
+			result.blocked_reason = "0x4aa603_0x49a09c_existing_bit22_reject";
+			return false;
+		}
+		if (!generated_cell_49a1d8_valid_record(*record)
+				|| bit22
+				|| !bit27
+				|| ((generated_cell_terrain_code_0x24(*record) == 8) != terrain8_policy)
+				|| generated_cell_word20_owner_byte2(record->word_0x20) != uint8_t(relation.runtime_zone_index & 0xff)) {
+			result.contour_reject_count_0x49a09c += 1;
+			result.blocked_reason = "0x4aa603_0x49a09c_contour_rejected";
+			return false;
+		}
+	}
+	return true;
+}
+
+static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x4aa603(
+		const GeneratorObjectPrivateState &state,
+		const RewardGuardWrapperState4aa3e9 &wrapper,
+		const GeneratorRelationOwnerState4a218c &relation,
+		int32_t candidate_x,
+		int32_t candidate_y,
+		int32_t candidate_level) {
+	RewardGuardFeasibilityResult4aa603 result;
+	result.selected_member_vector_known = wrapper.selected_member_vector_0x2c_0x30_known;
+	result.wrapper_candidate_vector_known = wrapper.candidate_coordinate_vector_0x3c_0x40_known;
+	result.wrapper_generated_cell_grid_known = wrapper.generated_cell_grid_0x08_0x10_known;
+	result.relation_terrain_policy_known = relation.terrain_policy_0x0c_known;
+	result.selected_member_count = int32_t(wrapper.selected_members_0x2c_0x30.size());
+	if (!state.generated_cell_buffer_owned || state.generated_cell_buffer.records.empty()) {
+		result.blocked_reason = "0x4aa603_generator_generated_cell_buffer_missing";
+		return result;
+	}
+	if (relation.runtime_zone_index < 0) {
+		result.blocked_reason = "0x4aa603_relation_owner_byte2_missing";
+		return result;
+	}
+	if (!result.relation_terrain_policy_known) {
+		result.blocked_reason = "0x4aa603_relation_terrain_policy_0x0c_missing";
+		return result;
+	}
+	if (!result.selected_member_vector_known) {
+		result.blocked_reason = "0x4aa603_selected_member_vector_missing";
+		return result;
+	}
+	if (wrapper.selected_members_0x2c_0x30.empty()) {
+		result.blocked_reason = "0x4aa603_selected_member_vector_empty";
+		return result;
+	}
+	if (!result.wrapper_generated_cell_grid_known || wrapper.generated_cell_grid_0x08_0x10.records.empty()) {
+		result.blocked_reason = "0x4aa603_wrapper_generated_cell_grid_missing";
+		return result;
+	}
+	result.inputs_available = true;
+
+	for (const RewardGuardWrapperMember4aa3e9 &member : wrapper.selected_members_0x2c_0x30) {
+		const int32_t absolute_x = candidate_x + member.relative_x_0x08;
+		const int32_t absolute_y = candidate_y + member.relative_y_0x0c;
+		const int32_t absolute_level = candidate_level + member.relative_level_0x10;
+		if (reward_guard_generated_footprint_rejects_0x4aa603(state, member, relation, absolute_x, absolute_y, absolute_level, result)) {
+			return result;
+		}
+	}
+
+	if (wrapper.attached_flag_0x48_known && wrapper.attached_flag_0x48) {
+		if (!wrapper.attached_relative_coordinate_0x4c_0x50_known) {
+			result.inputs_available = false;
+			result.blocked_reason = "0x4aa603_attached_relative_coordinate_missing";
+			return result;
+		}
+		const int32_t probe_center_x = candidate_x + wrapper.attached_relative_x_0x4c;
+		const int32_t probe_center_y = candidate_y + wrapper.attached_relative_y_0x50;
+		for (int32_t y = probe_center_y - 1; y <= probe_center_y + 1; ++y) {
+			for (int32_t x = probe_center_x - 1; x <= probe_center_x + 1; ++x) {
+				result.attached_neighbor_scan_count += 1;
+				const GeneratedCellRecord0x30 *record = generator_state_cell_0x4aa603(state, x, y, candidate_level);
+				if (record == nullptr || !record->word_0x28_known || (record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) == 0U) {
+					continue;
+				}
+				const int32_t descriptor_type = generator_state_object_descriptor_type_0x4aa603(state, *record);
+				if (descriptor_type < 0) {
+					result.inputs_available = false;
+					result.blocked_reason = "0x4aa603_attached_bit22_descriptor_type_missing";
+					return result;
+				}
+				if (descriptor_type == 0x36) {
+					result.attached_type36_reject_count += 1;
+					result.blocked_reason = "0x4aa603_attached_type36_neighbor_reject";
+					return result;
+				}
+			}
+		}
+	}
+
+	const RewardGuardWrapperMember4aa3e9 &last_member = wrapper.selected_members_0x2c_0x30.back();
+	const bool terrain8_policy = relation.terrain_policy_0x0c == 8;
+	const int32_t direction_count = object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1) ? 8 : 5;
+	for (int32_t direction_index = 0; direction_index < direction_count; ++direction_index) {
+		result.direction_scan_count += 1;
+		const int32_t local_x = last_member.descriptor_offset_x_0x2c + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
+		const int32_t local_y = last_member.descriptor_offset_y_0x30 + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
+		const GeneratedCellRecord0x30 *wrapper_record = reward_guard_wrapper_cell_0x49d2e0(wrapper, local_x, local_y, candidate_level);
+		const GeneratedCellRecord0x30 *state_record = generator_state_cell_0x4aa603(
+				state,
+				candidate_x + local_x,
+				candidate_y + local_y,
+				candidate_level);
+		if (wrapper_record == nullptr
+				|| state_record == nullptr
+				|| !wrapper_record->word_0x28_known
+				|| !state_record->word_0x20_known
+				|| !state_record->word_0x24_known
+				|| !state_record->word_0x28_known) {
+			continue;
+		}
+		const bool wrapper_bit27 = (wrapper_record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+		const bool wrapper_bit22 = (wrapper_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+		const bool wrapper_bit23 = (wrapper_record->word_0x28 & CELL_REWARD_GUARD_DIRECTION_BIT_23) != 0U;
+		const bool state_bit22 = (state_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+		const bool state_bit27 = (state_record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+		if (wrapper_bit27
+				&& !wrapper_bit22
+				&& wrapper_bit23
+				&& generated_cell_49a1d8_valid_record(*wrapper_record)
+				&& generated_cell_49a1d8_valid_record(*state_record)
+				&& !state_bit22
+				&& !state_bit27
+				&& ((generated_cell_terrain_code_0x24(*state_record) == 8) == terrain8_policy)
+				&& generated_cell_word20_owner_byte2(state_record->word_0x20) == uint8_t(relation.runtime_zone_index & 0xff)) {
+			result.direction_accept_count += 1;
+			break;
+		}
+	}
+	if (result.direction_accept_count <= 0) {
+		result.blocked_reason = "0x4aa603_no_valid_wrapper_to_generator_direction";
+		return result;
+	}
+
+	const bool allow_existing_bit22 = std::all_of(wrapper.selected_members_0x2c_0x30.begin(),
+			wrapper.selected_members_0x2c_0x30.end(),
+			[](const RewardGuardWrapperMember4aa3e9 &member) {
+				return object_metadata_flag_0x598300(member.descriptor_type_0x1c, 2);
 			});
+	if (!reward_guard_contour_passes_0x49a09c_for_0x4aa603(
+				state,
+				wrapper,
+				relation,
+				candidate_x,
+				candidate_y,
+				candidate_level,
+				allow_existing_bit22,
+				result)) {
+		return result;
+	}
+
+	const GeneratedCellRecordGrid0x30 &wrapper_grid = wrapper.generated_cell_grid_0x08_0x10;
+	for (int32_t local_level = 0; local_level < wrapper_grid.level_count; ++local_level) {
+		for (int32_t local_y = 0; local_y < wrapper_grid.height; ++local_y) {
+			for (int32_t local_x = 0; local_x < wrapper_grid.width; ++local_x) {
+				const int64_t wrapper_flat = cell_index(wrapper_grid.width, wrapper_grid.height, local_x, local_y, local_level);
+				const GeneratedCellRecord0x30 *state_record = generator_state_cell_0x4aa603(
+						state,
+						candidate_x + local_x,
+						candidate_y + local_y,
+						candidate_level + local_level);
+				if (wrapper_flat < 0 || wrapper_flat >= int64_t(wrapper_grid.records.size()) || state_record == nullptr) {
+					continue;
+				}
+				const GeneratedCellRecord0x30 &wrapper_record = wrapper_grid.records[size_t(wrapper_flat)];
+				if (!wrapper_record.word_0x28_known || !state_record->word_0x28_known) {
+					continue;
+				}
+				result.overlap_scan_count += 1;
+				const bool wrapper_bit27 = (wrapper_record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+				const bool state_bit26 = (state_record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U;
+				if (!wrapper_bit27 && state_bit26) {
+					result.overlap_bit26_reject_count += 1;
+					result.blocked_reason = "0x4aa603_overlap_existing_bit26_reject";
+					return result;
+				}
+			}
+		}
+	}
+	result.accepted = true;
+	return result;
 }
 
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level) {
@@ -3951,7 +4246,11 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 	RewardGuardCoordinateScanResult4aa9b7 result;
 	result.relation_scan_bounds_known = relation.scan_bounds_0x20_0x2c_known && relation.coordinate_triple_0x10_0x18_known;
 	result.wrapper_bounds_known = wrapper.wrapper_bounds_0x18_0x24_known;
-	result.feasibility_filter_prevalidated_0x4aa603 = wrapper.feasibility_filter_0x4aa603_prevalidated_candidates_known;
+	result.feasibility_filter_inputs_known_0x4aa603 =
+			wrapper.selected_member_vector_0x2c_0x30_known
+			&& wrapper.candidate_coordinate_vector_0x3c_0x40_known
+			&& wrapper.generated_cell_grid_0x08_0x10_known
+			&& relation.terrain_policy_0x0c_known;
 	result.relation_owner_byte2 = relation.runtime_zone_index;
 	result.minimum_low_word_score_0x10 = minimum_low_word_score_0x10;
 	result.policy_byte_0x13 = policy_byte_0x13;
@@ -3970,9 +4269,6 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 	}
 	if (!result.wrapper_bounds_known) {
 		return finish_blocked("0x4aa9b7_wrapper_bounds_missing");
-	}
-	if (!result.feasibility_filter_prevalidated_0x4aa603) {
-		return finish_blocked("0x4aa9b7_0x4aa603_feasibility_filter_inputs_missing");
 	}
 	if (relation.runtime_zone_index < 0) {
 		return finish_blocked("0x4aa9b7_relation_owner_byte2_missing");
@@ -4015,7 +4311,20 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 				result.value_floor_reject_count += 1;
 				continue;
 			}
-			if (!reward_guard_candidate_prevalidated_0x4aa603(wrapper, x, y, relation.coordinate_level_0x18)) {
+			const RewardGuardFeasibilityResult4aa603 feasibility =
+					reward_guard_coordinate_feasibility_0x4aa603(
+							state,
+							wrapper,
+							relation,
+							x,
+							y,
+							relation.coordinate_level_0x18);
+			result.feasibility_results_0x4aa603.push_back(feasibility);
+			if (!feasibility.inputs_available) {
+				result.feasibility_missing_input_count_0x4aa603 += 1;
+				continue;
+			}
+			if (!feasibility.accepted) {
 				result.feasibility_reject_count_0x4aa603 += 1;
 				continue;
 			}
@@ -4038,6 +4347,9 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 	result.accepted_candidate_count = int32_t(result.accepted_candidates_0x4ae1fd.size());
 	if (result.accepted_candidates_0x4ae1fd.empty()) {
 		result.threshold_after_scan = current_threshold;
+		if (result.feasibility_missing_input_count_0x4aa603 > 0 && result.feasibility_reject_count_0x4aa603 == 0) {
+			return finish_blocked("0x4aa9b7_0x4aa603_feasibility_filter_inputs_missing");
+		}
 		return finish_blocked("0x4aa9b7_candidate_vector_empty_after_score_and_0x4aa603_filters");
 	}
 
