@@ -1903,6 +1903,43 @@ struct GeneratorObjectPrivateState {
 	std::vector<std::string> remaining_private_state_blockers;
 };
 
+struct H3MapedRmgWorkflowPhase {
+	std::string id;
+	std::string h3maped_anchor;
+	std::string status;
+	std::string blocker;
+};
+
+struct H3MapedRmgWorkflowConfig {
+	std::string size_class;
+	std::string water_mode;
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t human_count = 0;
+	int32_t player_count = 0;
+	uint32_t seed = 0;
+	bool setup_object_0x44_known = false;
+	int32_t setup_object_0x44 = 0;
+};
+
+struct H3MapedRmgWorkflowResult {
+	H3MapedRmgWorkflowConfig config;
+	bool supported_scope = false;
+	bool executed = false;
+	bool final_payload_owned = false;
+	bool final_writeout_complete = false;
+	std::string status;
+	std::string blocked_reason;
+	std::string current_phase_id;
+	std::vector<std::string> missing_inputs;
+	GeneratorSetupModeResult49ecf2 setup_mode_0x49ecf2;
+	TemplateSelectionRuntimeResult4ac552 template_selection_0x4ac552;
+	CoordinateOwnerGridResult4a218c coordinate_owner_grid_0x4a218c;
+	GeneratorObjectPrivateState generator_object_private_state;
+	std::vector<H3MapedRmgWorkflowPhase> phases;
+};
+
 struct EndpointPointerRecord4a5e73 {
 	int32_t key_0x20 = -1;
 };
@@ -2349,6 +2386,7 @@ const char *boundary_vector_append_callsite_label_4a2777(uint32_t callsite);
 bool boundary_vector_append_callsite_recovered_4a2777(uint32_t callsite);
 bool boundary_vector_append_4a2777(BoundaryVector4a2777 &vector, int32_t x, int32_t y, uint32_t callsite);
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44);
+H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);
 PlayerSlotAssignmentResult4ac62a player_slot_assignment_4ac62a_4ac6ec(int32_t human_count, int32_t player_count, uint8_t human_capable_source_owner_mask, uint8_t player_capable_source_owner_mask, uint8_t selected_color_mask = 0xffU);
 RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a1f3b(const std::vector<TemplateZoneRecord4a218c> &zones, const std::vector<TemplateLinkRecord4a1f3b> &links, const PlayerSlotAssignmentResult4ac62a &assignment, int32_t human_count, int32_t player_count);
