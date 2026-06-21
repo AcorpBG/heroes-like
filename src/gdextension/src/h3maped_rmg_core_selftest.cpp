@@ -28,6 +28,9 @@ using aurelion::h3maped_rmg_core::H3MapedRng;
 using aurelion::h3maped_rmg_core::ObjectRecordReference4a54a7;
 using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
 using aurelion::h3maped_rmg_core::RewardGuardCoordinateScanResult4aa9b7;
+using aurelion::h3maped_rmg_core::RewardGuardAttachResult49cf34;
+using aurelion::h3maped_rmg_core::RewardGuardWrapperConstructResult49ce04;
+using aurelion::h3maped_rmg_core::RewardGuardWrapperFinalMarkResult49cefb;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperMember4aa3e9;
 using aurelion::h3maped_rmg_core::RewardGuardWrapperState4aa3e9;
 using aurelion::h3maped_rmg_core::RewardGuardRelationPriorityResult4ad7f7;
@@ -2576,6 +2579,138 @@ int main() {
 					&& !blocked_reward_guard_result.committed
 					&& blocked_reward_guard_result.blocked_reason == "0x4aa9b7_0x4aa603_feasibility_filter_inputs_missing",
 				"0x4aa9b7 did not fail closed when recovered 0x4aa603 feasibility inputs are missing")) {
+		return 1;
+	}
+	const RewardGuardWrapperConstructResult49ce04 attach_construct =
+			aurelion::h3maped_rmg_core::reward_guard_wrapper_construct_0x49ce04();
+	if (!require(attach_construct.applied
+					&& attach_construct.width_0x0c == 16
+					&& attach_construct.height_0x10 == 16
+					&& attach_construct.level_count_0x14 == 1
+					&& attach_construct.reset_cell_count_0x49ce64 == 256
+					&& attach_construct.wrapper.generated_cell_grid_0x08_0x10_known
+					&& attach_construct.wrapper.selected_member_vector_0x2c_0x30_known
+					&& attach_construct.wrapper.selected_members_0x2c_0x30.empty()
+					&& attach_construct.wrapper.candidate_coordinate_vector_0x3c_0x40_known
+					&& attach_construct.wrapper.candidate_coordinates_0x3c_0x40.empty()
+					&& attach_construct.wrapper.attached_flag_0x48_known
+					&& !attach_construct.wrapper.attached_flag_0x48
+					&& attach_construct.wrapper.final_projection_mark_byte_0x60_known
+					&& !attach_construct.wrapper.final_projection_mark_byte_0x60,
+				"0x49ce04/0x49ce64 wrapper construct did not initialize the recovered 16x16x1 wrapper fields")) {
+		return 1;
+	}
+	RewardGuardWrapperState4aa3e9 attach_wrapper = attach_construct.wrapper;
+	for (GeneratedCellRecord0x30 &record : attach_wrapper.generated_cell_grid_0x08_0x10.records) {
+		record.word_0x20_known = true;
+		record.word_0x20 = 0U;
+		record.word_0x24_known = true;
+		record.word_0x24 = 0U;
+		record.word_0x28_known = true;
+		record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25 | aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x2c_known = true;
+		record.word_0x2c = 0U;
+		record.byte_0x2b_known_mask = 0x02U;
+		record.byte_0x2b = 0x02U;
+	}
+	auto attach_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
+		return attach_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(16, 16, x, y, 0))];
+	};
+	for (int32_t y = 10; y <= 12; ++y) {
+		for (int32_t x = 7; x <= 9; ++x) {
+			attach_cell(x, y).word_0x28 &= ~aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+		}
+	}
+	aurelion::h3maped_rmg_core::generated_cell_49aa63(attach_cell(8, 11), true);
+	aurelion::h3maped_rmg_core::generated_cell_49aa63(attach_cell(7, 11), true);
+	attach_wrapper.candidate_coordinates_0x3c_0x40 = {
+		{ 8, 11, 0 },
+		{ 7, 11, 0 },
+		{ 5, 5, 0 },
+	};
+	attach_wrapper.attach_filter_0x49d2e0_prevalidated_candidates_known = true;
+	attach_wrapper.attach_filter_0x49d2e0_prevalidated_candidates = {
+		{ 8, 11, 0 },
+	};
+	attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates_known = true;
+	for (int32_t y = 0; y < 16 && attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates.size() < 26; ++y) {
+		for (int32_t x = 0; x < 16 && attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates.size() < 26; ++x) {
+			attach_wrapper.candidate_rebuild_0x49d7c3_prevalidated_coordinates.push_back({ x, y, 0 });
+		}
+	}
+	RewardGuardWrapperMember4aa3e9 attach_member;
+	attach_member.object_record_key = 0x036225e0U;
+	attach_member.object_record_key_known = true;
+	attach_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74;
+	attach_member.descriptor_type_0x1c = 54;
+	H3MapedRng attach_rng;
+	attach_rng.state = 11U;
+	const RewardGuardAttachResult49cf34 attach_result =
+			aurelion::h3maped_rmg_core::reward_guard_attach_member_0x49cf34(attach_wrapper, attach_member, attach_rng);
+	if (!require(attach_result.applied
+					&& attach_result.initial_candidate_refresh_0x49d7c3_applied
+					&& attach_result.initial_candidate_refresh_returned_existing_vector_0x49d7c3
+					&& attach_result.candidate_count_before_filter == 3
+					&& attach_result.bit26_clear_candidate_erase_count_0x4afaea == 1
+					&& attach_result.filter_reject_count_0x49d2e0 == 1
+					&& attach_result.candidate_count_after_filter == 1
+					&& attach_result.selected_candidate_known
+					&& attach_result.selected_candidate.x == 8
+					&& attach_result.selected_candidate.y == 11
+					&& attach_result.selected_candidate.level == 0
+					&& attach_result.appended_member_0x49d69d
+					&& attach_result.selected_member_count_after == 1,
+				"0x49cf34 did not refresh, filter, RNG-select, and append the recovered reward/guard attach candidate")) {
+		return 1;
+	}
+	if (!require(attach_wrapper.selected_members_0x2c_0x30[0].object_record_key == 0x036225e0U
+					&& attach_wrapper.selected_members_0x2c_0x30[0].relative_x_0x08 == 8
+					&& attach_wrapper.selected_members_0x2c_0x30[0].relative_y_0x0c == 11
+					&& attach_wrapper.selected_members_0x2c_0x30[0].relative_level_0x10 == 0
+					&& attach_wrapper.attached_flag_0x48_known
+					&& attach_wrapper.attached_flag_0x48
+					&& attach_wrapper.attached_relative_coordinate_0x4c_0x50_known
+					&& attach_wrapper.attached_relative_x_0x4c == 8
+					&& attach_wrapper.attached_relative_y_0x50 == 11
+					&& attach_result.stamped_member_0x49abd6
+					&& attach_result.primary_bit27_write_count_0x49d1ed == 0
+					&& attach_result.neighbor_bit27_write_count_0x49d270 == 8
+					&& attach_result.candidate_cleanup_count_0x4ae2d0 == 1
+					&& attach_result.bounds_refresh_0x49d6e0.applied
+					&& attach_result.candidate_rebuild_0x49d7c3.applied
+					&& attach_result.candidate_rebuild_0x49d7c3.candidate_count_after == 26,
+				"0x49cf34 did not stamp, block, set wrapper fields, cleanup, and rebuild recovered wrapper candidates")) {
+		return 1;
+	}
+	if (!require((attach_cell(8, 11).word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
+					&& (attach_cell(8, 11).word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+					&& (attach_cell(8, 11).word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U,
+				"0x49cf34 selected wrapper cell did not end as an action/occupied non-candidate cell")) {
+		return 1;
+	}
+	const RewardGuardWrapperFinalMarkResult49cefb final_mark_result =
+			aurelion::h3maped_rmg_core::reward_guard_wrapper_mark_candidate_cells_0x49cefb(attach_wrapper);
+	const GeneratedCellRecord0x30 &final_mark_cell = attach_wrapper.generated_cell_grid_0x08_0x10.records[0];
+	if (!require(final_mark_result.applied
+					&& attach_wrapper.final_projection_mark_byte_0x60_known
+					&& attach_wrapper.final_projection_mark_byte_0x60
+					&& final_mark_result.candidate_count == 26
+					&& final_mark_result.marked_candidate_cell_count == 26
+					&& final_mark_result.out_of_bounds_candidate_count == 0
+					&& final_mark_cell.byte_0x2a_known
+					&& (final_mark_cell.byte_0x2a_known_mask & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U
+					&& (final_mark_cell.byte_0x2a & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U,
+				"0x49cefb did not set wrapper +0x60 and mark candidate cells at cell+0x2a bit7")) {
+		return 1;
+	}
+	RewardGuardWrapperState4aa3e9 blocked_attach_wrapper = attach_construct.wrapper;
+	H3MapedRng blocked_attach_rng;
+	blocked_attach_rng.state = 11U;
+	const RewardGuardAttachResult49cf34 blocked_attach_result =
+			aurelion::h3maped_rmg_core::reward_guard_attach_member_0x49cf34(blocked_attach_wrapper, attach_member, blocked_attach_rng);
+	if (!require(!blocked_attach_result.applied
+					&& blocked_attach_result.blocked_reason == "0x49cf34_0x49d2e0_candidate_filter_inputs_missing",
+				"0x49cf34 did not fail closed when recovered 0x49d2e0 filter inputs are missing")) {
 		return 1;
 	}
 	const std::vector<SourceObjectRecord0x4c> type98_records =
