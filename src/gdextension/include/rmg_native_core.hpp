@@ -699,6 +699,7 @@ struct SharedGeneratorObjectPrivateState {
 	SharedGeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
 	SharedGeneratorObjectVectorState candidate_container_vector_10d4_10d8;
 	SharedGeneratorObjectVectorState relation_vector_10e4_10e8;
+	SharedGeneratorObjectVectorState reward_guard_candidate_vector_10f4_10f8;
 	SharedGeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
 	bool endpoint_cursor_0xf58_present = false;
 	bool endpoint_cursor_0xf58_known = false;
@@ -781,6 +782,20 @@ struct SharedGeneratorObjectPrivateState {
 	bool reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = false;
 	bool reward_guard_relation_priority_live_replay_blocked = false;
 	std::string reward_guard_relation_priority_live_replay_blocker;
+	bool reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = false;
+	bool reward_guard_candidate_records_10f4_10f8_contents_known = false;
+	int32_t reward_guard_candidate_record_count_10f4_10f8 = 0;
+	bool reward_guard_selector_0x4a9f1c_applied = false;
+	bool reward_guard_selector_0x4a9f1c_candidate_vector_present = false;
+	bool reward_guard_selector_0x4a9f1c_candidate_vector_contents_known = false;
+	int32_t reward_guard_selector_0x4a9f1c_candidate_scan_count = 0;
+	int32_t reward_guard_selector_0x4a9f1c_descriptor_type_missing_count = 0;
+	int32_t reward_guard_selector_0x4a9f1c_counter_input_missing_count = 0;
+	int32_t reward_guard_selector_0x4a9f1c_global_limit_reject_count = 0;
+	int32_t reward_guard_selector_0x4a9f1c_relation_limit_reject_count = 0;
+	int32_t reward_guard_selector_0x4a9f1c_value_bound_reject_count = 0;
+	int32_t reward_guard_selector_0x4a9f1c_accepted_count = 0;
+	std::string reward_guard_selector_0x4a9f1c_blocked_reason;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
