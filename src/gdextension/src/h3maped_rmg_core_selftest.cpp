@@ -2072,7 +2072,7 @@ int main() {
 		return 1;
 	}
 	const std::string mine_resource_blocker =
-			"0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection";
+			"0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums";
 	if (!require(generator_state.mine_resource_descriptor_vector_388_38c.present
 					&& generator_state.mine_resource_descriptor_vector_388_38c.contents_known
 					&& generator_state.mine_resource_descriptor_vector_388_38c.count_known
@@ -2102,13 +2102,23 @@ int main() {
 					&& !generator_state.reward_guard_terrain_pressure_zeroed_0x4aadd2
 					&& generator_state.mine_resource_materialization_0x4a9d6a.category_scan_count > 0
 					&& generator_state.mine_resource_materialization_0x4a9d6a.required_total_count_0x4c > 0
-					&& generator_state.mine_resource_materialization_0x4a9d6a.callback_attempt_count_0x4a9911 == 1,
+					&& generator_state.mine_resource_materialization_0x4a9d6a.callback_attempt_count_0x4a9911 > 0
+					&& generator_state.mine_resource_materialization_0x4a9d6a.successful_count_0x4a9911 == generator_state.mine_resource_materialization_0x4a9d6a.callback_attempt_count_0x4a9911,
 				"generator object private state executed downstream relation/reward phases before source-order 0x4a9d6a mine/resource materialization was owned")) {
 		return 1;
 	}
 	{
 		const auto &mine_resource = generator_state.mine_resource_materialization_0x4a9d6a;
-		const auto &callback = mine_resource.categories.back().selected_object_callback_0x4a9911;
+		const auto callback_category = std::find_if(
+				mine_resource.categories.rbegin(),
+				mine_resource.categories.rend(),
+				[](const auto &category) {
+					return category.attempted_callback_count_0x4a9911 > 0;
+				});
+		if (!require(callback_category != mine_resource.categories.rend(), "0x4a9d6a did not execute any source-order 0x4a9911 minimum callback before density followup")) {
+			return 1;
+		}
+		const auto &callback = callback_category->selected_object_callback_0x4a9911;
 		if (!require(callback.invoked
 						&& callback.descriptor_bucket_0x388_0x38c_known
 						&& callback.descriptor_bucket_count_0x388_0x38c == generator_state.mine_resource_descriptor_vector_entry_count_388_38c
@@ -2122,9 +2132,13 @@ int main() {
 						&& callback.selected_object_initialized_0x49ba89
 						&& callback.selected_object_vtable_0x540ab0 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540AB0
 						&& callback.coordinate_builder_0x4a9641_invoked
-						&& !callback.coordinate_builder_0x4a9641_applied
-						&& callback.blocked_reason == mine_resource_blocker,
-					"generator object private state did not execute source-backed 0x4a9911 descriptor selection before blocking at 0x4a9641")) {
+						&& callback.coordinate_builder_0x4a9641_applied
+						&& callback.coordinate_builder_commit_appended_0x4a54a7
+						&& callback.guard_attach_value_gate_invoked_0x4a960a
+						&& callback.guard_attach_value_gate_0x4a960a.applied
+						&& (callback.guard_attach_value_nonpositive_direct_continue || callback.guard_materialization_committed_0x4a54a7)
+						&& callback.blocked_reason.empty(),
+					"generator object private state did not execute source-backed 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 before blocking at 0x4a9c7c")) {
 			return 1;
 		}
 	}
@@ -4214,14 +4228,26 @@ int main() {
 						&& mine_resource.relation_owner_count > 0
 						&& mine_resource.category_scan_count > 0
 						&& mine_resource.required_total_count_0x4c > 0
-						&& mine_resource.callback_attempt_count_0x4a9911 == 1
+						&& mine_resource.callback_attempt_count_0x4a9911 > 0
+						&& mine_resource.successful_count_0x4a9911 == mine_resource.callback_attempt_count_0x4a9911
 						&& !mine_resource.categories.empty()
-						&& mine_resource.categories.back().blocked_reason == mine_resource_blocker,
-					"entry-to-writeout workflow did not execute source-order 0x4a9d6a from recovered mine/resource counts before blocking at 0x4a9911")) {
+						&& std::all_of(mine_resource.categories.begin(), mine_resource.categories.end(), [](const auto &category) {
+							return category.blocked_reason.empty();
+						}),
+					"entry-to-writeout workflow did not execute source-order 0x4a9d6a from recovered mine/resource counts before blocking at 0x4a9c7c")) {
 			return 1;
 		}
 		{
-			const auto &callback = mine_resource.categories.back().selected_object_callback_0x4a9911;
+			const auto callback_category = std::find_if(
+					mine_resource.categories.rbegin(),
+					mine_resource.categories.rend(),
+					[](const auto &category) {
+						return category.attempted_callback_count_0x4a9911 > 0;
+					});
+			if (!require(callback_category != mine_resource.categories.rend(), "entry-to-writeout 0x4a9d6a did not execute any 0x4a9911 minimum callback before density followup")) {
+				return 1;
+			}
+			const auto &callback = callback_category->selected_object_callback_0x4a9911;
 			if (!require(callback.invoked
 							&& callback.descriptor_bucket_0x388_0x38c_known
 							&& callback.descriptor_bucket_count_0x388_0x38c == workflow_generator_state.mine_resource_descriptor_vector_entry_count_388_38c
@@ -4235,9 +4261,13 @@ int main() {
 							&& callback.selected_object_initialized_0x49ba89
 							&& callback.selected_object_vtable_0x540ab0 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540AB0
 							&& callback.coordinate_builder_0x4a9641_invoked
-							&& !callback.coordinate_builder_0x4a9641_applied
-							&& callback.blocked_reason == mine_resource_blocker,
-						"entry-to-writeout workflow did not source-select the 0x4a9911 mine/resource object before the 0x4a9641 blocker")) {
+							&& callback.coordinate_builder_0x4a9641_applied
+							&& callback.coordinate_builder_commit_appended_0x4a54a7
+							&& callback.guard_attach_value_gate_invoked_0x4a960a
+							&& callback.guard_attach_value_gate_0x4a960a.applied
+							&& (callback.guard_attach_value_nonpositive_direct_continue || callback.guard_materialization_committed_0x4a54a7)
+							&& callback.blocked_reason.empty(),
+						"entry-to-writeout workflow did not source-select and commit the 0x4a9911 mine/resource object before the 0x4a9c7c blocker")) {
 				return 1;
 			}
 		}

@@ -16,40 +16,204 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order and executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a: category field +0x20 filtering, relation terrain policy +0x0c, terrain bitset helper 0x42cc99, fallback category scan, RNG modulo choice, 0x5044b1 allocation, 0x49ba89 initialization, and selected-object vtable 0x540ab0. It then fails closed at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. This is not parity and not final map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T19:34:04Z",
-      "latestEvidenceId": "native-rmg-4a9911-source-backed-selection-20260621",
-      "remainingWork": "Port source-order mine/resource coordinate builder 0x4a9641 and density followup 0x4a9c7c so selected mine/resource objects commit through the recovered generated-cell/object-record path. Only after that resume 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-      "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. The phase snapshot exposes generator +0x388/+0x38c mine_resource_descriptor_pointer_vector count=53. Relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending behind 0x4a9641/0x4a9c7c.",
-      "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned.",
+      "updatedAt": "2026-06-21T20:04:59Z",
+      "latestEvidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
+      "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+      "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+      "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-4a9911-source-backed-selection-20260621",
+        "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+        "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
         "sliceId": "rmg-small-generalization-hardening-10184",
+        "timestamp": "2026-06-21T20:04:59Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Mine Resource 0x4a9911 Source-Backed Selection",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order and executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a: category field +0x20 filtering, relation terrain policy +0x0c, terrain bitset helper 0x42cc99, fallback category scan, RNG modulo choice, 0x5044b1 allocation, 0x49ba89 initialization, and selected-object vtable 0x540ab0. It then fails closed at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. This is not parity and not final map output.",
-        "remainingWork": "Port source-order mine/resource coordinate builder 0x4a9641 and density followup 0x4a9c7c so selected mine/resource objects commit through the recovered generated-cell/object-record path. Only after that resume 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-        "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned.",
+        "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+        "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+        "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
         "artifacts": [
-          ".artifacts/rmg_workflow_4a9911_probe/small_3p_seed_11_controlled.phase_snapshot.json"
+          "src/gdextension/include/h3maped_rmg_core.hpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+          "src/gdextension/src/rmg_native_core.cpp",
+          "PLAN.md",
+          "ops/progress.json",
+          ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+          "bin/h3maped_rmg_core_selftest",
+          "bin/rmg_native_batch_export_cli",
+          "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+          "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
         ],
-        "commands": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-          "cmake --build .artifacts/map_persistence_native_build_release --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-          "./bin/h3maped_rmg_core_selftest after release build (passed)",
-          "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --phase-snapshot-only --out .artifacts/rmg_workflow_4a9911_probe (expected blocked before final writeout)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed_after_progress_update)",
-          "git diff --check (passed_after_progress_update)"
+        "checks": [
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+            "status": "passed_linux_debug_native_targets"
+          },
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+            "status": "passed_linux_release_native_targets"
+          },
+          {
+            "command": "bin/h3maped_rmg_core_selftest",
+            "status": "passed"
+          },
+          {
+            "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+            "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+          },
+          {
+            "command": "Godot/headless Godot",
+            "status": "not_run_per_current_RMG_guardrail"
+          },
+          {
+            "command": "Windows MinGW DLL builds",
+            "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+          },
+          {
+            "command": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "command": "jq empty ops/progress.json",
+            "status": "passed_after_progress_update"
+          },
+          {
+            "command": "git diff --check",
+            "status": "passed_after_progress_update"
+          }
         ],
-        "updatedAt": "2026-06-21T19:34:04Z"
+        "metrics": {
+          "checkpoint2_complete": false,
+          "checkpoint2_status": "pending",
+          "native_rmg_end_to_end_parity_complete": false,
+          "runtime_generation_allowed": false,
+          "godot_process_started": false,
+          "mine_resource_materialization_0x4a9d6a_ported": true,
+          "mine_resource_descriptor_selection_0x4a9911_ported": true,
+          "mine_resource_coordinate_builder_0x4a9641_ported": true,
+          "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+          "mine_resource_density_followup_0x4a9c7c_ported": false,
+          "phase_snapshot_only_status_blocked": true,
+          "phase_snapshot_only_status_passed": false,
+          "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+          "full_rmg_parity_complete": false,
+          "final_payload_generation_complete": false,
+          "windows_dll_build_deferred": true
+        }
+      },
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "remainingGap": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
+      "validation": {
+        "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+        "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
+        "sliceId": "rmg-small-generalization-hardening-10184",
+        "timestamp": "2026-06-21T20:04:59Z",
+        "status": "passed_partial_implementation_not_parity",
+        "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+        "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+        "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
+        "artifacts": [
+          "src/gdextension/include/h3maped_rmg_core.hpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+          "src/gdextension/src/rmg_native_core.cpp",
+          "PLAN.md",
+          "ops/progress.json",
+          ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+          "bin/h3maped_rmg_core_selftest",
+          "bin/rmg_native_batch_export_cli",
+          "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+          "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+        ],
+        "checks": [
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+            "status": "passed_linux_debug_native_targets"
+          },
+          {
+            "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+            "status": "passed_linux_release_native_targets"
+          },
+          {
+            "command": "bin/h3maped_rmg_core_selftest",
+            "status": "passed"
+          },
+          {
+            "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+            "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+          },
+          {
+            "command": "Godot/headless Godot",
+            "status": "not_run_per_current_RMG_guardrail"
+          },
+          {
+            "command": "Windows MinGW DLL builds",
+            "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+          },
+          {
+            "command": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "command": "jq empty ops/progress.json",
+            "status": "passed_after_progress_update"
+          },
+          {
+            "command": "git diff --check",
+            "status": "passed_after_progress_update"
+          }
+        ],
+        "metrics": {
+          "checkpoint2_complete": false,
+          "checkpoint2_status": "pending",
+          "native_rmg_end_to_end_parity_complete": false,
+          "runtime_generation_allowed": false,
+          "godot_process_started": false,
+          "mine_resource_materialization_0x4a9d6a_ported": true,
+          "mine_resource_descriptor_selection_0x4a9911_ported": true,
+          "mine_resource_coordinate_builder_0x4a9641_ported": true,
+          "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+          "mine_resource_density_followup_0x4a9c7c_ported": false,
+          "phase_snapshot_only_status_blocked": true,
+          "phase_snapshot_only_status_passed": false,
+          "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+          "full_rmg_parity_complete": false,
+          "final_payload_generation_complete": false,
+          "windows_dll_build_deferred": true
+        }
+      },
+      "metrics": {
+        "checkpoint2_complete": false,
+        "checkpoint2_status": "pending",
+        "native_rmg_end_to_end_parity_complete": false,
+        "runtime_generation_allowed": false,
+        "godot_process_started": false,
+        "mine_resource_materialization_0x4a9d6a_ported": true,
+        "mine_resource_descriptor_selection_0x4a9911_ported": true,
+        "mine_resource_coordinate_builder_0x4a9641_ported": true,
+        "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+        "mine_resource_density_followup_0x4a9c7c_ported": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+        "full_rmg_parity_complete": false,
+        "final_payload_generation_complete": false,
+        "windows_dll_build_deferred": true
       }
     },
     {
@@ -846,8 +1010,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled. The current executable owner-path blocker is 0x4a9641/0x4a9c7c after source-backed 0x4a9911 selection. The workflow has not reached relation scan, reward/guard, connection tail, roads/rivers, or final writeout in the current source state.",
-    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled. The current executable owner-path blocker is 0x4a9641/0x4a9c7c after source-backed 0x4a9911 selection. The workflow has not reached relation scan, reward/guard, connection tail, roads/rivers, or final writeout in the current source state.",
+    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
     "currentSliceUpdatedAt": "2026-06-21T11:58:40Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
@@ -875,25 +1039,89 @@
       "updatedAt": "2026-06-21T11:58:40Z"
     },
     "latestEvidence": {
-      "id": "native-rmg-connection-tail-boundary-20260621",
+      "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+      "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
+      "timestamp": "2026-06-21T20:04:59Z",
       "status": "passed_partial_implementation_not_parity",
-      "title": "Connection Tail Boundary",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
-      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered connection tail, road/river/object-adjacency replay, and final writeout before enabling map output.",
-      "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
-      "artifacts": [],
-      "commands": [
-        "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-        "./bin/h3maped_rmg_core_selftest (passed)",
-        "jq empty ops/progress.json (passed)",
-        "git diff --check (passed)",
-        "python3 tests/validate_repo.py (passed)"
+      "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+      "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+      "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
       ],
-      "updatedAt": "2026-06-21T11:33:56Z"
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "status": "passed_linux_debug_native_targets"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+          "status": "passed_linux_release_native_targets"
+        },
+        {
+          "command": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+          "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+        },
+        {
+          "command": "Godot/headless Godot",
+          "status": "not_run_per_current_RMG_guardrail"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "passed_after_progress_update"
+        },
+        {
+          "command": "git diff --check",
+          "status": "passed_after_progress_update"
+        }
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "checkpoint2_status": "pending",
+        "native_rmg_end_to_end_parity_complete": false,
+        "runtime_generation_allowed": false,
+        "godot_process_started": false,
+        "mine_resource_materialization_0x4a9d6a_ported": true,
+        "mine_resource_descriptor_selection_0x4a9911_ported": true,
+        "mine_resource_coordinate_builder_0x4a9641_ported": true,
+        "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+        "mine_resource_density_followup_0x4a9c7c_ported": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+        "full_rmg_parity_complete": false,
+        "final_payload_generation_complete": false,
+        "windows_dll_build_deferred": true
+      }
     },
     "latestEvidenceArtifacts": [],
-    "latestEvidenceId": "native-rmg-4a9911-source-backed-selection-20260621",
+    "latestEvidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -1659,20 +1887,26 @@
       "connection_fallback_0x4a7605_0x4a5e03_phase_snapshot_attempted_record_count": 2,
       "connection_fallback_0x4a7605_0x4a5e03_phase_snapshot_commit_count": 0,
       "connection_fallback_0x4a7605_0x4a5e03_phase_snapshot_blocked_count": 2,
-      "generic_live_connection_fallback_0x4a7605_0x4a5e03_caller_order_ported": false
+      "generic_live_connection_fallback_0x4a7605_0x4a5e03_caller_order_ported": false,
+      "mine_resource_materialization_0x4a9d6a_ported": true,
+      "mine_resource_descriptor_selection_0x4a9911_ported": true,
+      "mine_resource_coordinate_builder_0x4a9641_ported": true,
+      "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+      "mine_resource_density_followup_0x4a9c7c_ported": false,
+      "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout"
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands, terrain policy, stale supported-land +0xf5c cursor, zeroed +0xf60/+0xf64 terrain-pressure state, recovered 0x57cea0 monster terrain rows, and 0x531cc4 type-17 subtype-to-monster rows into the ordered reward/guard selector. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes recovered direct and dynamic scorer contracts, and now blocks at 0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create; this is not parity and not final map output.",
+    "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned.",
-    "remainingWork": "Port source-order mine/resource coordinate builder 0x4a9641 and density followup 0x4a9c7c so selected mine/resource objects commit through the recovered generated-cell/object-record path. Only after that resume 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-    "result": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
+    "remainingGap": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
+    "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+    "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -1680,7 +1914,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -1693,45 +1927,56 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-21T19:34:04Z",
+    "updatedAt": "2026-06-21T20:04:59Z",
     "validation": {
-      "id": "native-rmg-generic-nontype98-source-pair-replay-20260621",
-      "evidenceId": "native-rmg-generic-nontype98-source-pair-replay-20260621",
+      "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+      "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "timestamp": "2026-06-21T04:41:40Z",
+      "timestamp": "2026-06-21T20:04:59Z",
       "status": "passed_partial_implementation_not_parity",
-      "summary": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-      "blocker": "Checkpoint 2 is still not parity. Remaining blockers are complete live descriptor producers/raw source-field capture for all generic non-type98 source pairs, exact 0x49a318 call-site order and same-run private-state comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported helper chain, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled records, downstream relation/object caller order, roads/rivers, and final payload generation.",
+      "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+      "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+      "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
       "artifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-        "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
-        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "src/gdextension/src/rmg_native_core.cpp",
-        "docs/native-rmg-generated-cell-mutation-chain.md",
-        "docs/native-rmg-core-h3maped-drift-audit.md",
         "PLAN.md",
         "ops/progress.json",
+        ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
         "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli"
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
       ],
       "checks": [
         {
-          "command": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
           "status": "passed_linux_debug_native_targets"
         },
         {
-          "command": "./bin/h3maped_rmg_core_selftest",
-          "status": "passed_debug_build"
-        },
-        {
-          "command": "cmake --build .artifacts/map_persistence_native_build_release --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
           "status": "passed_linux_release_native_targets"
         },
         {
-          "command": "./bin/h3maped_rmg_core_selftest",
-          "status": "passed_release_build"
+          "command": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+          "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+        },
+        {
+          "command": "Godot/headless Godot",
+          "status": "not_run_per_current_RMG_guardrail"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
         },
         {
           "command": "python3 tests/validate_repo.py",
@@ -1744,29 +1989,24 @@
         {
           "command": "git diff --check",
           "status": "passed_after_progress_update"
-        },
-        {
-          "command": "Godot/headless Godot",
-          "status": "not_run_per_current_RMG_guardrail"
-        },
-        {
-          "command": "Windows MinGW DLL builds",
-          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
         }
       ],
       "metrics": {
-        "generic_non_type98_descriptor_joined_source_pair_replay_ported": true,
-        "generic_source_pair_replay_skips_missing_descriptor_context": true,
-        "generic_source_pair_replay_skips_missing_relation_context": true,
-        "generic_source_pair_replay_skips_missing_source_fields": true,
-        "generic_source_pair_replay_calls_0x4a8d2c": true,
-        "generic_source_pair_replay_calls_0x4a8db2": true,
-        "copied_source_record_raw_field_0x3c_carried": true,
-        "complete_live_generic_source_pair_producers_ported": false,
-        "live_reward_guard_caller_feed_ported": false,
         "checkpoint2_complete": false,
+        "checkpoint2_status": "pending",
         "native_rmg_end_to_end_parity_complete": false,
+        "runtime_generation_allowed": false,
         "godot_process_started": false,
+        "mine_resource_materialization_0x4a9d6a_ported": true,
+        "mine_resource_descriptor_selection_0x4a9911_ported": true,
+        "mine_resource_coordinate_builder_0x4a9641_ported": true,
+        "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+        "mine_resource_density_followup_0x4a9c7c_ported": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+        "full_rmg_parity_complete": false,
+        "final_payload_generation_complete": false,
         "windows_dll_build_deferred": true
       }
     },
@@ -1806,8 +2046,8 @@
       ],
       "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
-    "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. The phase snapshot exposes generator +0x388/+0x38c mine_resource_descriptor_pointer_vector count=53. Relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending behind 0x4a9641/0x4a9c7c.",
-    "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned."
+    "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+    "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned."
   },
   "completedImplementationEvidence": [
     {
@@ -13010,11 +13250,11 @@
       "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled. The current executable owner-path blocker is 0x4a9641/0x4a9c7c after source-backed 0x4a9911 selection. The workflow has not reached relation scan, reward/guard, connection tail, roads/rivers, or final writeout in the current source state.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled. The current executable owner-path blocker is 0x4a9641/0x4a9c7c after source-backed 0x4a9911 selection. The workflow has not reached relation scan, reward/guard, connection tail, roads/rivers, or final writeout in the current source state.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-06-21T19:34:04Z",
@@ -16995,57 +17235,259 @@
         "linux_release_native_build_passed": true
       },
       "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned."
+    },
+    "native-rmg-4a9641-guard-followup-minimums-20260621": {
+      "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+      "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
+      "sliceId": "rmg-small-generalization-hardening-10184",
+      "timestamp": "2026-06-21T20:04:59Z",
+      "status": "passed_partial_implementation_not_parity",
+      "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+      "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+      "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+      "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+      ],
+      "checks": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "status": "passed_linux_debug_native_targets"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+          "status": "passed_linux_release_native_targets"
+        },
+        {
+          "command": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+          "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+        },
+        {
+          "command": "Godot/headless Godot",
+          "status": "not_run_per_current_RMG_guardrail"
+        },
+        {
+          "command": "Windows MinGW DLL builds",
+          "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "command": "jq empty ops/progress.json",
+          "status": "passed_after_progress_update"
+        },
+        {
+          "command": "git diff --check",
+          "status": "passed_after_progress_update"
+        }
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "checkpoint2_status": "pending",
+        "native_rmg_end_to_end_parity_complete": false,
+        "runtime_generation_allowed": false,
+        "godot_process_started": false,
+        "mine_resource_materialization_0x4a9d6a_ported": true,
+        "mine_resource_descriptor_selection_0x4a9911_ported": true,
+        "mine_resource_coordinate_builder_0x4a9641_ported": true,
+        "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+        "mine_resource_density_followup_0x4a9c7c_ported": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+        "full_rmg_parity_complete": false,
+        "final_payload_generation_complete": false,
+        "windows_dll_build_deferred": true
+      }
     }
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-4a9911-source-backed-selection-20260621",
+    "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+    "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
+    "timestamp": "2026-06-21T20:04:59Z",
     "status": "passed_partial_implementation_not_parity",
-    "title": "Mine Resource 0x4a9911 Source-Backed Selection",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order and executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a: category field +0x20 filtering, relation terrain policy +0x0c, terrain bitset helper 0x42cc99, fallback category scan, RNG modulo choice, 0x5044b1 allocation, 0x49ba89 initialization, and selected-object vtable 0x540ab0. It then fails closed at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. This is not parity and not final map output.",
-    "remainingWork": "Port source-order mine/resource coordinate builder 0x4a9641 and density followup 0x4a9c7c so selected mine/resource objects commit through the recovered generated-cell/object-record path. Only after that resume 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-    "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned.",
+    "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+    "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+    "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+    "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
     "artifacts": [
-      ".artifacts/rmg_workflow_4a9911_probe/small_3p_seed_11_controlled.phase_snapshot.json"
+      "src/gdextension/include/h3maped_rmg_core.hpp",
+      "src/gdextension/src/h3maped_rmg_core.cpp",
+      "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+      "src/gdextension/src/rmg_native_core.cpp",
+      "PLAN.md",
+      "ops/progress.json",
+      ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+      "bin/h3maped_rmg_core_selftest",
+      "bin/rmg_native_batch_export_cli",
+      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
     ],
-    "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-      "./bin/h3maped_rmg_core_selftest (passed)",
-      "./bin/rmg_native_batch_export_cli --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --phase-snapshot-only --out .artifacts/rmg_workflow_4a9911_probe (expected blocked before final writeout)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed_after_progress_update)",
-      "git diff --check (passed_after_progress_update)"
+    "checks": [
+      {
+        "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "status": "passed_linux_debug_native_targets"
+      },
+      {
+        "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+        "status": "passed_linux_release_native_targets"
+      },
+      {
+        "command": "bin/h3maped_rmg_core_selftest",
+        "status": "passed"
+      },
+      {
+        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+        "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+      },
+      {
+        "command": "Godot/headless Godot",
+        "status": "not_run_per_current_RMG_guardrail"
+      },
+      {
+        "command": "Windows MinGW DLL builds",
+        "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+      },
+      {
+        "command": "python3 tests/validate_repo.py",
+        "status": "passed"
+      },
+      {
+        "command": "jq empty ops/progress.json",
+        "status": "passed_after_progress_update"
+      },
+      {
+        "command": "git diff --check",
+        "status": "passed_after_progress_update"
+      }
     ],
-    "updatedAt": "2026-06-21T19:34:04Z"
+    "metrics": {
+      "checkpoint2_complete": false,
+      "checkpoint2_status": "pending",
+      "native_rmg_end_to_end_parity_complete": false,
+      "runtime_generation_allowed": false,
+      "godot_process_started": false,
+      "mine_resource_materialization_0x4a9d6a_ported": true,
+      "mine_resource_descriptor_selection_0x4a9911_ported": true,
+      "mine_resource_coordinate_builder_0x4a9641_ported": true,
+      "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+      "mine_resource_density_followup_0x4a9c7c_ported": false,
+      "phase_snapshot_only_status_blocked": true,
+      "phase_snapshot_only_status_passed": false,
+      "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+      "full_rmg_parity_complete": false,
+      "final_payload_generation_complete": false,
+      "windows_dll_build_deferred": true
+    }
   },
   "latestEvidence": {
-    "id": "native-rmg-4a9911-source-backed-selection-20260621",
+    "id": "native-rmg-4a9641-guard-followup-minimums-20260621",
+    "evidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
     "sliceId": "rmg-small-generalization-hardening-10184",
+    "timestamp": "2026-06-21T20:04:59Z",
     "status": "passed_partial_implementation_not_parity",
-    "title": "Mine Resource 0x4a9911 Source-Backed Selection",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order and executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a: category field +0x20 filtering, relation terrain policy +0x0c, terrain bitset helper 0x42cc99, fallback category scan, RNG modulo choice, 0x5044b1 allocation, 0x49ba89 initialization, and selected-object vtable 0x540ab0. It then fails closed at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. This is not parity and not final map output.",
-    "remainingWork": "Port source-order mine/resource coordinate builder 0x4a9641 and density followup 0x4a9c7c so selected mine/resource objects commit through the recovered generated-cell/object-record path. Only after that resume 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-    "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned.",
+    "title": "Mine Resource 0x4a9641 Coordinate Commit And Guard Followup",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
+    "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending.",
+    "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+    "blocker": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
     "artifacts": [
-      ".artifacts/rmg_workflow_4a9911_probe/small_3p_seed_11_controlled.phase_snapshot.json"
+      "src/gdextension/include/h3maped_rmg_core.hpp",
+      "src/gdextension/src/h3maped_rmg_core.cpp",
+      "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+      "src/gdextension/src/rmg_native_core.cpp",
+      "PLAN.md",
+      "ops/progress.json",
+      ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+      "bin/h3maped_rmg_core_selftest",
+      "bin/rmg_native_batch_export_cli",
+      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
     ],
-    "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-      "cmake --build .artifacts/map_persistence_native_build_release --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-      "./bin/h3maped_rmg_core_selftest after release build (passed)",
-      "./bin/h3maped_rmg_core_selftest (passed)",
-      "./bin/rmg_native_batch_export_cli --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --phase-snapshot-only --out .artifacts/rmg_workflow_4a9911_probe (expected blocked before final writeout)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed_after_progress_update)",
-      "git diff --check (passed_after_progress_update)"
+    "checks": [
+      {
+        "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "status": "passed_linux_debug_native_targets"
+      },
+      {
+        "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
+        "status": "passed_linux_release_native_targets"
+      },
+      {
+        "command": "bin/h3maped_rmg_core_selftest",
+        "status": "passed"
+      },
+      {
+        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
+        "status": "expected_blocked_at_0x4a9c7c_phase_snapshot_written_no_godot"
+      },
+      {
+        "command": "Godot/headless Godot",
+        "status": "not_run_per_current_RMG_guardrail"
+      },
+      {
+        "command": "Windows MinGW DLL builds",
+        "status": "not_run_per_current_PLAN_guard_until_linux_parity_final_boundary"
+      },
+      {
+        "command": "python3 tests/validate_repo.py",
+        "status": "passed"
+      },
+      {
+        "command": "jq empty ops/progress.json",
+        "status": "passed_after_progress_update"
+      },
+      {
+        "command": "git diff --check",
+        "status": "passed_after_progress_update"
+      }
     ],
-    "updatedAt": "2026-06-21T19:34:04Z"
+    "metrics": {
+      "checkpoint2_complete": false,
+      "checkpoint2_status": "pending",
+      "native_rmg_end_to_end_parity_complete": false,
+      "runtime_generation_allowed": false,
+      "godot_process_started": false,
+      "mine_resource_materialization_0x4a9d6a_ported": true,
+      "mine_resource_descriptor_selection_0x4a9911_ported": true,
+      "mine_resource_coordinate_builder_0x4a9641_ported": true,
+      "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+      "mine_resource_density_followup_0x4a9c7c_ported": false,
+      "phase_snapshot_only_status_blocked": true,
+      "phase_snapshot_only_status_passed": false,
+      "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout",
+      "full_rmg_parity_complete": false,
+      "final_payload_generation_complete": false,
+      "windows_dll_build_deferred": true
+    }
   },
   "latestEvidenceArtifacts": [
     ".artifacts/rmg_workflow_4a9911_probe/small_3p_seed_11_controlled.phase_snapshot.json"
   ],
-  "latestEvidenceId": "native-rmg-4a9911-source-backed-selection-20260621",
+  "latestEvidenceId": "native-rmg-4a9641-guard-followup-minimums-20260621",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -17432,7 +17874,13 @@
     "generic_source_pair_replay_calls_0x4a8d2c": true,
     "generic_source_pair_replay_calls_0x4a8db2": true,
     "copied_source_record_raw_field_0x3c_carried": true,
-    "complete_live_generic_source_pair_producers_ported": false
+    "complete_live_generic_source_pair_producers_ported": false,
+    "mine_resource_materialization_0x4a9d6a_ported": true,
+    "mine_resource_descriptor_selection_0x4a9911_ported": true,
+    "mine_resource_coordinate_builder_0x4a9641_ported": true,
+    "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
+    "mine_resource_density_followup_0x4a9c7c_ported": false,
+    "native_cli_required_next_slice": "port_source_order_mine_resource_density_followup_0x4a9c7c_before_relation_reward_connection_final_writeout"
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
   "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
@@ -58092,8 +58540,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned.",
-  "remainingWork": "Port source-order mine/resource coordinate builder 0x4a9641 and density followup 0x4a9c7c so selected mine/resource objects commit through the recovered generated-cell/object-record path. Only after that resume 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+  "remainingGap": "The shared workflow owns 0x4a9d6a leading minimum counts, 0x4a9911 descriptor selection, 0x4a9641 coordinate/object commit, and 0x4a960a/0x4a5e03 guard followup for minimum mine/resource placement, but 0x4a9c7c density followup is still unported. Final tile/object/header writeout remains unowned.",
+  "remainingWork": "Port source-order mine/resource density followup 0x4a9c7c before resuming 0x4aadd2, 0x4a5767 relation scan consumers, source-order object replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, endpoint/decorative/connection/road-river phases, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -58524,7 +58972,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled.",
+  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -58625,9 +59073,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now materializes the recovered generator +0x388/+0x38c mine/resource descriptor bucket from source catalog order, executes recovered 0x4a9911 source-backed descriptor selection from 0x4a9d6a, and blocks at 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. Final writeout remains disabled.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes recovered mine/resource minimum materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03: source-backed descriptor selection from generator +0x388/+0x38c, coordinate scan/0x4a54a7 selected-object commit, guard value scaling, guard coordinate adjustment, and positive-value ordinary guard commit. It now fails closed at 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums. This is not parity and not final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-21T19:34:04Z",
+  "updatedAt": "2026-06-21T20:04:59Z",
   "validation": {
     "linux_debug_native_build": "passed",
     "linux_release_native_build": "passed",
@@ -70058,5 +70506,5 @@
     "windows_dll_build_run": "deferred_until_linux_parity_final_boundary",
     "h3maped_rmg_core_selftest_release": "passed"
   },
-  "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection. The phase snapshot exposes generator +0x388/+0x38c mine_resource_descriptor_pointer_vector count=53. Relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending behind 0x4a9641/0x4a9c7c."
+  "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id mine_resource_materialization with 0x4a9d6a_density_followup_0x4a9c7c_0x4a9641_unported_after_minimums after successful 0x4a9911 minimum callbacks through recovered 0x4a9641 coordinate/object commit and 0x4a960a/0x4a5e03 guard followup. 0x4a9c7c density followup, relation scan, generic object replay, high-owner propagation, reward/guard, connection/decorative/road-river, and final writeout remain pending."
 }
