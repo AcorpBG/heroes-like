@@ -457,6 +457,11 @@ struct SharedGeneratorRelationOwnerState {
 	int32_t scan_bound_high_y_0x2c = -32000;
 	bool byte_0x3c_known = false;
 	uint8_t byte_0x3c = 0U;
+	bool reward_guard_priority_0x40_known = false;
+	int32_t reward_guard_priority_0x40 = 0;
+	int32_t reward_guard_priority_before_randomization_0x4ad7f7 = 0;
+	int32_t reward_guard_priority_rng_value_0x4e7276 = -1;
+	bool reward_guard_priority_source_relation_0x4ad6a8 = false;
 	bool descriptor_type_counter_table_0x44_known = false;
 	int32_t descriptor_type_counter_table_0x44_byte_size = 0x3a0;
 	int32_t descriptor_type_counter_table_0x44_zero_count = 0x3a0 / 4;
@@ -750,6 +755,9 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t relation_record_count_10e4_10e8 = 0;
 	int32_t relation_record_missing_endpoint_count_10e4_10e8 = 0;
 	std::vector<SharedGeneratorRelationOwnerState> relation_owner_vectors_10e4_10e8;
+	bool reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = false;
+	bool reward_guard_relation_priority_live_replay_blocked = false;
+	std::string reward_guard_relation_priority_live_replay_blocker;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
