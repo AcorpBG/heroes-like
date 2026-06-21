@@ -707,9 +707,19 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed = input.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed;
 	out.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker = input.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker;
 	out.connection_fallback_materialization_0x4a7605_0x4a5e03_known = input.connection_fallback_materialization_0x4a7605_0x4a5e03_known;
+	out.connection_fallback_materialization_scope_known = input.connection_fallback_materialization_scope_known;
+	out.connection_fallback_materialization_scope_size_class = input.connection_fallback_materialization_scope_size_class;
+	out.connection_fallback_materialization_scope_water_mode = input.connection_fallback_materialization_scope_water_mode;
+	out.connection_fallback_materialization_scope_width = input.connection_fallback_materialization_scope_width;
+	out.connection_fallback_materialization_scope_height = input.connection_fallback_materialization_scope_height;
+	out.connection_fallback_materialization_scope_level_count = input.connection_fallback_materialization_scope_level_count;
+	out.connection_fallback_materialization_scope_seed = input.connection_fallback_materialization_scope_seed;
+	out.connection_fallback_materialization_records_available_for_scope = input.connection_fallback_materialization_records_available_for_scope;
 	out.connection_fallback_materialization_record_count = input.connection_fallback_materialization_record_count;
 	out.connection_fallback_materialization_commit_count = input.connection_fallback_materialization_commit_count;
 	out.connection_fallback_materialization_blocked_count = input.connection_fallback_materialization_blocked_count;
+	out.connection_fallback_materialization_first_blocked_record_index = input.connection_fallback_materialization_first_blocked_record_index;
+	out.connection_fallback_materialization_first_blocked_reason = input.connection_fallback_materialization_first_blocked_reason;
 	out.descriptor_counter_table_0x1110_present = input.descriptor_counter_table_0x1110_present;
 	out.descriptor_counter_table_0x1110_contents_known = input.descriptor_counter_table_0x1110_contents_known;
 	out.descriptor_counter_table_0x1110_known_count = input.descriptor_counter_table_0x1110_known_count;
@@ -2383,9 +2393,19 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 	append_source_object_resolver_source_pairs_json(out, state.source_pair_records_edc);
 	out << ","
 		<< "\"connection_fallback_materialization_0x4a7605_0x4a5e03_known\":" << (state.connection_fallback_materialization_0x4a7605_0x4a5e03_known ? "true" : "false") << ","
+		<< "\"connection_fallback_materialization_scope_known\":" << (state.connection_fallback_materialization_scope_known ? "true" : "false") << ","
+		<< "\"connection_fallback_materialization_scope_size_class\":\"" << json_escape(state.connection_fallback_materialization_scope_size_class) << "\","
+		<< "\"connection_fallback_materialization_scope_water_mode\":\"" << json_escape(state.connection_fallback_materialization_scope_water_mode) << "\","
+		<< "\"connection_fallback_materialization_scope_width\":" << state.connection_fallback_materialization_scope_width << ","
+		<< "\"connection_fallback_materialization_scope_height\":" << state.connection_fallback_materialization_scope_height << ","
+		<< "\"connection_fallback_materialization_scope_level_count\":" << state.connection_fallback_materialization_scope_level_count << ","
+		<< "\"connection_fallback_materialization_scope_seed\":" << state.connection_fallback_materialization_scope_seed << ","
+		<< "\"connection_fallback_materialization_records_available_for_scope\":" << (state.connection_fallback_materialization_records_available_for_scope ? "true" : "false") << ","
 		<< "\"connection_fallback_materialization_record_count\":" << state.connection_fallback_materialization_record_count << ","
 		<< "\"connection_fallback_materialization_commit_count\":" << state.connection_fallback_materialization_commit_count << ","
 		<< "\"connection_fallback_materialization_blocked_count\":" << state.connection_fallback_materialization_blocked_count << ","
+		<< "\"connection_fallback_materialization_first_blocked_record_index\":" << state.connection_fallback_materialization_first_blocked_record_index << ","
+		<< "\"connection_fallback_materialization_first_blocked_reason\":\"" << json_escape(state.connection_fallback_materialization_first_blocked_reason) << "\","
 		<< "\"object_record_vector_append_count_0x4a54a7\":" << state.object_record_vector_append_count_0x4a54a7 << ","
 		<< "\"generated_cell_object_reference_append_count_0x4a54a7\":" << state.generated_cell_object_reference_append_count_0x4a54a7 << ","
 		<< "\"descriptor_counter_increment_count_0x4a54a7\":" << state.descriptor_counter_increment_count_0x4a54a7 << ","
@@ -3412,7 +3432,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now consumes the currently ported relation scan, source-order object replay, and high-owner propagation phases; live reward/guard caller feed, endpoint/connection, roads/rivers, writeout, and same-run private-state comparison remain unported\",\n";
+	out << "    \"current_blocker\": \"native workflow now scopes recovered connection fallback records to their proven case; Small lacks source-backed 0x4a7605 records and Medium seed 10 blocks on exact target word 0x20 prestate before 0x4a5e03\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3429,7 +3449,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_exact_0x4a7605_0x4a5e03_fallback_prestate_into_0x4a79a3_connection_tail\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_source_scoped_0x4a7605_fallback_record_feed_and_medium_seed10_target_word_prestate_into_0x4a79a3_connection_tail\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

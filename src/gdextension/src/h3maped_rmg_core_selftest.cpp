@@ -2036,6 +2036,9 @@ int main() {
 					36,
 					36,
 					1,
+					"small",
+					"land",
+					10U,
 					selected_after_setup3,
 					selected_composed);
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -2454,6 +2457,13 @@ int main() {
 				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
 		if (!require(fallback_records.size() == 2
 						&& fallback_records[0].object_record_key == 0x036260c0U
+						&& fallback_records[0].source_scope_known
+						&& fallback_records[0].source_size_class == "medium"
+						&& fallback_records[0].source_water_mode == "land"
+						&& fallback_records[0].source_width == 72
+						&& fallback_records[0].source_height == 72
+						&& fallback_records[0].source_level_count == 1
+						&& fallback_records[0].source_seed == 10U
 						&& fallback_records[0].descriptor_pointer == 0x018dca40U
 						&& fallback_records[0].descriptor_type_0x1c == 54
 						&& fallback_records[0].x == 59
@@ -2467,6 +2477,13 @@ int main() {
 						&& fallback_records[0].expected_target_word_0x28_known
 						&& fallback_records[0].expected_target_word_0x28 == 0x12005000U
 						&& fallback_records[1].object_record_key == 0x03626060U
+						&& fallback_records[1].source_scope_known
+						&& fallback_records[1].source_size_class == "medium"
+						&& fallback_records[1].source_water_mode == "land"
+						&& fallback_records[1].source_width == 72
+						&& fallback_records[1].source_height == 72
+						&& fallback_records[1].source_level_count == 1
+						&& fallback_records[1].source_seed == 10U
 						&& fallback_records[1].descriptor_pointer == 0x018dc1a4U
 						&& fallback_records[1].descriptor_type_0x1c == 54
 						&& fallback_records[1].x == 39
@@ -2480,6 +2497,14 @@ int main() {
 						&& fallback_records[1].expected_target_word_0x28_known
 						&& fallback_records[1].expected_target_word_0x28 == 0x1a000000U,
 					"0x4a7605 -> 0x4a5e03 recovered fallback records are not the exact seed-controlled source records")) {
+			return 1;
+		}
+		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_medium_records =
+				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("medium", "land", 72, 72, 1, 10U);
+		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_small_records =
+				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("small", "land", 36, 36, 1, 11U);
+		if (!require(scoped_medium_records.size() == 2 && scoped_small_records.empty(),
+					"0x4a7605 -> 0x4a5e03 fallback source records were not constrained to the recovered Medium seed-10 scope")) {
 			return 1;
 		}
 		GeneratorObjectPrivateState fallback_state;
@@ -4020,7 +4045,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_connection_blocker =
-				"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied";
+				"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope";
 		if (!require(workflow.blocked_reason == current_connection_blocker,
 					std::string("entry-to-writeout workflow did not advance to the exact current 0x4a79a3 fallback-materialization prestate blocker; actual=")
 							+ workflow.blocked_reason)) {
@@ -4162,9 +4187,14 @@ int main() {
 							&& connection_tail.endpoint_caller_prep_known
 							&& connection_tail.fallback_materialization_known
 							&& !connection_tail.fallback_materialization_applied
+							&& workflow_generator_state.connection_fallback_materialization_scope_known
+							&& workflow_generator_state.connection_fallback_materialization_scope_size_class == "small"
+							&& workflow_generator_state.connection_fallback_materialization_scope_seed == 11U
+							&& !workflow_generator_state.connection_fallback_materialization_records_available_for_scope
+							&& workflow_generator_state.connection_fallback_materialization_record_count == 0
 							&& !connection_tail.source_backed_frontier_known
 							&& connection_tail.blocked_reason == current_connection_blocker,
-						"entry-to-writeout workflow did not stop at the exact recovered 0x4a79a3 fallback-materialization prestate blocker")) {
+						"entry-to-writeout workflow did not stop at the exact source-scoped 0x4a79a3 fallback-record coverage blocker")) {
 				return 1;
 			}
 		}
