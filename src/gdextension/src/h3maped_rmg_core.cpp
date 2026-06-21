@@ -9883,6 +9883,447 @@ static bool descriptor_terrain_bitset_index_test_0x42cc99(uint16_t mask_word_0x1
 	return (uint32_t(mask_word_0x18) & (uint32_t(1U) << uint32_t(terrain_policy_index))) != 0U;
 }
 
+static bool mine_resource_coordinate_eligibility_0x49aa93(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectRecord0x4c &source_record,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		int32_t relation_owner_byte2) {
+	const std::vector<SourceObjectMaskPoint490f3f> body_points =
+			source_object_text_mask_points_0x490f3f(source_record.passability_mask, false);
+	if (body_points.empty()) {
+		return false;
+	}
+	for (const SourceObjectMaskPoint490f3f &point : body_points) {
+		const int64_t flat = cell_index(state.width, state.height, x + point.dx, y + point.dy, level);
+		if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+			return false;
+		}
+		const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+		if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known || !record.word_0x2c_known) {
+			return false;
+		}
+		if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+			return false;
+		}
+		if ((record.word_0x24 & 0x3fU) == 9U) {
+			return false;
+		}
+		if (!generated_cell_49a1d8_valid_record(record)) {
+			return false;
+		}
+		if ((record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+			return false;
+		}
+		if ((record.word_0x2c & 0x01U) != 0U) {
+			return false;
+		}
+	}
+	return true;
+}
+
+static int32_t mine_resource_body_pressure_count_0x4a9641(
+		const GeneratorObjectPrivateState &state,
+		const GeneratorDescriptorVectorEntry0x398 &descriptor,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		int32_t &body_reject_count) {
+	const std::vector<CoordinateCandidate4a17f5> body_offsets =
+			descriptor_body_offsets_from_primary_mask_0x49a6f9(
+					descriptor.source_record_copy,
+					descriptor.descriptor_source_cell_x_0x2c,
+					descriptor.descriptor_source_cell_y_0x30);
+	int32_t body_pressure_count = 0;
+	for (const CoordinateCandidate4a17f5 &offset : body_offsets) {
+		const int32_t body_x = x + offset.x;
+		const int32_t body_y = y + offset.y;
+		if (body_y > y) {
+			body_reject_count += 1;
+			continue;
+		}
+		const int64_t flat = cell_index(state.width, state.height, body_x, body_y, level);
+		if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+			body_reject_count += 1;
+			continue;
+		}
+		const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+		if (!record.word_0x24_known || !record.word_0x28_known) {
+			body_reject_count += 1;
+			continue;
+		}
+		if ((record.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U) {
+			body_reject_count += 1;
+			continue;
+		}
+		if ((record.word_0x24 & 0x3fU) == 9U) {
+			body_reject_count += 1;
+			continue;
+		}
+		if (((record.word_0x28 >> 26U) & 0x1U) == 0U) {
+			body_reject_count += 1;
+			continue;
+		}
+		body_pressure_count += 1;
+	}
+	return body_pressure_count > 5 ? 5 : body_pressure_count;
+}
+
+static void mirror_mine_resource_coordinate_builder_fields_0x4a9641(
+		MineResourceSelectedObjectCallbackResult4a9911 &result,
+		const MineResourceSelectedObjectCallbackResult4a9911 &builder) {
+	result.coordinate_builder_0x4a9641_invoked = builder.coordinate_builder_0x4a9641_invoked;
+	result.coordinate_builder_0x4a9641_applied = builder.coordinate_builder_0x4a9641_applied;
+	result.coordinate_builder_scan_bounds_known_0x20_0x2c = builder.coordinate_builder_scan_bounds_known_0x20_0x2c;
+	result.coordinate_builder_scan_low_x_0x20 = builder.coordinate_builder_scan_low_x_0x20;
+	result.coordinate_builder_scan_low_y_0x24 = builder.coordinate_builder_scan_low_y_0x24;
+	result.coordinate_builder_scan_high_x_0x28 = builder.coordinate_builder_scan_high_x_0x28;
+	result.coordinate_builder_scan_high_y_0x2c = builder.coordinate_builder_scan_high_y_0x2c;
+	result.coordinate_builder_scanned_cell_count = builder.coordinate_builder_scanned_cell_count;
+	result.coordinate_builder_owner_byte_reject_count = builder.coordinate_builder_owner_byte_reject_count;
+	result.coordinate_builder_eligibility_reject_count_0x49aa93 = builder.coordinate_builder_eligibility_reject_count_0x49aa93;
+	result.coordinate_builder_value_floor_reject_count = builder.coordinate_builder_value_floor_reject_count;
+	result.coordinate_builder_distance_reject_count = builder.coordinate_builder_distance_reject_count;
+	result.coordinate_builder_body_offset_count_0x18_0x1c = builder.coordinate_builder_body_offset_count_0x18_0x1c;
+	result.coordinate_builder_body_reject_count = builder.coordinate_builder_body_reject_count;
+	result.coordinate_builder_body_best_count = builder.coordinate_builder_body_best_count;
+	result.coordinate_builder_threshold_initial_0x14 = builder.coordinate_builder_threshold_initial_0x14;
+	result.coordinate_builder_threshold_after_scan_0x14 = builder.coordinate_builder_threshold_after_scan_0x14;
+	result.coordinate_builder_local_vector_clear_count_0x4ae52a_0x4ae27c = builder.coordinate_builder_local_vector_clear_count_0x4ae52a_0x4ae27c;
+	result.coordinate_builder_local_vector_append_count_0x4ae1fd = builder.coordinate_builder_local_vector_append_count_0x4ae1fd;
+	result.coordinate_builder_candidate_count = builder.coordinate_builder_candidate_count;
+	result.coordinate_builder_selected_candidate_index = builder.coordinate_builder_selected_candidate_index;
+	result.coordinate_builder_selected_x = builder.coordinate_builder_selected_x;
+	result.coordinate_builder_selected_y = builder.coordinate_builder_selected_y;
+	result.coordinate_builder_selected_level = builder.coordinate_builder_selected_level;
+	result.coordinate_builder_rng_value_0x4e7276 = builder.coordinate_builder_rng_value_0x4e7276;
+	result.coordinate_builder_object_record_key = builder.coordinate_builder_object_record_key;
+	result.coordinate_builder_object_record_key_known = builder.coordinate_builder_object_record_key_known;
+	result.coordinate_builder_commit_appended_0x4a54a7 = builder.coordinate_builder_commit_appended_0x4a54a7;
+	result.coordinate_builder_object_vector_count_after = builder.coordinate_builder_object_vector_count_after;
+}
+
+static int32_t mine_resource_guard_budget_value_0x4a9911(int32_t category_index) {
+	if (category_index == 0 || category_index == 2) {
+		return 0x5dc;
+	}
+	if (category_index == 6) {
+		return 0x1b58;
+	}
+	return 0xdac;
+}
+
+static void mirror_mine_resource_guard_followup_fields_0x4a9911(
+		MineResourceSelectedObjectCallbackResult4a9911 &result,
+		const MineResourceSelectedObjectCallbackResult4a9911 &guard_followup) {
+	result.guard_attach_value_gate_invoked_0x4a960a = guard_followup.guard_attach_value_gate_invoked_0x4a960a;
+	result.guard_attach_value_gate_0x4a960a = guard_followup.guard_attach_value_gate_0x4a960a;
+	result.guard_budget_value_0x4a9911 = guard_followup.guard_budget_value_0x4a9911;
+	result.guard_attach_value_positive_0x4a960a = guard_followup.guard_attach_value_positive_0x4a960a;
+	result.guard_attach_value_nonpositive_direct_continue = guard_followup.guard_attach_value_nonpositive_direct_continue;
+	result.guard_attach_value_0x4a65a5 = guard_followup.guard_attach_value_0x4a65a5;
+	result.guard_attach_value_band_0x4a960a = guard_followup.guard_attach_value_band_0x4a960a;
+	result.guard_coordinate_adjusted_0x4a9911 = guard_followup.guard_coordinate_adjusted_0x4a9911;
+	result.guard_x_0x4a9911 = guard_followup.guard_x_0x4a9911;
+	result.guard_y_0x4a9911 = guard_followup.guard_y_0x4a9911;
+	result.guard_level_0x4a9911 = guard_followup.guard_level_0x4a9911;
+	result.guard_materialization_invoked_0x4a5e03 = guard_followup.guard_materialization_invoked_0x4a5e03;
+	result.guard_materialization_committed_0x4a54a7 = guard_followup.guard_materialization_committed_0x4a54a7;
+	result.guard_object_record_key_0x4a5e03 = guard_followup.guard_object_record_key_0x4a5e03;
+	result.guard_object_record_key_known_0x4a5e03 = guard_followup.guard_object_record_key_known_0x4a5e03;
+	result.guard_object_record_sequence_0x1c = guard_followup.guard_object_record_sequence_0x1c;
+	result.guard_object_vector_count_after_0x4a54a7 = guard_followup.guard_object_vector_count_after_0x4a54a7;
+}
+
+static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_guard_followup_0x4a9911_0x4a960a_0x4a5e03(
+		GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c &owner,
+		const GeneratorDescriptorVectorEntry0x398 &selected,
+		const MineResourceSelectedObjectCallbackResult4a9911 &coordinate_builder) {
+	MineResourceSelectedObjectCallbackResult4a9911 result;
+	result.guard_attach_value_gate_invoked_0x4a960a = true;
+	result.guard_budget_value_0x4a9911 =
+			mine_resource_guard_budget_value_0x4a9911(selected.descriptor_source_field_0x20);
+	result.guard_attach_value_gate_0x4a960a =
+			reward_guard_attach_value_gate_0x4a960a(
+					state,
+					&owner,
+					result.guard_budget_value_0x4a9911);
+	result.guard_attach_value_band_0x4a960a = result.guard_attach_value_gate_0x4a960a.effective_value_band_0x4a960a;
+	result.guard_attach_value_0x4a65a5 = result.guard_attach_value_gate_0x4a960a.scaled_attach_value_0x4a65a5;
+	if (!result.guard_attach_value_gate_0x4a960a.applied) {
+		result.blocked_reason = result.guard_attach_value_gate_0x4a960a.blocked_reason.empty()
+				? "0x4a9911_0x4a960a_guard_attach_value_gate_failed"
+				: result.guard_attach_value_gate_0x4a960a.blocked_reason;
+		return result;
+	}
+	if (result.guard_attach_value_0x4a65a5 <= 0) {
+		result.guard_attach_value_nonpositive_direct_continue = true;
+		result.applied = true;
+		return result;
+	}
+
+	if (coordinate_builder.coordinate_builder_selected_x < 0
+			|| coordinate_builder.coordinate_builder_selected_y < 0
+			|| coordinate_builder.coordinate_builder_selected_level < 0) {
+		result.blocked_reason = "0x4a9911_guard_coordinate_missing_after_0x4a9641_commit";
+		return result;
+	}
+	if (!selected.descriptor_source_cell_offsets_0x2c_0x30_known) {
+		result.blocked_reason = "0x4a9911_guard_descriptor_source_cell_offsets_0x2c_0x30_missing";
+		return result;
+	}
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		result.blocked_reason = "0x4a9911_guard_0x4a5e03_object_key_allocator_missing";
+		return result;
+	}
+
+	result.guard_attach_value_positive_0x4a960a = true;
+	result.guard_coordinate_adjusted_0x4a9911 = true;
+	result.guard_x_0x4a9911 =
+			coordinate_builder.coordinate_builder_selected_x - selected.descriptor_source_cell_x_0x2c;
+	result.guard_y_0x4a9911 =
+			coordinate_builder.coordinate_builder_selected_y + (1 - selected.descriptor_source_cell_y_0x30);
+	result.guard_level_0x4a9911 = coordinate_builder.coordinate_builder_selected_level;
+	result.guard_object_record_key_0x4a5e03 = state.next_native_object_record_key_0x4a93a2;
+	result.guard_object_record_key_known_0x4a5e03 = true;
+	state.next_native_object_record_key_0x4a93a2 += 1U;
+	if (state.object_record_sequence_allocator_0xf44_known) {
+		result.guard_object_record_sequence_0x1c = state.object_record_sequence_allocator_0xf44;
+		state.object_record_sequence_allocator_0xf44 += 1;
+	}
+	state.object_record_allocation_count_0x4a93a2 += 1;
+
+	result.guard_materialization_invoked_0x4a5e03 = true;
+	const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+			state,
+			result.guard_object_record_key_0x4a5e03,
+			54,
+			result.guard_x_0x4a9911,
+			result.guard_y_0x4a9911,
+			result.guard_level_0x4a9911,
+			true,
+			0,
+			0);
+	result.guard_materialization_committed_0x4a54a7 = commit.object_vector_appended;
+	result.guard_object_vector_count_after_0x4a54a7 = commit.object_vector_count_after;
+	if (!commit.object_vector_appended) {
+		result.blocked_reason = "0x4a9911_guard_0x4a5e03_0x4a54a7_commit_did_not_append";
+		return result;
+	}
+	if (!state.object_records_0xec4_ecc.empty()) {
+		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+		object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A88;
+		object_record.object_record_sequence_0x1c = result.guard_object_record_sequence_0x1c;
+		object_record.object_record_selected_index_0x20 = selected.descriptor_source_field_0x20;
+		object_record.object_record_enabled_word_0x24 = 3U;
+		object_record.object_record_enabled_low_byte_0x24 = true;
+		object_record.mine_resource_guard_record_0x4a9911_0x4a5e03_known = true;
+		object_record.mine_resource_guard_arg0_0x4a5e03 = uint32_t(result.guard_attach_value_0x4a65a5);
+		object_record.mine_resource_guard_protected_object_key = coordinate_builder.coordinate_builder_object_record_key;
+		object_record.mine_resource_guard_source_category_0x20 = selected.descriptor_source_field_0x20;
+		object_record.mine_resource_guard_selected_source_catalog_index_0x49da08 =
+				selected.source_catalog_index_0x49da08;
+	}
+	result.applied = true;
+	return result;
+}
+
+static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_builder_0x4a9641(
+		GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c &owner,
+		const GeneratorDescriptorVectorEntry0x398 &selected,
+		bool force_flag_0x0f,
+		int32_t threshold_arg_0x14,
+		H3MapedRng &rng) {
+	MineResourceSelectedObjectCallbackResult4a9911 result;
+	result.coordinate_builder_0x4a9641_invoked = true;
+	result.owner_vector_index = owner.owner_vector_index;
+	result.runtime_zone_index = owner.runtime_zone_index;
+	result.category_index = selected.descriptor_source_field_0x20;
+	result.selected = true;
+	result.selected_descriptor_vector_index_0x388 = selected.vector_index;
+	result.selected_source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
+	result.selected_descriptor_type_0x1c = selected.descriptor_type_0x1c;
+	result.selected_source_field_0x20 = selected.descriptor_source_field_0x20;
+	result.selected_def_name = selected.source_record_copy.def_name;
+	result.force_flag_0x0f = force_flag_0x0f;
+	result.policy_arg_0x10 = threshold_arg_0x14;
+	result.coordinate_builder_scan_bounds_known_0x20_0x2c = relation_scan_bounds_0x4a7312_non_sentinel(owner);
+	result.coordinate_builder_scan_low_x_0x20 = owner.scan_bound_low_x_0x20;
+	result.coordinate_builder_scan_low_y_0x24 = owner.scan_bound_low_y_0x24;
+	result.coordinate_builder_scan_high_x_0x28 = owner.scan_bound_high_x_0x28;
+	result.coordinate_builder_scan_high_y_0x2c = owner.scan_bound_high_y_0x2c;
+	result.coordinate_builder_threshold_initial_0x14 = threshold_arg_0x14;
+	result.coordinate_builder_threshold_after_scan_0x14 = threshold_arg_0x14;
+	result.coordinate_builder_body_offset_count_0x18_0x1c =
+			int32_t(descriptor_body_offsets_from_primary_mask_0x49a6f9(
+					selected.source_record_copy,
+					selected.descriptor_source_cell_x_0x2c,
+					selected.descriptor_source_cell_y_0x30).size());
+
+	if (!state.generated_cell_buffer_owned || state.generated_cell_buffer.records.empty()) {
+		result.blocked_reason = "0x4a9641_generated_cell_buffer_missing";
+		return result;
+	}
+	if (!result.coordinate_builder_scan_bounds_known_0x20_0x2c) {
+		result.blocked_reason = "0x4a9641_relation_scan_bounds_0x20_0x2c_missing_or_sentinel";
+		return result;
+	}
+	if (owner.runtime_zone_index < 0) {
+		result.blocked_reason = "0x4a9641_relation_owner_byte2_missing";
+		return result;
+	}
+	if (force_flag_0x0f && !owner.coordinate_triple_0x10_0x18_known) {
+		result.blocked_reason = "0x4a9641_force_distance_anchor_0x30_missing";
+		return result;
+	}
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		result.blocked_reason = "0x4a9641_selected_object_key_allocator_missing_before_0x5044b1";
+		return result;
+	}
+
+	std::vector<CoordinateCandidate4a17f5> accepted_candidates;
+	int32_t current_threshold = threshold_arg_0x14;
+	int32_t best_distance_squared = 0x9c40;
+	int32_t best_body_count = 0;
+	const int32_t level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : 0;
+	for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
+		for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
+			result.coordinate_builder_scanned_cell_count += 1;
+			const int64_t flat = cell_index(state.width, state.height, x, y, level);
+			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
+				continue;
+			}
+			const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+			if (!record.word_0x20_known) {
+				result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
+				continue;
+			}
+			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(owner.runtime_zone_index & 0xff)) {
+				result.coordinate_builder_owner_byte_reject_count += 1;
+				continue;
+			}
+			if (!mine_resource_coordinate_eligibility_0x49aa93(
+						state,
+						selected.source_record_copy,
+						x,
+						y,
+						level,
+						owner.runtime_zone_index)) {
+				result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
+				continue;
+			}
+
+			if (force_flag_0x0f) {
+				const int64_t dx = int64_t(x) - int64_t(owner.coordinate_x_0x10);
+				const int64_t dy = int64_t(y) - int64_t(owner.coordinate_y_0x14);
+				const int64_t distance64 = dx * dx + dy * dy;
+				if (distance64 > int64_t(best_distance_squared) || distance64 < 0x10) {
+					result.coordinate_builder_distance_reject_count += 1;
+					continue;
+				}
+				const int32_t candidate_distance = int32_t(distance64 < 0x90 ? 0x90 : distance64);
+				if (candidate_distance < best_distance_squared) {
+					best_distance_squared = candidate_distance;
+					accepted_candidates.clear();
+					result.coordinate_builder_local_vector_clear_count_0x4ae52a_0x4ae27c += 1;
+				}
+			}
+
+			const int32_t low_word_score = int32_t(record.word_0x20 & 0xffffU);
+			if (low_word_score < current_threshold) {
+				result.coordinate_builder_value_floor_reject_count += 1;
+				continue;
+			}
+
+			const int32_t body_count = mine_resource_body_pressure_count_0x4a9641(
+					state,
+					selected,
+					x,
+					y,
+					level,
+					result.coordinate_builder_body_reject_count);
+			if (body_count < best_body_count) {
+				result.coordinate_builder_body_reject_count += 1;
+				continue;
+			}
+			if (body_count > best_body_count) {
+				best_body_count = body_count;
+				result.coordinate_builder_body_best_count = best_body_count;
+				accepted_candidates.clear();
+				result.coordinate_builder_local_vector_clear_count_0x4ae52a_0x4ae27c += 1;
+			}
+			if (low_word_score > current_threshold) {
+				current_threshold = low_word_score;
+				result.coordinate_builder_threshold_after_scan_0x14 = current_threshold;
+				accepted_candidates.clear();
+				result.coordinate_builder_local_vector_clear_count_0x4ae52a_0x4ae27c += 1;
+			}
+			accepted_candidates.push_back(CoordinateCandidate4a17f5 { x, y, level });
+			result.coordinate_builder_local_vector_append_count_0x4ae1fd += 1;
+		}
+	}
+
+	result.coordinate_builder_candidate_count = int32_t(accepted_candidates.size());
+	if (accepted_candidates.empty()) {
+		result.blocked_reason = "0x4a9641_candidate_vector_empty_after_owner_0x49aa93_value_body_filters";
+		return result;
+	}
+
+	result.coordinate_builder_rng_value_0x4e7276 = rng.next();
+	result.coordinate_builder_selected_candidate_index =
+			result.coordinate_builder_rng_value_0x4e7276 % result.coordinate_builder_candidate_count;
+	const CoordinateCandidate4a17f5 selected_coordinate =
+			accepted_candidates[size_t(result.coordinate_builder_selected_candidate_index)];
+	result.coordinate_builder_selected_x = selected_coordinate.x;
+	result.coordinate_builder_selected_y = selected_coordinate.y;
+	result.coordinate_builder_selected_level = selected_coordinate.level;
+	result.coordinate_builder_object_record_key = state.next_native_object_record_key_0x4a93a2;
+	result.coordinate_builder_object_record_key_known = true;
+	state.next_native_object_record_key_0x4a93a2 += 1U;
+	int32_t allocated_sequence = -1;
+	if (state.object_record_sequence_allocator_0xf44_known) {
+		allocated_sequence = state.object_record_sequence_allocator_0xf44;
+		state.object_record_sequence_allocator_0xf44 += 1;
+	}
+	state.object_record_allocation_count_0x4a93a2 += 1;
+
+	const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+			state,
+			result.coordinate_builder_object_record_key,
+			selected.descriptor_type_0x1c,
+			selected_coordinate.x,
+			selected_coordinate.y,
+			selected_coordinate.level,
+			selected.descriptor_projection_enabled_0x29,
+			selected.descriptor_source_cell_x_0x2c,
+			selected.descriptor_source_cell_y_0x30);
+	result.coordinate_builder_commit_appended_0x4a54a7 = commit.object_vector_appended;
+	result.coordinate_builder_object_vector_count_after = commit.object_vector_count_after;
+	if (!commit.object_vector_appended) {
+		result.blocked_reason = "0x4a9641_vtable_slot_0x04_object_commit_did_not_append";
+		return result;
+	}
+	if (!state.object_records_0xec4_ecc.empty()) {
+		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+		object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540AB0;
+		object_record.object_record_sequence_0x1c = allocated_sequence;
+		object_record.object_record_selected_index_0x20 = selected.descriptor_source_field_0x20;
+		object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
+		object_record.copied_source_record_carried = true;
+		object_record.source_record_copy = selected.source_record_copy;
+	}
+	result.selected_object_allocated_0x5044b1 = true;
+	result.selected_object_initialized_0x49ba89 = true;
+	result.selected_object_vtable_0x540ab0 = OBJECT_RECORD_VTABLE_0X540AB0;
+	result.coordinate_builder_0x4a9641_applied = true;
+	result.applied = true;
+	return result;
+}
+
 static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_selected_object_callback_0x4a9911(
 		GeneratorObjectPrivateState &state,
 		const GeneratorRelationOwnerState4a218c &owner,
@@ -9960,8 +10401,35 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_selected_obj
 	result.selected_object_allocated_0x5044b1 = true;
 	result.selected_object_initialized_0x49ba89 = true;
 	result.selected_object_vtable_0x540ab0 = OBJECT_RECORD_VTABLE_0X540AB0;
-	result.coordinate_builder_0x4a9641_invoked = true;
-	result.blocked_reason = "0x4a9911_coordinate_builder_0x4a9641_unported_after_source_backed_descriptor_selection";
+	const MineResourceSelectedObjectCallbackResult4a9911 coordinate_builder =
+			mine_resource_coordinate_builder_0x4a9641(
+					state,
+					owner,
+					selected,
+					force_flag_0x0f,
+					policy_arg_0x10,
+					rng);
+	mirror_mine_resource_coordinate_builder_fields_0x4a9641(result, coordinate_builder);
+	if (!coordinate_builder.applied) {
+		result.blocked_reason = coordinate_builder.blocked_reason.empty()
+				? "0x4a9641_coordinate_builder_not_applied"
+				: coordinate_builder.blocked_reason;
+		return result;
+	}
+	const MineResourceSelectedObjectCallbackResult4a9911 guard_followup =
+			mine_resource_guard_followup_0x4a9911_0x4a960a_0x4a5e03(
+					state,
+					owner,
+					selected,
+					coordinate_builder);
+	mirror_mine_resource_guard_followup_fields_0x4a9911(result, guard_followup);
+	if (!guard_followup.applied) {
+		result.blocked_reason = guard_followup.blocked_reason.empty()
+				? "0x4a9911_guard_followup_0x4a960a_0x4a5e03_not_applied"
+				: guard_followup.blocked_reason;
+		return result;
+	}
+	result.applied = true;
 	return result;
 }
 
@@ -10002,27 +10470,30 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 			result.required_total_count_0x4c += category_result.required_count_0x4c;
 			result.density_total_count += category_result.density_count;
 			if (category_result.required_count_0x4c > 0) {
-				category_result.attempted_callback_count_0x4a9911 = 1;
-				category_result.selected_object_callback_0x4a9911 =
-						mine_resource_selected_object_callback_0x4a9911(
-								state,
-								owner,
-								category,
-								category_result.force_flag_from_relation_byte_0x3c,
-								0,
-								rng);
-				result.callback_attempt_count_0x4a9911 += 1;
-				if (category_result.selected_object_callback_0x4a9911.applied) {
+				for (int32_t attempt = 0; attempt < category_result.required_count_0x4c; ++attempt) {
+					category_result.attempted_callback_count_0x4a9911 += 1;
+					category_result.selected_object_callback_0x4a9911 =
+							mine_resource_selected_object_callback_0x4a9911(
+									state,
+									owner,
+									category,
+									category_result.force_flag_from_relation_byte_0x3c,
+									0,
+									rng);
+					result.callback_attempt_count_0x4a9911 += 1;
+					if (!category_result.selected_object_callback_0x4a9911.applied
+							|| !category_result.selected_object_callback_0x4a9911.blocked_reason.empty()) {
+						category_result.blocked_reason =
+								category_result.selected_object_callback_0x4a9911.blocked_reason.empty()
+								? "0x4a9911_selected_object_callback_not_applied_before_mine_resource_commit"
+								: category_result.selected_object_callback_0x4a9911.blocked_reason;
+						result.blocked_reason = category_result.blocked_reason;
+						result.categories.push_back(category_result);
+						return result;
+					}
 					category_result.successful_callback_count_0x4a9911 += 1;
 					result.successful_count_0x4a9911 += 1;
 				}
-				category_result.blocked_reason =
-						category_result.selected_object_callback_0x4a9911.blocked_reason.empty()
-						? "0x4a9911_selected_object_callback_not_applied_before_mine_resource_commit"
-						: category_result.selected_object_callback_0x4a9911.blocked_reason;
-				result.blocked_reason = category_result.blocked_reason;
-				result.categories.push_back(category_result);
-				return result;
 			}
 			result.categories.push_back(category_result);
 		}
