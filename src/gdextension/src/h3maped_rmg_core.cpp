@@ -5959,6 +5959,13 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	first.object_record_pointer_4a5e03 = 0x036260c0U;
 	first.descriptor_pointer = 0x018dca40U;
 	first.arg0_4a5e03 = 0x2422U;
+	first.source_scope_known = true;
+	first.source_size_class = "medium";
+	first.source_water_mode = "land";
+	first.source_width = 72;
+	first.source_height = 72;
+	first.source_level_count = 1;
+	first.source_seed = 10U;
 	first.descriptor_type_0x1c = 54;
 	first.x = 59;
 	first.y = 47;
@@ -5984,6 +5991,13 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	second.object_record_pointer_4a5e03 = 0x03626060U;
 	second.descriptor_pointer = 0x018dc1a4U;
 	second.arg0_4a5e03 = 0x2422U;
+	second.source_scope_known = true;
+	second.source_size_class = "medium";
+	second.source_water_mode = "land";
+	second.source_width = 72;
+	second.source_height = 72;
+	second.source_level_count = 1;
+	second.source_seed = 10U;
 	second.descriptor_type_0x1c = 54;
 	second.x = 39;
 	second.y = 31;
@@ -6007,6 +6021,24 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	return { first, second };
 }
 
+std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(const std::string &size_class, const std::string &water_mode, int32_t width, int32_t height, int32_t level_count, uint32_t seed) {
+	std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_records;
+	for (const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record : recovered_supported_land_connection_fallback_records_4a7605_4a5e03()) {
+		if (!record.source_scope_known) {
+			continue;
+		}
+		if (record.source_size_class == size_class
+				&& record.source_water_mode == water_mode
+				&& record.source_width == width
+				&& record.source_height == height
+				&& record.source_level_count == level_count
+				&& record.source_seed == seed) {
+			scoped_records.push_back(record);
+		}
+	}
+	return scoped_records;
+}
+
 ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materialization_4a7605_4a5e03(GeneratorObjectPrivateState &state, const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> &records) {
 	ConnectionFallbackMaterializationResult4a7605_4a5e03 result;
 	result.source_backed = true;
@@ -6014,13 +6046,22 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 	state.connection_fallback_materialization_0x4a7605_0x4a5e03_known = true;
 	state.connection_fallback_materialization_record_count = result.input_record_count;
 	state.connection_fallback_materialization_records_0x4a7605_0x4a5e03 = records;
+	state.connection_fallback_materialization_commit_count = 0;
+	state.connection_fallback_materialization_blocked_count = 0;
+	state.connection_fallback_materialization_first_blocked_record_index = -1;
+	state.connection_fallback_materialization_first_blocked_reason.clear();
 
-	for (const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record : records) {
+	for (size_t record_index = 0; record_index < records.size(); ++record_index) {
+		const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record = records[record_index];
 		ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 record_result;
 		record_result.record = record;
 		const int64_t target_flat = cell_index(state.width, state.height, record.x, record.y, record.level);
 		if (target_flat < 0 || target_flat >= int64_t(state.generated_cell_buffer.records.size())) {
 			record_result.blocked_reason = "0x4a5e03_target_cell_out_of_bounds";
+			if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+				state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+				state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+			}
 			result.blocked_count += 1;
 			result.records.push_back(record_result);
 			continue;
@@ -6032,12 +6073,20 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 				target_record.object_reference_vector_contents_known && target_record.object_reference_count == 0;
 		if (!record_result.target_object_reference_vector_known) {
 			record_result.blocked_reason = "0x4a5e03_target_object_reference_vector_unknown";
+			if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+				state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+				state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+			}
 			result.blocked_count += 1;
 			result.records.push_back(record_result);
 			continue;
 		}
 		if (!record_result.target_object_reference_vector_empty) {
 			record_result.blocked_reason = "0x4a5e03_target_object_reference_vector_not_empty";
+			if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+				state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+				state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+			}
 			result.blocked_count += 1;
 			result.records.push_back(record_result);
 			continue;
@@ -6045,12 +6094,20 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 		if (record.expected_target_word_0x20_known) {
 			if (!target_record.word_0x20_known) {
 				record_result.blocked_reason = "0x4a5e03_target_word_0x20_unknown";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
 			}
 			if (target_record.word_0x20 != record.expected_target_word_0x20) {
 				record_result.blocked_reason = "0x4a5e03_target_word_0x20_mismatch";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
@@ -6059,12 +6116,20 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 		if (record.expected_target_word_0x24_known) {
 			if (!target_record.word_0x24_known) {
 				record_result.blocked_reason = "0x4a5e03_target_word_0x24_unknown";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
 			}
 			if (target_record.word_0x24 != record.expected_target_word_0x24) {
 				record_result.blocked_reason = "0x4a5e03_target_word_0x24_mismatch";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
@@ -6073,12 +6138,20 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 		if (record.expected_target_word_0x28_known) {
 			if (!target_record.word_0x28_known) {
 				record_result.blocked_reason = "0x4a5e03_target_word_0x28_unknown";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
 			}
 			if (target_record.word_0x28 != record.expected_target_word_0x28) {
 				record_result.blocked_reason = "0x4a5e03_target_word_0x28_mismatch";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
@@ -6087,6 +6160,10 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 		if (record.expected_owner_byte2_known) {
 			if (!target_record.word_0x20_known) {
 				record_result.blocked_reason = "0x4a5e03_target_owner_word_unknown";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
@@ -6095,6 +6172,10 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 			record_result.expected_owner_byte2_matched = owner_byte2 == record.expected_owner_byte2;
 			if (!record_result.expected_owner_byte2_matched) {
 				record_result.blocked_reason = "0x4a5e03_target_owner_byte2_mismatch";
+				if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+					state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+					state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+				}
 				result.blocked_count += 1;
 				result.records.push_back(record_result);
 				continue;
@@ -6114,6 +6195,10 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 		record_result.committed = record_result.commit_0x4a54a7.object_vector_appended;
 		if (!record_result.committed) {
 			record_result.blocked_reason = "0x4a54a7_fallback_record_commit_did_not_append_object_vector";
+			if (state.connection_fallback_materialization_first_blocked_record_index < 0) {
+				state.connection_fallback_materialization_first_blocked_record_index = int32_t(record_index);
+				state.connection_fallback_materialization_first_blocked_reason = record_result.blocked_reason;
+			}
 			result.blocked_count += 1;
 			result.records.push_back(record_result);
 			continue;
@@ -6147,11 +6232,11 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			&& state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed;
 	result.fallback_materialization_known =
 			state.connection_fallback_materialization_0x4a7605_0x4a5e03_known
-			&& state.connection_fallback_materialization_record_count > 0
 			&& state.connection_fallback_materialization_records_0x4a7605_0x4a5e03.size()
 					== size_t(state.connection_fallback_materialization_record_count);
 	result.fallback_materialization_applied =
 			result.fallback_materialization_known
+			&& state.connection_fallback_materialization_record_count > 0
 			&& state.connection_fallback_materialization_blocked_count == 0
 			&& state.connection_fallback_materialization_commit_count
 					== state.connection_fallback_materialization_record_count;
@@ -6165,7 +6250,16 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 		return result;
 	}
 	if (!result.fallback_materialization_applied) {
-		result.blocked_reason = "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied";
+		if (!state.connection_fallback_materialization_records_available_for_scope
+				|| state.connection_fallback_materialization_record_count == 0) {
+			result.blocked_reason = "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope";
+		} else if (!state.connection_fallback_materialization_first_blocked_reason.empty()) {
+			result.blocked_reason = "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_blocked_at_record_"
+					+ std::to_string(state.connection_fallback_materialization_first_blocked_record_index)
+					+ "_" + state.connection_fallback_materialization_first_blocked_reason;
+		} else {
+			result.blocked_reason = "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied";
+		}
 		return result;
 	}
 
@@ -8802,7 +8896,7 @@ static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(Gener
 	}
 }
 
-static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateState &state) {
+static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed) {
 	state.endpoint_projection_records_c8_cc.clear();
 	bool projection_vectors_known = state.relation_owner_records_10e4_10e8_partial_known
 			&& state.relation_record_missing_endpoint_count_10e4_10e8 == 0;
@@ -8884,11 +8978,30 @@ static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateStat
 	state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed = false;
 	state.connection_materialization_caller_prep_d014.remaining_live_materialization_blocker =
 			"source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_payload_commit_helper_port";
+	state.connection_fallback_materialization_scope_known = true;
+	state.connection_fallback_materialization_scope_size_class = size_class;
+	state.connection_fallback_materialization_scope_water_mode = water_mode;
+	state.connection_fallback_materialization_scope_width = state.width;
+	state.connection_fallback_materialization_scope_height = state.height;
+	state.connection_fallback_materialization_scope_level_count = state.level_count;
+	state.connection_fallback_materialization_scope_seed = seed;
+	state.connection_fallback_materialization_records_0x4a7605_0x4a5e03 =
+			recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(
+					size_class,
+					water_mode,
+					state.width,
+					state.height,
+					state.level_count,
+					seed);
+	state.connection_fallback_materialization_records_available_for_scope =
+			!state.connection_fallback_materialization_records_0x4a7605_0x4a5e03.empty();
 	state.connection_fallback_materialization_0x4a7605_0x4a5e03_known = true;
 	state.connection_fallback_materialization_record_count =
-			int32_t(recovered_supported_land_connection_fallback_records_4a7605_4a5e03().size());
-	state.connection_fallback_materialization_records_0x4a7605_0x4a5e03 =
-			recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
+			int32_t(state.connection_fallback_materialization_records_0x4a7605_0x4a5e03.size());
+	state.connection_fallback_materialization_commit_count = 0;
+	state.connection_fallback_materialization_blocked_count = 0;
+	state.connection_fallback_materialization_first_blocked_record_index = -1;
+	state.connection_fallback_materialization_first_blocked_reason.clear();
 }
 
 static void apply_relation_normalization_full_grid_reset_0x4a5767(GeneratorObjectPrivateState &state) {
@@ -9207,7 +9320,7 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 	}
 }
 
-GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
+GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const std::string &size_class, const std::string &water_mode, uint32_t seed, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	GeneratorObjectPrivateState state;
 	state.width = width;
 	state.height = height;
@@ -9466,7 +9579,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 					state.reward_guard_source_stream_0x4aab7e.blocked_reason;
 		}
 	}
-	apply_endpoint_materialization_state_d014(state);
+	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed);
 	connection_fallback_materialization_4a7605_4a5e03(
 			state,
 			state.connection_fallback_materialization_records_0x4a7605_0x4a5e03);
@@ -9603,6 +9716,9 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					config.width,
 					config.height,
 					config.level_count,
+					config.size_class,
+					config.water_mode,
+					config.seed,
 					result.template_selection_0x4ac552,
 					result.coordinate_owner_grid_0x4a218c);
 	if (!result.generator_object_private_state.generated_cell_buffer_owned) {

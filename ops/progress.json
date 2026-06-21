@@ -16,35 +16,36 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Advanced the single shared native H3MapEd workflow to an owned 0x4a79a3 connection-tail prestate check after reward/guard source-stream materialization and 0x49eb8d flagged-cell pass-1. The workflow now stops at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied because the exact recovered fallback prestate is not present in the live generated-cell/object state.",
+      "notes": "Advanced the single shared native H3MapEd workflow to an owned 0x4a79a3 connection-tail prestate check after reward/guard source-stream materialization and 0x49eb8d flagged-cell pass-1, and constrained recovered 0x4a7605 -> 0x4a5e03 fallback records to their proven Medium seed-10 scope. Small seed 11 now blocks because no source-backed fallback records exist for that scope; Medium seed 10 now reaches the records and blocks on target word 0x20 prestate.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T11:58:40Z",
-      "latestEvidenceId": "native-rmg-connection-tail-boundary-20260621",
-      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
-      "latestFinding": "Native RMG no-Godot workflow now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1, enters an owned 0x4a79a3 connection-tail prestate check, and exits at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied with final_writeout_complete=false. h3maped_rmg_core_selftest proves the current phase is connection_road_river and the blocker is exact fallback prestate, not the previous generic post-0x49eb8d unported marker. This is implementation progress inside the chain, not parity.",
-      "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
+      "updatedAt": "2026-06-21T12:15:35Z",
+      "latestEvidenceId": "native-rmg-scoped-fallback-boundary-20260621",
+      "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback blockers: recover or port source-scoped 0x4a7605 -> 0x4a5e03 fallback record feed for supported scopes, port the upstream generated-cell target-word prestate that makes the recovered Medium seed-10 fallback commits apply, then continue through the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout before enabling map output.",
+      "latestFinding": "Native RMG no-Godot workflow now scopes recovered 0x4a7605 -> 0x4a5e03 fallback records to the exact source case that produced them. Small seed 11 exits at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope; Medium seed 10 exits at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_blocked_at_record_0_0x4a5e03_target_word_0x20_mismatch. This is implementation progress inside the chain, not parity.",
+      "blocker": "The shared workflow stops inside 0x4a79a3 because source-scoped fallback records are incomplete for Small and the recovered Medium seed-10 fallback record fails against current live generated-cell word 0x20 prestate. Final tile/object/header writeout remains unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-connection-tail-boundary-20260621",
+        "id": "native-rmg-scoped-fallback-boundary-20260621",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Connection Tail Boundary",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now completes reward/guard source-stream materialization, invokes recovered 0x49eb8d flagged-cell pass-1 from the single workflow owner, enters an owned 0x4a79a3 connection-tail prestate check, and blocks at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; this is not parity and not final map output.",
-        "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback prestate blocker: port the missing upstream source-order state so the recovered 0x4a7605 -> 0x4a5e03 -> 0x4a54a7 fallback commits apply, then continue through the recovered 0x4a79a3/0x4a61bc/0x4a696b/0x4a7605/0x4a7312 tail, 0x4ab52a road/river/object-adjacency replay, and final writeout before enabling map output.",
-        "blocker": "The shared workflow now stops inside 0x4a79a3 because recovered 0x4a7605 -> 0x4a5e03 fallback materialization records are known but do not apply against the current live generated-cell/object prestate. Final tile/object/header writeout remains unowned.",
+        "title": "Scoped Connection Fallback Boundary",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now scopes recovered 0x4a7605 -> 0x4a5e03 fallback records to their proven Medium seed-10 source case. Small seed 11 blocks on missing scoped fallback records; Medium seed 10 blocks on target word 0x20 prestate for recovered record 0. This is not parity and not final map output.",
+        "remainingWork": "Continue the single shared workflow from the exact 0x4a79a3 fallback blockers: recover or port source-scoped fallback record feed for supported scopes, port the upstream generated-cell target-word prestate that makes the recovered Medium fallback commits apply, then continue through the recovered 0x4a79a3 tail, 0x4ab52a road/river/object-adjacency replay, and final writeout before enabling map output.",
+        "blocker": "The shared workflow stops inside 0x4a79a3 because source-scoped fallback records are incomplete for Small and the recovered Medium seed-10 fallback record fails against current live generated-cell word 0x20 prestate. Final tile/object/header writeout remains unowned.",
         "artifacts": [],
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
           "./bin/h3maped_rmg_core_selftest (passed)",
+          "./bin/rmg_native_batch_export_cli --phase-snapshot-only --out .artifacts/tmp_workflow_scope_probe --controlled-case small_3p_seed11:small:3:11:land:1:1:2:0 --controlled-case medium_2p_seed10:medium:2:10:land:1:1:2:0 --print-manifest || true (blocked as expected: Small missing scoped fallback records; Medium target word 0x20 mismatch)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)",
           "python3 tests/validate_repo.py (passed)"
         ],
-        "updatedAt": "2026-06-21T11:33:56Z"
+        "updatedAt": "2026-06-21T12:15:35Z"
       }
     },
     {
@@ -12920,14 +12921,14 @@
       "blocker": "Live source-relation/wrapper caller feed and true runtime 0x4aa603 inputs are still not wired into the now-ported explicit 0x4aa9b7 -> 0x4aa3e9 reward/guard helper."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, recovered 0x49eb8d flagged-cell pass-1, and an owned 0x4a79a3 connection-tail prestate check. The current executable owner-path blocker is 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied; final writeout remains disabled.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now advances the single no-Godot workflow through reward/guard source-stream materialization, recovered 0x49eb8d flagged-cell pass-1, and an owned 0x4a79a3 connection-tail prestate check with source-scoped fallback records. Small seed 11 blocks on missing scoped 0x4a7605 records; Medium seed 10 blocks on recovered fallback record 0 target word 0x20 prestate. Final writeout remains disabled.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Advanced the single shared native H3MapEd workflow to an owned 0x4a79a3 connection-tail prestate check after reward/guard source-stream materialization and 0x49eb8d flagged-cell pass-1. The workflow now stops at 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_not_applied because the exact recovered fallback prestate is not present in the live generated-cell/object state.",
+  "currentSliceNotes": "Advanced the single shared native H3MapEd workflow to an owned 0x4a79a3 connection-tail prestate check after reward/guard source-stream materialization and 0x49eb8d flagged-cell pass-1, and constrained recovered 0x4a7605 -> 0x4a5e03 fallback records to their proven Medium seed-10 scope. Small seed 11 now blocks because no scoped fallback records are source-backed; Medium seed 10 now blocks on target word 0x20 prestate for recovered record 0.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-21T11:58:40Z",
+  "currentSliceUpdatedAt": "2026-06-21T12:15:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
