@@ -4999,7 +4999,7 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	return result;
 }
 
-RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng) {
+RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng) {
 	RewardGuardSelectedObjectResult4aa1db result;
 	result.invoked = true;
 	result.policy_word_0x10 = policy_word_0x10;
@@ -5037,7 +5037,107 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 		result.blocked_reason = "0x4aa1db_selected_descriptor_state_0x94_0x95_pending_before_0x4a5c07_0x49cf34_attach";
 		return result;
 	}
-	result.blocked_reason = "0x4aa1db_0x4a5c07_selected_object_create_and_0x49cf34_attach_not_yet_ported_for_live_descriptor_vector";
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		result.blocked_reason = "0x4aa1db_0x4a5c07_object_record_key_allocator_missing";
+		return result;
+	}
+	if (!state.object_record_sequence_allocator_0xf44_known) {
+		result.blocked_reason = "0x4aa1db_0x4a5c07_object_sequence_allocator_0xf44_missing";
+		return result;
+	}
+
+	const SourceObjectRecord0x4c &selected_source = result.selector_0x4a9f1c.selected_source_record_copy;
+	std::vector<SourceObjectMaskPoint490f3f> body_points =
+			source_object_text_mask_points_0x490f3f(selected_source.passability_mask, false);
+	if (body_points.empty()) {
+		body_points.push_back(SourceObjectMaskPoint490f3f { 0, 0 });
+		result.selected_object_body_anchor_fallback_0x4a5c07 = true;
+	}
+
+	result.selected_object_record_key_known_0x4a5c07 = true;
+	result.selected_object_record_key_0x4a5c07 = state.next_native_object_record_key_0x4a93a2;
+	state.next_native_object_record_key_0x4a93a2 += 1U;
+	state.object_record_allocation_count_0x4a93a2 += 1;
+	result.selected_object_sequence_0x1c_0x4a5c07 = state.object_record_sequence_allocator_0xf44;
+	state.object_record_sequence_allocator_0xf44 += 1;
+	result.selected_object_descriptor_type_0x1c = selected_source.type_id_0x1c;
+	result.selected_object_selected_value_0x20 = selected_value_0x14;
+	result.selected_object_enabled_word_0x24 = 3U;
+	result.selected_object_record_allocated_0x4a5c07 = true;
+	result.selected_object_vtable_0x00_known = true;
+	result.selected_object_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A88;
+
+	if (!wrapper.selected_member_vector_0x2c_0x30_known) {
+		result.blocked_reason = "0x4aa1db_wrapper_selected_member_vector_0x2c_0x30_missing_before_initial_append";
+		return result;
+	}
+	if (!wrapper.generated_cell_grid_0x08_0x10_known
+			|| wrapper.generated_cell_grid_0x08_0x10.width <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.height <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.level_count <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.records.empty()) {
+		result.blocked_reason = "0x4aa1db_wrapper_generated_cell_grid_missing_before_initial_stamp";
+		return result;
+	}
+
+	RewardGuardWrapperMember4aa3e9 member;
+	member.object_record_key = result.selected_object_record_key_0x4a5c07;
+	member.object_record_key_known = true;
+	member.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A88;
+	member.descriptor_type_0x1c = selected_source.type_id_0x1c;
+	member.descriptor_body_offsets_0x49a6f9_known = true;
+	member.descriptor_body_offsets_0x49a6f9.reserve(body_points.size());
+	for (const SourceObjectMaskPoint490f3f &point : body_points) {
+		member.descriptor_body_offsets_0x49a6f9.push_back(CoordinateCandidate4a17f5 { point.dx, point.dy, 0 });
+	}
+
+	const int32_t descriptor_width = selected_source.descriptor_width_0x34 > 0 ? selected_source.descriptor_width_0x34 : 1;
+	const int32_t descriptor_height = selected_source.descriptor_height_0x38 > 0 ? selected_source.descriptor_height_0x38 : 1;
+	member.relative_x_0x08 = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.width + descriptor_width - 1) / 2);
+	member.relative_y_0x0c = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.height + descriptor_height - 1) / 2);
+	member.relative_level_0x10 = 0;
+	result.initial_center_coordinate_known = true;
+	result.initial_center_x = member.relative_x_0x08;
+	result.initial_center_y = member.relative_y_0x0c;
+	result.initial_center_level = member.relative_level_0x10;
+	wrapper.selected_members_0x2c_0x30.push_back(member);
+	result.initial_member_appended_0x40bb26 = true;
+	result.initial_member_count_after = int32_t(wrapper.selected_members_0x2c_0x30.size());
+
+	for (const CoordinateCandidate4a17f5 &offset : member.descriptor_body_offsets_0x49a6f9) {
+		const int64_t flat = cell_index(
+				wrapper.generated_cell_grid_0x08_0x10.width,
+				wrapper.generated_cell_grid_0x08_0x10.height,
+				member.relative_x_0x08 + offset.x,
+				member.relative_y_0x0c + offset.y,
+				member.relative_level_0x10 + offset.level);
+		if (flat < 0 || flat >= int64_t(wrapper.generated_cell_grid_0x08_0x10.records.size())) {
+			continue;
+		}
+		GeneratedCellRecord0x30 &cell = wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
+		const bool action_stamped = generated_cell_49abd6_action_stamp(cell);
+		const bool occupied_stamped = generated_cell_49a932(cell, true);
+		if (action_stamped || occupied_stamped) {
+			result.initial_body_stamp_count_0x49abd6 += 1;
+		}
+	}
+	if (result.initial_body_stamp_count_0x49abd6 <= 0) {
+		result.blocked_reason = "0x4aa1db_initial_selected_object_body_stamp_empty";
+		return result;
+	}
+
+	result.bounds_refresh_invoked_0x49d6e0 = true;
+	const RewardGuardWrapperRefreshResult49d6e0 bounds_refresh =
+			reward_guard_wrapper_refresh_bounds_0x49d6e0(wrapper);
+	result.bounds_refresh_applied_0x49d6e0 = bounds_refresh.applied;
+	result.bounds_refresh_blocked_reason_0x49d6e0 = bounds_refresh.blocked_reason;
+	if (!bounds_refresh.applied) {
+		result.blocked_reason = bounds_refresh.blocked_reason.empty()
+				? "0x4aa1db_0x49d6e0_initial_wrapper_bounds_refresh_failed"
+				: bounds_refresh.blocked_reason;
+		return result;
+	}
+	result.applied = true;
 	return result;
 }
 
@@ -5072,6 +5172,7 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 	result.selected_object_helper_invoked_0x4aa1db = true;
 	result.selected_object_0x4aa1db = reward_guard_selected_object_create_shell_0x4aa1db(
 			state,
+			wrapper,
 			selector,
 			policy_word_0x10,
 			selected_value,

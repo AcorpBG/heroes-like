@@ -4020,7 +4020,7 @@ int main() {
 			return 1;
 		}
 		const std::string current_reward_guard_blocker =
-				"0x4aa1db_0x4a5c07_selected_object_create_and_0x49cf34_attach_not_yet_ported_for_live_descriptor_vector";
+				"0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7";
 		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
 			return 1;
@@ -4085,8 +4085,9 @@ int main() {
 						&& source_stream.active_lane_count > 0
 						&& source_stream.selected_lane_count > 0
 						&& !source_stream.attempts.empty()
-						&& source_stream.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not carry recovered 0x4aab7e source bands and terrain policy into selected-create")) {
+						&& source_stream.attempts.size() == size_t(18)
+						&& source_stream.blocked_reason.empty(),
+					"entry-to-writeout workflow did not carry recovered 0x4aab7e source bands and terrain policy through selected-object materialization attempts")) {
 			return 1;
 		}
 		if (!require(workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
@@ -4101,23 +4102,39 @@ int main() {
 						&& materialization_driver.selected_object_0x4aa1db.generator_descriptor_vector_0x398_0x39c_known
 						&& materialization_driver.selected_object_0x4aa1db.selected_descriptor_state_0x94_0x95_known
 						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_record_known_0x4a9e40
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_catalog_index_0x49da08 == 909
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 == 640
-						&& materialization_driver.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not advance from 0x4aab7e through 0x4aa354/0x4aa1db/0x4a9f1c/0x4a9e40 before the current selected-object allocation blocker")) {
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_catalog_index_0x49da08 == 1268
+						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 == 785
+						&& materialization_driver.selected_object_0x4aa1db.applied
+						&& materialization_driver.selected_object_0x4aa1db.selected_object_record_allocated_0x4a5c07
+						&& materialization_driver.selected_object_0x4aa1db.selected_object_record_key_known_0x4a5c07
+						&& materialization_driver.selected_object_0x4aa1db.selected_object_record_key_0x4a5c07 == 144U
+						&& materialization_driver.selected_object_0x4aa1db.selected_object_sequence_0x1c_0x4a5c07 == 144
+						&& materialization_driver.selected_object_0x4aa1db.selected_object_vtable_0x00 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A88
+						&& materialization_driver.selected_object_0x4aa1db.selected_object_body_anchor_fallback_0x4a5c07
+						&& materialization_driver.selected_object_0x4aa1db.initial_member_appended_0x40bb26
+						&& materialization_driver.selected_object_0x4aa1db.initial_member_count_after == 1
+						&& materialization_driver.selected_object_0x4aa1db.initial_center_coordinate_known
+						&& materialization_driver.selected_object_0x4aa1db.initial_center_x == 8
+						&& materialization_driver.selected_object_0x4aa1db.initial_center_y == 10
+						&& materialization_driver.selected_object_0x4aa1db.initial_body_stamp_count_0x49abd6 == 1
+						&& materialization_driver.selected_object_0x4aa1db.bounds_refresh_applied_0x49d6e0
+						&& materialization_driver.applied
+						&& materialization_driver.blocked_reason.empty(),
+					"entry-to-writeout workflow did not advance from 0x4aab7e through 0x4aa354/0x4aa1db/0x4a9f1c/0x4a9e40/0x4a5c07 initial wrapper seeding before the current source-triplet blocker")) {
 			return 1;
 		}
 		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
 				workflow_generator_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
 		if (!require(!projection_chain.invoked
 						&& !projection_chain.projection_object_input_known
+						&& projection_chain.blocked_reason == current_reward_guard_blocker
 						&& workflow_generator_state.reward_guard_relation_priority_live_replay_blocker == current_reward_guard_blocker
 						&& workflow_generator_state.reward_guard_relation_priority_0x4ad7f7.blocked_reason == current_reward_guard_blocker,
 					"entry-to-writeout workflow invoked 0x49c0a6 before selected-create produced a source-backed projection object")) {
 			return 1;
 		}
-		if (!require(materialization_driver.selected_object_0x4aa1db.blocked_reason == current_reward_guard_blocker,
-					"entry-to-writeout workflow did not surface the current selected-object allocation/attach blocker after 0x4a9f1c descriptor selection")) {
+		if (!require(materialization_driver.selected_object_0x4aa1db.blocked_reason.empty(),
+					"entry-to-writeout workflow did not complete selected-object allocation and initial wrapper seeding before the current source-stream blocker")) {
 			return 1;
 		}
 	}
