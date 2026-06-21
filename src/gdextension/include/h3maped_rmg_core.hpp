@@ -2006,6 +2006,16 @@ struct RewardGuardMaterializationDriverResult4aa354 {
 	bool selected_object_attach_invoked_0x49cf34 = false;
 	bool selected_object_attach_applied_0x49cf34 = false;
 	bool selected_object_attach_initial_candidate_refresh_0x49d7c3_applied = false;
+	bool selected_object_attach_failure_cleanup_invoked_0x49cebd = false;
+	bool selected_object_attach_failure_cleanup_applied_0x49cebd = false;
+	int32_t selected_object_attach_failure_cleanup_cell_count_0x49cebd = 0;
+	int32_t selected_object_attach_existing_member_probe_count_0x49cf34 = 0;
+	int32_t selected_object_attach_existing_member_out_of_bounds_count_0x49cf34 = 0;
+	int32_t selected_object_attach_existing_member_bit22_reject_count_0x49cf34 = 0;
+	int32_t selected_object_attach_existing_member_invalid_reject_count_0x49a1d8 = 0;
+	int32_t selected_object_attach_existing_member_word2c_reject_count_0x49aa63 = 0;
+	int32_t selected_object_attach_existing_member_candidate_set_count_0x49aa63 = 0;
+	int32_t selected_object_attach_existing_member_neighbor_bit27_clear_count_0x49a932 = 0;
 	int32_t selected_object_attach_candidate_count_before_filter_0x49cf34 = 0;
 	int32_t selected_object_attach_bit26_clear_candidate_erase_count_0x4afaea = 0;
 	int32_t selected_object_attach_filter_reject_count_0x49d2e0 = 0;
@@ -2059,6 +2069,9 @@ struct RewardGuardSourceStreamAttempt4aab7e {
 struct RewardGuardSourceStreamResult4aab7e {
 	bool invoked = false;
 	bool applied = false;
+	bool wrapper_construct_invoked_0x49ce04 = false;
+	bool wrapper_construct_applied_0x49ce04 = false;
+	int32_t wrapper_construct_reset_cell_count_0x49ce64 = 0;
 	bool source_triplet_known = false;
 	bool source_object_kind_0x0c_known = false;
 	int32_t source_object_kind_0x0c = 0;
@@ -2071,6 +2084,7 @@ struct RewardGuardSourceStreamResult4aab7e {
 	int32_t selected_lane_count = 0;
 	int32_t materialization_attempt_count = 0;
 	int32_t successful_coordinate_scan_count = 0;
+	int32_t wrapper_cleanup_count_0x49cebd = 0;
 	std::vector<RewardGuardSourceStreamLane4aab7e> lanes;
 	std::vector<RewardGuardSourceStreamAttempt4aab7e> attempts;
 	std::string blocked_reason;
@@ -2640,6 +2654,10 @@ struct RewardGuardAttachResult49cf34 {
 	bool initial_candidate_refresh_0x49d7c3_applied = false;
 	bool initial_candidate_refresh_returned_existing_vector_0x49d7c3 = false;
 	int32_t existing_member_probe_count_0x49cf34 = 0;
+	int32_t existing_member_probe_out_of_bounds_count_0x49cf34 = 0;
+	int32_t existing_member_probe_bit22_reject_count_0x49cf34 = 0;
+	int32_t existing_member_probe_invalid_reject_count_0x49a1d8 = 0;
+	int32_t existing_member_probe_word2c_reject_count_0x49aa63 = 0;
 	int32_t existing_member_candidate_set_count_0x49aa63 = 0;
 	int32_t existing_member_neighbor_bit27_clear_count_0x49a932 = 0;
 	int32_t candidate_count_before_filter = 0;
@@ -2656,6 +2674,9 @@ struct RewardGuardAttachResult49cf34 {
 	int32_t selected_member_count_after = 0;
 	bool stamped_member_0x49abd6 = false;
 	int32_t body_stamp_count_0x49abd6 = 0;
+	bool primary_bit27_descriptor_relative_base_known_0x49d179_0x49d184 = false;
+	int32_t primary_bit27_descriptor_relative_x_0x49d184 = 0;
+	int32_t primary_bit27_descriptor_relative_y_0x49d17f = 0;
 	int32_t primary_bit27_write_count_0x49d1ed = 0;
 	int32_t neighbor_bit27_write_count_0x49d270 = 0;
 	bool attached_flag_set_0x48 = false;

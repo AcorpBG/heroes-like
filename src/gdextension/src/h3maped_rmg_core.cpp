@@ -1518,8 +1518,8 @@ static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_prima
 	if (descriptor_width <= 0 || descriptor_height <= 0) {
 		return offsets;
 	}
-	for (int32_t row = 0; row < descriptor_height && row < 6; ++row) {
-		for (int32_t col = 0; col < descriptor_width && col < 8; ++col) {
+	for (int32_t row = 0; row < descriptor_height; ++row) {
+		for (int32_t col = 0; col < descriptor_width; ++col) {
 			if (!source_object_descriptor_mask_bit_0x4268eb(record, col, row)) {
 				continue;
 			}
@@ -4899,8 +4899,8 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 		return result;
 	}
 
-	for (int32_t row = 0; row < descriptor_height && row < 6; ++row) {
-		for (int32_t col = 0; col < descriptor_width && col < 8; ++col) {
+	for (int32_t row = 0; row < descriptor_height; ++row) {
+		for (int32_t col = 0; col < descriptor_width; ++col) {
 			const bool primary_mask = source_object_descriptor_mask_bit_0x4268eb(source, col, row);
 			const bool secondary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
 			if (!primary_mask && secondary_mask) {
@@ -4937,7 +4937,8 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 					result.blocked_reason = "0x49a6f9_footprint_existing_bit26_rejected";
 					return result;
 				}
-			} else if (source_object_secondary_mask_terrain_rejects_0x49a6f9(source, cell)) {
+			}
+			if (!secondary_mask && source_object_secondary_mask_terrain_rejects_0x49a6f9(source, cell)) {
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_secondary_mask_terrain_rejected";
 				return result;
@@ -5099,14 +5100,26 @@ static bool reward_guard_wrapper_contour_passable_0x49d7c3(const RewardGuardWrap
 	return !bit22 && generated_cell_49a1d8_valid_record(record) && bit27;
 }
 
-RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04() {
+static RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_reset_existing_0x49ce64(RewardGuardWrapperState4aa3e9 &wrapper) {
 	RewardGuardWrapperConstructResult49ce04 result;
-	result.width_0x0c = 0x10;
-	result.height_0x10 = 0x10;
-	result.level_count_0x14 = 1;
-	RewardGuardWrapperState4aa3e9 wrapper;
-	wrapper.generated_cell_grid_0x08_0x10_known = true;
-	wrapper.generated_cell_grid_0x08_0x10 = generated_cell_record_grid_reset_0x49a072(result.width_0x0c, result.height_0x10, result.level_count_0x14);
+	result.width_0x0c = wrapper.generated_cell_grid_0x08_0x10.width;
+	result.height_0x10 = wrapper.generated_cell_grid_0x08_0x10.height;
+	result.level_count_0x14 = wrapper.generated_cell_grid_0x08_0x10.level_count;
+	if (!wrapper.generated_cell_grid_0x08_0x10_known
+			|| result.width_0x0c <= 0
+			|| result.height_0x10 <= 0
+			|| result.level_count_0x14 <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.records.empty()) {
+		result.blocked_reason = "0x49ce64_wrapper_grid_missing_before_reset";
+		return result;
+	}
+	wrapper.generated_cell_grid_0x08_0x10 =
+			generated_cell_record_grid_reset_0x49a072(result.width_0x0c, result.height_0x10, result.level_count_0x14);
+	wrapper.generated_cell_grid_0x08_0x10_known = !wrapper.generated_cell_grid_0x08_0x10.records.empty();
+	if (!wrapper.generated_cell_grid_0x08_0x10_known) {
+		result.blocked_reason = "0x49ce64_wrapper_grid_0x49a072_reset_failed";
+		return result;
+	}
 	wrapper.selected_member_vector_0x2c_0x30_known = true;
 	wrapper.selected_members_0x2c_0x30.clear();
 	wrapper.candidate_coordinate_vector_0x3c_0x40_known = true;
@@ -5114,6 +5127,7 @@ RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04(
 	wrapper.attached_flag_0x48_known = true;
 	wrapper.attached_flag_0x48 = false;
 	wrapper.attached_relative_coordinate_0x4c_0x50_known = false;
+	wrapper.selected_coordinate_0x54_0x5c_known = false;
 	wrapper.final_projection_mark_byte_0x60_known = true;
 	wrapper.final_projection_mark_byte_0x60 = false;
 	for (GeneratedCellRecord0x30 &record : wrapper.generated_cell_grid_0x08_0x10.records) {
@@ -5127,9 +5141,30 @@ RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04(
 		result.reset_cell_count_0x49ce64 += 1;
 	}
 	result.wrapper = wrapper;
-	result.applied = !wrapper.generated_cell_grid_0x08_0x10.records.empty();
+	result.applied = true;
+	return result;
+}
+
+static RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_cleanup_0x49cebd(RewardGuardWrapperState4aa3e9 &wrapper) {
+	return reward_guard_wrapper_reset_existing_0x49ce64(wrapper);
+}
+
+RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04() {
+	RewardGuardWrapperConstructResult49ce04 result;
+	result.width_0x0c = 0x10;
+	result.height_0x10 = 0x10;
+	result.level_count_0x14 = 1;
+	RewardGuardWrapperState4aa3e9 wrapper;
+	wrapper.generated_cell_grid_0x08_0x10_known = true;
+	wrapper.generated_cell_grid_0x08_0x10 = generated_cell_record_grid_reset_0x49a072(result.width_0x0c, result.height_0x10, result.level_count_0x14);
+	const RewardGuardWrapperConstructResult49ce04 reset = reward_guard_wrapper_reset_existing_0x49ce64(wrapper);
+	result.reset_cell_count_0x49ce64 = reset.reset_cell_count_0x49ce64;
+	result.wrapper = wrapper;
+	result.applied = reset.applied && !wrapper.generated_cell_grid_0x08_0x10.records.empty();
 	if (!result.applied) {
-		result.blocked_reason = "0x49ce04_wrapper_grid_allocation_failed";
+		result.blocked_reason = reset.blocked_reason.empty()
+				? "0x49ce04_wrapper_grid_allocation_failed"
+				: reset.blocked_reason;
 	}
 	return result;
 }
@@ -5173,9 +5208,6 @@ RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6
 			max_y = std::max(max_y, y + 1);
 			result.included_cell_count += 1;
 		}
-	}
-	if (result.included_cell_count == 0) {
-		return finish_blocked("0x49d6e0_no_boundary_or_control_cells_for_bounds");
 	}
 	wrapper.wrapper_bounds_0x18_0x24_known = true;
 	wrapper.bound_left_0x18 = min_x;
@@ -5365,14 +5397,22 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 			const int32_t probe_level = selected_member.relative_level_0x10;
 			GeneratedCellRecord0x30 *probe_record = reward_guard_wrapper_cell_mutable_0x49cf34(wrapper, probe_x, probe_y, probe_level);
 			if (probe_record == nullptr || !probe_record->word_0x28_known) {
+				result.existing_member_probe_out_of_bounds_count_0x49cf34 += 1;
 				continue;
 			}
 			const bool probe_bit22 = (probe_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
-			if (probe_bit22 || !generated_cell_49a1d8_valid_record(*probe_record)) {
+			if (probe_bit22) {
+				result.existing_member_probe_bit22_reject_count_0x49cf34 += 1;
+				continue;
+			}
+			if (!generated_cell_49a1d8_valid_record(*probe_record)) {
+				result.existing_member_probe_invalid_reject_count_0x49a1d8 += 1;
 				continue;
 			}
 			if (generated_cell_49aa63(*probe_record, true)) {
 				result.existing_member_candidate_set_count_0x49aa63 += 1;
+			} else {
+				result.existing_member_probe_word2c_reject_count_0x49aa63 += 1;
 			}
 			for (int32_t y = std::max<int32_t>(0, probe_y - 1); y <= std::min<int32_t>(wrapper.generated_cell_grid_0x08_0x10.height - 1, probe_y + 1); ++y) {
 				for (int32_t x = std::max<int32_t>(0, probe_x - 1); x <= std::min<int32_t>(wrapper.generated_cell_grid_0x08_0x10.width - 1, probe_x + 1); ++x) {
@@ -5445,16 +5485,45 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 		return finish_blocked("0x49cf34_0x49d69d_0x49abd6_member_body_stamp_empty");
 	}
 
-	const int32_t direction_count = object_metadata_flag_0x598300(placed_member.descriptor_type_0x1c, 1) ? 8 : 5;
-	for (int32_t direction_index = 0; direction_index < direction_count; ++direction_index) {
-		const int32_t x = placed_member.relative_x_0x08 + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
-		const int32_t y = placed_member.relative_y_0x0c + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
+	const int32_t descriptor_relative_x = placed_member.relative_x_0x08 - placed_member.descriptor_offset_x_0x2c;
+	const int32_t descriptor_relative_y = placed_member.relative_y_0x0c - placed_member.descriptor_offset_y_0x30;
+	result.primary_bit27_descriptor_relative_base_known_0x49d179_0x49d184 = true;
+	result.primary_bit27_descriptor_relative_x_0x49d184 = descriptor_relative_x;
+	result.primary_bit27_descriptor_relative_y_0x49d17f = descriptor_relative_y;
+	for (int32_t direction_index = 0; direction_index < int32_t(DIRECTION_TABLE_0X5A2658.size()); ++direction_index) {
+		const int32_t x = descriptor_relative_x + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
+		const int32_t y = descriptor_relative_y + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
 		GeneratedCellRecord0x30 *record = reward_guard_wrapper_cell_mutable_0x49cf34(wrapper, x, y, placed_member.relative_level_0x10);
 		if (record == nullptr || !record->word_0x28_known || !generated_cell_49a1d8_valid_record(*record)) {
 			continue;
 		}
+		if (placed_member.descriptor_type_0x1c == 9
+				&& (record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+			continue;
+		}
 		if (generated_cell_49a932(*record, true)) {
 			result.primary_bit27_write_count_0x49d1ed += 1;
+		}
+		const int32_t neighbor_start_direction =
+				(direction_index & 1) != 0 ? ((direction_index - 1) & 7) : direction_index;
+		const int32_t neighbor_direction_count = (direction_index & 1) != 0 ? 3 : 1;
+		for (int32_t neighbor_step = 0; neighbor_step < neighbor_direction_count; ++neighbor_step) {
+			const int32_t neighbor_direction_index = (neighbor_start_direction + neighbor_step) & 7;
+			const int32_t neighbor_x = x + DIRECTION_TABLE_0X5A2658[size_t(neighbor_direction_index)][0];
+			const int32_t neighbor_y = y + DIRECTION_TABLE_0X5A2658[size_t(neighbor_direction_index)][1];
+			GeneratedCellRecord0x30 *neighbor_record =
+					reward_guard_wrapper_cell_mutable_0x49cf34(wrapper, neighbor_x, neighbor_y, placed_member.relative_level_0x10);
+			if (neighbor_record == nullptr || !neighbor_record->word_0x28_known) {
+				continue;
+			}
+			if ((neighbor_record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U
+					|| (neighbor_record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+					|| !generated_cell_49a1d8_valid_record(*neighbor_record)) {
+				continue;
+			}
+			if (generated_cell_49a932(*neighbor_record, true)) {
+				result.neighbor_bit27_write_count_0x49d270 += 1;
+			}
 		}
 	}
 
@@ -5612,8 +5681,8 @@ static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4a
 	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 8;
 	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 6;
 	int32_t stamp_count = 0;
-	for (int32_t row = 0; row < descriptor_height && row < 6; ++row) {
-		for (int32_t col = 0; col < descriptor_width && col < 8; ++col) {
+	for (int32_t row = 0; row < descriptor_height; ++row) {
+		for (int32_t col = 0; col < descriptor_width; ++col) {
 			const int64_t flat = cell_index(
 					wrapper.generated_cell_grid_0x08_0x10.width,
 					wrapper.generated_cell_grid_0x08_0x10.height,
@@ -5625,18 +5694,17 @@ static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4a
 			}
 			GeneratedCellRecord0x30 &cell = wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
 			bool stamped = false;
-			if (source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
-				const uint8_t before_byte_0x2a = cell.byte_0x2a;
-				const uint32_t before_word_0x28 = cell.word_0x28;
-				cell.byte_0x2a_known = true;
-				cell.byte_0x2a_known_mask |= 0x40U;
-				cell.byte_0x2a |= 0x40U;
-				if (cell.word_0x28_known) {
+				if (source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
+					const uint8_t before_byte_0x2a = cell.byte_0x2a;
+					const uint32_t before_word_0x28 = cell.word_0x28;
+					cell.byte_0x2a_known = true;
+					cell.byte_0x2a_known_mask |= 0x40U;
+					cell.byte_0x2a |= 0x40U;
+					cell.word_0x28_known = true;
 					cell.word_0x28 |= CELL_ACTION_CONTROL_BIT_22;
-				}
-				const bool occupied_stamped = generated_cell_49a932(cell, true);
-				const bool reference_stamped = member.object_record_key_known
-						&& generated_cell_append_object_reference_0x40bb26(cell, member.object_record_key);
+					const bool occupied_stamped = generated_cell_49a932(cell, true);
+					const bool reference_stamped = member.object_record_key_known
+							&& generated_cell_append_object_reference_0x40bb26(cell, member.object_record_key);
 				stamped = occupied_stamped
 						|| reference_stamped
 						|| before_byte_0x2a != cell.byte_0x2a
@@ -5958,10 +6026,6 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 			result.secondary_rejected_count_0x49d471 += 1;
 			result.secondary_destroyed_rejected_record_count += 1;
 			secondary_reject_count += 1;
-			if (secondary_validation.blocked_reason == "0x49d471_0x49d2e0_candidate_filter_inputs_missing") {
-				result.blocked_reason = secondary_validation.blocked_reason;
-				return result;
-			}
 			if (secondary_reject_count >= result.selector_retry_limit) {
 				secondary_null_count_this_budget = result.selector_retry_limit;
 				break;
@@ -5995,7 +6059,7 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 	result.low_value_0x14 = low_value_0x14;
 	result.high_value_0x18 = high_value_0x18;
 
-	RewardGuardWrapperConstructResult49ce04 wrapper_reset = reward_guard_wrapper_construct_0x49ce04();
+	RewardGuardWrapperConstructResult49ce04 wrapper_reset = reward_guard_wrapper_reset_existing_0x49ce64(wrapper);
 	result.wrapper_reset_0x49ce64_applied = wrapper_reset.applied;
 	result.wrapper_reset_cell_count_0x49ce64 = wrapper_reset.reset_cell_count_0x49ce64;
 	if (!wrapper_reset.applied) {
@@ -6004,7 +6068,6 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 				: wrapper_reset.blocked_reason;
 		return result;
 	}
-	wrapper = wrapper_reset.wrapper;
 
 	int32_t selected_value = high_value_0x18;
 	if (high_value_0x18 > low_value_0x14) {
@@ -6091,6 +6154,20 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 		result.selected_object_attach_applied_0x49cf34 = selected_attach.applied;
 		result.selected_object_attach_initial_candidate_refresh_0x49d7c3_applied =
 				selected_attach.initial_candidate_refresh_0x49d7c3_applied;
+		result.selected_object_attach_existing_member_probe_count_0x49cf34 =
+				selected_attach.existing_member_probe_count_0x49cf34;
+		result.selected_object_attach_existing_member_out_of_bounds_count_0x49cf34 =
+				selected_attach.existing_member_probe_out_of_bounds_count_0x49cf34;
+		result.selected_object_attach_existing_member_bit22_reject_count_0x49cf34 =
+				selected_attach.existing_member_probe_bit22_reject_count_0x49cf34;
+		result.selected_object_attach_existing_member_invalid_reject_count_0x49a1d8 =
+				selected_attach.existing_member_probe_invalid_reject_count_0x49a1d8;
+		result.selected_object_attach_existing_member_word2c_reject_count_0x49aa63 =
+				selected_attach.existing_member_probe_word2c_reject_count_0x49aa63;
+		result.selected_object_attach_existing_member_candidate_set_count_0x49aa63 =
+				selected_attach.existing_member_candidate_set_count_0x49aa63;
+		result.selected_object_attach_existing_member_neighbor_bit27_clear_count_0x49a932 =
+				selected_attach.existing_member_neighbor_bit27_clear_count_0x49a932;
 		result.selected_object_attach_candidate_count_before_filter_0x49cf34 =
 				selected_attach.candidate_count_before_filter;
 		result.selected_object_attach_bit26_clear_candidate_erase_count_0x4afaea =
@@ -6109,6 +6186,10 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 		result.selected_object_attach_member_count_after_0x49cf34 = selected_attach.selected_member_count_after;
 		result.selected_object_attach_blocked_reason_0x49cf34 = selected_attach.blocked_reason;
 		if (!selected_attach.applied) {
+			result.selected_object_attach_failure_cleanup_invoked_0x49cebd = true;
+			const RewardGuardWrapperConstructResult49ce04 cleanup = reward_guard_wrapper_cleanup_0x49cebd(wrapper);
+			result.selected_object_attach_failure_cleanup_applied_0x49cebd = cleanup.applied;
+			result.selected_object_attach_failure_cleanup_cell_count_0x49cebd = cleanup.reset_cell_count_0x49ce64;
 			result.blocked_reason = selected_attach.blocked_reason.empty()
 					? "0x4aa354_0x49cf34_selected_object_attach_failed"
 					: selected_attach.blocked_reason;
@@ -6139,10 +6220,6 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 
 	result.applied = true;
 	return result;
-}
-
-static bool reward_guard_materialization_false_is_source_order_attempt_failure_0x4aab7e(const std::string &reason) {
-	return reason == "0x49cf34_candidate_vector_empty_after_bit26_and_0x49d2e0_filters";
 }
 
 RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0x4aab7e(GeneratorObjectPrivateState &state, const std::vector<RewardGuardSourceStreamRecord4aab7e> &source_records, bool source_object_kind_0x0c_known, int32_t source_object_kind_0x0c, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng) {
@@ -6188,9 +6265,21 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 	}
 
 	if (result.total_source_count <= 0 || result.active_lane_count <= 0) {
-		result.blocked_reason = "0x4aab7e_no_active_source_records_after_high_value_count_filter";
+		result.applied = true;
 		return result;
 	}
+
+	result.wrapper_construct_invoked_0x49ce04 = true;
+	const RewardGuardWrapperConstructResult49ce04 wrapper_construct = reward_guard_wrapper_construct_0x49ce04();
+	result.wrapper_construct_applied_0x49ce04 = wrapper_construct.applied;
+	result.wrapper_construct_reset_cell_count_0x49ce64 = wrapper_construct.reset_cell_count_0x49ce64;
+	if (!wrapper_construct.applied) {
+		result.blocked_reason = wrapper_construct.blocked_reason.empty()
+				? "0x4aab7e_0x49ce04_wrapper_construct_failed"
+				: wrapper_construct.blocked_reason;
+		return result;
+	}
+	RewardGuardWrapperState4aa3e9 wrapper = wrapper_construct.wrapper;
 
 	const int32_t score_base = source_object_kind_0x0c == 8 ? 0x640 : 0x320;
 	result.score_base_divided_by_total_source_count_0x4aac0e = score_base / result.total_source_count;
@@ -6230,7 +6319,6 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 				attempt.lane_index = selected_lane;
 				attempt.pass_policy_word_0x10 = policy_word;
 				attempt.attempt_index = attempt_index;
-				RewardGuardWrapperState4aa3e9 wrapper;
 				attempt.materialization_invoked_0x4aa354 = true;
 				attempt.materialization_0x4aa354 = reward_guard_materialization_driver_shell_0x4aa354(
 						state,
@@ -6245,12 +6333,14 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 					attempt.blocked_reason = attempt.materialization_0x4aa354.blocked_reason.empty()
 							? "0x4aab7e_0x4aa354_materialization_failed"
 							: attempt.materialization_0x4aa354.blocked_reason;
-					result.attempts.push_back(attempt);
-					if (reward_guard_materialization_false_is_source_order_attempt_failure_0x4aab7e(attempt.blocked_reason)) {
-						continue;
+					if (attempt.materialization_0x4aa354.selected_object_attach_failure_cleanup_invoked_0x49cebd) {
+						attempt.wrapper_cleanup_invoked_0x49cebd = true;
+						if (attempt.materialization_0x4aa354.selected_object_attach_failure_cleanup_applied_0x49cebd) {
+							result.wrapper_cleanup_count_0x49cebd += 1;
+						}
 					}
-					result.blocked_reason = attempt.blocked_reason;
-					return result;
+					result.attempts.push_back(attempt);
+					continue;
 				}
 
 				attempt.coordinate_scan_invoked_0x4aa9b7 = true;
@@ -6260,7 +6350,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 								wrapper,
 								*selector,
 								result.minimum_low_word_score_0x10,
-								policy_word != 0,
+								((uint32_t(result.minimum_low_word_score_0x10) >> 24) & 0xffU) != 0U,
 								rng);
 				attempt.coordinate_scan_applied_0x4aa9b7 = coordinate_scan.applied;
 				attempt.coordinate_scan_scanned_cell_count_0x4aa9b7 = coordinate_scan.scanned_cell_count;
@@ -6282,6 +6372,10 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 					break;
 				}
 				attempt.wrapper_cleanup_invoked_0x49cebd = true;
+				const RewardGuardWrapperConstructResult49ce04 cleanup = reward_guard_wrapper_cleanup_0x49cebd(wrapper);
+				if (cleanup.applied) {
+					result.wrapper_cleanup_count_0x49cebd += 1;
+				}
 				attempt.blocked_reason = coordinate_scan.blocked_reason.empty()
 						? "0x4aab7e_0x4aa9b7_coordinate_scan_failed"
 						: coordinate_scan.blocked_reason;
@@ -6289,10 +6383,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 			}
 		}
 
-		if (!lane_success) {
-			lane.active = false;
-			continue;
-		}
+		lane.active = false;
 	}
 }
 
@@ -6481,12 +6572,24 @@ static bool reward_guard_contour_passes_0x49a09c_for_0x4aa603(
 			return false;
 		}
 		if (!generated_cell_49a1d8_valid_record(*record)
-				|| bit22
+				|| (!allow_existing_bit22 && bit22)
 				|| !bit27
 				|| ((generated_cell_terrain_code_0x24(*record) == 8) != terrain8_policy)
 				|| generated_cell_word20_owner_byte2(record->word_0x20) != uint8_t(reward_guard_relation_owner_byte2_0x4aa9b7(relation) & 0xff)) {
 			result.contour_reject_count_0x49a09c += 1;
 			result.blocked_reason = "0x4aa603_0x49a09c_contour_rejected";
+			return false;
+		}
+	}
+	return true;
+}
+
+static bool reward_guard_selected_members_policy_allow_existing_bit22_0x49d65c(const RewardGuardWrapperState4aa3e9 &wrapper) {
+	if (!wrapper.selected_member_vector_0x2c_0x30_known) {
+		return false;
+	}
+	for (const RewardGuardWrapperMember4aa3e9 &member : wrapper.selected_members_0x2c_0x30) {
+		if (!object_metadata_flag_0x598300(member.descriptor_type_0x1c, 2)) {
 			return false;
 		}
 	}
@@ -6620,11 +6723,11 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 		return result;
 	}
 
-	const bool allow_existing_bit22 = std::all_of(wrapper.selected_members_0x2c_0x30.begin(),
-			wrapper.selected_members_0x2c_0x30.end(),
-			[](const RewardGuardWrapperMember4aa3e9 &member) {
-				return object_metadata_flag_0x598300(member.descriptor_type_0x1c, 2);
-			});
+	const bool selected_member_policy_allows_existing_bit22 =
+			reward_guard_selected_members_policy_allow_existing_bit22_0x49d65c(wrapper);
+	const bool allow_existing_bit22 =
+			selected_member_policy_allows_existing_bit22
+			&& (!wrapper.attached_flag_0x48_known || !wrapper.attached_flag_0x48);
 	if (!reward_guard_contour_passes_0x49a09c_for_0x4aa603(
 				state,
 				wrapper,
@@ -6638,9 +6741,14 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 	}
 
 	const GeneratedCellRecordGrid0x30 &wrapper_grid = wrapper.generated_cell_grid_0x08_0x10;
+	if (!wrapper.wrapper_bounds_0x18_0x24_known) {
+		result.inputs_available = false;
+		result.blocked_reason = "0x4aa603_wrapper_bounds_missing_before_overlap_scan";
+		return result;
+	}
 	for (int32_t local_level = 0; local_level < wrapper_grid.level_count; ++local_level) {
-		for (int32_t local_y = 0; local_y < wrapper_grid.height; ++local_y) {
-			for (int32_t local_x = 0; local_x < wrapper_grid.width; ++local_x) {
+		for (int32_t local_y = wrapper.bound_top_0x1c; local_y < wrapper.bound_bottom_0x24; ++local_y) {
+			for (int32_t local_x = wrapper.bound_left_0x18; local_x < wrapper.bound_right_0x20; ++local_x) {
 				const int64_t wrapper_flat = cell_index(wrapper_grid.width, wrapper_grid.height, local_x, local_y, local_level);
 				const GeneratedCellRecord0x30 *state_record = generator_state_cell_0x4aa603(
 						state,
@@ -6824,6 +6932,12 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 	if (minimum_low_word_score_0x10 < 0) {
 		return finish_blocked("0x4aa9b7_minimum_low_word_score_missing");
 	}
+	if (wrapper.bound_left_0x18 == 0x7d00
+			&& wrapper.bound_top_0x1c == 0x7d00
+			&& wrapper.bound_right_0x20 == -0x7d00
+			&& wrapper.bound_bottom_0x24 == -0x7d00) {
+		return finish_blocked("0x4aa9b7_wrapper_bounds_sentinel_after_0x49d6e0_no_boundary_cells");
+	}
 
 	const int32_t wrapper_center_x = (wrapper.bound_left_0x18 + wrapper.bound_right_0x20) / 2;
 	const int32_t wrapper_center_y = (wrapper.bound_top_0x1c + wrapper.bound_bottom_0x24) / 2;
@@ -6922,6 +7036,49 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 				: result.commit_0x4aa3e9.blocked_reason;
 	}
 	return result;
+}
+
+static std::string reward_guard_zero_commit_blocker_detail_0x4aab7e(const RewardGuardSourceStreamResult4aab7e &source_stream) {
+	std::ostringstream detail;
+	detail << "reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail"
+			<< ";attempts=" << source_stream.materialization_attempt_count
+			<< ";cleanup_count_0x49cebd=" << source_stream.wrapper_cleanup_count_0x49cebd;
+	if (!source_stream.attempts.empty()) {
+		const RewardGuardSourceStreamAttempt4aab7e &attempt = source_stream.attempts.back();
+		detail << ";last_lane=" << attempt.lane_index
+				<< ";last_policy_word_0x10=" << attempt.pass_policy_word_0x10
+				<< ";last_attempt_index=" << attempt.attempt_index
+				<< ";last_attach_invoked_0x49cf34=" << (attempt.materialization_0x4aa354.selected_object_attach_invoked_0x49cf34 ? 1 : 0)
+				<< ";last_attach_existing_member_probe_0x49cf34=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_probe_count_0x49cf34
+				<< ";last_attach_existing_member_oob_0x49cf34=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_out_of_bounds_count_0x49cf34
+				<< ";last_attach_existing_member_bit22_reject_0x49cf34=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_bit22_reject_count_0x49cf34
+				<< ";last_attach_existing_member_invalid_reject_0x49a1d8=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_invalid_reject_count_0x49a1d8
+				<< ";last_attach_existing_member_word2c_reject_0x49aa63=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_word2c_reject_count_0x49aa63
+				<< ";last_attach_existing_member_candidate_set_0x49aa63=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_candidate_set_count_0x49aa63
+				<< ";last_attach_existing_member_bit27_clear_0x49a932=" << attempt.materialization_0x4aa354.selected_object_attach_existing_member_neighbor_bit27_clear_count_0x49a932
+				<< ";last_attach_candidate_before_0x49cf34=" << attempt.materialization_0x4aa354.selected_object_attach_candidate_count_before_filter_0x49cf34
+				<< ";last_attach_bit26_clear_0x4afaea=" << attempt.materialization_0x4aa354.selected_object_attach_bit26_clear_candidate_erase_count_0x4afaea
+				<< ";last_attach_filter_reject_0x49d2e0=" << attempt.materialization_0x4aa354.selected_object_attach_filter_reject_count_0x49d2e0
+				<< ";last_attach_filter_missing_0x49d2e0=" << attempt.materialization_0x4aa354.selected_object_attach_filter_missing_input_count_0x49d2e0
+				<< ";last_attach_candidate_after_0x49cf34=" << attempt.materialization_0x4aa354.selected_object_attach_candidate_count_after_filter_0x49cf34
+				<< ";last_scanned_0x4aa9b7=" << attempt.coordinate_scan_scanned_cell_count_0x4aa9b7
+				<< ";last_owner_reject_0x4aa9b7=" << attempt.coordinate_scan_owner_byte_reject_count_0x4aa9b7
+				<< ";last_value_reject_0x4aa9b7=" << attempt.coordinate_scan_value_floor_reject_count_0x4aa9b7
+				<< ";last_feasibility_reject_0x4aa603=" << attempt.coordinate_scan_feasibility_reject_count_0x4aa603
+				<< ";last_feasibility_missing_0x4aa603=" << attempt.coordinate_scan_feasibility_missing_input_count_0x4aa603
+				<< ";last_appends_0x4ae1fd=" << attempt.coordinate_scan_local_vector_append_count_0x4ae1fd;
+		if (!attempt.materialization_0x4aa354.selected_object_attach_first_filter_blocked_reason_0x49d2e0.empty()) {
+			detail << ";first_0x49d2e0_reject="
+					<< attempt.materialization_0x4aa354.selected_object_attach_first_filter_blocked_reason_0x49d2e0;
+		}
+		if (!attempt.coordinate_scan_first_feasibility_blocked_reason_0x4aa603.empty()) {
+			detail << ";first_0x4aa603_reject=" << attempt.coordinate_scan_first_feasibility_blocked_reason_0x4aa603;
+		}
+		if (!attempt.blocked_reason.empty()) {
+			detail << ";last_attempt_blocked=" << attempt.blocked_reason;
+		}
+	}
+	return detail.str();
 }
 
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03() {
@@ -11947,29 +12104,61 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	}
 	state.reward_guard_materialization_driver_0x4aa354_ported = true;
 	const GeneratorRelationOwnerState4a218c *source_stream_selector = nullptr;
+	RewardGuardSourceStreamResult4aab7e aggregate_source_stream_0x4aab7e;
+	auto merge_reward_guard_source_stream = [](RewardGuardSourceStreamResult4aab7e &aggregate, const RewardGuardSourceStreamResult4aab7e &stream) {
+		if (!aggregate.invoked) {
+			aggregate = stream;
+			return;
+		}
+		aggregate.invoked = aggregate.invoked || stream.invoked;
+		aggregate.applied = aggregate.applied && stream.applied;
+		aggregate.wrapper_construct_invoked_0x49ce04 = aggregate.wrapper_construct_invoked_0x49ce04 || stream.wrapper_construct_invoked_0x49ce04;
+		aggregate.wrapper_construct_applied_0x49ce04 = aggregate.wrapper_construct_applied_0x49ce04 || stream.wrapper_construct_applied_0x49ce04;
+		aggregate.wrapper_construct_reset_cell_count_0x49ce64 += stream.wrapper_construct_reset_cell_count_0x49ce64;
+		aggregate.source_triplet_known = aggregate.source_triplet_known || stream.source_triplet_known;
+		aggregate.source_object_kind_0x0c_known = aggregate.source_object_kind_0x0c_known || stream.source_object_kind_0x0c_known;
+		if (stream.source_object_kind_0x0c_known) {
+			aggregate.source_object_kind_0x0c = stream.source_object_kind_0x0c;
+		}
+		aggregate.source_record_count += stream.source_record_count;
+		aggregate.active_lane_count += stream.active_lane_count;
+		aggregate.total_source_count += stream.total_source_count;
+		aggregate.source_count_product = stream.source_count_product;
+		aggregate.score_base_divided_by_total_source_count_0x4aac0e = stream.score_base_divided_by_total_source_count_0x4aac0e;
+		aggregate.minimum_low_word_score_0x10 = stream.minimum_low_word_score_0x10;
+		aggregate.selected_lane_count += stream.selected_lane_count;
+		aggregate.materialization_attempt_count += stream.materialization_attempt_count;
+		aggregate.successful_coordinate_scan_count += stream.successful_coordinate_scan_count;
+		aggregate.wrapper_cleanup_count_0x49cebd += stream.wrapper_cleanup_count_0x49cebd;
+		aggregate.lanes.insert(aggregate.lanes.end(), stream.lanes.begin(), stream.lanes.end());
+		aggregate.attempts.insert(aggregate.attempts.end(), stream.attempts.begin(), stream.attempts.end());
+		if (aggregate.blocked_reason.empty() && !stream.blocked_reason.empty()) {
+			aggregate.blocked_reason = stream.blocked_reason;
+		}
+	};
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		state.reward_guard_source_stream_records_0x4aab7e =
 				reward_guard_source_stream_records_from_relation_owner_0x4aab7e(owner);
 		state.reward_guard_source_stream_0x4aab7e_input_known =
-				owner.reward_guard_source_bands_0xa0_0xc0_known;
-		state.reward_guard_source_stream_owner_kind_0x0c_known = owner.terrain_policy_0x0c_known;
+				state.reward_guard_source_stream_0x4aab7e_input_known
+				|| owner.reward_guard_source_bands_0xa0_0xc0_known;
+		state.reward_guard_source_stream_owner_kind_0x0c_known =
+				state.reward_guard_source_stream_owner_kind_0x0c_known
+				|| owner.terrain_policy_0x0c_known;
 		state.reward_guard_source_stream_owner_kind_0x0c = owner.terrain_policy_0x0c;
 		source_stream_selector = &owner;
-		state.reward_guard_source_stream_0x4aab7e =
+		const RewardGuardSourceStreamResult4aab7e stream =
 				reward_guard_source_stream_materialization_0x4aab7e(
 						state,
 						state.reward_guard_source_stream_records_0x4aab7e,
-						state.reward_guard_source_stream_owner_kind_0x0c_known,
-						state.reward_guard_source_stream_owner_kind_0x0c,
+						owner.terrain_policy_0x0c_known,
+						owner.terrain_policy_0x0c,
 						source_stream_selector,
 						relation_scan_rng);
-		if (!state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
-				|| !state.reward_guard_source_stream_0x4aab7e.applied) {
-			break;
-		}
+		merge_reward_guard_source_stream(aggregate_source_stream_0x4aab7e, stream);
 	}
 	if (state.relation_owner_vectors_10e4_10e8.empty()) {
-		state.reward_guard_source_stream_0x4aab7e =
+		const RewardGuardSourceStreamResult4aab7e stream =
 				reward_guard_source_stream_materialization_0x4aab7e(
 						state,
 						state.reward_guard_source_stream_records_0x4aab7e,
@@ -11977,7 +12166,9 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 						state.reward_guard_source_stream_owner_kind_0x0c,
 						source_stream_selector,
 						relation_scan_rng);
+		merge_reward_guard_source_stream(aggregate_source_stream_0x4aab7e, stream);
 	}
+	state.reward_guard_source_stream_0x4aab7e = aggregate_source_stream_0x4aab7e;
 	state.reward_guard_materialization_driver_input_known =
 			state.reward_guard_source_stream_0x4aab7e.source_triplet_known
 			&& state.reward_guard_source_stream_0x4aab7e.source_object_kind_0x0c_known
@@ -12016,8 +12207,10 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			&& state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
 			&& state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0;
 	if (reward_guard_source_stream_executed_without_commit) {
+		const std::string reward_guard_zero_commit_blocker =
+				reward_guard_zero_commit_blocker_detail_0x4aab7e(state.reward_guard_source_stream_0x4aab7e);
 		state.remaining_private_state_blockers = {
-			"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail",
+			reward_guard_zero_commit_blocker,
 			"connection_road_river_0x4a79a3_not_executed_until_reward_guard_source_stream_commits_are_owned",
 			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
 			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
@@ -12310,7 +12503,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				&& object_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
 				&& object_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0) {
 			result.blocked_reason =
-					"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
+					reward_guard_zero_commit_blocker_detail_0x4aab7e(object_state.reward_guard_source_stream_0x4aab7e);
 		} else if (!object_state.reward_guard_candidate_records_10f4_10f8_contents_known) {
 			result.blocked_reason = "reward_guard_candidate_vector_0x10f4_0x10f8_live_contents_pending_before_0x4a9f1c";
 		} else if (!object_state.reward_guard_selector_0x4a9f1c.blocked_reason.empty()) {
