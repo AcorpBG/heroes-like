@@ -419,6 +419,16 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.coordinate_level_0x18 = input.coordinate_level_0x18;
 	out.terrain_policy_0x0c_known = input.terrain_policy_0x0c_known;
 	out.terrain_policy_0x0c = input.terrain_policy_0x0c;
+	out.reward_guard_source_bands_0xa0_0xc0_known = input.reward_guard_source_bands_0xa0_0xc0_known;
+	for (size_t index = 0; index < out.reward_guard_source_bands_0xa0_0xc0.size(); ++index) {
+		const h3maped_rmg_core::SourceTreasureBand4a218c &band =
+				input.reward_guard_source_bands_0xa0_0xc0[index];
+		out.reward_guard_source_bands_0xa0_0xc0[index] = SharedSourceTreasureBand {
+			band.density,
+			band.low,
+			band.high,
+		};
+	}
 	out.source_endpoint_vector_0xc8_0xcc_present = input.source_endpoint_vector_0xc8_0xcc_present;
 	out.source_endpoint_vector_0xc8_0xcc_contents_known = input.source_endpoint_vector_0xc8_0xcc_contents_known;
 	out.source_endpoint_vector_0xc8_0xcc_count_known = input.source_endpoint_vector_0xc8_0xcc_count_known;
@@ -2004,6 +2014,15 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"coordinate_level_0x18\":" << owner.coordinate_level_0x18
 			<< ",\"terrain_policy_0x0c_known\":" << (owner.terrain_policy_0x0c_known ? "true" : "false")
 			<< ",\"terrain_policy_0x0c\":" << owner.terrain_policy_0x0c
+			<< ",\"reward_guard_source_bands_0xa0_0xc0_known\":" << (owner.reward_guard_source_bands_0xa0_0xc0_known ? "true" : "false")
+			<< ",\"reward_guard_source_bands_0xa0_0xc0\":[";
+		for (size_t band_index = 0; band_index < owner.reward_guard_source_bands_0xa0_0xc0.size(); ++band_index) {
+			if (band_index != 0) {
+				out << ",";
+			}
+			append_source_treasure_band_json(out, owner.reward_guard_source_bands_0xa0_0xc0[band_index]);
+		}
+		out << "]"
 			<< ",\"source_endpoint_vector_0xc8_0xcc_present\":" << (owner.source_endpoint_vector_0xc8_0xcc_present ? "true" : "false")
 			<< ",\"source_endpoint_vector_0xc8_0xcc_contents_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_contents_known ? "true" : "false")
 			<< ",\"source_endpoint_vector_0xc8_0xcc_count_known\":" << (owner.source_endpoint_vector_0xc8_0xcc_count_known ? "true" : "false")

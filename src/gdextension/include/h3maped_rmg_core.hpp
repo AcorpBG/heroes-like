@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <map>
 #include <string>
@@ -1462,6 +1463,8 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t coordinate_level_0x18 = 0;
 	bool terrain_policy_0x0c_known = false;
 	int32_t terrain_policy_0x0c = 0;
+	bool reward_guard_source_bands_0xa0_0xc0_known = false;
+	std::array<SourceTreasureBand4a218c, 3> reward_guard_source_bands_0xa0_0xc0;
 	bool source_endpoint_vector_0xc8_0xcc_present = false;
 	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
 	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
@@ -1859,6 +1862,7 @@ struct RewardGuardSourceStreamLane4aab7e {
 	int32_t high_value_0xa4 = 0;
 	int32_t source_count_0xa8 = 0;
 	int64_t quota = 0;
+	int64_t quota_increment = 0;
 };
 
 struct RewardGuardSourceStreamAttempt4aab7e {
@@ -1883,6 +1887,7 @@ struct RewardGuardSourceStreamResult4aab7e {
 	int32_t active_lane_count = 0;
 	int32_t total_source_count = 0;
 	int64_t source_count_product = 1;
+	int32_t score_base_divided_by_total_source_count_0x4aac0e = 0;
 	int32_t minimum_low_word_score_0x10 = 0;
 	int32_t selected_lane_count = 0;
 	int32_t materialization_attempt_count = 0;

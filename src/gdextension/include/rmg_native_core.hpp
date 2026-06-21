@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <string>
@@ -465,6 +466,8 @@ struct SharedGeneratorRelationOwnerState {
 	int32_t coordinate_level_0x18 = 0;
 	bool terrain_policy_0x0c_known = false;
 	int32_t terrain_policy_0x0c = 0;
+	bool reward_guard_source_bands_0xa0_0xc0_known = false;
+	std::array<SharedSourceTreasureBand, 3> reward_guard_source_bands_0xa0_0xc0;
 	bool source_endpoint_vector_0xc8_0xcc_present = false;
 	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
 	bool source_endpoint_vector_0xc8_0xcc_count_known = false;

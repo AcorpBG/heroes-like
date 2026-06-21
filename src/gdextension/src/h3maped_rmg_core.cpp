@@ -3926,8 +3926,14 @@ static bool reward_guard_candidate_vtable_has_direct_value_score(uint32_t candid
 	switch (candidate_vtable) {
 		case 0x00540ba0U:
 		case 0x00540bb0U:
+		case 0x00540bd0U:
+		case 0x00540be0U:
+		case 0x00540bf0U:
 		case 0x00540c10U:
+		case 0x00540c20U:
+		case 0x00540c30U:
 		case 0x00540c40U:
+		case 0x00540c50U:
 		case 0x00540c90U:
 			return true;
 		default:
@@ -4005,6 +4011,15 @@ static bool reward_guard_candidate_score_0x4aa151(
 		}
 		score = candidate.direct_value_0x0c;
 		return true;
+	}
+
+	if (candidate_vtable == 0x00540bc0U) {
+		blocked_reason = "0x49c64b_monster_candidate_score_semantics_pending";
+		return false;
+	}
+	if (candidate_vtable == 0x00540c00U) {
+		blocked_reason = "0x49c849_type17_candidate_score_semantics_pending";
+		return false;
 	}
 
 	blocked_reason = "0x4a9f1c_candidate_score_vtable_contract_unrecovered";
@@ -4861,10 +4876,12 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 	}
 
 	const int32_t score_base = source_object_kind_0x0c == 8 ? 0x640 : 0x320;
-	result.minimum_low_word_score_0x10 = score_base / result.total_source_count;
+	result.score_base_divided_by_total_source_count_0x4aac0e = score_base / result.total_source_count;
+	result.minimum_low_word_score_0x10 = int32_t(std::sqrt(double(result.score_base_divided_by_total_source_count_0x4aac0e)));
 	for (RewardGuardSourceStreamLane4aab7e &lane : result.lanes) {
 		if (lane.active && lane.source_count_0xa8 > 0) {
-			lane.quota = result.source_count_product / int64_t(lane.source_count_0xa8);
+			lane.quota = 0;
+			lane.quota_increment = result.source_count_product / int64_t(lane.source_count_0xa8);
 		}
 	}
 
@@ -4886,7 +4903,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 		}
 
 		RewardGuardSourceStreamLane4aab7e &lane = result.lanes[size_t(selected_lane)];
-		lane.quota += lane.source_count_0xa8;
+		lane.quota += lane.quota_increment;
 		result.selected_lane_count += 1;
 
 		bool lane_success = false;
@@ -8098,6 +8115,12 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.town_choice_0x04 = town_choice;
 	owner.source_owner_slot_0x1c_known = seed.source_owner_index >= 0;
 	owner.source_owner_slot_0x1c = seed.source_owner_index;
+	owner.reward_guard_source_bands_0xa0_0xc0_known = seed.source_index >= 0;
+	owner.reward_guard_source_bands_0xa0_0xc0 = {
+		seed.source_payload.treasure_band_0,
+		seed.source_payload.treasure_band_1,
+		seed.source_payload.treasure_band_2,
+	};
 	owner.scan_bounds_0x20_0x2c_known = false;
 	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
 	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
@@ -8123,6 +8146,23 @@ static void apply_relation_owner_terrain_policy_0x49b53d(GeneratorRelationOwnerS
 	}
 	owner.terrain_policy_0x0c_known = true;
 	owner.terrain_policy_0x0c = terrain_record->selected_terrain_id_0x49b53d;
+}
+
+static std::vector<RewardGuardSourceStreamRecord4aab7e> reward_guard_source_stream_records_from_relation_owner_0x4aab7e(const GeneratorRelationOwnerState4a218c &owner) {
+	if (!owner.reward_guard_source_bands_0xa0_0xc0_known) {
+		return {};
+	}
+	std::vector<RewardGuardSourceStreamRecord4aab7e> records;
+	records.reserve(3);
+	for (const SourceTreasureBand4a218c &band : owner.reward_guard_source_bands_0xa0_0xc0) {
+		RewardGuardSourceStreamRecord4aab7e record;
+		record.fields_known = true;
+		record.low_value_0xa0 = band.low;
+		record.high_value_0xa4 = band.high;
+		record.source_count_0xa8 = band.density;
+		records.push_back(record);
+	}
+	return records;
 }
 
 static const RuntimeZoneBoundaryInput4a3a03 *boundary_input_after_0x4a19ed_for_runtime_zone(const std::vector<RuntimeZoneBoundaryInput4a3a03> &boundary_inputs, int32_t runtime_zone_index) {
@@ -8861,18 +8901,37 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	}
 	state.reward_guard_materialization_driver_0x4aa354_ported = true;
 	const GeneratorRelationOwnerState4a218c *source_stream_selector = nullptr;
-	if (state.reward_guard_source_stream_0x4aab7e_input_known
-			&& !state.relation_owner_vectors_10e4_10e8.empty()) {
-		source_stream_selector = &state.relation_owner_vectors_10e4_10e8.front();
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		state.reward_guard_source_stream_records_0x4aab7e =
+				reward_guard_source_stream_records_from_relation_owner_0x4aab7e(owner);
+		state.reward_guard_source_stream_0x4aab7e_input_known =
+				owner.reward_guard_source_bands_0xa0_0xc0_known;
+		state.reward_guard_source_stream_owner_kind_0x0c_known = owner.terrain_policy_0x0c_known;
+		state.reward_guard_source_stream_owner_kind_0x0c = owner.terrain_policy_0x0c;
+		source_stream_selector = &owner;
+		state.reward_guard_source_stream_0x4aab7e =
+				reward_guard_source_stream_materialization_0x4aab7e(
+						state,
+						state.reward_guard_source_stream_records_0x4aab7e,
+						state.reward_guard_source_stream_owner_kind_0x0c_known,
+						state.reward_guard_source_stream_owner_kind_0x0c,
+						source_stream_selector,
+						relation_scan_rng);
+		if (!state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
+				|| !state.reward_guard_source_stream_0x4aab7e.applied) {
+			break;
+		}
 	}
-	state.reward_guard_source_stream_0x4aab7e =
-			reward_guard_source_stream_materialization_0x4aab7e(
-					state,
-					state.reward_guard_source_stream_records_0x4aab7e,
-					state.reward_guard_source_stream_owner_kind_0x0c_known,
-					state.reward_guard_source_stream_owner_kind_0x0c,
-					source_stream_selector,
-					relation_scan_rng);
+	if (state.relation_owner_vectors_10e4_10e8.empty()) {
+		state.reward_guard_source_stream_0x4aab7e =
+				reward_guard_source_stream_materialization_0x4aab7e(
+						state,
+						state.reward_guard_source_stream_records_0x4aab7e,
+						state.reward_guard_source_stream_owner_kind_0x0c_known,
+						state.reward_guard_source_stream_owner_kind_0x0c,
+						source_stream_selector,
+						relation_scan_rng);
+	}
 	state.reward_guard_materialization_driver_input_known =
 			state.reward_guard_source_stream_0x4aab7e.source_triplet_known
 			&& state.reward_guard_source_stream_0x4aab7e.source_object_kind_0x0c_known
@@ -8902,7 +8961,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_descriptor_producers_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_replay_now_consumes_only_descriptor_joined_0xedc_pairs_remaining_live_descriptor_producers_and_raw_source_fields_pending",
-		"reward_guard_0x4aab7e_source_triplet_0xa0_0xa4_0xa8_and_owner_kind_pending_before_0x4aa354",
+		"reward_guard_0x49c64b_0x49c849_non_direct_candidate_score_semantics_pending_after_0x4aab7e_source_stream",
 		"reward_guard_selected_create_descriptor_vector_pending_after_0x4aab7e_0x4aa354_0x4aa1db_caller_contract",
 		"reward_guard_projection_global_table_pending_for_0x4ad947_selected_global_entry_after_projection_object",
 		"reward_guard_projection_object_coordinate_triple_pending_for_0x4ad947_source_relation_lookup_before_0x4ad7f7",

@@ -16,35 +16,35 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T08:33:22Z",
-      "latestEvidenceId": "native-rmg-reward-guard-source-stream-caller-20260621",
-      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the live source object producer that supplies the 0x4aab7e +0xa0/+0xa4/+0xa8 source triplet and owner-kind +0x0c, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
-      "latestFinding": "Native RMG no-Godot workflow now enters the recovered 0x4aab7e reward/guard caller boundary. h3maped_rmg_core_selftest proves 0x4aab7e is the source-stream owner and that 0x4aa354 keeps a caller-owned wrapper while selecting the value passed into 0x4aa1db. The focused small_3p_seed_11_controlled CLI run exits expected status 2 at 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7 with final_writeout_complete=false. This is implementation progress inside the chain, not parity.",
-      "blocker": "The shared workflow still stops at reward_guard_materialization because the live 0x4aab7e source triplet/owner-kind producer is not owned. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
+      "updatedAt": "2026-06-21T09:08:06Z",
+      "latestEvidenceId": "native-rmg-reward-guard-direct-score-vtables-20260621",
+      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the 0x49c64b monster candidate score inputs/formula without flattening terrain/generator strength state, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
+      "latestFinding": "Native RMG no-Godot workflow now sources 0x4aab7e reward/guard triplets from relation-owner source-zone treasure bands and terrain policy. h3maped_rmg_core_selftest proves the workflow carries those fields into 0x4aa354/0x4aa1db, reaches the nested 0x4a9f1c candidate selector, and consumes the recovered direct-value scorer vtables. The focused small_3p_seed_11_controlled CLI run exits expected status 2 at 0x49c64b_monster_candidate_score_semantics_pending with final_writeout_complete=false. This is implementation progress inside the chain, not parity.",
+      "blocker": "The shared workflow now stops inside reward_guard_materialization at 0x49c64b because active candidate records do not yet carry the exact monster terrain/generator strength inputs needed by the recovered dynamic monster score formula. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-reward-guard-source-stream-caller-20260621",
+        "id": "native-rmg-reward-guard-direct-score-vtables-20260621",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Reward Guard Source Stream Caller Boundary",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
-        "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the live source object producer that supplies the 0x4aab7e +0xa0/+0xa4/+0xa8 source triplet and owner-kind +0x0c, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
-        "blocker": "The shared workflow still stops at reward_guard_materialization because the live 0x4aab7e source triplet/owner-kind producer is not owned. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
+        "title": "Reward Guard Direct Score Vtables",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
+        "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the 0x49c64b monster candidate score inputs/formula without flattening terrain/generator strength state, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
+        "blocker": "The shared workflow now stops inside reward_guard_materialization at 0x49c64b because active candidate records do not yet carry the exact monster terrain/generator strength inputs needed by the recovered dynamic monster score formula. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
         "artifacts": [
           ".artifacts/tmp_native_workflow_4aab7e_check/small_3p_seed_11_controlled.phase_snapshot.json"
         ],
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-          "./bin/h3maped_rmg_core_selftest (passed; proves recovered 0x4aab7e source-stream caller boundary and corrected 0x4aa354 wrapper/value argument contract; active workflow does not invoke 0x4aa354/0x4aa1db before the source triplet is owned)",
-          "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_4aab7e_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked at 0x4aab7e source triplet before final writeout)"
+          "./bin/h3maped_rmg_core_selftest (passed; proves recovered 0x4aab7e source bands and terrain policy flow into 0x4aa354/0x4aa1db and stop at the nested 0x49c64b monster-score input blocker)",
+          "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_4aab7e_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked at 0x49c64b_monster_candidate_score_semantics_pending before final writeout)"
         ],
-        "updatedAt": "2026-06-21T08:33:22Z"
+        "updatedAt": "2026-06-21T09:08:06Z"
       }
     },
     {
@@ -841,9 +841,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
-    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
-    "currentSliceUpdatedAt": "2026-06-21T08:33:22Z",
+    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
+    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
+    "currentSliceUpdatedAt": "2026-06-21T09:08:06Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -852,45 +852,45 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-reward-guard-source-stream-caller-20260621",
+      "id": "native-rmg-reward-guard-direct-score-vtables-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed_partial_implementation_not_parity",
-      "title": "Reward Guard Source Stream Caller Boundary",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
-      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the live source object producer that supplies the 0x4aab7e +0xa0/+0xa4/+0xa8 source triplet and owner-kind +0x0c, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
-      "blocker": "The shared workflow still stops at reward_guard_materialization because the live 0x4aab7e source triplet/owner-kind producer is not owned. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
+      "title": "Reward Guard Direct Score Vtables",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
+      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the 0x49c64b monster candidate score inputs/formula without flattening terrain/generator strength state, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
+      "blocker": "The shared workflow now stops inside reward_guard_materialization at 0x49c64b because active candidate records do not yet carry the exact monster terrain/generator strength inputs needed by the recovered dynamic monster score formula. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
       "artifacts": [
         ".artifacts/tmp_native_workflow_4aab7e_check/small_3p_seed_11_controlled.phase_snapshot.json"
       ],
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
         "./bin/h3maped_rmg_core_selftest (passed)",
-        "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_4aab7e_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked at 0x4aab7e source triplet before final writeout)"
+        "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_4aab7e_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked at 0x49c64b_monster_candidate_score_semantics_pending before final writeout)"
       ],
-      "updatedAt": "2026-06-21T08:33:22Z"
+      "updatedAt": "2026-06-21T09:08:06Z"
     },
     "latestEvidence": {
-      "id": "native-rmg-reward-guard-source-stream-caller-20260621",
+      "id": "native-rmg-reward-guard-direct-score-vtables-20260621",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "passed_partial_implementation_not_parity",
-      "title": "Reward Guard Source Stream Caller Boundary",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
-      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the live source object producer that supplies the 0x4aab7e +0xa0/+0xa4/+0xa8 source triplet and owner-kind +0x0c, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
-      "blocker": "The shared workflow still stops at reward_guard_materialization because the live 0x4aab7e source triplet/owner-kind producer is not owned. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
+      "title": "Reward Guard Direct Score Vtables",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
+      "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the 0x49c64b monster candidate score inputs/formula without flattening terrain/generator strength state, then port selected descriptor/materialization state for 0x4aa1db/0x4a5c07/0x49cf34, the 0x4ad947 global table feed, projection coordinate triple, wrapper/member handoff to 0x4ad7f7/0x4aa9b7, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
+      "blocker": "The shared workflow now stops inside reward_guard_materialization at 0x49c64b because active candidate records do not yet carry the exact monster terrain/generator strength inputs needed by the recovered dynamic monster score formula. After that, selected descriptor/materialization state, 0x4ad947 global table/coordinate inputs, wrapper/member handoff, connection/road/river phases, and final tile/object/header writeout remain unowned.",
       "artifacts": [
         ".artifacts/tmp_native_workflow_4aab7e_check/small_3p_seed_11_controlled.phase_snapshot.json"
       ],
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
         "./bin/h3maped_rmg_core_selftest (passed)",
-        "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_4aab7e_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked at 0x4aab7e source triplet before final writeout)"
+        "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_4aab7e_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked at 0x49c64b_monster_candidate_score_semantics_pending before final writeout)"
       ],
-      "updatedAt": "2026-06-21T08:33:22Z"
+      "updatedAt": "2026-06-21T09:08:06Z"
     },
     "latestEvidenceArtifacts": [
       ".artifacts/tmp_native_workflow_4aab7e_check/small_3p_seed_11_controlled.phase_snapshot.json"
     ],
-    "latestEvidenceId": "native-rmg-reward-guard-source-stream-caller-20260621",
+    "latestEvidenceId": "native-rmg-reward-guard-direct-score-vtables-20260621",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -12922,14 +12922,14 @@
       "blocker": "Live source-relation/wrapper caller feed and true runtime 0x4aa603 inputs are still not wired into the now-ported explicit 0x4aa9b7 -> 0x4aa3e9 reward/guard helper."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "rmg-small-generalization-hardening-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now ports recovered 0x4aab7e reward/guard source-stream caller scheduling and the corrected 0x4aa354 caller-owned wrapper/value argument contract. The no-Godot workflow enters 0x4aab7e and blocks honestly at reward_guard_materialization on 0x4aab7e_source_triplet_0xa0_0xa4_0xa8_pending_before_0x4aa354_0x4aa9b7; this is not parity and not final map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered relation-owner treasure bands (+0xa0/+0xa4/+0xa8 through +0xc0) and terrain policy +0x0c from runtime source-zone payloads into the ordered 0x4aab7e reward/guard source stream. The no-Godot workflow advances through 0x4aab7e -> 0x4aa354 -> 0x4aa1db -> 0x4a9f1c, consumes all recovered 0x49c54d direct-value candidate scorer vtables, and now blocks at 0x49c64b_monster_candidate_score_semantics_pending; this is not parity and not final map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-21T08:33:22Z",
+  "currentSliceUpdatedAt": "2026-06-21T09:08:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
